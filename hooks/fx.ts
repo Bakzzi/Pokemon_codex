@@ -106,6 +106,14 @@ const waveArt = (c: string, l: string): Art => ({
   w: 4, h: 5,
   svg: [1.2, 1.7, 2.2].map((r, i) => `<path d="M${-1.2 + i * 1.2} -${r} Q${-1.2 + i * 1.2 + r * 1.1} 0 ${-1.2 + i * 1.2} ${r}" stroke="${i == 1 ? l : c}" stroke-width="0.5" fill="none" stroke-linecap="round"/>`).join(''),
 })
+const arrowArt = (c: string, l: string): Art => ({
+  w: 13, h: 2.6,
+  svg:
+    `<path d="M-6 0 L-4 0" stroke="${c}" stroke-width="1" stroke-linecap="round" opacity="0.3"/><rect x="-4.5" y="-0.24" width="6.5" height="0.48" rx="0.24" fill="${c}"/><rect x="-4.5" y="-0.1" width="6.5" height="0.2" fill="${l}"/>` +
+    `<path d="M1.6 -1.1 L5.2 0 L1.6 1.1 L2.3 0 Z" fill="${c}"/><path d="M2 -0.55 L4.4 0 L2 0.55 L2.4 0 Z" fill="${WHITE}"/><path d="M-4.5 -0.2 L-3.2 -1.2 L-2.2 -1.2 L-3.4 -0.2 Z" fill="${l}" stroke="${c}" stroke-width="0.1"/><path d="M-4.5 0.2 L-3.2 1.2 L-2.2 1.2 L-3.4 0.2 Z" fill="${l}" stroke="${c}" stroke-width="0.1"/>` +
+    glow(4.2, 0, 1.2, c, l, 0.7),
+})
+const fishArt = (c: string, l: string): Art => ({ w: 3.4, h: 1.4, svg: `<path d="M0.9 0 C0.4 -0.6 -0.6 -0.6 -1 0 C-0.6 0.6 0.4 0.6 0.9 0 Z" fill="${c}"/><path d="M-0.9 0 L-1.6 -0.5 L-1.5 0 L-1.6 0.5 Z" fill="${c}"/><path d="M0.5 -0.15 C0.1 -0.4 -0.5 -0.4 -0.8 -0.05 C-0.4 -0.2 0.1 -0.15 0.5 -0.15Z" fill="${l}"/><circle cx="0.45" cy="-0.12" r="0.1" fill="#1F1410"/>` })
 const ARTS_ONE: Record<string, Art> = {
   shard: { w: 3.4, h: 1.6, svg: `<polygon points="1.6,0 0,-0.75 -1.6,0 0,0.75" fill="#60A5FA"/><polygon points="1.2,0 0,-0.45 -0.9,0 0,0.45" fill="#E0F2FE"/><polygon points="0.9,0 0.1,-0.2 -0.4,0 0.1,0.2" fill="${WHITE}"/>` },
   star: (() => {
@@ -118,15 +126,13 @@ const ARTS_ONE: Record<string, Art> = {
       `<path d="M-2.6 -0.1 L-2.6 -0.9 L-1.6 -0.3 L-1.6 0.3 L-2.6 0.9 L-2.6 0.1 Z" fill="#7B8794"/><rect x="-2.2" y="-0.42" width="3.2" height="0.84" rx="0.3" fill="#C5CDD6"/><rect x="-2.2" y="-0.42" width="3.2" height="0.3" rx="0.15" fill="#EEF2F5"/><path d="M1 -0.42 L2.3 0 L1 0.42 Z" fill="#D7263D"/><rect x="-0.6" y="-0.42" width="0.25" height="0.84" fill="#7B8794"/>` +
       `<path d="M-2.6 0 C-3.4 -0.6 -4.4 -0.5 -5 0 C-4.4 0.5 -3.4 0.6 -2.6 0 Z" fill="#F26B21" opacity="0.9"/><path d="M-2.6 0 C-3.1 -0.3 -3.7 -0.3 -4.1 0 C-3.7 0.3 -3.1 0.3 -2.6 0 Z" fill="#FDE047"/>`,
   },
-  arrow: {
-    w: 13, h: 2.6,
-    svg:
-      `<path d="M-6 0 L-4 0" stroke="#F9A8D4" stroke-width="1" stroke-linecap="round" opacity="0.3"/><rect x="-4.5" y="-0.24" width="6.5" height="0.48" rx="0.24" fill="#F9A8D4"/><rect x="-4.5" y="-0.1" width="6.5" height="0.2" fill="${WHITE}"/>` +
-      `<path d="M1.6 -1.1 L5.2 0 L1.6 1.1 L2.3 0 Z" fill="#F9A8D4"/><path d="M2 -0.55 L4.4 0 L2 0.55 L2.4 0 Z" fill="${WHITE}"/><path d="M-4.5 -0.2 L-3.2 -1.2 L-2.2 -1.2 L-3.4 -0.2 Z" fill="${WHITE}" stroke="#F9A8D4" stroke-width="0.1"/><path d="M-4.5 0.2 L-3.2 1.2 L-2.2 1.2 L-3.4 0.2 Z" fill="${WHITE}" stroke="#F9A8D4" stroke-width="0.1"/>` +
-      glow(4.2, 0, 1.2, '#F9A8D4', WHITE, 0.7),
-  },
+  arrow: arrowArt('#F9A8D4', WHITE),
+  arrow_gold: arrowArt('#F59E0B', '#FDE68A'),
   harpoon: { w: 12, h: 1.6, svg: `<rect x="-3.6" y="-0.16" width="5.4" height="0.32" fill="#9AA3AE"/><rect x="-3.6" y="-0.16" width="5.4" height="0.12" fill="#E2E8F0"/><path d="M1.6 -0.7 L3.4 0 L1.6 0.7 L2.1 0 Z" fill="#CBD5E1"/><path d="M1.8 -0.4 L2.9 0 L1.8 0.4 L2.1 0 Z" fill="${WHITE}"/><path d="M-3.6 0 C-4.4 0.3 -5 -0.3 -5.8 0.1" stroke="#64748B" stroke-width="0.14" fill="none"/>` },
-  fish: { w: 3.4, h: 1.4, svg: `<path d="M0.9 0 C0.4 -0.6 -0.6 -0.6 -1 0 C-0.6 0.6 0.4 0.6 0.9 0 Z" fill="#38BDF8"/><path d="M-0.9 0 L-1.6 -0.5 L-1.5 0 L-1.6 0.5 Z" fill="#38BDF8"/><path d="M0.5 -0.15 C0.1 -0.4 -0.5 -0.4 -0.8 -0.05 C-0.4 -0.2 0.1 -0.15 0.5 -0.15Z" fill="#E0F2FE"/><circle cx="0.45" cy="-0.12" r="0.1" fill="#1F1410"/>` },
+  fish: fishArt('#38BDF8', '#E0F2FE'),
+  fish_red: fishArt('#EF4444', '#FECACA'),
+  fish_yellow: fishArt('#FACC15', '#FEF9C3'),
+  fish_green: fishArt('#4ADE80', '#DCFCE7'),
   flower: { w: 4, h: 4, svg: glow(0, 0, 1.8, '#F472B6', '#FBCFE8', 0.8) + [0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-0.85" rx="0.42" ry="0.7" fill="#F472B6" transform="rotate(${a})"/>`).join('') + [0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-0.8" rx="0.2" ry="0.4" fill="#FBCFE8" transform="rotate(${a})"/>`).join('') + `<circle cx="0" cy="0" r="0.45" fill="#FDE047"/><circle cx="-0.1" cy="-0.1" r="0.18" fill="${WHITE}"/>` },
   wind: { w: 8.6, h: 3.6, svg: `<ellipse cx="0" cy="0" rx="1.2" ry="1.6" fill="none" stroke="#7DD3FC" stroke-width="0.5" opacity="0.9"/><ellipse cx="0.15" cy="0" rx="0.7" ry="1" fill="none" stroke="#E0F2FE" stroke-width="0.35"/><ellipse cx="0.3" cy="0" rx="0.3" ry="0.45" fill="${WHITE}" opacity="0.9"/><path d="M-1.4 -1 Q-3 -0.8 -4 0.2" stroke="#7DD3FC" stroke-width="0.3" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M-1.4 1 Q-2.8 1.3 -3.6 0.4" stroke="#E0F2FE" stroke-width="0.25" fill="none" stroke-linecap="round" opacity="0.7"/>` },
   needle: { w: 5, h: 1, svg: `<path d="M-2.2 0 L2.2 0" stroke="#15803D" stroke-width="0.45" stroke-linecap="round"/><path d="M-2 0 L1.8 0" stroke="#4ADE80" stroke-width="0.2"/><path d="M1.6 -0.35 L2.5 0 L1.6 0.35 Z" fill="${WHITE}"/>` },
@@ -231,7 +237,7 @@ export const orb = (from: At, color: string, _light: string, size = 1.6) => {
   const [x0, y0] = from
   const yTop = Math.max(-1.5, y0 - 5)
   const tn = toneOf(color)
-  const name = tn === 'thunder' ? 'orb_thunder' : tn === 'elec' ? 'orb_elec' : 'orb_fire'
+  const name = tn === 'thunder' ? 'orb_thunder' : tn === 'elec' || tn === 'water' || tn === 'sky' ? 'orb_elec' : 'orb_fire'
   return (
     muzzle(color, _light, from, size) +
     '<g opacity="0">' +
@@ -350,10 +356,13 @@ export const whip = (from: At, color: string, light: string) =>
 export const vine = (from: At, color = '#22C55E', light = '#86EFAC') =>
   muzzle(light, WHITE, from, 0.7) + lash(`vine_${toneOf(color)}`, from, at(BODY_X - from[0]), 0.46, 0.66) + slash(light, BODY_X, 7.5, WHITE, -30)
 // 음파 (퍼피 하울링)
-export const soundWave = (from: At, color = '#F9A8D4', _light = WHITE) =>
+export const soundWave = (from: At, color = '#7DD3FC', _light = WHITE) =>
   muzzle(color, _light, from, 0.8) + fly(art(`wave_${toneOf(color)}`), from, [BODY_X - 2, from[1]], 0.44, 0.6) + impact(color, BODY_X - 1.5, from[1], 0.9)
 export const holyArrow = (from: At) =>
   muzzle('#F9A8D4', WHITE, from, 0.9) + fly(art('arrow', 1.5), from, [HIT_X + 1.5, 7.5]) + impact('#F9A8D4', HIT_X + 4, 7.5, 1.1)
+// 엔젤몬의 금빛 화살
+export const goldArrow = (from: At) =>
+  muzzle('#F59E0B', '#FDE68A', from, 0.9) + fly(art('arrow_gold', 1.5), from, [HIT_X + 1.5, 7.5]) + impact('#F59E0B', HIT_X + 4, 7.5, 1.1)
 export const harpoon = (from: At, n = 1) => {
   let out = muzzle('#CBD5E1', WHITE, from, 0.8)
   for (let i = 0; i < n; i++) {
@@ -370,7 +379,7 @@ export const marchingFishes = (from: At, n = 4) => {
     const x0 = at(from[0] - i * 1.4)
     const y = at(11.4 - (i % 2) * 1.1)
     const a = at(0.44 + i * 0.015)
-    out += fly(art('fish', 1.1), [x0, y], [HIT_X + 1, y], a, at(a + 0.16))
+    out += fly(art(['fish', 'fish_red', 'fish_yellow', 'fish_green'][i % 4]!, 1.1), [x0, y], [HIT_X + 1, y], a, at(a + 0.16))
   }
   return out + impact('#38BDF8', HIT_X + 1, 10.5, 1.1) + impact('#BAE6FD', HIT_X + 2, 8.5, 0.8)
 }
