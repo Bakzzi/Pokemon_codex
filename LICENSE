@@ -23,7 +23,7 @@ SOFTWARE.
 ---
 
 This license covers the source code only. Digimon characters, names and
-artwork (art/, sprites/, hooks/img/) are the property of Bandai Namco and
+artwork (art/, sprites/, hooks/img/, docs/) are the property of Bandai Namco and
 Toei Animation. They are not covered by this license and are included for
 non-commercial fan use only. This project is not affiliated with or endorsed
 by Bandai Namco or Toei Animation.
