@@ -11,9 +11,10 @@ import { mechanic } from './mechanic.ts'
 import { healer } from './healer.ts'
 import { priest } from './priest.ts'
 import { necromancer } from './necromancer.ts'
+import { courage } from './courage.ts'
 import type { Job } from './types.ts'
 
-export const JOBS: readonly Job[] = [adventurer, knight, warrior, warlock, spellblade, druid, hunter, gunner, mechanic, healer, priest, necromancer]
+export const JOBS: readonly Job[] = [courage, adventurer, knight, warrior, warlock, spellblade, druid, hunter, gunner, mechanic, healer, priest, necromancer]
 
 export const jobOf = (key: string | undefined): Job => JOBS.find(j => j.key === key) ?? adventurer
 
