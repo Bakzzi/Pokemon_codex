@@ -35,7 +35,7 @@ figure.wide img {{ max-width:none; width:2600px; }}
   </header>
   <section>
     <h2>전투 <small>Lv.1부터 100까지, 용기 계열. 옆으로 스크롤해 보세요</small></h2>
-    <figure class="wide"><img src="{uri('preview/out/courage-run.png')}" alt="레벨별 전투 장면: 쿠가몬부터 아포카리몬, 오메가몬까지"></figure>
+    <figure class="wide"><img src="{uri('preview/out/courage-run.png')}" alt="레벨별 전투 장면: 워매몬부터 아포카리몬, 오메가몬까지"></figure>
   </section>
   <section>
     <h2>공격 순간 <small>Lv.10 · 40 · 60 · 80 · 90. 기술 효과도 1칸당 4점 도트로 구운 그림입니다. 정지 화면이라 투사체는 도착 지점에, 데미지 숫자도 같이 찍혀 있습니다</small></h2>
