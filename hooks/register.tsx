@@ -56,21 +56,21 @@ const pet = atom({ plugin: 'run-buddy', key: 'pet' } as const, '')
 const chestFound = atom({ plugin: 'run-buddy', key: 'chestFound' } as const, false)
 // 캐릭터에 입힌 직업: 턴의 시작과 끝에만 바꾼다 (자정에 달이 바뀌어도 싸우는 도중 그림이 바뀌지 않게)
 const shownJob = atom({ plugin: 'run-buddy', key: 'shownJob' } as const, '')
-// 히든 진화: 용기(워그레이몬)·우정(메탈가루몬) 시즌이 둘 다 Lv.99에 닿으면 열린다 ($.store 'maxed'에 닿은 계열을 모은다)
+// 히든 진화: 용기(워그레이몬)·우정(메탈가루몬) 시즌에서 각각 Lv.90(궁극체)에 닿으면 열린다 ($.store 'maxed'에 닿은 계열을 모은다)
 const omega = atom({ plugin: 'run-buddy', key: 'omega' } as const, false)
 const OMEGA_LINES = ['courage', 'friendship']
 const omegaReady = (maxed: readonly string[] | undefined) => OMEGA_LINES.every(k => maxed?.includes(k))
-// Lv.99에 닿은 계열을 기록하고, 둘 다 닿았으면 알린다
+// Lv.90에 닿은 계열을 기록하고, 둘 다 닿았으면 알린다
 async function noteMaxed($: any, lineKey: string | undefined, level: number) {
   const maxed = ((await $.store.get('maxed')) as string[] | undefined) ?? []
   const wasReady = omegaReady(maxed)
-  if (level >= 99 && lineKey && OMEGA_LINES.includes(lineKey) && !maxed.includes(lineKey)) {
+  if (level >= 90 && lineKey && OMEGA_LINES.includes(lineKey) && !maxed.includes(lineKey)) {
     maxed.push(lineKey)
     await $.store.set('maxed', maxed)
   }
   const ready = omegaReady(maxed)
   if ((await read($, omega)) !== ready) await update($, omega, () => ready)
-  if (ready && !wasReady) await $.ui.toast('🌟 워그레이몬과 메탈가루몬이 모두 Lv.99에 닿았어요! 이제 용기·우정 시즌의 Lv.100에는 오메가몬으로 조그레스 진화!')
+  if (ready && !wasReady) await $.ui.toast('🌟 워그레이몬과 메탈가루몬이 모두 깨어났어요! 이제 용기·우정 시즌의 Lv.100에는 오메가몬으로 조그레스 진화!')
 }
 // 그릴 단계: 히든 진화가 열렸고 Lv.100이면 11(오메가몬)
 const drawTier = (tier: number, lineKey: string, ready: boolean) => (ready && tier >= 10 && OMEGA_LINES.includes(lineKey) ? 11 : tier)
