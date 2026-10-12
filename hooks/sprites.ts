@@ -232,12 +232,13 @@ const motion = (variant: BigVariant) =>
 // 등장 동작이 되풀이되지 않게, 등장이 끝난 뒤에는 false로 그린다.
 // t: 장비 단계 (0~10). 머리 위로 올라가는 장비만큼(job.bigHeadroom) 위에 자리를 더 둔다.
 // side: Claude 뒤(오른쪽 발치)에 둘 것 — 펫, 보물상자, 상자에서 튀어나오는 펫 (pets.ts 그림을 12배로). 있으면 54px 넓어진다
-export const bigSvg = (variant: BigVariant, line1: string, line2: string, hp: Hp, intro: boolean, t: number, job: Job, side = '') => {
+// foe: 오류 알림에서 오른쪽에서 달려들어 내 디지몬을 치는 상대 그림(monsters.ts foeBig, 1px 단위). 있으면 120px 넓어진다
+export const bigSvg = (variant: BigVariant, line1: string, line2: string, hp: Hp, intro: boolean, t: number, job: Job, side = '', foe = '') => {
   const plate = plateHeight(hp, LARGE_PLATE)
   // 이름표가 없을 때도 통통 뛰기(8px)와 어지러운 별이 위로 잘리지 않게 자리를 둔다
   const shift = (plate ? plate + 2 : 8) + job.bigHeadroom(t)
   const height = 160 + shift
-  const width = side ? 514 : 460
+  const width = (side ? 514 : 460) + (foe ? 120 : 0)
   const mid = plate / 2
   return {
     height,
@@ -267,6 +268,17 @@ export const bigSvg = (variant: BigVariant, line1: string, line2: string, hp: Hp
       (variant === 'done' ? (intro ? confetti : '') + plus(300, 26, AMBER, '0.9s') + plus(444, 44, AMBER, '1.5s') + plus(440, 108, AMBER, '2.1s') : '') +
       (variant === 'waiting' ? exclaim : '') +
       (variant === 'error' ? dizzy : '') +
+      // 상대가 오른쪽에서 달려들어 한 대 치고 물러난다 (2초마다). 맞는 순간 내 디지몬 몸에 불꽃이 튄다
+      (foe
+        ? `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 0;-80 0;-80 0;0 0;0 0" keyTimes="0;0.15;0.3;0.45;0.6;1" dur="2s" begin="${intro ? '0.9s' : '0s'}" repeatCount="indefinite"/>` +
+          `<g transform="translate(${width - 60} 0)">${foe}</g></g>` +
+          '<g opacity="0">' +
+          `<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.3;0.31;0.42;0.46;1" dur="2s" begin="${intro ? '0.9s' : '0s'}" repeatCount="indefinite"/>` +
+          `<g transform="translate(${width - 60 - 80 - 45} 70)">` +
+          [0, 45, 90, 135].map(a => `<polygon points="-22,0 -3,-3 0,-22 3,-3 22,0 3,3 0,22 -3,3" fill="${a % 90 ? RED : '#FDE68A'}" transform="rotate(${a})"/>`).join('') +
+          `<circle cx="0" cy="0" r="6" fill="${WHITE}"/>` +
+          '</g></g>'
+        : '') +
       '</g></svg>',
   }
 }

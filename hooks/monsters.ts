@@ -1,17 +1,17 @@
 // 레벨마다 싸우는 상대: 디지몬 어드벤처의 빌런들 (hooks/img/monsters.ts의 디지몬 스토리 전투 스프라이트)
 // 전투 장면은 44 × 15칸이고, 상대는 오른쪽(x 22~41)에 서서 왼쪽의 내 디지몬을 바라본다. 땅은 y = 13.
-// 단계(tier) = 레벨 ÷ 10: 0 워매몬 … 9 피에몬, 10(레벨 100)은 최종 보스 아포카리몬
+// 단계(tier) = 레벨 ÷ 10: 0 워매몬 … 9 피에몬, 10(레벨 100)은 최종 보스 아포카리몬. 애니 등장 순서(우가몬 → 데블몬 → 에테몬 → 피코데블몬 → 묘티스몬)를 세기 순으로 조금 바꿨다
 import { MONSTERS } from './img/monsters.ts'
 
-export const MONSTER_NAMES = ['워매몬', '가지몬', '데블몬', '에테몬', '묘티스몬', '베놈묘티스몬', '메탈시드라몬', '피노키몬', '파워드라몬', '피에몬', '아포카리몬']
+export const MONSTER_NAMES = ['워매몬', '피코데블몬', '우가몬', '데블몬', '에테몬', '묘티스몬', '메탈시드라몬', '피노키몬', '파워드라몬', '피에몬', '아포카리몬']
 // 그림 키, 키(칸), 뒤집기(원본이 오른쪽을 보면 true: 왼쪽의 내 디지몬을 보게 뒤집는다). 너비는 원본 비율대로
 const FOES: readonly (readonly [string, number, boolean])[] = [
   ['numemon', 8, true],
-  ['gazimon', 9, true],
+  ['picodevimon', 7.5, false],
+  ['orgemon', 11.5, false],
   ['devimon', 12.5, false],
   ['etemon', 11, true],
   ['vamdemon', 13, true],
-  ['venomvamdemon', 13.5, false],
   ['metalseadramon', 13.5, true],
   ['pinochimon', 11.5, true],
   ['mugendramon', 13.5, true],
@@ -84,4 +84,15 @@ export const monster = (t: number, hp: number, damage: number) => {
     `<text x="38.5" y="${y + 2.6}" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="2.8" font-weight="900" fill="#EF4444" stroke="${WHITE}" stroke-width="0.5" paint-order="stroke">-${damage}</text>` +
     '</g>'
   return hit + bar + pop
+}
+
+// 큰 알림(오류)에서 내 디지몬을 치는 상대: 1px 단위, 발이 (x, 120)에 닿고 왼쪽을 본다. h: 키(px)
+export const foeBig = (t: number, x: number, h = 110) => {
+  const tier = Math.max(0, Math.min(10, t))
+  const [key, , flip] = FOES[tier]!
+  const img = MONSTERS[key]!
+  const w = at((h * img.w) / img.h)
+  const left = at(x - w / 2)
+  const image = `<image href="${img.href}" x="${left}" y="${120 - h}" width="${w}" height="${h}" preserveAspectRatio="none" style="image-rendering:pixelated"/>`
+  return flip ? `<g transform="translate(${at(2 * left + w)} 0) scale(-1 1)">${image}</g>` : image
 }

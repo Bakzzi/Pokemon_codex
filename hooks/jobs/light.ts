@@ -8,7 +8,7 @@ export const light = makeLine({
   key: 'light',
   name: '빛',
   icon: '✨',
-  gear: ["", "플롯몬으로 진화", "퍼피 하울링", "플롯몬 단련", "가트몬으로 진화", "냥냥펀치", "엔젤우몬으로 초진화", "성스러운 화살", "헤븐즈 참", "오파니몬으로 궁극진화", "에덴즈 재블린·무지개 후광"],
+  gear: ["", "플롯몬으로 진화", "퍼피 하울링", "플롯몬 단련", "가트몬으로 진화", "냥냥펀치", "엔젤우몬으로 초진화", "천국의 화살", "천국의 미소", "오파니몬으로 궁극진화", "낙원의 창·무지개 후광"],
   stages: [
   sprite('뉴몬', LIGHT.nyaromon!, 5.5, { flip: true, mouth: [0.85, 0.5], fx: (t, from) => fx.bubble(from) }),
   sprite('플롯몬', LIGHT.plotmon!, 8, { flip: true, mouth: [0.62, 0.42], fx: (t, from) => fx.soundWave(from) }),

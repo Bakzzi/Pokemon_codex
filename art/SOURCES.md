@@ -40,14 +40,12 @@
 | monsters/apocalymon | ApocalymonDMO.png |
 | monsters/devimon | Devimon_new_century.png |
 | monsters/etemon | 디지몬 서바이브 |
-| monsters/gazimon | 디지몬 서바이브 |
 | monsters/metalseadramon | 디지몬 서바이브 |
 | monsters/mugendramon | 디지몬 서바이브 |
 | monsters/numemon | 디지몬 서바이브 |
 | monsters/piemon | 디지몬 서바이브 |
 | monsters/pinochimon | 디지몬 서바이브 |
 | monsters/vamdemon | 디지몬 서바이브 |
-| monsters/venomvamdemon | Venomvamdemon_new_century.png |
 | reliability/gomamon | 디지몬 서바이브 |
 | reliability/ikkakumon | 디지몬 서바이브 |
 | reliability/plesiomon | 디지몬 서바이브 |
@@ -58,3 +56,5 @@
 | sincerity/rosemon | 디지몬 서바이브 |
 | sincerity/tanemon | Tanemon_new_century.png |
 | sincerity/togemon | 디지몬 서바이브 |
+| monsters/orgemon | Orgemon_new_century.png |
+| monsters/picodevimon | Picodevimon_new_century.png |
