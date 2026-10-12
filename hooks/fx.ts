@@ -9,7 +9,7 @@ import { FX } from './img/fx.ts'
 type At = readonly [number, number]
 const at = (v: number) => Math.round(v * 100) / 100
 const HIT_X = 25.7
-const BODY_X = 29.5
+export const BODY_X = 29.5
 
 // ── 색 묶음 ────────────────────────────────────────────────────────
 export const TONE = {
