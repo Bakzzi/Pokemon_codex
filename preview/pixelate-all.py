@@ -21,8 +21,8 @@ for line in ['courage', 'friendship', 'love', 'sincerity', 'knowledge', 'reliabi
 mon = open('hooks/monsters.ts', encoding='utf-8').read()
 for k, h in re.findall(r"\['(\w+)', ([\d.]+), (?:true|false)\]", mon):
     heights[f'monsters/{k}'] = float(h)
-for m in re.finditer(r"'(\w+)': \('(\w+)','[^']+',([\d.]+),", gen.split('OMEGA = ')[1].split('\n')[0] if 'OMEGA = ' in gen else ''):
-    heights[f'{m.group(1)}/{m.group(2)}'] = float(m.group(3))
+m = re.search(r"OMEGA = \('(\w+)', '[^']+', ([\d.]+),", gen)
+if m: heights[f'omega/{m.group(1)}'] = float(m.group(2))
 for key, cells in sorted(heights.items()):
     src = os.path.join(raw, key + '.png')
     if not os.path.exists(src): continue

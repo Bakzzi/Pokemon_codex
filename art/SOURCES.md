@@ -9,12 +9,10 @@
 | courage/greymon | 디지몬 서바이브 |
 | courage/koromon | 디지몬 서바이브 |
 | courage/metalgreymon | 디지몬 서바이브 |
-| courage/omegamon | 디지몬 서바이브 |
 | courage/wargreymon | 디지몬 서바이브 |
 | friendship/gabumon | 디지몬 서바이브 |
 | friendship/garurumon | 디지몬 서바이브 |
 | friendship/metalgarurumon | 디지몬 서바이브 |
-| friendship/omegamon | 디지몬 서바이브 |
 | friendship/tsunomon | Tunomon_new_century.png |
 | friendship/weregarurumon | 디지몬 서바이브 |
 | hope/angemon | 디지몬 서바이브 |
@@ -29,7 +27,6 @@
 | knowledge/tentomon | 디지몬 서바이브 |
 | light/angewomon | 디지몬 서바이브 |
 | light/nyaromon | Nyaromon_new_century.png |
-| light/ofanimon | Ofanimon.png |
 | light/plotmon | Plotmon_new_century.png |
 | light/tailmon | 디지몬 서바이브 |
 | love/birdramon | 디지몬 서바이브 |
@@ -48,7 +45,6 @@
 | monsters/vamdemon | 디지몬 서바이브 |
 | reliability/gomamon | 디지몬 서바이브 |
 | reliability/ikkakumon | 디지몬 서바이브 |
-| reliability/plesiomon | 디지몬 서바이브 |
 | reliability/pukamon | Pukamon_new_century.png |
 | reliability/zudomon | 디지몬 서바이브 |
 | sincerity/lilimon | 디지몬 서바이브 |
@@ -58,3 +54,6 @@
 | sincerity/togemon | 디지몬 서바이브 |
 | monsters/orgemon | Orgemon_new_century.png |
 | monsters/venomvamdemon | Venomvamdemon_new_century.png |
+| light/holydramon | 디지몬 서바이브 |
+| omega/omegamon | 디지몬 서바이브 |
+| reliability/vikemon | Vikemon_new_century.png |

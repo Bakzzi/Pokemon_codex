@@ -11,8 +11,8 @@ const at = (v: number) => Math.round(v * 100) / 100
 // 도트 PNG 스프라이트 (preview/pixelate-all.py가 art/*.png에서 만들고 preview/embed.py가 심는다). w·h는 원본 px
 export type Sprite = { href: string; w: number; h: number }
 
-// 장비 단계 t(레벨 ÷ 10) → 진화 단계: 0 유년기(1~9), 1 성장기(10~39), 2 성숙기(40~59), 3 완전체(60~89), 4 궁극체(90~). 11은 히든 진화
-export const stageOf = (t: number) => (t >= 9 ? 4 : t >= 6 ? 3 : t >= 4 ? 2 : t >= 1 ? 1 : 0)
+// 장비 단계 t(레벨 ÷ 10) → 진화 단계: 0 유년기(1~9), 1 성장기(10~29), 2 성숙기(30~49), 3 완전체(50~79), 4 궁극체(80~). 11은 히든 진화(조그레스체)
+export const stageOf = (t: number) => (t >= 8 ? 4 : t >= 5 ? 3 : t >= 3 ? 2 : t >= 1 ? 1 : 0)
 
 export type Stage = {
   name: string
@@ -62,7 +62,7 @@ export const figure = (s: Stage, pose: Pose, variant?: BigVariant) => {
   return `<g transform="translate(${o.x} ${o.y})"><g>${bob}${body}</g></g>`
 }
 
-// 레벨 90~: 머리 위 후광과 반짝이. 100은 무지개
+// 레벨 90~: 머리 위 후광과 반짝이. 100은 무지개 (궁극체 Lv.80 뒤의 보상)
 const glory = (s: Stage, t: number) => {
   if (t < 9) return ''
   const o = origin(s)

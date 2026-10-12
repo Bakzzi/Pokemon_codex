@@ -61,7 +61,7 @@ declare module 'claude-code' {
       // 이달에 찾았지만 아직 안 연 보물상자가 있는지, 따라다니는 펫 key(없으면 빈 글자)
       chestReady: boolean
       pet: string
-      // 히든 진화가 열렸는지 (용기·우정 계열이 각각 Lv.90에 닿음, $.store 'maxed')
+      // 히든 진화가 열렸는지 (용기·우정 계열이 각각 Lv.80에 닿음, $.store 'maxed')
       omega: boolean
       // 방금 끝난 턴이 상자를 찾았는지 (그 끝 알림에만 상자를 띄운다)
       chestFound: boolean
