@@ -16,7 +16,7 @@ FX = {
  "agumon": "fx.fireball(from, t >= 2 ? 1.3 : 0.9)",
  "greymon": "fx.fireball(from, 1.8)",
  "metalgreymon": "fx.missiles(from, 2) + (t >= 8 ? fx.tridentArm([from[0] + 1, from[1] + 2.5]) : '')",
- "wargreymon": "fx.orb(from, '#F26B21', '#FDE047', 1.9)",
+ "wargreymon": "fx.gaiaForce(from)",
  "gabumon": "fx.beam(from, '#60A5FA', '#E0F2FE', t >= 2 ? 0.9 : 0.6)",
  "garurumon": "fx.beam(from, '#3B82F6', '#BFDBFE', 1.2)",
  "weregarurumon": "fx.strike('#93C5FD', '#E0F2FE', true) + (t >= 8 ? fx.impact('#E0F2FE', 30, 9.5, 1.4) : '')",
@@ -49,7 +49,7 @@ FX = {
 MELEE = ['tailmon', 'togemon', 'weregarurumon', 'zudomon']
 LINES = [
  ('courage','용기','🔥','fire',False,
-  [('koromon','코로몬',5.5,{'flip':False,'mouth':(0.85,0.5)}),('agumon','아구몬',9.5,{'flip':False}),('greymon','그레이몬',13,{'flip':False}),('metalgreymon','메탈그레이몬',14,{'flip':False,'mouth':(0.72,0.5)}),('wargreymon','워그레이몬',13,{'flip':False,'mouth':(0.9,0.45)})],
+  [('koromon','코로몬',5.5,{'flip':False,'mouth':(0.85,0.5)}),('agumon','아구몬',9.5,{'flip':False}),('greymon','그레이몬',13,{'flip':False}),('metalgreymon','메탈그레이몬',14,{'flip':False,'mouth':(0.72,0.5)}),('wargreymon','워그레이몬',13,{'flip':False,'mouth':(0.55,0.03)})],
   ['','아구몬으로 진화','페퍼 브레스','용기의 문장','그레이몬으로 진화','메가 플레임','메탈그레이몬으로 초진화','기가 디스트로이어','트라이던트 암','워그레이몬으로 궁극진화','가이아 포스·무지개 후광']),
  ('friendship','우정','🐺','ice',False,
   [('tsunomon','원뿔몬',5.5,{'flip':False,'mouth':(0.85,0.5)}),('gabumon','파피몬',9.5,{'flip':False}),('garurumon','가루몬',12,{'flip':False}),('weregarurumon','워가루몬',13,{'flip':False}),('metalgarurumon','메탈가루몬',14,{'flip':False})],

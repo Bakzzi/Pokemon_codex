@@ -195,6 +195,31 @@ export const orb = (from: At, color: string, light: string, size = 1.6) => {
   )
 }
 
+// 가이아 포스: 머리 위(from)에서 에너지구가 커지며 모였다가(0.3 → 0.46) 상대에게 포물선으로 날아간다 (0.46 → 0.62)
+export const gaiaForce = (from: At, color = FIRE, light = FIRE_L, size = 1.7) => {
+  const [x0, y0] = from
+  const art =
+    defs(color, light) +
+    glow(0, 0, 2.4, color, light, 0.9) +
+    `<circle cx="0" cy="0" r="1.25" fill="${color}"/><circle cx="-0.25" cy="-0.25" r="0.85" fill="${light}"/><circle cx="-0.45" cy="-0.45" r="0.38" fill="${WHITE}"/>` +
+    `<ellipse cx="0" cy="0" rx="1.9" ry="0.45" fill="none" stroke="${light}" stroke-width="0.14" opacity="0.8" transform="rotate(-25)"><animateTransform attributeName="transform" type="rotate" values="-25;335" dur="1s" repeatCount="indefinite"/></ellipse>`
+  return (
+    // 모으기: 머리 위에서 작게 시작해 커진다
+    `<g opacity="0" ${SMOOTH}>` +
+    `<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.3;0.3;0.46;0.46;1" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>` +
+    `<g transform="translate(${x0} ${y0})"><g transform="scale(${size})"><animateTransform attributeName="transform" type="scale" values="0.2;0.2;${size};${size}" keyTimes="0;0.3;0.46;1" dur="${ATK}" repeatCount="indefinite"/>${art}</g></g>` +
+    '</g>' +
+    // 던지기: 머리 위에서 살짝 더 올라갔다가 상대에게 떨어진다
+    `<g opacity="0" ${SMOOTH}>` +
+    `<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.46;0.46;0.62;0.62;1" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>` +
+    `<animateTransform attributeName="transform" type="translate" values="${x0} ${y0};${x0} ${y0};${at((x0 + BODY_X) / 2)} ${at(y0 - 0.6)};${BODY_X} 8;${BODY_X} 8" keyTimes="0;0.46;0.54;0.62;1" dur="${ATK}" repeatCount="indefinite"/>` +
+    `<g transform="scale(${size})">${art}</g>` +
+    '</g>' +
+    impact(color, BODY_X, 8, size * 1.3, light) +
+    impact(light, BODY_X - 2.2, 6, size * 0.6)
+  )
+}
+
 // 빔 (블루 블래스터·폭스 파이어·호른 버스터·메가 블래스터·헤븐즈 너클·소로 블루): 입에서 상대까지 쭉 뻗는다. thick: 굵기(칸)
 export const beam = (from: At, color: string, light: string, thick = 0.8) => {
   const [x0, y0] = from
