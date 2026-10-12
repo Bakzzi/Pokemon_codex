@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "디지몬이 입력창 위에서 어드벤처 빌런과 싸우며 주간 사용량만큼 레벨업하고 진화한다. 끝나면 확 커지며 확인하라고 알린다",
   "author": {
-    "name": "sdk8192"
+    "name": "momozzing"
   },
   "types": "./types/index.d.ts"
 }

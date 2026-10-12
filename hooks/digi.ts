@@ -1,6 +1,6 @@
 // 디지몬 계열이 같이 쓰는 그림 틀: 도트 스프라이트(hooks/img/*.ts) 놓기, 진화 단계, 움직임, 기술 강화, 계열 → Job.
 // 각 계열 파일(jobs/*.ts)은 진화 단계 5개(유년기·성장기·성숙기·완전체·궁극체)와 히든 진화를 적고 makeLine으로 Job을 만든다.
-// 격자는 발바닥이 y = 11칸(원본 모드의 발 위치)에 닿고 x ≈ 14.5칸을 중심으로 놓인다. 작은 그림 칸: x 5~23.5, y -3~11.5
+// 격자는 발바닥이 y = 11칸에 닿고 x ≈ 14.5칸을 중심으로 놓인다. 작은 그림 칸: x 5~23.5, y -3~11.5
 import { ATK } from './atk.ts'
 import { STAND_STEP, STEP } from './pixel.ts'
 import type { BigVariant, Pose } from './pixel.ts'
