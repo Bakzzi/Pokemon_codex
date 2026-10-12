@@ -1,2 +1,3 @@
 preview/out/
 __pycache__/
+.claude-plugin/types/
