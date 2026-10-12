@@ -19,7 +19,7 @@ for (const t of tiers) {
 }
 for (const t of tiers.filter(t => [0, 1, 4, 6, 9, 10].includes(t))) {
   for (const v of ['done', 'waiting', 'error'] as const) {
-    writeFileSync(join(out, `big-${v}-${t}.svg`), v === 'error' ? bigSvg(v, `${foeSkill(Math.min(10, t))}!`, '문제가 생겼어요', hp, false, t, job, '', (dx: number) => foeBig(Math.min(10, t), dx)).source : bigSvg(v, '다 했어요!', '결과 확인해 주세요', hp, false, t, job).source)
+    writeFileSync(join(out, `big-${v}-${t}.svg`), v === 'error' ? bigSvg(v, `${foeSkill(Math.min(10, t))}!`, '문제가 생겼어요', hp, false, t, job, (dx: number) => foeBig(Math.min(10, t), dx)).source : bigSvg(v, '다 했어요!', '결과 확인해 주세요', hp, false, t, job).source)
   }
 }
 console.log(`${key}: wrote ${out}`)

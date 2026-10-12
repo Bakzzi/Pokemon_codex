@@ -1,9 +1,10 @@
-// 레벨마다 싸우는 상대: 디지몬 어드벤처의 빌런들 (hooks/img/monsters.ts의 디지몬 스토리 전투 스프라이트)
+// 레벨마다 싸우는 상대: 디지몬 어드벤처의 빌런들 (hooks/img/monsters.ts의 도트 그림, 원본은 art/monsters)
 // 전투 장면은 44 × 15칸이고, 상대는 오른쪽(x 22~41)에 서서 왼쪽의 내 디지몬을 바라본다. 땅은 y = 13.
 // 단계(tier) = 레벨 ÷ 10: 0 워매몬 … 9 피에몬, 10(레벨 100)은 최종 보스 아포카리몬. 애니 등장 순서 그대로
 import { MONSTERS } from './img/monsters.ts'
 import { ATK, FOE_BEGIN, FOE_DUR } from './atk.ts'
 import * as fx from './fx.ts'
+import { pixels } from './digi.ts'
 
 export { ATK } from './atk.ts'
 
@@ -28,7 +29,6 @@ const FOES: readonly Foe[] = [
 export const foeSkill = (t: number) => FOES[Math.max(0, Math.min(10, t))]!.skill
 const CENTER = 31.5
 const GROUND = 13
-
 
 const INK = '#1F1410'
 const WHITE = '#FFFFFF'
@@ -57,7 +57,7 @@ const draw = (tier: number) => {
   return (
     `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -0.3;0 0" dur="${dur}" repeatCount="indefinite"/>` +
     (b.flip ? `<g transform="translate(${at(2 * b.x + b.w)} 0) scale(-1 1)">` : '') +
-    `<image href="${b.img.href}" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" preserveAspectRatio="none" style="image-rendering:pixelated"/>` +
+    pixels(b.img, b.x, b.y, b.w, b.h) +
     (b.flip ? '</g>' : '') +
     '</g>'
   )
@@ -103,7 +103,6 @@ export const heroHurt = () =>
   `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;-1 0;0.6 0;0 0;0 0" keyTimes="0;0.3;0.325;0.35;0.38;1" dur="${FOE_DUR}" begin="${FOE_BEGIN}" repeatCount="indefinite" additive="sum"/>` +
   `<animate attributeName="opacity" values="1;1;0.35;1;0.35;1;1" keyTimes="0;0.3;0.32;0.34;0.36;0.38;1" dur="${FOE_DUR}" begin="${FOE_BEGIN}" repeatCount="indefinite"/>`
 
-// 큰 알림(오류)에서 내 디지몬을 치는 상대: 1px 단위, 발이 (x, 120)에 닿고 왼쪽을 본다. h: 키(px)
 // 큰 알림(오류): 상대 그림(1px 단위, 발이 (0, 120), 왼쪽을 본다)과 그 기술. heroDx: 상대 가운데에서 내 디지몬 몸 가운데까지의 px(음수).
 // 기술은 영웅용 부품(오른쪽의 상대를 향한다)을 좌우로 뒤집어 쓴다: 1칸 = 10px, 내 디지몬 몸(BODY_X) ↔ heroDx
 export const foeBig = (t: number, heroDx: number, h = 110) => {
@@ -112,7 +111,7 @@ export const foeBig = (t: number, heroDx: number, h = 110) => {
   const img = MONSTERS[f.key]!
   const w = at((h * img.w) / img.h)
   const left = at(-w / 2)
-  const image = `<image href="${img.href}" x="${left}" y="${120 - h}" width="${w}" height="${h}" preserveAspectRatio="none" style="image-rendering:pixelated"/>`
+  const image = pixels(img, left, 120 - h, w, h)
   const lunge = f.melee
     ? `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;${at(heroDx + 90)} 0;${at(heroDx + 90)} 0;0 0;0 0" keyTimes="0;0.24;0.3;0.36;0.42;1" dur="${FOE_DUR}" begin="${FOE_BEGIN}" repeatCount="indefinite"/>`
     : ''

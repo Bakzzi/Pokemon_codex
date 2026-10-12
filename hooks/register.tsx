@@ -45,14 +45,14 @@ const shown = atom({ plugin: 'run-buddy', key: 'shown' } as const, { five: null,
 const xp = atom({ plugin: 'run-buddy', key: 'xp' } as const, 0)
 const shownXp = atom({ plugin: 'run-buddy', key: 'shownXp' } as const, 0)
 const seasonEnd = atom({ plugin: 'run-buddy', key: 'seasonEnd' } as const, 0)
-// 이달의 직업 (시즌 기록의 job). 그림과 장비 이름이 이 직업을 따른다
+// 이달의 계열(문장) (시즌 기록의 job). 그림과 진화·기술 이름이 이 계열을 따른다
 const job = atom({ plugin: 'run-buddy', key: 'job' } as const, '')
 // 이달의 디지바이스: 찾고 아직 안 썼는지, 써서 임시 진화 중인지 (모든 창이 $.store 'digivice'에서 같은 값을 읽는다)
 const digiReady = atom({ plugin: 'run-buddy', key: 'digiReady' } as const, false)
 const digiOn = atom({ plugin: 'run-buddy', key: 'digiOn' } as const, false)
 // 방금 끝난 턴이 디지바이스를 찾았는지 (그 끝 알림에만 띄운다. 예전에 찾았거나 다른 창에서 찾은 것은 쉬는 띠에)
 const digiFound = atom({ plugin: 'run-buddy', key: 'digiFound' } as const, false)
-// 캐릭터에 입힌 직업: 턴의 시작과 끝에만 바꾼다 (자정에 달이 바뀌어도 싸우는 도중 그림이 바뀌지 않게)
+// 캐릭터에 입힌 계열: 턴의 시작과 끝에만 바꾼다 (자정에 달이 바뀌어도 싸우는 도중 그림이 바뀌지 않게)
 const shownJob = atom({ plugin: 'run-buddy', key: 'shownJob' } as const, '')
 // 히든 진화: 용기(워그레이몬)·우정(메탈가루몬) 시즌에서 각각 Lv.80(궁극체)에 닿으면 열린다 ($.store 'maxed'에 닿은 계열을 모은다). 열린 뒤에는 어느 시즌이든 Lv.100에 오메가몬
 const omega = atom({ plugin: 'run-buddy', key: 'omega' } as const, false)
@@ -71,7 +71,7 @@ async function noteMaxed($: any, lineKey: string | undefined, level: number) {
   if (ready && !wasReady) await $.ui.toast('🌟 워그레이몬과 메탈가루몬이 모두 깨어났어요! 이제 어느 시즌이든 Lv.100에는 오메가몬으로 조그레스 진화!')
 }
 // 그릴 단계: 히든 진화가 열렸고 Lv.100이면 11(오메가몬). 디지바이스 임시 진화 중이면 한 단계 위
-const drawTier = (tier: number, _lineKey: string, ready: boolean, boosted = false) => (ready && tier >= 10 ? 11 : boosted ? boostTier(tier) : tier)
+const drawTier = (tier: number, ready: boolean, boosted = false) => (ready && tier >= 10 ? 11 : boosted ? boostTier(tier) : tier)
 // 사람에게 묻는 중인 도구 호출들 (여럿이 같이 돌 때 하나가 끝났다고 기다림을 풀지 않게). 띠는 읽지 않는다
 const pendingAsks = atom({ plugin: 'run-buddy', key: 'pendingAsks' } as const, [] as string[])
 
@@ -80,7 +80,7 @@ const pendingAsks = atom({ plugin: 'run-buddy', key: 'pendingAsks' } as const, [
 // 한도는 계정 전체의 값이라, 모든 세션이 $.store의 'season' 하나를 같이 쓴다.
 // 주(週)마다 본 가장 큰 사용률만 남기므로 여러 세션이 같은 사용량을 두 번 세지 않는다.
 
-// 주간 한도 값을 받아 시즌 기록을 고치고, 장비가 바뀌면 알린다
+// 주간 한도 값을 받아 시즌 기록을 고치고, 진화·기술을 얻으면 알린다
 async function gainXp($: any, list: readonly RateLimit[]) {
   const t = await $.clock.now()
   const month = monthOf(t)
@@ -90,7 +90,7 @@ async function gainXp($: any, list: readonly RateLimit[]) {
   const expired = saved !== undefined && !old && saved.month !== month.key
   // 다시 차는 시각이 지난 주간 값은 끝난 창의 것이라 세지 않는다
   const week = list.find(w => w.kind === 'seven_day' && w.resetsAt !== undefined && Date.parse(w.resetsAt) > t)
-  // 새 시즌이면 이번 돌림에 아직 안 나온 직업 가운데 하나를 고른다 (지난달 직업은 빼고)
+  // 새 시즌이면 이번 돌림에 아직 안 나온 계열 가운데 하나를 고른다 (지난달 계열은 빼고)
   const fresh = !saved || old || expired
   const picked = fresh ? nextJobs(month.key, expired ? saved?.jobsUsed : undefined, expired ? saved?.job : undefined) : null
   if (fresh && !week) {
@@ -105,7 +105,7 @@ async function gainXp($: any, list: readonly RateLimit[]) {
     saved && !fresh
       ? saved
       : { month: month.key, start: month.start, weeks: {}, carry: 0, tier: old ? saved.tier : 0, ...picked }
-  // 직업이 생기기 전(이 기능 전)에 만든 이번 달 기록이면 지금 고른다
+  // 계열이 없는 이번 달 기록(예전 판에서 만든 것)이면 지금 고른다
   const newJob = fresh || !c.job
   if (!c.job) c = { ...c, ...nextJobs(month.key, undefined, undefined) }
   const myJob = jobOf(c.job)
@@ -331,16 +331,16 @@ const RED = '#E5484D'
 
 // 싸우는 동안 12초마다 바뀌는 한마디
 const QUIPS = [
-  '칼을 휘두르는 중',
-  '빈틈 노리는 중',
   '필살기 모으는 중',
-  '콤보 이어가는 중',
-  '크리티컬 노리는 중',
-  '방패로 막는 중',
+  '빈틈 노리는 중',
+  '진화 에너지 모으는 중',
+  '파트너와 호흡 맞추는 중',
+  '디지바이스가 빛나는 중',
+  '공격 피하는 중',
   '기합 넣는 중',
-  '회피하는 중',
+  '연속 기술 이어가는 중',
 ]
-const TIRED_QUIPS = ['헉헉… HP가 얼마 안 남았어요', '포션이 필요해요', '후퇴할까 고민 중', '마지막 힘을 짜내는 중']
+const TIRED_QUIPS = ['헉헉… HP가 얼마 안 남았어요', '고기 먹고 싶어요…', '퇴화할 것 같아요', '마지막 힘을 짜내는 중']
 
 const activityOf = (tool: string) => {
   if (tool === 'Bash' || tool === 'PowerShell') return '명령 실행 중'
@@ -625,9 +625,9 @@ export const register: Register = on => {
       const x = await read($, xp)
       const r = rankOf(x)
       const me = jobOf(await read($, job))
-      const rt = drawTier(r.tier, me.key, await read($, omega), boosted)
+      const rt = drawTier(r.tier, await read($, omega), boosted)
       const days = Math.max(0, Math.ceil(((await read($, seasonEnd)) - nowMs) / 86_400_000))
-      // 주간 한도 정보가 있을 때만 경험치가 쌓이니 그때만 레벨 줄을 보여 준다. 안 연 상자가 있으면 그 줄에서 연다
+      // 주간 한도 정보가 있을 때만 경험치가 쌓이니 그때만 레벨 줄을 보여 준다. 안 쓴 디지바이스가 있으면 그 줄에서 쓴다
       const lv = lim.week
         ? {
             label: `Lv.${r.level} ${formName(me, rt)} ⚔ ${r.foe}`,
@@ -711,7 +711,7 @@ export const register: Register = on => {
                           <Text bold>{lv.label}</Text>
                         </Box>
                         <Text dimColor>{lv.detail}  </Text>
-                        {digi ? [<Button key="run-buddy-digi" label="진화" onPress={evolve} />] : [<Text bold>{lv.value}</Text>]}
+                        {digi ? [<Button key="run-buddy-digi" label="진화" onPress={evolve} />] : [<Text key="run-buddy-xp" bold>{lv.value}</Text>]}
                       </Box>
                       <Svg source={xpBarSvg(x / MAX_XP, r.level)} alt={`경험치 ${x}/${MAX_XP}`} />
                     </Box>,
@@ -739,9 +739,9 @@ export const register: Register = on => {
     const hp = hpOf(await read($, shown))
     const sx = await read($, shownXp)
     const rank = rankOf(sx)
-    // 레벨과 같이 턴의 시작과 끝에 입힌 직업 (모드를 다시 불러와 아직 없으면 이달의 직업)
+    // 레벨과 같이 턴의 시작과 끝에 입힌 계열 (모드를 다시 불러와 아직 없으면 이달의 계열)
     const me = jobOf((await read($, shownJob)) || (await read($, job)))
-    const dt = drawTier(rank.tier, me.key, await read($, omega), boosted)
+    const dt = drawTier(rank.tier, await read($, omega), boosted)
     const hpText = hpLine(hp)
     const hpTail = hpText ? [hpText] : []
     // 이번 턴이 찾은 디지바이스면 끝 알림에 띄우고 확인이 진화시킨다 (끝 알림일 때만 읽는다: 전투 그림이 괜히 다시 그려지지 않게)
@@ -789,7 +789,7 @@ export const register: Register = on => {
 
     const { Box, Text, Button, Svg } = $.ui.resolve(e)
 
-    // 일하는 중: 장비를 찬 Claude가 레벨에 맞는 몬스터와 싸운다 (경과 시간·하는 일은 앱의 진행 표시줄에)
+    // 일하는 중: 내 디지몬이 레벨에 맞는 상대와 싸운다 (경과 시간·하는 일은 앱의 진행 표시줄에)
     if (view === 'running') {
       const run = runSvg(hp, dt, rank.level, foeHp(sx), me)
       // JSX가 쓰는 h와 겹치지 않게 다른 이름을 쓴다
@@ -801,7 +801,7 @@ export const register: Register = on => {
             <Box flexDirection="column">
               <Text bold>{`Lv.${rank.level} ${formName(me, dt)} vs ${rank.foe}`}</Text>
               {hpTail.map(t => (
-                <Text dimColor>{t}</Text>
+                <Text key="run-buddy-hp" dimColor>{t}</Text>
               ))}
               <Text dimColor>
                 {rank.next ? `상대 HP ${rank.foeHp}% · Lv.${rank.next}에 ${me.gear[rank.tier + 1]}` : `최종 보스와 결전 중 · ${me.gear[10]}`}
@@ -828,7 +828,7 @@ export const register: Register = on => {
       const ranFor = elapsedText(await read($, lastMs))
       big =
         view === 'error'
-          ? { art: bigSvg('error', `${rank.foe}의 ${foeSkill(rank.tier)}!`, '문제가 생겼어요', hp, intro, dt, me, '', dx => foeBig(rank.tier, dx)), alt: `${rank.foe}에게 맞은 내 디지몬`, color: RED, title: `${rank.foe}의 ${foeSkill(rank.tier)}! 문제가 생겼어요`, sub: `${ranFor} 싸우다 한 대 맞음 · Lv.${rank.level} ${formName(me, dt)}` }
+          ? { art: bigSvg('error', `${rank.foe}의 ${foeSkill(rank.tier)}!`, '문제가 생겼어요', hp, intro, dt, me, dx => foeBig(rank.tier, dx)), alt: `${rank.foe}에게 맞은 내 디지몬`, color: RED, title: `${rank.foe}의 ${foeSkill(rank.tier)}! 문제가 생겼어요`, sub: `${ranFor} 싸우다 한 대 맞음 · Lv.${rank.level} ${formName(me, dt)}` }
           : withDigi
             ? { art: bigSvg('done', '디지바이스 발견!', '확인을 눌러 진화해요', hp, intro, dt, me), alt: '일을 마치고 디지바이스를 찾은 내 디지몬', color: AMBER, title: '📱 디지바이스를 찾았어요!', sub: `${ranFor} 전투 · 확인을 누르면 진화해요` }
             : { art: bigSvg('done', '다 했어요!', '결과 확인해 주세요', hp, intro, dt, me), alt: '일을 마친 내 디지몬', color: GREEN, title: '작업 끝! 확인해 주세요', sub: `${ranFor} 전투 · Lv.${rank.level} ${formName(me, dt)}` }
@@ -846,7 +846,7 @@ export const register: Register = on => {
             <Text dimColor>{big.sub}</Text>
             <Box flexDirection="row" alignItems="center" columnGap={1}>
               {hpTail.map(t => (
-                <Text dimColor>{t.replace('HP · ', 'HP ')}</Text>
+                <Text key="run-buddy-hp" dimColor>{t.replace('HP · ', 'HP ')}</Text>
               ))}
               {view === 'waiting' ? [] : [<Button key="run-buddy-ack" label="확인" onPress={ack} />]}
             </Box>

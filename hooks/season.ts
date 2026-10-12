@@ -33,14 +33,14 @@ export const levelOf = (x: number) => Math.min(100, 1 + Math.floor(x / 2))
 export const tierOf = (level: number) => (level >= 100 ? 10 : Math.floor(level / 10))
 // 단계 t가 시작되는 경험치 (레벨 10t에 닿는 값)
 const tierStart = (t: number) => (t <= 0 ? 0 : (10 * t - 1) * 2)
-// 지금 상대하는 몬스터에게 남은 체력(0~1) = 다음 장비까지 남은 경험치의 비율
+// 지금 상대에게 남은 체력(0~1) = 다음 진화·기술까지 남은 경험치의 비율
 export const foeHp = (x: number) => {
   const t = tierOf(levelOf(x))
   if (t >= 10) return 1
   const a = tierStart(t)
   return 1 - (x - a) / (tierStart(t + 1) - a)
 }
-// 레벨, 장비 단계, 상대 몬스터 이름 등 한 번에
+// 레벨, 장비 단계, 상대 이름 등 한 번에
 export const rankOf = (x: number) => {
   const level = levelOf(x)
   const tier = tierOf(level)
@@ -60,8 +60,8 @@ export const firstBase = (percentUsed: number, resetsAt: string, seasonStart: nu
   return Math.min(percentUsed, Math.max(seenBefore, Math.round(percentUsed * share)))
 }
 
-// ── 보물상자 ──────────────────────────────────────────────────────
-// 일을 잘 마칠 때마다 1% 확률로 보물상자가 나온다(한 달에 한 번까지). 상자를 열면 펫 넷 가운데 하나가 나온다.
+// ── 디지바이스 ────────────────────────────────────────────────────
+// 일을 잘 마칠 때마다 1% 확률로 디지바이스가 나온다(한 달에 한 번까지, 아직 궁극체가 아닐 때만).
 // 끝난 시각과 걸린 시간을 섞어 굴리므로 Math.random 없이도 턴마다 결과가 다르다
 export const DIGIVICE_CHANCE = 0.01
 
@@ -72,7 +72,7 @@ const mix = (s: string) => {
   h = Math.imul(h ^ (h >>> 13), 3266489909) >>> 0
   return (h ^ (h >>> 16)) >>> 0
 }
-export const digiviceRoll = (t: number, salt: number) => mix(`chest:${t}:${salt}`) / 4294967296 < DIGIVICE_CHANCE
+export const digiviceRoll = (t: number, salt: number) => mix(`digivice:${t}:${salt}`) / 4294967296 < DIGIVICE_CHANCE
 
 // ── 설치 전 사용량 어림 ────────────────────────────────────────────
 // 설치할 때 scripts/seed.mjs가 로컬 대화 기록에서 시간별 사용량(가격 비율로 환산)을 남긴다.

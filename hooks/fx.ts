@@ -4,6 +4,7 @@
 // 상대는 0.6~0.76에 맞는다 (monsters.ts). from: 기술이 나가는 자리(입·손). preview/gen-lines.py의 FX 표가 디지몬마다 고른다
 import { ATK } from './atk.ts'
 import { WHITE } from './pixel.ts'
+import { pixels } from './digi.ts'
 import { FX } from './img/fx.ts'
 
 type At = readonly [number, number]
@@ -177,7 +178,7 @@ export const art = (name: string, scale = 1) => {
   const h = at(s.h / DOTS)
   const x = a.anchor === 'left' ? 0 : at(-w / 2)
   const y = a.anchor === 'top' ? 0 : at(-h / 2)
-  const img = `<image href="${s.href}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="none" style="image-rendering:pixelated"/>`
+  const img = pixels(s, x, y, w, h)
   return scale === 1 ? img : `<g transform="scale(${scale})">${img}</g>`
 }
 // 색 → 색 묶음 이름 (impact/slash/muzzle에 쓰던 색을 묶음으로 바꾼다)

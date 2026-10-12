@@ -84,13 +84,13 @@ Claude Code 입력창 바로 위에서 내 디지몬이 디지몬 어드벤처�
 | 경로 | 내용 |
 | --- | --- |
 | `hooks/register.tsx` | 모드 본체: 상태, 경험치·시즌, 띠와 알림 그리기, 히든 진화 조건, 디지바이스 |
-| `hooks/sprites.ts` · `hooks/pixel.ts` | 원본 run-buddy의 화면 틀, HP·레벨 막대 |
+| `hooks/sprites.ts` · `hooks/pixel.ts` | 띠·알림의 화면 틀(HP 이름표, 말풍선, HP·경험치 막대)과 공용 색·칸 그리기 |
 | `hooks/digi.ts` | 디지몬 계열 공통: 도트 스프라이트 놓기, 진화 단계, 움직임, 기술 강화, 발사 위치 |
 | `hooks/fx.ts` | 기술 효과: 벡터 원화(`ARTS`)와 날아가기·충격·빔 같은 움직임 |
 | `hooks/monsters.ts` | 상대 11종의 이름·키·방향·기술, 체력 막대, 오류 알림의 공격 장면 |
 | `hooks/atk.ts` | 공격 주기 상수 |
 | `hooks/jobs/*.ts` | 계열 8개 (자동 생성, 손으로 고치지 말 것) |
-| `hooks/img/*.ts` | 도트 PNG를 base64로 심은 모듈 (자동 생성, `omega.ts`는 공용 오메가몬) |
+| `hooks/img/*.ts` | 도트 그림을 색마다 path 하나인 벡터로 심은 모듈 (자동 생성, `omega.ts`는 공용 오메가몬) |
 | `art/` | 도트로 바꾸기 전 원본 일러스트와 출처(`art/SOURCES.md`) |
 | `sprites/` | 도트로 바꾼 PNG (디지몬·상대·기술 효과) |
 | `preview/` | 그림 만들기·미리보기 도구 |
@@ -100,7 +100,8 @@ Claude Code 입력창 바로 위에서 내 디지몬이 디지몬 어드벤처�
 그림은 [위키몬](https://wikimon.net)에 올라온 디지몬 서바이브·뉴 센추리 등의 일러스트입니다. 반다이남코 저작물이므로 개인 사용 범위에서만 쓰세요.
 
 1. **디지몬·상대 그림**: `art/<묶음>/<키>.png`를 바꾼 뒤 `python3 preview/pixelate-all.py` → 화면 크기에 맞춰 1칸당 4점·32색 도트로 바꿔 `sprites/`에 씁니다.
-   이어서 `python3 preview/embed.py <묶음>`으로 `hooks/img/<묶음>.ts`에 심습니다. 화면에서는 점을 그대로 키웁니다(image-rendering: pixelated).
+   이어서 `python3 preview/embed.py <묶음>`으로 `hooks/img/<묶음>.ts`에 심습니다. 점 하나하나를 사각형(path)으로 바꿔 심습니다.
+   데스크톱 앱은 Svg 안의 `<image>`(base64 PNG)를 그리지 않으므로 그림을 PNG로 심으면 안 됩니다.
 2. **진화 단계·키·방향·발사 위치·기술·근접 여부**: `preview/gen-lines.py`의 표(`LINES`, `FX`, `MELEE`, `OMEGA`)를 고치고 실행하면 `hooks/jobs/*.ts`가 다시 만들어집니다.
    `python3 preview/mouths.py preview/out/mouths.png`로 발사 위치를 그림 위에 점으로 찍어 확인할 수 있습니다.
 3. **기술 효과 그림**: `hooks/fx.ts`의 `ARTS`를 고치고 `./preview/build-fx.sh` → 1칸당 4점 도트 PNG로 구워 `sprites/fx/`와 `hooks/img/fx.ts`에 넣습니다.
@@ -119,7 +120,7 @@ Claude Code 입력창 바로 위에서 내 디지몬이 디지몬 어드벤처�
 - 데스크톱 앱은 입력창 위 띠를 화면 분할의 **첫 번째(맨 왼쪽) 칸**에서만 그립니다(앱 제한). 다른 칸에서는 진행 표시줄의 한마디만 보입니다.
   다른 칸에서 일한 만큼의 경험치와 HP는 1분 안에 왼쪽 칸에 반영됩니다.
 - 구독 한도 정보가 없는 계정에서는 HP와 레벨을 표시하지 않습니다.
-- 그림이 base64로 코드에 들어 있어 `hooks/img/`가 약 340KB입니다.
+- 그림이 벡터로 코드에 들어 있어 `hooks/img/`가 약 900KB입니다. 그림 한 장(SVG)은 앱 한도 131,072자 안(가장 큰 것 약 67,000자)에 듭니다.
 
 ## 설치
 

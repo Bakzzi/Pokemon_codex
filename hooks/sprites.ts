@@ -1,6 +1,6 @@
-// 러닝 버디가 그리는 그림의 틀: 몬스터와 싸우는 작은 Claude, 쉬는 동안 서 있는 Claude,
-// 일이 끝나면 커지며 말풍선을 가리키는 큰 Claude, 쉬는 동안의 HP·경험치 막대.
-// Claude의 차림(장비)은 이달의 직업(jobs/*.ts)이 그린다.
+// 띠에 그리는 그림의 틀: 상대와 싸우는 작은 디지몬, 쉬는 동안 서 있는 디지몬,
+// 일이 끝나면 확 커지며 말풍선을 띄우는 큰 디지몬, 쉬는 동안의 HP·경험치 막대.
+// 디지몬 그림은 이달의 계열(jobs/*.ts)이 그린다.
 // 데스크톱 앱이 Svg를 샌드박스 프레임(isInteractive)에 그릴 때 SMIL 애니메이션이 돌아간다
 // 캐릭터 머리 위에는 5시간·주간 한도의 남은 비율을 HP 이름표로 띄운다
 
@@ -86,36 +86,31 @@ export const xpBarSvg = (fraction: number, level: number) => {
   )
 }
 
-// ── 쉬는 동안: 지금 레벨의 차림으로 서 있는 Claude ─────────────────────────
-// 96 × 84px (띠 높이 86px 안), 5px 칸. 레벨은 옆 글자 줄에 있으니 배지 없이 Claude만 크게.
-// 발 위치는 단계와 상관없이 같게 두고, 후광(90~)까지 위에 들어가게 한다.
-// side: 디지몬 뒤(왼쪽)에 둘 것 (지금은 쓰지 않는다). 있으면 그림이 24px 넓어진다
-export const idleSvg = (t: number, job: Job, side = '') => {
-  const extra = side ? 24 : 0
-  const width = 96 + extra
+// ── 쉬는 동안: 지금 진화 단계로 서 있는 디지몬 ─────────────────────────
+// 96 × 84px (띠 높이 86px 안), 5px 칸. 레벨은 옆 글자 줄에 있으니 배지 없이 디지몬만 크게.
+// 발 위치는 단계와 상관없이 같게 둔다
+export const idleSvg = (t: number, job: Job) => {
+  const width = 96
   const height = 84
   return {
     width,
     height,
     source:
       `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" shape-rendering="crispEdges">` +
-      `<g transform="translate(${-24.5 + extra} 16) scale(5)">` +
+      '<g transform="translate(-24.5 16) scale(5)">' +
       '<ellipse cx="15" cy="11.2" rx="5" ry="0.7" fill="#000000" fill-opacity="0.12" shape-rendering="auto"/>' +
       job.small(t, 'stand') +
-      '</g>' +
-      // 발을 Claude 발(y = 11칸)에 맞춘다
-      (side ? `<g transform="translate(0 ${16 + 5 * (11 - 3.6)}) scale(5)">${side}</g>` : '') +
-      '</svg>',
+      '</g></svg>',
   }
 }
 
-// ── 작은 그림: 몬스터와 싸우는 Claude ─────────────────────────────────
-// 4px 칸 단위, 44 × 15칸(176 × 60px). Claude는 왼쪽, 몬스터는 오른쪽(x 24~38). 땅은 y = 13
+// ── 작은 그림: 상대와 싸우는 디지몬 ─────────────────────────────────
+// 4px 칸 단위, 44 × 15칸(176 × 60px). 내 디지몬은 왼쪽, 상대는 오른쪽(x 22~41). 땅은 y = 13
 
 // 단계별로 한 대 칠 때 뜨는 데미지
 const DAMAGE = [7, 15, 28, 46, 73, 120, 188, 290, 455, 999, 1500]
 
-// 근접 직업은 공격 주기마다 몬스터에게 돌진했다 돌아오고, 원거리 직업은 제자리에서 살짝 반동한다
+// 근접 기술은 공격 주기마다 상대에게 돌진했다 돌아오고, 원거리 기술은 제자리에서 살짝 반동한다
 const approach = (t: number, job: Job) =>
   (typeof job.melee === 'function' ? job.melee(t) : job.melee)
       ? `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;3.5 0;3.5 0;0 0;0 0" keyTimes="0;0.5;0.6;0.7;0.85;1" dur="${ATK}" repeatCount="indefinite"/>`
@@ -128,9 +123,8 @@ const levelBadge = (level: number, x: number, w: number, h: number, font: number
   `<rect x="${x}" y="1" width="${w}" height="${h}" rx="4" fill="${GOLD}" stroke="${INK}" stroke-width="1.5"/>` +
   `<text x="${x + w / 2}" y="${1 + h / 2}" dominant-baseline="central" text-anchor="middle" font-family="${FONT}" font-size="${font}" font-weight="800" fill="${INK}">Lv.${level}</text>`
 
-// hp: 머리 위 HP 이름표(한도), t: 장비 단계, level: 레벨, foe: 몬스터에게 남은 체력(0~1), job: 이달의 직업,
-// pet: 디지몬 뒤에 둘 것 (지금은 쓰지 않는다)
-export const runSvg = (hp: Hp, t: number, level: number, foe: number, job: Job, pet = '') => {
+// hp: 머리 위 HP 이름표(한도), t: 장비 단계, level: 레벨, foe: 상대에게 남은 체력(0~1), job: 이달의 계열
+export const runSvg = (hp: Hp, t: number, level: number, foe: number, job: Job) => {
   const plate = plateHeight(hp, SMALL_PLATE)
   const top = Math.max(plate, 22) + 2
   const shift = top + job.smallHeadroom(t)
@@ -145,15 +139,14 @@ export const runSvg = (hp: Hp, t: number, level: number, foe: number, job: Job, 
       `<g transform="translate(0 ${shift}) scale(4)">` +
       ground +
       monster(t, foe, DAMAGE[Math.min(10, t)]!) +
-      `<g>${approach(t, job)}<g transform="translate(${pet ? -2 : -5} 2)">${job.small(t, 'run')}</g></g>` +
-      (pet ? `<g transform="translate(0.1 9.4)">${pet}</g>` : '') +
+      `<g>${approach(t, job)}<g transform="translate(-5 2)">${job.small(t, 'run')}</g></g>` +
       job.hit(t) +
       '</g></svg>',
   }
 }
 
-// ── 큰 그림: 확 커지면서 말풍선을 손가락으로 가리키는 Claude ──────────────
-// 460 × 160px (+ 머리 위 HP 이름표). done은 축하, waiting은 손 들고 기다림, error는 어질어질
+// ── 큰 그림: 확 커지면서 말풍선을 띄우는 디지몬 ──────────────
+// 460 × 160px (+ 머리 위 HP 이름표). done은 축하, waiting은 느낌표, error는 어질어질
 
 const ACCENT: Record<BigVariant, string> = { done: GREEN, waiting: AMBER, error: RED }
 
@@ -187,7 +180,7 @@ const bubble = (variant: BigVariant, line1: string, line2: string, intro: boolea
   `<text x="128" y="85" text-anchor="middle" font-family="${FONT}" font-size="16" font-weight="600" fill="${SUB}">${esc(line2)}</text>` +
   '</g></g></g>'
 
-// 기다릴 때는 머리 오른쪽 위에서 느낌표가 깜빡인다 (머리 위는 장비 자리)
+// 기다릴 때는 머리 오른쪽 위에서 느낌표가 깜빡인다
 const exclaim =
   '<g>' +
   '<animate attributeName="opacity" values="1;0.2;1" dur="0.8s" repeatCount="indefinite"/>' +
@@ -230,22 +223,21 @@ const motion = (variant: BigVariant) =>
 // intro가 true면 확 커지는 등장 동작(커지기, 말풍선·이름표 튀어나오기, 색종이)을 한 번 재생한다.
 // false면 다 나온 모습에서 통통 뛰기·콕콕 찌르기만 반복한다. 앱이 스크롤 등으로 그림을 다시 만들어도
 // 등장 동작이 되풀이되지 않게, 등장이 끝난 뒤에는 false로 그린다.
-// t: 장비 단계 (0~10). 머리 위로 올라가는 장비만큼(job.bigHeadroom) 위에 자리를 더 둔다.
-// side: 디지몬 뒤(오른쪽 발치)에 둘 것 (지금은 쓰지 않는다). 있으면 54px 넓어진다
+// t: 장비 단계 (0~11). 머리가 위로 넘치는 만큼(job.bigHeadroom) 위에 자리를 더 둔다.
 // foe: 오류 알림에서 오른쪽에 서서 기술로 내 디지몬을 치는 상대 (monsters.ts foeBig에 heroDx를 넘겨 그린다). 있으면 120px 넓어진다
-export const bigSvg = (variant: BigVariant, line1: string, line2: string, hp: Hp, intro: boolean, t: number, job: Job, side = '', foe?: (heroDx: number) => string) => {
+export const bigSvg = (variant: BigVariant, line1: string, line2: string, hp: Hp, intro: boolean, t: number, job: Job, foe?: (heroDx: number) => string) => {
   const plate = plateHeight(hp, LARGE_PLATE)
   // 이름표가 없을 때도 통통 뛰기(8px)와 어지러운 별이 위로 잘리지 않게 자리를 둔다
   const shift = (plate ? plate + 2 : 8) + job.bigHeadroom(t)
   const height = 160 + shift
-  const width = (side ? 514 : 460) + (foe ? 120 : 0)
+  const width = 460 + (foe ? 120 : 0)
   const mid = plate / 2
   return {
     height,
     width,
     source:
       `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" shape-rendering="crispEdges">` +
-      // HP 이름표는 Claude가 커진 뒤에 톡 튀어나온다
+      // HP 이름표는 디지몬이 커진 뒤에 톡 튀어나온다
       (plate
         ? `<g transform="translate(370 ${mid})"><g transform="scale(${intro ? 0 : 1})">` +
           (intro
@@ -255,7 +247,7 @@ export const bigSvg = (variant: BigVariant, line1: string, line2: string, hp: Hp
         : '') +
       `<g transform="translate(0 ${shift})">` +
       bubble(variant, line1, line2, intro) +
-      // Claude는 발밑(370, 118)을 중심으로 작게 시작해 확 커진다
+      // 디지몬은 발밑(370, 118)을 중심으로 작게 시작해 확 커진다
       '<g transform="translate(370 118)"><g>' +
       (intro
         ? '<animateTransform attributeName="transform" type="scale" values="0.2;1.18;0.94;1" keyTimes="0;0.5;0.78;1" dur="0.7s" fill="freeze"/>'
@@ -264,7 +256,6 @@ export const bigSvg = (variant: BigVariant, line1: string, line2: string, hp: Hp
       `<ellipse cx="370" cy="120" rx="54" ry="5" fill="${INK}" opacity="0.15"/>` +
       `<g>${motion(variant)}${job.big(variant, t)}</g>` +
       '</g></g></g>' +
-      (side ? `<g transform="translate(459 ${120 - 3.6 * 12}) scale(12)">${side}</g>` : '') +
       (variant === 'done' ? (intro ? confetti : '') + plus(300, 26, AMBER, '0.9s') + plus(444, 44, AMBER, '1.5s') + plus(440, 108, AMBER, '2.1s') : '') +
       (variant === 'waiting' ? exclaim : '') +
       (variant === 'error' ? dizzy : '') +

@@ -1,6 +1,6 @@
-// 디지몬 계열이 같이 쓰는 그림 틀: 도트 스프라이트(hooks/img/*.ts) 놓기, 진화 단계, 움직임, 후광, 계열 → Job.
+// 디지몬 계열이 같이 쓰는 그림 틀: 도트 스프라이트(hooks/img/*.ts) 놓기, 진화 단계, 움직임, 기술 강화, 계열 → Job.
 // 각 계열 파일(jobs/*.ts)은 진화 단계 5개(유년기·성장기·성숙기·완전체·궁극체)와 히든 진화를 적고 makeLine으로 Job을 만든다.
-// 격자는 발바닥이 y = 11칸(원본 Claude의 발 위치)에 닿고 x ≈ 14.5칸을 중심으로 놓인다. 작은 그림 칸: x 5~23.5, y -3~11.5
+// 격자는 발바닥이 y = 11칸(원본 모드의 발 위치)에 닿고 x ≈ 14.5칸을 중심으로 놓인다. 작은 그림 칸: x 5~23.5, y -3~11.5
 import { ATK } from './atk.ts'
 import { STAND_STEP, STEP } from './pixel.ts'
 import type { BigVariant, Pose } from './pixel.ts'
@@ -8,8 +8,12 @@ import type { Job } from './jobs/types.ts'
 
 const at = (v: number) => Math.round(v * 100) / 100
 
-// 도트 PNG 스프라이트 (preview/pixelate-all.py가 art/*.png에서 만들고 preview/embed.py가 심는다). w·h는 원본 px
-export type Sprite = { href: string; w: number; h: number }
+// 도트 스프라이트 (preview/pixelate-all.py가 art/*.png에서 만들고 preview/embed.py가 색마다 path 하나로 심는다).
+// w·h는 원본 px, body는 그 px 좌표의 <path>들. 데스크톱 앱은 Svg 안의 <image>를 그리지 않아 벡터로 둔다
+export type Sprite = { body: string; w: number; h: number }
+// 스프라이트를 (x, y)에 w × h 크기로 놓는다
+export const pixels = (s: Sprite, x: number, y: number, w: number, h: number) =>
+  `<g transform="translate(${x} ${y}) scale(${at(w / s.w)} ${at(h / s.h)})" shape-rendering="crispEdges">${s.body}</g>`
 
 // 장비 단계 t(레벨 ÷ 10) → 진화 단계: 0 유년기(1~9), 1 성장기(10~29), 2 성숙기(30~49), 3 완전체(50~79), 4 궁극체(80~). 11은 히든 진화(조그레스체)
 export const stageOf = (t: number) => (t >= 8 ? 4 : t >= 5 ? 3 : t >= 3 ? 2 : t >= 1 ? 1 : 0)
@@ -49,7 +53,7 @@ const FADE = '<filter id="digi-fade"><feColorMatrix type="saturate" values="0.25
 export const figure = (s: Stage, pose: Pose, variant?: BigVariant) => {
   const run = pose === 'run'
   const o = origin(s)
-  const img = `<image href="${s.image.href}" x="0" y="0" width="${o.wc}" height="${o.hc}" preserveAspectRatio="none" style="image-rendering:pixelated"/>`
+  const img = pixels(s.image, 0, 0, o.wc, o.hc)
   let frames = (s.flip ?? true) ? `<g transform="translate(${o.wc} 0) scale(-1 1)">${img}</g>` : img
   if (run) {
     // 뒤로 살짝 움츠렸다 앞으로 내민다 (발 가운데가 축)
@@ -94,8 +98,8 @@ export type Line = {
 }
 
 // 머리 위로 올라가는 만큼 위에 더 둘 자리(px). 전투 그림은 y = -2칸 위부터, 큰 그림은 (6 + 10y)px 위부터 잘린다
-const smallHeadroom = (s: Stage, _t: number) => Math.max(0, Math.ceil((-2 - top(s)) * 4))
-const bigHeadroom = (s: Stage, _t: number) => Math.max(0, Math.ceil(-(6 + 10 * top(s))))
+const smallHeadroom = (s: Stage) => Math.max(0, Math.ceil((-2 - top(s)) * 4))
+const bigHeadroom = (s: Stage) => Math.max(0, Math.ceil(-(6 + 10 * top(s))))
 
 export const makeLine = (line: Line): Job & { formName: (t: number) => string } => {
   const stageAt = (t: number) => (t >= 11 && line.omega ? line.omega : line.stages[stageOf(t)]!)
@@ -112,10 +116,10 @@ export const makeLine = (line: Line): Job & { formName: (t: number) => string } 
       return s.fx ? empower(s.fx(t, mouthOf(s)), t) : ''
     },
     big: (variant, t) => `<g transform="translate(220 6) scale(10)">${figure(stageAt(t), 'stand', variant)}</g>`,
-    smallHeadroom: t => smallHeadroom(stageAt(t), t),
-    bigHeadroom: t => bigHeadroom(stageAt(t), t),
+    smallHeadroom: t => smallHeadroom(stageAt(t)),
+    bigHeadroom: t => bigHeadroom(stageAt(t)),
   }
 }
 
-// 직업의 현재 모습 이름 (디지몬 계열이면 진화 단계 이름, 아니면 직업 이름)
+// 계열의 지금 모습 이름 (진화 단계 이름)
 export const formName = (job: Job, t: number) => ('formName' in job ? (job as { formName: (t: number) => string }).formName(t) : job.name)
