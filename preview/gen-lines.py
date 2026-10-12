@@ -52,7 +52,7 @@ LINES = [
   [('koromon','코로몬',5.5,{'flip':False,'mouth':(0.82,0.62)}),('agumon','아구몬',9.5,{'flip':False,'mouth':(0.9,0.36)}),('greymon','그레이몬',13,{'flip':False,'mouth':(0.93,0.3)}),('metalgreymon','메탈그레이몬',14,{'flip':False,'mouth':(0.62,0.55)}),('wargreymon','워그레이몬',13,{'flip':False,'mouth':(0.55,0.03)})],
   ['','아구몬으로 진화','페퍼 브레스','용기의 문장','그레이몬으로 진화','메가 플레임','메탈그레이몬으로 초진화','기가 디스트로이어','트라이던트 암','워그레이몬으로 궁극진화','가이아 포스·무지개 후광']),
  ('friendship','우정','🐺','ice',False,
-  [('tsunomon','원뿔몬',5.5,{'flip':False,'mouth':(0.88,0.6)}),('gabumon','파피몬',9.5,{'flip':False,'mouth':(0.9,0.33)}),('garurumon','가루몬',12,{'flip':False,'mouth':(0.93,0.3)}),('weregarurumon','워가루몬',13,{'flip':False,'mouth':(0.85,0.4)}),('metalgarurumon','메탈가루몬',14,{'flip':False,'mouth':(0.95,0.42)})],
+  [('tsunomon','원뿔몬',5.5,{'flip':False,'mouth':(0.88,0.6)}),('gabumon','파피몬',9.5,{'flip':False,'mouth':(0.9,0.33)}),('garurumon','가루몬',12,{'flip':False,'mouth':(0.95,0.58)}),('weregarurumon','워가루몬',13,{'flip':False,'mouth':(0.85,0.4)}),('metalgarurumon','메탈가루몬',14,{'flip':False,'mouth':(0.95,0.42)})],
   ['','파피몬으로 진화','블루 블래스터','우정의 문장','가루몬으로 진화','폭스 파이어','워가루몬으로 초진화','카이저 네일','가루루 킥','메탈가루몬으로 궁극진화','코큐토스 브레스·무지개 후광']),
  ('love','사랑','❤️','fire',False,
   [('pyocomon','뿌카몬',5.5,{'flip':False,'mouth':(0.82,0.7)}),('piyomon','피요몬',9,{'flip':False,'mouth':(0.74,0.34)}),('birdramon','버드라몬',12,{'flip':False,'mouth':(0.9,0.28)}),('garudamon','가루다몬',14,{'flip':False,'mouth':(0.7,0.38)}),('hououmon','피닉스몬',13,{'flip':False,'mouth':(0.92,0.32)})],

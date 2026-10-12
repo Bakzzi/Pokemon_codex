@@ -14,7 +14,7 @@ export const friendship = makeLine({
   stages: [
   sprite('원뿔몬', FRIENDSHIP.tsunomon!, 5.5, { flip: false, mouth: [0.88, 0.6], fx: (t, from) => fx.bubble(from) }),
   sprite('파피몬', FRIENDSHIP.gabumon!, 9.5, { flip: false, mouth: [0.9, 0.33], fx: (t, from) => fx.blueFlame(from, t >= 2 ? 1.2 : 0.9) }),
-  sprite('가루몬', FRIENDSHIP.garurumon!, 12, { flip: false, mouth: [0.93, 0.3], fx: (t, from) => fx.blueFlame(from, 1.7) }),
+  sprite('가루몬', FRIENDSHIP.garurumon!, 12, { flip: false, mouth: [0.95, 0.58], fx: (t, from) => fx.blueFlame(from, 1.7) }),
   sprite('워가루몬', FRIENDSHIP.weregarurumon!, 13, { flip: false, mouth: [0.85, 0.4], melee: true, fx: (t, from) => fx.strike('#93C5FD', '#E0F2FE', true) + (t >= 8 ? fx.impact('#E0F2FE', 30, 9.5, 1.4) : '') }),
   sprite('메탈가루몬', FRIENDSHIP.metalgarurumon!, 14, { flip: false, mouth: [0.95, 0.42], fx: (t, from) => fx.cocytus(from) }),
   ],
