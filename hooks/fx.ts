@@ -36,12 +36,16 @@ const during = (a: number, b: number, inner: string) =>
   '</g>'
 
 // from에서 to까지 날아가기 (0.44 → 0.6). inner는 가운데가 (0, 0)이고 오른쪽을 향한 그림
-const fly = (inner: string, from: At, to: At, a = 0.44, b = 0.6) =>
-  `<g opacity="0" ${SMOOTH}>` +
-  `<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;${a};${a};${b};${b};1" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>` +
-  `<animateTransform attributeName="transform" type="translate" values="${from[0]} ${from[1]};${from[0]} ${from[1]};${to[0]} ${to[1]};${to[0]} ${to[1]}" keyTimes="0;${a};${b};1" dur="${ATK}" repeatCount="indefinite"/>` +
-  inner +
-  '</g>'
+const fly = (inner: string, from: At, to: At, a = 0.44, b = 0.6) => {
+  const ang = at((Math.atan2(to[1] - from[1], to[0] - from[0]) * 180) / Math.PI)
+  return (
+    `<g opacity="0" ${SMOOTH}>` +
+    `<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;${a};${a};${b};${b};1" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>` +
+    `<animateTransform attributeName="transform" type="translate" values="${from[0]} ${from[1]};${from[0]} ${from[1]};${to[0]} ${to[1]};${to[0]} ${to[1]}" keyTimes="0;${a};${b};1" dur="${ATK}" repeatCount="indefinite"/>` +
+    (ang ? `<g transform="rotate(${ang})">${inner}</g>` : inner) +
+    '</g>'
+  )
+}
 
 // 반짝 터지는 충격 (0.6 → 0.72): 빛 번짐 + 여덟 갈래 광선 + 퍼지는 고리
 export const impact = (color: string, cx = HIT_X, cy = 7.6, size = 1, light = WHITE) =>
@@ -117,13 +121,15 @@ const missileArt = () =>
   `<path d="M-2.6 0 C-3.4 -0.6 -4.4 -0.5 -5 0 C-4.4 0.5 -3.4 0.6 -2.6 0 Z" fill="${FIRE}" opacity="0.9"/>` +
   `<path d="M-2.6 0 C-3.1 -0.3 -3.7 -0.3 -4.1 0 C-3.7 0.3 -3.1 0.3 -2.6 0 Z" fill="${FIRE_L}"/>`
 
-// 화살 (홀리 애로우): 빛나는 살대와 촉, 깃
+// 화살 (홀리 애로우): 굵은 빛의 살대, 길고 큰 삼각 촉, 뒤로 눕힌 깃 둘, 뒤로 끌리는 빛줄기
 const arrowArt = (c = '#F9A8D4', l = WHITE) =>
   defs(c, l) +
-  `<rect x="-3.2" y="-0.14" width="5.2" height="0.28" fill="${l}"/><rect x="-3.2" y="-0.06" width="5.2" height="0.12" fill="${WHITE}"/>` +
-  `<path d="M2 -0.55 L3.4 0 L2 0.55 Z" fill="${c}"/><path d="M2.2 -0.25 L3 0 L2.2 0.25 Z" fill="${WHITE}"/>` +
-  `<path d="M-3.2 0 L-2.4 -0.6 L-1.8 -0.6 L-2.6 0 L-1.8 0.6 L-2.4 0.6 Z" fill="${c}"/>` +
-  glow(2.4, 0, 1.1, c, l, 0.7)
+  `<path d="M-7 0 L-4 0" stroke="${c}" stroke-width="1" stroke-linecap="round" opacity="0.3"/>` +
+  `<rect x="-4.5" y="-0.24" width="6.5" height="0.48" rx="0.24" fill="${c}"/><rect x="-4.5" y="-0.1" width="6.5" height="0.2" fill="${WHITE}"/>` +
+  `<path d="M1.6 -1.1 L5.2 0 L1.6 1.1 L2.3 0 Z" fill="${c}"/><path d="M2 -0.55 L4.4 0 L2 0.55 L2.4 0 Z" fill="${WHITE}"/>` +
+  `<path d="M-4.5 -0.2 L-3.2 -1.2 L-2.2 -1.2 L-3.4 -0.2 Z" fill="${l}" stroke="${c}" stroke-width="0.1"/>` +
+  `<path d="M-4.5 0.2 L-3.2 1.2 L-2.2 1.2 L-3.4 0.2 Z" fill="${l}" stroke="${c}" stroke-width="0.1"/>` +
+  glow(4.2, 0, 1.2, c, l, 0.7)
 
 // 작살 (하푼 발칸): 쇠 창대와 넓은 촉, 줄
 const harpoonArt = () =>
@@ -146,11 +152,13 @@ const flowerArt = (c = '#F472B6', l = '#FDE047') =>
   [0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-0.8" rx="0.2" ry="0.4" fill="#FBCFE8" transform="rotate(${a})"/>`).join('') +
   `<circle cx="0" cy="0" r="0.45" fill="${l}"/><circle cx="-0.1" cy="-0.1" r="0.18" fill="${WHITE}"/>`
 
-// 바람 고리 (에어 슛)
-const windArt = (c = '#BAE6FD') =>
-  `<ellipse cx="0" cy="0" rx="0.9" ry="1.2" fill="none" stroke="${c}" stroke-width="0.35" opacity="0.9"/>` +
-  `<ellipse cx="0.15" cy="0" rx="0.5" ry="0.75" fill="none" stroke="${WHITE}" stroke-width="0.2"/>` +
-  `<path d="M-1.2 -0.9 Q-2.4 -0.6 -2.8 0.2" stroke="${c}" stroke-width="0.18" fill="none" opacity="0.7"/>`
+// 바람 고리 (에어 슛): 겹친 고리 둘과 뒤로 흐르는 바람 줄기
+const windArt = (c = '#7DD3FC', l = '#E0F2FE') =>
+  `<ellipse cx="0" cy="0" rx="1.2" ry="1.6" fill="none" stroke="${c}" stroke-width="0.5" opacity="0.9"/>` +
+  `<ellipse cx="0.15" cy="0" rx="0.7" ry="1" fill="none" stroke="${l}" stroke-width="0.35"/>` +
+  `<ellipse cx="0.3" cy="0" rx="0.3" ry="0.45" fill="${WHITE}" opacity="0.9"/>` +
+  `<path d="M-1.4 -1 Q-3 -0.8 -4 0.2" stroke="${c}" stroke-width="0.3" fill="none" stroke-linecap="round" opacity="0.7"/>` +
+  `<path d="M-1.4 1 Q-2.8 1.3 -3.6 0.4" stroke="${l}" stroke-width="0.25" fill="none" stroke-linecap="round" opacity="0.7"/>`
 
 // 바늘 (니들 스프레이)
 const needleArt = (c = '#16A34A', l = '#86EFAC') =>
@@ -174,6 +182,12 @@ export const fireball = (from: At, size = 1) =>
   muzzle(FIRE, FIRE_L, from, size) +
   fly(`<g transform="scale(${size})">${fireballArt()}</g>`, from, [HIT_X, from[1]]) +
   impact(FIRE, HIT_X, from[1], size, FIRE_L)
+
+// 파란 불꽃 (블루 블래스터·폭스 파이어): 불덩이의 파란 판
+export const blueFlame = (from: At, size = 1) =>
+  muzzle('#3B82F6', '#BFDBFE', from, size) +
+  fly(`<g transform="scale(${size})">${fireballArt('#3B82F6', '#BFDBFE')}</g>`, from, [HIT_X, from[1]]) +
+  impact('#3B82F6', HIT_X, from[1], size, '#BFDBFE')
 
 // 큰 에너지구 (가이아 포스·일렉트로 쇼커): 머리 위로 던져 포물선으로 떨어진다
 export const orb = (from: At, color: string, light: string, size = 1.6) => {
@@ -370,13 +384,16 @@ export const soundWave = (from: At, color = '#F9A8D4', light = WHITE) => {
 
 // 화살 (홀리 애로우)·작살 (하푼 발칸)·물고기 떼 (마칭 피시즈)·바람 고리 (에어 슛)·꽃 (플라워 캐논)·얼음 조각
 export const holyArrow = (from: At) =>
-  muzzle('#F9A8D4', WHITE, from, 0.9) + fly(arrowArt(), from, [HIT_X + 1, from[1]]) + impact('#F9A8D4', HIT_X + 1, from[1], 1.3) + pillar('#FBCFE8', WHITE, 1.4, HIT_X + 1)
+  muzzle('#F9A8D4', WHITE, from, 0.9) +
+  fly(`<g transform="scale(1.5)">${arrowArt()}</g>`, from, [HIT_X + 1.5, 7.5]) +
+  impact('#F9A8D4', HIT_X + 4, 7.5, 1.1, '#FBCFE8')
 export const harpoon = (from: At, n = 1) => {
   let out = muzzle('#CBD5E1', WHITE, from, 0.8)
   for (let i = 0; i < n; i++) {
     const y = at(from[1] + (i - (n - 1) / 2) * 1.5)
     const a = at(0.44 + i * 0.03)
-    out += fly(harpoonArt(), [from[0], y], [HIT_X + 1, y], a, at(a + 0.16)) + impact('#E2E8F0', HIT_X + 1, y, 1, '#CBD5E1')
+    const ty = at(7.5 + (i - (n - 1) / 2) * 1.5)
+    out += fly(`<g transform="scale(1.3)">${harpoonArt()}</g>`, [from[0], y], [HIT_X + 1, ty], a, at(a + 0.16)) + impact('#E2E8F0', HIT_X + 1.5, ty, 1, '#CBD5E1')
   }
   return out
 }
@@ -390,7 +407,7 @@ export const marchingFishes = (from: At, n = 4) => {
   }
   return out + impact('#38BDF8', HIT_X + 1, 10.5, 1.1, '#E0F2FE') + impact('#BAE6FD', HIT_X + 2, 8.5, 0.8)
 }
-export const airShot = (from: At) => muzzle('#BAE6FD', WHITE, from, 0.7) + fly(windArt(), from, [HIT_X, from[1]]) + impact('#E0F2FE', HIT_X, from[1], 0.9, '#BAE6FD')
+export const airShot = (from: At) => muzzle('#7DD3FC', WHITE, from, 0.8) + fly(`<g transform="scale(1.2)">${windArt()}</g>`, from, [HIT_X, from[1]]) + impact('#BAE6FD', HIT_X, from[1], 1.1, '#E0F2FE')
 export const flowerCannon = (from: At) =>
   muzzle('#F9A8D4', '#FDE047', from, 1) +
   fly(`<g transform="scale(1.4)"><g><animateTransform attributeName="transform" type="rotate" values="0;360" dur="0.6s" repeatCount="indefinite"/>${flowerArt()}</g></g>`, from, [HIT_X, from[1]]) +
