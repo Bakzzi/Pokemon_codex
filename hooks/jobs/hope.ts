@@ -8,7 +8,7 @@ export const hope = makeLine({
   key: 'hope',
   name: '희망',
   icon: '😇',
-  gear: ["", "파닥몬으로 진화", "공기팡", "엔젤몬으로 진화", "천사의 손", "홀리엔젤몬으로 초진화", "천국의 문", "엑스칼리버", "세라피몬으로 궁극진화", "세븐 헤븐즈·후광", "무지개 후광"],
+  gear: ["", "파닥몬으로 진화", "공기팡", "엔젤몬으로 진화", "천사의 손", "홀리엔젤몬으로 초진화", "천국의 문", "엑스칼리버", "세라피몬으로 궁극진화", "세븐 헤븐즈 강화", "세븐 헤븐즈 극대화"],
   stages: [
     sprite('토코몬', HOPE.tokomon!, 5.5, { flip: true, mouth: [0.82, 0.6], fx: (t, from) => fx.bubble(from) }),
     sprite('파닥몬', HOPE.patamon!, 8, { flip: false, mouth: [0.8, 0.66], fx: (t, from) => fx.airShot(from) }),

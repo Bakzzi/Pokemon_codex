@@ -8,7 +8,7 @@ export const friendship = makeLine({
   key: 'friendship',
   name: '우정',
   icon: '🐺',
-  gear: ["", "파피몬으로 진화", "파란 불꽃", "가루몬으로 진화", "푸른 화염포", "워가루몬으로 초진화", "초강력 손톱", "늑대 발차기", "메탈가루몬으로 궁극진화", "썰렁포·후광", "무지개 후광"],
+  gear: ["", "파피몬으로 진화", "파란 불꽃", "가루몬으로 진화", "푸른 화염포", "워가루몬으로 초진화", "초강력 손톱", "늑대 발차기", "메탈가루몬으로 궁극진화", "썰렁포 강화", "썰렁포 극대화"],
   stages: [
     sprite('뿔몬', FRIENDSHIP.tsunomon!, 5.5, { flip: true, mouth: [0.88, 0.6], fx: (t, from) => fx.bubble(from) }),
     sprite('파피몬', FRIENDSHIP.gabumon!, 9.5, { flip: false, mouth: [0.9, 0.33], fx: (t, from) => fx.blueFlame(from, t >= 2 ? 1.2 : 0.9) }),

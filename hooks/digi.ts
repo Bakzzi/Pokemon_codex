@@ -2,7 +2,7 @@
 // 각 계열 파일(jobs/*.ts)은 진화 단계 5개(유년기·성장기·성숙기·완전체·궁극체)와 히든 진화를 적고 makeLine으로 Job을 만든다.
 // 격자는 발바닥이 y = 11칸(원본 Claude의 발 위치)에 닿고 x ≈ 14.5칸을 중심으로 놓인다. 작은 그림 칸: x 5~23.5, y -3~11.5
 import { ATK } from './atk.ts'
-import { GOLD, STAND_STEP, STEP, halo, sparkle } from './pixel.ts'
+import { STAND_STEP, STEP } from './pixel.ts'
 import type { BigVariant, Pose } from './pixel.ts'
 import type { Job } from './jobs/types.ts'
 
@@ -66,11 +66,11 @@ export const figure = (s: Stage, pose: Pose, variant?: BigVariant) => {
   return `<g transform="translate(${o.x} ${o.y})"><g>${bob}${body}</g></g>`
 }
 
-// 레벨 90~: 머리 위 후광과 반짝이. 100은 무지개 (궁극체 Lv.80 뒤의 보상)
-const glory = (s: Stage, t: number) => {
-  if (t < 9) return ''
-  const o = origin(s)
-  return halo(14.5, top(s) + 0.6, o.wc / 2.6, 0.7, 0.4, t) + sparkle(o.x - 1, o.y + 1, 1.2, GOLD, '0.3s') + sparkle(o.x + o.wc + 1, o.y, 1.2, GOLD, '1.1s')
+// 레벨 90·100의 기술 강화: 90은 1.3배, 100은 1.6배 크기. 기술 효과는 전투 좌표(칸)라 내 디지몬의 입 근처(x 15, y 7.5)를 축으로 키운다
+const empower = (fx: string, t: number) => {
+  if (t < 9) return fx
+  const k = t >= 10 ? 1.6 : 1.3
+  return `<g transform="translate(15 7.5) scale(${k}) translate(-15 -7.5)">${fx}</g>`
 }
 
 // 단계의 입(기술이 나가는 자리)을 전투 좌표로: 전투 그림에서 디지몬은 (-5, 2)칸 옮겨 그려진다
@@ -94,8 +94,8 @@ export type Line = {
 }
 
 // 머리 위로 올라가는 만큼 위에 더 둘 자리(px). 전투 그림은 y = -2칸 위부터, 큰 그림은 (6 + 10y)px 위부터 잘린다
-const smallHeadroom = (s: Stage, t: number) => Math.max(0, Math.ceil((-2 - top(s) + (t >= 9 ? 1 : 0)) * 4))
-const bigHeadroom = (s: Stage, t: number) => Math.max(0, Math.ceil(-(6 + 10 * (top(s) - (t >= 9 ? 1 : 0)))))
+const smallHeadroom = (s: Stage, _t: number) => Math.max(0, Math.ceil((-2 - top(s)) * 4))
+const bigHeadroom = (s: Stage, _t: number) => Math.max(0, Math.ceil(-(6 + 10 * top(s))))
 
 export const makeLine = (line: Line): Job & { formName: (t: number) => string } => {
   const stageAt = (t: number) => (t >= 11 && line.omega ? line.omega : line.stages[stageOf(t)]!)
@@ -106,12 +106,12 @@ export const makeLine = (line: Line): Job & { formName: (t: number) => string } 
     gear: line.gear,
     melee: t => stageAt(t).melee ?? false,
     formName: t => stageAt(t).name,
-    small: (t, pose) => figure(stageAt(t), pose) + glory(stageAt(t), t),
+    small: (t, pose) => figure(stageAt(t), pose),
     hit: t => {
       const s = stageAt(t)
-      return s.fx ? s.fx(t, mouthOf(s)) : ''
+      return s.fx ? empower(s.fx(t, mouthOf(s)), t) : ''
     },
-    big: (variant, t) => `<g transform="translate(220 6) scale(10)">${figure(stageAt(t), 'stand', variant)}${glory(stageAt(t), t)}</g>`,
+    big: (variant, t) => `<g transform="translate(220 6) scale(10)">${figure(stageAt(t), 'stand', variant)}</g>`,
     smallHeadroom: t => smallHeadroom(stageAt(t), t),
     bigHeadroom: t => bigHeadroom(stageAt(t), t),
   }

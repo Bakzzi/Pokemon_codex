@@ -8,7 +8,7 @@ export const reliability = makeLine({
   key: 'reliability',
   name: '성실',
   icon: '🐾',
-  gear: ["", "쉬라몬으로 진화", "물고기 행진", "원뿔몬으로 진화", "뿔 날리기", "쥬드몬으로 초진화", "해머 스파크", "발칸 해머", "바이킹몬으로 궁극진화", "아크틱 블리자드·후광", "무지개 후광"],
+  gear: ["", "쉬라몬으로 진화", "물고기 행진", "원뿔몬으로 진화", "뿔 날리기", "쥬드몬으로 초진화", "해머 스파크", "발칸 해머", "바이킹몬으로 궁극진화", "아크틱 블리자드 강화", "아크틱 블리자드 극대화"],
   stages: [
     sprite('둥실몬', RELIABILITY.pukamon!, 5.5, { flip: true, mouth: [0.88, 0.5], fx: (t, from) => fx.bubble(from) }),
     sprite('쉬라몬', RELIABILITY.gomamon!, 8.5, { flip: false, mouth: [0.85, 0.4], fx: (t, from) => fx.marchingFishes(from, t >= 2 ? 5 : 3) }),

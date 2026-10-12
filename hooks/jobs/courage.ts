@@ -8,7 +8,7 @@ export const courage = makeLine({
   key: 'courage',
   name: '용기',
   icon: '🔥',
-  gear: ["", "아구몬으로 진화", "꼬마 불꽃", "그레이몬으로 진화", "메가 파이어", "메탈그레이몬으로 초진화", "인공지능 미사일", "왕발톱", "워그레이몬으로 궁극진화", "테라 광선·후광", "무지개 후광"],
+  gear: ["", "아구몬으로 진화", "꼬마 불꽃", "그레이몬으로 진화", "메가 파이어", "메탈그레이몬으로 초진화", "인공지능 미사일", "왕발톱", "워그레이몬으로 궁극진화", "테라 광선 강화", "테라 광선 극대화"],
   stages: [
     sprite('코로몬', COURAGE.koromon!, 5.5, { flip: false, mouth: [0.82, 0.62], fx: (t, from) => fx.bubble(from) }),
     sprite('아구몬', COURAGE.agumon!, 9.5, { flip: false, mouth: [0.9, 0.36], fx: (t, from) => fx.fireball(from, t >= 2 ? 1.3 : 0.9) }),

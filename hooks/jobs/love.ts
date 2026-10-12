@@ -8,7 +8,7 @@ export const love = makeLine({
   key: 'love',
   name: '사랑',
   icon: '❤️',
-  gear: ["", "피요몬으로 진화", "빙빙 회오리", "버드라몬으로 진화", "메테오 윙", "가루다몬으로 초진화", "불새 출격", "이글 클로", "페닉스몬으로 궁극진화", "스타라이트 익스플로전·후광", "무지개 후광"],
+  gear: ["", "피요몬으로 진화", "빙빙 회오리", "버드라몬으로 진화", "메테오 윙", "가루다몬으로 초진화", "불새 출격", "이글 클로", "페닉스몬으로 궁극진화", "스타라이트 익스플로전 강화", "스타라이트 익스플로전 극대화"],
   stages: [
     sprite('어니몬', LOVE.pyocomon!, 5.5, { flip: true, mouth: [0.82, 0.7], fx: (t, from) => fx.bubble(from) }),
     sprite('피요몬', LOVE.piyomon!, 9, { flip: false, mouth: [0.74, 0.34], fx: (t, from) => fx.greenFlame(from, t >= 2 ? 1.1 : 0.9) }),
