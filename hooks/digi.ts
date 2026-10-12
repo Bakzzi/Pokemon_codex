@@ -174,8 +174,8 @@ export const figure = (s: Stage, pose: Pose, variant?: BigVariant) => {
   let faceLayer = ''
   if (s.image) {
     // 뒤집어서 오른쪽을 보게 하고, 달릴 때는 발끝을 축으로 앞뒤로 기울인다
-    // 아주 작은 원본(40px 미만)은 키울 때 뿌옇게 번지지 않게 점을 그대로 키운다
-    const crisp = s.image.h < 40 ? ' style="image-rendering:pixelated"' : ''
+    // 도트 그림이므로 키울 때 뿌옇게 번지지 않게 점을 그대로 키운다
+    const crisp = ' style="image-rendering:pixelated"'
     const img = `<image href="${s.image.href}" x="0" y="0" width="${o.wc}" height="${o.hc}" preserveAspectRatio="none"${crisp}/>`
     let frames = img
     if (run && s.attack) {

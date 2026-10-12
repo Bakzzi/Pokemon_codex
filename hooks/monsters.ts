@@ -51,7 +51,7 @@ const draw = (tier: number) => {
   return (
     `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -0.3;0 0" dur="${dur}" repeatCount="indefinite"/>` +
     (b.flip ? `<g transform="translate(${at(2 * b.x + b.w)} 0) scale(-1 1)">` : '') +
-    `<image href="${b.img.href}" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" preserveAspectRatio="none"/>` +
+    `<image href="${b.img.href}" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" preserveAspectRatio="none" style="image-rendering:pixelated"/>` +
     (b.flip ? '</g>' : '') +
     '</g>'
   )

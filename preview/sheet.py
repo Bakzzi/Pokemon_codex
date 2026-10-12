@@ -2,6 +2,9 @@
 #   python3 -I preview/sheet.py <svg dir> <out png> [scale]
 import sys, os, io, re
 import cairosvg
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from crisp import crispify
 from PIL import Image, ImageDraw
 
 src, dst = sys.argv[1], sys.argv[2]
@@ -14,7 +17,7 @@ def order(f):
 files.sort(key=order)
 imgs = []
 for f in files:
-    png = cairosvg.svg2png(url=os.path.join(src, f), scale=scale, background_color='#F6F1EC')
+    png = cairosvg.svg2png(bytestring=crispify(open(os.path.join(src, f), encoding='utf-8').read()).encode(), scale=scale, background_color='#F6F1EC')
     imgs.append((f, Image.open(io.BytesIO(png)).convert('RGBA')))
 # 종류별로 한 줄씩
 rows = {}
