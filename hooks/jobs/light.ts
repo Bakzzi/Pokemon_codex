@@ -13,10 +13,10 @@ export const light = makeLine({
   melee: false,
   stages: [
   sprite('뉴몬', LIGHT.nyaromon!, 5.5, { flip: false, mouth: [0.85, 0.5], fx: (t, from) => fx.bubble(from) }),
-  sprite('플롯몬', LIGHT.plotmon!, 8, { fx: (t, from) => fx.soundWave(from) }),
-  sprite('가트몬', LIGHT.tailmon!, 9.5, { melee: true, fx: (t, from) => fx.strike('#F9A8D4', '#FFFFFF', true) }),
-  sprite('엔젤우몬', LIGHT.angewomon!, 13.5, { flipAttack: false, mouth: [0.9, 0.3], fx: (t, from) => fx.holyArrow(from) + (t >= 8 ? fx.strike('#F9A8D4', '#FFFFFF') : '') }),
-  sprite('오파니몬', LIGHT.ofanimon!, 13.5, { mouth: [0.9, 0.3], fx: (t, from) => fx.beam(from, '#FDE68A', '#FFFFFF', 1.2) + fx.pillar('#FDE68A', '#FFFFFF', 2.2) }),
+  sprite('플롯몬', LIGHT.plotmon!, 8, { flip: true, fx: (t, from) => fx.soundWave(from) }),
+  sprite('가트몬', LIGHT.tailmon!, 9.5, { flip: false, melee: true, fx: (t, from) => fx.strike('#F9A8D4', '#FFFFFF', true) }),
+  sprite('엔젤우몬', LIGHT.angewomon!, 13.5, { flipAttack: false, flip: false, mouth: [0.9, 0.3], fx: (t, from) => fx.holyArrow(from) + (t >= 8 ? fx.strike('#F9A8D4', '#FFFFFF') : '') }),
+  sprite('오파니몬', LIGHT.ofanimon!, 13.5, { flip: true, mouth: [0.9, 0.3], fx: (t, from) => fx.beam(from, '#FDE68A', '#FFFFFF', 1.2) + fx.pillar('#FDE68A', '#FFFFFF', 2.2) }),
   ],
   crest: { image: CRESTS.light! },
   hit: (_t, stage, from) => elementHit('light', stage, false, from)})

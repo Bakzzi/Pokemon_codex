@@ -13,10 +13,10 @@ export const hope = makeLine({
   melee: false,
   stages: [
   sprite('토코몬', HOPE.tokomon!, 5.5, { flip: false, mouth: [0.85, 0.5], fx: (t, from) => fx.bubble(from) }),
-  sprite('파닥몬', HOPE.patamon!, 8, { fx: (t, from) => fx.airShot(from) }),
-  sprite('엔젤몬', HOPE.angemon!, 13.5, { mouth: [0.9, 0.4], fx: (t, from) => fx.beam(from, '#FDE68A', '#FFFFFF', 1.1) }),
-  sprite('홀리엔젤몬', HOPE.holyangemon!, 13.5, { mouth: [0.9, 0.4], fx: (t, from) => fx.pillar('#FDE68A', '#FFFFFF', 3) + (t >= 8 ? fx.strike('#FDE68A', '#FFFFFF') : '') }),
-  sprite('세라피몬', HOPE.seraphimon!, 14, { mouth: [0.9, 0.4], fx: (t, from) => fx.sevenHeavens() }),
+  sprite('파닥몬', HOPE.patamon!, 8, { flip: false, fx: (t, from) => fx.airShot(from) }),
+  sprite('엔젤몬', HOPE.angemon!, 13.5, { flip: false, mouth: [0.9, 0.4], fx: (t, from) => fx.beam(from, '#FDE68A', '#FFFFFF', 1.1) }),
+  sprite('홀리엔젤몬', HOPE.holyangemon!, 13.5, { flip: false, mouth: [0.9, 0.4], fx: (t, from) => fx.pillar('#FDE68A', '#FFFFFF', 3) + (t >= 8 ? fx.strike('#FDE68A', '#FFFFFF') : '') }),
+  sprite('세라피몬', HOPE.seraphimon!, 14, { flip: false, mouth: [0.9, 0.4], fx: (t, from) => fx.sevenHeavens() }),
   ],
   crest: { image: CRESTS.hope! },
   hit: (_t, stage, from) => elementHit('holy', stage, false, from)})

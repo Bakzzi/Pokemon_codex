@@ -4,19 +4,19 @@
 import { MONSTERS } from './img/monsters.ts'
 
 export const MONSTER_NAMES = ['쿠가몬', '데블몬', '에테몬', '묘티스몬', '베놈묘티스몬', '메탈시드라몬', '피노키몬', '무겐드라몬', '피에몬', '아포카리몬', '오메가몬']
-// 그림 키와 키(칸). 너비는 원본 비율대로
-const FOES: readonly (readonly [string, number])[] = [
-  ['kuwagamon', 9.5],
-  ['devimon', 12.5],
-  ['etemon', 11],
-  ['vamdemon', 13],
-  ['venomvamdemon', 13.5],
-  ['metalseadramon', 13.5],
-  ['pinochimon', 11.5],
-  ['mugendramon', 13.5],
-  ['piemon', 13],
-  ['apocalymon', 13.5],
-  ['omegamon', 13.5],
+// 그림 키, 키(칸), 뒤집기(원본이 오른쪽을 보면 true: 왼쪽의 내 디지몬을 보게 뒤집는다). 너비는 원본 비율대로
+const FOES: readonly (readonly [string, number, boolean])[] = [
+  ['kuwagamon', 9.5, true],
+  ['devimon', 12.5, false],
+  ['etemon', 11, true],
+  ['vamdemon', 13, true],
+  ['venomvamdemon', 13.5, false],
+  ['metalseadramon', 13.5, true],
+  ['pinochimon', 11.5, true],
+  ['mugendramon', 13.5, true],
+  ['piemon', 13, true],
+  ['apocalymon', 13.5, false],
+  ['omegamon', 13.5, true],
 ]
 const CENTER = 31.5
 const GROUND = 13
@@ -33,7 +33,7 @@ const rect = (x: number, y: number, w: number, h: number, fill: string, inner = 
 
 // 상대의 자리(칸): 발은 땅, 가운데는 CENTER. 너비가 19칸을 넘으면 키를 줄인다
 const box = (tier: number) => {
-  const [key, wantH] = FOES[tier]!
+  const [key, wantH, flip] = FOES[tier]!
   const img = MONSTERS[key]!
   let h = wantH
   let w = at((h * img.w) / img.h)
@@ -41,7 +41,7 @@ const box = (tier: number) => {
     w = 19
     h = at((w * img.h) / img.w)
   }
-  return { img, x: at(CENTER - w / 2), y: at(GROUND - h), w, h }
+  return { img, x: at(CENTER - w / 2), y: at(GROUND - h), w, h, flip }
 }
 
 // 상대 한 마리: 숨 쉬듯 들썩인다. 동료(오메가몬)는 조금 더 느긋하게
@@ -50,7 +50,9 @@ const draw = (tier: number) => {
   const dur = tier >= 10 ? '1.6s' : tier >= 5 ? '1s' : '0.7s'
   return (
     `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -0.3;0 0" dur="${dur}" repeatCount="indefinite"/>` +
+    (b.flip ? `<g transform="translate(${at(2 * b.x + b.w)} 0) scale(-1 1)">` : '') +
     `<image href="${b.img.href}" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" preserveAspectRatio="none"/>` +
+    (b.flip ? '</g>' : '') +
     '</g>'
   )
 }

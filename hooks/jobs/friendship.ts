@@ -13,10 +13,10 @@ export const friendship = makeLine({
   melee: false,
   stages: [
   sprite('원뿔몬', FRIENDSHIP.tsunomon!, 5.5, { flip: false, mouth: [0.85, 0.5], fx: (t, from) => fx.bubble(from) }),
-  sprite('파피몬', FRIENDSHIP.gabumon!, 9.5, { fx: (t, from) => fx.beam(from, '#60A5FA', '#E0F2FE', t >= 2 ? 0.9 : 0.6) }),
-  sprite('가루몬', FRIENDSHIP.garurumon!, 12, { fx: (t, from) => fx.beam(from, '#3B82F6', '#BFDBFE', 1.2) }),
-  sprite('워가루몬', FRIENDSHIP.weregarurumon!, 13, { melee: true, fx: (t, from) => fx.strike('#93C5FD', '#E0F2FE', true) + (t >= 8 ? fx.impact('#E0F2FE', 30, 9.5, 1.4) : '') }),
-  sprite('메탈가루몬', FRIENDSHIP.metalgarurumon!, 14, { fx: (t, from) => fx.cocytus(from) }),
+  sprite('파피몬', FRIENDSHIP.gabumon!, 9.5, { flip: false, fx: (t, from) => fx.beam(from, '#60A5FA', '#E0F2FE', t >= 2 ? 0.9 : 0.6) }),
+  sprite('가루몬', FRIENDSHIP.garurumon!, 12, { flip: false, fx: (t, from) => fx.beam(from, '#3B82F6', '#BFDBFE', 1.2) }),
+  sprite('워가루몬', FRIENDSHIP.weregarurumon!, 13, { flip: false, melee: true, fx: (t, from) => fx.strike('#93C5FD', '#E0F2FE', true) + (t >= 8 ? fx.impact('#E0F2FE', 30, 9.5, 1.4) : '') }),
+  sprite('메탈가루몬', FRIENDSHIP.metalgarurumon!, 14, { flip: false, fx: (t, from) => fx.cocytus(from) }),
   ],
   crest: { image: CRESTS.friendship! },
   hit: (_t, stage, from) => elementHit('ice', stage, false, from)})
