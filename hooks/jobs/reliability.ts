@@ -14,7 +14,7 @@ export const reliability = makeLine({
   stages: [
   sprite('푸카몬', RELIABILITY.pukamon!, 5.5, { mouth: [0.85, 0.5], fx: (t, from) => fx.bubble(from) }),
   sprite('파피몬', RELIABILITY.gomamon!, 8.5, { attack: RELIABILITY.gomamon_attack, flipAttack: false, fx: (t, from) => fx.marchingFishes(from, t >= 2 ? 5 : 3) }),
-  sprite('이크몬', RELIABILITY.ikkakumon!, 13, { attack: RELIABILITY.ikkakumon_attack, fx: (t, from) => fx.harpoon(from, t >= 5 ? 2 : 1) }),
+  sprite('이크몬', RELIABILITY.ikkakumon!, 12.5, { fx: (t, from) => fx.harpoon(from, t >= 5 ? 2 : 1) }),
   sprite('쥬드몬', RELIABILITY.zudomon!, 13.5, { attack: RELIABILITY.zudomon_attack, melee: true, fx: (t, from) => fx.strike('#CBD5E1', '#FFFFFF') + fx.lightning() }),
   sprite('플레시오몬', RELIABILITY.plesiomon!, 13.5, { attack: RELIABILITY.plesiomon_attack, fx: (t, from) => fx.beam(from, '#38BDF8', '#E0F2FE', 1.6) }),
   ],

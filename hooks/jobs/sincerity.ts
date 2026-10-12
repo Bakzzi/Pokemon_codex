@@ -14,8 +14,8 @@ export const sincerity = makeLine({
   stages: [
   sprite('타네몬', SINCERITY.tanemon!, 5.5, { mouth: [0.85, 0.5], fx: (t, from) => fx.bubble(from) }),
   sprite('팔몬', SINCERITY.palmon!, 9, { attack: SINCERITY.palmon_attack, fx: (t, from) => fx.vine(from) }),
-  sprite('니드몬', SINCERITY.togemon!, 13, { attack: SINCERITY.togemon_attack, melee: true, fx: (t, from) => fx.strike('#F26B21', '#FFF7D6') + (t >= 5 ? fx.needleSpray(from) : '') }),
-  sprite('릴리몬', SINCERITY.lilimon!, 12, { attack: SINCERITY.lilimon_attack, fx: (t, from) => fx.flowerCannon(from) }),
+  sprite('니드몬', SINCERITY.togemon!, 13, { melee: true, fx: (t, from) => fx.strike('#F26B21', '#FFF7D6') + (t >= 5 ? fx.needleSpray(from) : '') }),
+  sprite('릴리몬', SINCERITY.lilimon!, 12, { fx: (t, from) => fx.flowerCannon(from) }),
   sprite('로제몬', SINCERITY.rosemon!, 13, { attack: SINCERITY.rosemon_attack, flipAttack: true, flip: false, fx: (t, from) => fx.whip(from, '#EC4899', '#FBCFE8') }),
   ],
   crest: { image: CRESTS.sincerity! },
