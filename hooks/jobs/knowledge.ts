@@ -8,7 +8,7 @@ export const knowledge = makeLine({
   key: 'knowledge',
   name: '지식',
   icon: '💡',
-  gear: ["", "텐타몬으로 진화", "쁘띠 썬더", "캅테리몬으로 진화", "일렉트로 쇼커", "아트라캅테리몬으로 초진화", "혼 버스터", "울트라 썬더", "헤라클레스캅테리몬으로 궁극진화", "메가 블래스터 강화", "메가 블래스터 극대화"],
+  gear: ["", "텐타몬으로 진화", "꼬마 번개", "캅테리몬으로 진화", "일렉트로 쇼커", "아트라캅테리몬으로 초진화", "혼 버스터", "울트라 썬더", "헤라클레스캅테리몬으로 궁극진화", "메가 블래스터 강화", "메가 블래스터 극대화"],
   stages: [
     sprite('모티몬', KNOWLEDGE.mochimon!, 4.5, { flip: true, mouth: [0.78, 0.5], fx: (t, from) => fx.bubble(from) }),
     sprite('텐타몬', KNOWLEDGE.tentomon!, 9, { flip: false, mouth: [0.88, 0.36], fx: (t, from) => fx.sparks(from, t >= 2 ? 1 : 0.8) }),

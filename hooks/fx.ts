@@ -156,7 +156,7 @@ const ARTS_ONE: Record<string, Art> = {
   fireball_blue: fireballArt('#3B82F6', '#BFDBFE'),
   fireball_green: fireballArt('#22C55E', '#BBF7D0'),
   orb_elec: orbArt('#38BDF8', '#F0F9FF', 1.25),
-  // 전기 불꽃 (쁘띠 썬더): 작은 전기구 둘레로 지그재그 번개
+  // 전기 불꽃 (꼬마 번개): 작은 전기구 둘레로 지그재그 번개
   spark: { w: 4.4, h: 4.4, svg: glow(0, 0, 1.4, '#38BDF8', '#F0F9FF', 0.9) + `<circle cx="0" cy="0" r="0.6" fill="#F0F9FF"/>` + [0, 72, 144, 216, 288].map(a => `<path d="M0 -0.6 L-0.3 -1.2 L0.25 -1.5 L-0.1 -2.1" stroke="#38BDF8" stroke-width="0.25" fill="none" stroke-linejoin="round" transform="rotate(${a})"/>`).join('') },
   // 창 (에덴즈 재블린): 금빛 창대와 넓은 날, 빛 꼬리
   javelin: { w: 13, h: 2.2, svg: `<path d="M-6.5 0 L-4 0" stroke="#FDE68A" stroke-width="0.9" stroke-linecap="round" opacity="0.35"/><rect x="-4.6" y="-0.2" width="7" height="0.4" rx="0.2" fill="#F59E0B"/><rect x="-4.6" y="-0.08" width="7" height="0.16" fill="#FDE68A"/><path d="M2 -0.9 L5.4 0 L2 0.9 L2.6 0 Z" fill="#FDE68A"/><path d="M2.4 -0.4 L4.6 0 L2.4 0.4 L2.7 0 Z" fill="${WHITE}"/><rect x="1.4" y="-0.5" width="0.5" height="1" fill="#B45309"/>` + glow(4.4, 0, 1.1, '#F59E0B', '#FDE68A', 0.7) },
@@ -232,7 +232,7 @@ export const fireball = (from: At, size = 1) =>
   muzzle('#F26B21', '#FDE047', from, size) + fly(art('fireball', size), from, [HIT_X, from[1]]) + impact('#F26B21', HIT_X, from[1], size)
 export const greenFlame = (from: At, size = 1) =>
   muzzle('#22C55E', '#BBF7D0', from, size) + fly(art('fireball_green', size), from, [HIT_X, from[1]]) + impact('#22C55E', HIT_X, from[1], size)
-// 전기 불꽃 (쁘띠 썬더)
+// 전기 불꽃 (꼬마 번개)
 export const sparks = (from: At, size = 1) =>
   muzzle('#38BDF8', '#F0F9FF', from, size) + fly(`<g><animateTransform attributeName="transform" type="rotate" values="0;90;180;270" dur="0.3s" calcMode="discrete" repeatCount="indefinite"/>${art('spark', size)}</g>`, from, [HIT_X, from[1]]) + impact('#38BDF8', HIT_X, from[1], size)
 // 창 던지기 (에덴즈 재블린)
