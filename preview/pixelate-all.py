@@ -11,8 +11,11 @@ COLORS = int(sys.argv[3]) if len(sys.argv) > 3 else 32
 gen = open('preview/gen-lines.py', encoding='utf-8').read()
 heights = {}
 for line in ['courage', 'friendship', 'love', 'sincerity', 'knowledge', 'reliability', 'hope', 'light']:
-    block = gen.split(f"('{line}'")[1].split('\n  [')[0]
-    for k, h in re.findall(r"\('(\w+)','[^']+',([\d.]+),", block):
+    # 계열 블록: " ('<line>','...'" 부터 다음 계열 시작 전까지
+    start = gen.index(f" ('{line}',")
+    nxt = [gen.index(f" ('{l}',") for l in ['courage','friendship','love','sincerity','knowledge','reliability','hope','light'] if gen.find(f" ('{l}',") > start]
+    block = gen[start:min(nxt) if nxt else len(gen)]
+    for k, h in re.findall(r"\('(\w+)','[^']+',([\d.]+),\{", block):
         heights[f'{line}/{k}'] = float(h)
 mon = open('hooks/monsters.ts', encoding='utf-8').read()
 for k, h in re.findall(r"\['(\w+)', ([\d.]+), (?:true|false)\]", mon):
