@@ -80,27 +80,32 @@ const pendingAsks = atom({ plugin: 'digimon-buddy', key: 'pendingAsks' } as cons
 // 그래서 응답마다 앱이 알려 주는 토큰 수(context.breakdown.apiUsage)에 공개 가격의 비율로 무게를 주어 점수로 쓴다
 // (scripts/seed.mjs와 같은 비율. 구독 계정 데스크톱 앱에서 세션 비용 cost.usd가 응답 뒤에도 늘지 않아 쓰지 않는다). 가중 토큰 1,000개 = 1점.
 // - 데미지 = 이번 응답(턴)에서 늘어난 점수
-// - 풀피 = 1%당 점수 × 100. 모든 창이 쓴 점수와 그동안 오른 사용률을 $.store 'cal'에 모아 어림한다
+// - 풀피 = 1%당 점수 × 100. 사용률은 1% 단위로 오르므로, 사용률이 한 칸 오른 순간부터 다음 칸 오른 순간까지
+//   모든 창이 쓴 점수를 그 칸 수로 나눈다($.store 'cal'). 처음 오른 순간 전의 몫은 얼마가 1칸인지 몰라 버린다
 //   (claude.ai 채팅 등 모드가 없는 곳의 사용량은 점수에 안 잡혀 풀피가 작게 어림될 수 있다)
 // 토큰 종류별 무게 (입력 대비 가격 비율): 출력 5배, 캐시 읽기 0.05배, 캐시 쓰기 1.25배
 const WEIGHT = { input: 1, output: 5, cacheRead: 0.05, cacheWrite: 1.25 }
 const TOKENS_PER_POINT = 1000
-// 1%당 점수를 믿기 시작하는 모은 사용률(%p): 주간, 5시간
+// 1%당 점수를 믿기 시작하는 모은 칸 수(%p): 주간, 5시간. 넘으면 반으로 줄여 오래된 몫을 덜어 낸다
 const CAL_MIN = { week: 1, five: 2 }
+const CAL_MAX = { week: 50, five: 100 }
 // 데미지 숫자를 고치는 최소 간격 (고칠 때마다 전투 그림이 처음부터 다시 돈다). 턴이 끝날 때는 바로 맞춘다
 const SPENT_EVERY_MS = 8000
 
 type Reading = { used: number; resetsAt: string | null } | null
 type Pools = { week: number | null; five: number | null }
-type Cal = { points: number; week: number; five: number; last: { week: Reading; five: Reading } }
+// 한도 하나의 어림: 마지막으로 센 사용률, 첫 칸을 봤는지, 칸 사이에 모은 점수(pts)와 칸 수(pct), 지금 칸에서 쓰는 중인 점수(run)
+type Track = { last: Reading; anchored: boolean; pts: number; pct: number; run: number }
+type Cal = { v: 2; week: Track; five: Track }
 // 이번 턴: 점수(데미지)와 주간·5시간 사용률이 늘어난 양
 type Spent = { points: number | null; week: number | null; five: number | null }
 type TurnFrom = { points: number | null; week: Reading; five: Reading }
 
 const turnFrom = atom({ plugin: 'digimon-buddy', key: 'turnFrom' } as const, { points: null, week: null, five: null } as TurnFrom)
 const spent = atom({ plugin: 'digimon-buddy', key: 'spent' } as const, { points: null, week: null, five: null } as Spent)
-// 어림한 풀피(점수). 띠가 읽으므로 크게 바뀔 때만 적는다
+// 어림한 풀피(점수). 쉬는 띠가 읽으므로 바뀔 때만 적는다. shownPools는 전투·알림에 입힌 값(턴의 시작과 끝에만 바꾼다)
 const pools = atom({ plugin: 'digimon-buddy', key: 'pools' } as const, { week: null, five: null } as Pools)
+const shownPools = atom({ plugin: 'digimon-buddy', key: 'shownPools' } as const, { week: null, five: null } as Pools)
 // 이 창이 지금까지 쓴 점수와 마지막으로 센 응답 (같은 응답을 두 번 세지 않게)
 const pointsTotal = atom({ plugin: 'digimon-buddy', key: 'pointsTotal' } as const, 0)
 const lastUsage = atom({ plugin: 'digimon-buddy', key: 'lastUsage' } as const, '')
@@ -142,20 +147,21 @@ async function countUsage($: any): Promise<number> {
   return read($, pointsTotal)
 }
 
-// 모든 창의 기록에서 마지막으로 센 사용률보다 오른 만큼. 늦게 온 옛 창의 값이나 내려간 값은 세지 않는다
-const growth = (last: Reading, now: Reading): { add: number; last: Reading } => {
-  if (!now) return { add: 0, last }
-  if (!last) return { add: 0, last: now }
-  if (renewedAfter(last, now)) return { add: now.used, last: now }
-  if (renewedAfter(now, last)) return { add: 0, last }
-  return now.used > last.used ? { add: now.used - last.used, last: now } : { add: 0, last }
+// 한도 하나의 어림을 한 걸음: 이번에 쓴 점수(dPts)를 지금 칸에 더하고, 사용률이 올랐으면 칸을 닫는다.
+// 늦게 온 옛 창의 값이나 내려간 값은 무시하고, 창이 다시 찼으면 걸친 칸의 점수는 버린다
+const stepTrack = (t: Track, now: Reading, dPts: number): Track => {
+  const run = t.run + dPts
+  if (!now) return { ...t, run }
+  if (!t.last) return { ...t, last: now, run: 0 }
+  if (renewedAfter(t.last, now)) return { ...t, last: now, run: 0 }
+  if (renewedAfter(now, t.last) || now.used <= t.last.used) return { ...t, run }
+  const add = now.used - t.last.used
+  return t.anchored ? { ...t, last: now, pts: t.pts + run, pct: t.pct + add, run: 0 } : { ...t, last: now, anchored: true, run: 0 }
 }
-const poolsOf = (c: Cal): Pools => ({
-  week: c.week >= CAL_MIN.week && c.points > 0 ? Math.round((c.points / c.week) * 100) : null,
-  five: c.five >= CAL_MIN.five && c.points > 0 ? Math.round((c.points / c.five) * 100) : null,
-})
-// 띠를 다시 그릴 만큼 바뀌었는지: 생기거나 없어졌거나 3% 넘게 바뀜
-const poolMoved = (a: number | null, b: number | null) => (a === null || b === null ? a !== b : Math.abs(a - b) > a * 0.03)
+const shrink = (t: Track, max: number): Track => (t.pct > max ? { ...t, pts: t.pts / 2, pct: t.pct / 2 } : t)
+const freshTrack = (): Track => ({ last: null, anchored: false, pts: 0, pct: 0, run: 0 })
+const poolOf = (t: Track, min: number) => (t.pct >= min && t.pts > 0 ? Math.round((t.pts / t.pct) * 100) : null)
+const poolsOf = (c: Cal): Pools => ({ week: poolOf(c.week, CAL_MIN.week), five: poolOf(c.five, CAL_MIN.five) })
 
 // 응답마다: 이 창이 쓴 점수와 오른 사용률을 모든 창의 기록에 더하고 풀피를 다시 어림한다
 async function calibrate($: any, list: readonly RateLimit[], total: number) {
@@ -164,16 +170,18 @@ async function calibrate($: any, list: readonly RateLimit[], total: number) {
   // 처음이면(-1) 이번 몫은 세지 않는다 (출발점만 잡는다)
   const dPts = prev >= 0 && total >= prev ? total - prev : 0
   const raw = (await $.store.get('cal')) as Partial<Cal> | undefined
-  const saved: Cal = { points: raw?.points ?? 0, week: raw?.week ?? 0, five: raw?.five ?? 0, last: raw?.last ?? { week: null, five: null } }
-  const w = growth(saved.last.week, readingOf(list, 'seven_day'))
-  const f = growth(saved.last.five, readingOf(list, 'five_hour'))
-  let cal: Cal = { points: saved.points + dPts, week: saved.week + w.add, five: saved.five + f.add, last: { week: w.last, five: f.last } }
-  // 오래된 몫이 계속 쌓이지 않게: 주간 사용률이 50%p 넘게 모이면 모두 반으로 줄인다 (비율은 그대로)
-  if (cal.week > 50) cal = { ...cal, points: cal.points / 2, week: cal.week / 2, five: cal.five / 2 }
-  if (dPts > 0 || raw?.points === undefined || w.add > 0 || f.add > 0 || w.last !== saved.last.week || f.last !== saved.last.five) await $.store.set('cal', cal)
+  const saved: Cal = raw?.v === 2 && raw.week && raw.five ? (raw as Cal) : { v: 2, week: freshTrack(), five: freshTrack() }
+  const cal: Cal = {
+    v: 2,
+    week: shrink(stepTrack(saved.week, readingOf(list, 'seven_day'), dPts), CAL_MAX.week),
+    five: shrink(stepTrack(saved.five, readingOf(list, 'five_hour'), dPts), CAL_MAX.five),
+  }
+  if (JSON.stringify(cal) !== JSON.stringify(saved)) await $.store.set('cal', cal)
   const now = poolsOf(cal)
   const cur = await read($, pools)
-  if (poolMoved(cur.week, now.week) || poolMoved(cur.five, now.five)) await update($, pools, () => now)
+  // 1% 넘게 바뀔 때만 적는다 (쉬는 띠가 다시 그려지므로)
+  const moved = (x: number | null, y: number | null) => (x === null || y === null ? x !== y : Math.abs(x - y) > x * 0.01)
+  if (moved(cur.week, now.week) || moved(cur.five, now.five)) await update($, pools, () => now)
 }
 
 // 턴을 시작할 때: 지금 점수와 한도를 출발점으로 적고 데미지를 비운다
@@ -636,6 +644,8 @@ export const register: Register = on => {
     await update($, shownXp, () => x)
     await update($, shownJob, () => j)
     await startSpent($)
+    const pl = await read($, pools)
+    await update($, shownPools, () => pl)
     await update($, phase, () => 'running')
     return next(e)
   })
@@ -709,6 +719,8 @@ export const register: Register = on => {
       const j = await read($, job)
       // 그림이 한 번만 그려지도록 phase보다 먼저 채운다
       await noteSpent($, (await $.session.usage()).rateLimits, await countUsage($), true)
+      const pl = await read($, pools)
+      await update($, shownPools, () => pl)
       await update($, lastMs, () => e.durationMs)
       await update($, shown, () => l)
       await update($, shownXp, () => x)
@@ -895,7 +907,7 @@ export const register: Register = on => {
     // 레벨과 같이 턴의 시작과 끝에 입힌 계열 (모드를 다시 불러와 아직 없으면 이달의 계열)
     const me = jobOf((await read($, shownJob)) || (await read($, job)))
     const dt = drawTier(rank.tier, await read($, omega), boosted)
-    const hpText = hpLine(hp, await read($, pools))
+    const hpText = hpLine(hp, await read($, shownPools))
     const hpTail = hpText ? [hpText] : []
     // 이번 턴이 찾은 디지바이스면 끝 알림에 띄우고 확인이 진화시킨다 (끝 알림일 때만 읽는다: 전투 그림이 괜히 다시 그려지지 않게)
     const withDigi = view === 'done' && (await read($, digiReady)) && (await read($, digiFound))
