@@ -3,6 +3,50 @@
 # flipAttack=False면 공격 그림을 뒤집지 않는다, mouth=(x, y)는 기술이 나가는 자리의 비율
 import json
 BABY = {'mouth': (0.85, 0.5)}
+# 디지몬마다 고유 기술 효과 (hooks/fx.ts 부품을 조합한 TS 식). t: 장비 단계, from: 입(기술 자리)
+FX = {
+ "koromon": "fx.bubble(from)",
+ "tsunomon": "fx.bubble(from)",
+ "pyocomon": "fx.bubble(from)",
+ "tanemon": "fx.bubble(from)",
+ "mochimon": "fx.bubble(from)",
+ "pukamon": "fx.bubble(from)",
+ "tokomon": "fx.bubble(from)",
+ "nyaromon": "fx.bubble(from)",
+ "agumon": "fx.fireball(from, t >= 2 ? 1.3 : 0.9)",
+ "greymon": "fx.fireball(from, 1.8)",
+ "metalgreymon": "fx.missiles(from, 2) + (t >= 8 ? fx.tridentArm([from[0] + 1, from[1] + 2.5]) : '')",
+ "wargreymon": "fx.orb(from, '#F26B21', '#FDE047', 1.9)",
+ "gabumon": "fx.beam(from, '#60A5FA', '#E0F2FE', t >= 2 ? 0.9 : 0.6)",
+ "garurumon": "fx.beam(from, '#3B82F6', '#BFDBFE', 1.2)",
+ "weregarurumon": "fx.strike('#93C5FD', '#E0F2FE', true) + (t >= 8 ? fx.impact('#E0F2FE', 30, 9.5, 1.4) : '')",
+ "metalgarurumon": "fx.cocytus(from)",
+ "piyomon": "fx.fireball(from, t >= 2 ? 1 : 0.8)",
+ "birdramon": "fx.meteorWing(from, t >= 5 ? 4 : 3)",
+ "garudamon": "fx.beam(from, '#F26B21', '#FDE047', 1.7) + (t >= 8 ? fx.strike('#F26B21', '#FDE047', true) : '')",
+ "hououmon": "fx.starlight(6)",
+ "palmon": "fx.vine(from)",
+ "togemon": "fx.strike('#F26B21', '#FFF7D6') + (t >= 5 ? fx.needleSpray(from) : '')",
+ "lilimon": "fx.flowerCannon(from)",
+ "rosemon": "fx.whip(from, '#EC4899', '#FBCFE8')",
+ "tentomon": "fx.beam(from, '#FDE047', '#FFFBEB', t >= 2 ? 0.7 : 0.5)",
+ "kabuterimon": "fx.orb(from, '#FDE047', '#FFFBEB', 1.3)",
+ "atlurkabuterimon": "fx.beam(from, '#FDE047', '#FFFBEB', 1.4)",
+ "heraklekabuterimon": "fx.beam(from, '#FDE047', '#FFFBEB', 1.9) + (t >= 8 ? fx.lightning() : '')",
+ "gomamon": "fx.marchingFishes(from, t >= 2 ? 5 : 3)",
+ "ikkakumon": "fx.harpoon(from, t >= 5 ? 2 : 1)",
+ "zudomon": "fx.strike('#CBD5E1', '#FFFFFF') + fx.lightning()",
+ "plesiomon": "fx.beam(from, '#38BDF8', '#E0F2FE', 1.6)",
+ "patamon": "fx.airShot(from)",
+ "angemon": "fx.beam(from, '#FDE68A', '#FFFFFF', 1.1)",
+ "holyangemon": "fx.pillar('#FDE68A', '#FFFFFF', 3) + (t >= 8 ? fx.strike('#FDE68A', '#FFFFFF') : '')",
+ "seraphimon": "fx.sevenHeavens()",
+ "plotmon": "fx.soundWave(from)",
+ "tailmon": "fx.strike('#F9A8D4', '#FFFFFF', true)",
+ "angewomon": "fx.holyArrow(from) + (t >= 8 ? fx.strike('#F9A8D4', '#FFFFFF') : '')",
+ "ofanimon": "fx.beam(from, '#FDE68A', '#FFFFFF', 1.2) + fx.pillar('#FDE68A', '#FFFFFF', 2.2)"
+}
+MELEE = ['tailmon', 'togemon', 'weregarurumon', 'zudomon']
 LINES = [
  ('courage','용기','🔥','fire',False,
   [('koromon','코로몬',5.5,BABY),('agumon','아구몬',9.5,{}),('greymon','그레이몬',13,{}),('metalgreymon','메탈그레이몬',14,{'mouth':(0.72,0.5)}),('wargreymon','워그레이몬',13,{'mouth':(0.9,0.45)})],
@@ -38,11 +82,14 @@ for key, name, icon, el, melee, stages, gear in LINES:
         if 'flipAttack' in opt: parts.append(f'flipAttack: {json.dumps(opt["flipAttack"])}')
         if 'flip' in opt: parts.append(f'flip: {json.dumps(opt["flip"])}')
         if 'mouth' in opt: parts.append(f'mouth: [{opt["mouth"][0]}, {opt["mouth"][1]}]')
+        if k in MELEE: parts.append('melee: true')
+        if k in FX: parts.append(f'fx: (t, from) => {FX[k]}')
         extra = ', { ' + ', '.join(parts) + ' }' if parts else ''
         rows.append(f"  sprite('{kname}', {C}.{k}!, {h}{extra}),")
     body = f"""// {name}의 문장: {' → '.join(s[1] for s in stages)}
 // 그림은 hooks/img/{key}.ts (위키몬의 디지몬 스토리 전투 스프라이트에 검은 테두리를 두른 것). preview/gen-lines.py가 만든다
 import {{ elementHit, makeLine, sprite }} from '../digi.ts'
+import * as fx from '../fx.ts'
 import {{ {C} }} from '../img/{key}.ts'
 import {{ CRESTS }} from '../img/crests.ts'
 
@@ -51,12 +98,12 @@ export const {key} = makeLine({{
   name: '{name}',
   icon: '{icon}',
   gear: {json.dumps(gear, ensure_ascii=False)},
-  melee: {'true' if melee else 'false'},
+  melee: false,
   stages: [
 {chr(10).join(rows)}
   ],
   crest: {{ image: CRESTS.{key}! }},
-  hit: (_t, stage, from) => elementHit('{el}', stage, {'true' if melee else 'false'}, from),
+  hit: (_t, stage, from) => elementHit('{el}', stage, false, from),
 }})
 """
     open(f'hooks/jobs/{key}.ts', 'w', encoding='utf-8').write(body)

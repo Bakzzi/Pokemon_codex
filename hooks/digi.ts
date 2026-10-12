@@ -65,6 +65,10 @@ export type Stage = {
   flipAttack?: boolean
   // 기술이 나가는 자리(입·손): 그림 너비·높이에 대한 비율 (0~1, 오른쪽을 본 상태 기준). 기본 (0.85, 0.3)
   mouth?: readonly [number, number]
+  // 이 모습의 고유 기술 효과 (hooks/fx.ts 부품으로). 없으면 계열의 hit을 쓴다. from = 입(기술이 나가는 자리)의 전투 좌표
+  fx?: (t: number, from: readonly [number, number]) => string
+  // 이 모습이 근접 공격이면 true (돌진했다 돌아온다). 없으면 계열의 melee
+  melee?: boolean
   // 땅에서 띄울 점 수 (날아다니는 디지몬). 그림자는 그대로 땅에 둔다
   hover?: number
   // 격자 위에 덧그리는 움직이는 부분 (꼬리·날개·불씨). 격자 좌표의 px/dots로 그린다
@@ -377,13 +381,17 @@ export const makeLine = (line: Line): Job & { formName: (t: number) => string } 
     name: line.name,
     icon: line.icon,
     gear: line.gear,
-    melee: line.melee,
+    melee: t => stageAt(t).melee ?? line.melee,
     formName: t => stageAt(t).name,
     small: (t, pose) => {
       const s = stageAt(t)
       return figure(s, pose) + (t >= 3 ? crestMark(line.crest, s) : '') + glory(s, t, false)
     },
-    hit: t => (t >= 10 ? '' : line.hit(t, stageOf(t), mouthOf(stageAt(t)))),
+    hit: t => {
+      if (t >= 10) return ''
+      const s = stageAt(t)
+      return s.fx ? s.fx(t, mouthOf(s)) : line.hit(t, stageOf(t), mouthOf(s))
+    },
     big: (variant, t) => {
       const s = stageAt(t)
       return (

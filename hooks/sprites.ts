@@ -120,7 +120,7 @@ const DAMAGE = [7, 15, 28, 46, 73, 120, 188, 290, 455, 999, 0]
 const approach = (t: number, job: Job) =>
   t >= 10
     ? ''
-    : job.melee
+    : (typeof job.melee === 'function' ? job.melee(t) : job.melee)
       ? `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;3.5 0;3.5 0;0 0;0 0" keyTimes="0;0.5;0.6;0.7;0.85;1" dur="${ATK}" repeatCount="indefinite"/>`
       : `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;-0.6 0;0 0;0 0" keyTimes="0;0.44;0.48;0.56;1" dur="${ATK}" repeatCount="indefinite"/>`
 

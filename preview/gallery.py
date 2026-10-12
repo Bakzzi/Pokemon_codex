@@ -2,6 +2,7 @@
 import base64, sys
 def uri(p): return 'data:image/png;base64,'+base64.b64encode(open(p,'rb').read()).decode()
 lines=[('courage','용기','코로몬 → 아구몬 → 그레이몬 → 메탈그레이몬 → 워그레이몬'),('friendship','우정','츠노몬 → 가브몬 → 가루몬 → 워가루몬 → 메탈가루몬'),('love','사랑','뿌카몬 → 피요몬 → 버드라몬 → 가루다몬 → 피닉스몬'),('sincerity','순수','타네몬 → 팔몬 → 니드몬 → 릴리몬 → 로제몬'),('knowledge','지식','모티몬 → 텐타몬 → 캅테리몬 → 메가캅테리몬 → 헤라클레스캅테리몬'),('reliability','성실','푸카몬 → 파피몬 → 이크몬 → 쥬드몬 → 플레시오몬'),('hope','희망','토코몬 → 파닥몬 → 엔젤몬 → 홀리엔젤몬 → 세라피몬'),('light','빛','뉴몬 → 플롯몬 → 가트몬 → 엔젤우몬 → 오파니몬')]
+attacks=''.join(f'''    <figure><img src="{uri(f'preview/out/{k}-attack.png')}" alt="{name}의 문장 공격 순간"></figure>\n''' for k,name,chain in lines)
 sections=''.join(f'''  <section>
     <h2>{name}의 문장 <small>{chain}</small></h2>
     <figure><img src="{uri(f'preview/out/{k}-idle.png')}" alt="{chain}"></figure>
@@ -37,10 +38,8 @@ figure.wide img {{ max-width:none; width:2600px; }}
     <figure class="wide"><img src="{uri('preview/out/courage-run.png')}" alt="레벨별 전투 장면: 쿠와가몬부터 아포카리몬, 오메가몬까지"></figure>
   </section>
   <section>
-    <h2>공격 순간 <small>서 있는 그림 그대로 몸을 움찔하며 입(손)에서 기술이 나갑니다. 고유 기술과 어울리는 경우에만 게임의 공격 장면을 씁니다</small></h2>
-    <figure><img src="{uri('preview/out/attack-check.png')}" alt="아구몬, 그레이몬, 메탈그레이몬, 워그레이몬, 메탈가루몬의 공격 순간"></figure>
-    <figure><img src="{uri('preview/out/attack-check2.png')}" alt="캅테리몬, 파닥몬, 엔젤몬, 플롯몬, 피요몬의 공격 순간"></figure>
-  </section>
+    <h2>공격 순간 <small>Lv.10 · 40 · 60 · 80 · 90. 디지몬마다 고유 기술이 입(손)에서 나가고, 근접 기술만 돌진합니다</small></h2>
+{attacks}  </section>
   <section>
     <h2>알림 <small>완료 · 대기 · 오류(색이 바램)</small></h2>
     <figure><img src="{uri('preview/out/big-check.png')}" alt="니드몬 완료, 헤라클레스캅테리몬 대기, 홀리엔젤몬 오류 알림"></figure>

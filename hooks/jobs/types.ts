@@ -9,8 +9,8 @@ export type Job = {
   icon: string
   // 단계 0~10에서 얻는 장비 이름 (0은 빈 글자)
   gear: readonly string[]
-  // true: 몬스터에게 돌진해 벤다. false: 제자리에서 쏜다(화살·총알·마법). hit이 그 효과를 그린다
-  melee: boolean
+  // true: 몬스터에게 돌진해 벤다. false: 제자리에서 쏜다(화살·총알·마법). hit이 그 효과를 그린다. 단계마다 다르면 함수
+  melee: boolean | ((t: number) => boolean)
   // 작은 Claude (4px 칸 단위, pixel.ts의 좌표). run: 전투 중, stand: 쉬는 중
   small: (t: number, pose: Pose) => string
   // 전투 장면에서 공격이 몬스터에게 닿는 효과 (전투 좌표, 칸 단위). 몬스터는 ATK 주기의 0.6~0.76에 맞는다
