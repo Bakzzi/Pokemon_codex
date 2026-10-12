@@ -13,6 +13,10 @@ export type Sprite = { href: string; w: number; h: number }
 
 // 장비 단계 t(레벨 ÷ 10) → 진화 단계: 0 유년기(1~9), 1 성장기(10~29), 2 성숙기(30~49), 3 완전체(50~79), 4 궁극체(80~). 11은 히든 진화(조그레스체)
 export const stageOf = (t: number) => (t >= 8 ? 4 : t >= 5 ? 3 : t >= 3 ? 2 : t >= 1 ? 1 : 0)
+// 진화 단계가 시작되는 장비 단계
+export const STAGE_START = [0, 1, 3, 5, 8] as const
+// 디지바이스 임시 진화: 한 진화 단계 위의 첫 장비 단계로 그린다 (궁극체·히든 진화는 그대로)
+export const boostTier = (t: number) => (t >= 8 ? t : STAGE_START[stageOf(t) + 1]!)
 
 export type Stage = {
   name: string

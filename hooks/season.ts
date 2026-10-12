@@ -63,7 +63,7 @@ export const firstBase = (percentUsed: number, resetsAt: string, seasonStart: nu
 // ── 보물상자 ──────────────────────────────────────────────────────
 // 일을 잘 마칠 때마다 1% 확률로 보물상자가 나온다(한 달에 한 번까지). 상자를 열면 펫 넷 가운데 하나가 나온다.
 // 끝난 시각과 걸린 시간을 섞어 굴리므로 Math.random 없이도 턴마다 결과가 다르다
-export const CHEST_CHANCE = 0.01
+export const DIGIVICE_CHANCE = 0.01
 
 const mix = (s: string) => {
   let h = 2166136261
@@ -72,8 +72,7 @@ const mix = (s: string) => {
   h = Math.imul(h ^ (h >>> 13), 3266489909) >>> 0
   return (h ^ (h >>> 16)) >>> 0
 }
-export const chestRoll = (t: number, salt: number) => mix(`chest:${t}:${salt}`) / 4294967296 < CHEST_CHANCE
-export const petIndex = (t: number, count: number) => mix(`pet:${t}`) % count
+export const digiviceRoll = (t: number, salt: number) => mix(`chest:${t}:${salt}`) / 4294967296 < DIGIVICE_CHANCE
 
 // ── 설치 전 사용량 어림 ────────────────────────────────────────────
 // 설치할 때 scripts/seed.mjs가 로컬 대화 기록에서 시간별 사용량(가격 비율로 환산)을 남긴다.

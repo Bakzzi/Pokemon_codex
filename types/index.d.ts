@@ -1,8 +1,8 @@
-// treasure: 보물상자를 열어 펫이 튀어나오는 장면
-export type Phase = 'idle' | 'running' | 'waiting' | 'done' | 'error' | 'treasure'
+// evolve: 디지바이스로 진화하는 장면
+export type Phase = 'idle' | 'running' | 'waiting' | 'done' | 'error' | 'evolve'
 
-// 이달의 보물상자($.store 'treasure', 모든 창이 같이 쓴다): 찾은 달과 시각, 열었으면 나온 펫(pets.ts의 key)
-export type Treasure = { month: string; at: number; pet?: string }
+// 이달의 디지바이스($.store 'digivice', 모든 창이 같이 쓴다): 찾은 달과 시각, 썼으면(진화했으면) on
+export type Digivice = { month: string; at: number; on?: boolean }
 export type WaitKind = 'permission' | 'question' | 'plan'
 
 // 한도 하나의 남은 비율(HP, 0~100)과 다시 차는 시각(ISO 8601)
@@ -58,13 +58,13 @@ declare module 'claude-code' {
       seasonEnd: number
       // 이달의 직업 key (모든 창이 시즌 기록에서 같은 값을 읽는다)
       job: string
-      // 이달에 찾았지만 아직 안 연 보물상자가 있는지, 따라다니는 펫 key(없으면 빈 글자)
-      chestReady: boolean
-      pet: string
+      // 이달에 찾았지만 아직 안 쓴 디지바이스가 있는지, 디지바이스로 임시 진화 중인지
+      digiReady: boolean
+      digiOn: boolean
       // 히든 진화가 열렸는지 (용기·우정 계열이 각각 Lv.80에 닿음, $.store 'maxed')
       omega: boolean
-      // 방금 끝난 턴이 상자를 찾았는지 (그 끝 알림에만 상자를 띄운다)
-      chestFound: boolean
+      // 방금 끝난 턴이 디지바이스를 찾았는지 (그 끝 알림에만 띄운다)
+      digiFound: boolean
       // 캐릭터에 입힌 직업 (턴의 시작과 끝에만 바꾼다)
       shownJob: string
       // 사람에게 묻는 중인 도구 호출들의 tool_use_id (띠는 읽지 않는다)

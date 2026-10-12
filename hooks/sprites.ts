@@ -89,7 +89,7 @@ export const xpBarSvg = (fraction: number, level: number) => {
 // ── 쉬는 동안: 지금 레벨의 차림으로 서 있는 Claude ─────────────────────────
 // 96 × 84px (띠 높이 86px 안), 5px 칸. 레벨은 옆 글자 줄에 있으니 배지 없이 Claude만 크게.
 // 발 위치는 단계와 상관없이 같게 두고, 후광(90~)까지 위에 들어가게 한다.
-// side: Claude 뒤(왼쪽)에 둘 것 — 따라다니는 펫이나 아직 안 연 보물상자 (pets.ts의 4.4 × 3.6칸 그림). 있으면 그림이 24px 넓어진다
+// side: 디지몬 뒤(왼쪽)에 둘 것 (지금은 쓰지 않는다). 있으면 그림이 24px 넓어진다
 export const idleSvg = (t: number, job: Job, side = '') => {
   const extra = side ? 24 : 0
   const width = 96 + extra
@@ -129,7 +129,7 @@ const levelBadge = (level: number, x: number, w: number, h: number, font: number
   `<text x="${x + w / 2}" y="${1 + h / 2}" dominant-baseline="central" text-anchor="middle" font-family="${FONT}" font-size="${font}" font-weight="800" fill="${INK}">Lv.${level}</text>`
 
 // hp: 머리 위 HP 이름표(한도), t: 장비 단계, level: 레벨, foe: 몬스터에게 남은 체력(0~1), job: 이달의 직업,
-// pet: 따라다니는 펫 그림(pets.ts, 4.4 × 3.6칸). 있으면 Claude를 3칸 오른쪽으로 옮기고 그 뒤 땅 위에 세운다
+// pet: 디지몬 뒤에 둘 것 (지금은 쓰지 않는다)
 export const runSvg = (hp: Hp, t: number, level: number, foe: number, job: Job, pet = '') => {
   const plate = plateHeight(hp, SMALL_PLATE)
   const top = Math.max(plate, 22) + 2
@@ -231,7 +231,7 @@ const motion = (variant: BigVariant) =>
 // false면 다 나온 모습에서 통통 뛰기·콕콕 찌르기만 반복한다. 앱이 스크롤 등으로 그림을 다시 만들어도
 // 등장 동작이 되풀이되지 않게, 등장이 끝난 뒤에는 false로 그린다.
 // t: 장비 단계 (0~10). 머리 위로 올라가는 장비만큼(job.bigHeadroom) 위에 자리를 더 둔다.
-// side: Claude 뒤(오른쪽 발치)에 둘 것 — 펫, 보물상자, 상자에서 튀어나오는 펫 (pets.ts 그림을 12배로). 있으면 54px 넓어진다
+// side: 디지몬 뒤(오른쪽 발치)에 둘 것 (지금은 쓰지 않는다). 있으면 54px 넓어진다
 // foe: 오류 알림에서 오른쪽에 서서 기술로 내 디지몬을 치는 상대 (monsters.ts foeBig에 heroDx를 넘겨 그린다). 있으면 120px 넓어진다
 export const bigSvg = (variant: BigVariant, line1: string, line2: string, hp: Hp, intro: boolean, t: number, job: Job, side = '', foe?: (heroDx: number) => string) => {
   const plate = plateHeight(hp, LARGE_PLATE)

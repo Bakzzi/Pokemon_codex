@@ -1,21 +1,19 @@
 import { atom, read, update } from 'claude-code'
 import type { Register } from 'claude-code'
 
-import type { Cycle, Hp, Limit, Limits, Phase, Treasure, WaitKind } from '../types'
+import type { Cycle, Digivice, Hp, Limit, Limits, Phase, WaitKind } from '../types'
 import { MONSTER_NAMES, foeBig, foeSkill } from './monsters.ts'
-import { PETS, chestClosed, chestReveal, petOf } from './pets.ts'
 import {
   HOUR_MS,
   KST,
   MAX_XP,
   SEED_FRESH_MS,
-  chestRoll,
+  digiviceRoll,
   firstBase,
   foeHp,
   fromSeed,
   levelOf,
   monthOf,
-  petIndex,
   rankOf,
   tierOf,
   weekKey,
@@ -24,7 +22,7 @@ import {
 import { SEED } from './seed.ts'
 import { bigSvg, hpBarSvg, hpColor, idleSvg, runSvg, xpBarSvg } from './sprites.ts'
 import { jobOf, nextJobs } from './jobs/index.ts'
-import { formName } from './digi.ts'
+import { boostTier, formName } from './digi.ts'
 
 // 입력창 위 띠(밴드)는 상태가 바뀔 때만 다시 그린다. 데스크톱 앱은 띠를 다시 그릴 때마다
 // 움직이는 그림 칸을 새로 만들어서 그림이 처음부터 다시 돈다. 그래서 띠를 그리는 훅은
@@ -49,11 +47,11 @@ const shownXp = atom({ plugin: 'run-buddy', key: 'shownXp' } as const, 0)
 const seasonEnd = atom({ plugin: 'run-buddy', key: 'seasonEnd' } as const, 0)
 // 이달의 직업 (시즌 기록의 job). 그림과 장비 이름이 이 직업을 따른다
 const job = atom({ plugin: 'run-buddy', key: 'job' } as const, '')
-// 이달의 보물상자: 찾고 아직 안 열었는지, 열어서 나온 펫 (모든 창이 $.store 'treasure'에서 같은 값을 읽는다)
-const chestReady = atom({ plugin: 'run-buddy', key: 'chestReady' } as const, false)
-const pet = atom({ plugin: 'run-buddy', key: 'pet' } as const, '')
-// 방금 끝난 턴이 상자를 찾았는지 (그 끝 알림에만 상자를 띄운다. 예전에 찾았거나 다른 창에서 찾은 상자는 쉬는 띠에)
-const chestFound = atom({ plugin: 'run-buddy', key: 'chestFound' } as const, false)
+// 이달의 디지바이스: 찾고 아직 안 썼는지, 써서 임시 진화 중인지 (모든 창이 $.store 'digivice'에서 같은 값을 읽는다)
+const digiReady = atom({ plugin: 'run-buddy', key: 'digiReady' } as const, false)
+const digiOn = atom({ plugin: 'run-buddy', key: 'digiOn' } as const, false)
+// 방금 끝난 턴이 디지바이스를 찾았는지 (그 끝 알림에만 띄운다. 예전에 찾았거나 다른 창에서 찾은 것은 쉬는 띠에)
+const digiFound = atom({ plugin: 'run-buddy', key: 'digiFound' } as const, false)
 // 캐릭터에 입힌 직업: 턴의 시작과 끝에만 바꾼다 (자정에 달이 바뀌어도 싸우는 도중 그림이 바뀌지 않게)
 const shownJob = atom({ plugin: 'run-buddy', key: 'shownJob' } as const, '')
 // 히든 진화: 용기(워그레이몬)·우정(메탈가루몬) 시즌에서 각각 Lv.80(궁극체)에 닿으면 열린다 ($.store 'maxed'에 닿은 계열을 모은다). 열린 뒤에는 어느 시즌이든 Lv.100에 오메가몬
@@ -72,8 +70,8 @@ async function noteMaxed($: any, lineKey: string | undefined, level: number) {
   if ((await read($, omega)) !== ready) await update($, omega, () => ready)
   if (ready && !wasReady) await $.ui.toast('🌟 워그레이몬과 메탈가루몬이 모두 깨어났어요! 이제 어느 시즌이든 Lv.100에는 오메가몬으로 조그레스 진화!')
 }
-// 그릴 단계: 히든 진화가 열렸고 Lv.100이면 11(오메가몬)
-const drawTier = (tier: number, _lineKey: string, ready: boolean) => (ready && tier >= 10 ? 11 : tier)
+// 그릴 단계: 히든 진화가 열렸고 Lv.100이면 11(오메가몬). 디지바이스 임시 진화 중이면 한 단계 위
+const drawTier = (tier: number, _lineKey: string, ready: boolean, boosted = false) => (ready && tier >= 10 ? 11 : boosted ? boostTier(tier) : tier)
 // 사람에게 묻는 중인 도구 호출들 (여럿이 같이 돌 때 하나가 끝났다고 기다림을 풀지 않게). 띠는 읽지 않는다
 const pendingAsks = atom({ plugin: 'run-buddy', key: 'pendingAsks' } as const, [] as string[])
 
@@ -219,55 +217,55 @@ async function syncShared($: any) {
     const used = { kind: 'seven_day', percentUsed: 100 - merged.week.left, resetsAt: merged.week.resetsAt ?? undefined }
     await gainXp($, [used])
   }
-  await syncTreasure($, month.key)
+  await syncDigivice($, month.key)
 }
 
-// ── 보물상자와 펫 ─────────────────────────────────────────────────
-// 일을 잘 마칠 때 1% 확률로 보물상자가 나온다(한 달에 한 번까지). 확인을 누르면 열리고 펫 넷 가운데 하나가 나와
-// 그달 내내 Claude 뒤를 따라다닌다. 다른 창에서 찾은 상자는 1분 안에 이 창의 쉬는 띠에도 나온다
+// ── 디지바이스 (임시 진화) ─────────────────────────────────────────
+// 일을 잘 마칠 때 1% 확률로 디지바이스가 나온다(한 달에 한 번까지, 아직 궁극체가 아닐 때만). 확인을 누르면 빛나며
+// 한 진화 단계 위 모습이 되고, 그달 남은 기간 동안 유지된다(모습과 기술만 위고 레벨·상대·경험치는 그대로. 레벨로 그 단계에
+// 닿으면 자연히 흡수된다). 다른 창에서 찾은 디지바이스는 1분 안에 이 창의 쉬는 띠에도 나온다
 
-// 모든 창이 같이 쓰는 기록에서 이달의 상자·펫을 읽어 이 창에 맞춘다 (지난달 것이면 없앤다)
-async function syncTreasure($: any, monthKey: string) {
-  const saved = (await $.store.get('treasure')) as Treasure | undefined
+// 모든 창이 같이 쓰는 기록에서 이달의 디지바이스를 읽어 이 창에 맞춘다 (지난달 것이면 없앤다)
+async function syncDigivice($: any, monthKey: string) {
+  const saved = (await $.store.get('digivice')) as Digivice | undefined
   const mine = saved?.month === monthKey ? saved : undefined
-  const ready = mine !== undefined && !mine.pet
-  const key = mine?.pet ?? ''
-  if ((await read($, chestReady)) !== ready) await update($, chestReady, () => ready)
-  if ((await read($, pet)) !== key) {
-    await update($, pet, () => key)
-    // 펫 등장 장면을 띄워 둔 채 달이 바뀌어 펫이 떠났으면 그 장면도 닫는다
-    if (!key && (await read($, phase)) === 'treasure') await update($, phase, () => 'idle')
+  const ready = mine !== undefined && !mine.on
+  const on = mine?.on === true
+  if ((await read($, digiReady)) !== ready) await update($, digiReady, () => ready)
+  if ((await read($, digiOn)) !== on) {
+    await update($, digiOn, () => on)
+    // 진화 장면을 띄워 둔 채 달이 바뀌어 효과가 끝났으면 그 장면도 닫는다
+    if (!on && (await read($, phase)) === 'evolve') await update($, phase, () => 'idle')
   }
 }
 
-// 일을 마친 턴마다 상자를 굴린다. 이달에 이미 찾았으면 굴리지 않는다. 이번에 새로 찾았으면 true
-async function rollChest($: any, salt: number) {
+// 일을 마친 턴마다 굴린다. 이달에 이미 찾았거나 이미 궁극체면 굴리지 않는다. 이번에 새로 찾았으면 true
+async function rollDigivice($: any, salt: number, level: number) {
   const t = await $.clock.now()
   const monthKey = monthOf(t).key
-  const saved = (await $.store.get('treasure')) as Treasure | undefined
-  const found = saved?.month !== monthKey && chestRoll(t, salt)
-  if (found) await $.store.set('treasure', { month: monthKey, at: t })
-  await syncTreasure($, monthKey)
+  const saved = (await $.store.get('digivice')) as Digivice | undefined
+  const found = saved?.month !== monthKey && level < 80 && digiviceRoll(t, salt)
+  if (found) await $.store.set('digivice', { month: monthKey, at: t })
+  await syncDigivice($, monthKey)
   return found
 }
 
-// 상자를 연다: 펫을 고르고(다른 창이 먼저 열었으면 그 펫), 상자에서 펫이 튀어나오는 장면으로 바꾼다
-async function openChest($: any) {
+// 디지바이스를 쓴다: 임시 진화를 켜고 진화 장면으로 바꾼다
+async function useDigivice($: any) {
   const t = await $.clock.now()
   const monthKey = monthOf(t).key
-  const saved = (await $.store.get('treasure')) as Treasure | undefined
+  const saved = (await $.store.get('digivice')) as Digivice | undefined
   if (saved?.month !== monthKey) {
-    // 자정이 지나 지난달 상자가 되었다
-    await syncTreasure($, monthKey)
+    // 자정이 지나 지난달 것이 되었다
+    await syncDigivice($, monthKey)
     if ((await read($, phase)) !== 'idle') await update($, phase, () => 'idle')
-    await $.ui.toast('🎁 달이 바뀌어 지난달 보물상자는 사라졌어요. 이번 달에 다시 찾아봐요!')
+    await $.ui.toast('📱 달이 바뀌어 지난달 디지바이스는 빛을 잃었어요. 이번 달에 다시 찾아봐요!')
     return
   }
-  const key = saved.pet ?? PETS[petIndex(t, PETS.length)]!.key
-  if (!saved.pet) await $.store.set('treasure', { ...saved, pet: key })
+  if (!saved.on) await $.store.set('digivice', { ...saved, on: true })
   await update($, introUntil, () => t + INTRO_MS)
-  await syncTreasure($, monthKey)
-  await update($, phase, () => 'treasure')
+  await syncDigivice($, monthKey)
+  await update($, phase, () => 'evolve')
 }
 
 // 1분마다 맞추는 타이머. 모드를 다시 불러오면(/reload-plugins) 엔진이 타이머를 없애고 이 변수도 새로 시작하므로,
@@ -565,20 +563,20 @@ export const register: Register = on => {
       await update($, asking, () => false)
       await update($, pendingAsks, () => [])
       await update($, introUntil, () => t + INTRO_MS)
-      // 잘 마친 턴이면 보물상자를 굴린다 (끝 알림이 처음 그려질 때 상자가 같이 나오게 phase보다 먼저).
-      // 이번 턴이 찾았을 때만 끝 알림에 상자를 띄운다
-      const found = !e.isAborted && !failed ? await rollChest($, e.durationMs) : false
-      if ((await read($, chestFound)) !== found) await update($, chestFound, () => found)
+      // 잘 마친 턴이면 디지바이스를 굴린다 (끝 알림이 처음 그려질 때 같이 나오게 phase보다 먼저).
+      // 이번 턴이 찾았을 때만 끝 알림에 띄운다
+      const found = !e.isAborted && !failed ? await rollDigivice($, e.durationMs, levelOf(x)) : false
+      if ((await read($, digiFound)) !== found) await update($, digiFound, () => found)
       await update($, phase, () => (e.isAborted ? 'idle' : failed ? 'error' : 'done'))
       await startSync($)
     }
     return next(e)
   })
 
-  // 다음 지시를 보내면 끝 알림을 치운다 (끝·오류·펫 등장일 때만 적는다. 안 연 상자는 쉬는 띠에 남는다)
+  // 다음 지시를 보내면 끝 알림을 치운다 (끝·오류·진화 장면일 때만 적는다. 안 쓴 디지바이스는 쉬는 띠에 남는다)
   on('prompt.submit', async ($, e, next) => {
     const p = await read($, phase)
-    if (p === 'done' || p === 'error' || p === 'treasure') await update($, phase, () => 'idle')
+    if (p === 'done' || p === 'error' || p === 'evolve') await update($, phase, () => 'idle')
     await startSync($)
     return next(e)
   })
@@ -603,10 +601,10 @@ export const register: Register = on => {
     // 상태와 실제 작업 여부가 어긋나면(모드가 중간에 다시 불린 경우 등) 작업 여부를 따른다
     const known = p === 'running' || p === 'waiting'
     const view: Phase = known ? (e.props.isWorking ? p : 'idle') : e.props.isWorking ? 'running' : p
-    // 따라다니는 펫 (전투·쉬는 띠·알림에 같이 그린다)
-    const buddy = petOf(await read($, pet))
-    const open = () => {
-      void openChest($)
+    // 디지바이스 임시 진화 중인지 (전투·쉬는 띠·알림 모두 한 단계 위 모습으로 그린다)
+    const boosted = await read($, digiOn)
+    const evolve = () => {
+      void useDigivice($)
     }
     // 모드를 다시 불러온 뒤 아무 일도 없는 창에서도 1분 맞추기가 돌게 한다 (그리는 동안에는 상태를 못 적으니 잠시 뒤에)
     if (!syncTimer && !syncKicked) {
@@ -618,31 +616,31 @@ export const register: Register = on => {
 
     // 쉬는 중: 입력창 위에 HP 막대 두 줄 (5시간·주간 한도)과 레벨·경험치 줄
     if (view === 'idle') {
-      // 아직 안 연 보물상자 (이 창이나 다른 창에서 찾은 것)
-      const chest = await read($, chestReady)
+      // 아직 안 쓴 디지바이스 (이 창이나 다른 창에서 찾은 것)
+      const digi = await read($, digiReady)
       const lim: Limits = await read($, limits)
       const nowMs = await $.clock.now()
       const rows = hpRowsOf(lim, nowMs)
-      if (rows.length === 0 && !chest && !buddy) return next(e)
+      if (rows.length === 0 && !digi) return next(e)
       const x = await read($, xp)
       const r = rankOf(x)
       const me = jobOf(await read($, job))
-      const rt = drawTier(r.tier, me.key, await read($, omega))
+      const rt = drawTier(r.tier, me.key, await read($, omega), boosted)
       const days = Math.max(0, Math.ceil(((await read($, seasonEnd)) - nowMs) / 86_400_000))
       // 주간 한도 정보가 있을 때만 경험치가 쌓이니 그때만 레벨 줄을 보여 준다. 안 연 상자가 있으면 그 줄에서 연다
       const lv = lim.week
         ? {
             label: `Lv.${r.level} ${formName(me, rt)} ⚔ ${r.foe}`,
-            detail: chest
-              ? '🎁 보물상자를 찾았어요!'
+            detail: digi
+              ? '📱 디지바이스를 찾았어요!'
               : r.next
                 ? `상대 HP ${r.foeHp}% · 시즌 ${days}일 남음`
                 : `최종 보스와 결전 중 · 시즌 ${days}일 남음`,
             value: `XP ${x}/${MAX_XP}`,
           }
         : null
-      // 레벨 줄이 없으면(주간 한도 정보가 없는 계정) 상자·펫은 따로 한 줄에 보여 준다
-      const companion = !lv && (chest || buddy) ? (chest ? '🎁 보물상자를 찾았어요!' : `${buddy!.icon} ${buddy!.name}${buddy!.josa} 함께해요`) : ''
+      // 레벨 줄이 없으면(주간 한도 정보가 없는 계정) 디지바이스는 따로 한 줄에 보여 준다
+      const companion = !lv && digi ? '📱 디지바이스를 찾았어요!' : ''
       const theirs = await next(e)
       const tail = theirs ? [theirs] : []
       if (e.surface === 'terminal') {
@@ -662,8 +660,7 @@ export const register: Register = on => {
                   <Box key="level">
                     <Text bold>{`${lv.label}  ${lv.value}  `}</Text>
                     <Text dimColor>{lv.detail}</Text>
-                    {buddy ? [<Text dimColor>{`  ${buddy.icon} ${buddy.name}`}</Text>] : []}
-                    {chest ? [<Button key="run-buddy-chest" label="열기" onPress={open} />] : []}
+                    {digi ? [<Button key="run-buddy-digi" label="진화" onPress={evolve} />] : []}
                   </Box>,
                 ]
               : []}
@@ -671,7 +668,7 @@ export const register: Register = on => {
               ? [
                   <Box key="companion">
                     <Text bold>{companion}  </Text>
-                    {chest ? [<Button key="run-buddy-chest" label="열기" onPress={open} />] : []}
+                    {digi ? [<Button key="run-buddy-digi" label="진화" onPress={evolve} />] : []}
                   </Box>,
                 ]
               : []}
@@ -680,9 +677,9 @@ export const register: Register = on => {
         )
       }
       const { Box, Text, Button, Svg } = $.ui.resolve(e)
-      // 왼쪽에는 지금 레벨의 차림으로 서 있는 Claude를 늘 세워 두고, 그 뒤에 펫(또는 안 연 상자)을 둔다
-      const stand = idleSvg(rt, me, chest ? chestClosed() : buddy ? buddy.small('stand') : '')
-      const company = chest ? ' · 보물상자' : buddy ? ` · ${buddy.name}` : ''
+      // 왼쪽에는 지금 모습의 디지몬을 늘 세워 둔다
+      const stand = idleSvg(rt, me)
+      const company = digi ? ' · 디지바이스' : boosted ? ' · 디지바이스 진화 중' : ''
       return (
         <Box flexDirection="column">
           <Box flexDirection="row" alignItems="center" columnGap={2}>
@@ -714,7 +711,7 @@ export const register: Register = on => {
                           <Text bold>{lv.label}</Text>
                         </Box>
                         <Text dimColor>{lv.detail}  </Text>
-                        {chest ? [<Button key="run-buddy-chest" label="열기" onPress={open} />] : [<Text bold>{lv.value}</Text>]}
+                        {digi ? [<Button key="run-buddy-digi" label="진화" onPress={evolve} />] : [<Text bold>{lv.value}</Text>]}
                       </Box>
                       <Svg source={xpBarSvg(x / MAX_XP, r.level)} alt={`경험치 ${x}/${MAX_XP}`} />
                     </Box>,
@@ -726,7 +723,7 @@ export const register: Register = on => {
                       <Box flexGrow={1}>
                         <Text bold>{companion}</Text>
                       </Box>
-                      {chest ? [<Button key="run-buddy-chest" label="열기" onPress={open} />] : []}
+                      {digi ? [<Button key="run-buddy-digi" label="진화" onPress={evolve} />] : []}
                     </Box>,
                   ]
                 : []}
@@ -744,39 +741,38 @@ export const register: Register = on => {
     const rank = rankOf(sx)
     // 레벨과 같이 턴의 시작과 끝에 입힌 직업 (모드를 다시 불러와 아직 없으면 이달의 직업)
     const me = jobOf((await read($, shownJob)) || (await read($, job)))
-    const dt = drawTier(rank.tier, me.key, await read($, omega))
+    const dt = drawTier(rank.tier, me.key, await read($, omega), boosted)
     const hpText = hpLine(hp)
     const hpTail = hpText ? [hpText] : []
-    // 이번 턴이 찾은 상자면 끝 알림에 띄우고 확인이 상자를 연다 (끝 알림일 때만 읽는다: 전투 그림이 괜히 다시 그려지지 않게)
-    const withChest = view === 'done' && (await read($, chestReady)) && (await read($, chestFound))
-    const ack = withChest
-      ? open
+    // 이번 턴이 찾은 디지바이스면 끝 알림에 띄우고 확인이 진화시킨다 (끝 알림일 때만 읽는다: 전투 그림이 괜히 다시 그려지지 않게)
+    const withDigi = view === 'done' && (await read($, digiReady)) && (await read($, digiFound))
+    const ack = withDigi
+      ? evolve
       : () => {
           void update($, phase, () => 'idle')
         }
-    const met = buddy ? `${buddy.icon} ${buddy.name}${buddy.josa} 동료가 됐어요!` : ''
 
     if (e.surface === 'terminal') {
       const { Box, Text, Button } = $.ui.resolve(e)
       let line
       if (view === 'running') {
-        line = <Text>{[`⚔ Lv.${rank.level} ${formName(me, dt)}${buddy ? ` ${buddy.icon}` : ''} vs ${rank.foe}`, ...hpTail].join(' · ')}</Text>
+        line = <Text>{[`⚔ Lv.${rank.level} ${formName(me, dt)}${boosted ? ' 📱' : ''} vs ${rank.foe}`, ...hpTail].join(' · ')}</Text>
       } else if (view === 'waiting') {
         const wait = WAIT[await read($, waitKind)]
         line = <Text bold color={AMBER}>{`${wait.icon} ${wait.title} · ${wait.hint}`}</Text>
       } else {
         const ranFor = elapsedText(await read($, lastMs))
         const text =
-          view === 'treasure'
-            ? `🎁 ${met} 이번 달 내내 따라다녀요`
-            : withChest
-              ? `🎁 보물상자를 찾았어요! 확인을 누르면 열어요 · ${ranFor}`
+          view === 'evolve'
+            ? `📱 ${formName(me, dt)}(으)로 진화! 이달 남은 기간 동안 한 단계 위 모습으로 싸워요`
+            : withDigi
+              ? `📱 디지바이스를 찾았어요! 확인을 누르면 진화해요 · ${ranFor}`
               : view === 'done'
                 ? `🎉 다 했어요! 결과를 확인해 주세요 · ${ranFor}`
-                : `⚠ 멈췄어요! 오류가 났어요 · ${ranFor}`
+                : `⚠ ${rank.foe}의 ${foeSkill(rank.tier)}! 문제가 생겼어요 · ${ranFor}`
         line = (
           <Box flexDirection="row" columnGap={2}>
-            <Text bold color={view === 'error' ? RED : view === 'treasure' || withChest ? AMBER : GREEN}>
+            <Text bold color={view === 'error' ? RED : view === 'evolve' || withDigi ? AMBER : GREEN}>
               {text}
             </Text>
             <Button key="run-buddy-ack" label="확인" onPress={ack} />
@@ -795,7 +791,7 @@ export const register: Register = on => {
 
     // 일하는 중: 장비를 찬 Claude가 레벨에 맞는 몬스터와 싸운다 (경과 시간·하는 일은 앱의 진행 표시줄에)
     if (view === 'running') {
-      const run = runSvg(hp, dt, rank.level, foeHp(sx), me, buddy ? buddy.small('run') : '')
+      const run = runSvg(hp, dt, rank.level, foeHp(sx), me)
       // JSX가 쓰는 h와 겹치지 않게 다른 이름을 쓴다
       const artH = Math.min(BAND_H, run.height)
       return (
@@ -817,25 +813,25 @@ export const register: Register = on => {
       )
     }
 
-    // 끝·기다림·오류·펫 등장: 확 커져서 말풍선을 가리키는 Claude (뒤에 펫이나 상자)
+    // 끝·기다림·오류·진화: 확 커진 디지몬과 말풍선
     // 등장 동작이 끝난 뒤에 다시 그려지면(스크롤 등) 다 나온 모습으로 그린다.
     // 시각만 비교하고 따로 적지 않으므로, 등장이 끝났다고 띠가 다시 그려지지는 않는다
     const intro = (await $.clock.now()) < (await read($, introUntil))
-    const side = buddy ? buddy.small('stand') : ''
     let big
     if (view === 'waiting') {
       const wait = WAIT[await read($, waitKind)]
-      big = { art: bigSvg('waiting', wait.bubble[0], wait.bubble[1], hp, intro, dt, me, side), alt: `기다리는 ${formName(me, dt)}: ${wait.title}`, color: AMBER, title: wait.title, sub: wait.hint }
-    } else if (view === 'treasure' && buddy) {
-      big = { art: bigSvg('done', `${buddy.name} 등장!`, '이달 내내 따라다녀요', hp, intro, dt, me, chestReveal(buddy, intro)), alt: `보물상자에서 ${buddy.name}${buddy.josa} 나왔어요`, color: AMBER, title: `🎁 ${met}`, sub: '이번 달 내내 내 디지몬을 따라다녀요' }
+      big = { art: bigSvg('waiting', wait.bubble[0], wait.bubble[1], hp, intro, dt, me), alt: `기다리는 ${formName(me, dt)}: ${wait.title}`, color: AMBER, title: wait.title, sub: wait.hint }
+    } else if (view === 'evolve') {
+      const evolved = formName(me, dt)
+      big = { art: bigSvg('done', `${evolved}(으)로 진화!`, '디지바이스의 빛으로', hp, intro, dt, me), alt: `디지바이스로 ${evolved}(으)로 진화한 내 디지몬`, color: AMBER, title: `📱 ${evolved}(으)로 진화!`, sub: '이달 남은 기간 동안 한 단계 위 모습으로 싸워요' }
     } else {
       const ranFor = elapsedText(await read($, lastMs))
       big =
         view === 'error'
-          ? { art: bigSvg('error', `${rank.foe}의 ${foeSkill(rank.tier)}!`, '문제가 생겼어요', hp, intro, dt, me, side, dx => foeBig(rank.tier, dx)), alt: `${rank.foe}에게 맞은 내 디지몬`, color: RED, title: `${rank.foe}의 ${foeSkill(rank.tier)}! 문제가 생겼어요`, sub: `${ranFor} 싸우다 한 대 맞음 · Lv.${rank.level} ${formName(me, dt)}` }
-          : withChest
-            ? { art: bigSvg('done', '보물상자 발견!', '확인을 눌러 열어 봐요', hp, intro, dt, me, chestClosed()), alt: '일을 마치고 보물상자를 찾은 내 디지몬', color: AMBER, title: '🎁 보물상자를 찾았어요!', sub: `${ranFor} 전투 · 확인을 누르면 열어요` }
-            : { art: bigSvg('done', '다 했어요!', '결과 확인해 주세요', hp, intro, dt, me, side), alt: '일을 마친 내 디지몬', color: GREEN, title: '작업 끝! 확인해 주세요', sub: `${ranFor} 전투 · Lv.${rank.level} ${formName(me, dt)}` }
+          ? { art: bigSvg('error', `${rank.foe}의 ${foeSkill(rank.tier)}!`, '문제가 생겼어요', hp, intro, dt, me, '', dx => foeBig(rank.tier, dx)), alt: `${rank.foe}에게 맞은 내 디지몬`, color: RED, title: `${rank.foe}의 ${foeSkill(rank.tier)}! 문제가 생겼어요`, sub: `${ranFor} 싸우다 한 대 맞음 · Lv.${rank.level} ${formName(me, dt)}` }
+          : withDigi
+            ? { art: bigSvg('done', '디지바이스 발견!', '확인을 눌러 진화해요', hp, intro, dt, me), alt: '일을 마치고 디지바이스를 찾은 내 디지몬', color: AMBER, title: '📱 디지바이스를 찾았어요!', sub: `${ranFor} 전투 · 확인을 누르면 진화해요` }
+            : { art: bigSvg('done', '다 했어요!', '결과 확인해 주세요', hp, intro, dt, me), alt: '일을 마친 내 디지몬', color: GREEN, title: '작업 끝! 확인해 주세요', sub: `${ranFor} 전투 · Lv.${rank.level} ${formName(me, dt)}` }
     }
 
     return (
