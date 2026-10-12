@@ -26,7 +26,7 @@ import { boostTier, formName } from './digi.ts'
 
 // 입력창 위 띠(밴드)는 상태가 바뀔 때만 다시 그린다. 데스크톱 앱은 띠를 다시 그릴 때마다
 // 움직이는 그림 칸을 새로 만들어서 그림이 처음부터 다시 돈다. 그래서 띠를 그리는 훅은
-// phase·waitKind·lastMs·shown·shownXp·introUntil·spent(·쉬는 중의 limits·xp)만 읽고, 자주 바뀌는
+// phase·waitKind·lastMs·shown·shownXp·introUntil(·쉬는 중의 limits·xp)만 읽고, 자주 바뀌는
 // 하는 일과 한마디는 앱의 진행 표시줄(Spinner) 뒤에 붙인다. 같은 값을 다시 적어도 다시 그려지므로
 // 띠가 읽는 값은 바뀔 때만 적는다.
 
@@ -74,67 +74,6 @@ async function noteMaxed($: any, lineKey: string | undefined, level: number) {
 const drawTier = (tier: number, ready: boolean, boosted = false) => (ready && tier >= 10 ? 11 : boosted ? boostTier(tier) : tier)
 // 사람에게 묻는 중인 도구 호출들 (여럿이 같이 돌 때 하나가 끝났다고 기다림을 풀지 않게). 띠는 읽지 않는다
 const pendingAsks = atom({ plugin: 'digimon-buddy', key: 'pendingAsks' } as const, [] as string[])
-
-// ── 이번 응답의 점수 ────────────────────────────────────────────────
-// 끝 알림에 이번 응답(턴)에서 쓴 양을 점수로 적는다. 사용률은 1% 단위라 응답 하나로는 거의 움직이지 않으므로,
-// 응답마다 앱이 알려 주는 토큰 수(context.breakdown.apiUsage)에 공개 가격의 비율로 무게를 준다
-// (scripts/seed.mjs와 같은 비율. 구독 계정 데스크톱 앱에서는 세션 비용 cost.usd가 늘지 않아 쓰지 않는다). 가중 토큰 1,000개 = 1점.
-// 앱의 측정 이벤트는 응답 중에 오지 않아 턴의 시작과 끝에 센다. 전투 중 데미지 숫자는 sprites.ts의 연출용 값이다
-// 토큰 종류별 무게 (입력 대비 가격 비율): 출력 5배, 캐시 읽기 0.05배, 캐시 쓰기 1.25배
-const WEIGHT = { input: 1, output: 5, cacheRead: 0.05, cacheWrite: 1.25 }
-const TOKENS_PER_POINT = 1000
-
-// 턴을 시작할 때의 점수와 이번 턴에 쓴 점수
-const turnFrom = atom({ plugin: 'digimon-buddy', key: 'turnFromPoints' } as const, null as number | null)
-const spent = atom({ plugin: 'digimon-buddy', key: 'spentPoints' } as const, null as number | null)
-// 이 창이 지금까지 쓴 점수와 마지막으로 센 응답 (같은 응답을 두 번 세지 않게)
-const pointsTotal = atom({ plugin: 'digimon-buddy', key: 'pointsTotal' } as const, 0)
-const lastUsage = atom({ plugin: 'digimon-buddy', key: 'lastUsage' } as const, '')
-
-type ApiUsage = { input_tokens: number; output_tokens: number; cache_read_input_tokens: number; cache_creation_input_tokens: number }
-const pointsOfUsage = (a: ApiUsage) =>
-  (a.input_tokens * WEIGHT.input + a.output_tokens * WEIGHT.output + a.cache_read_input_tokens * WEIGHT.cacheRead + a.cache_creation_input_tokens * WEIGHT.cacheWrite) /
-  TOKENS_PER_POINT
-
-// 마지막 응답의 토큰 수를 읽어 아직 안 센 응답이면 이 창의 점수에 더한다. 지금까지 쓴 점수를 돌려준다.
-// breakdown 'summary'는 앱 안에서 어림하므로 요청을 보내지 않는다. 메인 대화의 응답만 잡힌다(서브에이전트는 빠진다)
-async function countUsage($: any): Promise<number> {
-  const u = await $.session.usage({ breakdown: 'summary' })
-  const a = u.context?.breakdown?.apiUsage as ApiUsage | null | undefined
-  if (a) {
-    const sig = JSON.stringify([a.input_tokens, a.output_tokens, a.cache_read_input_tokens, a.cache_creation_input_tokens, u.context.tokens ?? 0])
-    if (sig !== (await read($, lastUsage))) {
-      await update($, lastUsage, () => sig)
-      await update($, pointsTotal, v => v + pointsOfUsage(a))
-    }
-  }
-  return read($, pointsTotal)
-}
-
-// 점수 세기가 실패해도 띠와 다른 훅은 그대로 돌게 한다 (끝 알림에 점수만 빠진다)
-async function guard(f: () => Promise<unknown>) {
-  try {
-    await f()
-  } catch {}
-}
-
-// 턴을 시작할 때: 지금 점수를 출발점으로 적고 지난 턴의 점수를 비운다
-async function startSpent($: any) {
-  await update($, turnFrom, () => null)
-  if ((await read($, spent)) !== null) await update($, spent, () => null)
-  const total = await countUsage($)
-  await update($, turnFrom, () => total)
-}
-
-// 턴이 끝날 때: 이번 턴에 쓴 점수
-async function noteSpent($: any) {
-  const total = await countUsage($)
-  const base = await read($, turnFrom)
-  const points = base === null ? null : Math.max(0, Math.round(total - base))
-  if ((await read($, spent)) !== points) await update($, spent, () => points)
-}
-// 끝 알림에 붙이는 한 줄: "이번 응답 26점" (못 셌으면 빈 글자)
-const spentLine = (s: number | null) => (s === null ? '' : `이번 응답 ${s.toLocaleString('en-US')}점`)
 
 // ── 경험치와 레벨 ──────────────────────────────────────────────────
 // 계산은 season.ts에 있다. 한 시즌은 한 달(한국 시간 1일 0시부터)이고, 달이 바뀌면 레벨 1부터 다시 시작한다.
@@ -546,8 +485,6 @@ export const register: Register = on => {
     await update($, shownXp, () => x)
     await update($, shownJob, () => j)
     await update($, phase, () => 'running')
-    // 이번 응답의 점수를 셀 출발점 (실패해도 전투는 돈다)
-    await guard(() => startSpent($))
     return next(e)
   })
 
@@ -619,7 +556,6 @@ export const register: Register = on => {
       const x = await read($, xp)
       const j = await read($, job)
       // 그림이 한 번만 그려지도록 phase보다 먼저 채운다
-      await guard(() => noteSpent($))
       await update($, lastMs, () => e.durationMs)
       await update($, shown, () => l)
       await update($, shownXp, () => x)
@@ -825,8 +761,7 @@ export const register: Register = on => {
         const wait = WAIT[await read($, waitKind)]
         line = <Text bold color={AMBER}>{`${wait.icon} ${wait.title} · ${wait.hint}`}</Text>
       } else {
-        const used = spentLine(await read($, spent))
-        const ranFor = elapsedText(await read($, lastMs)) + (used ? ` · ${used}` : '')
+        const ranFor = elapsedText(await read($, lastMs))
         const text =
           view === 'evolve'
             ? `📱 ${formName(me, dt)}(으)로 진화! 이달 남은 기간 동안 한 단계 위 모습으로 싸워요`
@@ -892,14 +827,12 @@ export const register: Register = on => {
       big = { art: bigSvg('done', `${evolved}(으)로 진화!`, '디지바이스의 빛으로', hp, intro, dt, me), alt: `디지바이스로 ${evolved}(으)로 진화한 내 디지몬`, color: AMBER, title: `📱 ${evolved}(으)로 진화!`, sub: '이달 남은 기간 동안 한 단계 위 모습으로 싸워요' }
     } else {
       const ranFor = elapsedText(await read($, lastMs))
-      // 이번 응답에서 쓴 사용률 (한도 정보가 없으면 레벨과 모습)
-      const used = spentLine(await read($, spent)) || `Lv.${rank.level} ${formName(me, dt)}`
       big =
         view === 'error'
-          ? { art: bigSvg('error', `${rank.foe}의 ${foeSkill(rank.tier)}!`, '문제가 생겼어요', hp, intro, dt, me, dx => foeBig(rank.tier, dx)), alt: `${rank.foe}에게 맞은 내 디지몬`, color: RED, title: `${rank.foe}의 ${foeSkill(rank.tier)}! 문제가 생겼어요`, sub: `${ranFor} 싸우다 한 대 맞음 · ${used}` }
+          ? { art: bigSvg('error', `${rank.foe}의 ${foeSkill(rank.tier)}!`, '문제가 생겼어요', hp, intro, dt, me, dx => foeBig(rank.tier, dx)), alt: `${rank.foe}에게 맞은 내 디지몬`, color: RED, title: `${rank.foe}의 ${foeSkill(rank.tier)}! 문제가 생겼어요`, sub: `${ranFor} 싸우다 한 대 맞음 · Lv.${rank.level} ${formName(me, dt)}` }
           : withDigi
-            ? { art: bigSvg('done', '디지바이스 발견!', '확인을 눌러 진화해요', hp, intro, dt, me), alt: '일을 마치고 디지바이스를 찾은 내 디지몬', color: AMBER, title: '📱 디지바이스를 찾았어요!', sub: `${ranFor} 전투 · ${used} · 확인을 누르면 진화해요` }
-            : { art: bigSvg('done', '다 했어요!', '결과 확인해 주세요', hp, intro, dt, me), alt: '일을 마친 내 디지몬', color: GREEN, title: '작업 끝! 확인해 주세요', sub: `${ranFor} 전투 · ${used}` }
+            ? { art: bigSvg('done', '디지바이스 발견!', '확인을 눌러 진화해요', hp, intro, dt, me), alt: '일을 마치고 디지바이스를 찾은 내 디지몬', color: AMBER, title: '📱 디지바이스를 찾았어요!', sub: `${ranFor} 전투 · 확인을 누르면 진화해요` }
+            : { art: bigSvg('done', '다 했어요!', '결과 확인해 주세요', hp, intro, dt, me), alt: '일을 마친 내 디지몬', color: GREEN, title: '작업 끝! 확인해 주세요', sub: `${ranFor} 전투 · Lv.${rank.level} ${formName(me, dt)}` }
     }
 
     return (

@@ -120,7 +120,7 @@ const levelBadge = (level: number, x: number, w: number, h: number, font: number
   `<rect x="${x}" y="1" width="${w}" height="${h}" rx="4" fill="${GOLD}" stroke="${INK}" stroke-width="1.5"/>` +
   `<text x="${x + w / 2}" y="${1 + h / 2}" dominant-baseline="central" text-anchor="middle" font-family="${FONT}" font-size="${font}" font-weight="800" fill="${INK}">Lv.${level}</text>`
 
-// 단계별로 한 대 칠 때 뜨는 데미지의 기준값 (연출용. 실제로 쓴 양은 끝 알림의 점수)
+// 단계별로 한 대 칠 때 뜨는 데미지의 기준값 (연출용)
 const DAMAGE = [7, 15, 28, 46, 73, 120, 188, 290, 455, 999, 1500]
 // 전투 그림 하나에 넣는 데미지 수와 흔들림 폭. 그림 안에서는 새로 뽑을 수 없어(스크립트 없는 SVG)
 // 그림을 만들 때 seed로 HITS개를 뽑아 차례로 띄운다. 기준값의 0.8~1.25배
