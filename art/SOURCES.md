@@ -57,4 +57,4 @@
 | sincerity/tanemon | Tanemon_new_century.png |
 | sincerity/togemon | 디지몬 서바이브 |
 | monsters/orgemon | Orgemon_new_century.png |
-| monsters/picodevimon | Picodevimon_new_century.png |
+| monsters/venomvamdemon | Venomvamdemon_new_century.png |
