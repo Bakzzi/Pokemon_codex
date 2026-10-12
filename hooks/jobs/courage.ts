@@ -3,6 +3,7 @@ import { ATK } from '../monsters.ts'
 import { WHITE, rect } from '../pixel.ts'
 import { glowBox, impact, makeLine, shot } from '../digi.ts'
 import type { Palette, Stage } from '../digi.ts'
+import { COURAGE } from '../img/courage.ts'
 
 // ── 코로몬 (유년기): 분홍 덩어리, 큰 입과 뾰족한 이, 뒤로 흩날리는 귀 ─────────
 const KORO: Palette = {
@@ -47,37 +48,7 @@ const AGU: Palette = {
   w: '#FFFFFF',
   k: '#1F1410',
 }
-const agumon: Stage = {
-  name: '아구몬',
-  pal: AGU,
-  rows: [
-    '.........yyyyyyyy.......',
-    '.......yyyyyyyyyyyy.....',
-    '......yyyyyyyyyyyyyy....',
-    '.....yyyyyyyyyyyyyyyy...',
-    '.....yyyyyyyggyyyyyyyy..',
-    '.....yyyyyyygkyyyyyyyyyy',
-    '.....yyyyyyyyyyyyyyyyyyy',
-    '......yyyyyyyyyymwmwmwmw',
-    '.......yyyyyyyyymmmmmmmm',
-    '........yyyyyyyyywmwmwmy',
-    '.........yyyyyyyyyyyyyy.',
-    '..........yyyyyyyyyyy...',
-    'y..........ooyyyyyyo....',
-    'yy.........yyyyyyyyy....',
-    'yyy.......yyyyyyyykkkk..',
-    '.yyyy....yyyyyyyyykyyyyn',
-    '..yyyyy.yyyyyyyyyykyyynn',
-    '...yyyyyyyyyyyyyyyyyy...',
-    '....yyyyyyyyyyyyyyyy....',
-    '.....yyyyyyyyyyyyyy.....',
-    '......yyyyyykyyyyyy.....',
-    '......yyyyyykyyyyyy.....',
-    '......yyyyyykyyyyyy.....',
-    '.....nyyyyyn.nyyyyyn....',
-  ],
-  eyes: { at: [[12, 4]], w: 2, h: 2, lid: '#F2C14E' },
-}
+const agumon: Stage = { name: '아구몬', image: COURAGE.agumon!, height: 10 }
 
 // ── 그레이몬 (성숙기): 갈색 해골 투구와 뿔 셋, 주황 몸에 파란 줄무늬, 벌린 입 ──────
 const GREY: Palette = {
@@ -92,39 +63,7 @@ const GREY: Palette = {
   w: '#FFFFFF',
   k: '#1F1410',
 }
-const greymon: Stage = {
-  name: '그레이몬',
-  pal: GREY,
-  rows: [
-    '...............h........h.....',
-    '..............hh.......hh.....',
-    '..............shh.....hhs.....',
-    '.............sssssssssssss....',
-    '............sssssssssssssss...',
-    '............sssssssssssssssss.',
-    '............ssssssggssssssssshh',
-    '............ssssssgkssssssssshh',
-    '............sssssssssssssssss.',
-    '............SSSSSSSSSSSSSSSSS.',
-    '.............ooomwmwmwmwmwmo..',
-    '.............ooommmmmmmmmmoo..',
-    '..............oowmwmwmwmwoo...',
-    '...............ooooooooooo....',
-    'o..............dooooooood.....',
-    'oo............ooooooooooo.....',
-    'ooo..........oooobboooobboooo.',
-    '.oooo.......ooooobboooobbooooo',
-    '..ooooo....oooooobboooobbooooo',
-    '...ooooooooooooooooooooooooooo',
-    '....ooooooooooooooooooookkkooh',
-    '.....dddoooooooooooooooooohhh.',
-    '......ddoooooooooooooooooooo..',
-    '.......ooooooookkooooooooo....',
-    '.......oooooooo..oooooooo.....',
-    '......hooooooooh.hoooooooooh..',
-  ],
-  eyes: { at: [[18, 6]], w: 2, h: 2, lid: '#8C6239' },
-}
+const greymon: Stage = { name: '그레이몬', image: COURAGE.greymon!, height: 12.5 }
 
 // ── 메탈그레이몬 (완전체): 쇠 가면과 붉은 갈기, 트라이던트 암, 가슴의 미사일 해치, 찢어진 날개 ──
 const METAL: Palette = {
@@ -142,40 +81,7 @@ const METAL: Palette = {
   w: '#FFFFFF',
   k: '#1F1410',
 }
-const metalgreymon: Stage = {
-  name: '메탈그레이몬',
-  pal: METAL,
-  rows: [
-    '...............rr...mm.....mm....',
-    '..............rrrr.mmmm...mmm....',
-    '.............rrrrrmmmmmmmmmmmm...',
-    '............rrrrmmmmmmmmmmmmmmm..',
-    '............rrrmmmmmmmmmmmmmmmmm.',
-    '.............rrmmmmmmmmmmmmmmmmhh',
-    '..............mmmmmmgggmmmmmmmmhh',
-    '..............mmmmmmgkgmmmmmmmm..',
-    '..............mMMMMMMMMMMMMMMMM..',
-    '...............ooonwnwnwnwnwno...',
-    '.vv.............ooonnnnnnnnnoo...',
-    'vvvv.............oownwnwnwnwoo...',
-    'vVvvv.............ooooooooooo....',
-    '.vVvvvv..........ddoooooooood....',
-    '..vVvvvvv.......ooooobboooobbooo.',
-    '...vVvvvvvv....oooooobboooobbooo.',
-    '....vVvvvvv...ooooMMMMMMMMMoooooo',
-    '.....vVVVV....ooooMmmmrrmmmMooooo',
-    '......oo......ooooMmmmrrmmmMooMMM',
-    '.......oooooooooooMMMMMMMMMoMmmmmh',
-    '........ooooooooooooooooooooMmmmmhh',
-    '.........dddooooooooooooooooMMMMMh',
-    '..........ddoooooooooooooooo.....',
-    '...........oooooooooookkoooooo...',
-    '...........ooooooooo..oooooo.....',
-    '...........ooooooooo..oooooo.....',
-    '..........hoooooooooh.hooooooh...',
-  ],
-  eyes: { at: [[20, 6]], w: 3, h: 2, lid: '#AEB7C2' },
-}
+const metalgreymon: Stage = { name: '메탈그레이몬', image: COURAGE.metalgreymon!, height: 14 }
 
 // ── 워그레이몬 (궁극체): 뿔 달린 쇠 투구, 가슴의 용기 문장, 드라몬 킬러, 등의 브레이브 실드 ──
 const WAR: Palette = {

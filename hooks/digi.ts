@@ -43,12 +43,22 @@ export const stageOf = (t: number) => (t >= 9 ? 4 : t >= 6 ? 3 : t >= 4 ? 2 : t 
 // 눈: 격자의 눈 자리들(왼쪽 위 점), 크기, 눈을 감을 때 덮는 살색
 export type Eyes = { at: readonly (readonly [number, number])[]; w: number; h: number; lid: string }
 
+// PNG 스프라이트 (hooks/img/*.ts, preview/embed.py가 sprites/*.png에서 만든다). w·h는 원본 px
+export type Sprite = { href: string; w: number; h: number }
+
 export type Stage = {
   name: string
-  pal: Palette
+  // ── 점 그림(격자)으로 그릴 때 ──
+  pal?: Palette
   // 서 있는 모습. 맨 아랫줄이 발바닥
-  rows: readonly string[]
-  eyes: Eyes
+  rows?: readonly string[]
+  eyes?: Eyes
+  // ── PNG 스프라이트로 그릴 때 ──
+  image?: Sprite
+  // 화면에서의 키(칸). 너비는 원본 비율대로
+  height?: number
+  // 원본이 왼쪽을 보면 true (오른쪽의 몬스터를 보게 뒤집는다). 기본 true
+  flip?: boolean
   // 땅에서 띄울 점 수 (날아다니는 디지몬). 그림자는 그대로 땅에 둔다
   hover?: number
   // 격자 위에 덧그리는 움직이는 부분 (꼬리·날개·불씨). 격자 좌표의 px/dots로 그린다
@@ -130,19 +140,44 @@ const face = (e: Eyes, variant: BigVariant) =>
 
 // ── 디지몬 한 마리 ───────────────────────────────────────────────
 // 격자를 발이 y = 11칸, 가운데가 x = 14.5칸에 오게 놓는다. 전투(run)는 발을 번갈아 들며 뛰고, 쉴 때는 숨 쉰다
-// 테두리 한 점을 포함해 가운데와 발 위치를 맞춘다 (격자 (0, 0)은 테두리 안쪽)
+// 그림이 차지하는 칸 상자: 가운데 x = 14.5, 발 y = 11. 격자는 테두리 한 점을 포함한다 (격자 (0, 0)은 테두리 안쪽)
 const origin = (s: Stage) => {
-  const w = gridWidth(s.rows) + 2
-  const h = s.rows.length + 2
-  return { x: at(14.5 - (w * DOT) / 2 + DOT), y: at(11 - h * DOT + DOT - (s.hover ?? 0) * DOT), w, h }
+  const lift = (s.hover ?? 0) * DOT
+  if (s.image) {
+    const hc = s.height ?? 10
+    const wc = at((hc * s.image.w) / s.image.h)
+    return { x: at(14.5 - wc / 2), y: at(11 - hc - lift), wc, hc }
+  }
+  const rows = s.rows ?? []
+  const w = gridWidth(rows) + 2
+  const h = rows.length + 2
+  return { x: at(14.5 - (w * DOT) / 2 + DOT), y: at(11 - h * DOT + DOT - lift), wc: w * DOT, hc: h * DOT }
 }
+
+// 오류 때 빛이 바랜다 (이미지 스프라이트는 눈을 바꿀 수 없어서 몸 전체로 표현한다)
+const FADE = '<filter id="digi-fade"><feColorMatrix type="saturate" values="0.25"/></filter>'
 
 export const figure = (s: Stage, pose: Pose, variant?: BigVariant) => {
   const run = pose === 'run'
   const o = origin(s)
-  const ink = s.outline ?? INK
-  const draw = (rows: readonly string[]) => outlineOf(rows, s.pal, ink) + dots(rows, s.pal)
-  const body = run ? flipbook(STEP, draw(liftFeet(s.rows, 'left')), draw(liftFeet(s.rows, 'right'))) : draw(s.rows)
+  let body: string
+  let faceLayer = ''
+  if (s.image) {
+    // 뒤집어서 오른쪽을 보게 하고, 달릴 때는 발끝을 축으로 앞뒤로 기울인다
+    const img = `<image href="${s.image.href}" x="0" y="0" width="${o.wc}" height="${o.hc}" preserveAspectRatio="none"/>`
+    const flipped = (s.flip ?? true) ? `<g transform="translate(${o.wc} 0) scale(-1 1)">${img}</g>` : img
+    const tilt = run
+      ? `<g><animateTransform attributeName="transform" type="rotate" values="-4 ${at(o.wc / 2)} ${o.hc};4 ${at(o.wc / 2)} ${o.hc}" dur="${STEP}" calcMode="discrete" repeatCount="indefinite"/>${flipped}</g>`
+      : flipped
+    body = variant === 'error' ? `<defs>${FADE}</defs><g filter="url(#digi-fade)">${tilt}</g>` : tilt
+  } else {
+    const rows = s.rows ?? []
+    const pal = s.pal ?? {}
+    const ink = s.outline ?? INK
+    const draw = (r: readonly string[]) => outlineOf(r, pal, ink) + dots(r, pal)
+    body = run ? flipbook(STEP, draw(liftFeet(rows, 'left')), draw(liftFeet(rows, 'right'))) : draw(rows)
+    if (s.eyes) faceLayer = variant ? face(s.eyes, variant) : blink(s.eyes)
+  }
   const bob = run
     ? `<animateTransform attributeName="transform" type="translate" values="0 0;0 -0.5" dur="${STEP}" calcMode="discrete" repeatCount="indefinite"/>`
     : `<animateTransform attributeName="transform" type="translate" values="0 0;0 -0.3" dur="${STAND_STEP}" calcMode="discrete" repeatCount="indefinite"/>`
@@ -154,13 +189,13 @@ export const figure = (s: Stage, pose: Pose, variant?: BigVariant) => {
     `<g>${bob}${hoverAnim}` +
     body +
     (s.extra ? s.extra(pose) : '') +
-    (variant ? face(s.eyes, variant) : blink(s.eyes)) +
+    faceLayer +
     '</g></g>'
   )
 }
 
 // 격자 꼭대기의 y(칸). 머리 위 자리(headroom) 계산용
-const top = (s: Stage) => origin(s).y - DOT
+const top = (s: Stage) => (s.image ? origin(s).y : origin(s).y - DOT)
 
 // ── 문장(紋章) ────────────────────────────────────────────────────
 // 레벨 30부터 머리 왼쪽 위에 이달의 문장이 떠서 숨 쉬듯 빛난다
@@ -185,8 +220,8 @@ const glory = (s: Stage, t: number, big: boolean) => {
   const cx = 14.5
   const cy = top(s) + 0.6
   return big
-    ? halo(cx, cy, (o.w * DOT) / 2.6, 0.7, 0.4, t) + sparkle(o.x - 1.5, o.y + 1, 1.2, GOLD, '0.3s') + sparkle(o.x + o.w * DOT + 1.5, o.y + 0.5, 1.2, GOLD, '1.1s')
-    : halo(cx, cy, (o.w * DOT) / 2.6, 0.7, 0.4, t) + sparkle(o.x - 1, o.y + 1, 1.2, GOLD, '0.3s') + sparkle(o.x + o.w * DOT + 1, o.y, 1.2, GOLD, '1.1s')
+    ? halo(cx, cy, o.wc / 2.6, 0.7, 0.4, t) + sparkle(o.x - 1.5, o.y + 1, 1.2, GOLD, '0.3s') + sparkle(o.x + o.wc + 1.5, o.y + 0.5, 1.2, GOLD, '1.1s')
+    : halo(cx, cy, o.wc / 2.6, 0.7, 0.4, t) + sparkle(o.x - 1, o.y + 1, 1.2, GOLD, '0.3s') + sparkle(o.x + o.wc + 1, o.y, 1.2, GOLD, '1.1s')
 }
 
 // ── 공격 효과 (전투 좌표, 칸 단위) ─────────────────────────────────
