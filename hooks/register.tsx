@@ -832,7 +832,7 @@ export const register: Register = on => {
       const ranFor = elapsedText(await read($, lastMs))
       big =
         view === 'error'
-          ? { art: bigSvg('error', `${rank.foe}의 기습!`, '문제가 생겼어요', hp, intro, dt, me, side, foeBig(rank.tier, 60)), alt: `${rank.foe}에게 맞은 내 디지몬`, color: RED, title: `${rank.foe}의 기습! 문제가 생겼어요`, sub: `${ranFor} 싸우다 한 대 맞음 · Lv.${rank.level} ${formName(me, dt)}` }
+          ? { art: bigSvg('error', `${rank.foe}의 기습!`, '문제가 생겼어요', hp, intro, dt, me, side, foeBig(rank.tier, 0)), alt: `${rank.foe}에게 맞은 내 디지몬`, color: RED, title: `${rank.foe}의 기습! 문제가 생겼어요`, sub: `${ranFor} 싸우다 한 대 맞음 · Lv.${rank.level} ${formName(me, dt)}` }
           : withChest
             ? { art: bigSvg('done', '보물상자 발견!', '확인을 눌러 열어 봐요', hp, intro, dt, me, chestClosed()), alt: '일을 마치고 보물상자를 찾은 내 디지몬', color: AMBER, title: '🎁 보물상자를 찾았어요!', sub: `${ranFor} 전투 · 확인을 누르면 열어요` }
             : { art: bigSvg('done', '다 했어요!', '결과 확인해 주세요', hp, intro, dt, me, side), alt: '일을 마친 내 디지몬', color: GREEN, title: '작업 끝! 확인해 주세요', sub: `${ranFor} 전투 · Lv.${rank.level} ${formName(me, dt)}` }
