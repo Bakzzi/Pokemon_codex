@@ -35,7 +35,7 @@
 | love/piyomon | 디지몬 서바이브 |
 | love/pyocomon | Pyocomon_new_century.png |
 | monsters/apocalymon | ApocalymonDMO.png |
-| monsters/devimon | Devimon_new_century.png |
+| monsters/devimon | Devimon_NC.png (뉴 센추리 카드) |
 | monsters/etemon | 디지몬 서바이브 |
 | monsters/metalseadramon | 디지몬 서바이브 |
 | monsters/mugendramon | 디지몬 서바이브 |
