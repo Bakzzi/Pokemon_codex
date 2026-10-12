@@ -54,6 +54,6 @@
 | sincerity/togemon | 디지몬 서바이브 |
 | monsters/orgemon | Orgemon_new_century.png |
 | monsters/venomvamdemon | Venomvamdemon_new_century.png |
-| light/holydramon | 디지몬 서바이브 |
 | omega/omegamon | 디지몬 서바이브 |
 | reliability/vikemon | Vikemon_new_century.png |
+| light/ofanimon | Ofanimon.png (공식 설정화) |

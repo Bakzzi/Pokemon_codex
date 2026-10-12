@@ -44,7 +44,7 @@ FX = {
  "plotmon": "fx.soundWave(from)",
  "tailmon": "fx.strike('#F9A8D4', '#FFFFFF', true)",
  "angewomon": "fx.holyArrow(from) + (t >= 7 ? fx.strike('#F9A8D4', '#FFFFFF') : '')",
- "holydramon": "fx.fireball(from, 2) + fx.pillar('#FDE68A', '#FFFFFF', 2.2)",
+ "ofanimon": "fx.javelin(from) + fx.pillar('#FDE68A', '#FFFFFF', 2.2)",
  "omegamon": "fx.beam(from, '#93C5FD', '#E0F2FE', 1.6) + fx.strike('#FDE68A', '#FFFFFF')",
 }
 MELEE = ['tailmon', 'weregarurumon', 'zudomon', 'vikemon']
@@ -76,8 +76,8 @@ LINES = [
   [('tokomon','토코몬',5.5,{'flip':False,'mouth':(0.82,0.6)}),('patamon','파닥몬',8,{'flip':False,'mouth':(0.8,0.66)}),('angemon','엔젤몬',13.5,{'flip':False,'mouth':(0.82,0.5)}),('holyangemon','홀리엔젤몬',13.5,{'flip':False,'mouth':(0.9,0.4)}),('seraphimon','세라피몬',14,{'flip':False,'mouth':(0.9,0.4)})],
   ['','파닥몬으로 진화','공기팡','엔젤몬으로 진화','천사의 손','홀리엔젤몬으로 초진화','천국의 문','엑스칼리버','세라피몬으로 궁극진화','세븐 헤븐즈·후광','무지개 후광']),
  ('light', '빛', '✨',
-  [('nyaromon','야옹몬',5.5,{'flip':True,'mouth':(0.85,0.5)}),('plotmon','플롯몬',8,{'flip':True,'mouth':(0.62,0.42)}),('tailmon','가트몬',9.5,{'flip':False,'mouth':(0.85,0.3)}),('angewomon','엔젤우몬',13.5,{'flip':False,'mouth':(0.86,0.45)}),('holydramon','홀리드라몬',13.5,{'flip':False,'mouth':(0.92,0.3)})],
-  ['','플롯몬으로 진화','퍼피 하울링','가트몬으로 진화','냥냥펀치','엔젤우몬으로 초진화','천국의 화살','천국의 미소','홀리드라몬으로 궁극진화','홀리 플레임·후광','무지개 후광']),
+  [('nyaromon','야옹몬',5.5,{'flip':True,'mouth':(0.85,0.5)}),('plotmon','플롯몬',8,{'flip':True,'mouth':(0.62,0.42)}),('tailmon','가트몬',9.5,{'flip':False,'mouth':(0.85,0.3)}),('angewomon','엔젤우몬',13.5,{'flip':False,'mouth':(0.86,0.45)}),('ofanimon','오파니몬',13.5,{'flip':True,'mouth':(0.96,0.4)})],
+  ['','플롯몬으로 진화','퍼피 하울링','가트몬으로 진화','냥냥펀치','엔젤우몬으로 초진화','천국의 화살','천국의 미소','오파니몬으로 궁극진화','낙원의 창·후광','무지개 후광']),
 ]
 
 def stage_row(C, k, kname, h, opt):
