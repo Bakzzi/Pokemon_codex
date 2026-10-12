@@ -121,7 +121,7 @@ const levelBadge = (level: number, x: number, w: number, h: number, font: number
   `<text x="${x + w / 2}" y="${1 + h / 2}" dominant-baseline="central" text-anchor="middle" font-family="${FONT}" font-size="${font}" font-weight="800" fill="${INK}">Lv.${level}</text>`
 
 // hp: 머리 위 HP 이름표(한도), t: 장비 단계, level: 레벨, foe: 상대에게 남은 체력(0~1), job: 이달의 계열,
-// damage: 상대 머리 위에 뜨는 데미지 = 이번 응답에서 쓴 주간 사용률(%p, 곧 경험치). null이면 띄우지 않는다
+// damage: 상대 머리 위에 뜨는 데미지 = 이번 응답에서 쓴 점수(register.tsx의 HP 점수). null이면 띄우지 않는다
 export const runSvg = (hp: Hp, t: number, level: number, foe: number, job: Job, damage: number | null) => {
   const plate = plateHeight(hp, SMALL_PLATE)
   const top = Math.max(plate, 22) + 2

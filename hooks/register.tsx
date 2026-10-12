@@ -26,7 +26,7 @@ import { boostTier, formName } from './digi.ts'
 
 // 입력창 위 띠(밴드)는 상태가 바뀔 때만 다시 그린다. 데스크톱 앱은 띠를 다시 그릴 때마다
 // 움직이는 그림 칸을 새로 만들어서 그림이 처음부터 다시 돈다. 그래서 띠를 그리는 훅은
-// phase·waitKind·lastMs·shown·shownXp·introUntil·spent(·쉬는 중의 limits·xp)만 읽고, 자주 바뀌는
+// phase·waitKind·lastMs·shown·shownXp·introUntil·spent·pools(·쉬는 중의 limits·xp)만 읽고, 자주 바뀌는
 // 하는 일과 한마디는 앱의 진행 표시줄(Spinner) 뒤에 붙인다. 같은 값을 다시 적어도 다시 그려지므로
 // 띠가 읽는 값은 바뀔 때만 적는다.
 
@@ -75,56 +75,122 @@ const drawTier = (tier: number, ready: boolean, boosted = false) => (ready && ti
 // 사람에게 묻는 중인 도구 호출들 (여럿이 같이 돌 때 하나가 끝났다고 기다림을 풀지 않게). 띠는 읽지 않는다
 const pendingAsks = atom({ plugin: 'digimon-buddy', key: 'pendingAsks' } as const, [] as string[])
 
-// ── 이번 응답에서 쓴 사용률 (데미지) ─────────────────────────────────
-// 턴을 시작할 때 본 한도(turnFrom)와 지금 한도의 차이. 주간 몫이 곧 이번 응답에서 얻은 경험치라
-// 전투 데미지로 띄우고(-0.4%), 끝 알림에는 주간·5시간 둘 다 적는다. 한도는 계정 전체 값이라
-// 다른 창에서 같은 시간에 쓴 양도 함께 잡힌다
+// ── HP 점수와 데미지 ────────────────────────────────────────────────
+// 앱은 한도의 크기(토큰 몇 개인지)를 알려 주지 않고, 사용률도 0.1% 단위라 응답 하나로는 거의 움직이지 않는다.
+// 그래서 세션 비용(cost.usd: 쓴 토큰을 API 정가로 환산한 값, 구독 요금과는 무관)을 점수로 쓴다. 1점 = $0.01.
+// - 데미지 = 이번 응답(턴)에서 늘어난 점수
+// - 풀피 = 1%당 점수 × 100. 모든 창이 쓴 점수와 그동안 오른 사용률을 $.store 'cal'에 모아 어림한다
+//   (claude.ai 채팅 등 모드가 없는 곳의 사용량은 점수에 안 잡혀 풀피가 작게 어림될 수 있다)
+const POINT_USD = 0.01
+// 1%당 점수를 믿기 시작하는 모은 사용률(%p): 주간, 5시간
+const CAL_MIN = { week: 1, five: 2 }
+// 데미지 숫자를 고치는 최소 간격 (고칠 때마다 전투 그림이 처음부터 다시 돈다). 턴이 끝날 때는 바로 맞춘다
+const SPENT_EVERY_MS = 8000
+
 type Reading = { used: number; resetsAt: string | null } | null
-type Spent = { week: number | null; five: number | null }
-const turnFrom = atom({ plugin: 'digimon-buddy', key: 'turnFrom' } as const, { week: null, five: null } as { week: Reading; five: Reading })
-const spent = atom({ plugin: 'digimon-buddy', key: 'spent' } as const, { week: null, five: null } as Spent)
+type Pools = { week: number | null; five: number | null }
+type Cal = { cost: number; week: number; five: number; last: { week: Reading; five: Reading } }
+// 이번 턴: 점수(데미지)와 주간·5시간 사용률이 늘어난 양
+type Spent = { points: number | null; week: number | null; five: number | null }
+type TurnFrom = { usd: number | null; week: Reading; five: Reading }
+
+const turnFrom = atom({ plugin: 'digimon-buddy', key: 'turnFrom' } as const, { usd: null, week: null, five: null } as TurnFrom)
+const spent = atom({ plugin: 'digimon-buddy', key: 'spent' } as const, { points: null, week: null, five: null } as Spent)
+// 어림한 풀피(점수). 띠가 읽으므로 크게 바뀔 때만 적는다
+const pools = atom({ plugin: 'digimon-buddy', key: 'pools' } as const, { week: null, five: null } as Pools)
+// 이 창이 마지막으로 본 세션 비용 (모든 창의 점수 합에 더할 몫을 구한다)
+const calCost = atom({ plugin: 'digimon-buddy', key: 'calCost' } as const, -1)
+let spentAt = 0
 
 const readingOf = (list: readonly RateLimit[], kind: string): Reading => {
   const w = list.find(x => x.kind === kind)
   return w ? { used: w.percentUsed, resetsAt: w.resetsAt ?? null } : null
 }
+const renewedAfter = (a: Reading, b: Reading) => {
+  const ta = a?.resetsAt ? Date.parse(a.resetsAt) : NaN
+  const tb = b?.resetsAt ? Date.parse(b.resetsAt) : NaN
+  return !Number.isNaN(ta) && !Number.isNaN(tb) && tb - ta >= HOUR_MS
+}
 // 같은 창이면 늘어난 만큼, 그사이 창이 다시 찼으면 새 창에서 쓴 만큼 (소수 첫째 자리)
 const spentOf = (from: Reading, now: Reading): number | null => {
   if (!from || !now) return null
-  const a = from.resetsAt ? Date.parse(from.resetsAt) : NaN
-  const b = now.resetsAt ? Date.parse(now.resetsAt) : NaN
-  const renewed = !Number.isNaN(a) && !Number.isNaN(b) && b - a >= HOUR_MS
-  return Math.round(Math.max(0, renewed ? now.used : now.used - from.used) * 10) / 10
+  return Math.round(Math.max(0, renewedAfter(from, now) ? now.used : now.used - from.used) * 10) / 10
+}
+const usdOf = (u: { cost?: { usd: number } }) => (typeof u.cost?.usd === 'number' ? u.cost.usd : null)
+
+// 모든 창의 기록에서 마지막으로 센 사용률보다 오른 만큼. 늦게 온 옛 창의 값이나 내려간 값은 세지 않는다
+const growth = (last: Reading, now: Reading): { add: number; last: Reading } => {
+  if (!now) return { add: 0, last }
+  if (!last) return { add: 0, last: now }
+  if (renewedAfter(last, now)) return { add: now.used, last: now }
+  if (renewedAfter(now, last)) return { add: 0, last }
+  return now.used > last.used ? { add: now.used - last.used, last: now } : { add: 0, last }
+}
+const poolsOf = (c: Cal): Pools => ({
+  week: c.week >= CAL_MIN.week && c.cost > 0 ? Math.round((c.cost / POINT_USD / c.week) * 100) : null,
+  five: c.five >= CAL_MIN.five && c.cost > 0 ? Math.round((c.cost / POINT_USD / c.five) * 100) : null,
+})
+// 띠를 다시 그릴 만큼 바뀌었는지: 생기거나 없어졌거나 3% 넘게 바뀜
+const poolMoved = (a: number | null, b: number | null) => (a === null || b === null ? a !== b : Math.abs(a - b) > a * 0.03)
+
+// 응답마다: 이 창이 쓴 점수와 오른 사용률을 모든 창의 기록에 더하고 풀피를 다시 어림한다
+async function calibrate($: any, list: readonly RateLimit[], usd: number | null) {
+  if (usd === null) return
+  const prev = await read($, calCost)
+  if (prev !== usd) await update($, calCost, () => usd)
+  // 처음 보거나(-1) 세션 비용이 처음부터 다시 세어졌으면 이번 몫은 세지 않는다
+  const dUsd = prev >= 0 && usd >= prev ? usd - prev : 0
+  const saved = ((await $.store.get('cal')) as Cal | undefined) ?? { cost: 0, week: 0, five: 0, last: { week: null, five: null } }
+  const w = growth(saved.last.week, readingOf(list, 'seven_day'))
+  const f = growth(saved.last.five, readingOf(list, 'five_hour'))
+  let cal: Cal = { cost: saved.cost + dUsd, week: saved.week + w.add, five: saved.five + f.add, last: { week: w.last, five: f.last } }
+  // 오래된 몫이 계속 쌓이지 않게: 주간 사용률이 50%p 넘게 모이면 모두 반으로 줄인다 (비율은 그대로)
+  if (cal.week > 50) cal = { ...cal, cost: cal.cost / 2, week: cal.week / 2, five: cal.five / 2 }
+  if (dUsd > 0 || w.add > 0 || f.add > 0 || w.last !== saved.last.week || f.last !== saved.last.five) await $.store.set('cal', cal)
+  const now = poolsOf(cal)
+  const cur = await read($, pools)
+  if (poolMoved(cur.week, now.week) || poolMoved(cur.five, now.five)) await update($, pools, () => now)
 }
 
-// 턴을 시작할 때: 지금 한도를 출발점으로 적고 데미지를 비운다
+// 턴을 시작할 때: 지금 비용과 한도를 출발점으로 적고 데미지를 비운다
 async function startSpent($: any) {
-  const list = (await $.session.usage()).rateLimits as RateLimit[]
-  await update($, turnFrom, () => ({ week: readingOf(list, 'seven_day'), five: readingOf(list, 'five_hour') }))
-  const none: Spent = { week: null, five: null }
+  const u = await $.session.usage()
+  const list = u.rateLimits as RateLimit[]
+  await update($, turnFrom, () => ({ usd: usdOf(u), week: readingOf(list, 'seven_day'), five: readingOf(list, 'five_hour') }))
+  const none: Spent = { points: null, week: null, five: null }
   if (JSON.stringify(await read($, spent)) !== JSON.stringify(none)) await update($, spent, () => none)
+  spentAt = 0
 }
 
-// 응답이 올 때마다: 이번 턴에 쓴 양을 고친다 (바뀔 때만 적는다. 전투 그림이 다시 그려지므로).
-// 턴을 시작할 때 한도를 아직 못 봤으면 처음 본 값을 출발점으로 삼는다
-async function noteSpent($: any, list: readonly RateLimit[]) {
+// 응답이 올 때마다: 이번 턴에 쓴 양을 고친다 (바뀔 때만, 그리고 SPENT_EVERY_MS에 한 번까지. now = true면 바로).
+// 턴을 시작할 때 아직 못 본 값이 있으면 처음 본 값을 출발점으로 삼는다
+async function noteSpent($: any, list: readonly RateLimit[], usd: number | null, now = false) {
   const from = await read($, turnFrom)
   const week = readingOf(list, 'seven_day')
   const five = readingOf(list, 'five_hour')
-  if ((!from.week && week) || (!from.five && five)) {
-    await update($, turnFrom, f => ({ week: f.week ?? week, five: f.five ?? five }))
+  if ((from.usd === null && usd !== null) || (!from.week && week) || (!from.five && five)) {
+    await update($, turnFrom, f => ({ usd: f.usd ?? usd, week: f.week ?? week, five: f.five ?? five }))
   }
   const base = await read($, turnFrom)
-  const s: Spent = { week: spentOf(base.week, week), five: spentOf(base.five, five) }
-  if (JSON.stringify(await read($, spent)) !== JSON.stringify(s)) await update($, spent, () => s)
+  const points = base.usd !== null && usd !== null ? Math.max(0, Math.round((usd - base.usd) / POINT_USD)) : null
+  const s: Spent = { points, week: spentOf(base.week, week), five: spentOf(base.five, five) }
+  if (JSON.stringify(await read($, spent)) === JSON.stringify(s)) return
+  const t = await $.clock.now()
+  if (!now && t - spentAt < SPENT_EVERY_MS) return
+  spentAt = t
+  await update($, spent, () => s)
 }
-// 끝 알림에 붙이는 한 줄: "이번 응답 주간 0.4% · 5시간 1.2%" (한도 정보가 없으면 빈 글자)
+// 끝 알림에 붙이는 한 줄: "이번 응답 12점 · 주간 0.1% · 5시간 0.4%" (아무 값도 없으면 빈 글자)
 const spentLine = (s: Spent) => {
   const parts: string[] = []
+  if (s.points !== null) parts.push(`${s.points.toLocaleString('en-US')}점`)
   if (s.week !== null) parts.push(`주간 ${s.week.toFixed(1)}%`)
   if (s.five !== null) parts.push(`5시간 ${s.five.toFixed(1)}%`)
   return parts.length > 0 ? `이번 응답 ${parts.join(' · ')}` : ''
 }
+// 남은 비율 v(%)를 점수로: "41,230 / 46,800" (풀피를 아직 어림하지 못했으면 null)
+const pointsText = (v: number, pool: number | null) =>
+  pool === null ? null : `${Math.round((pool * v) / 100).toLocaleString('en-US')} / ${pool.toLocaleString('en-US')}`
 
 // ── 경험치와 레벨 ──────────────────────────────────────────────────
 // 계산은 season.ts에 있다. 한 시즌은 한 달(한국 시간 1일 0시부터)이고, 달이 바뀌면 레벨 1부터 다시 시작한다.
@@ -450,19 +516,24 @@ const resetText = (resetsAt: string | null, nowMs: number, withDay: boolean) => 
 }
 
 // 쉬는 동안 보여 줄 HP 줄들
-type HpRow = { key: string; label: string; v: number; detail: string }
-const hpRowsOf = (l: Limits, nowMs: number) => {
+// value: 오른쪽 끝의 굵은 글자 ("41,230 / 46,800 · 88%", 풀피를 아직 어림하지 못했으면 "88%")
+type HpRow = { key: string; label: string; v: number; detail: string; value: string }
+const hpRowsOf = (l: Limits, nowMs: number, p: Pools) => {
   const rows: HpRow[] = []
-  if (l.five) rows.push({ key: 'five', label: '5시간 HP', v: l.five.left, detail: resetText(l.five.resetsAt, nowMs, false) })
-  if (l.week) rows.push({ key: 'week', label: '주간 HP', v: l.week.left, detail: resetText(l.week.resetsAt, nowMs, true) })
+  const value = (v: number, pool: number | null) => {
+    const pts = pointsText(v, pool)
+    return pts ? `${pts} · ${v}%` : `${v}%`
+  }
+  if (l.five) rows.push({ key: 'five', label: '5시간 HP', v: l.five.left, detail: resetText(l.five.resetsAt, nowMs, false), value: value(l.five.left, p.five) })
+  if (l.week) rows.push({ key: 'week', label: '주간 HP', v: l.week.left, detail: resetText(l.week.resetsAt, nowMs, true), value: value(l.week.left, p.week) })
   return rows
 }
 
-// "HP · 5시간 59% · 주간 56%" (한도 정보가 없으면 빈 문자열)
-const hpLine = (hp: Hp) => {
+// "HP · 5시간 2,712 / 4,600 · 주간 41,230 / 46,800" (풀피를 어림하지 못한 한도는 %, 한도 정보가 없으면 빈 문자열)
+const hpLine = (hp: Hp, p: Pools) => {
   const parts: string[] = []
-  if (hp.five !== null) parts.push(`5시간 ${hp.five}%`)
-  if (hp.week !== null) parts.push(`주간 ${hp.week}%`)
+  if (hp.five !== null) parts.push(`5시간 ${pointsText(hp.five, p.five) ?? `${hp.five}%`}`)
+  if (hp.week !== null) parts.push(`주간 ${pointsText(hp.week, p.week) ?? `${hp.week}%`}`)
   return parts.length > 0 ? `HP · ${parts.join(' · ')}` : ''
 }
 
@@ -509,9 +580,11 @@ export const register: Register = on => {
       await shareLimits($, limitsOf(e.rateLimits))
       await gainXp($, e.rateLimits)
     }
-    // 이번 응답에서 쓴 사용률은 소수 첫째 자리까지 본다 (rateLimits는 1%p 넘게 움직여야 changed에 든다)
+    // 점수는 응답마다(cost가 늘 때마다) 센다. rateLimits는 1%p 넘게 움직여야 changed에 들지만 값은 소수 첫째 자리까지 온다
+    const usd = usdOf(e)
+    await calibrate($, e.rateLimits, usd)
     const p = await read($, phase)
-    if (p === 'running' || p === 'waiting') await noteSpent($, e.rateLimits)
+    if (p === 'running' || p === 'waiting') await noteSpent($, e.rateLimits, usd)
     return next(e)
   })
 
@@ -611,7 +684,8 @@ export const register: Register = on => {
       const x = await read($, xp)
       const j = await read($, job)
       // 그림이 한 번만 그려지도록 phase보다 먼저 채운다
-      await noteSpent($, (await $.session.usage()).rateLimits)
+      const u = await $.session.usage()
+      await noteSpent($, u.rateLimits, usdOf(u), true)
       await update($, lastMs, () => e.durationMs)
       await update($, shown, () => l)
       await update($, shownXp, () => x)
@@ -676,7 +750,7 @@ export const register: Register = on => {
       const digi = await read($, digiReady)
       const lim: Limits = await read($, limits)
       const nowMs = await $.clock.now()
-      const rows = hpRowsOf(lim, nowMs)
+      const rows = hpRowsOf(lim, nowMs, await read($, pools))
       if (rows.length === 0 && !digi) return next(e)
       const x = await read($, xp)
       const r = rankOf(x)
@@ -707,7 +781,7 @@ export const register: Register = on => {
               <Box key={row.key}>
                 <Text>{row.label.padEnd(8)} </Text>
                 <Text color={hpColor(row.v)}>{hpTextBar(row.v, 20)}</Text>
-                <Text bold> {row.v}%</Text>
+                <Text bold> {row.value}</Text>
                 <Text dimColor>  {row.detail}</Text>
               </Box>
             ))}
@@ -754,7 +828,7 @@ export const register: Register = on => {
                       <Text>{row.label}</Text>
                     </Box>
                     <Text dimColor>{row.detail}  </Text>
-                    <Text bold>{`${row.v}%`}</Text>
+                    <Text bold>{row.value}</Text>
                   </Box>
                   <Svg source={hpBarSvg(row.v)} alt={`${row.label} ${row.v}% 남음`} />
                 </Box>
@@ -798,7 +872,7 @@ export const register: Register = on => {
     // 레벨과 같이 턴의 시작과 끝에 입힌 계열 (모드를 다시 불러와 아직 없으면 이달의 계열)
     const me = jobOf((await read($, shownJob)) || (await read($, job)))
     const dt = drawTier(rank.tier, await read($, omega), boosted)
-    const hpText = hpLine(hp)
+    const hpText = hpLine(hp, await read($, pools))
     const hpTail = hpText ? [hpText] : []
     // 이번 턴이 찾은 디지바이스면 끝 알림에 띄우고 확인이 진화시킨다 (끝 알림일 때만 읽는다: 전투 그림이 괜히 다시 그려지지 않게)
     const withDigi = view === 'done' && (await read($, digiReady)) && (await read($, digiFound))
@@ -848,7 +922,7 @@ export const register: Register = on => {
 
     // 일하는 중: 내 디지몬이 레벨에 맞는 상대와 싸운다 (경과 시간·하는 일은 앱의 진행 표시줄에)
     if (view === 'running') {
-      const run = runSvg(hp, dt, rank.level, foeHp(sx), me, (await read($, spent)).week)
+      const run = runSvg(hp, dt, rank.level, foeHp(sx), me, (await read($, spent)).points)
       // JSX가 쓰는 h와 겹치지 않게 다른 이름을 쓴다
       const artH = Math.min(BAND_H, run.height)
       return (

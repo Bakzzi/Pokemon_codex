@@ -15,7 +15,7 @@ const hp = { five: 72, week: 40 }
 const tiers = (process.argv[4] ?? '0,1,2,3,4,5,6,7,8,9,10,11').split(',').map(Number)
 for (const t of tiers) {
   writeFileSync(join(out, `idle-${t}.svg`), idleSvg(t, job).source)
-  writeFileSync(join(out, `run-${t}.svg`), runSvg(hp, t, Math.max(1, t * 10), 0.6, job, 0.4).source)
+  writeFileSync(join(out, `run-${t}.svg`), runSvg(hp, t, Math.max(1, t * 10), 0.6, job, 12).source)
 }
 for (const t of tiers.filter(t => [0, 1, 4, 6, 9, 10].includes(t))) {
   for (const v of ['done', 'waiting', 'error'] as const) {

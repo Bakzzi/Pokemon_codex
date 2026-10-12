@@ -67,7 +67,7 @@ const draw = (tier: number) => {
 const barY = (tier: number) => Math.max(-0.4, at(box(tier).y - 1.3))
 
 // 상대 하나 + 체력 막대 + 맞는 순간의 흔들림·깜빡임·데미지 숫자.
-// hp: 상대에게 남은 체력(0~1), damage: 이번 응답에서 쓴 주간 사용률(%p). null이면 숫자를 띄우지 않는다
+// hp: 상대에게 남은 체력(0~1), damage: 이번 응답에서 쓴 점수(1점 = API 정가 $0.01). null·0이면 숫자를 띄우지 않는다
 export const monster = (t: number, hp: number, damage: number | null) => {
   const tier = Math.max(0, Math.min(10, t))
   const fill = Math.max(0, Math.min(1, hp))
@@ -84,11 +84,11 @@ export const monster = (t: number, hp: number, damage: number | null) => {
     '</g>'
   // 데미지 숫자가 떠오른다
   const pop =
-    damage === null ? '' :
+    !damage ? '' :
     '<g opacity="0" shape-rendering="auto">' +
     `<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.6;0.64;0.88;1" dur="${ATK}" repeatCount="indefinite"/>` +
     `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 -2.6" keyTimes="0;0.6;1" dur="${ATK}" repeatCount="indefinite"/>` +
-    `<text x="36.5" y="${y + 2.6}" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="2.8" font-weight="900" fill="#EF4444" stroke="${WHITE}" stroke-width="0.5" paint-order="stroke">-${damage.toFixed(1)}%</text>` +
+    `<text x="36.5" y="${y + 2.6}" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="2.8" font-weight="900" fill="#EF4444" stroke="${WHITE}" stroke-width="0.5" paint-order="stroke">-${damage.toLocaleString('en-US')}</text>` +
     '</g>'
   return hit + bar + pop
 }
