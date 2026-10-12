@@ -9,7 +9,7 @@ export const reliability = makeLine({
   key: 'reliability',
   name: '성실',
   icon: '🐾',
-  gear: ["", "쉬라몬으로 진화", "마칭 피시즈", "성실의 문장", "이크몬으로 진화", "하푼 발칸", "쥬드몬으로 초진화", "해머 스파크", "발칸 해머", "플레시오몬으로 궁극진화", "소로 블루·무지개 후광"],
+  gear: ["", "쉬라몬으로 진화", "마칭 피시즈", "쉬라몬 단련", "이크몬으로 진화", "하푼 발칸", "쥬드몬으로 초진화", "해머 스파크", "발칸 해머", "플레시오몬으로 궁극진화", "소로 블루·무지개 후광"],
   melee: false,
   stages: [
   sprite('푸카몬', RELIABILITY.pukamon!, 5.5, { flip: true, mouth: [0.88, 0.5], fx: (t, from) => fx.bubble(from) }),

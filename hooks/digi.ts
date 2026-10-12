@@ -387,7 +387,7 @@ export const makeLine = (line: Line): Job & { formName: (t: number) => string } 
     formName: t => stageAt(t).name,
     small: (t, pose) => {
       const s = stageAt(t)
-      return figure(s, pose) + (t >= 3 ? crestMark(line.crest, s) : '') + glory(s, t, false)
+      return figure(s, pose) + glory(s, t, false)
     },
     hit: t => {
       if (t >= 10) return ''
@@ -399,7 +399,6 @@ export const makeLine = (line: Line): Job & { formName: (t: number) => string } 
       return (
         '<g transform="translate(220 6) scale(10)">' +
         figure(s, 'stand', variant) +
-        (t >= 3 ? crestMark(line.crest, s) : '') +
         glory(s, t, true) +
         '</g>'
       )
