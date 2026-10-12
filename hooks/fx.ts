@@ -308,7 +308,16 @@ const rainOf = (name: string, color: string, n: number, spread: number, rot = 0,
 export const meteorWing = (from: At, n = 3) => muzzle('#F26B21', '#FDE047', from, 1) + rainOf('fireball', '#F26B21', n, 7, 90, 0.9)
 export const starlight = (n = 5) => rainOf('star', '#FDE047', n, 9, 0, 1.1)
 export const sevenHeavens = () => rainOf('orb_holy', '#FDE68A', 7, 10)
-export const needleSpray = (from: At) => muzzle('#86EFAC', WHITE, from, 0.8) + rainOf('needle', '#86EFAC', 7, 9, 90, 1, 0.3)
+// 니들 스프레이: 몸에서 바늘 여럿이 위아래로 퍼지며 가로로 날아간다
+export const needleSpray = (from: At, n = 6) => {
+  let out = muzzle('#86EFAC', WHITE, from, 0.8)
+  for (let i = 0; i < n; i++) {
+    const dy = (i - (n - 1) / 2) * 1.1
+    const a = at(0.44 + (i % 3) * 0.02)
+    out += fly(art('needle'), [from[0], at(from[1] + dy * 0.4)], [HIT_X + 1 + (i % 2) * 0.8, at(7.5 + dy)], a, at(a + 0.16)) + impact('#86EFAC', HIT_X + 1.5, at(7.5 + dy), 0.3)
+  }
+  return out
+}
 export const rockRain = (n = 4) => rainOf('rock', '#9CA3AF', n, 8)
 export const rain = (_rows: unknown, _pal: unknown, color: string, n = 3, scale = 1, spread = 7) => rainOf('orb_white', color, n, spread, 0, scale)
 
