@@ -120,13 +120,26 @@ const levelBadge = (level: number, x: number, w: number, h: number, font: number
   `<rect x="${x}" y="1" width="${w}" height="${h}" rx="4" fill="${GOLD}" stroke="${INK}" stroke-width="1.5"/>` +
   `<text x="${x + w / 2}" y="${1 + h / 2}" dominant-baseline="central" text-anchor="middle" font-family="${FONT}" font-size="${font}" font-weight="800" fill="${INK}">Lv.${level}</text>`
 
-// 단계별로 한 대 칠 때 뜨는 데미지 (연출용. 실제로 쓴 양은 끝 알림의 점수)와, 네 번 칠 때마다 다르게 보이게 곱하는 흔들림
+// 단계별로 한 대 칠 때 뜨는 데미지의 기준값 (연출용. 실제로 쓴 양은 끝 알림의 점수)
 const DAMAGE = [7, 15, 28, 46, 73, 120, 188, 290, 455, 999, 1500]
-const JITTER = [1, 0.86, 1.18, 0.93]
-const hits = (t: number) => JITTER.map(k => Math.max(1, Math.round(DAMAGE[Math.min(10, t)]! * k)))
+// 전투 그림 하나에 넣는 데미지 수와 흔들림 폭. 그림 안에서는 새로 뽑을 수 없어(스크립트 없는 SVG)
+// 그림을 만들 때 seed로 HITS개를 뽑아 차례로 띄운다. 기준값의 0.8~1.25배
+const HITS = 8
+const SPREAD = [0.8, 1.25] as const
+const hits = (t: number, seed: number) => {
+  let h = (Math.imul(seed | 0, 2654435761) ^ 0x9e3779b9) >>> 0
+  return Array.from({ length: HITS }, () => {
+    h = Math.imul(h ^ (h >>> 15), 2246822507) >>> 0
+    h = Math.imul(h ^ (h >>> 13), 3266489909) >>> 0
+    h = (h ^ (h >>> 16)) >>> 0
+    const k = SPREAD[0] + (h / 4294967296) * (SPREAD[1] - SPREAD[0])
+    return Math.max(1, Math.round(DAMAGE[Math.min(10, t)]! * k))
+  })
+}
 
-// hp: 머리 위 HP 이름표(한도), t: 장비 단계, level: 레벨, foe: 상대에게 남은 체력(0~1), job: 이달의 계열
-export const runSvg = (hp: Hp, t: number, level: number, foe: number, job: Job) => {
+// hp: 머리 위 HP 이름표(한도), t: 장비 단계, level: 레벨, foe: 상대에게 남은 체력(0~1), job: 이달의 계열,
+// seed: 데미지 숫자를 뽑는 씨앗 (같은 턴 안에서는 같은 값을 넘겨 다시 그려도 숫자가 그대로)
+export const runSvg = (hp: Hp, t: number, level: number, foe: number, job: Job, seed = 0) => {
   const plate = plateHeight(hp, SMALL_PLATE)
   const top = Math.max(plate, 22) + 2
   const shift = top + job.smallHeadroom(t)
@@ -140,7 +153,7 @@ export const runSvg = (hp: Hp, t: number, level: number, foe: number, job: Job) 
       levelBadge(level, 120, 52, 20, 12) +
       `<g transform="translate(0 ${shift}) scale(4)">` +
       ground +
-      monster(t, foe, hits(t)) +
+      monster(t, foe, hits(t, seed)) +
       `<g>${approach(t, job)}<g transform="translate(-5 2)">${job.small(t, 'run')}</g></g>` +
       job.hit(t) +
       '</g></svg>',

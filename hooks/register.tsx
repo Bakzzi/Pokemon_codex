@@ -856,7 +856,8 @@ export const register: Register = on => {
 
     // 일하는 중: 내 디지몬이 레벨에 맞는 상대와 싸운다 (경과 시간·하는 일은 앱의 진행 표시줄에)
     if (view === 'running') {
-      const run = runSvg(hp, dt, rank.level, foeHp(sx), me)
+      // 데미지 숫자는 턴을 시작한 시각으로 뽑는다 (턴마다 다르고, 턴 안에서는 그대로)
+      const run = runSvg(hp, dt, rank.level, foeHp(sx), me, Math.floor((await read($, startedAt)) / 1000))
       // JSX가 쓰는 h와 겹치지 않게 다른 이름을 쓴다
       const artH = Math.min(BAND_H, run.height)
       return (
