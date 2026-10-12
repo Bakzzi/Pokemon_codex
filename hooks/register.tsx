@@ -24,6 +24,7 @@ import {
 import { SEED } from './seed.ts'
 import { bigSvg, hpBarSvg, hpColor, idleSvg, runSvg, xpBarSvg } from './sprites.ts'
 import { jobOf, nextJobs } from './jobs/index.ts'
+import { formName } from './digi.ts'
 
 // 입력창 위 띠(밴드)는 상태가 바뀔 때만 다시 그린다. 데스크톱 앱은 띠를 다시 그릴 때마다
 // 움직이는 그림 칸을 새로 만들어서 그림이 처음부터 다시 돈다. 그래서 띠를 그리는 훅은
@@ -122,22 +123,22 @@ async function gainXp($: any, list: readonly RateLimit[]) {
   const x = xpOf(c)
   const level = levelOf(x)
   const tier = tierOf(level)
-  const foe = tier >= 10 ? '황금 드래곤이 동료예요' : `상대는 ${MONSTER_NAMES[tier]}`
+  const foe = tier >= 10 ? '오메가몬이 동료예요' : `상대는 ${MONSTER_NAMES[tier]}`
   const who = `${myJob.icon} ${myJob.name}`
   if (seeded) {
-    await $.ui.toast(`📜 이번 달 1일부터 쓴 양을 어림했어요 · 이달의 직업 ${who} · XP ${x} · Lv.${level}부터 시작! ${foe}`)
+    await $.ui.toast(`📜 이번 달 1일부터 쓴 양을 어림했어요 · 이달의 문장 ${who} · XP ${x} · Lv.${level}부터 시작! ${foe}`)
   } else if (seedMissed) {
     await $.ui.toast(
       '📜 모아 둔 사용 기록으로 1일부터 어림하지 못했어요(이번 주 사용량이 5% 미만이거나 기록이 하루 넘게 지남). 조금 쓴 뒤 seed.mjs를 다시 실행하고 /reload-plugins 해 주세요',
     )
   } else if (expired) {
-    await $.ui.toast(`🔄 새 시즌 시작! 이달의 직업은 ${who} · 경험치를 다시 세요 · Lv.${level} · ${foe}`)
+    await $.ui.toast(`🔄 새 시즌 시작! 이달의 문장은 ${who} · 경험치를 다시 세요 · Lv.${level} · ${foe}`)
   } else if (newJob) {
-    await $.ui.toast(`🎲 이달의 직업은 ${who}! Lv.${level} · ${foe}`)
+    await $.ui.toast(`🎲 이달의 문장은 ${who}! Lv.${level} · ${foe}`)
   } else if (tier >= 10 && c.tier < 10) {
-    await $.ui.toast(`🏆 Lv.100! ${myJob.name} Claude가 황금 드래곤을 쓰러뜨려 동료로 삼았어요. ${myJob.gear[10]} 획득!`)
+    await $.ui.toast(`🏆 Lv.100! ${formName(myJob, 9)}이(가) 아포카리몬을 쓰러뜨렸어요. 오메가몬이 동료로 합류! ${myJob.gear[10]}`)
   } else if (tier > c.tier) {
-    await $.ui.toast(`⚔️ Lv.${level}! ${MONSTER_NAMES[tier - 1]} 처치 · ${myJob.gear[tier]} 획득 · 다음 상대 ${MONSTER_NAMES[tier]}`)
+    await $.ui.toast(`⚔️ Lv.${level}! ${MONSTER_NAMES[tier - 1]} 격파 · ${myJob.gear[tier]} · 다음 상대 ${MONSTER_NAMES[tier]}`)
   }
   c = { ...c, tier }
   await $.store.set('season', c)
@@ -610,12 +611,12 @@ export const register: Register = on => {
       // 주간 한도 정보가 있을 때만 경험치가 쌓이니 그때만 레벨 줄을 보여 준다. 안 연 상자가 있으면 그 줄에서 연다
       const lv = lim.week
         ? {
-            label: `Lv.${r.level} ${me.name} ⚔ ${r.foe}`,
+            label: `Lv.${r.level} ${formName(me, r.tier)} ⚔ ${r.foe}`,
             detail: chest
               ? '🎁 보물상자를 찾았어요!'
               : r.next
-                ? `몬스터 HP ${r.foeHp}% · 시즌 ${days}일 남음`
-                : `황금 드래곤과 함께 · 시즌 ${days}일 남음`,
+                ? `상대 HP ${r.foeHp}% · 시즌 ${days}일 남음`
+                : `오메가몬과 함께 · 시즌 ${days}일 남음`,
             value: `XP ${x}/${MAX_XP}`,
           }
         : null
@@ -666,7 +667,7 @@ export const register: Register = on => {
           <Box flexDirection="row" alignItems="center" columnGap={2}>
             <Svg
               source={stand.source}
-              alt={`쉬고 있는 ${me.name} Claude · Lv.${r.level}${company}`}
+              alt={`쉬고 있는 ${formName(me, r.tier)} · Lv.${r.level}${company}`}
               width={stand.width}
               height={stand.height}
               isInteractive={true}
@@ -737,7 +738,7 @@ export const register: Register = on => {
       const { Box, Text, Button } = $.ui.resolve(e)
       let line
       if (view === 'running') {
-        line = <Text>{[`⚔ Lv.${rank.level} ${me.name} Claude${buddy ? ` ${buddy.icon}` : ''} vs ${rank.foe}`, ...hpTail].join(' · ')}</Text>
+        line = <Text>{[`⚔ Lv.${rank.level} ${formName(me, rank.tier)}${buddy ? ` ${buddy.icon}` : ''} vs ${rank.foe}`, ...hpTail].join(' · ')}</Text>
       } else if (view === 'waiting') {
         const wait = WAIT[await read($, waitKind)]
         line = <Text bold color={AMBER}>{`${wait.icon} ${wait.title} · ${wait.hint}`}</Text>
@@ -778,14 +779,14 @@ export const register: Register = on => {
       return (
         <Box flexDirection="column">
           <Box flexDirection="row" alignItems="center" columnGap={2}>
-            <Svg source={run.source} alt="몬스터와 싸우는 Claude" width={Math.round((run.width * artH) / run.height)} height={artH} isInteractive={true} />
+            <Svg source={run.source} alt="상대와 싸우는 내 디지몬" width={Math.round((run.width * artH) / run.height)} height={artH} isInteractive={true} />
             <Box flexDirection="column">
-              <Text bold>{`Lv.${rank.level} ${me.name} Claude vs ${rank.foe}`}</Text>
+              <Text bold>{`Lv.${rank.level} ${formName(me, rank.tier)} vs ${rank.foe}`}</Text>
               {hpTail.map(t => (
                 <Text dimColor>{t}</Text>
               ))}
               <Text dimColor>
-                {rank.next ? `몬스터 HP ${rank.foeHp}% · Lv.${rank.next}에 ${me.gear[rank.tier + 1]}` : `최종 보스 격파! ${me.gear[10]}`}
+                {rank.next ? `상대 HP ${rank.foeHp}% · Lv.${rank.next}에 ${me.gear[rank.tier + 1]}` : `최종 보스 격파! ${me.gear[10]}`}
               </Text>
             </Box>
           </Box>
@@ -802,17 +803,17 @@ export const register: Register = on => {
     let big
     if (view === 'waiting') {
       const wait = WAIT[await read($, waitKind)]
-      big = { art: bigSvg('waiting', wait.bubble[0], wait.bubble[1], hp, intro, rank.tier, me, side), alt: `손을 들고 기다리는 Claude: ${wait.title}`, color: AMBER, title: wait.title, sub: wait.hint }
+      big = { art: bigSvg('waiting', wait.bubble[0], wait.bubble[1], hp, intro, rank.tier, me, side), alt: `기다리는 ${formName(me, rank.tier)}: ${wait.title}`, color: AMBER, title: wait.title, sub: wait.hint }
     } else if (view === 'treasure' && buddy) {
-      big = { art: bigSvg('done', `${buddy.name} 등장!`, '이달 내내 따라다녀요', hp, intro, rank.tier, me, chestReveal(buddy, intro)), alt: `보물상자에서 ${buddy.name}${buddy.josa} 나왔어요`, color: AMBER, title: `🎁 ${met}`, sub: '이번 달 내내 Claude를 따라다녀요' }
+      big = { art: bigSvg('done', `${buddy.name} 등장!`, '이달 내내 따라다녀요', hp, intro, rank.tier, me, chestReveal(buddy, intro)), alt: `보물상자에서 ${buddy.name}${buddy.josa} 나왔어요`, color: AMBER, title: `🎁 ${met}`, sub: '이번 달 내내 내 디지몬을 따라다녀요' }
     } else {
       const ranFor = elapsedText(await read($, lastMs))
       big =
         view === 'error'
-          ? { art: bigSvg('error', '멈췄어요!', '오류가 났어요', hp, intro, rank.tier, me, side), alt: '오류로 멈춰 어지러워하는 Claude', color: RED, title: '멈췄어요! 오류가 났어요', sub: `${ranFor} 싸우다 멈춤 · Lv.${rank.level} ${me.name}` }
+          ? { art: bigSvg('error', '멈췄어요!', '오류가 났어요', hp, intro, rank.tier, me, side), alt: '오류로 멈춘 내 디지몬', color: RED, title: '멈췄어요! 오류가 났어요', sub: `${ranFor} 싸우다 멈춤 · Lv.${rank.level} ${formName(me, rank.tier)}` }
           : withChest
-            ? { art: bigSvg('done', '보물상자 발견!', '확인을 눌러 열어 봐요', hp, intro, rank.tier, me, chestClosed()), alt: '일을 마치고 보물상자를 찾은 Claude', color: AMBER, title: '🎁 보물상자를 찾았어요!', sub: `${ranFor} 전투 · 확인을 누르면 열어요` }
-            : { art: bigSvg('done', '다 했어요!', '결과 확인해 주세요', hp, intro, rank.tier, me, side), alt: '일을 마치고 확인하라고 가리키는 Claude', color: GREEN, title: '작업 끝! 확인해 주세요', sub: `${ranFor} 전투 · Lv.${rank.level} ${me.name}` }
+            ? { art: bigSvg('done', '보물상자 발견!', '확인을 눌러 열어 봐요', hp, intro, rank.tier, me, chestClosed()), alt: '일을 마치고 보물상자를 찾은 내 디지몬', color: AMBER, title: '🎁 보물상자를 찾았어요!', sub: `${ranFor} 전투 · 확인을 누르면 열어요` }
+            : { art: bigSvg('done', '다 했어요!', '결과 확인해 주세요', hp, intro, rank.tier, me, side), alt: '일을 마친 내 디지몬', color: GREEN, title: '작업 끝! 확인해 주세요', sub: `${ranFor} 전투 · Lv.${rank.level} ${formName(me, rank.tier)}` }
     }
 
     return (

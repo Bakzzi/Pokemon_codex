@@ -59,6 +59,8 @@ export type Stage = {
   height?: number
   // 원본이 왼쪽을 보면 true (오른쪽의 몬스터를 보게 뒤집는다). 기본 true
   flip?: boolean
+  // 공격 장면 (있으면 전투 중 공격 주기의 0.5~0.72에 이 그림으로 바뀐다). 크기는 image와 같은 비율로 맞춘다
+  attack?: Sprite
   // 땅에서 띄울 점 수 (날아다니는 디지몬). 그림자는 그대로 땅에 둔다
   hover?: number
   // 격자 위에 덧그리는 움직이는 부분 (꼬리·날개·불씨). 격자 좌표의 px/dots로 그린다
@@ -165,7 +167,18 @@ export const figure = (s: Stage, pose: Pose, variant?: BigVariant) => {
   if (s.image) {
     // 뒤집어서 오른쪽을 보게 하고, 달릴 때는 발끝을 축으로 앞뒤로 기울인다
     const img = `<image href="${s.image.href}" x="0" y="0" width="${o.wc}" height="${o.hc}" preserveAspectRatio="none"/>`
-    const flipped = (s.flip ?? true) ? `<g transform="translate(${o.wc} 0) scale(-1 1)">${img}</g>` : img
+    let frames = img
+    if (run && s.attack) {
+      // 공격 장면은 같은 배율로, 발과 가운데를 맞춰 놓는다
+      const k = o.hc / s.image.h
+      const aw = at(s.attack.w * k)
+      const ah = at(s.attack.h * k)
+      const atk = `<image href="${s.attack.href}" x="${at((o.wc - aw) / 2)}" y="${at(o.hc - ah)}" width="${aw}" height="${ah}" preserveAspectRatio="none"/>`
+      frames =
+        `<g><animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;0.5;0.5;0.72;0.72;1" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>${img}</g>` +
+        `<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.5;0.5;0.72;0.72;1" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>${atk}</g>`
+    }
+    const flipped = (s.flip ?? true) ? `<g transform="translate(${o.wc} 0) scale(-1 1)">${frames}</g>` : frames
     const tilt = run
       ? `<g><animateTransform attributeName="transform" type="rotate" values="-4 ${at(o.wc / 2)} ${o.hc};4 ${at(o.wc / 2)} ${o.hc}" dur="${STEP}" calcMode="discrete" repeatCount="indefinite"/>${flipped}</g>`
       : flipped
@@ -198,16 +211,22 @@ export const figure = (s: Stage, pose: Pose, variant?: BigVariant) => {
 const top = (s: Stage) => (s.image ? origin(s).y : origin(s).y - DOT)
 
 // ── 문장(紋章) ────────────────────────────────────────────────────
-// 레벨 30부터 머리 왼쪽 위에 이달의 문장이 떠서 숨 쉬듯 빛난다
-export const crestMark = (rows: readonly string[], pal: Palette, s: Stage) => {
+// 레벨 30부터 머리 왼쪽 위에 이달의 문장(태그)이 떠서 숨 쉬듯 빛난다. 점 그림 또는 PNG
+export type Crest = { rows: readonly string[]; pal: Palette } | { image: Sprite }
+const CREST_W = 3.4
+export const crestMark = (crest: Crest, s: Stage) => {
   const o = origin(s)
-  const w = gridWidth(rows)
+  const w = 'image' in crest ? CREST_W : gridWidth(crest.rows) * DOT
+  const art =
+    'image' in crest
+      ? `<image href="${crest.image.href}" x="0" y="0" width="${CREST_W}" height="${at((CREST_W * crest.image.h) / crest.image.w)}" preserveAspectRatio="none"/>`
+      : dots(crest.rows, crest.pal)
   // 전투 그림은 x = 5칸 왼쪽이 잘리므로 그 안쪽에 둔다 (덩치 큰 디지몬은 머리 왼쪽 위에 겹친다)
   return (
-    `<g transform="translate(${at(Math.max(5.2, o.x - w * DOT - 1))} ${at(o.y + 0.5)})">` +
+    `<g transform="translate(${at(Math.max(5.2, o.x - w - 0.8))} ${at(o.y + 0.5)})">` +
     `<animateTransform attributeName="transform" type="translate" values="0 0;0 -0.4;0 0" dur="2s" repeatCount="indefinite" additive="sum"/>` +
-    '<g><animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>' +
-    dots(rows, pal) +
+    '<g><animate attributeName="opacity" values="0.75;1;0.75" dur="2s" repeatCount="indefinite"/>' +
+    art +
     '</g></g>'
   )
 }
@@ -228,17 +247,42 @@ const glory = (s: Stage, t: number, big: boolean) => {
 // 몬스터는 x 24~38에 서 있고, 공격 주기(ATK)의 0.6~0.76에 맞는다
 
 // 날아가는 것: 디지몬 앞(x ≈ 17, y)에서 출발해 0.44 → 0.6 사이에 dist칸 날아간다. 격자 그림은 가운데가 (0, 0)이 되게 놓는다
-export const shot = (rows: readonly string[], pal: Palette, y: number, dist = 9, glow = '') => {
+export const shot = (rows: readonly string[], pal: Palette, y: number, dist = 9, glow = '', scale = 1) => {
   const w = gridWidth(rows)
   const h = rows.length
   return (
     '<g opacity="0">' +
     `<animate attributeName="opacity" values="0;1;0" keyTimes="0;0.44;0.6" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>` +
     `<animateTransform attributeName="transform" type="translate" values="17 ${y};17 ${y};${17 + dist} ${y};${17 + dist} ${y}" keyTimes="0;0.44;0.6;1" dur="${ATK}" repeatCount="indefinite"/>` +
-    `<g transform="translate(${at((-w * DOT) / 2)} ${at((-h * DOT) / 2)})">${glow}${dots(rows, pal)}</g>` +
+    `<g transform="scale(${scale}) translate(${at((-w * DOT) / 2)} ${at((-h * DOT) / 2)})">${glow}${dots(rows, pal)}</g>` +
     '</g>'
   )
 }
+
+// ── 속성별 기술 효과 ──────────────────────────────────────────────
+// 계열 파일은 속성 하나만 고르고, 진화 단계가 오를수록 커진다
+export type Element = 'fire' | 'ice' | 'leaf' | 'thunder' | 'water' | 'holy' | 'light' | 'bubble'
+const W = '#FFFFFF'
+const ELEMENTS: Record<Element, { rows: readonly string[]; pal: Palette; color: string; light: string }> = {
+  fire: { rows: ['....rrr.', '..rryyrr', 'rryywwyr', '..rryyrr', '....rrr.'], pal: { r: '#F26B21', y: '#FDE047', w: '#FFF7D6' }, color: '#F26B21', light: '#FDE047' },
+  ice: { rows: ['..b..', '.bwb.', 'bwwwb', '.bwb.', '..b..'], pal: { b: '#60A5FA', w: '#E0F2FE' }, color: '#60A5FA', light: '#E0F2FE' },
+  leaf: { rows: ['..ggl', '.gggl', 'ggggl', 'ggg..', 'gg...'], pal: { g: '#22C55E', l: '#86EFAC' }, color: '#22C55E', light: '#86EFAC' },
+  thunder: { rows: ['...yy', '..yyw', 'yyyyy', 'wyy..', 'yy...'], pal: { y: '#FDE047', w: '#FFFBEB' }, color: '#FDE047', light: '#FFFBEB' },
+  water: { rows: ['.bb.', 'bwbb', 'bbbb', '.bb.'], pal: { b: '#38BDF8', w: '#E0F2FE' }, color: '#38BDF8', light: '#E0F2FE' },
+  holy: { rows: ['.ww.', 'wyyw', 'wyyw', '.ww.'], pal: { w: W, y: '#FDE68A' }, color: '#FDE68A', light: W },
+  light: { rows: ['....p.', 'wwwwww', '....p.'], pal: { w: W, p: '#F9A8D4' }, color: '#F9A8D4', light: W },
+  bubble: { rows: ['.pp.', 'pwpp', 'pppp', '.pp.'], pal: { p: '#BAE6FD', w: W }, color: '#BAE6FD', light: W },
+}
+// stage: 진화 단계(0~4). 근접(melee)이면 날아가는 것 없이 베는 자국만 남긴다
+export const elementHit = (el: Element, stage: number, melee = false) => {
+  const e = ELEMENTS[el]
+  const sc = at(0.7 + stage * 0.3)
+  if (melee) return slash(e.color) + (stage >= 2 ? impact(e.light, 25.7, 8.2, sc * 0.6) : '')
+  return shot(e.rows, e.pal, 7.2, 9, glowBox(gridWidth(e.rows), e.rows.length, e.color), sc) + impact(e.color, 25.7, 7.6, sc)
+}
+
+// PNG 스프라이트 단계 하나
+export const sprite = (name: string, image: Sprite, height: number, extra: Partial<Stage> = {}): Stage => ({ name, image, height, ...extra })
 
 // 맞은 자리의 불꽃 (0.6 → 0.72): 십자 불꽃과 흰 심, 네 귀퉁이로 튀는 조각
 export const impact = (color: string, cx = 25.7, cy = 7.9, size = 1) =>
@@ -278,8 +322,8 @@ export type Line = {
   melee: boolean
   // 유년기 → 성장기 → 성숙기 → 완전체 → 궁극체
   stages: readonly [Stage, Stage, Stage, Stage, Stage]
-  // 문장 마크 (5 × 5점쯤)
-  crest: { rows: readonly string[]; pal: Palette }
+  // 문장 마크 (태그 그림 또는 5 × 5점쯤의 점 그림)
+  crest: Crest
   // 공격 효과 (전투 좌표). 단계 t마다 다르게 그릴 수 있다
   hit: (t: number, stage: number) => string
 }
@@ -299,7 +343,7 @@ export const makeLine = (line: Line): Job & { formName: (t: number) => string } 
     formName: t => stageAt(t).name,
     small: (t, pose) => {
       const s = stageAt(t)
-      return figure(s, pose) + (t >= 3 ? crestMark(line.crest.rows, line.crest.pal, s) : '') + glory(s, t, false)
+      return figure(s, pose) + (t >= 3 ? crestMark(line.crest, s) : '') + glory(s, t, false)
     },
     hit: t => (t >= 10 ? '' : line.hit(t, stageOf(t))),
     big: (variant, t) => {
@@ -307,7 +351,7 @@ export const makeLine = (line: Line): Job & { formName: (t: number) => string } 
       return (
         '<g transform="translate(220 6) scale(10)">' +
         figure(s, 'stand', variant) +
-        (t >= 3 ? crestMark(line.crest.rows, line.crest.pal, s) : '') +
+        (t >= 3 ? crestMark(line.crest, s) : '') +
         glory(s, t, true) +
         '</g>'
       )
