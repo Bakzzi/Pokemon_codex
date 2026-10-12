@@ -10,11 +10,11 @@ def show(m):
     head, anim = m.group(1), m.group(2)
     rest = s_after = ''
     return f'<g opacity="1">{anim}'
-s = re.sub(r'<g opacity="0">(<animate attributeName="opacity"[^>]*/>)', lambda m: f'<g opacity="1">{m.group(1)}', s)
+s = re.sub(r'<g opacity="0"( [^>]*)?>(<animate attributeName="opacity"[^>]*/>)', lambda m: f'<g opacity="1"{m.group(1) or ""}>{m.group(2)}', s)
 # 묶음 바로 안의 translate 움직임: 값 목록에서 세 번째 값(없으면 마지막)으로 transform을 박는다
 def move(m):
-    vals = m.group(2).split(';')
+    vals = m.group(3).split(';')
     v = vals[2] if len(vals) > 3 else vals[-1]
-    return f'<g opacity="1" transform="translate({v})">{m.group(1)}<animateTransform attributeName="transform" type="translate" values="{m.group(2)}"'
-s = re.sub(r'<g opacity="1">(<animate attributeName="opacity"[^>]*/>)<animateTransform attributeName="transform" type="translate" values="([^"]+)"', move, s)
+    return f'<g opacity="1"{m.group(1) or ""} transform="translate({v})">{m.group(2)}<animateTransform attributeName="transform" type="translate" values="{m.group(3)}"'
+s = re.sub(r'<g opacity="1"( [^>]*)?>(<animate attributeName="opacity"[^>]*/>)<animateTransform attributeName="transform" type="translate" values="([^"]+)"', move, s)
 open(sys.argv[2], 'w', encoding='utf-8').write(s)

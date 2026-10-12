@@ -38,7 +38,7 @@ figure.wide img {{ max-width:none; width:2600px; }}
     <figure class="wide"><img src="{uri('preview/out/courage-run.png')}" alt="레벨별 전투 장면: 쿠와가몬부터 아포카리몬, 오메가몬까지"></figure>
   </section>
   <section>
-    <h2>공격 순간 <small>Lv.10 · 40 · 60 · 80 · 90. 디지몬마다 고유 기술이 입(손)에서 나가고, 근접 기술만 돌진합니다</small></h2>
+    <h2>공격 순간 <small>Lv.10 · 40 · 60 · 80 · 90. 기술 효과는 그라데이션 벡터라 어느 배율에서도 매끈합니다. 정지 화면이라 투사체는 도착 지점에, 데미지 숫자도 같이 찍혀 있습니다</small></h2>
 {attacks}  </section>
   <section>
     <h2>알림 <small>완료 · 대기 · 오류(색이 바램)</small></h2>
