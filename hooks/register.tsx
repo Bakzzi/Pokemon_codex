@@ -77,11 +77,14 @@ const pendingAsks = atom({ plugin: 'digimon-buddy', key: 'pendingAsks' } as cons
 
 // ── HP 점수와 데미지 ────────────────────────────────────────────────
 // 앱은 한도의 크기(토큰 몇 개인지)를 알려 주지 않고, 사용률도 0.1% 단위라 응답 하나로는 거의 움직이지 않는다.
-// 그래서 세션 비용(cost.usd: 쓴 토큰을 API 정가로 환산한 값, 구독 요금과는 무관)을 점수로 쓴다. 1점 = $0.01.
+// 그래서 응답마다 앱이 알려 주는 토큰 수(context.breakdown.apiUsage)에 공개 가격의 비율로 무게를 주어 점수로 쓴다
+// (scripts/seed.mjs와 같은 비율. 구독 계정 데스크톱 앱에서 세션 비용 cost.usd가 응답 뒤에도 늘지 않아 쓰지 않는다). 가중 토큰 1,000개 = 1점.
 // - 데미지 = 이번 응답(턴)에서 늘어난 점수
 // - 풀피 = 1%당 점수 × 100. 모든 창이 쓴 점수와 그동안 오른 사용률을 $.store 'cal'에 모아 어림한다
 //   (claude.ai 채팅 등 모드가 없는 곳의 사용량은 점수에 안 잡혀 풀피가 작게 어림될 수 있다)
-const POINT_USD = 0.01
+// 토큰 종류별 무게 (입력 대비 가격 비율): 출력 5배, 캐시 읽기 0.05배, 캐시 쓰기 1.25배
+const WEIGHT = { input: 1, output: 5, cacheRead: 0.05, cacheWrite: 1.25 }
+const TOKENS_PER_POINT = 1000
 // 1%당 점수를 믿기 시작하는 모은 사용률(%p): 주간, 5시간
 const CAL_MIN = { week: 1, five: 2 }
 // 데미지 숫자를 고치는 최소 간격 (고칠 때마다 전투 그림이 처음부터 다시 돈다). 턴이 끝날 때는 바로 맞춘다
@@ -89,17 +92,20 @@ const SPENT_EVERY_MS = 8000
 
 type Reading = { used: number; resetsAt: string | null } | null
 type Pools = { week: number | null; five: number | null }
-type Cal = { cost: number; week: number; five: number; last: { week: Reading; five: Reading } }
+type Cal = { points: number; week: number; five: number; last: { week: Reading; five: Reading } }
 // 이번 턴: 점수(데미지)와 주간·5시간 사용률이 늘어난 양
 type Spent = { points: number | null; week: number | null; five: number | null }
-type TurnFrom = { usd: number | null; week: Reading; five: Reading }
+type TurnFrom = { points: number | null; week: Reading; five: Reading }
 
-const turnFrom = atom({ plugin: 'digimon-buddy', key: 'turnFrom' } as const, { usd: null, week: null, five: null } as TurnFrom)
+const turnFrom = atom({ plugin: 'digimon-buddy', key: 'turnFrom' } as const, { points: null, week: null, five: null } as TurnFrom)
 const spent = atom({ plugin: 'digimon-buddy', key: 'spent' } as const, { points: null, week: null, five: null } as Spent)
 // 어림한 풀피(점수). 띠가 읽으므로 크게 바뀔 때만 적는다
 const pools = atom({ plugin: 'digimon-buddy', key: 'pools' } as const, { week: null, five: null } as Pools)
-// 이 창이 마지막으로 본 세션 비용 (모든 창의 점수 합에 더할 몫을 구한다)
-const calCost = atom({ plugin: 'digimon-buddy', key: 'calCost' } as const, -1)
+// 이 창이 지금까지 쓴 점수와 마지막으로 센 응답 (같은 응답을 두 번 세지 않게)
+const pointsTotal = atom({ plugin: 'digimon-buddy', key: 'pointsTotal' } as const, 0)
+const lastUsage = atom({ plugin: 'digimon-buddy', key: 'lastUsage' } as const, '')
+// 모든 창의 점수 합에 마지막으로 더한 이 창의 점수 (-1: 아직 안 더함)
+const calPoints = atom({ plugin: 'digimon-buddy', key: 'calPoints' } as const, -1)
 let spentAt = 0
 
 const readingOf = (list: readonly RateLimit[], kind: string): Reading => {
@@ -116,7 +122,25 @@ const spentOf = (from: Reading, now: Reading): number | null => {
   if (!from || !now) return null
   return Math.round(Math.max(0, renewedAfter(from, now) ? now.used : now.used - from.used) * 10) / 10
 }
-const usdOf = (u: { cost?: { usd: number } }) => (typeof u.cost?.usd === 'number' ? u.cost.usd : null)
+type ApiUsage = { input_tokens: number; output_tokens: number; cache_read_input_tokens: number; cache_creation_input_tokens: number }
+const pointsOfUsage = (a: ApiUsage) =>
+  (a.input_tokens * WEIGHT.input + a.output_tokens * WEIGHT.output + a.cache_read_input_tokens * WEIGHT.cacheRead + a.cache_creation_input_tokens * WEIGHT.cacheWrite) /
+  TOKENS_PER_POINT
+
+// 마지막 응답의 토큰 수를 읽어 아직 안 센 응답이면 이 창의 점수에 더한다. 지금까지 쓴 점수를 돌려준다.
+// breakdown 'summary'는 앱 안에서 어림하므로 요청을 보내지 않는다. 메인 대화의 응답만 잡힌다(서브에이전트는 빠진다)
+async function countUsage($: any): Promise<number> {
+  const u = await $.session.usage({ breakdown: 'summary' })
+  const a = u.context?.breakdown?.apiUsage as ApiUsage | null | undefined
+  if (a) {
+    const sig = JSON.stringify([a.input_tokens, a.output_tokens, a.cache_read_input_tokens, a.cache_creation_input_tokens, u.context.tokens ?? 0])
+    if (sig !== (await read($, lastUsage))) {
+      await update($, lastUsage, () => sig)
+      await update($, pointsTotal, v => v + pointsOfUsage(a))
+    }
+  }
+  return read($, pointsTotal)
+}
 
 // 모든 창의 기록에서 마지막으로 센 사용률보다 오른 만큼. 늦게 온 옛 창의 값이나 내려간 값은 세지 않는다
 const growth = (last: Reading, now: Reading): { add: number; last: Reading } => {
@@ -127,36 +151,36 @@ const growth = (last: Reading, now: Reading): { add: number; last: Reading } => 
   return now.used > last.used ? { add: now.used - last.used, last: now } : { add: 0, last }
 }
 const poolsOf = (c: Cal): Pools => ({
-  week: c.week >= CAL_MIN.week && c.cost > 0 ? Math.round((c.cost / POINT_USD / c.week) * 100) : null,
-  five: c.five >= CAL_MIN.five && c.cost > 0 ? Math.round((c.cost / POINT_USD / c.five) * 100) : null,
+  week: c.week >= CAL_MIN.week && c.points > 0 ? Math.round((c.points / c.week) * 100) : null,
+  five: c.five >= CAL_MIN.five && c.points > 0 ? Math.round((c.points / c.five) * 100) : null,
 })
 // 띠를 다시 그릴 만큼 바뀌었는지: 생기거나 없어졌거나 3% 넘게 바뀜
 const poolMoved = (a: number | null, b: number | null) => (a === null || b === null ? a !== b : Math.abs(a - b) > a * 0.03)
 
 // 응답마다: 이 창이 쓴 점수와 오른 사용률을 모든 창의 기록에 더하고 풀피를 다시 어림한다
-async function calibrate($: any, list: readonly RateLimit[], usd: number | null) {
-  if (usd === null) return
-  const prev = await read($, calCost)
-  if (prev !== usd) await update($, calCost, () => usd)
-  // 처음 보거나(-1) 세션 비용이 처음부터 다시 세어졌으면 이번 몫은 세지 않는다
-  const dUsd = prev >= 0 && usd >= prev ? usd - prev : 0
-  const saved = ((await $.store.get('cal')) as Cal | undefined) ?? { cost: 0, week: 0, five: 0, last: { week: null, five: null } }
+async function calibrate($: any, list: readonly RateLimit[], total: number) {
+  const prev = await read($, calPoints)
+  if (prev !== total) await update($, calPoints, () => total)
+  // 처음이면(-1) 이번 몫은 세지 않는다 (출발점만 잡는다)
+  const dPts = prev >= 0 && total >= prev ? total - prev : 0
+  const raw = (await $.store.get('cal')) as Partial<Cal> | undefined
+  const saved: Cal = { points: raw?.points ?? 0, week: raw?.week ?? 0, five: raw?.five ?? 0, last: raw?.last ?? { week: null, five: null } }
   const w = growth(saved.last.week, readingOf(list, 'seven_day'))
   const f = growth(saved.last.five, readingOf(list, 'five_hour'))
-  let cal: Cal = { cost: saved.cost + dUsd, week: saved.week + w.add, five: saved.five + f.add, last: { week: w.last, five: f.last } }
+  let cal: Cal = { points: saved.points + dPts, week: saved.week + w.add, five: saved.five + f.add, last: { week: w.last, five: f.last } }
   // 오래된 몫이 계속 쌓이지 않게: 주간 사용률이 50%p 넘게 모이면 모두 반으로 줄인다 (비율은 그대로)
-  if (cal.week > 50) cal = { ...cal, cost: cal.cost / 2, week: cal.week / 2, five: cal.five / 2 }
-  if (dUsd > 0 || w.add > 0 || f.add > 0 || w.last !== saved.last.week || f.last !== saved.last.five) await $.store.set('cal', cal)
+  if (cal.week > 50) cal = { ...cal, points: cal.points / 2, week: cal.week / 2, five: cal.five / 2 }
+  if (dPts > 0 || raw?.points === undefined || w.add > 0 || f.add > 0 || w.last !== saved.last.week || f.last !== saved.last.five) await $.store.set('cal', cal)
   const now = poolsOf(cal)
   const cur = await read($, pools)
   if (poolMoved(cur.week, now.week) || poolMoved(cur.five, now.five)) await update($, pools, () => now)
 }
 
-// 턴을 시작할 때: 지금 비용과 한도를 출발점으로 적고 데미지를 비운다
+// 턴을 시작할 때: 지금 점수와 한도를 출발점으로 적고 데미지를 비운다
 async function startSpent($: any) {
-  const u = await $.session.usage()
-  const list = u.rateLimits as RateLimit[]
-  await update($, turnFrom, () => ({ usd: usdOf(u), week: readingOf(list, 'seven_day'), five: readingOf(list, 'five_hour') }))
+  const list = (await $.session.usage()).rateLimits as RateLimit[]
+  const total = await countUsage($)
+  await update($, turnFrom, () => ({ points: total, week: readingOf(list, 'seven_day'), five: readingOf(list, 'five_hour') }))
   const none: Spent = { points: null, week: null, five: null }
   if (JSON.stringify(await read($, spent)) !== JSON.stringify(none)) await update($, spent, () => none)
   spentAt = 0
@@ -164,15 +188,15 @@ async function startSpent($: any) {
 
 // 응답이 올 때마다: 이번 턴에 쓴 양을 고친다 (바뀔 때만, 그리고 SPENT_EVERY_MS에 한 번까지. now = true면 바로).
 // 턴을 시작할 때 아직 못 본 값이 있으면 처음 본 값을 출발점으로 삼는다
-async function noteSpent($: any, list: readonly RateLimit[], usd: number | null, now = false) {
+async function noteSpent($: any, list: readonly RateLimit[], total: number, now = false) {
   const from = await read($, turnFrom)
   const week = readingOf(list, 'seven_day')
   const five = readingOf(list, 'five_hour')
-  if ((from.usd === null && usd !== null) || (!from.week && week) || (!from.five && five)) {
-    await update($, turnFrom, f => ({ usd: f.usd ?? usd, week: f.week ?? week, five: f.five ?? five }))
+  if (from.points === null || (!from.week && week) || (!from.five && five)) {
+    await update($, turnFrom, f => ({ points: f.points ?? total, week: f.week ?? week, five: f.five ?? five }))
   }
   const base = await read($, turnFrom)
-  const points = base.usd !== null && usd !== null ? Math.max(0, Math.round((usd - base.usd) / POINT_USD)) : null
+  const points = base.points !== null ? Math.max(0, Math.round(total - base.points)) : null
   const s: Spent = { points, week: spentOf(base.week, week), five: spentOf(base.five, five) }
   if (JSON.stringify(await read($, spent)) === JSON.stringify(s)) return
   const t = await $.clock.now()
@@ -580,11 +604,11 @@ export const register: Register = on => {
       await shareLimits($, limitsOf(e.rateLimits))
       await gainXp($, e.rateLimits)
     }
-    // 점수는 응답마다(cost가 늘 때마다) 센다. rateLimits는 1%p 넘게 움직여야 changed에 들지만 값은 소수 첫째 자리까지 온다
-    const usd = usdOf(e)
-    await calibrate($, e.rateLimits, usd)
+    // 점수는 응답마다(context가 바뀔 때마다) 센다. rateLimits는 1%p 넘게 움직여야 changed에 들지만 값은 소수 첫째 자리까지 온다
+    const total = await countUsage($)
+    await calibrate($, e.rateLimits, total)
     const p = await read($, phase)
-    if (p === 'running' || p === 'waiting') await noteSpent($, e.rateLimits, usd)
+    if (p === 'running' || p === 'waiting') await noteSpent($, e.rateLimits, total)
     return next(e)
   })
 
@@ -684,8 +708,7 @@ export const register: Register = on => {
       const x = await read($, xp)
       const j = await read($, job)
       // 그림이 한 번만 그려지도록 phase보다 먼저 채운다
-      const u = await $.session.usage()
-      await noteSpent($, u.rateLimits, usdOf(u), true)
+      await noteSpent($, (await $.session.usage()).rateLimits, await countUsage($), true)
       await update($, lastMs, () => e.durationMs)
       await update($, shown, () => l)
       await update($, shownXp, () => x)
