@@ -61,6 +61,8 @@ export type Stage = {
   flip?: boolean
   // 공격 장면 (있으면 전투 중 공격 주기의 0.5~0.72에 이 그림으로 바뀐다). 크기는 image와 같은 비율로 맞춘다
   attack?: Sprite
+  // 공격 장면의 뒤집기 (기본은 flip과 같다). 원본 공격 그림이 이미 오른쪽을 보면 false
+  flipAttack?: boolean
   // 땅에서 띄울 점 수 (날아다니는 디지몬). 그림자는 그대로 땅에 둔다
   hover?: number
   // 격자 위에 덧그리는 움직이는 부분 (꼬리·날개·불씨). 격자 좌표의 px/dots로 그린다
@@ -173,12 +175,16 @@ export const figure = (s: Stage, pose: Pose, variant?: BigVariant) => {
       const k = o.hc / s.image.h
       const aw = at(s.attack.w * k)
       const ah = at(s.attack.h * k)
-      const atk = `<image href="${s.attack.href}" x="${at((o.wc - aw) / 2)}" y="${at(o.hc - ah)}" width="${aw}" height="${ah}" preserveAspectRatio="none"/>`
+      const atkImg = `<image href="${s.attack.href}" x="${at((o.wc - aw) / 2)}" y="${at(o.hc - ah)}" width="${aw}" height="${ah}" preserveAspectRatio="none"/>`
+      // 공격 그림은 따로 뒤집는다 (서 있는 그림과 보는 방향이 다른 원본이 있다)
+      const atk = (s.flipAttack ?? s.flip ?? true) ? `<g transform="translate(${o.wc} 0) scale(-1 1)">${atkImg}</g>` : atkImg
       frames =
-        `<g><animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;0.5;0.5;0.72;0.72;1" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>${img}</g>` +
+        `<g><animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;0.5;0.5;0.72;0.72;1" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>${(s.flip ?? true) ? `<g transform="translate(${o.wc} 0) scale(-1 1)">${img}</g>` : img}</g>` +
         `<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.5;0.5;0.72;0.72;1" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>${atk}</g>`
+    } else {
+      frames = (s.flip ?? true) ? `<g transform="translate(${o.wc} 0) scale(-1 1)">${img}</g>` : img
     }
-    const flipped = (s.flip ?? true) ? `<g transform="translate(${o.wc} 0) scale(-1 1)">${frames}</g>` : frames
+    const flipped = frames
     const tilt = run
       ? `<g><animateTransform attributeName="transform" type="rotate" values="-4 ${at(o.wc / 2)} ${o.hc};4 ${at(o.wc / 2)} ${o.hc}" dur="${STEP}" calcMode="discrete" repeatCount="indefinite"/>${flipped}</g>`
       : flipped

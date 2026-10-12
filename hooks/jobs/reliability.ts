@@ -12,7 +12,7 @@ export const reliability = makeLine({
   melee: true,
   stages: [
   sprite('푸카몬', RELIABILITY.pukamon!, 5.5, { attack: RELIABILITY.pukamon_attack }),
-  sprite('파피몬', RELIABILITY.gomamon!, 8.5, { attack: RELIABILITY.gomamon_attack }),
+  sprite('파피몬', RELIABILITY.gomamon!, 8.5, { attack: RELIABILITY.gomamon_attack, flipAttack: false }),
   sprite('이크몬', RELIABILITY.ikkakumon!, 13, { attack: RELIABILITY.ikkakumon_attack }),
   sprite('쥬드몬', RELIABILITY.zudomon!, 13.5, { attack: RELIABILITY.zudomon_attack }),
   sprite('플레시오몬', RELIABILITY.plesiomon!, 13.5, { attack: RELIABILITY.plesiomon_attack }),

@@ -15,7 +15,7 @@ export const courage = makeLine({
   sprite('아구몬', COURAGE.agumon!, 9.5, { attack: COURAGE.agumon_attack }),
   sprite('그레이몬', COURAGE.greymon!, 13, { attack: COURAGE.greymon_attack }),
   sprite('메탈그레이몬', COURAGE.metalgreymon!, 14, { attack: COURAGE.metalgreymon_attack }),
-  sprite('워그레이몬', COURAGE.wargreymon!, 13, { attack: COURAGE.wargreymon_attack }),
+  sprite('워그레이몬', COURAGE.wargreymon!, 13, { attack: COURAGE.wargreymon_attack, flipAttack: false }),
   ],
   crest: { image: CRESTS.courage! },
   hit: (_t, stage) => elementHit('fire', stage, false),

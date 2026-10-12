@@ -13,8 +13,8 @@ export const light = makeLine({
   stages: [
   sprite('뉴몬', LIGHT.nyaromon!, 5.5, { attack: LIGHT.nyaromon_attack, flip: false }),
   sprite('플롯몬', LIGHT.plotmon!, 8, { attack: LIGHT.plotmon_attack }),
-  sprite('가트몬', LIGHT.tailmon!, 9.5, { attack: LIGHT.tailmon_attack }),
-  sprite('엔젤우몬', LIGHT.angewomon!, 13.5, { attack: LIGHT.angewomon_attack }),
+  sprite('가트몬', LIGHT.tailmon!, 9.5, { attack: LIGHT.tailmon_attack, flipAttack: false }),
+  sprite('엔젤우몬', LIGHT.angewomon!, 13.5, { attack: LIGHT.angewomon_attack, flipAttack: false }),
   sprite('오파니몬', LIGHT.ofanimon!, 13.5, { attack: LIGHT.ofanimon_attack }),
   ],
   crest: { image: CRESTS.light! },
