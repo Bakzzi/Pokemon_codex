@@ -68,7 +68,7 @@ Claude Code 입력창 바로 위에서 내 디지몬이 어드벤처의 빌런�
 
 - 디지몬·빌런 그림은 [위키몬](https://wikimon.net)에 올라온 디지몬 서바이브(2022)의 전투 일러스트가 기본이고, 서바이브에 없는 유년기·플롯몬·오파니몬·데블몬·베놈묘티스몬·아포카리몬은 디지몬 뉴 센추리·공식 설정화·DMO 그림입니다. 모두 비스듬히(45도) 적을 봅니다. 문장은 위키몬의 문장 태그 그림입니다.
   (`sprites/<묶음>/*.png`). 반다이남코의 저작물이므로 개인 사용 범위에서만 쓰세요.
-- `preview/prep-art.py`가 큰 일러스트를 높이 160px로 줄이고, `preview/pixelate-all.py`가 화면 크기에 맞춰 1칸당 4점의 도트 그림(32색, 1px 검은 테두리)으로 바꾸며, `preview/embed.py`가 `hooks/img/*.ts`에 base64로 심습니다. 화면에서는 점을 그대로 키웁니다(image-rendering: pixelated).
+- `preview/prep-art.py`가 큰 일러스트를 높이 160px로 줄이고, `preview/pixelate-all.py`가 화면 크기에 맞춰 1칸당 4점의 도트 그림(32색, 옆 색을 어둡게 한 1점 테두리)으로 바꾸며, `preview/embed.py`가 `hooks/img/*.ts`에 base64로 심습니다. 화면에서는 점을 그대로 키웁니다(image-rendering: pixelated).
   그림을 바꾸려면 PNG를 `sprites/` 아래에 넣고 `python3 preview/embed.py <묶음>`을 다시 실행하세요.
 - `preview/render-all.sh`로 모든 계열의 화면을 `preview/out/`에 PNG로 뽑아 볼 수 있습니다(node 22, cairosvg, Pillow 필요).
 
