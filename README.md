@@ -124,28 +124,28 @@ Claude Code 입력창 바로 위에서 내 디지몬이 디지몬 어드벤처�
 
 ## 설치
 
-1. `run-buddy` 폴더를 원하는 곳에 둡니다(예: `~/.claude/mods/run-buddy`).
+1. `Digimon_mod` 폴더를 원하는 곳에 둡니다(예: `~/.claude/mods/Digimon_mod`). 모드 이름(`plugin.json`의 name)은 저장된 시즌 기록을 이어 쓰도록 `run-buddy` 그대로입니다.
 2. `~/.claude/settings.json`의 `"env"`에 넣습니다(다른 내용은 그대로 두고 이 줄만 추가).
 
    ```json
    "env": {
-     "CLAUDE_CODE_PLUGIN_DIRS": "/home/<사용자이름>/.claude/mods/run-buddy",
+     "CLAUDE_CODE_PLUGIN_DIRS": "/home/<사용자이름>/.claude/mods/Digimon_mod",
      "CLAUDE_CODE_ENABLE_FUNCTION_HOOKS": "1"
    }
    ```
 
-   윈도우라면 `C:\\Users\\<사용자이름>\\.claude\\mods\\run-buddy` 처럼 적습니다.
-3. 이번 달 사용량을 모읍니다(선택, node 필요): `node <run-buddy 폴더>/scripts/seed.mjs`
+   윈도우라면 `C:\\Users\\<사용자이름>\\.claude\\mods\\Digimon_mod` 처럼 적습니다.
+3. 이번 달 사용량을 모읍니다(선택, node 필요): `node <Digimon_mod 폴더>/scripts/seed.mjs`
 4. 바로 `/reload-plugins`를 입력하거나 Claude 데스크톱 앱을 다시 시작합니다.
 
 ## 끄기
 
-settings.json의 `CLAUDE_CODE_PLUGIN_DIRS`에서 run-buddy 경로를 지우고 앱을 다시 시작합니다.
+settings.json의 `CLAUDE_CODE_PLUGIN_DIRS`에서 Digimon_mod 경로를 지우고 앱을 다시 시작합니다.
 
 ## 테스트
 
 ```bash
-claude plugin test <run-buddy 폴더>
+claude plugin test <Digimon_mod 폴더>
 ```
 
 원본은 Claude Code 2.1.293에서 만들고 테스트했습니다. 디지몬 판은 2.1.296에서 미리보기 렌더링과 문법 검사(esbuild)로만 확인했고, 실제 앱 동작은 설치 후 확인이 필요합니다.
