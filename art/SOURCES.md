@@ -27,7 +27,7 @@
 | knowledge/tentomon | 디지몬 서바이브 |
 | light/angewomon | 디지몬 서바이브 |
 | light/nyaromon | Nyaromon_new_century.png |
-| light/plotmon | Plotmon_new_century.png |
+| light/plotmon | Plotmon_Encounters.png |
 | light/tailmon | 디지몬 서바이브 |
 | love/birdramon | 디지몬 서바이브 |
 | love/garudamon | 디지몬 서바이브 |
@@ -52,7 +52,7 @@
 | sincerity/rosemon | 디지몬 서바이브 |
 | sincerity/tanemon | Tanemon_new_century.png |
 | sincerity/togemon | 디지몬 서바이브 |
-| monsters/orgemon | Orgemon_new_century.png |
+| monsters/orgemon | Orgemon_tri.png (디지몬 어드벤처 tri. 설정화) |
 | monsters/venomvamdemon | Venomvamdemon_new_century.png |
 | omega/omegamon | 디지몬 서바이브 |
 | reliability/vikemon | Vikemon_new_century.png |

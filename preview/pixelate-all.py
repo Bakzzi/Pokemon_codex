@@ -19,7 +19,7 @@ for line in ['courage', 'friendship', 'love', 'sincerity', 'knowledge', 'reliabi
     for k, h in re.findall(r"\('(\w+)','[^']+',([\d.]+),\{", block):
         heights[f'{line}/{k}'] = float(h)
 mon = open('hooks/monsters.ts', encoding='utf-8').read()
-for k, h in re.findall(r"\['(\w+)', ([\d.]+), (?:true|false)\]", mon):
+for k, h in re.findall(r"\{ key: '(\w+)', h: ([\d.]+),", mon):
     heights[f'monsters/{k}'] = float(h)
 m = re.search(r"OMEGA = \('(\w+)', '[^']+', ([\d.]+),", gen)
 if m: heights[f'omega/{m.group(1)}'] = float(m.group(2))
