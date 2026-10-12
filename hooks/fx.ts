@@ -196,7 +196,7 @@ const fly = (inner: string, from: At, to: At, a = 0.44, b = 0.6) => {
 export const impact = (color: string, cx = HIT_X, cy = 7.6, size = 1, _light = WHITE) =>
   '<g opacity="0">' +
   `<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.6;0.61;0.7;0.74;1" dur="${ATK}" repeatCount="indefinite"/>` +
-  `<g transform="translate(${at(cx)} ${at(cy)})"><g><animateTransform attributeName="transform" type="scale" values="${at(size * 0.4)};${at(size * 1.15)};${size}" keyTimes="0;0.63;1" dur="${ATK}" repeatCount="indefinite" calcMode="discrete"/>${art(`impact_${toneOf(color)}`)}</g></g>` +
+  `<g transform="translate(${at(cx)} ${at(cy)})"><g transform="scale(${size})"><animateTransform attributeName="transform" type="scale" values="${at(size * 0.4)};${at(size * 1.15)};${size}" keyTimes="0;0.63;1" dur="${ATK}" repeatCount="indefinite" calcMode="discrete"/>${art(`impact_${toneOf(color)}`)}</g></g>` +
   '</g>'
 // 베는 자국 (0.6 → 0.72)
 export const slash = (color: string, cx = BODY_X, cy = 7.5, _light = WHITE, angle = -40) =>
@@ -249,7 +249,7 @@ export const gaiaForce = (from: At, _color = '#F26B21', _light = '#FDE047', size
   return (
     '<g opacity="0">' +
     `<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.3;0.3;0.46;0.46;1" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>` +
-    `<g transform="translate(${x0} ${y0})"><g><animateTransform attributeName="transform" type="scale" values="0.2;0.2;${size};${size}" keyTimes="0;0.3;0.46;1" dur="${ATK}" repeatCount="indefinite"/>${art('orb_fire')}</g></g>` +
+    `<g transform="translate(${x0} ${y0})"><g transform="scale(${size})"><animateTransform attributeName="transform" type="scale" values="0.2;0.2;${size};${size}" keyTimes="0;0.3;0.46;1" dur="${ATK}" repeatCount="indefinite"/>${art('orb_fire')}</g></g>` +
     '</g>' +
     '<g opacity="0">' +
     `<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.46;0.46;0.62;0.62;1" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>` +
