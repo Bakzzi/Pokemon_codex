@@ -41,8 +41,10 @@ figure.wide img {{ max-width:none; width:2600px; }}
     <h2>공격 순간 <small>Lv.10 · 30 · 50 · 70 · 90. 기술 효과도 1칸당 4점 도트로 구운 그림입니다. 정지 화면이라 투사체는 도착 지점에, 데미지 숫자도 같이 찍혀 있습니다</small></h2>
 {attacks}  </section>
   <section>
-    <h2>알림 <small>완료 · 대기 · 오류(상대가 달려들어 한 대 침)</small></h2>
+    <h2>알림 <small>완료 · 대기 · 오류(상대가 고유 기술로 침)</small></h2>
     <figure><img src="{uri('preview/out/big-check.png')}" alt="니드몬 완료, 헤라클레스캅테리몬 대기, 홀리엔젤몬 오류 알림"></figure>
+    <figure><img src="{uri('preview/out/error-check.png')}" alt="워매몬·우가몬·묘티스몬의 기술"></figure>
+    <figure><img src="{uri('preview/out/error-check2.png')}" alt="메탈시드라몬·피에몬·아포카리몬의 기술"></figure>
   </section>
 {sections}</main>
 '''

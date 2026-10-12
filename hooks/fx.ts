@@ -2,7 +2,7 @@
 // 점 그대로 키워 그리고, 날아가기·커지기·깜빡임 같은 움직임만 SVG 애니메이션으로 준다 → 스프라이트와 같은 도트 느낌.
 // 상대는 x 22~41에 서 있고 가운데가 x ≈ 31.5, 땅은 y = 13. 공격 주기(ATK)의 0.44에 기술이 나가서 0.6에 닿고,
 // 상대는 0.6~0.76에 맞는다 (monsters.ts). from: 기술이 나가는 자리(입·손). preview/gen-lines.py의 FX 표가 디지몬마다 고른다
-import { ATK } from './monsters.ts'
+import { ATK } from './atk.ts'
 import { WHITE } from './pixel.ts'
 import { FX } from './img/fx.ts'
 
@@ -26,6 +26,10 @@ export const TONE = {
   elec: ['#38BDF8', '#F0F9FF'],
   green: ['#22C55E', '#BBF7D0'],
   gold: ['#F59E0B', '#FDE68A'],
+  red: ['#DC2626', '#FCA5A5'],
+  violet: ['#A855F7', '#E9D5FF'],
+  dark: ['#312E81', '#A5B4FC'],
+  brown: ['#8B5E3C', '#D2B48C'],
 } as const
 export type Tone = keyof typeof TONE
 
@@ -141,6 +145,12 @@ const ARTS_ONE: Record<string, Art> = {
   orb_holy: orbArt('#FDE68A', '#FFF7D6', 0.8),
   orb_fire: orbArt('#F26B21', '#FDE047', 1.25),
   orb_thunder: orbArt('#FDE047', '#FFFBEB', 1.25),
+  // 빌런 기술 그림
+  orb_violet: orbArt('#A855F7', '#E9D5FF', 1.25),
+  poo: { w: 3.2, h: 2.6, svg: `<ellipse cx="0" cy="0.4" rx="1.5" ry="0.8" fill="#8B5E3C"/><ellipse cx="-0.2" cy="-0.3" rx="1" ry="0.6" fill="#8B5E3C"/><circle cx="0" cy="-0.8" r="0.45" fill="#8B5E3C"/><ellipse cx="-0.5" cy="-0.1" rx="0.4" ry="0.2" fill="#A9774F"/>` },
+  bullet: { w: 2.4, h: 0.9, svg: `<rect x="-1.1" y="-0.3" width="1.8" height="0.6" rx="0.3" fill="#9AA3AE"/><path d="M0.7 -0.3 L1.2 0 L0.7 0.3 Z" fill="#E2E8F0"/><rect x="-1.1" y="-0.12" width="1.4" height="0.24" fill="#E2E8F0"/>` },
+  sword: { w: 7, h: 1.8, svg: `<rect x="-1.2" y="-0.2" width="4.4" height="0.4" fill="#E2E8F0"/><rect x="-1.2" y="-0.08" width="4.4" height="0.16" fill="${WHITE}"/><path d="M3.2 -0.35 L4 0 L3.2 0.35 Z" fill="#E2E8F0"/><rect x="-1.7" y="-0.7" width="0.5" height="1.4" fill="#D7263D"/><rect x="-3.2" y="-0.22" width="1.5" height="0.44" fill="#7C2D12"/><circle cx="-3.4" cy="0" r="0.3" fill="#FDE047"/>` },
+  darkwave: { w: 5, h: 6, svg: `<path d="M0 -2.8 Q2.6 0 0 2.8" stroke="#312E81" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.9"/><path d="M-1.2 -2.2 Q1 0 -1.2 2.2" stroke="#6366F1" stroke-width="0.8" fill="none" stroke-linecap="round"/><path d="M-2.2 -1.4 Q-0.8 0 -2.2 1.4" stroke="#A5B4FC" stroke-width="0.5" fill="none" stroke-linecap="round"/>` },
   fireball: fireballArt('#F26B21', '#FDE047'),
   fireball_blue: fireballArt('#3B82F6', '#BFDBFE'),
   fireball_green: fireballArt('#22C55E', '#BBF7D0'),
@@ -174,7 +184,7 @@ export const art = (name: string, scale = 1) => {
 const toneOf = (color: string): Tone => {
   const k = (Object.keys(TONE) as Tone[]).find(t => TONE[t][0].toLowerCase() === color.toLowerCase() || TONE[t][1].toLowerCase() === color.toLowerCase())
   if (k) return k
-  const map: Record<string, Tone> = { '#f0f9ff': 'elec', '#bbf7d0': 'green', '#fde68a': 'holy', '#60a5fa': 'ice', '#bae6fd': 'sky', '#f472b6': 'pink', '#fbcfe8': 'pink', '#ec4899': 'pink', '#e2e8f0': 'grey', '#86efac': 'leaf', '#fff7d6': 'holy', '#ffffff': 'holy', '#fde047': 'thunder' }
+  const map: Record<string, Tone> = { '#fca5a5': 'red', '#e9d5ff': 'violet', '#a5b4fc': 'dark', '#d2b48c': 'brown', '#f0f9ff': 'elec', '#bbf7d0': 'green', '#fde68a': 'holy', '#60a5fa': 'ice', '#bae6fd': 'sky', '#f472b6': 'pink', '#fbcfe8': 'pink', '#ec4899': 'pink', '#e2e8f0': 'grey', '#86efac': 'leaf', '#fff7d6': 'holy', '#ffffff': 'holy', '#fde047': 'thunder' }
   return map[color.toLowerCase()] ?? 'holy'
 }
 
@@ -399,3 +409,50 @@ export const tridentArm = (from: At) => {
     impact('#F26B21', HIT_X + 1, y0, 1.1)
   )
 }
+
+// ── 빌런 기술 (좌우를 뒤집은 장면에서 쓴다: monsters.ts foeHit) ────────────
+// 던지기: 포물선으로 상대 몸에 떨어진다
+export const lob = (name: string, from: At, color: string, light: string, size = 1) => {
+  const [x0, y0] = from
+  return (
+    muzzle(color, light, from, size) +
+    '<g opacity="0">' +
+    `<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.4;0.4;0.6;0.6;1" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>` +
+    `<animateTransform attributeName="transform" type="translate" values="${x0} ${y0};${x0} ${y0};${at((x0 + BODY_X) / 2)} ${at(Math.max(-1.5, y0 - 5))};${BODY_X} 8;${BODY_X} 8" keyTimes="0;0.4;0.5;0.6;1" dur="${ATK}" repeatCount="indefinite"/>` +
+    art(name, size) +
+    '</g>' +
+    impact(color, BODY_X, 8, size)
+  )
+}
+// 총알 n발 (불릿 해머)
+export const bullets = (from: At, n = 3) => {
+  let out = muzzle('#CBD5E1', WHITE, from, 0.7)
+  for (let i = 0; i < n; i++) {
+    const a = at(0.44 + i * 0.04)
+    const y = at(from[1] + (i - (n - 1) / 2) * 0.9)
+    out += fly(art('bullet'), [from[0], y], [HIT_X + 1, at(7.5 + (i - (n - 1) / 2) * 0.9)], a, at(a + 0.12)) + impact('#E2E8F0', HIT_X + 1.5, at(7.5 + (i - (n - 1) / 2) * 0.9), 0.5, '#CBD5E1')
+  }
+  return out
+}
+// 검 n자루 던지기 (트럼프 소드)
+export const swords = (from: At, n = 4) => {
+  let out = muzzle('#E2E8F0', WHITE, from, 0.8)
+  for (let i = 0; i < n; i++) {
+    const a = at(0.44 + i * 0.03)
+    const y = at(from[1] + (i - (n - 1) / 2) * 1.2)
+    out += fly(art('sword', 1.1), [from[0], y], [HIT_X + 1.5, at(7.5 + (i - (n - 1) / 2) * 1.2)], a, at(a + 0.16)) + impact('#E2E8F0', HIT_X + 3, at(7.5 + (i - (n - 1) / 2) * 1.2), 0.7, '#CBD5E1')
+  }
+  return out
+}
+// 어둠의 파동 (다크니스 존): 파동이 셋 퍼져 간 뒤 어둠의 기둥
+export const darkness = (from: At) => {
+  let out = muzzle('#312E81', '#A5B4FC', from, 1)
+  for (let i = 0; i < 3; i++) {
+    const a = at(0.44 + i * 0.04)
+    out += fly(art('darkwave', 1 + i * 0.25), from, [BODY_X - 2, from[1]], a, at(a + 0.16))
+  }
+  return out + pillar('#312E81', '#A5B4FC', 3)
+}
+// 두 줄기 빔 (무한 캐논)
+export const twinBeam = (from: At, color: string, light: string, thick = 1) =>
+  beam([from[0], at(from[1] - 1)], color, light, thick) + beam([from[0], at(from[1] + 1)], color, light, thick)
