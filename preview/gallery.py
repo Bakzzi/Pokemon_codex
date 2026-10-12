@@ -1,7 +1,7 @@
 # preview/out/*.png 를 모아 미리보기 HTML 한 장을 만든다.  python3 preview/gallery.py <out.html>
 import base64, sys
 def uri(p): return 'data:image/png;base64,'+base64.b64encode(open(p,'rb').read()).decode()
-lines=[('courage','용기','코로몬 → 아구몬 → 그레이몬 → 메탈그레이몬 → 워그레이몬'),('friendship','우정','츠노몬 → 가브몬 → 가루몬 → 워가루몬 → 메탈가루몬'),('love','사랑','뿌카몬 → 피요몬 → 버드라몬 → 가루다몬 → 피닉스몬'),('sincerity','순수','타네몬 → 팔몬 → 니드몬 → 릴리몬 → 로제몬'),('knowledge','지식','모티몬 → 텐타몬 → 캅테리몬 → 메가캅테리몬 → 헤라클레스캅테리몬'),('reliability','성실','푸카몬 → 파피몬 → 이크몬 → 쥬드몬 → 플레시오몬'),('hope','희망','토코몬 → 파닥몬 → 엔젤몬 → 홀리엔젤몬 → 세라피몬'),('light','빛','뉴몬 → 플롯몬 → 가트몬 → 엔젤우몬 → 오파니몬')]
+lines=[('courage','용기','코로몬 → 아구몬 → 그레이몬 → 메탈그레이몬 → 워그레이몬'),('friendship','우정','원뿔몬 → 가브몬 → 가루몬 → 워가루몬 → 메탈가루몬'),('love','사랑','뿌카몬 → 피요몬 → 버드라몬 → 가루다몬 → 피닉스몬'),('sincerity','순수','타네몬 → 팔몬 → 니드몬 → 릴리몬 → 로제몬'),('knowledge','지식','모티몬 → 텐타몬 → 캅테리몬 → 메가캅테리몬 → 헤라클레스캅테리몬'),('reliability','성실','푸카몬 → 파피몬 → 이크몬 → 쥬드몬 → 플레시오몬'),('hope','희망','토코몬 → 파닥몬 → 엔젤몬 → 홀리엔젤몬 → 세라피몬'),('light','빛','뉴몬 → 플롯몬 → 가트몬 → 엔젤우몬 → 오파니몬')]
 attacks=''.join(f'''    <figure><img src="{uri(f'preview/out/{k}-attack.png')}" alt="{name}의 문장 공격 순간"></figure>\n''' for k,name,chain in lines)
 sections=''.join(f'''  <section>
     <h2>{name}의 문장 <small>{chain}</small></h2>
