@@ -26,7 +26,7 @@ import { boostTier, formName } from './digi.ts'
 
 // 입력창 위 띠(밴드)는 상태가 바뀔 때만 다시 그린다. 데스크톱 앱은 띠를 다시 그릴 때마다
 // 움직이는 그림 칸을 새로 만들어서 그림이 처음부터 다시 돈다. 그래서 띠를 그리는 훅은
-// phase·waitKind·lastMs·shown·shownXp·introUntil(·쉬는 중의 limits·xp)만 읽고, 자주 바뀌는
+// phase·waitKind·lastMs·shown·shownXp·introUntil·spent(·쉬는 중의 limits·xp)만 읽고, 자주 바뀌는
 // 하는 일과 한마디는 앱의 진행 표시줄(Spinner) 뒤에 붙인다. 같은 값을 다시 적어도 다시 그려지므로
 // 띠가 읽는 값은 바뀔 때만 적는다.
 
@@ -74,6 +74,57 @@ async function noteMaxed($: any, lineKey: string | undefined, level: number) {
 const drawTier = (tier: number, ready: boolean, boosted = false) => (ready && tier >= 10 ? 11 : boosted ? boostTier(tier) : tier)
 // 사람에게 묻는 중인 도구 호출들 (여럿이 같이 돌 때 하나가 끝났다고 기다림을 풀지 않게). 띠는 읽지 않는다
 const pendingAsks = atom({ plugin: 'digimon-buddy', key: 'pendingAsks' } as const, [] as string[])
+
+// ── 이번 응답에서 쓴 사용률 (데미지) ─────────────────────────────────
+// 턴을 시작할 때 본 한도(turnFrom)와 지금 한도의 차이. 주간 몫이 곧 이번 응답에서 얻은 경험치라
+// 전투 데미지로 띄우고(-0.4%), 끝 알림에는 주간·5시간 둘 다 적는다. 한도는 계정 전체 값이라
+// 다른 창에서 같은 시간에 쓴 양도 함께 잡힌다
+type Reading = { used: number; resetsAt: string | null } | null
+type Spent = { week: number | null; five: number | null }
+const turnFrom = atom({ plugin: 'digimon-buddy', key: 'turnFrom' } as const, { week: null, five: null } as { week: Reading; five: Reading })
+const spent = atom({ plugin: 'digimon-buddy', key: 'spent' } as const, { week: null, five: null } as Spent)
+
+const readingOf = (list: readonly RateLimit[], kind: string): Reading => {
+  const w = list.find(x => x.kind === kind)
+  return w ? { used: w.percentUsed, resetsAt: w.resetsAt ?? null } : null
+}
+// 같은 창이면 늘어난 만큼, 그사이 창이 다시 찼으면 새 창에서 쓴 만큼 (소수 첫째 자리)
+const spentOf = (from: Reading, now: Reading): number | null => {
+  if (!from || !now) return null
+  const a = from.resetsAt ? Date.parse(from.resetsAt) : NaN
+  const b = now.resetsAt ? Date.parse(now.resetsAt) : NaN
+  const renewed = !Number.isNaN(a) && !Number.isNaN(b) && b - a >= HOUR_MS
+  return Math.round(Math.max(0, renewed ? now.used : now.used - from.used) * 10) / 10
+}
+
+// 턴을 시작할 때: 지금 한도를 출발점으로 적고 데미지를 비운다
+async function startSpent($: any) {
+  const list = (await $.session.usage()).rateLimits as RateLimit[]
+  await update($, turnFrom, () => ({ week: readingOf(list, 'seven_day'), five: readingOf(list, 'five_hour') }))
+  const none: Spent = { week: null, five: null }
+  if (JSON.stringify(await read($, spent)) !== JSON.stringify(none)) await update($, spent, () => none)
+}
+
+// 응답이 올 때마다: 이번 턴에 쓴 양을 고친다 (바뀔 때만 적는다. 전투 그림이 다시 그려지므로).
+// 턴을 시작할 때 한도를 아직 못 봤으면 처음 본 값을 출발점으로 삼는다
+async function noteSpent($: any, list: readonly RateLimit[]) {
+  const from = await read($, turnFrom)
+  const week = readingOf(list, 'seven_day')
+  const five = readingOf(list, 'five_hour')
+  if ((!from.week && week) || (!from.five && five)) {
+    await update($, turnFrom, f => ({ week: f.week ?? week, five: f.five ?? five }))
+  }
+  const base = await read($, turnFrom)
+  const s: Spent = { week: spentOf(base.week, week), five: spentOf(base.five, five) }
+  if (JSON.stringify(await read($, spent)) !== JSON.stringify(s)) await update($, spent, () => s)
+}
+// 끝 알림에 붙이는 한 줄: "이번 응답 주간 0.4% · 5시간 1.2%" (한도 정보가 없으면 빈 글자)
+const spentLine = (s: Spent) => {
+  const parts: string[] = []
+  if (s.week !== null) parts.push(`주간 ${s.week.toFixed(1)}%`)
+  if (s.five !== null) parts.push(`5시간 ${s.five.toFixed(1)}%`)
+  return parts.length > 0 ? `이번 응답 ${parts.join(' · ')}` : ''
+}
 
 // ── 경험치와 레벨 ──────────────────────────────────────────────────
 // 계산은 season.ts에 있다. 한 시즌은 한 달(한국 시간 1일 0시부터)이고, 달이 바뀌면 레벨 1부터 다시 시작한다.
@@ -458,6 +509,9 @@ export const register: Register = on => {
       await shareLimits($, limitsOf(e.rateLimits))
       await gainXp($, e.rateLimits)
     }
+    // 이번 응답에서 쓴 사용률은 소수 첫째 자리까지 본다 (rateLimits는 1%p 넘게 움직여야 changed에 든다)
+    const p = await read($, phase)
+    if (p === 'running' || p === 'waiting') await noteSpent($, e.rateLimits)
     return next(e)
   })
 
@@ -484,6 +538,7 @@ export const register: Register = on => {
     await update($, shown, () => l)
     await update($, shownXp, () => x)
     await update($, shownJob, () => j)
+    await startSpent($)
     await update($, phase, () => 'running')
     return next(e)
   })
@@ -556,6 +611,7 @@ export const register: Register = on => {
       const x = await read($, xp)
       const j = await read($, job)
       // 그림이 한 번만 그려지도록 phase보다 먼저 채운다
+      await noteSpent($, (await $.session.usage()).rateLimits)
       await update($, lastMs, () => e.durationMs)
       await update($, shown, () => l)
       await update($, shownXp, () => x)
@@ -761,7 +817,8 @@ export const register: Register = on => {
         const wait = WAIT[await read($, waitKind)]
         line = <Text bold color={AMBER}>{`${wait.icon} ${wait.title} · ${wait.hint}`}</Text>
       } else {
-        const ranFor = elapsedText(await read($, lastMs))
+        const used = spentLine(await read($, spent))
+        const ranFor = elapsedText(await read($, lastMs)) + (used ? ` · ${used}` : '')
         const text =
           view === 'evolve'
             ? `📱 ${formName(me, dt)}(으)로 진화! 이달 남은 기간 동안 한 단계 위 모습으로 싸워요`
@@ -791,7 +848,7 @@ export const register: Register = on => {
 
     // 일하는 중: 내 디지몬이 레벨에 맞는 상대와 싸운다 (경과 시간·하는 일은 앱의 진행 표시줄에)
     if (view === 'running') {
-      const run = runSvg(hp, dt, rank.level, foeHp(sx), me)
+      const run = runSvg(hp, dt, rank.level, foeHp(sx), me, (await read($, spent)).week)
       // JSX가 쓰는 h와 겹치지 않게 다른 이름을 쓴다
       const artH = Math.min(BAND_H, run.height)
       return (
@@ -826,12 +883,14 @@ export const register: Register = on => {
       big = { art: bigSvg('done', `${evolved}(으)로 진화!`, '디지바이스의 빛으로', hp, intro, dt, me), alt: `디지바이스로 ${evolved}(으)로 진화한 내 디지몬`, color: AMBER, title: `📱 ${evolved}(으)로 진화!`, sub: '이달 남은 기간 동안 한 단계 위 모습으로 싸워요' }
     } else {
       const ranFor = elapsedText(await read($, lastMs))
+      // 이번 응답에서 쓴 사용률 (한도 정보가 없으면 레벨과 모습)
+      const used = spentLine(await read($, spent)) || `Lv.${rank.level} ${formName(me, dt)}`
       big =
         view === 'error'
-          ? { art: bigSvg('error', `${rank.foe}의 ${foeSkill(rank.tier)}!`, '문제가 생겼어요', hp, intro, dt, me, dx => foeBig(rank.tier, dx)), alt: `${rank.foe}에게 맞은 내 디지몬`, color: RED, title: `${rank.foe}의 ${foeSkill(rank.tier)}! 문제가 생겼어요`, sub: `${ranFor} 싸우다 한 대 맞음 · Lv.${rank.level} ${formName(me, dt)}` }
+          ? { art: bigSvg('error', `${rank.foe}의 ${foeSkill(rank.tier)}!`, '문제가 생겼어요', hp, intro, dt, me, dx => foeBig(rank.tier, dx)), alt: `${rank.foe}에게 맞은 내 디지몬`, color: RED, title: `${rank.foe}의 ${foeSkill(rank.tier)}! 문제가 생겼어요`, sub: `${ranFor} 싸우다 한 대 맞음 · ${used}` }
           : withDigi
-            ? { art: bigSvg('done', '디지바이스 발견!', '확인을 눌러 진화해요', hp, intro, dt, me), alt: '일을 마치고 디지바이스를 찾은 내 디지몬', color: AMBER, title: '📱 디지바이스를 찾았어요!', sub: `${ranFor} 전투 · 확인을 누르면 진화해요` }
-            : { art: bigSvg('done', '다 했어요!', '결과 확인해 주세요', hp, intro, dt, me), alt: '일을 마친 내 디지몬', color: GREEN, title: '작업 끝! 확인해 주세요', sub: `${ranFor} 전투 · Lv.${rank.level} ${formName(me, dt)}` }
+            ? { art: bigSvg('done', '디지바이스 발견!', '확인을 눌러 진화해요', hp, intro, dt, me), alt: '일을 마치고 디지바이스를 찾은 내 디지몬', color: AMBER, title: '📱 디지바이스를 찾았어요!', sub: `${ranFor} 전투 · ${used} · 확인을 누르면 진화해요` }
+            : { art: bigSvg('done', '다 했어요!', '결과 확인해 주세요', hp, intro, dt, me), alt: '일을 마친 내 디지몬', color: GREEN, title: '작업 끝! 확인해 주세요', sub: `${ranFor} 전투 · ${used}` }
     }
 
     return (

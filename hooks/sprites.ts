@@ -107,9 +107,6 @@ export const idleSvg = (t: number, job: Job) => {
 // ── 작은 그림: 상대와 싸우는 디지몬 ─────────────────────────────────
 // 4px 칸 단위, 44 × 15칸(176 × 60px). 내 디지몬은 왼쪽, 상대는 오른쪽(x 22~41). 땅은 y = 13
 
-// 단계별로 한 대 칠 때 뜨는 데미지
-const DAMAGE = [7, 15, 28, 46, 73, 120, 188, 290, 455, 999, 1500]
-
 // 근접 기술은 공격 주기마다 상대에게 돌진했다 돌아오고, 원거리 기술은 제자리에서 살짝 반동한다
 const approach = (t: number, job: Job) =>
   (typeof job.melee === 'function' ? job.melee(t) : job.melee)
@@ -123,8 +120,9 @@ const levelBadge = (level: number, x: number, w: number, h: number, font: number
   `<rect x="${x}" y="1" width="${w}" height="${h}" rx="4" fill="${GOLD}" stroke="${INK}" stroke-width="1.5"/>` +
   `<text x="${x + w / 2}" y="${1 + h / 2}" dominant-baseline="central" text-anchor="middle" font-family="${FONT}" font-size="${font}" font-weight="800" fill="${INK}">Lv.${level}</text>`
 
-// hp: 머리 위 HP 이름표(한도), t: 장비 단계, level: 레벨, foe: 상대에게 남은 체력(0~1), job: 이달의 계열
-export const runSvg = (hp: Hp, t: number, level: number, foe: number, job: Job) => {
+// hp: 머리 위 HP 이름표(한도), t: 장비 단계, level: 레벨, foe: 상대에게 남은 체력(0~1), job: 이달의 계열,
+// damage: 상대 머리 위에 뜨는 데미지 = 이번 응답에서 쓴 주간 사용률(%p, 곧 경험치). null이면 띄우지 않는다
+export const runSvg = (hp: Hp, t: number, level: number, foe: number, job: Job, damage: number | null) => {
   const plate = plateHeight(hp, SMALL_PLATE)
   const top = Math.max(plate, 22) + 2
   const shift = top + job.smallHeadroom(t)
@@ -138,7 +136,7 @@ export const runSvg = (hp: Hp, t: number, level: number, foe: number, job: Job) 
       levelBadge(level, 120, 52, 20, 12) +
       `<g transform="translate(0 ${shift}) scale(4)">` +
       ground +
-      monster(t, foe, DAMAGE[Math.min(10, t)]!) +
+      monster(t, foe, damage) +
       `<g>${approach(t, job)}<g transform="translate(-5 2)">${job.small(t, 'run')}</g></g>` +
       job.hit(t) +
       '</g></svg>',
