@@ -37,9 +37,9 @@ figure.wide img {{ max-width:none; width:2600px; }}
     <figure class="wide"><img src="{uri('preview/out/courage-run.png')}" alt="레벨별 전투 장면: 쿠와가몬부터 아포카리몬, 오메가몬까지"></figure>
   </section>
   <section>
-    <h2>공격 순간 <small>공격 주기의 0.5~0.72에 게임의 공격 장면으로 바뀌고 기술이 적에게 맞습니다</small></h2>
-    <figure><img src="{uri('preview/out/attack-check.png')}" alt="아구몬, 워그레이몬, 워가루몬, 파피몬, 파닥몬의 공격 순간"></figure>
-    <figure><img src="{uri('preview/out/attack-check2.png')}" alt="토코몬, 가트몬, 엔젤우몬, 니드몬, 캅테리몬의 공격 순간"></figure>
+    <h2>공격 순간 <small>서 있는 그림 그대로 몸을 움찔하며 입(손)에서 기술이 나갑니다. 고유 기술과 어울리는 경우에만 게임의 공격 장면을 씁니다</small></h2>
+    <figure><img src="{uri('preview/out/attack-check.png')}" alt="아구몬, 그레이몬, 메탈그레이몬, 워그레이몬, 메탈가루몬의 공격 순간"></figure>
+    <figure><img src="{uri('preview/out/attack-check2.png')}" alt="캅테리몬, 파닥몬, 엔젤몬, 플롯몬, 피요몬의 공격 순간"></figure>
   </section>
   <section>
     <h2>알림 <small>완료 · 대기 · 오류(색이 바램)</small></h2>

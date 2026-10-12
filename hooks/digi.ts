@@ -63,6 +63,8 @@ export type Stage = {
   attack?: Sprite
   // 공격 장면의 뒤집기 (기본은 flip과 같다). 원본 공격 그림이 이미 오른쪽을 보면 false
   flipAttack?: boolean
+  // 기술이 나가는 자리(입·손): 그림 너비·높이에 대한 비율 (0~1, 오른쪽을 본 상태 기준). 기본 (0.85, 0.3)
+  mouth?: readonly [number, number]
   // 땅에서 띄울 점 수 (날아다니는 디지몬). 그림자는 그대로 땅에 둔다
   hover?: number
   // 격자 위에 덧그리는 움직이는 부분 (꼬리·날개·불씨). 격자 좌표의 px/dots로 그린다
@@ -183,6 +185,12 @@ export const figure = (s: Stage, pose: Pose, variant?: BigVariant) => {
         `<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.5;0.5;0.72;0.72;1" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>${atk}</g>`
     } else {
       frames = (s.flip ?? true) ? `<g transform="translate(${o.wc} 0) scale(-1 1)">${img}</g>` : img
+      if (run)
+        frames =
+          `<g><animateTransform attributeName="transform" type="scale" values="1 1;1 1;0.95 1.04;1.07 0.96;1 1;1 1" keyTimes="0;0.34;0.42;0.47;0.58;1" dur="${ATK}" repeatCount="indefinite"/>` +
+          `<g transform="translate(${at(-o.wc / 2)} ${at(-o.hc)})">${frames}</g></g>`
+      // scale의 기준점을 발 가운데로 옮긴다
+      if (run) frames = `<g transform="translate(${at(o.wc / 2)} ${o.hc})">${frames}</g>`
     }
     const flipped = frames
     const tilt = run
@@ -253,13 +261,13 @@ const glory = (s: Stage, t: number, big: boolean) => {
 // 몬스터는 x 24~38에 서 있고, 공격 주기(ATK)의 0.6~0.76에 맞는다
 
 // 날아가는 것: 디지몬 앞(x ≈ 17, y)에서 출발해 0.44 → 0.6 사이에 dist칸 날아간다. 격자 그림은 가운데가 (0, 0)이 되게 놓는다
-export const shot = (rows: readonly string[], pal: Palette, y: number, dist = 9, glow = '', scale = 1) => {
+export const shot = (rows: readonly string[], pal: Palette, y: number, dist = 9, glow = '', scale = 1, x0 = 17) => {
   const w = gridWidth(rows)
   const h = rows.length
   return (
     '<g opacity="0">' +
     `<animate attributeName="opacity" values="0;1;0" keyTimes="0;0.44;0.6" dur="${ATK}" calcMode="discrete" repeatCount="indefinite"/>` +
-    `<animateTransform attributeName="transform" type="translate" values="17 ${y};17 ${y};${17 + dist} ${y};${17 + dist} ${y}" keyTimes="0;0.44;0.6;1" dur="${ATK}" repeatCount="indefinite"/>` +
+    `<animateTransform attributeName="transform" type="translate" values="${x0} ${y};${x0} ${y};${at(x0 + dist)} ${y};${at(x0 + dist)} ${y}" keyTimes="0;0.44;0.6;1" dur="${ATK}" repeatCount="indefinite"/>` +
     `<g transform="scale(${scale}) translate(${at((-w * DOT) / 2)} ${at((-h * DOT) / 2)})">${glow}${dots(rows, pal)}</g>` +
     '</g>'
   )
@@ -279,12 +287,36 @@ const ELEMENTS: Record<Element, { rows: readonly string[]; pal: Palette; color: 
   light: { rows: ['....p.', 'wwwwww', '....p.'], pal: { w: W, p: '#F9A8D4' }, color: '#F9A8D4', light: W },
   bubble: { rows: ['.pp.', 'pwpp', 'pppp', '.pp.'], pal: { p: '#BAE6FD', w: W }, color: '#BAE6FD', light: W },
 }
-// stage: 진화 단계(0~4). 근접(melee)이면 날아가는 것 없이 베는 자국만 남긴다
-export const elementHit = (el: Element, stage: number, melee = false) => {
+// 기술이 나가는 순간 입가(손끝)의 번쩍임 (0.4 → 0.5)
+const muzzle = (color: string, light: string, x: number, y: number, size: number) =>
+  '<g opacity="0">' +
+  `<animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.4;0.43;0.5;1" dur="${ATK}" repeatCount="indefinite"/>` +
+  `<g transform="translate(${x} ${y}) scale(${size})">` +
+  rect(-0.9, -0.3, 1.8, 0.6, color) +
+  rect(-0.3, -0.9, 0.6, 1.8, color) +
+  rect(-0.4, -0.15, 0.8, 0.3, light) +
+  rect(-0.15, -0.4, 0.3, 0.8, light) +
+  '</g></g>'
+
+// stage: 진화 단계(0~4). 근접(melee)이면 날아가는 것 없이 베는 자국만 남긴다.
+// from: 기술이 나가는 자리(전투 좌표, 칸). 없으면 (17, 7.2)
+export const elementHit = (el: Element, stage: number, melee = false, from?: readonly [number, number]) => {
   const e = ELEMENTS[el]
   const sc = at(0.7 + stage * 0.3)
   if (melee) return slash(e.color) + (stage >= 2 ? impact(e.light, 25.7, 8.2, sc * 0.6) : '')
-  return shot(e.rows, e.pal, 7.2, 9, glowBox(gridWidth(e.rows), e.rows.length, e.color), sc) + impact(e.color, 25.7, 7.6, sc)
+  const [x0, y0] = from ?? [17, 7.2]
+  return (
+    muzzle(e.color, e.light, x0, y0, sc) +
+    shot(e.rows, e.pal, y0, at(25.7 - x0), glowBox(gridWidth(e.rows), e.rows.length, e.color), sc, x0) +
+    impact(e.color, 25.7, 7.6, sc)
+  )
+}
+
+// 단계의 입(기술이 나가는 자리)을 전투 좌표로: 전투 그림에서 디지몬은 (-5, 2)칸 옮겨 그려진다
+export const mouthOf = (s: Stage): readonly [number, number] => {
+  const o = origin(s)
+  const [fx, fy] = s.mouth ?? [0.85, 0.3]
+  return [at(o.x - 5 + o.wc * fx), at(o.y + 2 + o.hc * fy)]
 }
 
 // PNG 스프라이트 단계 하나
@@ -330,8 +362,8 @@ export type Line = {
   stages: readonly [Stage, Stage, Stage, Stage, Stage]
   // 문장 마크 (태그 그림 또는 5 × 5점쯤의 점 그림)
   crest: Crest
-  // 공격 효과 (전투 좌표). 단계 t마다 다르게 그릴 수 있다
-  hit: (t: number, stage: number) => string
+  // 공격 효과 (전투 좌표). 단계 t마다 다르게 그릴 수 있다. from: 지금 모습의 입(기술이 나가는 자리)
+  hit: (t: number, stage: number, from: readonly [number, number]) => string
 }
 
 // 머리 위로 올라가는 만큼 위에 더 둘 자리(px). 전투 그림은 y = -2칸 위부터, 큰 그림은 (6 + 10y)px 위부터 잘린다
@@ -351,7 +383,7 @@ export const makeLine = (line: Line): Job & { formName: (t: number) => string } 
       const s = stageAt(t)
       return figure(s, pose) + (t >= 3 ? crestMark(line.crest, s) : '') + glory(s, t, false)
     },
-    hit: t => (t >= 10 ? '' : line.hit(t, stageOf(t))),
+    hit: t => (t >= 10 ? '' : line.hit(t, stageOf(t), mouthOf(stageAt(t)))),
     big: (variant, t) => {
       const s = stageAt(t)
       return (
