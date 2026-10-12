@@ -30,32 +30,32 @@ import { boostTier, formName } from './digi.ts'
 // 하는 일과 한마디는 앱의 진행 표시줄(Spinner) 뒤에 붙인다. 같은 값을 다시 적어도 다시 그려지므로
 // 띠가 읽는 값은 바뀔 때만 적는다.
 
-const phase = atom({ plugin: 'run-buddy', key: 'phase' } as const, 'idle')
-const waitKind = atom({ plugin: 'run-buddy', key: 'waitKind' } as const, 'permission')
-const asking = atom({ plugin: 'run-buddy', key: 'asking' } as const, false)
-const introUntil = atom({ plugin: 'run-buddy', key: 'introUntil' } as const, 0)
-const mode = atom({ plugin: 'run-buddy', key: 'mode' } as const, 'default')
-const syncedAt = atom({ plugin: 'run-buddy', key: 'syncedAt' } as const, 0)
-const startedAt = atom({ plugin: 'run-buddy', key: 'startedAt' } as const, 0)
-const lastMs = atom({ plugin: 'run-buddy', key: 'lastMs' } as const, 0)
-const activity = atom({ plugin: 'run-buddy', key: 'activity' } as const, '')
-const limits = atom({ plugin: 'run-buddy', key: 'limits' } as const, { five: null, week: null })
-const shown = atom({ plugin: 'run-buddy', key: 'shown' } as const, { five: null, week: null })
+const phase = atom({ plugin: 'digimon-buddy', key: 'phase' } as const, 'idle')
+const waitKind = atom({ plugin: 'digimon-buddy', key: 'waitKind' } as const, 'permission')
+const asking = atom({ plugin: 'digimon-buddy', key: 'asking' } as const, false)
+const introUntil = atom({ plugin: 'digimon-buddy', key: 'introUntil' } as const, 0)
+const mode = atom({ plugin: 'digimon-buddy', key: 'mode' } as const, 'default')
+const syncedAt = atom({ plugin: 'digimon-buddy', key: 'syncedAt' } as const, 0)
+const startedAt = atom({ plugin: 'digimon-buddy', key: 'startedAt' } as const, 0)
+const lastMs = atom({ plugin: 'digimon-buddy', key: 'lastMs' } as const, 0)
+const activity = atom({ plugin: 'digimon-buddy', key: 'activity' } as const, '')
+const limits = atom({ plugin: 'digimon-buddy', key: 'limits' } as const, { five: null, week: null })
+const shown = atom({ plugin: 'digimon-buddy', key: 'shown' } as const, { five: null, week: null })
 // 경험치(0~200)와 시즌 끝 시각. xp는 최신 값, shownXp는 캐릭터에 입힌 값(턴의 시작과 끝에만 바꾼다)
-const xp = atom({ plugin: 'run-buddy', key: 'xp' } as const, 0)
-const shownXp = atom({ plugin: 'run-buddy', key: 'shownXp' } as const, 0)
-const seasonEnd = atom({ plugin: 'run-buddy', key: 'seasonEnd' } as const, 0)
+const xp = atom({ plugin: 'digimon-buddy', key: 'xp' } as const, 0)
+const shownXp = atom({ plugin: 'digimon-buddy', key: 'shownXp' } as const, 0)
+const seasonEnd = atom({ plugin: 'digimon-buddy', key: 'seasonEnd' } as const, 0)
 // 이달의 계열(문장) (시즌 기록의 job). 그림과 진화·기술 이름이 이 계열을 따른다
-const job = atom({ plugin: 'run-buddy', key: 'job' } as const, '')
+const job = atom({ plugin: 'digimon-buddy', key: 'job' } as const, '')
 // 이달의 디지바이스: 찾고 아직 안 썼는지, 써서 임시 진화 중인지 (모든 창이 $.store 'digivice'에서 같은 값을 읽는다)
-const digiReady = atom({ plugin: 'run-buddy', key: 'digiReady' } as const, false)
-const digiOn = atom({ plugin: 'run-buddy', key: 'digiOn' } as const, false)
+const digiReady = atom({ plugin: 'digimon-buddy', key: 'digiReady' } as const, false)
+const digiOn = atom({ plugin: 'digimon-buddy', key: 'digiOn' } as const, false)
 // 방금 끝난 턴이 디지바이스를 찾았는지 (그 끝 알림에만 띄운다. 예전에 찾았거나 다른 창에서 찾은 것은 쉬는 띠에)
-const digiFound = atom({ plugin: 'run-buddy', key: 'digiFound' } as const, false)
+const digiFound = atom({ plugin: 'digimon-buddy', key: 'digiFound' } as const, false)
 // 캐릭터에 입힌 계열: 턴의 시작과 끝에만 바꾼다 (자정에 달이 바뀌어도 싸우는 도중 그림이 바뀌지 않게)
-const shownJob = atom({ plugin: 'run-buddy', key: 'shownJob' } as const, '')
+const shownJob = atom({ plugin: 'digimon-buddy', key: 'shownJob' } as const, '')
 // 히든 진화: 용기(워그레이몬)·우정(메탈가루몬) 시즌에서 각각 Lv.80(궁극체)에 닿으면 열린다 ($.store 'maxed'에 닿은 계열을 모은다). 열린 뒤에는 어느 시즌이든 Lv.100에 오메가몬
-const omega = atom({ plugin: 'run-buddy', key: 'omega' } as const, false)
+const omega = atom({ plugin: 'digimon-buddy', key: 'omega' } as const, false)
 const OMEGA_LINES = ['courage', 'friendship']
 const omegaReady = (maxed: readonly string[] | undefined) => OMEGA_LINES.every(k => maxed?.includes(k))
 // Lv.80에 닿은 계열을 기록하고, 둘 다 닿았으면 알린다
@@ -73,7 +73,7 @@ async function noteMaxed($: any, lineKey: string | undefined, level: number) {
 // 그릴 단계: 히든 진화가 열렸고 Lv.100이면 11(오메가몬). 디지바이스 임시 진화 중이면 한 단계 위
 const drawTier = (tier: number, ready: boolean, boosted = false) => (ready && tier >= 10 ? 11 : boosted ? boostTier(tier) : tier)
 // 사람에게 묻는 중인 도구 호출들 (여럿이 같이 돌 때 하나가 끝났다고 기다림을 풀지 않게). 띠는 읽지 않는다
-const pendingAsks = atom({ plugin: 'run-buddy', key: 'pendingAsks' } as const, [] as string[])
+const pendingAsks = atom({ plugin: 'digimon-buddy', key: 'pendingAsks' } as const, [] as string[])
 
 // ── 경험치와 레벨 ──────────────────────────────────────────────────
 // 계산은 season.ts에 있다. 한 시즌은 한 달(한국 시간 1일 0시부터)이고, 달이 바뀌면 레벨 1부터 다시 시작한다.
@@ -660,7 +660,7 @@ export const register: Register = on => {
                   <Box key="level">
                     <Text bold>{`${lv.label}  ${lv.value}  `}</Text>
                     <Text dimColor>{lv.detail}</Text>
-                    {digi ? [<Button key="run-buddy-digi" label="진화" onPress={evolve} />] : []}
+                    {digi ? [<Button key="digimon-buddy-digi" label="진화" onPress={evolve} />] : []}
                   </Box>,
                 ]
               : []}
@@ -668,7 +668,7 @@ export const register: Register = on => {
               ? [
                   <Box key="companion">
                     <Text bold>{companion}  </Text>
-                    {digi ? [<Button key="run-buddy-digi" label="진화" onPress={evolve} />] : []}
+                    {digi ? [<Button key="digimon-buddy-digi" label="진화" onPress={evolve} />] : []}
                   </Box>,
                 ]
               : []}
@@ -711,7 +711,7 @@ export const register: Register = on => {
                           <Text bold>{lv.label}</Text>
                         </Box>
                         <Text dimColor>{lv.detail}  </Text>
-                        {digi ? [<Button key="run-buddy-digi" label="진화" onPress={evolve} />] : [<Text key="run-buddy-xp" bold>{lv.value}</Text>]}
+                        {digi ? [<Button key="digimon-buddy-digi" label="진화" onPress={evolve} />] : [<Text key="digimon-buddy-xp" bold>{lv.value}</Text>]}
                       </Box>
                       <Svg source={xpBarSvg(x / MAX_XP, r.level)} alt={`경험치 ${x}/${MAX_XP}`} />
                     </Box>,
@@ -723,7 +723,7 @@ export const register: Register = on => {
                       <Box flexGrow={1}>
                         <Text bold>{companion}</Text>
                       </Box>
-                      {digi ? [<Button key="run-buddy-digi" label="진화" onPress={evolve} />] : []}
+                      {digi ? [<Button key="digimon-buddy-digi" label="진화" onPress={evolve} />] : []}
                     </Box>,
                   ]
                 : []}
@@ -775,7 +775,7 @@ export const register: Register = on => {
             <Text bold color={view === 'error' ? RED : view === 'evolve' || withDigi ? AMBER : GREEN}>
               {text}
             </Text>
-            <Button key="run-buddy-ack" label="확인" onPress={ack} />
+            <Button key="digimon-buddy-ack" label="확인" onPress={ack} />
           </Box>
         )
       }
@@ -801,7 +801,7 @@ export const register: Register = on => {
             <Box flexDirection="column">
               <Text bold>{`Lv.${rank.level} ${formName(me, dt)} vs ${rank.foe}`}</Text>
               {hpTail.map(t => (
-                <Text key="run-buddy-hp" dimColor>{t}</Text>
+                <Text key="digimon-buddy-hp" dimColor>{t}</Text>
               ))}
               <Text dimColor>
                 {rank.next ? `상대 HP ${rank.foeHp}% · Lv.${rank.next}에 ${me.gear[rank.tier + 1]}` : `최종 보스와 결전 중 · ${me.gear[10]}`}
@@ -846,9 +846,9 @@ export const register: Register = on => {
             <Text dimColor>{big.sub}</Text>
             <Box flexDirection="row" alignItems="center" columnGap={1}>
               {hpTail.map(t => (
-                <Text key="run-buddy-hp" dimColor>{t.replace('HP · ', 'HP ')}</Text>
+                <Text key="digimon-buddy-hp" dimColor>{t.replace('HP · ', 'HP ')}</Text>
               ))}
-              {view === 'waiting' ? [] : [<Button key="run-buddy-ack" label="확인" onPress={ack} />]}
+              {view === 'waiting' ? [] : [<Button key="digimon-buddy-ack" label="확인" onPress={ack} />]}
             </Box>
           </Box>
         </Box>

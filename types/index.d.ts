@@ -33,7 +33,7 @@ export type Seed = { made: number; hours: [number, number][] }
 
 declare module 'claude-code' {
   interface PluginState {
-    'run-buddy': {
+    'digimon-buddy': {
       phase: Phase
       waitKind: WaitKind
       // 권한 요청에 답을 기다리는 중인지 (1.5초 뒤에도 그러면 크게 알린다)
