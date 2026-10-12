@@ -36,7 +36,7 @@ const tierStart = (t: number) => (t <= 0 ? 0 : (10 * t - 1) * 2)
 // 지금 상대하는 몬스터에게 남은 체력(0~1) = 다음 장비까지 남은 경험치의 비율
 export const foeHp = (x: number) => {
   const t = tierOf(levelOf(x))
-  if (t >= 10) return 0
+  if (t >= 10) return 1
   const a = tierStart(t)
   return 1 - (x - a) / (tierStart(t + 1) - a)
 }

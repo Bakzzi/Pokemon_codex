@@ -47,6 +47,9 @@ FX = {
  "ofanimon": "fx.javelin(from) + fx.pillar('#FDE68A', '#FFFFFF', 2.2)"
 }
 MELEE = ['tailmon', 'weregarurumon', 'zudomon']
+# 히든 진화: 용기·우정 계열이 둘 다 Lv.99에 닿은 뒤 Lv.100이면 오메가몬 (가루루 캐논 + 그레이 소드)
+OMEGA = {'courage': ('omegamon','오메가몬',14,{'flip':False,'mouth':(0.3,0.42)}), 'friendship': ('omegamon','오메가몬',14,{'flip':False,'mouth':(0.3,0.42)})}
+FX['omegamon'] = "fx.beam(from, '#93C5FD', '#E0F2FE', 1.6) + fx.strike('#FDE68A', '#FFFFFF')" 
 LINES = [
  ('courage','용기','🔥','fire',False,
   [('koromon','코로몬',5.5,{'flip':False,'mouth':(0.82,0.62)}),('agumon','아구몬',9.5,{'flip':False,'mouth':(0.9,0.36)}),('greymon','그레이몬',13,{'flip':False,'mouth':(0.93,0.3)}),('metalgreymon','메탈그레이몬',14,{'flip':False,'mouth':(0.62,0.55)}),('wargreymon','워그레이몬',13,{'flip':False,'mouth':(0.55,0.03)})],
@@ -86,24 +89,26 @@ for key, name, icon, el, melee, stages, gear in LINES:
         if k in FX: parts.append(f'fx: (t, from) => {FX[k]}')
         extra = ', { ' + ', '.join(parts) + ' }' if parts else ''
         rows.append(f"  sprite('{kname}', {C}.{k}!, {h}{extra}),")
+    omega = ''
+    if key in OMEGA:
+        k, kname, h, opt = OMEGA[key]
+        parts = [f"flip: {json.dumps(opt['flip'])}", f"mouth: [{opt['mouth'][0]}, {opt['mouth'][1]}]", f"fx: (t, from) => {FX[k]}"]
+        omega = f"  omega: sprite('{kname}', {C}.{k}!, {h}, {{ {', '.join(parts)} }}),\n"
     body = f"""// {name}의 문장: {' → '.join(s[1] for s in stages)}
 // 그림은 hooks/img/{key}.ts (위키몬의 디지몬 스토리 전투 스프라이트에 검은 테두리를 두른 것). preview/gen-lines.py가 만든다
-import {{ elementHit, makeLine, sprite }} from '../digi.ts'
+import {{ makeLine, sprite }} from '../digi.ts'
 import * as fx from '../fx.ts'
 import {{ {C} }} from '../img/{key}.ts'
-import {{ CRESTS }} from '../img/crests.ts'
 
 export const {key} = makeLine({{
   key: '{key}',
   name: '{name}',
   icon: '{icon}',
   gear: {json.dumps(gear, ensure_ascii=False)},
-  melee: false,
   stages: [
 {chr(10).join(rows)}
   ],
-  crest: {{ image: CRESTS.{key}! }},
-  hit: (_t, stage, from) => elementHit('{el}', stage, false, from)}})
+{omega}}})
 """
     open(f'hooks/jobs/{key}.ts', 'w', encoding='utf-8').write(body)
     print('wrote', key)

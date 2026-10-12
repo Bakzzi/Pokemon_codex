@@ -113,14 +113,11 @@ export const idleSvg = (t: number, job: Job, side = '') => {
 // 4px 칸 단위, 44 × 15칸(176 × 60px). Claude는 왼쪽, 몬스터는 오른쪽(x 24~38). 땅은 y = 13
 
 // 단계별로 한 대 칠 때 뜨는 데미지
-const DAMAGE = [7, 15, 28, 46, 73, 120, 188, 290, 455, 999, 0]
+const DAMAGE = [7, 15, 28, 46, 73, 120, 188, 290, 455, 999, 1500]
 
 // 근접 직업은 공격 주기마다 몬스터에게 돌진했다 돌아오고, 원거리 직업은 제자리에서 살짝 반동한다
-// (레벨 100은 싸움이 끝나 제자리에서 기뻐한다)
 const approach = (t: number, job: Job) =>
-  t >= 10
-    ? ''
-    : (typeof job.melee === 'function' ? job.melee(t) : job.melee)
+  (typeof job.melee === 'function' ? job.melee(t) : job.melee)
       ? `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;3.5 0;3.5 0;0 0;0 0" keyTimes="0;0.5;0.6;0.7;0.85;1" dur="${ATK}" repeatCount="indefinite"/>`
       : `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;-0.6 0;0 0;0 0" keyTimes="0;0.44;0.48;0.56;1" dur="${ATK}" repeatCount="indefinite"/>`
 

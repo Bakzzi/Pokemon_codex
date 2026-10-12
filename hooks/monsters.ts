@@ -1,12 +1,13 @@
 // 레벨마다 싸우는 상대: 디지몬 어드벤처의 빌런들 (hooks/img/monsters.ts의 디지몬 스토리 전투 스프라이트)
 // 전투 장면은 44 × 15칸이고, 상대는 오른쪽(x 22~41)에 서서 왼쪽의 내 디지몬을 바라본다. 땅은 y = 13.
-// 단계(tier) = 레벨 ÷ 10: 0 쿠와가몬 … 9 아포카리몬, 10(레벨 100)은 오메가몬이 동료로 합류한다
+// 단계(tier) = 레벨 ÷ 10: 0 워매몬 … 9 피에몬, 10(레벨 100)은 최종 보스 아포카리몬
 import { MONSTERS } from './img/monsters.ts'
 
-export const MONSTER_NAMES = ['워매몬', '데블몬', '에테몬', '묘티스몬', '베놈묘티스몬', '메탈시드라몬', '피노키몬', '묵시몬', '피에몬', '아포카리몬', '오메가몬']
+export const MONSTER_NAMES = ['워매몬', '가지몬', '데블몬', '에테몬', '묘티스몬', '베놈묘티스몬', '메탈시드라몬', '피노키몬', '파워드라몬', '피에몬', '아포카리몬']
 // 그림 키, 키(칸), 뒤집기(원본이 오른쪽을 보면 true: 왼쪽의 내 디지몬을 보게 뒤집는다). 너비는 원본 비율대로
 const FOES: readonly (readonly [string, number, boolean])[] = [
   ['numemon', 8, true],
+  ['gazimon', 9, true],
   ['devimon', 12.5, false],
   ['etemon', 11, true],
   ['vamdemon', 13, true],
@@ -16,7 +17,6 @@ const FOES: readonly (readonly [string, number, boolean])[] = [
   ['mugendramon', 13.5, true],
   ['piemon', 13, true],
   ['apocalymon', 13.5, false],
-  ['omegamon', 13.5, true],
 ]
 const CENTER = 31.5
 const GROUND = 13
@@ -44,7 +44,7 @@ const box = (tier: number) => {
   return { img, x: at(CENTER - w / 2), y: at(GROUND - h), w, h, flip }
 }
 
-// 상대 한 마리: 숨 쉬듯 들썩인다. 동료(오메가몬)는 조금 더 느긋하게
+// 상대 한 마리: 숨 쉬듯 들썩인다. 최종 보스는 느긋하게
 const draw = (tier: number) => {
   const b = box(tier)
   const dur = tier >= 10 ? '1.6s' : tier >= 5 ? '1s' : '0.7s'
@@ -61,16 +61,14 @@ const draw = (tier: number) => {
 const barY = (tier: number) => Math.max(-0.4, at(box(tier).y - 1.3))
 
 // 상대 하나 + 체력 막대 + 맞는 순간의 흔들림·깜빡임·데미지 숫자.
-// hp: 상대에게 남은 체력(0~1). 레벨 100의 오메가몬은 싸우지 않고 동료로 그린다
+// hp: 상대에게 남은 체력(0~1)
 export const monster = (t: number, hp: number, damage: number) => {
   const tier = Math.max(0, Math.min(10, t))
   const fill = Math.max(0, Math.min(1, hp))
   const y = barY(tier)
-  const bar =
-    tier >= 10
-      ? ''
-      : rect(26, y, 8, 0.9, INK) + rect(26.15, y + 0.15, 7.7, 0.6, '#4B5563') + (fill > 0 ? rect(26.15, y + 0.15, 7.7 * fill, 0.6, '#EF4444') : '')
-  if (tier >= 10) return draw(tier) + bar
+  // 레벨 100의 최종 보스는 체력이 줄지 않는다 (시즌이 끝날 때까지 결전)
+  const shown = tier >= 10 ? 1 : fill
+  const bar = rect(26, y, 8, 0.9, INK) + rect(26.15, y + 0.15, 7.7, 0.6, '#4B5563') + (shown > 0 ? rect(26.15, y + 0.15, 7.7 * shown, 0.6, '#EF4444') : '')
   const hit =
     // 맞는 순간 좌우로 흔들리고 깜빡인다
     '<g>' +

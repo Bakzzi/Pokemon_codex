@@ -56,6 +56,24 @@ const pet = atom({ plugin: 'run-buddy', key: 'pet' } as const, '')
 const chestFound = atom({ plugin: 'run-buddy', key: 'chestFound' } as const, false)
 // 캐릭터에 입힌 직업: 턴의 시작과 끝에만 바꾼다 (자정에 달이 바뀌어도 싸우는 도중 그림이 바뀌지 않게)
 const shownJob = atom({ plugin: 'run-buddy', key: 'shownJob' } as const, '')
+// 히든 진화: 용기(워그레이몬)·우정(메탈가루몬) 시즌이 둘 다 Lv.99에 닿으면 열린다 ($.store 'maxed'에 닿은 계열을 모은다)
+const omega = atom({ plugin: 'run-buddy', key: 'omega' } as const, false)
+const OMEGA_LINES = ['courage', 'friendship']
+const omegaReady = (maxed: readonly string[] | undefined) => OMEGA_LINES.every(k => maxed?.includes(k))
+// Lv.99에 닿은 계열을 기록하고, 둘 다 닿았으면 알린다
+async function noteMaxed($: any, lineKey: string | undefined, level: number) {
+  const maxed = ((await $.store.get('maxed')) as string[] | undefined) ?? []
+  const wasReady = omegaReady(maxed)
+  if (level >= 99 && lineKey && OMEGA_LINES.includes(lineKey) && !maxed.includes(lineKey)) {
+    maxed.push(lineKey)
+    await $.store.set('maxed', maxed)
+  }
+  const ready = omegaReady(maxed)
+  if ((await read($, omega)) !== ready) await update($, omega, () => ready)
+  if (ready && !wasReady) await $.ui.toast('🌟 워그레이몬과 메탈가루몬이 모두 Lv.99에 닿았어요! 이제 용기·우정 시즌의 Lv.100에는 오메가몬으로 조그레스 진화!')
+}
+// 그릴 단계: 히든 진화가 열렸고 Lv.100이면 11(오메가몬)
+const drawTier = (tier: number, lineKey: string, ready: boolean) => (ready && tier >= 10 && OMEGA_LINES.includes(lineKey) ? 11 : tier)
 // 사람에게 묻는 중인 도구 호출들 (여럿이 같이 돌 때 하나가 끝났다고 기다림을 풀지 않게). 띠는 읽지 않는다
 const pendingAsks = atom({ plugin: 'run-buddy', key: 'pendingAsks' } as const, [] as string[])
 
@@ -123,7 +141,7 @@ async function gainXp($: any, list: readonly RateLimit[]) {
   const x = xpOf(c)
   const level = levelOf(x)
   const tier = tierOf(level)
-  const foe = tier >= 10 ? '오메가몬이 동료예요' : `상대는 ${MONSTER_NAMES[tier]}`
+  const foe = tier >= 10 ? `최종 보스 ${MONSTER_NAMES[10]}과 결전!` : `상대는 ${MONSTER_NAMES[tier]}`
   const who = `${myJob.icon} ${myJob.name}`
   if (seeded) {
     await $.ui.toast(`📜 이번 달 1일부터 쓴 양을 어림했어요 · 이달의 문장 ${who} · XP ${x} · Lv.${level}부터 시작! ${foe}`)
@@ -136,12 +154,13 @@ async function gainXp($: any, list: readonly RateLimit[]) {
   } else if (newJob) {
     await $.ui.toast(`🎲 이달의 문장은 ${who}! Lv.${level} · ${foe}`)
   } else if (tier >= 10 && c.tier < 10) {
-    await $.ui.toast(`🏆 Lv.100! ${formName(myJob, 9)}이(가) 아포카리몬을 쓰러뜨렸어요. 오메가몬이 동료로 합류! ${myJob.gear[10]}`)
+    await $.ui.toast(`🏆 Lv.100! ${MONSTER_NAMES[9]} 격파 · ${myJob.gear[10]} · 최종 보스 ${MONSTER_NAMES[10]} 등장!`)
   } else if (tier > c.tier) {
     await $.ui.toast(`⚔️ Lv.${level}! ${MONSTER_NAMES[tier - 1]} 격파 · ${myJob.gear[tier]} · 다음 상대 ${MONSTER_NAMES[tier]}`)
   }
   c = { ...c, tier }
   await $.store.set('season', c)
+  await noteMaxed($, c.job, level)
   if ((await read($, xp)) !== x) await update($, xp, () => x)
   if ((await read($, seasonEnd)) !== month.end) await update($, seasonEnd, () => month.end)
   if ((await read($, job)) !== c.job) await update($, job, () => c.job ?? '')
@@ -194,6 +213,7 @@ async function syncShared($: any) {
     if ((await read($, xp)) !== x) await update($, xp, () => x)
     if ((await read($, seasonEnd)) !== month.end) await update($, seasonEnd, () => month.end)
     if (c.job && (await read($, job)) !== c.job) await update($, job, () => c.job ?? '')
+    await noteMaxed($, c.job, levelOf(x))
   } else if (merged.week) {
     // 달이 바뀌었는데(또는 예전 기록) 아직 아무 창도 새 시즌을 열지 않았으면 이 창이 연다
     const used = { kind: 'seven_day', percentUsed: 100 - merged.week.left, resetsAt: merged.week.resetsAt ?? undefined }
@@ -607,16 +627,17 @@ export const register: Register = on => {
       const x = await read($, xp)
       const r = rankOf(x)
       const me = jobOf(await read($, job))
+      const rt = drawTier(r.tier, me.key, await read($, omega))
       const days = Math.max(0, Math.ceil(((await read($, seasonEnd)) - nowMs) / 86_400_000))
       // 주간 한도 정보가 있을 때만 경험치가 쌓이니 그때만 레벨 줄을 보여 준다. 안 연 상자가 있으면 그 줄에서 연다
       const lv = lim.week
         ? {
-            label: `Lv.${r.level} ${formName(me, r.tier)} ⚔ ${r.foe}`,
+            label: `Lv.${r.level} ${formName(me, rt)} ⚔ ${r.foe}`,
             detail: chest
               ? '🎁 보물상자를 찾았어요!'
               : r.next
                 ? `상대 HP ${r.foeHp}% · 시즌 ${days}일 남음`
-                : `오메가몬과 함께 · 시즌 ${days}일 남음`,
+                : `최종 보스와 결전 중 · 시즌 ${days}일 남음`,
             value: `XP ${x}/${MAX_XP}`,
           }
         : null
@@ -660,14 +681,14 @@ export const register: Register = on => {
       }
       const { Box, Text, Button, Svg } = $.ui.resolve(e)
       // 왼쪽에는 지금 레벨의 차림으로 서 있는 Claude를 늘 세워 두고, 그 뒤에 펫(또는 안 연 상자)을 둔다
-      const stand = idleSvg(r.tier, me, chest ? chestClosed() : buddy ? buddy.small('stand') : '')
+      const stand = idleSvg(rt, me, chest ? chestClosed() : buddy ? buddy.small('stand') : '')
       const company = chest ? ' · 보물상자' : buddy ? ` · ${buddy.name}` : ''
       return (
         <Box flexDirection="column">
           <Box flexDirection="row" alignItems="center" columnGap={2}>
             <Svg
               source={stand.source}
-              alt={`쉬고 있는 ${formName(me, r.tier)} · Lv.${r.level}${company}`}
+              alt={`쉬고 있는 ${formName(me, rt)} · Lv.${r.level}${company}`}
               width={stand.width}
               height={stand.height}
               isInteractive={true}
@@ -723,6 +744,7 @@ export const register: Register = on => {
     const rank = rankOf(sx)
     // 레벨과 같이 턴의 시작과 끝에 입힌 직업 (모드를 다시 불러와 아직 없으면 이달의 직업)
     const me = jobOf((await read($, shownJob)) || (await read($, job)))
+    const dt = drawTier(rank.tier, me.key, await read($, omega))
     const hpText = hpLine(hp)
     const hpTail = hpText ? [hpText] : []
     // 이번 턴이 찾은 상자면 끝 알림에 띄우고 확인이 상자를 연다 (끝 알림일 때만 읽는다: 전투 그림이 괜히 다시 그려지지 않게)
@@ -738,7 +760,7 @@ export const register: Register = on => {
       const { Box, Text, Button } = $.ui.resolve(e)
       let line
       if (view === 'running') {
-        line = <Text>{[`⚔ Lv.${rank.level} ${formName(me, rank.tier)}${buddy ? ` ${buddy.icon}` : ''} vs ${rank.foe}`, ...hpTail].join(' · ')}</Text>
+        line = <Text>{[`⚔ Lv.${rank.level} ${formName(me, dt)}${buddy ? ` ${buddy.icon}` : ''} vs ${rank.foe}`, ...hpTail].join(' · ')}</Text>
       } else if (view === 'waiting') {
         const wait = WAIT[await read($, waitKind)]
         line = <Text bold color={AMBER}>{`${wait.icon} ${wait.title} · ${wait.hint}`}</Text>
@@ -773,7 +795,7 @@ export const register: Register = on => {
 
     // 일하는 중: 장비를 찬 Claude가 레벨에 맞는 몬스터와 싸운다 (경과 시간·하는 일은 앱의 진행 표시줄에)
     if (view === 'running') {
-      const run = runSvg(hp, rank.tier, rank.level, foeHp(sx), me, buddy ? buddy.small('run') : '')
+      const run = runSvg(hp, dt, rank.level, foeHp(sx), me, buddy ? buddy.small('run') : '')
       // JSX가 쓰는 h와 겹치지 않게 다른 이름을 쓴다
       const artH = Math.min(BAND_H, run.height)
       return (
@@ -781,12 +803,12 @@ export const register: Register = on => {
           <Box flexDirection="row" alignItems="center" columnGap={2}>
             <Svg source={run.source} alt="상대와 싸우는 내 디지몬" width={Math.round((run.width * artH) / run.height)} height={artH} isInteractive={true} />
             <Box flexDirection="column">
-              <Text bold>{`Lv.${rank.level} ${formName(me, rank.tier)} vs ${rank.foe}`}</Text>
+              <Text bold>{`Lv.${rank.level} ${formName(me, dt)} vs ${rank.foe}`}</Text>
               {hpTail.map(t => (
                 <Text dimColor>{t}</Text>
               ))}
               <Text dimColor>
-                {rank.next ? `상대 HP ${rank.foeHp}% · Lv.${rank.next}에 ${me.gear[rank.tier + 1]}` : `최종 보스 격파! ${me.gear[10]}`}
+                {rank.next ? `상대 HP ${rank.foeHp}% · Lv.${rank.next}에 ${me.gear[rank.tier + 1]}` : `최종 보스와 결전 중 · ${me.gear[10]}`}
               </Text>
             </Box>
           </Box>
@@ -803,17 +825,17 @@ export const register: Register = on => {
     let big
     if (view === 'waiting') {
       const wait = WAIT[await read($, waitKind)]
-      big = { art: bigSvg('waiting', wait.bubble[0], wait.bubble[1], hp, intro, rank.tier, me, side), alt: `기다리는 ${formName(me, rank.tier)}: ${wait.title}`, color: AMBER, title: wait.title, sub: wait.hint }
+      big = { art: bigSvg('waiting', wait.bubble[0], wait.bubble[1], hp, intro, dt, me, side), alt: `기다리는 ${formName(me, dt)}: ${wait.title}`, color: AMBER, title: wait.title, sub: wait.hint }
     } else if (view === 'treasure' && buddy) {
-      big = { art: bigSvg('done', `${buddy.name} 등장!`, '이달 내내 따라다녀요', hp, intro, rank.tier, me, chestReveal(buddy, intro)), alt: `보물상자에서 ${buddy.name}${buddy.josa} 나왔어요`, color: AMBER, title: `🎁 ${met}`, sub: '이번 달 내내 내 디지몬을 따라다녀요' }
+      big = { art: bigSvg('done', `${buddy.name} 등장!`, '이달 내내 따라다녀요', hp, intro, dt, me, chestReveal(buddy, intro)), alt: `보물상자에서 ${buddy.name}${buddy.josa} 나왔어요`, color: AMBER, title: `🎁 ${met}`, sub: '이번 달 내내 내 디지몬을 따라다녀요' }
     } else {
       const ranFor = elapsedText(await read($, lastMs))
       big =
         view === 'error'
-          ? { art: bigSvg('error', '멈췄어요!', '오류가 났어요', hp, intro, rank.tier, me, side), alt: '오류로 멈춘 내 디지몬', color: RED, title: '멈췄어요! 오류가 났어요', sub: `${ranFor} 싸우다 멈춤 · Lv.${rank.level} ${formName(me, rank.tier)}` }
+          ? { art: bigSvg('error', '멈췄어요!', '오류가 났어요', hp, intro, dt, me, side), alt: '오류로 멈춘 내 디지몬', color: RED, title: '멈췄어요! 오류가 났어요', sub: `${ranFor} 싸우다 멈춤 · Lv.${rank.level} ${formName(me, dt)}` }
           : withChest
-            ? { art: bigSvg('done', '보물상자 발견!', '확인을 눌러 열어 봐요', hp, intro, rank.tier, me, chestClosed()), alt: '일을 마치고 보물상자를 찾은 내 디지몬', color: AMBER, title: '🎁 보물상자를 찾았어요!', sub: `${ranFor} 전투 · 확인을 누르면 열어요` }
-            : { art: bigSvg('done', '다 했어요!', '결과 확인해 주세요', hp, intro, rank.tier, me, side), alt: '일을 마친 내 디지몬', color: GREEN, title: '작업 끝! 확인해 주세요', sub: `${ranFor} 전투 · Lv.${rank.level} ${formName(me, rank.tier)}` }
+            ? { art: bigSvg('done', '보물상자 발견!', '확인을 눌러 열어 봐요', hp, intro, dt, me, chestClosed()), alt: '일을 마치고 보물상자를 찾은 내 디지몬', color: AMBER, title: '🎁 보물상자를 찾았어요!', sub: `${ranFor} 전투 · 확인을 누르면 열어요` }
+            : { art: bigSvg('done', '다 했어요!', '결과 확인해 주세요', hp, intro, dt, me, side), alt: '일을 마친 내 디지몬', color: GREEN, title: '작업 끝! 확인해 주세요', sub: `${ranFor} 전투 · Lv.${rank.level} ${formName(me, dt)}` }
     }
 
     return (

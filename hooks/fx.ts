@@ -136,11 +136,9 @@ const ARTS_ONE: Record<string, Art> = {
   flower: { w: 4, h: 4, svg: glow(0, 0, 1.8, '#F472B6', '#FBCFE8', 0.8) + [0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-0.85" rx="0.42" ry="0.7" fill="#F472B6" transform="rotate(${a})"/>`).join('') + [0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-0.8" rx="0.2" ry="0.4" fill="#FBCFE8" transform="rotate(${a})"/>`).join('') + `<circle cx="0" cy="0" r="0.45" fill="#FDE047"/><circle cx="-0.1" cy="-0.1" r="0.18" fill="${WHITE}"/>` },
   wind: { w: 8.6, h: 3.6, svg: `<ellipse cx="0" cy="0" rx="1.2" ry="1.6" fill="none" stroke="#7DD3FC" stroke-width="0.5" opacity="0.9"/><ellipse cx="0.15" cy="0" rx="0.7" ry="1" fill="none" stroke="#E0F2FE" stroke-width="0.35"/><ellipse cx="0.3" cy="0" rx="0.3" ry="0.45" fill="${WHITE}" opacity="0.9"/><path d="M-1.4 -1 Q-3 -0.8 -4 0.2" stroke="#7DD3FC" stroke-width="0.3" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M-1.4 1 Q-2.8 1.3 -3.6 0.4" stroke="#E0F2FE" stroke-width="0.25" fill="none" stroke-linecap="round" opacity="0.7"/>` },
   needle: { w: 5, h: 1, svg: `<path d="M-2.2 0 L2.2 0" stroke="#15803D" stroke-width="0.45" stroke-linecap="round"/><path d="M-2 0 L1.8 0" stroke="#4ADE80" stroke-width="0.2"/><path d="M1.6 -0.35 L2.5 0 L1.6 0.35 Z" fill="${WHITE}"/>` },
-  rock: { w: 2.2, h: 2.2, svg: `<polygon points="-0.9,-0.4 -0.2,-0.9 0.8,-0.5 0.9,0.5 0.1,0.9 -0.8,0.5" fill="#9CA3AF"/><polygon points="-0.5,-0.3 0.1,-0.6 0.5,-0.2 0,0.1" fill="#D1D5DB"/>` },
   bubble: orbArt('#7DD3FC', '#E0F2FE', 0.55),
   bubble_s: orbArt('#7DD3FC', '#E0F2FE', 0.32),
   orb_holy: orbArt('#FDE68A', '#FFF7D6', 0.8),
-  orb_white: orbArt('#FDE047', WHITE, 0.6),
   orb_fire: orbArt('#F26B21', '#FDE047', 1.25),
   orb_thunder: orbArt('#FDE047', '#FFFBEB', 1.25),
   fireball: fireballArt('#F26B21', '#FDE047'),
@@ -223,7 +221,7 @@ export const fireball = (from: At, size = 1) =>
   muzzle('#F26B21', '#FDE047', from, size) + fly(art('fireball', size), from, [HIT_X, from[1]]) + impact('#F26B21', HIT_X, from[1], size)
 export const greenFlame = (from: At, size = 1) =>
   muzzle('#22C55E', '#BBF7D0', from, size) + fly(art('fireball_green', size), from, [HIT_X, from[1]]) + impact('#22C55E', HIT_X, from[1], size)
-// 전기 불꽃 (쁘띠 썬더): 작은 전기구가 튀어 나간다
+// 전기 불꽃 (쁘띠 썬더)
 export const sparks = (from: At, size = 1) =>
   muzzle('#38BDF8', '#F0F9FF', from, size) + fly(`<g><animateTransform attributeName="transform" type="rotate" values="0;90;180;270" dur="0.3s" calcMode="discrete" repeatCount="indefinite"/>${art('spark', size)}</g>`, from, [HIT_X, from[1]]) + impact('#38BDF8', HIT_X, from[1], size)
 // 창 던지기 (에덴즈 재블린)
@@ -324,10 +322,6 @@ export const needleSpray = (from: At, n = 6) => {
   }
   return out
 }
-export const rockRain = (n = 4) => rainOf('rock', '#9CA3AF', n, 8)
-export const rain = (_rows: unknown, _pal: unknown, color: string, n = 3, scale = 1, spread = 7) => rainOf('orb_white', color, n, spread, 0, scale)
-
-// 빛기둥: 상대 위에서 내려꽂힌다 (0.56 → 0.72)
 export const pillar = (color: string, _light: string, w = 2.4, x = BODY_X) =>
   '<g opacity="0">' +
   `<animate attributeName="opacity" values="0;0;0.95;0.95;0;0" keyTimes="0;0.56;0.58;0.7;0.74;1" dur="${ATK}" repeatCount="indefinite"/>` +
@@ -386,14 +380,6 @@ export const marchingFishes = (from: At, n = 4) => {
 export const airShot = (from: At) => muzzle('#7DD3FC', WHITE, from, 0.8) + fly(art('wind', 1.2), from, [HIT_X, from[1]]) + impact('#BAE6FD', HIT_X, from[1], 1.1)
 export const flowerCannon = (from: At) =>
   muzzle('#F9A8D4', '#FDE047', from, 1) + fly(`<g><animateTransform attributeName="transform" type="rotate" values="0;90;180;270" dur="0.6s" calcMode="discrete" repeatCount="indefinite"/>${art('flower', 1.4)}</g>`, from, [HIT_X, from[1]]) + impact('#F472B6', HIT_X, from[1], 1.5)
-export const iceShards = (from: At, n = 3) => {
-  let out = muzzle('#60A5FA', '#E0F2FE', from, 1)
-  for (let i = 0; i < n; i++) {
-    const y = at(from[1] + (i - (n - 1) / 2) * 1.4)
-    out += fly(art('shard'), [from[0], y], [HIT_X, y], at(0.44 + i * 0.02), at(0.6 + i * 0.02))
-  }
-  return out + impact('#60A5FA', HIT_X, from[1], 1.3)
-}
 export const cocytus = (from: At) => beam(from, '#93C5FD', '#E0F2FE', 1.4) + rainOf('shard', '#93C5FD', 4, 6, 90, 0.9)
 export const strike = (color: string, light: string, claws = false) =>
   claws
