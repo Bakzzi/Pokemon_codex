@@ -19,5 +19,4 @@ export const knowledge = makeLine({
   sprite('헤라클레스캅테리몬', KNOWLEDGE.heraklekabuterimon!, 14, { fx: (t, from) => fx.beam(from, '#FDE047', '#FFFBEB', 1.9) + (t >= 8 ? fx.lightning() : '') }),
   ],
   crest: { image: CRESTS.knowledge! },
-  hit: (_t, stage, from) => elementHit('thunder', stage, false, from),
-})
+  hit: (_t, stage, from) => elementHit('thunder', stage, false, from)})

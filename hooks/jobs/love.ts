@@ -14,10 +14,9 @@ export const love = makeLine({
   stages: [
   sprite('뿌카몬', LOVE.pyocomon!, 5.5, { mouth: [0.85, 0.5], fx: (t, from) => fx.bubble(from) }),
   sprite('피요몬', LOVE.piyomon!, 9, { fx: (t, from) => fx.fireball(from, t >= 2 ? 1 : 0.8) }),
-  sprite('버드라몬', LOVE.birdramon!, 12, { attack: LOVE.birdramon_attack, fx: (t, from) => fx.meteorWing(from, t >= 5 ? 4 : 3) }),
+  sprite('버드라몬', LOVE.birdramon!, 12, { fx: (t, from) => fx.meteorWing(from, t >= 5 ? 4 : 3) }),
   sprite('가루다몬', LOVE.garudamon!, 14, { fx: (t, from) => fx.beam(from, '#F26B21', '#FDE047', 1.7) + (t >= 8 ? fx.strike('#F26B21', '#FDE047', true) : '') }),
-  sprite('피닉스몬', LOVE.hououmon!, 13, { attack: LOVE.hououmon_attack, fx: (t, from) => fx.starlight(6) }),
+  sprite('피닉스몬', LOVE.hououmon!, 13, { fx: (t, from) => fx.starlight(6) }),
   ],
   crest: { image: CRESTS.love! },
-  hit: (_t, stage, from) => elementHit('fire', stage, false, from),
-})
+  hit: (_t, stage, from) => elementHit('fire', stage, false, from)})

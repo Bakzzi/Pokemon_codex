@@ -1,7 +1,7 @@
 # preview/out/*.png 를 모아 미리보기 HTML 한 장을 만든다.  python3 preview/gallery.py <out.html>
 import base64, sys
 def uri(p): return 'data:image/png;base64,'+base64.b64encode(open(p,'rb').read()).decode()
-lines=[('courage','용기','코로몬 → 아구몬 → 그레이몬 → 메탈그레이몬 → 워그레이몬'),('friendship','우정','원뿔몬 → 가브몬 → 가루몬 → 워가루몬 → 메탈가루몬'),('love','사랑','뿌카몬 → 피요몬 → 버드라몬 → 가루다몬 → 피닉스몬'),('sincerity','순수','타네몬 → 팔몬 → 니드몬 → 릴리몬 → 로제몬'),('knowledge','지식','모티몬 → 텐타몬 → 캅테리몬 → 메가캅테리몬 → 헤라클레스캅테리몬'),('reliability','성실','푸카몬 → 파피몬 → 이크몬 → 쥬드몬 → 플레시오몬'),('hope','희망','토코몬 → 파닥몬 → 엔젤몬 → 홀리엔젤몬 → 세라피몬'),('light','빛','뉴몬 → 플롯몬 → 가트몬 → 엔젤우몬 → 오파니몬')]
+lines=[('courage','용기','코로몬 → 아구몬 → 그레이몬 → 메탈그레이몬 → 워그레이몬'),('friendship','우정','원뿔몬 → 파피몬(가브몬) → 가루몬 → 워가루몬 → 메탈가루몬'),('love','사랑','뿌카몬 → 피요몬 → 버드라몬 → 가루다몬 → 피닉스몬'),('sincerity','순수','타네몬 → 팔몬 → 니드몬 → 릴리몬 → 로제몬'),('knowledge','지식','모티몬 → 텐타몬 → 캅테리몬 → 메가캅테리몬 → 헤라클레스캅테리몬'),('reliability','성실','푸카몬 → 쉬라몬 → 이크몬 → 쥬드몬 → 플레시오몬'),('hope','희망','토코몬 → 파닥몬 → 엔젤몬 → 홀리엔젤몬 → 세라피몬'),('light','빛','뉴몬 → 플롯몬 → 가트몬 → 엔젤우몬 → 오파니몬')]
 attacks=''.join(f'''    <figure><img src="{uri(f'preview/out/{k}-attack.png')}" alt="{name}의 문장 공격 순간"></figure>\n''' for k,name,chain in lines)
 sections=''.join(f'''  <section>
     <h2>{name}의 문장 <small>{chain}</small></h2>
@@ -31,11 +31,11 @@ figure.wide img {{ max-width:none; width:2600px; }}
 <main>
   <header>
     <h1>디지몬 런버디 <span>어드벤처 편</span></h1>
-    <p class="lead">run-buddy 모드의 캐릭터를 디지몬으로 바꿨습니다. 그림은 위키몬에 있는 DS 디지몬 스토리 전투 스프라이트에 검은 테두리를 두른 것이고, 매달 문장 하나가 뽑혀 그 파트너가 유년기부터 궁극체까지 진화합니다. 상대는 어드벤처의 빌런 10명이고 Lv.100에 오메가몬이 합류합니다.</p>
+    <p class="lead">run-buddy 모드의 캐릭터를 디지몬으로 바꿨습니다. 그림은 위키몬에 있는 디지몬 서바이브·뉴 센추리 일러스트에 검은 테두리를 두른 것이라 모두 45도로 적을 보고, 매달 문장 하나가 뽑혀 그 파트너가 유년기부터 궁극체까지 진화합니다. 상대는 어드벤처의 빌런 10명이고 Lv.100에 오메가몬이 합류합니다.</p>
   </header>
   <section>
     <h2>전투 <small>Lv.1부터 100까지, 용기 계열. 옆으로 스크롤해 보세요</small></h2>
-    <figure class="wide"><img src="{uri('preview/out/courage-run.png')}" alt="레벨별 전투 장면: 쿠와가몬부터 아포카리몬, 오메가몬까지"></figure>
+    <figure class="wide"><img src="{uri('preview/out/courage-run.png')}" alt="레벨별 전투 장면: 쿠가몬부터 아포카리몬, 오메가몬까지"></figure>
   </section>
   <section>
     <h2>공격 순간 <small>Lv.10 · 40 · 60 · 80 · 90. 기술 효과는 그라데이션 벡터라 어느 배율에서도 매끈합니다. 정지 화면이라 투사체는 도착 지점에, 데미지 숫자도 같이 찍혀 있습니다</small></h2>

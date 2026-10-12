@@ -3,7 +3,7 @@
 // 단계(tier) = 레벨 ÷ 10: 0 쿠와가몬 … 9 아포카리몬, 10(레벨 100)은 오메가몬이 동료로 합류한다
 import { MONSTERS } from './img/monsters.ts'
 
-export const MONSTER_NAMES = ['쿠와가몬', '데블몬', '에테몬', '묘티스몬', '베놈묘티스몬', '메탈시드라몬', '피노키몬', '무겐드라몬', '피에몬', '아포카리몬', '오메가몬']
+export const MONSTER_NAMES = ['쿠가몬', '데블몬', '에테몬', '묘티스몬', '베놈묘티스몬', '메탈시드라몬', '피노키몬', '무겐드라몬', '피에몬', '아포카리몬', '오메가몬']
 // 그림 키와 키(칸). 너비는 원본 비율대로
 const FOES: readonly (readonly [string, number])[] = [
   ['kuwagamon', 9.5],

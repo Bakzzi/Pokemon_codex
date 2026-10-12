@@ -15,9 +15,8 @@ export const courage = makeLine({
   sprite('코로몬', COURAGE.koromon!, 5.5, { mouth: [0.85, 0.5], fx: (t, from) => fx.bubble(from) }),
   sprite('아구몬', COURAGE.agumon!, 9.5, { fx: (t, from) => fx.fireball(from, t >= 2 ? 1.3 : 0.9) }),
   sprite('그레이몬', COURAGE.greymon!, 13, { fx: (t, from) => fx.fireball(from, 1.8) }),
-  sprite('메탈그레이몬', COURAGE.metalgreymon!, 14, { flip: false, mouth: [0.72, 0.5], fx: (t, from) => fx.missiles(from, 2) + (t >= 8 ? fx.tridentArm([from[0] + 1, from[1] + 2.5]) : '') }),
-  sprite('워그레이몬', COURAGE.wargreymon!, 13, { flip: false, mouth: [0.9, 0.45], fx: (t, from) => fx.orb(from, '#F26B21', '#FDE047', 1.9) }),
+  sprite('메탈그레이몬', COURAGE.metalgreymon!, 14, { mouth: [0.72, 0.5], fx: (t, from) => fx.missiles(from, 2) + (t >= 8 ? fx.tridentArm([from[0] + 1, from[1] + 2.5]) : '') }),
+  sprite('워그레이몬', COURAGE.wargreymon!, 13, { mouth: [0.9, 0.45], fx: (t, from) => fx.orb(from, '#F26B21', '#FDE047', 1.9) }),
   ],
   crest: { image: CRESTS.courage! },
-  hit: (_t, stage, from) => elementHit('fire', stage, false, from),
-})
+  hit: (_t, stage, from) => elementHit('fire', stage, false, from)})

@@ -28,5 +28,6 @@ for group in sorted(os.listdir(src)):
         if not f.endswith('.png'): continue
         im = Image.open(os.path.join(g, f))
         o = outline(im)
-        o.save(os.path.join(dst, group, f))
+        # 256색 팔레트로 줄여 저장 (용량 절반, 테두리가 또렷해 눈에 띄는 차이 없음)
+        o.quantize(colors=255, method=Image.Quantize.FASTOCTREE, dither=Image.Dither.NONE).save(os.path.join(dst, group, f), optimize=True)
         print(f'{group}/{f}: {im.size} -> {o.size}')
