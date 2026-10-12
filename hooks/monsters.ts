@@ -28,6 +28,8 @@ const FOES: readonly Foe[] = [
 ]
 export const foeSkill = (t: number) => FOES[Math.max(0, Math.min(10, t))]!.skill
 const CENTER = 31.5
+// 공격 주기 n번 길이 ("1.8s" × n)
+const dur = (n: number) => `${Math.round(parseFloat(ATK) * n * 1000) / 1000}s`
 const GROUND = 13
 
 const INK = '#1F1410'
@@ -67,8 +69,8 @@ const draw = (tier: number) => {
 const barY = (tier: number) => Math.max(-0.4, at(box(tier).y - 1.3))
 
 // 상대 하나 + 체력 막대 + 맞는 순간의 흔들림·깜빡임·데미지 숫자.
-// hp: 상대에게 남은 체력(0~1), damage: 이번 응답에서 쓴 점수(1점 = API 정가 $0.01). null·0이면 숫자를 띄우지 않는다
-export const monster = (t: number, hp: number, damage: number | null) => {
+// hp: 상대에게 남은 체력(0~1), damages: 한 대씩 칠 때 차례로 뜨는 데미지 (다 돌면 처음부터)
+export const monster = (t: number, hp: number, damages: readonly number[]) => {
   const tier = Math.max(0, Math.min(10, t))
   const fill = Math.max(0, Math.min(1, hp))
   const y = barY(tier)
@@ -82,14 +84,30 @@ export const monster = (t: number, hp: number, damage: number | null) => {
     `<animate attributeName="opacity" values="1;1;0.35;1;0.35;1;1" keyTimes="0;0.6;0.64;0.68;0.72;0.76;1" dur="${ATK}" repeatCount="indefinite"/>` +
     draw(tier) +
     '</g>'
-  // 데미지 숫자가 떠오른다
-  const pop =
-    !damage ? '' :
-    '<g opacity="0" shape-rendering="auto">' +
-    `<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.6;0.64;0.88;1" dur="${ATK}" repeatCount="indefinite"/>` +
-    `<animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 -2.6" keyTimes="0;0.6;1" dur="${ATK}" repeatCount="indefinite"/>` +
-    `<text x="36.5" y="${y + 2.6}" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="2.8" font-weight="900" fill="#EF4444" stroke="${WHITE}" stroke-width="0.5" paint-order="stroke">-${damage.toLocaleString('en-US')}</text>` +
-    '</g>'
+  // 데미지 숫자가 떠오른다: 공격 주기마다 다음 숫자 (n개면 n주기에 한 바퀴)
+  const n = damages.length
+  const k = (i: number, v: number) => Math.round(((i + v) / n) * 1000) / 1000
+  const pop = damages
+    .map((d, i) => {
+      const times = [0, k(i, 0.6), k(i, 0.64), k(i, 0.88), k(i, 1)]
+      const vals = ['0', '0', '1', '1', '0']
+      const moveT = [0, k(i, 0.6), k(i, 1)]
+      const moveV = ['0 0', '0 0', '0 -2.6']
+      if (times[times.length - 1]! < 1) {
+        times.push(1)
+        vals.push('0')
+        moveT.push(1)
+        moveV.push('0 -2.6')
+      }
+      return (
+        '<g opacity="0" shape-rendering="auto">' +
+        `<animate attributeName="opacity" values="${vals.join(';')}" keyTimes="${times.join(';')}" dur="${dur(n)}" repeatCount="indefinite"/>` +
+        `<animateTransform attributeName="transform" type="translate" values="${moveV.join(';')}" keyTimes="${moveT.join(';')}" dur="${dur(n)}" repeatCount="indefinite"/>` +
+        `<text x="36.5" y="${y + 2.6}" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="2.8" font-weight="900" fill="#EF4444" stroke="${WHITE}" stroke-width="0.5" paint-order="stroke">-${d.toLocaleString('en-US')}</text>` +
+        '</g>'
+      )
+    })
+    .join('')
   return hit + bar + pop
 }
 

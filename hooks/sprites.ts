@@ -120,9 +120,13 @@ const levelBadge = (level: number, x: number, w: number, h: number, font: number
   `<rect x="${x}" y="1" width="${w}" height="${h}" rx="4" fill="${GOLD}" stroke="${INK}" stroke-width="1.5"/>` +
   `<text x="${x + w / 2}" y="${1 + h / 2}" dominant-baseline="central" text-anchor="middle" font-family="${FONT}" font-size="${font}" font-weight="800" fill="${INK}">Lv.${level}</text>`
 
-// hp: 머리 위 HP 이름표(한도), t: 장비 단계, level: 레벨, foe: 상대에게 남은 체력(0~1), job: 이달의 계열,
-// damage: 상대 머리 위에 뜨는 데미지 = 이번 응답에서 쓴 점수(register.tsx의 HP 점수). null이면 띄우지 않는다
-export const runSvg = (hp: Hp, t: number, level: number, foe: number, job: Job, damage: number | null) => {
+// 단계별로 한 대 칠 때 뜨는 데미지 (연출용. 실제로 쓴 양은 끝 알림의 점수)와, 네 번 칠 때마다 다르게 보이게 곱하는 흔들림
+const DAMAGE = [7, 15, 28, 46, 73, 120, 188, 290, 455, 999, 1500]
+const JITTER = [1, 0.86, 1.18, 0.93]
+const hits = (t: number) => JITTER.map(k => Math.max(1, Math.round(DAMAGE[Math.min(10, t)]! * k)))
+
+// hp: 머리 위 HP 이름표(한도), t: 장비 단계, level: 레벨, foe: 상대에게 남은 체력(0~1), job: 이달의 계열
+export const runSvg = (hp: Hp, t: number, level: number, foe: number, job: Job) => {
   const plate = plateHeight(hp, SMALL_PLATE)
   const top = Math.max(plate, 22) + 2
   const shift = top + job.smallHeadroom(t)
@@ -136,7 +140,7 @@ export const runSvg = (hp: Hp, t: number, level: number, foe: number, job: Job, 
       levelBadge(level, 120, 52, 20, 12) +
       `<g transform="translate(0 ${shift}) scale(4)">` +
       ground +
-      monster(t, foe, damage) +
+      monster(t, foe, hits(t)) +
       `<g>${approach(t, job)}<g transform="translate(-5 2)">${job.small(t, 'run')}</g></g>` +
       job.hit(t) +
       '</g></svg>',
