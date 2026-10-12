@@ -53,6 +53,31 @@ export type Stage = {
   hover?: number
   // 격자 위에 덧그리는 움직이는 부분 (꼬리·날개·불씨). 격자 좌표의 px/dots로 그린다
   extra?: (pose: Pose) => string
+  // 테두리 색 (없으면 검정). 채워진 점의 상하좌우 빈 점에 한 점 두께로 두른다 — V펫 도트처럼 또렷하게 읽힌다
+  outline?: string
+}
+
+// 테두리: 채워진 점에 상하좌우로 붙은 빈 점을 모아 한 점씩 그린다. 격자 밖(-1, w, h)으로도 나간다
+export const outlineOf = (rows: readonly string[], pal: Palette, color: string) => {
+  const filled = (c: number, r: number) => {
+    const ch = rows[r]?.[c]
+    return ch !== undefined && pal[ch] !== undefined
+  }
+  const h = rows.length
+  const w = gridWidth(rows)
+  let out = ''
+  for (let r = -1; r <= h; r++) {
+    let run = -1
+    for (let c = -1; c <= w + 1; c++) {
+      const edge = c <= w && !filled(c, r) && (filled(c - 1, r) || filled(c + 1, r) || filled(c, r - 1) || filled(c, r + 1))
+      if (edge && run < 0) run = c
+      if (!edge && run >= 0) {
+        out += px(run, r, c - run, 1, color)
+        run = -1
+      }
+    }
+  }
+  return out
 }
 
 // ── 움직임 ────────────────────────────────────────────────────────
@@ -105,18 +130,19 @@ const face = (e: Eyes, variant: BigVariant) =>
 
 // ── 디지몬 한 마리 ───────────────────────────────────────────────
 // 격자를 발이 y = 11칸, 가운데가 x = 14.5칸에 오게 놓는다. 전투(run)는 발을 번갈아 들며 뛰고, 쉴 때는 숨 쉰다
+// 테두리 한 점을 포함해 가운데와 발 위치를 맞춘다 (격자 (0, 0)은 테두리 안쪽)
 const origin = (s: Stage) => {
-  const w = gridWidth(s.rows)
-  const h = s.rows.length
-  return { x: at(14.5 - (w * DOT) / 2), y: at(11 - h * DOT - (s.hover ?? 0) * DOT), w, h }
+  const w = gridWidth(s.rows) + 2
+  const h = s.rows.length + 2
+  return { x: at(14.5 - (w * DOT) / 2 + DOT), y: at(11 - h * DOT + DOT - (s.hover ?? 0) * DOT), w, h }
 }
 
 export const figure = (s: Stage, pose: Pose, variant?: BigVariant) => {
   const run = pose === 'run'
   const o = origin(s)
-  const body = run
-    ? flipbook(STEP, dots(liftFeet(s.rows, 'left'), s.pal), dots(liftFeet(s.rows, 'right'), s.pal))
-    : dots(s.rows, s.pal)
+  const ink = s.outline ?? INK
+  const draw = (rows: readonly string[]) => outlineOf(rows, s.pal, ink) + dots(rows, s.pal)
+  const body = run ? flipbook(STEP, draw(liftFeet(s.rows, 'left')), draw(liftFeet(s.rows, 'right'))) : draw(s.rows)
   const bob = run
     ? `<animateTransform attributeName="transform" type="translate" values="0 0;0 -0.5" dur="${STEP}" calcMode="discrete" repeatCount="indefinite"/>`
     : `<animateTransform attributeName="transform" type="translate" values="0 0;0 -0.3" dur="${STAND_STEP}" calcMode="discrete" repeatCount="indefinite"/>`
@@ -134,7 +160,7 @@ export const figure = (s: Stage, pose: Pose, variant?: BigVariant) => {
 }
 
 // 격자 꼭대기의 y(칸). 머리 위 자리(headroom) 계산용
-const top = (s: Stage) => origin(s).y
+const top = (s: Stage) => origin(s).y - DOT
 
 // ── 문장(紋章) ────────────────────────────────────────────────────
 // 레벨 30부터 머리 왼쪽 위에 이달의 문장이 떠서 숨 쉬듯 빛난다
@@ -143,7 +169,7 @@ export const crestMark = (rows: readonly string[], pal: Palette, s: Stage) => {
   const w = gridWidth(rows)
   // 전투 그림은 x = 5칸 왼쪽이 잘리므로 그 안쪽에 둔다 (덩치 큰 디지몬은 머리 왼쪽 위에 겹친다)
   return (
-    `<g transform="translate(${at(Math.max(5.2, o.x - w * DOT - 0.5))} ${at(o.y + 0.5)})">` +
+    `<g transform="translate(${at(Math.max(5.2, o.x - w * DOT - 1))} ${at(o.y + 0.5)})">` +
     `<animateTransform attributeName="transform" type="translate" values="0 0;0 -0.4;0 0" dur="2s" repeatCount="indefinite" additive="sum"/>` +
     '<g><animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>' +
     dots(rows, pal) +
@@ -154,9 +180,10 @@ export const crestMark = (rows: readonly string[], pal: Palette, s: Stage) => {
 // 레벨 90~: 머리 위 후광과 반짝이. 100은 무지개
 const glory = (s: Stage, t: number, big: boolean) => {
   if (t < 9) return ''
+  // 후광은 머리 꼭대기에 살짝 걸치게 둔다 (덩치 큰 궁극체도 쉬는 그림 위로 잘리지 않게)
   const o = origin(s)
   const cx = 14.5
-  const cy = o.y - 1.2
+  const cy = top(s) + 0.6
   return big
     ? halo(cx, cy, (o.w * DOT) / 2.6, 0.7, 0.4, t) + sparkle(o.x - 1.5, o.y + 1, 1.2, GOLD, '0.3s') + sparkle(o.x + o.w * DOT + 1.5, o.y + 0.5, 1.2, GOLD, '1.1s')
     : halo(cx, cy, (o.w * DOT) / 2.6, 0.7, 0.4, t) + sparkle(o.x - 1, o.y + 1, 1.2, GOLD, '0.3s') + sparkle(o.x + o.w * DOT + 1, o.y, 1.2, GOLD, '1.1s')
@@ -223,8 +250,8 @@ export type Line = {
 }
 
 // 머리 위로 올라가는 만큼 위에 더 둘 자리(px). 전투 그림은 y = -2칸 위부터, 큰 그림은 (6 + 10y)px 위부터 잘린다
-const smallHeadroom = (s: Stage, t: number) => Math.max(0, Math.ceil((-2 - top(s) + (t >= 9 ? 2.4 : 0)) * 4))
-const bigHeadroom = (s: Stage, t: number) => Math.max(0, Math.ceil(-(6 + 10 * (top(s) - (t >= 9 ? 2.4 : 0)))))
+const smallHeadroom = (s: Stage, t: number) => Math.max(0, Math.ceil((-2 - top(s) + (t >= 9 ? 1 : 0)) * 4))
+const bigHeadroom = (s: Stage, t: number) => Math.max(0, Math.ceil(-(6 + 10 * (top(s) - (t >= 9 ? 1 : 0)))))
 
 export const makeLine = (line: Line): Job & { formName: (t: number) => string } => {
   const stageAt = (t: number) => line.stages[stageOf(t)]!
