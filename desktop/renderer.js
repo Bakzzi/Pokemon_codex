@@ -1,6 +1,6 @@
 'use strict';
 const $=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('ko-KR');
-let serial=0,current=null,switching=false,timers=[],animations=[],captureRaf=0,moveRaf=0,playingMove=null;
+let serial=0,current=null,switching=false,timers=[],animations=[],captureRaf=0,moveRaf=0,playingMove=null,speechTimer=0;
 for(const action of ['pin','compact','hide','close'])$(action).onclick=()=>window.buddy.action(action);
 for(const b of document.querySelectorAll('[data-panel]'))b.onclick=()=>window.buddy.action('panel',b.dataset.panel);
 function sprite(element,p){const img=$(element),src='assets/'+p.id+'.gif';if(img.getAttribute('src')!==src)img.src=src;img.alt=p.name;}
@@ -95,10 +95,20 @@ function renderFoe(s){
   [...stars.children].forEach((star,i)=>{const a=[[-27,-18],[0,-33],[27,-18],[8,9]][i];star.style.transform=`translate(${a[0]*spark}px,${a[1]*spark}px) scale(${1-.3*spark})`;});
 }
 function renderSpeech(s){
-  if(s.capture?.leadIn&&Date.now()<s.capture.at){$('speech').textContent=s.capture.leadIn.text;return;}
-  const f=s.capture&&CaptureAnimation.captureFrame(s.capture,Date.now()),recent=s.animation&&Date.now()-s.animation.at<5000;
-  $('speech').textContent=f&&(f.locked||s.animation?.kind==='capture')?f.text:recent?s.animation.text:s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.battle?'다음 작업과 함께 배틀을 이어가요':'오늘은 어떤 포켓몬을 만날까?';
-  $('speech').title=s.animation?.detail||$('speech').textContent;
+  clearTimeout(speechTimer);speechTimer=0;
+  const now=Date.now(),capture=s.capture,f=capture&&CaptureAnimation.captureFrame(capture,now);
+  let event=capture?.leadIn&&now<capture.at?capture.leadIn:s.animation,text='',speaker='scene',expires=0;
+  if(capture&&now>=capture.at&&(f.locked||s.animation?.kind==='capture'))text=f.text;
+  else if(event&&now>=event.at&&now-event.at<2400){
+    text=event.text;expires=event.at+2400;
+    if(event.kind==='attack')speaker=event.actor==='foe'?'foe':'hero';
+    else if(event.kind==='switch')speaker='hero';
+    else if(event.kind==='encounter')speaker='foe';
+  }else text=s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.battle?'다음 작업과 함께 배틀을 이어가요':'오늘은 어떤 포켓몬을 만날까?';
+  const bubble=$('speech');bubble.dataset.speaker=speaker;$('speech-text').textContent=text;
+  bubble.title=event?.detail?text+' · '+event.detail:text;
+  // Clear an expired action even when no new state arrives from an idle Codex session.
+  if(expires&&!(f?.locked))speechTimer=setTimeout(()=>{if(current)renderSpeech(current);},Math.max(1,expires-now+10));
 }
 function refreshScene(){
   if(captureRaf)cancelAnimationFrame(captureRaf);captureRaf=0;
@@ -114,8 +124,8 @@ window.buddy.onState(s=>{
   $('xp-bar').style.width=s.progress*100+'%';$('evolution').textContent=s.evolution.some(e=>e.ready)?'진화 가능 · 도감에서 확인':'';
   $('status').textContent=s.notice||(s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.phase==='working'?'Codex 작업과 함께 모험 중':s.workTokens>=250?'작업의 여운으로 모험을 이어가는 중':s.phase==='done'?'작업 끝! 모험 기록을 확인해 봐':'다음 코딩을 기다리는 중');
   $('mode-tag').textContent=s.demo?'DEMO':'LIVE';
-  $('connection-label').textContent=s.demo?'미리보기 · 경험치 별도':s.source.connected?'Codex 연결됨':'Codex 기다리는 중';
-  $('connection-label').parentElement.classList.toggle('live',s.source.connected&&!s.demo);$('connection-label').title=s.source.error||'로컬 작업 상태만 읽어요';
+  $('connection-label').textContent=s.demo?'미리보기':s.source.connected?'Codex 연결됨':'Codex 기다리는 중';
+  $('connection-label').parentElement.classList.toggle('live',s.source.connected&&!s.demo);$('connection-label').title=s.demo?'미리보기 · 경험치 별도':s.source.error||'로컬 작업 상태만 읽어요';
   s.limits.forEach((limit,i)=>{const prefix=i===0?'limit-a':'limit-b';$(prefix+'-value').textContent=limit.left===null?'미제공':limit.left+'%';$(prefix+'-bar').style.width=(limit.left??0)+'%';});
   if($('party').dataset.ids!==s.slots.map(p=>p.uid).join(',')){
     $('party').replaceChildren(...s.slots.map((p,i)=>{const b=document.createElement('button');b.dataset.slot=i;b.onclick=()=>window.buddy.action('select',Number(b.dataset.id));const img=document.createElement('img');img.alt='';b.append(img,document.createElement('small'));return b;}));$('party').dataset.ids=s.slots.map(p=>p.uid).join(',');

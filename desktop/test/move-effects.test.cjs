@@ -27,6 +27,8 @@ test('native protocol sends actual called move, target, multi-hit count and fail
   assert.equal(present([`|move|${a}|Tackle|${b}`,`|-immune|${b}`]).outcome,'immune');
   assert.equal(present([`|move|${a}|Tackle|${b}`,`|-activate|${b}|move: Protect`]).outcome,'protected');
   assert.equal(present([`|move|${b}|Harden|${b}`]).actor,'foe');
+  assert.equal(present([`|cant|${b}|slp`]).actor,'foe');
+  assert.equal(present([`|-mustrecharge|${a}`]).actor,'hero');
 });
 test('HUD exposes exact actual HP on both sides and full HP outside battle',()=>{
   const g=new Game({},now,{random:()=>.73});let s=g.snapshot(now);

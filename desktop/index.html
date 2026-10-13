@@ -8,16 +8,15 @@
 <main class="widget">
   <header class="toolbar">
     <div class="brand"><span class="pokeball"></span>POKÉMON <span>/</span> <b>CODEX</b></div>
-    <nav aria-label="위젯 조작">
+    <div class="toolbar-right"><div class="connection"><i></i><span id="connection-label">연결 준비 중</span></div><nav aria-label="위젯 조작">
       <button id="pin" title="항상 위에" aria-label="항상 위에" aria-pressed="true">⌖</button>
       <button id="compact" title="작게 보기" aria-label="작게 보기">▱</button>
       <button id="hide" title="트레이로 숨기기" aria-label="트레이로 숨기기">−</button>
       <button id="close" title="종료" aria-label="종료">×</button>
-    </nav>
+    </nav></div>
   </header>
   <section class="scene" aria-label="포켓몬 배틀">
-    <div class="connection"><i></i><span id="connection-label">연결 준비 중</span></div>
-    <div class="speech" id="speech" role="status">오늘도 함께 모험하자!</div>
+    <div class="speech" id="speech" data-speaker="scene" role="status"><span id="speech-text">오늘도 함께 모험하자!</span></div>
     <div class="ground hero-ground"></div><div class="ground foe-ground" id="foe-ground"></div>
     <div class="hero sprite" id="hero"><img id="hero-image" src="assets/25.gif" alt="피카츄" draggable="false"></div>
     <div class="foe sprite" id="foe"><img id="foe-image" src="assets/19.gif" alt="" draggable="false"></div>

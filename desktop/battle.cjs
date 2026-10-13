@@ -194,7 +194,10 @@ function sync(game,b,sim){
 function movePresentation(lines){
   // Called moves (Metronome, Sleep Talk, Mirror Move) show the move actually executed.
   const line=lines.findLast(l=>l.startsWith('|move|'));
-  if(!line)return {};
+  if(!line){
+    const stopped=lines.find(l=>/^\|(cant|-mustrecharge)\|p[12]/.test(l));
+    return stopped?{actor:stopped.split('|')[2].startsWith('p2')?'foe':'hero',moveTarget:'self'}:{};
+  }
   const parts=line.split('|'),m=dex.moves.get(parts[3]),actor=parts[2].startsWith('p2')?'foe':'hero';
   const actionLines=lines.slice(lines.lastIndexOf(line));
   const charging=actionLines.some(l=>l.startsWith('|-prepare|'));
