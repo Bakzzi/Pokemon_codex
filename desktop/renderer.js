@@ -128,8 +128,11 @@ function renderSpeech(s){
   clearTimeout(speechTimer);speechTimer=0;
   const now=Date.now(),capture=s.capture,f=capture&&CaptureAnimation.captureFrame(capture,now);
   let event=capture?.leadIn&&now<capture.at?capture.leadIn:s.animation,text='',speaker='scene',expires=0;
-  if(capture&&now>=capture.at&&(f.locked||s.animation?.kind==='capture'))text=f.text;
-  else if(event&&now>=event.at&&now-event.at<BattlePacing.duration(event)){
+  const actionActive=event&&now>=event.at&&now-event.at<BattlePacing.duration(event);
+  const waiting=s.phase!=='working'&&s.workTokens<250&&s.battle?.kind!=='trainer'&&!actionActive&&!f?.locked;
+  if(waiting)text='작업 대기중..';
+  else if(capture&&now>=capture.at&&(f.locked||s.animation?.kind==='capture'))text=f.text;
+  else if(actionActive){
     text=event.text;expires=event.at+BattlePacing.duration(event);
     if(event.kind==='attack'&&now-event.at>=BattlePacing.actionTiming(event).resultAt){
       const result=(event.detail||'').split(' · ').filter(line=>line&&!line.includes('기절')).slice(0,2).join(' · ');
@@ -147,8 +150,8 @@ function renderSpeech(s){
       if(causes.length){text=causes.map(c=>event[c.side].name+' · '+c.cause+' 피해!').join(' · ');speaker=causes.length===1?causes[0].side:'scene';}
     }
   }else text=s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.battle?'다음 작업과 함께 배틀을 이어가요':'오늘은 어떤 포켓몬을 만날까?';
-  const bubble=$('speech');bubble.dataset.speaker=speaker;$('speech-text').textContent=text;
-  bubble.title=event?.detail?text+' · '+event.detail:text;
+  const bubble=$('speech');bubble.dataset.speaker=speaker;bubble.classList.toggle('waiting',waiting);$('speech-text').textContent=text;
+  bubble.title=!waiting&&event?.detail?text+' · '+event.detail:text;
   // Clear an expired action even when no new state arrives from an idle Codex session.
   if(expires&&!(f?.locked))speechTimer=setTimeout(()=>{if(current)renderSpeech(current);},Math.max(1,expires-now+10));
 }

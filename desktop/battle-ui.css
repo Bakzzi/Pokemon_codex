@@ -9,6 +9,10 @@
 .speech[data-speaker=hero]{left:85px;max-width:152px}
 .speech[data-speaker=foe]{left:294px;max-width:152px}
 .speech[data-speaker=hero]:after,.speech[data-speaker=foe]:after{content:"";position:absolute;bottom:-4px;left:calc(50% - 4px);width:6px;height:6px;background:#f2f1de;border-right:1px solid #d1d8bb;border-bottom:1px solid #d1d8bb;transform:rotate(45deg)}
+.waiting-ball{display:none;flex:none}
+.speech.waiting,.compact .speech.waiting{display:flex;align-items:center;gap:7px}
+.speech.waiting .waiting-ball{display:inline-block;animation:waiting-ball-turn 2s ease-in-out infinite}
+@keyframes waiting-ball-turn{0%,50%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 .scene{height:185px}
 .compact .scene{height:182px}
 #ball-fx{left:73px;top:58px;width:24px;height:24px;box-shadow:0 2px 5px #122217aa;transform-origin:50% 50%}
@@ -34,4 +38,4 @@
 .hp-row .health i[data-health=mid]{background:#d9b349}
 .hp-row .health i[data-health=low]{background:#d76855}
 .hp-number{text-align:right;font:10px/11px Consolas,monospace;margin-top:2px}
-@media(prefers-reduced-motion:reduce){.health i{transition:none}}
+@media(prefers-reduced-motion:reduce){.health i{transition:none}.speech.waiting .waiting-ball{animation:none}}
