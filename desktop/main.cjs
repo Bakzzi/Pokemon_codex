@@ -48,7 +48,7 @@ async function start(){
     game.animate('encounter',{id:19,text:'야생 꼬렛 Lv.5 등장!'});
   }else if(demo)game.data.workTokens=25000;
   else reader=new CodexReader(path.join(process.env.CODEX_HOME||path.join(os.homedir(),'.codex'),'sessions'),game);
-  const area=screen.getPrimaryDisplay().workArea,width=400,height=settings.compact?296:484;
+  const area=screen.getPrimaryDisplay().workArea,width=400,height=settings.compact?276:484;
   let x=settings.x??area.x+area.width-width-28,y=settings.y??area.y+area.height-height-32;
   const display=screen.getDisplayMatching({x,y,width,height}).workArea;
   x=Math.max(display.x,Math.min(x,display.x+display.width-width));y=Math.max(display.y,Math.min(y,display.y+display.height-height));
@@ -67,7 +67,7 @@ async function start(){
       if(action==='hide')win.hide();
       if(action==='pin'){settings.pinned=settings.pinned===false;win.setAlwaysOnTop(settings.pinned,'floating');}
       if(action==='compact'){
-        settings.compact=!settings.compact;win.setResizable(true);win.setSize(400,settings.compact?296:484);win.setResizable(false);
+        settings.compact=!settings.compact;win.setResizable(true);win.setSize(400,settings.compact?276:484);win.setResizable(false);
         const b=win.getBounds(),a=screen.getDisplayMatching(b).workArea;
         win.setPosition(Math.max(a.x,Math.min(b.x,a.x+a.width-b.width)),Math.max(a.y,Math.min(b.y,a.y+a.height-b.height)));
       }
@@ -253,7 +253,7 @@ async function smokeTest(){
   })()`);
   fs.writeFileSync(path.join(dir,'compact.png'),(await win.webContents.capturePage()).toPNG());
   const controls={switched,assigned,challenge,preview:preview.name&&preview.image&&!preview.overflow,boarded,eggVisible,hatched,summary,detail,acknowledged,earnedGymLocked,allMoves,nativeBattle,autoRotation,autoSprite,faintRotation,headerLayout,actorMessages,actionMessageExpires,emptyBadgeCase,earnedBadgeCase,fullBadgeCase,moveCatalog:moveCatalog.count===354&&!moveCatalog.empty.length&&moveCatalog.distinctFire===3,movePlayback,battleHud,captureThreeShakes,captureSparkle,caughtBallOnly,captureBreakouts,compact:settings.compact===true,height:win.getSize()[1],pin:settings.pinned===false};
-  const ok=inspection.hero==='피카츄'&&inspection.images&&!inspection.overflow&&inspection.slots===4&&inspection.facing.startsWith('matrix(-1')&&collection.count===151&&collection.caught===4&&collection.unknown.includes('???')&&collection.silhouette&&collection.noPichu&&!collection.overflow&&Object.values(controls).every(Boolean)&&controls.height===296&&!errors.length;
+  const ok=inspection.hero==='피카츄'&&inspection.images&&!inspection.overflow&&inspection.slots===4&&inspection.facing.startsWith('matrix(-1')&&collection.count===151&&collection.caught===4&&collection.unknown.includes('???')&&collection.silhouette&&collection.noPichu&&!collection.overflow&&Object.values(controls).every(Boolean)&&controls.height===276&&!errors.length;
   fs.writeFileSync(path.join(dir,'result.json'),JSON.stringify({ok,inspection,collection,controls,errors},null,2));console.log(JSON.stringify({smoke:ok,inspection,collection,controls,errors}));app.exit(ok?0:1);
 }
 app.on('before-quit',()=>{clearInterval(timer);try{save();}catch{}tray?.destroy();});
