@@ -37,7 +37,7 @@ test('capture playback blocks battles and manual changes, survives reload, and p
   assert.deepEqual(g.snapshot(now+1000).capture,c);assert.equal(Object.keys(g.data.owned).length,count);
   g.data.workTokens=0;assert.equal(g.tick(now+t.duration+1),false);assert.equal(g.data.battle,null);
   assert.ok(g.select(7,now+t.duration+1));assert.deepEqual(g.snapshot(now+t.duration+1).capture,c);
-  g.data.workTokens=250;assert.ok(g.tick(now+t.duration+2000));assert.equal(g.snapshot().capture,null);
+  g.data.workTokens=250;assert.ok(g.tick(g.data.switchUntil));assert.equal(g.snapshot().capture,null);
   assert.ok(g.data.battle);assert.equal(Object.keys(g.data.owned).length,count);
 });
 test('a failed throw waits for the breakout before resuming the same battle and capture threshold',()=>{

@@ -28,7 +28,7 @@ function predict(game,parents=[]){
 }
 function start(game,parents,now=Date.now()){
   parents=Array.isArray(parents)?parents.map(Number):[];
-  if(game.data.battle?.kind==='trainer'||now<game.data.switchUntil||game.data.egg||(game.data.daycare&&!game.data.daycare.produced))return false;
+  if(game.data.battle?.kind==='trainer'||game.data.pendingBattle||now<game.data.switchUntil||game.data.egg||(game.data.daycare&&!game.data.daycare.produced))return false;
   const preview=predict(game,parents);if(!preview.compatible)return false;
   const available=Object.values(game.data.owned).filter(p=>!parents.includes(p.uid));
   if(!available.length)return false;

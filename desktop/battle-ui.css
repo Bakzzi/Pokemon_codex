@@ -11,6 +11,12 @@
 .speech[data-speaker=hero]:after,.speech[data-speaker=foe]:after{content:"";position:absolute;bottom:-4px;left:calc(50% - 4px);width:6px;height:6px;background:#f2f1de;border-right:1px solid #d1d8bb;border-bottom:1px solid #d1d8bb;transform:rotate(45deg)}
 .scene{height:185px}
 .compact .scene{height:182px}
+#ball-fx{left:73px;top:58px;width:24px;height:24px;box-shadow:0 2px 5px #122217aa;transform-origin:50% 50%}
+#ball-fx:after{width:8px;height:8px;left:6px;top:6px}
+#ball-fx.opening{box-shadow:0 0 12px 6px #fff5b4}
+#switch-flash{position:absolute;left:49px;top:34px;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle,#fffbd9 0 12%,#ffafcbab 24%,transparent 68%);z-index:7;pointer-events:none}
+#switch-flash[data-mode=release]{background:radial-gradient(circle,#fff 0 18%,#fff5bdcc 30%,transparent 68%)}
+#switch-beam{position:absolute;left:83px;top:69px;width:4px;height:29px;background:#ffadc2;box-shadow:0 0 10px 4px #ff4b8699;z-index:7;pointer-events:none}
 .sprite{bottom:45px}
 .ground{bottom:50px}
 #capture-fx{bottom:50px}
@@ -24,7 +30,7 @@
 .hp-row{display:flex;gap:4px;align-items:center;margin-top:3px}
 .hp-row>b{font-size:8px;color:#8c642e;letter-spacing:.5px}
 .hp-row .health{position:static;width:auto;flex:1;height:6px;border:1px solid #58634b;background:#37462f;border-radius:4px;padding:1px;overflow:hidden}
-.hp-row .health i{height:2px;border-radius:2px;background:#63b46d}
+.hp-row .health i{height:2px;border-radius:2px;background:#63b46d;transition:none}
 .hp-row .health i[data-health=mid]{background:#d9b349}
 .hp-row .health i[data-health=low]{background:#d76855}
 .hp-number{text-align:right;font:10px/11px Consolas,monospace;margin-top:2px}

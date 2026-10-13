@@ -19,7 +19,7 @@ function statsAt(id,level){
 }
 function view(id){const p=species.get(id);return {id:p.id,name:p.name,types:p.types.map(t=>data.types.find(x=>x.id===t).name),accent:colors[p.types[0]]||colors[1]};}
 // Game-specific encounter balance, distinct from original area-specific encounter slots.
-const balance={tokensPerAction:250,actionMs:1400,legendaryPoolChance:0.001,mythicalPoolChance:0.0001,rarePoolChance:0.08};
+const balance={tokensPerAction:250,legendaryPoolChance:0.001,mythicalPoolChance:0.0001,rarePoolChance:0.08};
 function rarity(p){if(p.mythical)return 'mythical';if(p.legendary)return 'legendary';if(p.catchRate<=75||Object.values(p.stats).reduce((a,b)=>a+b,0)>=480)return 'rare';return p.catchRate>=190?'common':'uncommon';}
 function wildMinimum(p){return Math.max(p.minWildLevel||2,p.legendary?50:p.mythical?30:2);}
 function pickWild(maxGeneration,random=Math.random,partnerLevel=100){

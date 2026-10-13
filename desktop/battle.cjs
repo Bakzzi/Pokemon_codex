@@ -222,7 +222,13 @@ function step(game,b){
   }else sim.turnLoop();
   const lines=sim.log.slice(start),presentation=movePresentation(lines),actor=presentation.actor||'hero',changed=heroBefore!==sim.p1.active[0].name;
   const messages=protocol(sim,lines);sync(game,b,sim);persist(b,sim);
-  return {...presentation,actor,id:actor==='hero'?b.party[game.data.activeId].id:b.foe.id,damage:Math.max(0,actor==='hero'?foeBefore-sim.p2.active[0].hp:heroHpBefore-sim.p1.active[0].hp),lines:messages,switched:changed,ended:sim.ended};
+  const damageCauses=lines.filter(line=>line.startsWith('|-damage|')).flatMap(line=>{
+    const parts=line.split('|'),source=parts.find(p=>p.startsWith('[from] '));
+    if(!source)return [];
+    const raw=source.slice(7),cause=raw==='recoil'?'반동':raw==='confusion'?'혼란 자해':effectName(raw);
+    return [{side:parts[2].startsWith('p2')?'foe':'hero',cause}];
+  });
+  return {...presentation,actor,id:actor==='hero'?b.party[game.data.activeId].id:b.foe.id,damage:Math.max(0,actor==='hero'?foeBefore-sim.p2.active[0].hp:heroHpBefore-sim.p1.active[0].hp),damageCauses,lines:messages,switched:changed,ended:sim.ended};
 }
 function canSwitch(game,b,uid){
   const sim=cache.get(b)||(b.sim?engine(game,b):null);

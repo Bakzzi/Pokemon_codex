@@ -1,30 +1,59 @@
 'use strict';
 const $=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('ko-KR');
-let serial=0,current=null,switching=false,timers=[],animations=[],captureRaf=0,moveRaf=0,playingMove=null,speechTimer=0;
+let serial=0,current=null,switching=false,captureRaf=0,moveRaf=0,faintRaf=0,switchRaf=0,playingMove=null,playingSwitch=null,speechTimer=0;
 for(const action of ['pin','compact','hide','close'])$(action).onclick=()=>window.buddy.action(action);
 for(const b of document.querySelectorAll('[data-panel]'))b.onclick=()=>window.buddy.action('panel',b.dataset.panel);
 function sprite(element,p){const img=$(element),src='assets/'+p.id+'.gif';if(img.getAttribute('src')!==src)img.src=src;img.alt=p.name;}
-function later(fn,ms){timers.push(setTimeout(fn,ms));}
-function animate(element,frames,options){const a=element.animate(frames,{fill:'none',...options});animations.push(a);return a;}
 function clearMove(){
   if(moveRaf)cancelAnimationFrame(moveRaf);moveRaf=0;playingMove=null;
   const canvas=$('attack-fx');canvas.hidden=true;canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
-  for(const id of ['hero','foe']){$(id).style.transform='';$(id).style.opacity='';}
+  for(const id of ['hero','foe']){$(id).style.transform='';$(id).style.opacity='';$(id).style.filter='';}
 }
-function clearFx(){timers.forEach(clearTimeout);timers=[];animations.forEach(a=>a.cancel());animations=[];clearMove();switching=false;$('ball-fx').style.display='none';$('hero-image').style.opacity='1';$('foe-image').style.opacity='1';}
+function clearFx(){
+  if(faintRaf)cancelAnimationFrame(faintRaf);if(switchRaf)cancelAnimationFrame(switchRaf);faintRaf=0;switchRaf=0;
+  clearMove();switching=false;playingSwitch=null;$('ball-fx').style.display='none';$('switch-flash').hidden=true;$('switch-beam').hidden=true;
+  for(const id of ['hero-image','foe-image']){$(id).style.opacity='1';$(id).style.transform='';$(id).style.filter='';}
+}
 function playMove(event){
-  if(!event.moveId)return;playingMove=event;
+  playingMove=event;
+  const timing=BattlePacing.actionTiming(event),effect={...event,at:event.at+timing.announceMs};
   const canvas=$('attack-fx'),ctx=canvas.getContext('2d');
   canvas.hidden=false;canvas.dataset.move=String(event.moveId);canvas.dataset.family=MoveEffects.profileFor(event.moveId).family;
   const draw=()=>{
     if(playingMove!==event)return;
-    const frame=MoveEffects.frameFor(event,Date.now());
-    if(!frame.active){clearMove();if(current){renderHealth('hero',current.hero);renderFoe(current);}return;}
-    MoveEffects.drawFrame(ctx,event,frame);canvas.dataset.phase=frame.phase;canvas.dataset.outcome=frame.outcome;
+    const now=Date.now(),frame=MoveEffects.frameFor(effect,now);
+    if(now>=event.at+BattlePacing.duration(event)){clearMove();if(current){renderHeroHealth(current);renderFoe(current);renderSpeech(current);}return;}
+    canvas.hidden=!event.moveId||!frame.active;
+    MoveEffects.drawFrame(ctx,effect,frame);canvas.dataset.phase=now<effect.at?'announce':now>=event.at+timing.resultAt?'result':frame.phase;canvas.dataset.outcome=frame.outcome;
     for(const [id,m] of [[event.actor==='foe'?'foe':'hero',frame.actor],[event.actor==='foe'?'hero':'foe',frame.target]]){
-      $(id).style.transform=`translate(${m.x}px,${m.y}px) rotate(${m.rotate}deg) scale(${m.scale})`;$(id).style.opacity=String(m.opacity);
+      const hit=BattlePacing.damageReaction(event,id,now);
+      $(id).style.transform=`translate(${m.x+hit.x}px,${m.y}px) rotate(${m.rotate}deg) scale(${m.scale})`;$(id).style.opacity=String(m.opacity*hit.opacity);
+      $(id).style.filter=hit.active?'brightness(2)':'';
     }
-    renderHeroHealth(current);renderFoe(current);moveRaf=requestAnimationFrame(draw);
+    renderHeroHealth(current);renderFoe(current);renderPartyStatus(current);renderSpeech(current);moveRaf=requestAnimationFrame(draw);
+  };draw();
+}
+function playFaint(event){
+  const draw=()=>{
+    const age=Date.now()-event.at,t=Math.max(0,Math.min(1,(age-400)/700));
+    for(const side of event.sides||[]){$(side).style.transform=`translateY(${(side==='hero'?18:38)*t}px) scaleY(${1-.3*t})`;$(side).style.opacity=String(1-(side==='hero'?.55:1)*t);}
+    if(age<BattlePacing.duration(event))faintRaf=requestAnimationFrame(draw);else faintRaf=0;
+  };draw();
+}
+function playSwitch(event){
+  switching=true;playingSwitch=event;
+  const draw=()=>{
+    if(playingSwitch!==event)return;
+    const f=BattlePacing.switchFrame(event,Date.now()),ball=$('ball-fx'),hero=$('hero-image'),flash=$('switch-flash');
+    if(f.done){clearFx();sprite('hero-image',current.hero);renderHeroHealth(current);renderSpeech(current);return;}
+    sprite('hero-image',{id:f.incoming?event.to:event.from,name:f.incoming?event.toName:event.fromName});
+    hero.style.transform=`translateY(${f.heroY}px) scaleX(-1) scale(${f.scale})`;hero.style.opacity=String(f.opacity);
+    hero.style.filter=f.phase==='absorb'?'brightness(2.8) sepia(1) saturate(5) hue-rotate(290deg)':f.phase==='release'?`brightness(${1+2*f.glow})`:'';
+    ball.style.display=f.ballVisible?'block':'none';ball.dataset.phase=f.phase;ball.style.opacity=String(f.ballOpacity);
+    ball.style.transform=`translate(${f.x}px,${f.y}px) rotate(${f.angle}deg)`;ball.classList.toggle('opening',f.phase==='open'||f.phase==='release');
+    flash.hidden=f.glow<=0;flash.dataset.mode=f.incoming?'release':'recall';flash.style.opacity=String(f.glow);flash.style.transform=`scale(${.5+f.glow})`;
+    $('switch-beam').hidden=f.phase!=='absorb';$('switch-beam').style.opacity=String(f.glow);
+    renderHeroHealth(current);renderSpeech(current);switchRaf=requestAnimationFrame(draw);
   };draw();
 }
 function renderHealth(side,p){
@@ -35,24 +64,25 @@ function renderHealth(side,p){
   $(side+'-hp-number').textContent=Number.isFinite(p.maxHp)?`${p.currentHp ?? Math.ceil(p.hp*p.maxHp)} / ${p.maxHp}`:'';
 }
 function moveHealth(side,p){
-  return playingMove?.[side+'Before']&&MoveEffects.frameFor(playingMove,Date.now()).u<.58?{...p,...playingMove[side+'Before']}:p;
+  return playingMove?BattlePacing.healthAt(playingMove,side,Date.now(),p):p;
 }
 function renderHeroHealth(s){
+  if(playingSwitch){
+    const f=BattlePacing.switchFrame(playingSwitch,Date.now()),p=f.incoming?playingSwitch.toPokemon||s.hero:playingSwitch.fromPokemon||{...s.hero,id:playingSwitch.from,name:playingSwitch.fromName};
+    $('hero-hud').hidden=f.opacity===0;renderHealth('hero',p);return;
+  }
+  $('hero-hud').hidden=false;
   const p=playingMove?.hero?.id===s.hero.id?playingMove.hero:s.hero;renderHealth('hero',moveHealth('hero',p));
 }
 function eventFx(e){
   if(!e||e.serial===serial)return;serial=e.serial;
-  clearFx();if(Date.now()-e.at>2200)return;
-  const ball=$('ball-fx'),hero=$('hero-image'),foe=$('foe-image');
-  if(e.kind==='switch'){
-    switching=true;sprite('hero-image',{id:e.from,name:''});ball.style.display='block';
-    animate(ball,[{transform:'translate(-65px,-40px) rotate(0deg)',opacity:0},{transform:'translate(-25px,-70px) rotate(180deg)',opacity:1,offset:.45},{transform:'translate(8px,0) rotate(360deg)',opacity:1}],{duration:280});
-    later(()=>animate(hero,[{transform:'scaleX(-1) scale(1)',filter:'brightness(2)'},{transform:'scaleX(-1) scale(0)',opacity:0}],{duration:240,fill:'forwards'}),230);
-    later(()=>animate(ball,[{transform:'translate(8px,0)',opacity:1},{transform:'translate(-65px,-20px) rotate(-300deg)',opacity:0}],{duration:200}),470);
-    later(()=>{hero.style.opacity='0';sprite('hero-image',current.hero);animate(ball,[{transform:'translate(-65px,-30px)',opacity:0},{transform:'translate(-15px,-85px) rotate(200deg)',opacity:1,offset:.45},{transform:'translate(8px,0) rotate(400deg)',opacity:1}],{duration:300});},670);
-    later(()=>{ball.style.display='none';hero.style.opacity='1';animate(hero,[{transform:'scaleX(-1) scale(.1)',filter:'brightness(3)',opacity:0},{transform:'scaleX(-1) scale(1.08)',filter:'brightness(1.7)',opacity:1,offset:.7},{transform:'scaleX(-1) scale(1)',filter:'none',opacity:1}],{duration:280,fill:'forwards'});},980);
-    later(()=>{clearFx();sprite('hero-image',current.hero);},1290);
-  }else if(e.kind==='attack'&&e.moveId)playMove(e);
+  clearFx();if(Date.now()-e.at>BattlePacing.duration(e)){
+    if(e.kind==='faint')playFaint(e);
+    return;
+  }
+  if(e.kind==='switch')playSwitch(e);
+  else if(e.kind==='attack')playMove(e);
+  else if(e.kind==='faint')playFaint(e);
   else if(e.kind==='capture'&&e.leadIn&&Date.now()<e.at)playMove(e.leadIn);
 }
 function renderFoe(s){
@@ -99,11 +129,23 @@ function renderSpeech(s){
   const now=Date.now(),capture=s.capture,f=capture&&CaptureAnimation.captureFrame(capture,now);
   let event=capture?.leadIn&&now<capture.at?capture.leadIn:s.animation,text='',speaker='scene',expires=0;
   if(capture&&now>=capture.at&&(f.locked||s.animation?.kind==='capture'))text=f.text;
-  else if(event&&now>=event.at&&now-event.at<2400){
-    text=event.text;expires=event.at+2400;
+  else if(event&&now>=event.at&&now-event.at<BattlePacing.duration(event)){
+    text=event.text;expires=event.at+BattlePacing.duration(event);
+    if(event.kind==='attack'&&now-event.at>=BattlePacing.actionTiming(event).resultAt){
+      const result=(event.detail||'').split(' · ').filter(line=>line&&!line.includes('기절')).slice(0,2).join(' · ');
+      if(result)text=result;
+    }
     if(event.kind==='attack')speaker=event.actor==='foe'?'foe':'hero';
-    else if(event.kind==='switch')speaker='hero';
+    else if(event.kind==='switch'){
+      speaker='hero';
+      if(now-event.at>=650||!event.reason){const incoming=BattlePacing.switchFrame(event,now).incoming;text=incoming?event.toName+', 너로 정했다!':event.fromName+(event.reason==='faint'?', 수고했어!':', 돌아와!');}
+    }
     else if(event.kind==='encounter')speaker='foe';
+    else if(event.kind==='faint'&&event.sides?.length===1)speaker=event.sides[0];
+    if(event.kind==='attack'&&now-event.at>=BattlePacing.actionTiming(event).healthAt){
+      const causes=(event.damageCauses||[]).filter(c=>(event[c.side+'Before']?.currentHp||0)>(event[c.side]?.currentHp??Infinity));
+      if(causes.length){text=causes.map(c=>event[c.side].name+' · '+c.cause+' 피해!').join(' · ');speaker=causes.length===1?causes[0].side:'scene';}
+    }
   }else text=s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.battle?'다음 작업과 함께 배틀을 이어가요':'오늘은 어떤 포켓몬을 만날까?';
   const bubble=$('speech');bubble.dataset.speaker=speaker;$('speech-text').textContent=text;
   bubble.title=event?.detail?text+' · '+event.detail:text;
@@ -112,8 +154,17 @@ function renderSpeech(s){
 }
 function refreshScene(){
   if(captureRaf)cancelAnimationFrame(captureRaf);captureRaf=0;
-  renderFoe(current);renderSpeech(current);
+  renderHeroHealth(current);renderFoe(current);renderSpeech(current);
   if(current.capture&&CaptureAnimation.captureFrame(current.capture,Date.now()).locked)captureRaf=requestAnimationFrame(refreshScene);
+}
+function renderPartyStatus(s){
+  s.slots.forEach((p,i)=>{
+    const b=$('party').children[i];if(!b)return;
+    const fainted=p.fainted&&!(p.selected&&playingMove?.heroBefore&&moveHealth('hero',playingMove.hero||s.hero).currentHp>0);
+    b.dataset.id=p.uid;b.disabled=p.boarded||fainted;b.title=p.name+' Lv.'+p.level+(p.boarded?' · 키우미집':fainted?' · 기절':' · 클릭하여 출전');
+    b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed',String(p.selected));b.classList.toggle('fainted',fainted);
+    const img=b.firstChild;if(img.getAttribute('src')!=='assets/'+p.id+'.gif')img.src='assets/'+p.id+'.gif';b.lastChild.textContent=p.boarded?'맡김':fainted?'기절':'Lv.'+p.level;
+  });
 }
 window.buddy.onState(s=>{
   current=s;document.body.classList.toggle('compact',s.compact);document.documentElement.style.setProperty('--accent',s.accent);
@@ -130,7 +181,7 @@ window.buddy.onState(s=>{
   if($('party').dataset.ids!==s.slots.map(p=>p.uid).join(',')){
     $('party').replaceChildren(...s.slots.map((p,i)=>{const b=document.createElement('button');b.dataset.slot=i;b.onclick=()=>window.buddy.action('select',Number(b.dataset.id));const img=document.createElement('img');img.alt='';b.append(img,document.createElement('small'));return b;}));$('party').dataset.ids=s.slots.map(p=>p.uid).join(',');
   }
-  s.slots.forEach((p,i)=>{const b=$('party').children[i];b.dataset.id=p.uid;b.disabled=p.boarded||p.fainted;b.title=p.name+' Lv.'+p.level+(p.boarded?' · 키우미집':p.fainted?' · 기절':' · 클릭하여 출전');b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed',String(p.selected));b.classList.toggle('fainted',p.fainted);const img=b.firstChild;if(img.getAttribute('src')!=='assets/'+p.id+'.gif')img.src='assets/'+p.id+'.gif';b.lastChild.textContent=p.boarded?'맡김':p.fainted?'기절':'Lv.'+p.level;});
+  renderPartyStatus(s);
   $('caught-count').textContent=s.caughtCount+' / '+(s.generation===1?151:251);$('badge-count').textContent=s.badges.length+' / 8';
   eventFx(s.animation);refreshScene();
 });

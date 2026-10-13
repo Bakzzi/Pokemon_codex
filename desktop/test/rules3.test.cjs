@@ -16,9 +16,9 @@ function round(sim,a='move 1',b='move 1'){
   sim.makeChoices(a,b);let n=0;while(!sim.requestState&&!sim.ended){sim.turnLoop();assert.ok(++n<20);}
 }
 test('earned gym badges block replay at the API, while losses may retry',()=>{
-  const g=new Game({},now);assert.ok(g.challenge(0,now));g.endChallenge(false,now);assert.ok(g.challenge(0,now));
+  const g=new Game({},now);assert.ok(g.challenge(0,now));g.endChallenge(false,now);assert.ok(g.challenge(0,g.data.switchUntil));
   while(g.data.battle?.kind==='trainer')g.defeatOpponent(now);
-  const xp=g.data.owned[g.data.activeId].xp;assert.equal(g.challenge(0,now),false);assert.equal(g.data.owned[g.data.activeId].xp,xp);assert.ok(g.challenge(1,now));
+  const xp=g.data.owned[g.data.activeId].xp;assert.equal(g.challenge(0,g.data.switchUntil),false);assert.equal(g.data.owned[g.data.activeId].xp,xp);assert.ok(g.challenge(1,g.data.switchUntil));
 });
 test('wild evolution floors propagate through level, trade and stone chains',()=>{
   assert.equal(species.get(5).minWildLevel,16);assert.equal(species.get(6).minWildLevel,36);
@@ -70,7 +70,7 @@ test('weather, screens and end-of-round poison use persistent native battle effe
 test('ten fractional capture boundaries survive real engine damage and a midbattle reload',()=>{
   const f=fixture(3,150,[33],[150],100);let g=f.g;delete g.data.caught[150];g.random=()=>.999999;g.data.workTokens=100000;
   let last=0,reloaded=false,steps=0;const boundaries=[];
-  while(g.data.battle&&steps<100){g.tick(now+(++steps)*2000);const b=g.data.battle;if(b&&b.captureAttempts>last){last=b.captureAttempts;boundaries.push(Math.round(b.foe.hp/b.foe.maxHp*100));}
+  while(g.data.battle&&steps<200){g.tick(now+(++steps)*2000);const b=g.data.battle;if(b&&b.captureAttempts>last){last=b.captureAttempts;boundaries.push(Math.round(b.foe.hp/b.foe.maxHp*100));}
     if(last===5&&!reloaded){g=new Game(g.data,now+steps*2000,{random:()=>.999999});reloaded=true;}}
   assert.deepEqual(boundaries,[10,9,8,7,6,5,4,3,2,1]);assert.equal(g.data.battle,null);assert.ok(!g.data.caught[150]);
 });
@@ -82,7 +82,7 @@ test('native trainer simulation awards a badge without capturing, then refuses r
 test('saved native queue, HP, PP and statuses resume without repeating the first action',()=>{
   const f=fixture(143,113,[92,33],[150],30),g=f.g;g.data.workTokens=50000;g.tick(now);
   assert.ok(g.data.battle.sim);const a=new Game(g.data,now+1,{random:()=>.73}),b=new Game(g.data,now+1,{random:()=>.73});
-  for(let i=1;i<=6;i++){a.tick(now+i*2000);b.tick(now+i*2000);}
+  for(let i=1;i<=6;i++){const at=Math.max(a.nextTick,a.data.switchUntil);a.tick(at);b.tick(at);}
   assert.deepEqual(a.data.battle?.foe,b.data.battle?.foe);assert.deepEqual(a.data.battle?.party,b.data.battle?.party);
   assert.equal(a.data.workTokens,g.data.workTokens-1500);
 });

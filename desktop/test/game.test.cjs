@@ -41,7 +41,7 @@ test('XP belongs only to the individual currently battling, including same-speci
 test('wild battles require observed work and spend exactly one action credit per step',()=>{
   const g=new Game({},now,{random:rng(1)});assert.equal(g.tick(now),false);
   g.data.workTokens=500;assert.equal(g.tick(now),true);assert.equal(g.data.workTokens,250);
-  assert.equal(g.tick(now+100),false);assert.equal(g.tick(now+2000),true);assert.equal(g.data.workTokens,0);
+  assert.equal(g.tick(now+100),false);assert.equal(g.tick(g.data.switchUntil),true);assert.equal(g.data.workTokens,0);
 });
 test('large hits stop at each 10% through 1% threshold, exactly ten balls, no replay after restart',()=>{
   let g=new Game({},now,{random:()=>.999999});wild(g,150,50);
@@ -92,10 +92,10 @@ test('gym order, eight badges, Elite Four and actual champion victory are the on
   const g=new Game({},now);for(let id=1;id<=151;id++)g.data.caught[id]=now;
   assert.equal(g.maxGeneration(),1);assert.equal(g.challenge(1,now),false);assert.equal(g.challenge(8,now),false);
   for(let i=0;i<8;i++){
-    assert.ok(g.challenge(i,now));while(g.data.battle?.kind==='trainer')g.defeatOpponent(now);
+    assert.ok(g.challenge(i,Math.max(now,g.data.switchUntil)));while(g.data.battle?.kind==='trainer')g.defeatOpponent(g.data.switchUntil);
     assert.equal(g.data.badges.length,i+1);assert.equal(g.maxGeneration(),1);
   }
-  assert.ok(g.challenge(8,now));let count=0;
+  assert.ok(g.challenge(8,g.data.switchUntil));let count=0;
   while(g.data.battle?.kind==='trainer'){
     if(g.data.battle.bossIndex<12||g.data.battle.foeIndex<5)assert.equal(g.maxGeneration(),1);
     g.defeatOpponent(now);assert.ok(++count<40);

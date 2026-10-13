@@ -4,8 +4,9 @@ const {Game}=require('../game.cjs'),battle=require('../battle.cjs');
 const {data,statsAt}=require('../pokemon.cjs');
 const {profiles,profileFor,frameFor}=require('../move-effects.js');
 const {captureTiming}=require('../capture-animation.js');
+const pacing=require('../battle-pacing.js');
 const now=Date.parse('2026-10-13T09:00:00Z');
-test('every stored technique has an explicit visual, within the battle action interval',()=>{
+test('every stored technique has an explicit visual, with time left for HP and result reading',()=>{
   for(const m of data.moves){assert.ok(profiles[m.id],m.name);assert.ok(profiles[m.id].duration<=1400,m.name);}
   for(const ids of [[52,53,126],[55,57,145],[33,10,45,106]])assert.equal(new Set(ids.map(id=>profileFor(id).family)).size,ids.length);
 });
@@ -41,7 +42,7 @@ test('HUD exposes exact actual HP on both sides and full HP outside battle',()=>
 test('a native battle action reaches the widget with move identity and the original defender',()=>{
   const g=new Game({},now,{random:()=>.73});g.data.owned[25].moves=[84];g.newWild(now);
   g.data.battle.foe=battle.combatant(143,5,[150]);g.data.caught[143]=now;g.data.workTokens=1000;g.nextTick=0;
-  g.tick(now);const a=g.snapshot(now).animation;
+  g.tick(g.data.switchUntil);const a=g.snapshot(now).animation;
   assert.equal(a.moveId,84);assert.equal(a.moveTarget,'opponent');assert.equal(a.outcome,'success');assert.equal(a.foe.id,143);assert.ok(a.damage>0);
   assert.equal(a.foeBefore.currentHp,a.foe.maxHp);assert.ok(a.foe.currentHp<a.foeBefore.currentHp);assert.equal(a.hero.id,25);
 });
@@ -49,7 +50,7 @@ test('capture waits for the triggering technique before the throw, including a r
   const g=new Game({},now,{random:()=>0});g.newWild(now);g.data.battle.foe=battle.combatant(19,5);g.damageFoe(9999);
   g.animate('attack',{moveId:55,move:'물대포',damage:10,actor:'hero',foe:g.snapshot(now).foe},now);
   g.capture(now);const c=g.snapshot(now).capture;
-  assert.equal(c.at,now+profileFor(55).duration);assert.equal(c.leadIn.moveId,55);
+  assert.equal(c.at,now+pacing.actionTiming({moveId:55}).duration);assert.equal(c.leadIn.moveId,55);
   assert.equal(g.data.switchUntil,c.at+captureTiming(c).duration);
   g.data.workTokens=1000;const loaded=new Game(g.data,now+500);assert.equal(loaded.tick(now+600),false);
   assert.equal(loaded.snapshot(now+600).capture.leadIn.moveId,55);

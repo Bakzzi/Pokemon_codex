@@ -5,7 +5,7 @@
     const shakes=capture.caught?3:Math.max(0,Math.min(3,Math.trunc(capture.shakes)||0));
     const throwMs=360,absorbMs=280,landMs=460,shakeAt=1500,shakeEvery=740,shakeMs=320;
     const resultAt=shakeAt+shakes*shakeEvery,messageAt=resultAt+(capture.caught?320:0);
-    return {shakes,throwMs,absorbMs,landMs,shakeAt,shakeEvery,shakeMs,resultAt,messageAt,duration:resultAt+1100};
+    return {shakes,throwMs,absorbMs,landMs,shakeAt,shakeEvery,shakeMs,resultAt,messageAt,duration:resultAt+(capture.caught?3200:2400)};
   }
   function captureFrame(capture,now){
     const t=captureTiming(capture),age=Math.max(0,now-capture.at);
