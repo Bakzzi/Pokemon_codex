@@ -1,0 +1,22 @@
+{
+  "name": "pokemon-codex-buddy",
+  "version": "0.3.0",
+  "private": true,
+  "description": "A local Pokemon desktop companion for Codex, inspired by momozzing/Digimon_mod",
+  "main": "desktop/main.cjs",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "demo": "electron . --demo",
+    "test": "node --test desktop/test/*.test.cjs",
+    "smoke": "electron . --smoke-test",
+    "build:data": "node desktop/scripts/build-data.cjs",
+    "package": "node desktop/scripts/package.cjs"
+  },
+  "devDependencies": {
+    "electron": "44.7.0"
+  },
+  "dependencies": {
+    "@pkmn/sim": "0.10.11"
+  }
+}

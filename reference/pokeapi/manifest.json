@@ -1,0 +1,404 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Offline reference data for design; not loaded by the widget",
+  "project": "https://pokeapi.co/",
+  "documentation": "https://pokeapi.co/docs/v2/",
+  "upstreamRepository": "https://github.com/PokeAPI/pokeapi",
+  "upstreamCommit": "81d20919845b6a445969b9265aab5cec6b04cece",
+  "createdAt": "2026-10-13T03:20:02.906Z",
+  "sources": [
+    {
+      "file": "raw/abilities.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/abilities.csv",
+      "bytes": 7074,
+      "sha256": "74c3588ad48e08e54ff01f432899a4028c3e91508bbd53201df85e1f6b9e9ef3",
+      "fetchedAt": "2026-10-13T03:20:06.543Z"
+    },
+    {
+      "file": "raw/ability_names.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/ability_names.csv",
+      "bytes": 65239,
+      "sha256": "8acb80c42210f86ae747dc3347b060d69cd2574a9dbfaf74774ae632ca6348da",
+      "fetchedAt": "2026-10-13T03:20:06.770Z"
+    },
+    {
+      "file": "raw/api-pokemon-25.json",
+      "url": "https://pokeapi.co/api/v2/pokemon/25/",
+      "bytes": 308230,
+      "sha256": "b964b99e20ec163d9f6a865de060992a637c01eb46500e7bf74bbff37886a0db",
+      "fetchedAt": "2026-10-13T03:20:09.565Z"
+    },
+    {
+      "file": "raw/encounter_condition_value_map.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/encounter_condition_value_map.csv",
+      "bytes": 1122337,
+      "sha256": "e7e566eb07f53aab34065869a245359cc8c0313ca97872de5fd07d1867a46c7a",
+      "fetchedAt": "2026-10-13T03:20:09.337Z"
+    },
+    {
+      "file": "raw/encounter_condition_values.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/encounter_condition_values.csv",
+      "bytes": 11345,
+      "sha256": "f55fc7c4b4d821631695ff30d74f34b2122859c412d29b98d4d973cb6d2df902",
+      "fetchedAt": "2026-10-13T03:20:09.019Z"
+    },
+    {
+      "file": "raw/encounter_conditions.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/encounter_conditions.csv",
+      "bytes": 455,
+      "sha256": "489a58710644df3daef44e86227fba98ecfe9fc4349e86901997f9d9b20c8a18",
+      "fetchedAt": "2026-10-13T03:20:09.012Z"
+    },
+    {
+      "file": "raw/encounter_methods.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/encounter_methods.csv",
+      "bytes": 1299,
+      "sha256": "99327ac41c463b8bcca18d04b56cad3d5532fec70dd7eb869b9ca650a007e291",
+      "fetchedAt": "2026-10-13T03:20:09.020Z"
+    },
+    {
+      "file": "raw/encounter_pokemon_details.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/encounter_pokemon_details.csv",
+      "bytes": 1948,
+      "sha256": "93b6cec7907b97c0809095fd5d6bea1cbe4f72698936366811138bf8edf36fba",
+      "fetchedAt": "2026-10-13T03:20:09.264Z"
+    },
+    {
+      "file": "raw/encounter_slots.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/encounter_slots.csv",
+      "bytes": 57659,
+      "sha256": "597dc58df2b0a2c64cedce6d6a2a08feeecbd1cf860bdf926cd27f119417d87a",
+      "fetchedAt": "2026-10-13T03:20:09.008Z"
+    },
+    {
+      "file": "raw/encounters.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/encounters.csv",
+      "bytes": 3172057,
+      "sha256": "93ba8853ac871719d230a6406c91f8418754fdc773f2f4b9f476007f743b4955",
+      "fetchedAt": "2026-10-13T03:20:08.772Z"
+    },
+    {
+      "file": "raw/evolution_triggers.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/evolution_triggers.csv",
+      "bytes": 304,
+      "sha256": "fb4b055fdb022eab3110147de669ae243c5497559257ad1f370c929ab6309a8c",
+      "fetchedAt": "2026-10-13T03:20:07.874Z"
+    },
+    {
+      "file": "raw/experience.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/experience.csv",
+      "bytes": 6713,
+      "sha256": "246d5d215bb90ee47206b57bfb9d9f639f73080ee8e99147382814e44e4f417b",
+      "fetchedAt": "2026-10-13T03:20:07.853Z"
+    },
+    {
+      "file": "raw/generations.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/generations.csv",
+      "bytes": 194,
+      "sha256": "d39634465251f1334aa0389b5adc4b4f2754eaec61f305fceb9432a3d4c96748",
+      "fetchedAt": "2026-10-13T03:20:03.192Z"
+    },
+    {
+      "file": "raw/growth_rates.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/growth_rates.csv",
+      "bytes": 879,
+      "sha256": "2691fea161441ce97085d70c0f466c0329a9a5a587a9797bb3b757da0e8090d0",
+      "fetchedAt": "2026-10-13T03:20:07.843Z"
+    },
+    {
+      "file": "raw/item_names.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/item_names.csv",
+      "bytes": 498452,
+      "sha256": "c4ad0b446e395c378d8ba75d6900f051cc9ebb99431d4000adeac35f492852f0",
+      "fetchedAt": "2026-10-13T03:20:08.150Z"
+    },
+    {
+      "file": "raw/items.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/items.csv",
+      "bytes": 59564,
+      "sha256": "f08cd6dc30b447cb91cbe9232c79052e8521f32f6105bb1489b5bfabf4ca3241",
+      "fetchedAt": "2026-10-13T03:20:07.860Z"
+    },
+    {
+      "file": "raw/languages.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/languages.csv",
+      "bytes": 291,
+      "sha256": "fbb60019a6a461783d5671a995d5f590db61792a273e90faa0ed630d102a19b8",
+      "fetchedAt": "2026-10-13T03:20:03.137Z"
+    },
+    {
+      "file": "raw/location_area_encounter_rates.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/location_area_encounter_rates.csv",
+      "bytes": 44948,
+      "sha256": "a633bc92028683619d6e2c2b4247b75f6dbfc4316668e65c00d82e87a7ae20c7",
+      "fetchedAt": "2026-10-13T03:20:09.677Z"
+    },
+    {
+      "file": "raw/location_areas.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/location_areas.csv",
+      "bytes": 26734,
+      "sha256": "4706b96842166a44ca619da0add34c212088669270a478d9e84bc78e9f581840",
+      "fetchedAt": "2026-10-13T03:20:09.424Z"
+    },
+    {
+      "file": "raw/location_names.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/location_names.csv",
+      "bytes": 116637,
+      "sha256": "4f901da13ab1fcd4cfeee99dd653652c2bd10afe21739f47a99ee906a99a004e",
+      "fetchedAt": "2026-10-13T03:20:09.280Z"
+    },
+    {
+      "file": "raw/locations.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/locations.csv",
+      "bytes": 23389,
+      "sha256": "2af5d6a1151d5ae402f9da1d5513bc1c7437795e69b140787c7aab3f6ed7eaa3",
+      "fetchedAt": "2026-10-13T03:20:09.683Z"
+    },
+    {
+      "file": "raw/move_changelog.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/move_changelog.csv",
+      "bytes": 3475,
+      "sha256": "86c1511f6a0e29dcc5a885c5b8f125ffd502afbec9f69c7f2b85a3e0e8b001f8",
+      "fetchedAt": "2026-10-13T03:20:06.767Z"
+    },
+    {
+      "file": "raw/move_effect_prose.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/move_effect_prose.csv",
+      "bytes": 253898,
+      "sha256": "f6d9bf0d28433a010a8b8b6a0a14d1ef72fbfcb997717f71b0e34483b7ee9697",
+      "fetchedAt": "2026-10-13T03:20:07.246Z"
+    },
+    {
+      "file": "raw/move_effects.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/move_effects.csv",
+      "bytes": 1813,
+      "sha256": "062f397d449a222c6401cf316cad4fc3063559e2a01603c087ce5947b666eb16",
+      "fetchedAt": "2026-10-13T03:20:07.269Z"
+    },
+    {
+      "file": "raw/move_flavor_text.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/move_flavor_text.csv",
+      "bytes": 5392794,
+      "sha256": "43177df8d76dac477fc837aa19b2a50d74ee2c94e47fb827506768c58b360087",
+      "fetchedAt": "2026-10-13T03:20:07.626Z"
+    },
+    {
+      "file": "raw/move_meta_ailment_names.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/move_meta_ailment_names.csv",
+      "bytes": 1197,
+      "sha256": "f4bf930ddf28e2e182641c04610a0fd86e5fc33a31480118bddaedba654db0c0",
+      "fetchedAt": "2026-10-13T03:20:07.028Z"
+    },
+    {
+      "file": "raw/move_meta_ailments.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/move_meta_ailments.csv",
+      "bytes": 271,
+      "sha256": "4c6e3ce3afe276478a45730de3d15f65496f646ce927c3e374b32295fbe24ed4",
+      "fetchedAt": "2026-10-13T03:20:07.022Z"
+    },
+    {
+      "file": "raw/move_meta_stat_changes.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/move_meta_stat_changes.csv",
+      "bytes": 2091,
+      "sha256": "489edd9ee45ea7e60c99c5a860c4c0957b337af21f8ae9bf03dd121fd548d5ab",
+      "fetchedAt": "2026-10-13T03:20:07.027Z"
+    },
+    {
+      "file": "raw/move_meta.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/move_meta.csv",
+      "bytes": 20555,
+      "sha256": "93b92d5bddf4fc1536ca0a647c20453bf92e6389010f33ca6fc4c5e9c54363be",
+      "fetchedAt": "2026-10-13T03:20:07.029Z"
+    },
+    {
+      "file": "raw/move_names.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/move_names.csv",
+      "bytes": 202670,
+      "sha256": "99e23ee38ea53d1473474d463b87651deac3cd4928750f8186feae66da45c147",
+      "fetchedAt": "2026-10-13T03:20:06.789Z"
+    },
+    {
+      "file": "raw/move_targets.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/move_targets.csv",
+      "bytes": 278,
+      "sha256": "47600dd1ec76bc6e9f117116686ea5d44219623658b2cfcb140711fc9f021db9",
+      "fetchedAt": "2026-10-13T03:20:07.247Z"
+    },
+    {
+      "file": "raw/moves.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/moves.csv",
+      "bytes": 42322,
+      "sha256": "8aafd37bf78f19471495c05b201545180f50f0a08a2a2a844d69f9837dd39ac9",
+      "fetchedAt": "2026-10-13T03:20:06.771Z"
+    },
+    {
+      "file": "raw/pokemon_abilities_past.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_abilities_past.csv",
+      "bytes": 6271,
+      "sha256": "cc77c6d85f8323f5f52047d45671140309d19ec0eb0e5e610b68971dc9c64e02",
+      "fetchedAt": "2026-10-13T03:20:06.558Z"
+    },
+    {
+      "file": "raw/pokemon_abilities.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_abilities.csv",
+      "bytes": 37224,
+      "sha256": "4a79ee53d386a8ad3a89657483ddfd31594e05a5d52400fe131e5e4dfd7ec04a",
+      "fetchedAt": "2026-10-13T03:20:06.558Z"
+    },
+    {
+      "file": "raw/pokemon_evolution.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_evolution.csv",
+      "bytes": 37836,
+      "sha256": "e78be51c8805551fffccd5551a556e752e4a76ff1b52482b53b409dd3882e1dd",
+      "fetchedAt": "2026-10-13T03:20:28.137Z"
+    },
+    {
+      "file": "raw/pokemon_habitat_names.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_habitat_names.csv",
+      "bytes": 480,
+      "sha256": "93c0adf8d16a6f9a6bb8f755dd907e200660ce6bbab79f1cf12c0a3bc8b4b3a1",
+      "fetchedAt": "2026-10-13T03:20:06.563Z"
+    },
+    {
+      "file": "raw/pokemon_habitats.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_habitats.csv",
+      "bytes": 104,
+      "sha256": "30f6c3a82a1aa32be1280fcf4a8c138b1cdaf421399cbf9c0dd1a6aa2673b5df",
+      "fetchedAt": "2026-10-13T03:20:04.807Z"
+    },
+    {
+      "file": "raw/pokemon_move_methods.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_move_methods.csv",
+      "bytes": 187,
+      "sha256": "78b75acfcf6dca4c82da9d4851357cbbd65e61b08154eddfc2ace0efd00e408e",
+      "fetchedAt": "2026-10-13T03:20:04.826Z"
+    },
+    {
+      "file": "raw/pokemon_moves.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_moves.csv",
+      "bytes": 10733699,
+      "sha256": "22a807cef26891eeac0d0c900bd363e66baf421f7ee795bc7bc3e718f23b939e",
+      "fetchedAt": "2026-10-13T03:20:06.345Z"
+    },
+    {
+      "file": "raw/pokemon_species_flavor_text.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_species_flavor_text.csv",
+      "bytes": 9206001,
+      "sha256": "c341e602ab623084fef4c44ca4a174938e617802cfcf2deec830d824f688dc69",
+      "fetchedAt": "2026-10-13T03:20:04.357Z"
+    },
+    {
+      "file": "raw/pokemon_species_names.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_species_names.csv",
+      "bytes": 404502,
+      "sha256": "820cde17074cdb1c2b0595c997fb8f998e773bd5da3bb525dec85703c86c5fd9",
+      "fetchedAt": "2026-10-13T03:20:03.453Z"
+    },
+    {
+      "file": "raw/pokemon_species.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_species.csv",
+      "bytes": 56884,
+      "sha256": "e66e2eeb25fd3836b0ebab6bf87bbf01960aa3c0555e2bac495fa8393c5e0c45",
+      "fetchedAt": "2026-10-13T03:20:03.435Z"
+    },
+    {
+      "file": "raw/pokemon_stats_past.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_stats_past.csv",
+      "bytes": 3046,
+      "sha256": "0a074d9581369c1df13d8d4f4015fd7215b896c5dfb58107f3b529f7156950d2",
+      "fetchedAt": "2026-10-13T03:20:04.558Z"
+    },
+    {
+      "file": "raw/pokemon_stats.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_stats.csv",
+      "bytes": 94392,
+      "sha256": "fa2c44263a3706468682fefc3e0b3c4f5487fe9febed7d4ebcd6939c34b16aa8",
+      "fetchedAt": "2026-10-13T03:20:04.578Z"
+    },
+    {
+      "file": "raw/pokemon_types_past.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_types_past.csv",
+      "bytes": 428,
+      "sha256": "02553c38e3871f99c7ed809b944066fea3f42ef6bccd4daba19274aca01fbff0",
+      "fetchedAt": "2026-10-13T03:20:04.588Z"
+    },
+    {
+      "file": "raw/pokemon_types.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_types.csv",
+      "bytes": 19058,
+      "sha256": "f1fc4bfd657a034ea3bf6972423b10276424aa068577b304a78a08996425ba05",
+      "fetchedAt": "2026-10-13T03:20:04.576Z"
+    },
+    {
+      "file": "raw/pokemon.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon.csv",
+      "bytes": 47082,
+      "sha256": "16c81c33188b0eac403aa2f759fcbe9e42c611f722d263f5b5a6a5bff9f8ce6b",
+      "fetchedAt": "2026-10-13T03:20:03.448Z"
+    },
+    {
+      "file": "raw/stat_names.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/stat_names.csv",
+      "bytes": 1130,
+      "sha256": "c58f9cc3c0b3bd004f9e5b84ba7590e42f15ffc6f2d58acc7ee39c9298ae83c3",
+      "fetchedAt": "2026-10-13T03:20:08.407Z"
+    },
+    {
+      "file": "raw/stats.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/stats.csv",
+      "bytes": 202,
+      "sha256": "ee8c541b45b64f40f0eb2545c767294b5801ce8a1410e19d8c33a54e6f1c3b9c",
+      "fetchedAt": "2026-10-13T03:20:08.364Z"
+    },
+    {
+      "file": "raw/type_efficacy_past.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/type_efficacy_past.csv",
+      "bytes": 118,
+      "sha256": "0d8cb1251c7f987c7978d77d6c1b9ecfc54e04474b7584b8ecf96fef498fb9d4",
+      "fetchedAt": "2026-10-13T03:20:08.356Z"
+    },
+    {
+      "file": "raw/type_efficacy.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/type_efficacy.csv",
+      "bytes": 2883,
+      "sha256": "cdd7de4066680414d0a2433af805f139f425d6350cbf998ecab559a0fe8ff587",
+      "fetchedAt": "2026-10-13T03:20:08.092Z"
+    },
+    {
+      "file": "raw/type_names.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/type_names.csv",
+      "bytes": 2843,
+      "sha256": "685230c51074cf2f723debcf827a4df4c36ab0ec7e929c806ad65a3e40958705",
+      "fetchedAt": "2026-10-13T03:20:08.077Z"
+    },
+    {
+      "file": "raw/types.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/types.csv",
+      "bytes": 321,
+      "sha256": "37f039c8d722f47d51ba1c5c5ecf9b7007235b1a9a1af2827645c777b70307c8",
+      "fetchedAt": "2026-10-13T03:20:08.085Z"
+    },
+    {
+      "file": "raw/UPSTREAM-LICENSE",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/LICENSE.md",
+      "bytes": 1621,
+      "sha256": "1c04595dc662981c20956ae4251dfa7b62b475c345eddf98bc9b904cb2373f2c",
+      "fetchedAt": "2026-10-13T03:20:09.648Z"
+    },
+    {
+      "file": "raw/version_groups.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/version_groups.csv",
+      "bytes": 726,
+      "sha256": "28da8d89d8eb4966941f81a9e62b3990510ed4d76dd774158246551a8e7707a7",
+      "fetchedAt": "2026-10-13T03:20:03.150Z"
+    },
+    {
+      "file": "raw/versions.csv",
+      "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/versions.csv",
+      "bytes": 907,
+      "sha256": "70083465865a6a69a9aad2be3fc3915078c6ff740f14a090b1367d8ec9cfc3cd",
+      "fetchedAt": "2026-10-13T03:20:03.164Z"
+    }
+  ],
+  "downloadErrors": []
+}

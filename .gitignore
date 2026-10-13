@@ -1,3 +1,14 @@
 preview/out/
 __pycache__/
 .claude-plugin/types/
+node_modules/
+desktop/.smoke/
+desktop/.demo/
+backups/
+dist/
+*.log
+.env
+.env.*
+!.env.example
+.codex/
+**/progress*.json

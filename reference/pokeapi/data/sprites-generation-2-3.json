@@ -1,0 +1,2516 @@
+{
+  "sourceExample": "raw/api-pokemon-25.json",
+  "note": "Original API URLs; local downloaded files are indexed separately in sprite-manifest.json.",
+  "entries": [
+    {
+      "id": 1,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/1.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/1.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/1.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/1.png"
+      }
+    },
+    {
+      "id": 2,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/2.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/2.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/2.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/2.png"
+      }
+    },
+    {
+      "id": 3,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/3.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/3.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/3.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/3.png"
+      }
+    },
+    {
+      "id": 4,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/4.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/4.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/4.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/4.png"
+      }
+    },
+    {
+      "id": 5,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/5.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/5.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/5.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/5.png"
+      }
+    },
+    {
+      "id": 6,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/6.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/6.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/6.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/6.png"
+      }
+    },
+    {
+      "id": 7,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/7.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/7.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/7.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/7.png"
+      }
+    },
+    {
+      "id": 8,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/8.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/8.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/8.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/8.png"
+      }
+    },
+    {
+      "id": 9,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/9.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/9.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/9.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/9.png"
+      }
+    },
+    {
+      "id": 10,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/10.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/10.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/10.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/10.png"
+      }
+    },
+    {
+      "id": 11,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/11.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/11.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/11.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/11.png"
+      }
+    },
+    {
+      "id": 12,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/12.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/12.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/12.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/12.png"
+      }
+    },
+    {
+      "id": 13,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/13.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/13.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/13.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/13.png"
+      }
+    },
+    {
+      "id": 14,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/14.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/14.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/14.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/14.png"
+      }
+    },
+    {
+      "id": 15,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/15.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/15.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/15.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/15.png"
+      }
+    },
+    {
+      "id": 16,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/16.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/16.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/16.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/16.png"
+      }
+    },
+    {
+      "id": 17,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/17.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/17.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/17.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/17.png"
+      }
+    },
+    {
+      "id": 18,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/18.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/18.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/18.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/18.png"
+      }
+    },
+    {
+      "id": 19,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/19.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/19.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/19.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/19.png"
+      }
+    },
+    {
+      "id": 20,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/20.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/20.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/20.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/20.png"
+      }
+    },
+    {
+      "id": 21,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/21.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/21.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/21.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/21.png"
+      }
+    },
+    {
+      "id": 22,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/22.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/22.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/22.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/22.png"
+      }
+    },
+    {
+      "id": 23,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/23.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/23.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/23.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/23.png"
+      }
+    },
+    {
+      "id": 24,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/24.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/24.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/24.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/24.png"
+      }
+    },
+    {
+      "id": 25,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/25.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/25.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/25.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/25.png"
+      }
+    },
+    {
+      "id": 26,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/26.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/26.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/26.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/26.png"
+      }
+    },
+    {
+      "id": 27,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/27.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/27.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/27.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/27.png"
+      }
+    },
+    {
+      "id": 28,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/28.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/28.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/28.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/28.png"
+      }
+    },
+    {
+      "id": 29,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/29.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/29.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/29.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/29.png"
+      }
+    },
+    {
+      "id": 30,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/30.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/30.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/30.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/30.png"
+      }
+    },
+    {
+      "id": 31,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/31.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/31.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/31.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/31.png"
+      }
+    },
+    {
+      "id": 32,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/32.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/32.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/32.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/32.png"
+      }
+    },
+    {
+      "id": 33,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/33.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/33.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/33.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/33.png"
+      }
+    },
+    {
+      "id": 34,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/34.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/34.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/34.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/34.png"
+      }
+    },
+    {
+      "id": 35,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/35.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/35.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/35.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/35.png"
+      }
+    },
+    {
+      "id": 36,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/36.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/36.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/36.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/36.png"
+      }
+    },
+    {
+      "id": 37,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/37.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/37.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/37.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/37.png"
+      }
+    },
+    {
+      "id": 38,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/38.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/38.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/38.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/38.png"
+      }
+    },
+    {
+      "id": 39,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/39.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/39.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/39.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/39.png"
+      }
+    },
+    {
+      "id": 40,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/40.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/40.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/40.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/40.png"
+      }
+    },
+    {
+      "id": 41,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/41.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/41.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/41.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/41.png"
+      }
+    },
+    {
+      "id": 42,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/42.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/42.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/42.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/42.png"
+      }
+    },
+    {
+      "id": 43,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/43.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/43.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/43.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/43.png"
+      }
+    },
+    {
+      "id": 44,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/44.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/44.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/44.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/44.png"
+      }
+    },
+    {
+      "id": 45,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/45.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/45.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/45.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/45.png"
+      }
+    },
+    {
+      "id": 46,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/46.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/46.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/46.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/46.png"
+      }
+    },
+    {
+      "id": 47,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/47.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/47.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/47.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/47.png"
+      }
+    },
+    {
+      "id": 48,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/48.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/48.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/48.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/48.png"
+      }
+    },
+    {
+      "id": 49,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/49.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/49.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/49.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/49.png"
+      }
+    },
+    {
+      "id": 50,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/50.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/50.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/50.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/50.png"
+      }
+    },
+    {
+      "id": 51,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/51.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/51.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/51.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/51.png"
+      }
+    },
+    {
+      "id": 52,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/52.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/52.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/52.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/52.png"
+      }
+    },
+    {
+      "id": 53,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/53.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/53.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/53.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/53.png"
+      }
+    },
+    {
+      "id": 54,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/54.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/54.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/54.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/54.png"
+      }
+    },
+    {
+      "id": 55,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/55.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/55.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/55.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/55.png"
+      }
+    },
+    {
+      "id": 56,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/56.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/56.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/56.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/56.png"
+      }
+    },
+    {
+      "id": 57,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/57.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/57.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/57.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/57.png"
+      }
+    },
+    {
+      "id": 58,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/58.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/58.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/58.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/58.png"
+      }
+    },
+    {
+      "id": 59,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/59.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/59.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/59.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/59.png"
+      }
+    },
+    {
+      "id": 60,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/60.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/60.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/60.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/60.png"
+      }
+    },
+    {
+      "id": 61,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/61.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/61.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/61.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/61.png"
+      }
+    },
+    {
+      "id": 62,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/62.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/62.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/62.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/62.png"
+      }
+    },
+    {
+      "id": 63,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/63.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/63.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/63.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/63.png"
+      }
+    },
+    {
+      "id": 64,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/64.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/64.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/64.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/64.png"
+      }
+    },
+    {
+      "id": 65,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/65.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/65.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/65.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/65.png"
+      }
+    },
+    {
+      "id": 66,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/66.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/66.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/66.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/66.png"
+      }
+    },
+    {
+      "id": 67,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/67.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/67.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/67.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/67.png"
+      }
+    },
+    {
+      "id": 68,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/68.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/68.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/68.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/68.png"
+      }
+    },
+    {
+      "id": 69,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/69.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/69.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/69.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/69.png"
+      }
+    },
+    {
+      "id": 70,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/70.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/70.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/70.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/70.png"
+      }
+    },
+    {
+      "id": 71,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/71.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/71.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/71.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/71.png"
+      }
+    },
+    {
+      "id": 72,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/72.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/72.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/72.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/72.png"
+      }
+    },
+    {
+      "id": 73,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/73.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/73.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/73.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/73.png"
+      }
+    },
+    {
+      "id": 74,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/74.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/74.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/74.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/74.png"
+      }
+    },
+    {
+      "id": 75,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/75.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/75.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/75.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/75.png"
+      }
+    },
+    {
+      "id": 76,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/76.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/76.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/76.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/76.png"
+      }
+    },
+    {
+      "id": 77,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/77.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/77.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/77.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/77.png"
+      }
+    },
+    {
+      "id": 78,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/78.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/78.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/78.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/78.png"
+      }
+    },
+    {
+      "id": 79,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/79.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/79.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/79.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/79.png"
+      }
+    },
+    {
+      "id": 80,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/80.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/80.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/80.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/80.png"
+      }
+    },
+    {
+      "id": 81,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/81.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/81.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/81.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/81.png"
+      }
+    },
+    {
+      "id": 82,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/82.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/82.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/82.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/82.png"
+      }
+    },
+    {
+      "id": 83,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/83.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/83.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/83.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/83.png"
+      }
+    },
+    {
+      "id": 84,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/84.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/84.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/84.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/84.png"
+      }
+    },
+    {
+      "id": 85,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/85.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/85.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/85.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/85.png"
+      }
+    },
+    {
+      "id": 86,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/86.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/86.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/86.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/86.png"
+      }
+    },
+    {
+      "id": 87,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/87.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/87.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/87.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/87.png"
+      }
+    },
+    {
+      "id": 88,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/88.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/88.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/88.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/88.png"
+      }
+    },
+    {
+      "id": 89,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/89.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/89.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/89.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/89.png"
+      }
+    },
+    {
+      "id": 90,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/90.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/90.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/90.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/90.png"
+      }
+    },
+    {
+      "id": 91,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/91.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/91.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/91.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/91.png"
+      }
+    },
+    {
+      "id": 92,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/92.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/92.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/92.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/92.png"
+      }
+    },
+    {
+      "id": 93,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/93.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/93.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/93.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/93.png"
+      }
+    },
+    {
+      "id": 94,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/94.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/94.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/94.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/94.png"
+      }
+    },
+    {
+      "id": 95,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/95.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/95.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/95.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/95.png"
+      }
+    },
+    {
+      "id": 96,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/96.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/96.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/96.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/96.png"
+      }
+    },
+    {
+      "id": 97,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/97.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/97.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/97.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/97.png"
+      }
+    },
+    {
+      "id": 98,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/98.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/98.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/98.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/98.png"
+      }
+    },
+    {
+      "id": 99,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/99.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/99.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/99.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/99.png"
+      }
+    },
+    {
+      "id": 100,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/100.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/100.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/100.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/100.png"
+      }
+    },
+    {
+      "id": 101,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/101.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/101.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/101.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/101.png"
+      }
+    },
+    {
+      "id": 102,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/102.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/102.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/102.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/102.png"
+      }
+    },
+    {
+      "id": 103,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/103.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/103.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/103.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/103.png"
+      }
+    },
+    {
+      "id": 104,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/104.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/104.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/104.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/104.png"
+      }
+    },
+    {
+      "id": 105,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/105.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/105.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/105.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/105.png"
+      }
+    },
+    {
+      "id": 106,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/106.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/106.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/106.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/106.png"
+      }
+    },
+    {
+      "id": 107,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/107.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/107.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/107.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/107.png"
+      }
+    },
+    {
+      "id": 108,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/108.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/108.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/108.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/108.png"
+      }
+    },
+    {
+      "id": 109,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/109.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/109.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/109.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/109.png"
+      }
+    },
+    {
+      "id": 110,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/110.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/110.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/110.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/110.png"
+      }
+    },
+    {
+      "id": 111,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/111.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/111.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/111.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/111.png"
+      }
+    },
+    {
+      "id": 112,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/112.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/112.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/112.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/112.png"
+      }
+    },
+    {
+      "id": 113,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/113.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/113.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/113.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/113.png"
+      }
+    },
+    {
+      "id": 114,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/114.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/114.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/114.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/114.png"
+      }
+    },
+    {
+      "id": 115,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/115.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/115.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/115.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/115.png"
+      }
+    },
+    {
+      "id": 116,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/116.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/116.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/116.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/116.png"
+      }
+    },
+    {
+      "id": 117,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/117.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/117.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/117.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/117.png"
+      }
+    },
+    {
+      "id": 118,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/118.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/118.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/118.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/118.png"
+      }
+    },
+    {
+      "id": 119,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/119.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/119.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/119.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/119.png"
+      }
+    },
+    {
+      "id": 120,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/120.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/120.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/120.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/120.png"
+      }
+    },
+    {
+      "id": 121,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/121.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/121.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/121.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/121.png"
+      }
+    },
+    {
+      "id": 122,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/122.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/122.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/122.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/122.png"
+      }
+    },
+    {
+      "id": 123,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/123.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/123.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/123.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/123.png"
+      }
+    },
+    {
+      "id": 124,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/124.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/124.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/124.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/124.png"
+      }
+    },
+    {
+      "id": 125,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/125.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/125.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/125.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/125.png"
+      }
+    },
+    {
+      "id": 126,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/126.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/126.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/126.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/126.png"
+      }
+    },
+    {
+      "id": 127,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/127.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/127.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/127.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/127.png"
+      }
+    },
+    {
+      "id": 128,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/128.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/128.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/128.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/128.png"
+      }
+    },
+    {
+      "id": 129,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/129.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/129.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/129.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/129.png"
+      }
+    },
+    {
+      "id": 130,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/130.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/130.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/130.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/130.png"
+      }
+    },
+    {
+      "id": 131,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/131.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/131.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/131.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/131.png"
+      }
+    },
+    {
+      "id": 132,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/132.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/132.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/132.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/132.png"
+      }
+    },
+    {
+      "id": 133,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/133.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/133.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/133.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/133.png"
+      }
+    },
+    {
+      "id": 134,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/134.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/134.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/134.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/134.png"
+      }
+    },
+    {
+      "id": 135,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/135.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/135.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/135.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/135.png"
+      }
+    },
+    {
+      "id": 136,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/136.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/136.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/136.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/136.png"
+      }
+    },
+    {
+      "id": 137,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/137.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/137.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/137.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/137.png"
+      }
+    },
+    {
+      "id": 138,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/138.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/138.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/138.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/138.png"
+      }
+    },
+    {
+      "id": 139,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/139.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/139.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/139.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/139.png"
+      }
+    },
+    {
+      "id": 140,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/140.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/140.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/140.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/140.png"
+      }
+    },
+    {
+      "id": 141,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/141.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/141.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/141.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/141.png"
+      }
+    },
+    {
+      "id": 142,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/142.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/142.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/142.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/142.png"
+      }
+    },
+    {
+      "id": 143,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/143.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/143.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/143.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/143.png"
+      }
+    },
+    {
+      "id": 144,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/144.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/144.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/144.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/144.png"
+      }
+    },
+    {
+      "id": 145,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/145.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/145.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/145.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/145.png"
+      }
+    },
+    {
+      "id": 146,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/146.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/146.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/146.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/146.png"
+      }
+    },
+    {
+      "id": 147,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/147.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/147.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/147.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/147.png"
+      }
+    },
+    {
+      "id": 148,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/148.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/148.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/148.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/148.png"
+      }
+    },
+    {
+      "id": 149,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/149.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/149.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/149.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/149.png"
+      }
+    },
+    {
+      "id": 150,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/150.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/150.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/150.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/150.png"
+      }
+    },
+    {
+      "id": 151,
+      "introducedGeneration": 1,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/151.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/151.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/151.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/151.png"
+      }
+    },
+    {
+      "id": 152,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/152.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/152.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/152.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/152.png"
+      }
+    },
+    {
+      "id": 153,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/153.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/153.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/153.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/153.png"
+      }
+    },
+    {
+      "id": 154,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/154.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/154.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/154.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/154.png"
+      }
+    },
+    {
+      "id": 155,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/155.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/155.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/155.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/155.png"
+      }
+    },
+    {
+      "id": 156,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/156.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/156.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/156.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/156.png"
+      }
+    },
+    {
+      "id": 157,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/157.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/157.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/157.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/157.png"
+      }
+    },
+    {
+      "id": 158,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/158.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/158.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/158.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/158.png"
+      }
+    },
+    {
+      "id": 159,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/159.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/159.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/159.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/159.png"
+      }
+    },
+    {
+      "id": 160,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/160.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/160.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/160.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/160.png"
+      }
+    },
+    {
+      "id": 161,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/161.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/161.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/161.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/161.png"
+      }
+    },
+    {
+      "id": 162,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/162.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/162.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/162.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/162.png"
+      }
+    },
+    {
+      "id": 163,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/163.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/163.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/163.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/163.png"
+      }
+    },
+    {
+      "id": 164,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/164.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/164.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/164.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/164.png"
+      }
+    },
+    {
+      "id": 165,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/165.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/165.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/165.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/165.png"
+      }
+    },
+    {
+      "id": 166,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/166.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/166.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/166.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/166.png"
+      }
+    },
+    {
+      "id": 167,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/167.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/167.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/167.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/167.png"
+      }
+    },
+    {
+      "id": 168,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/168.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/168.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/168.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/168.png"
+      }
+    },
+    {
+      "id": 169,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/169.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/169.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/169.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/169.png"
+      }
+    },
+    {
+      "id": 170,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/170.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/170.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/170.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/170.png"
+      }
+    },
+    {
+      "id": 171,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/171.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/171.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/171.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/171.png"
+      }
+    },
+    {
+      "id": 172,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/172.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/172.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/172.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/172.png"
+      }
+    },
+    {
+      "id": 173,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/173.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/173.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/173.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/173.png"
+      }
+    },
+    {
+      "id": 174,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/174.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/174.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/174.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/174.png"
+      }
+    },
+    {
+      "id": 175,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/175.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/175.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/175.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/175.png"
+      }
+    },
+    {
+      "id": 176,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/176.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/176.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/176.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/176.png"
+      }
+    },
+    {
+      "id": 177,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/177.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/177.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/177.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/177.png"
+      }
+    },
+    {
+      "id": 178,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/178.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/178.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/178.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/178.png"
+      }
+    },
+    {
+      "id": 179,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/179.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/179.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/179.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/179.png"
+      }
+    },
+    {
+      "id": 180,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/180.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/180.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/180.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/180.png"
+      }
+    },
+    {
+      "id": 181,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/181.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/181.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/181.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/181.png"
+      }
+    },
+    {
+      "id": 182,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/182.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/182.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/182.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/182.png"
+      }
+    },
+    {
+      "id": 183,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/183.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/183.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/183.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/183.png"
+      }
+    },
+    {
+      "id": 184,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/184.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/184.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/184.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/184.png"
+      }
+    },
+    {
+      "id": 185,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/185.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/185.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/185.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/185.png"
+      }
+    },
+    {
+      "id": 186,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/186.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/186.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/186.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/186.png"
+      }
+    },
+    {
+      "id": 187,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/187.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/187.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/187.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/187.png"
+      }
+    },
+    {
+      "id": 188,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/188.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/188.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/188.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/188.png"
+      }
+    },
+    {
+      "id": 189,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/189.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/189.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/189.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/189.png"
+      }
+    },
+    {
+      "id": 190,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/190.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/190.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/190.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/190.png"
+      }
+    },
+    {
+      "id": 191,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/191.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/191.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/191.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/191.png"
+      }
+    },
+    {
+      "id": 192,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/192.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/192.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/192.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/192.png"
+      }
+    },
+    {
+      "id": 193,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/193.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/193.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/193.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/193.png"
+      }
+    },
+    {
+      "id": 194,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/194.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/194.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/194.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/194.png"
+      }
+    },
+    {
+      "id": 195,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/195.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/195.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/195.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/195.png"
+      }
+    },
+    {
+      "id": 196,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/196.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/196.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/196.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/196.png"
+      }
+    },
+    {
+      "id": 197,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/197.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/197.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/197.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/197.png"
+      }
+    },
+    {
+      "id": 198,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/198.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/198.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/198.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/198.png"
+      }
+    },
+    {
+      "id": 199,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/199.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/199.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/199.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/199.png"
+      }
+    },
+    {
+      "id": 200,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/200.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/200.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/200.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/200.png"
+      }
+    },
+    {
+      "id": 201,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/201.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/201.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/201.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/201.png"
+      }
+    },
+    {
+      "id": 202,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/202.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/202.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/202.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/202.png"
+      }
+    },
+    {
+      "id": 203,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/203.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/203.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/203.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/203.png"
+      }
+    },
+    {
+      "id": 204,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/204.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/204.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/204.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/204.png"
+      }
+    },
+    {
+      "id": 205,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/205.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/205.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/205.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/205.png"
+      }
+    },
+    {
+      "id": 206,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/206.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/206.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/206.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/206.png"
+      }
+    },
+    {
+      "id": 207,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/207.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/207.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/207.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/207.png"
+      }
+    },
+    {
+      "id": 208,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/208.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/208.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/208.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/208.png"
+      }
+    },
+    {
+      "id": 209,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/209.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/209.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/209.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/209.png"
+      }
+    },
+    {
+      "id": 210,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/210.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/210.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/210.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/210.png"
+      }
+    },
+    {
+      "id": 211,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/211.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/211.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/211.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/211.png"
+      }
+    },
+    {
+      "id": 212,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/212.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/212.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/212.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/212.png"
+      }
+    },
+    {
+      "id": 213,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/213.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/213.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/213.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/213.png"
+      }
+    },
+    {
+      "id": 214,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/214.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/214.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/214.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/214.png"
+      }
+    },
+    {
+      "id": 215,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/215.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/215.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/215.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/215.png"
+      }
+    },
+    {
+      "id": 216,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/216.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/216.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/216.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/216.png"
+      }
+    },
+    {
+      "id": 217,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/217.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/217.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/217.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/217.png"
+      }
+    },
+    {
+      "id": 218,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/218.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/218.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/218.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/218.png"
+      }
+    },
+    {
+      "id": 219,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/219.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/219.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/219.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/219.png"
+      }
+    },
+    {
+      "id": 220,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/220.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/220.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/220.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/220.png"
+      }
+    },
+    {
+      "id": 221,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/221.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/221.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/221.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/221.png"
+      }
+    },
+    {
+      "id": 222,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/222.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/222.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/222.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/222.png"
+      }
+    },
+    {
+      "id": 223,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/223.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/223.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/223.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/223.png"
+      }
+    },
+    {
+      "id": 224,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/224.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/224.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/224.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/224.png"
+      }
+    },
+    {
+      "id": 225,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/225.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/225.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/225.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/225.png"
+      }
+    },
+    {
+      "id": 226,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/226.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/226.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/226.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/226.png"
+      }
+    },
+    {
+      "id": 227,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/227.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/227.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/227.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/227.png"
+      }
+    },
+    {
+      "id": 228,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/228.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/228.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/228.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/228.png"
+      }
+    },
+    {
+      "id": 229,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/229.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/229.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/229.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/229.png"
+      }
+    },
+    {
+      "id": 230,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/230.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/230.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/230.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/230.png"
+      }
+    },
+    {
+      "id": 231,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/231.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/231.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/231.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/231.png"
+      }
+    },
+    {
+      "id": 232,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/232.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/232.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/232.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/232.png"
+      }
+    },
+    {
+      "id": 233,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/233.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/233.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/233.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/233.png"
+      }
+    },
+    {
+      "id": 234,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/234.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/234.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/234.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/234.png"
+      }
+    },
+    {
+      "id": 235,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/235.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/235.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/235.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/235.png"
+      }
+    },
+    {
+      "id": 236,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/236.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/236.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/236.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/236.png"
+      }
+    },
+    {
+      "id": 237,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/237.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/237.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/237.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/237.png"
+      }
+    },
+    {
+      "id": 238,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/238.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/238.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/238.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/238.png"
+      }
+    },
+    {
+      "id": 239,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/239.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/239.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/239.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/239.png"
+      }
+    },
+    {
+      "id": 240,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/240.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/240.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/240.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/240.png"
+      }
+    },
+    {
+      "id": 241,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/241.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/241.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/241.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/241.png"
+      }
+    },
+    {
+      "id": 242,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/242.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/242.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/242.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/242.png"
+      }
+    },
+    {
+      "id": 243,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/243.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/243.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/243.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/243.png"
+      }
+    },
+    {
+      "id": 244,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/244.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/244.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/244.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/244.png"
+      }
+    },
+    {
+      "id": 245,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/245.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/245.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/245.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/245.png"
+      }
+    },
+    {
+      "id": 246,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/246.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/246.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/246.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/246.png"
+      }
+    },
+    {
+      "id": 247,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/247.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/247.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/247.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/247.png"
+      }
+    },
+    {
+      "id": 248,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/248.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/248.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/248.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/248.png"
+      }
+    },
+    {
+      "id": 249,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/249.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/249.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/249.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/249.png"
+      }
+    },
+    {
+      "id": 250,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/250.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/250.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/250.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/250.png"
+      }
+    },
+    {
+      "id": 251,
+      "introducedGeneration": 2,
+      "urls": {
+        "crystalFrontAnimated": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/251.gif",
+        "crystalBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/transparent/back/251.png",
+        "fireRedLeafGreenFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/251.png",
+        "fireRedLeafGreenBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/251.png"
+      }
+    }
+  ]
+}

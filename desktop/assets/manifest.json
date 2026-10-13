@@ -1,0 +1,2162 @@
+[
+  {
+    "id": 1,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/1.gif",
+    "sha256": "9e9845c1a65def0c1393a5618e67dc59c40361e72198a1f12d70421628d189cb",
+    "bytes": 2076
+  },
+  {
+    "id": 2,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/2.gif",
+    "sha256": "f3e04ea064a945210c86ce9a3954e46b9459a12f39a932fcc86b6eb1e477584c",
+    "bytes": 1344
+  },
+  {
+    "id": 3,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/3.gif",
+    "sha256": "f0b3077c905fbd936b46b640b77d3ffe8bfde8b3718949e1dde2566aff45a334",
+    "bytes": 3790
+  },
+  {
+    "id": 4,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/4.gif",
+    "sha256": "ae4f67e6e9b96932baaeb2a788f0df6ee80fa546749296d742eafa9e7bc590ed",
+    "bytes": 2733
+  },
+  {
+    "id": 5,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/5.gif",
+    "sha256": "fddd2e6234c0e951565eb9900d6d041c2f6d11c1dcae43d93a4c951ef4371c13",
+    "bytes": 6785
+  },
+  {
+    "id": 6,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/6.gif",
+    "sha256": "2eb306eb5e0e99c8815e955fee8e0388cb53215d9293d13a053223d2db83928e",
+    "bytes": 4548
+  },
+  {
+    "id": 7,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/7.gif",
+    "sha256": "818ae505cc0843e7b1ccf41d2de07de791244cc8e114baf522616cfe1ac3e677",
+    "bytes": 2171
+  },
+  {
+    "id": 8,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/8.gif",
+    "sha256": "02248e2039fa88f1e7e2f265ea2bdfbae3a81d96c055c9bfece6dc4b22827e16",
+    "bytes": 3037
+  },
+  {
+    "id": 9,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/9.gif",
+    "sha256": "b53767602b94191b85de699be50ff5303e5ef055682c882480ba7bea31c10693",
+    "bytes": 6097
+  },
+  {
+    "id": 10,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/10.gif",
+    "sha256": "b24408c86ecf99f2762a1289ae8dc112023222bcbfae4a65386839cf0000fb82",
+    "bytes": 1655
+  },
+  {
+    "id": 11,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/11.gif",
+    "sha256": "c43769fe14030e97b8375a69fa32106932e6b6e692acdb0ac606aa01c0e9b33f",
+    "bytes": 1122
+  },
+  {
+    "id": 12,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/12.gif",
+    "sha256": "368bb1bc2b92d7cafad3bcb81ca0c2d7ef3b0dc1e396e3f303f6f61eb2030f07",
+    "bytes": 5821
+  },
+  {
+    "id": 13,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/13.gif",
+    "sha256": "8cf14068470ccbd01ea9821db6ab6f6841c970aee38bb17f8d8275c13c6e2a5a",
+    "bytes": 2956
+  },
+  {
+    "id": 14,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/14.gif",
+    "sha256": "02882d41e4a3db213d2f7c53a756765915bfda6c1d81feb7e2ae55591557cf5c",
+    "bytes": 1711
+  },
+  {
+    "id": 15,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/15.gif",
+    "sha256": "3fa35f965bfa0dff9cf03007d2eb51cbe02f1c1c6b97b7db21fb3ece4f4800b6",
+    "bytes": 36193
+  },
+  {
+    "id": 16,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/16.gif",
+    "sha256": "a8529a65336562b6e4d87cc87aa5ff41847cea6ca52d899b3f8644e0dada5b51",
+    "bytes": 5816
+  },
+  {
+    "id": 17,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/17.gif",
+    "sha256": "11c438cf17ef8c8aa44f82ea2fc1c44975a6263129b9aa7af7b13b4c4bcbbb40",
+    "bytes": 1523
+  },
+  {
+    "id": 18,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/18.gif",
+    "sha256": "64da0537ddc8a99d789e11ec3275bf2172f44d7b075d584d4d25a636b7f2add6",
+    "bytes": 5502
+  },
+  {
+    "id": 19,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/19.gif",
+    "sha256": "fd3b199f097cbba4e3fe313a8483b9bfde425c10b24c650cb2d78400ae1513cb",
+    "bytes": 4598
+  },
+  {
+    "id": 20,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/20.gif",
+    "sha256": "8b96b028be6795bb43c019364dfedbe3c7d630d8ca55af531cb0b7d51a651bce",
+    "bytes": 3916
+  },
+  {
+    "id": 21,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/21.gif",
+    "sha256": "8039b34bc24a84abccbb03028958976325ddc29d322f0b58564824fbc044a08f",
+    "bytes": 6105
+  },
+  {
+    "id": 22,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/22.gif",
+    "sha256": "eeb81d0555e097c6b9e93cbeb4b6f7da7c8c096c1413cc74739729c22b907a5f",
+    "bytes": 5445
+  },
+  {
+    "id": 23,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/23.gif",
+    "sha256": "89315739e131240cba53ddaa87f7e807fb348e532ca08641a8b07a61ba33d5d7",
+    "bytes": 6339
+  },
+  {
+    "id": 24,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/24.gif",
+    "sha256": "0347f4590135dea598ca5a6d227fad8b807d970820a5eae4d5100f97ac2f9394",
+    "bytes": 6321
+  },
+  {
+    "id": 25,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/25.gif",
+    "sha256": "481f419f6e791346f1dab7db96512a22f78310bc3317a482c9f6eb9e04331545",
+    "bytes": 2770
+  },
+  {
+    "id": 26,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/26.gif",
+    "sha256": "423346416b9cdc557a7055f9d3d89da89e232e00196a8520de3801e0251ab99f",
+    "bytes": 3846
+  },
+  {
+    "id": 27,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/27.gif",
+    "sha256": "1afb0510a31ddb5f322a79094488986c85161e9103e8068b1bc7cc468d09082f",
+    "bytes": 2286
+  },
+  {
+    "id": 28,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/28.gif",
+    "sha256": "027fb5d48645c61be293b6f2e00896d944fb687118f8d93647af79cdd5ecdbdc",
+    "bytes": 2936
+  },
+  {
+    "id": 29,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/29.gif",
+    "sha256": "15e58c363a517e057cc7c8f7789bb50a49b33babb9478ce7905794da498d1737",
+    "bytes": 2559
+  },
+  {
+    "id": 30,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/30.gif",
+    "sha256": "1625523d9978b091e09c47c8362a91b6ae70a1cdf876da761b927294c5df1a26",
+    "bytes": 2519
+  },
+  {
+    "id": 31,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/31.gif",
+    "sha256": "616bfa6447eeb30d9de04915e4439cf78afb8a47a9cab19a6a46abdb67715317",
+    "bytes": 7312
+  },
+  {
+    "id": 32,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/32.gif",
+    "sha256": "b189a4cf4c0e108101e9f653a50b5b261bd9b028e3cf2855b4442b548a268086",
+    "bytes": 3192
+  },
+  {
+    "id": 33,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/33.gif",
+    "sha256": "b6876556f61747ec3def00d8b2003d85f027a4eb3574e3166d5cf25b968064c2",
+    "bytes": 5306
+  },
+  {
+    "id": 34,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/34.gif",
+    "sha256": "2e59019ba9fd0c6b59d4023a84611bb5747f68aac250ca754c1d355786ef377d",
+    "bytes": 3098
+  },
+  {
+    "id": 35,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/35.gif",
+    "sha256": "9c9a67e8d97fc2120337f80c9cd5c4d67debd858459ee2503cc11c9a928aadaa",
+    "bytes": 1979
+  },
+  {
+    "id": 36,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/36.gif",
+    "sha256": "ddb248e449a4f378ebf577ee654b888871335eb0cf9de9c75d23ab24c0170b31",
+    "bytes": 2472
+  },
+  {
+    "id": 37,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/37.gif",
+    "sha256": "0876e61d42dd172f0295093eb64d5cfb4c1e8ad5f54ed5cd089d0c9fccc39374",
+    "bytes": 2265
+  },
+  {
+    "id": 38,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/38.gif",
+    "sha256": "b74e022360e26014972f298d2ec06c11597c6ed19dcbaf64703e3b179c11e3b1",
+    "bytes": 6087
+  },
+  {
+    "id": 39,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/39.gif",
+    "sha256": "c58b44640cc211d11db12f17fae1ed83b662041954f217dbe5661204e6a7fb16",
+    "bytes": 2521
+  },
+  {
+    "id": 40,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/40.gif",
+    "sha256": "04688cbddb330baa0a7ec883fd6d5b0216d7eccf974e98be4907ea34c4bd4d97",
+    "bytes": 3860
+  },
+  {
+    "id": 41,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/41.gif",
+    "sha256": "61a070df3f5a00aec0d5cee436f221d36d8606cb58f1c3078773b68e70562ab8",
+    "bytes": 3886
+  },
+  {
+    "id": 42,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/42.gif",
+    "sha256": "fb8129f47c27e3d6af980c44932b4cb92f3347984f37c7c3dd7e14ba45c4a7ef",
+    "bytes": 4463
+  },
+  {
+    "id": 43,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/43.gif",
+    "sha256": "6d17f62e5742614e5bbe9ca59f13566935bd4cdb0341d84d82daefb20b89c9bf",
+    "bytes": 1348
+  },
+  {
+    "id": 44,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/44.gif",
+    "sha256": "b03f719fb4b258ab08f040b90d3bde099236e661bfac1025aadf298526d51d40",
+    "bytes": 2563
+  },
+  {
+    "id": 45,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/45.gif",
+    "sha256": "8f5f65937fde3010b8f28bbd4abbc2d7907a04c77773dc75c91723e215a39f33",
+    "bytes": 3721
+  },
+  {
+    "id": 46,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/46.gif",
+    "sha256": "effd95bab0daa478a5a1cf934aa90d0c95474902c750b63a14b50842b8df95ef",
+    "bytes": 2035
+  },
+  {
+    "id": 47,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/47.gif",
+    "sha256": "2d3085b854d973eecbcb63dd5d07836e8804482ce650fd8311f530733ec3e303",
+    "bytes": 4511
+  },
+  {
+    "id": 48,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/48.gif",
+    "sha256": "fbb266c75f8ff58ce8e767c4a7a5861c9e6a82eda709bb1dba7a9cdd975c7ac0",
+    "bytes": 3456
+  },
+  {
+    "id": 49,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/49.gif",
+    "sha256": "fdb02765d936e3fd3587dc47192a2cec8542b7f815f9e62559b5f71fc534a98c",
+    "bytes": 6979
+  },
+  {
+    "id": 50,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/50.gif",
+    "sha256": "dbc2666605eefba283923a9003aa0d924bfdef0ab9edba6ef2abc91b00c823a8",
+    "bytes": 943
+  },
+  {
+    "id": 51,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/51.gif",
+    "sha256": "46a4b0b7187f6dd37aab6f8868779fdaded8e6b31a23688815fc19bcbe75ffc9",
+    "bytes": 2760
+  },
+  {
+    "id": 52,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/52.gif",
+    "sha256": "05a25fab0b068b47c45507a284a5e508803727c0247c6474437ea043b6022280",
+    "bytes": 1405
+  },
+  {
+    "id": 53,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/53.gif",
+    "sha256": "26c1c92183714cd7280872d47924c284f042c722c141d08437694c03a2ca9a2b",
+    "bytes": 5007
+  },
+  {
+    "id": 54,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/54.gif",
+    "sha256": "3f66971b7431c1884a8a6a5c24bcfcf94d584970927c83b699a2ddd8a1378428",
+    "bytes": 1373
+  },
+  {
+    "id": 55,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/55.gif",
+    "sha256": "c9e950a8b67864cfc2c2c9f536e42feb23a5193c7e8a89cbc4cc053783c0b47b",
+    "bytes": 9249
+  },
+  {
+    "id": 56,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/56.gif",
+    "sha256": "825ec7515a571920422107ecb6362b31f494ef942bce61c69c13f30fce6578d2",
+    "bytes": 2092
+  },
+  {
+    "id": 57,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/57.gif",
+    "sha256": "c5f3508fc1397d6e517056e3c546c7e8cb498ace93d5972f3e800935d77f82b1",
+    "bytes": 7094
+  },
+  {
+    "id": 58,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/58.gif",
+    "sha256": "bdfd2486a1572df9ad2d55e0a40b02052a1eb1c4ef297d230a1288c88a2fb801",
+    "bytes": 4363
+  },
+  {
+    "id": 59,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/59.gif",
+    "sha256": "645737d6bd2feaa09bc94e757a9614c68f85b65e4424ed99f0f42babaa022bb6",
+    "bytes": 10094
+  },
+  {
+    "id": 60,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/60.gif",
+    "sha256": "b1784b9f8e0c2700dd4a466f29e04cf36b00e4b78357985f21212388e2de3d38",
+    "bytes": 2287
+  },
+  {
+    "id": 61,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/61.gif",
+    "sha256": "394c5f3ed0151b6aaf951981d778484b9e942c5946df3ea5869821ef41f9af81",
+    "bytes": 2081
+  },
+  {
+    "id": 62,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/62.gif",
+    "sha256": "e6e33a3c6b2fe88c132dedb0916e8807e9743206a4c5fd2605c0339317d1f0d1",
+    "bytes": 3215
+  },
+  {
+    "id": 63,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/63.gif",
+    "sha256": "fd010e4250986c117f4b4c147a23695b0bd458fd6e32ba96f6e808cfc7e15c9e",
+    "bytes": 5740
+  },
+  {
+    "id": 64,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/64.gif",
+    "sha256": "c25c5c0fdbb3f2d56d811ae60fdcfa7f3b97626e87ed0721826decf0b13fa729",
+    "bytes": 1721
+  },
+  {
+    "id": 65,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/65.gif",
+    "sha256": "cf606129de1a9fda8eb8fe988a5419265476e082cdcdc9f6729d2a237ca4ce22",
+    "bytes": 5404
+  },
+  {
+    "id": 66,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/66.gif",
+    "sha256": "b5e3732c4125c6bf43ed93b4b7360fef4cef4ce376bfe42a46a61147a93b02c7",
+    "bytes": 1779
+  },
+  {
+    "id": 67,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/67.gif",
+    "sha256": "b48e28430933c79a0c3d1244a10ea506c332a1d52e162277907d76c7bca3dc14",
+    "bytes": 2928
+  },
+  {
+    "id": 68,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/68.gif",
+    "sha256": "794540f1ea8a805dddccc178a87774a5fd9564e574d1f6c86c44ffc412336e68",
+    "bytes": 12190
+  },
+  {
+    "id": 69,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/69.gif",
+    "sha256": "c3cbae2d315a9221d8dba10e9b97ed08c5b3fd3aa9a2489e5b87f20c9d22491a",
+    "bytes": 5392
+  },
+  {
+    "id": 70,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/70.gif",
+    "sha256": "4aff23ff5ecec9eb0d6beccf9fbdf9d715b42bbd59cb3cb7db054faa9e45fc05",
+    "bytes": 2938
+  },
+  {
+    "id": 71,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/71.gif",
+    "sha256": "4869d44e7fe901fc659a95cda47ccc42f77c7629640586d71035265280824556",
+    "bytes": 6668
+  },
+  {
+    "id": 72,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/72.gif",
+    "sha256": "55e36c74ffb7b2b955df139dd56c5cd566d14176c2cf316e7197a2a8a64e5823",
+    "bytes": 1721
+  },
+  {
+    "id": 73,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/73.gif",
+    "sha256": "ae76179977753509ea98ff6e4000ceb1f3dc02a15cb73829b879dcdb2dc57d5e",
+    "bytes": 3114
+  },
+  {
+    "id": 74,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/74.gif",
+    "sha256": "8137a1751e6021da5e50dc35998ac0edbf2674bc4829ed78c2ab7baa79cc0fdb",
+    "bytes": 2995
+  },
+  {
+    "id": 75,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/75.gif",
+    "sha256": "cd91e15a39af9910637e467d7a34dab97099bdec9ad90a578502b6798703f10b",
+    "bytes": 4021
+  },
+  {
+    "id": 76,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/76.gif",
+    "sha256": "50be2c814bebe470c431ab412c13593c228eaf5ac945b33af24c153647c0abe4",
+    "bytes": 1538
+  },
+  {
+    "id": 77,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/77.gif",
+    "sha256": "76449bc5eecee3dcd03e3e69157a6950124a4e3dba7ff6ea319457dd52eb504e",
+    "bytes": 2806
+  },
+  {
+    "id": 78,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/78.gif",
+    "sha256": "887f70a389bec5333188540ea79877fc50bf3d650cd86d8c998d219cc7bcc32c",
+    "bytes": 11607
+  },
+  {
+    "id": 79,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/79.gif",
+    "sha256": "996588b707862023f09dbdbb14fbaf9cdb9991baec013f90f689ee0354142dd0",
+    "bytes": 1316
+  },
+  {
+    "id": 80,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/80.gif",
+    "sha256": "c07c55568fa6acefda97450e0a53494a1c2ab42f49f7ea3353f0d74fa81f61d0",
+    "bytes": 2035
+  },
+  {
+    "id": 81,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/81.gif",
+    "sha256": "fdbf396aa6d0b4473b2002ba405b90bbd6dcf26bc2c4364999c19e910a77fcde",
+    "bytes": 1680
+  },
+  {
+    "id": 82,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/82.gif",
+    "sha256": "56dc64b184e829501b54da6c05a673f2c48367c7be83b2895f2803374d44a0cb",
+    "bytes": 4547
+  },
+  {
+    "id": 83,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/83.gif",
+    "sha256": "c8793372a988eb119284d0551d6c38d33e3500731e22072a7d7a20f539ec9cbf",
+    "bytes": 2636
+  },
+  {
+    "id": 84,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/84.gif",
+    "sha256": "8a8214f0e640f365ecd17d586c1ca27c86f3e913cd0dedd1283c4196e8566a90",
+    "bytes": 1795
+  },
+  {
+    "id": 85,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/85.gif",
+    "sha256": "affed18c6ee52ff1f0c4e54205749fc50807a641e2e8b22dd8d5465c35db53a4",
+    "bytes": 6343
+  },
+  {
+    "id": 86,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/86.gif",
+    "sha256": "a8e4c0c12f838c02bf9771896152f058a820f547d44834bdab7241b58b313dfb",
+    "bytes": 2250
+  },
+  {
+    "id": 87,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/87.gif",
+    "sha256": "afd53efa2c62dcb5889ecbc4a0f0f0d023d43b452ca2735a06203c5562d16c37",
+    "bytes": 8312
+  },
+  {
+    "id": 88,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/88.gif",
+    "sha256": "7afcc7ab926860af7aa6d073ec11bf761a163f2db2376d9caea412e6d462bd21",
+    "bytes": 1800
+  },
+  {
+    "id": 89,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/89.gif",
+    "sha256": "088826be35a29ba94e4c54c39ec00ff80bf052133b197e2baa0df8bae1da74fc",
+    "bytes": 3237
+  },
+  {
+    "id": 90,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/90.gif",
+    "sha256": "76f68c524c0437d7c6417aaefc6b85a5b284f8e7995662de09e40ef5e02bb457",
+    "bytes": 1561
+  },
+  {
+    "id": 91,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/91.gif",
+    "sha256": "ce0dfd1a041d4f411f071834e7ca2a960025d0f28d849d9ba5c7c15aecaa3003",
+    "bytes": 3851
+  },
+  {
+    "id": 92,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/92.gif",
+    "sha256": "3934a19c9fcca43443e485a2662225f270347540fa8834a9e8c26d717384011b",
+    "bytes": 1767
+  },
+  {
+    "id": 93,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/93.gif",
+    "sha256": "a38a50aa6ead2a526f20ec1798592fc7195848d7b7bb30e7bac1441c7e4e5379",
+    "bytes": 1444
+  },
+  {
+    "id": 94,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/94.gif",
+    "sha256": "389d3b27ecba9a69186a62aa409d509cf857c0954380e851d55e3eb0fa2679f4",
+    "bytes": 4589
+  },
+  {
+    "id": 95,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/95.gif",
+    "sha256": "c3e77c3baaa5e4944ad5dec0c06ef245aaf7c4f72d0678a6261ba1c04a144664",
+    "bytes": 5950
+  },
+  {
+    "id": 96,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/96.gif",
+    "sha256": "a96aec2f86ed7731d60cc9c77a324f940dd2b752482eda2d6a72e5ba57b52d09",
+    "bytes": 3629
+  },
+  {
+    "id": 97,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/97.gif",
+    "sha256": "297cd8948ffef0b0abc9bc39c0bbc50b418de5829c7cbf9ab87088cab5b79657",
+    "bytes": 2984
+  },
+  {
+    "id": 98,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/98.gif",
+    "sha256": "0757db0fcb7adad39bd10cb12b12be27891038a1fcd665d1fc95794fa9df780a",
+    "bytes": 4680
+  },
+  {
+    "id": 99,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/99.gif",
+    "sha256": "61b83ff4bea0d2b1d1228b6416b437300497fb31b09fec13633f873737505741",
+    "bytes": 5163
+  },
+  {
+    "id": 100,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/100.gif",
+    "sha256": "9170d245060bb16f293af6619b05904e4f0d2628458740bd49fcf2c76e7eedcd",
+    "bytes": 1587
+  },
+  {
+    "id": 101,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/101.gif",
+    "sha256": "e0502abf55837adea4f7d38440d577fac6ef3a3acfed1a98ff8ae3ffee2bea0d",
+    "bytes": 626
+  },
+  {
+    "id": 102,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/102.gif",
+    "sha256": "e6c50193ee8e615993aeb7af243f92588ac8ed4dd97d6f09931638dba2e5c318",
+    "bytes": 8009
+  },
+  {
+    "id": 103,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/103.gif",
+    "sha256": "5dc0fd1fbf7029ee85033b2f8ea6bc094e15ce4cd41a82226e8320f5521c2798",
+    "bytes": 9007
+  },
+  {
+    "id": 104,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/104.gif",
+    "sha256": "47301bb179301bb5ee056174fbdeb54b4c0cb354121308e3aedee1d6f4042771",
+    "bytes": 2118
+  },
+  {
+    "id": 105,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/105.gif",
+    "sha256": "fe2a4224a3cb3930ecfbd525af0eea457992d230217cdf896c56a68d28c09422",
+    "bytes": 7927
+  },
+  {
+    "id": 106,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/106.gif",
+    "sha256": "99787685eabdeed7ac98f8e6a93f83eb75d863fb884f323eb040aee83e5a2552",
+    "bytes": 4722
+  },
+  {
+    "id": 107,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/107.gif",
+    "sha256": "dc10b2919abbf3c9eb3ffda91b1d38f8a189c5848ea9f68228f65276c2a1ac55",
+    "bytes": 7473
+  },
+  {
+    "id": 108,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/108.gif",
+    "sha256": "b5215f01b051a48ff3c6f3429c30e4c8f7c0a332fea6139f611cab69377c7001",
+    "bytes": 2101
+  },
+  {
+    "id": 109,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/109.gif",
+    "sha256": "04339af8d8583a568f14944fc38ce7ffa5cd1464125da8b43add695295eea9c3",
+    "bytes": 1599
+  },
+  {
+    "id": 110,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/110.gif",
+    "sha256": "5492dae819a8c364e84157835bb764771716c2b01c29584fa0f395336fcf0be7",
+    "bytes": 5569
+  },
+  {
+    "id": 111,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/111.gif",
+    "sha256": "0dd0fb4d11d8772e23d767d14a5f17792efe00cdc5181dd902dc2a57603107d2",
+    "bytes": 4336
+  },
+  {
+    "id": 112,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/112.gif",
+    "sha256": "61f0730ad4d768aff65447d4f1f0ed432709fafd70bd1657ce3d6f86766dff62",
+    "bytes": 11082
+  },
+  {
+    "id": 113,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/113.gif",
+    "sha256": "b264ad8329d74610d5f315d43f10883ff3b262753e90f55ab7b294280c576aee",
+    "bytes": 2436
+  },
+  {
+    "id": 114,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/114.gif",
+    "sha256": "a0f891d1789106c31c8c65264db421bc6fbbf34e137763e89176d63256ae6948",
+    "bytes": 1077
+  },
+  {
+    "id": 115,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/115.gif",
+    "sha256": "7e420e2bee93dedcec9286fcd4a2959942c7665dc5fac109b39a86b4e5b11f61",
+    "bytes": 2241
+  },
+  {
+    "id": 116,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/116.gif",
+    "sha256": "778fd8856eb73600c450d8a37d559e0f027c7682f015a8fe62f8586673db458d",
+    "bytes": 2350
+  },
+  {
+    "id": 117,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/117.gif",
+    "sha256": "488fd8f47642110545b2965472071d7d13c29d669ecd2b22f7d095a8a1e07d35",
+    "bytes": 2194
+  },
+  {
+    "id": 118,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/118.gif",
+    "sha256": "1fff072194722ed6c70999378ca8fb781b57499ac94ce79eb6425db04f8e9c48",
+    "bytes": 4486
+  },
+  {
+    "id": 119,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/119.gif",
+    "sha256": "ef546dda2abb78a666da9ad7ecc03b71544b258010816ed8ea77aa1db3e34fe0",
+    "bytes": 6403
+  },
+  {
+    "id": 120,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/120.gif",
+    "sha256": "3c52bcff6efe7089a05d565d88c506a7651603211c85ad6a0df02008b0cd4038",
+    "bytes": 1894
+  },
+  {
+    "id": 121,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/121.gif",
+    "sha256": "9836c744221b6fd042a99e8d5184a5278f3d3f3cf31e875691e1164f9e95960b",
+    "bytes": 5498
+  },
+  {
+    "id": 122,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/122.gif",
+    "sha256": "2b15e21d1d26ef15bdebec3a20db274d80f56c97ba4e72edf3d8e132122cea26",
+    "bytes": 3865
+  },
+  {
+    "id": 123,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/123.gif",
+    "sha256": "b2c7adb3152930accc780598d070debef02393dced1e4b1cda40a855186a94b8",
+    "bytes": 18875
+  },
+  {
+    "id": 124,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/124.gif",
+    "sha256": "7cad9d9680101280784e45379d7a0059a8a56f565d167dd67af71e44764ce6e8",
+    "bytes": 4171
+  },
+  {
+    "id": 125,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/125.gif",
+    "sha256": "c2f3921c3463daf93c47b2ed87cf4846cbcc52abbceb8e8cff581c8231db7058",
+    "bytes": 2680
+  },
+  {
+    "id": 126,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/126.gif",
+    "sha256": "31986f34ad1d5e8953bddfc85dbda07e9bd806d9f1948b0d2fa3243fd1156aec",
+    "bytes": 4544
+  },
+  {
+    "id": 127,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/127.gif",
+    "sha256": "7710d5e8bd04072bdca9c5d65e81857f00b09dff9d5f24798c1d4f08031b76f9",
+    "bytes": 5501
+  },
+  {
+    "id": 128,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/128.gif",
+    "sha256": "2841c226679cc67b1e41183894f29fd7a6888d5892e5a8c53807740ff6c0c9f5",
+    "bytes": 7710
+  },
+  {
+    "id": 129,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/129.gif",
+    "sha256": "d88de78e7f7d418d9c1b74ef57925f750bfa2fa8515c9943dbf66132a7f89260",
+    "bytes": 6416
+  },
+  {
+    "id": 130,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/130.gif",
+    "sha256": "b5b94817319e67495dc3dbafde617bfc25bbae71adb93320dafc4f3479195281",
+    "bytes": 3664
+  },
+  {
+    "id": 131,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/131.gif",
+    "sha256": "210c84e28643f0726435542dcb610de7fe91aad7bcf1ef3343be53684ac09865",
+    "bytes": 1214
+  },
+  {
+    "id": 132,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/132.gif",
+    "sha256": "2f3a60f4f04a951e0bd21df7061ad8339d6e5becabfee7d4ca1cccdeca1a7736",
+    "bytes": 2402
+  },
+  {
+    "id": 133,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/133.gif",
+    "sha256": "9d16e521d3c617d7d7c2299c3179780d178c51ddb5ef6fbd19d8a7e4aba8405e",
+    "bytes": 5307
+  },
+  {
+    "id": 134,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/134.gif",
+    "sha256": "e56b288361d89e9c5e7dcf80f77075c127724df5e0ff99be8874819e6809999c",
+    "bytes": 4244
+  },
+  {
+    "id": 135,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/135.gif",
+    "sha256": "4df0eb9762522c8d1139dae48bf9885674dc4ace9f7b538e72de9749d0c5df01",
+    "bytes": 3511
+  },
+  {
+    "id": 136,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/136.gif",
+    "sha256": "493347900123acdc53cd5b6c98703b00c22724957b156dac5ee3bb3f1ffcf203",
+    "bytes": 3904
+  },
+  {
+    "id": 137,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/137.gif",
+    "sha256": "57e82a13ceff03de5692728fbe72a93f966aec283d3359c42c7d79c376ae4760",
+    "bytes": 1839
+  },
+  {
+    "id": 138,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/138.gif",
+    "sha256": "663fb590086d0ef2c5d683f3fd4a26502e23559fe0068fe576c5f6c52dba3650",
+    "bytes": 1100
+  },
+  {
+    "id": 139,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/139.gif",
+    "sha256": "b7e768da8aad27a3d59dcc77cc2bc9f3d7e3fc7771234163569ac7aee1348d83",
+    "bytes": 1757
+  },
+  {
+    "id": 140,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/140.gif",
+    "sha256": "1ab7a4bcfcd0babce51ca359c7608d45b1b89c8d63d3dfd0daf618c6c3ff6d9b",
+    "bytes": 1653
+  },
+  {
+    "id": 141,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/141.gif",
+    "sha256": "67aede2ad47e62c3bb6c850de8c91e6a3d561d9de04c5548818f82b46cc0ed33",
+    "bytes": 2869
+  },
+  {
+    "id": 142,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/142.gif",
+    "sha256": "f06d90873e9b5d5b45fc4f9ca62cc0531dc473a614a1b2ea6b4824e1863bb669",
+    "bytes": 6017
+  },
+  {
+    "id": 143,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/143.gif",
+    "sha256": "a744f32817642dd4c2f063be1f53a1a111f0ee3505e7faabbb2ee7cd25deaf3d",
+    "bytes": 2504
+  },
+  {
+    "id": 144,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/144.gif",
+    "sha256": "62dbac6048155a720e505d1c1f88a9069e86aefddc8edb76eeb90bc0e32a4b06",
+    "bytes": 8735
+  },
+  {
+    "id": 145,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/145.gif",
+    "sha256": "aa5bdeb038563b542b9f1cbadf35bf85de79dd122392a42795bd39a247fadbc5",
+    "bytes": 7257
+  },
+  {
+    "id": 146,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/146.gif",
+    "sha256": "2cfd949facf09d529a936597e8b339a73a92ff17384d7658220904d8b2a2bb3a",
+    "bytes": 10835
+  },
+  {
+    "id": 147,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/147.gif",
+    "sha256": "99ba3712ff618d87b58bd72b51600b5da0467ebeb216a8b6492e4ec6924c6e26",
+    "bytes": 2434
+  },
+  {
+    "id": 148,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/148.gif",
+    "sha256": "de5a81593382f7fcad1492d4ee0d58f0041c2ec4d6f57d9edc63c80677fcecdb",
+    "bytes": 5045
+  },
+  {
+    "id": 149,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/149.gif",
+    "sha256": "24b02aa417566b81cf783fcd1d53cc32a02afc3d2294bcb4857fea1166131a99",
+    "bytes": 9824
+  },
+  {
+    "id": 150,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/150.gif",
+    "sha256": "8770cd3825d8934924d298baa52f78183e748f98665e591d4aeff886beda93d1",
+    "bytes": 9502
+  },
+  {
+    "id": 151,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/151.gif",
+    "sha256": "40fbc30332b44e9f7b535cecaae598cf8ca4a5d5f7a6961905750d0c7c6bb7b0",
+    "bytes": 4824
+  },
+  {
+    "id": 152,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/152.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2147,
+    "sha256": "0a5e826592dff85641da5fa5c52b5bd60d13404c73b71b7ce8fbdd32a1cabf7a"
+  },
+  {
+    "id": 153,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/153.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3378,
+    "sha256": "101dbf750f41445ba1b49316dbb669422e17331d9012444d4f75132322c4006c"
+  },
+  {
+    "id": 154,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/154.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3561,
+    "sha256": "cb64a4f5b757ed783f17ae9372841c8cecb7cd50eaa7ab8d0a81d79717daf1aa"
+  },
+  {
+    "id": 155,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/155.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 5897,
+    "sha256": "43916ce23694365588d7a22cc6cfd42ddee9f434a6cc765a31b17e714f8bdb56"
+  },
+  {
+    "id": 156,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/156.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2985,
+    "sha256": "3aa84d42154280dcfa9d48465764d45da1d17e4a550d4e5471acdd9c90104599"
+  },
+  {
+    "id": 157,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/157.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 8803,
+    "sha256": "31724eeb257f357b82ccf7a26ee6b19b99f09ee5efe0c87627221cc1291b1241"
+  },
+  {
+    "id": 158,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/158.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 6293,
+    "sha256": "a1f7d4b4c27fbe4860b6556830fe7e52ccf1bcdcd45682c40bdf81f66e3eb25c"
+  },
+  {
+    "id": 159,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/159.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 9913,
+    "sha256": "64c97d7d7a7403eff69fa16cf8bbcb4a67213343119ce23888c162fa3f3c9d61"
+  },
+  {
+    "id": 160,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/160.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 4232,
+    "sha256": "1c06a66a88d429d975bfce720a2be69ad04fb3901aa78072f4e221c280b333e9"
+  },
+  {
+    "id": 161,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/161.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1600,
+    "sha256": "556c2a93be716ff5e99ec9ae0d1b0c5de5e678323af3a7c8830ec5e129385678"
+  },
+  {
+    "id": 162,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/162.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2045,
+    "sha256": "0f587c9574e8b8898d1bad26baf0ebdec67a43d16dd03ca64803a4328ed11396"
+  },
+  {
+    "id": 163,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/163.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2552,
+    "sha256": "a27df0c5349ca7b48b10f1fee0741b63126183d48cad8d78baafae8c989d9b6e"
+  },
+  {
+    "id": 164,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/164.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1704,
+    "sha256": "d63e11f918721bf0de47841917f73e02ae5d3e819bdffa15b0b974f784585835"
+  },
+  {
+    "id": 165,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/165.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3399,
+    "sha256": "ff9428ad34a6af6a1ad363b608aa815827833ad670c33db8049ea2c4e714d47d"
+  },
+  {
+    "id": 166,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/166.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2610,
+    "sha256": "0e9f70872e8d96f6655d7921bc74c5fd53800ef1e908c8e06ef7f557f0dc65e5"
+  },
+  {
+    "id": 167,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/167.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1268,
+    "sha256": "60a0e5f3871c6a017c06c036232d0b94b970087ff6d5f8168061fc830245a122"
+  },
+  {
+    "id": 168,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/168.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 8230,
+    "sha256": "2c8cd67e94d40dbcb5efecedd47efb9efc572e9f63b4c3f6926906030c1a58f1"
+  },
+  {
+    "id": 169,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/169.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 8819,
+    "sha256": "53fc1421eacdcbc2dd62ca4de7cea9b9db76e1a671f4ad6453236ed91646b552"
+  },
+  {
+    "id": 170,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/170.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 4548,
+    "sha256": "2689209cfa2b1c5ed883ba396b40ac20c9ec6750932ff2787a538543b95b4f1c"
+  },
+  {
+    "id": 171,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/171.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 4605,
+    "sha256": "0950c890ea3ff96edaf631c2da9fe505ad36c31ef9a2cc6315dac39468507581"
+  },
+  {
+    "id": 172,
+    "game": "Pokemon Crystal (Generation II)",
+    "width": 56,
+    "height": 56,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/172.gif",
+    "sha256": "db1cbd2adcbd0e1752a026367ea2efa905a58535a2becd8c4c443c3b4e8f926d",
+    "bytes": 1148
+  },
+  {
+    "id": 173,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/173.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1465,
+    "sha256": "7582298e1be60dc8a94b701aabc31809aa2890c3f163d4f9564b20fb60995922"
+  },
+  {
+    "id": 174,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/174.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1068,
+    "sha256": "f53ddaacfe27b6b4f6c06dd68ab9512c01d59ebd4c3993bfbd2501359119d742"
+  },
+  {
+    "id": 175,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/175.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1309,
+    "sha256": "993e52b4bed79465617853452590c72a72162d261dc1cbe6bd9cbc8f1e8830c9"
+  },
+  {
+    "id": 176,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/176.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3127,
+    "sha256": "e525260eb52772940c5143debd73234157018188c105f3f9fb10967912450979"
+  },
+  {
+    "id": 177,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/177.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 547,
+    "sha256": "b1af9dd2aa6a287a58ba4289a35af017b027fc077e8249716d5ed88750dd222d"
+  },
+  {
+    "id": 178,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/178.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3139,
+    "sha256": "a99b2c4d86fb6db678a4048722c2e41a41bb3c8c2bd17c49dfcef53a71417058"
+  },
+  {
+    "id": 179,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/179.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1758,
+    "sha256": "fdd6b334347c331210dec2d8d168f4a7a20f8e75460cf174c79a5a04f57d4c54"
+  },
+  {
+    "id": 180,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/180.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1366,
+    "sha256": "1a051dd70108c93eeeed591f5e3bac6b46fe085b250e8f89272a668eea88365f"
+  },
+  {
+    "id": 181,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/181.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 8074,
+    "sha256": "73c1750e47b284d8e5d3b7622ecb63280885bbbdc5c080dbc16f20747bdac178"
+  },
+  {
+    "id": 182,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/182.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3654,
+    "sha256": "82ea261f4e293f4fd9b629f62213ee0bac56eb3b21d8c1e75ceaf34da3231f73"
+  },
+  {
+    "id": 183,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/183.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3383,
+    "sha256": "eca9973ef8aba151e4d84267cf3f3095a013c4adc239b4d7d3eaef5185faaac6"
+  },
+  {
+    "id": 184,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/184.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3510,
+    "sha256": "a829dcf30532dd06c5b26bdfc72774c3f6489d85c87d6e625c1ee3e7cb5a9351"
+  },
+  {
+    "id": 185,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/185.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3913,
+    "sha256": "0c95663e7fbf501cda431193084e79acfb06f0e3a0fadd0461e3ecbab77105f3"
+  },
+  {
+    "id": 186,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/186.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2505,
+    "sha256": "676d5626c504fc7bfab5981e925f9904e6323b40613390863b6982952b90dfd3"
+  },
+  {
+    "id": 187,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/187.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1919,
+    "sha256": "43b254cd915f617fafc16ca5e28461617244b383ad5f75e79605177ed253f9e6"
+  },
+  {
+    "id": 188,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/188.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1124,
+    "sha256": "8fc75d40e555f444145589c2d142ef682846e4a6ce97e880568dd0b865129ce9"
+  },
+  {
+    "id": 189,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/189.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2294,
+    "sha256": "83d911279dacddd6bd70f8090e1f5f44b5dfb5fd96cc1e4fb351f1fc1711e1b7"
+  },
+  {
+    "id": 190,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/190.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1521,
+    "sha256": "99b43e15c52c8b10911848cd7f8a60e7fd6c9cc6bb1ee36c6dcfcdef2136af62"
+  },
+  {
+    "id": 191,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/191.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1824,
+    "sha256": "f221a6966535682764909d349c3309c7dd91cf44e9997a8738a579733ba8f7ad"
+  },
+  {
+    "id": 192,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/192.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 941,
+    "sha256": "9614e88b63e5af37fb0b97cf80763340390e6333421d8f5dfa16293ac5689d84"
+  },
+  {
+    "id": 193,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/193.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 4106,
+    "sha256": "696dd49d6b87753c0e064dc0b805f21849dbeab98efb48f407bff0b73ec6f94e"
+  },
+  {
+    "id": 194,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/194.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1977,
+    "sha256": "c585e7ca9a8be3472953fc21b73c1a40af91a32647992189d96a615db98680c2"
+  },
+  {
+    "id": 195,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/195.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3042,
+    "sha256": "17aab09fbbd3ed23fa5912926e2852711fbbc62546e67b6adddee02bc2871030"
+  },
+  {
+    "id": 196,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/196.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 4106,
+    "sha256": "6c63dc00b12900a3f8ba43b7fc47f2881014c310c6dfef62eba7883d5a73f306"
+  },
+  {
+    "id": 197,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/197.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 4456,
+    "sha256": "634a9112ef377bdce7d568bb11d7ddfd3b9ad77d92408fbc3e9b0b68914bee4a"
+  },
+  {
+    "id": 198,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/198.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 4196,
+    "sha256": "8a96666522e7ed129e392fef3cfb3f2a06c65c22107b952961f769523d7db801"
+  },
+  {
+    "id": 199,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/199.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1746,
+    "sha256": "c76441a9b2ca27edca90516fddda2556ae4c13ea2542f776aeaea3a283a5003a"
+  },
+  {
+    "id": 200,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/200.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 772,
+    "sha256": "56b79d8d9fbf1d2b2715cd2a4f1533e54fc3c8801996170b179339677e49c79c"
+  },
+  {
+    "id": 201,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/201.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1099,
+    "sha256": "19252ec488616f184e666e601c9d3ba0fcdfc9c184901c112ad0b0299d160e04"
+  },
+  {
+    "id": 202,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/202.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 778,
+    "sha256": "9694ee626987d9dcf8505c61b898e574d630e551d24203eb5e2ca237491219f5"
+  },
+  {
+    "id": 203,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/203.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 7865,
+    "sha256": "a927ee5fb6cb89f55ca5200c9f9a359675734ec52dedf3a97b85fc663e185de4"
+  },
+  {
+    "id": 204,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/204.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1143,
+    "sha256": "65fc4d4fa5468bc0a6f5f9b798bb1724d84ca7e5b852dd4c946773a485408319"
+  },
+  {
+    "id": 205,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/205.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1739,
+    "sha256": "ae1d6fa8fafe9a760439d8ae2eaef421c755dc6c1705b0f793595e9fd7be23c2"
+  },
+  {
+    "id": 206,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/206.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2180,
+    "sha256": "89648e520ea22852d71b85c150e04eb974a8b2d711597e7605bd0468098f0587"
+  },
+  {
+    "id": 207,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/207.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1862,
+    "sha256": "b73137041434c5254eae3eefc92c18cbc9e83734571e9535bd029526bb6dd566"
+  },
+  {
+    "id": 208,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/208.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 4433,
+    "sha256": "f1654998ab5b03f9f9d466fec7f0a4f91b566a198105b040af29e2d28cb62849"
+  },
+  {
+    "id": 209,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/209.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3044,
+    "sha256": "e46c3b77612cc121c6a298697f44eec52595f16e8602f90fd46149f38439e7e6"
+  },
+  {
+    "id": 210,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/210.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2912,
+    "sha256": "f8366f427e004538e83e3a4ee9e3d5b42b0ff813afc1f0db3c1484f5748b6981"
+  },
+  {
+    "id": 211,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/211.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1761,
+    "sha256": "b1d90adc0e48256bcb72d3ba725f2cfbf600d40c2451104adacc88da692f28f5"
+  },
+  {
+    "id": 212,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/212.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 8079,
+    "sha256": "824ef3b9f0fe252b3f297e01b90478ab7d84e0afde430d853fa76af25c1f9ae3"
+  },
+  {
+    "id": 213,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/213.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1702,
+    "sha256": "3316b5f86b2271f455f8437309ad9644ef3cad7eee539fecab7f297ce9252f07"
+  },
+  {
+    "id": 214,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/214.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2128,
+    "sha256": "baaa63a03063b657ae82284fced0a2224c221cf4f7f6d21e291eb21bcce9ab48"
+  },
+  {
+    "id": 215,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/215.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1549,
+    "sha256": "a6c75150c7671f1c05707adc8d86d1d114dc94f38a2a68cddcf7a825886ea19c"
+  },
+  {
+    "id": 216,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/216.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 997,
+    "sha256": "420bc9a795cba3660acdf5972e8951c45f01d78e3c3fb8c73170415c308105d0"
+  },
+  {
+    "id": 217,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/217.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 5806,
+    "sha256": "194af04cdf016913f721c7a249a5055efb194a01cfa751132831671af12d2ce4"
+  },
+  {
+    "id": 218,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/218.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1887,
+    "sha256": "a72d4cb9a536512e3f4091285a1d51630dda0a7b0a7e530634e37dbb35a63990"
+  },
+  {
+    "id": 219,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/219.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3352,
+    "sha256": "d0941a5993a6fb8778d78df013054aed9331eff2b022b47578f1200c9a3730c1"
+  },
+  {
+    "id": 220,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/220.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 844,
+    "sha256": "81638aacaefd97b8d1581007077f2fd8930129f7587dc6ce38f9d7bd6480868f"
+  },
+  {
+    "id": 221,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/221.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1653,
+    "sha256": "cc4e53675d9716119b1e3d6b87ff33f1b9e433eae904ae5aecc613b3186ee056"
+  },
+  {
+    "id": 222,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/222.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2447,
+    "sha256": "f57583d733bb30a746b4537357ac91e552b4f235d1c2d523e05f9ad8db0f2113"
+  },
+  {
+    "id": 223,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/223.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1982,
+    "sha256": "65a5720a438846f7415c32d80bae4a14ec24e12baad07829e5b39047e40a5e55"
+  },
+  {
+    "id": 224,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/224.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2064,
+    "sha256": "95bf143aaff21c7efd2bd08cb7c62f694eb3340b5d8b67203854d236bfe2b4d2"
+  },
+  {
+    "id": 225,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/225.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 6296,
+    "sha256": "eb0c7ac0e749c2c59be613e0b4986b484fe903b892858bef067593d25e28713f"
+  },
+  {
+    "id": 226,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/226.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 4245,
+    "sha256": "79f6467f54333ed479744f76de9fae34754beee6d6efbc752668663a16eb6f45"
+  },
+  {
+    "id": 227,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/227.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 7111,
+    "sha256": "5745001d82fd37d984ff7ec69de0f3267fa4aaf613cd1783ddc95880f3634621"
+  },
+  {
+    "id": 228,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/228.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2588,
+    "sha256": "84e460025a444c0ed9e281ec689fb5975337f1ff1bd42395d16215d0a6a2aea1"
+  },
+  {
+    "id": 229,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/229.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 13554,
+    "sha256": "d1a67e5c5bb7c5cbc3ffe38718f6308e29584cf34e3f4cc3525917129e88a367"
+  },
+  {
+    "id": 230,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/230.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 5279,
+    "sha256": "65ce7f25c08068e86be499a4baf30c56cf01cc3c9a7e759928262e42dce9f120"
+  },
+  {
+    "id": 231,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/231.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1110,
+    "sha256": "876df38bc84e20ec33bca12d375c7ef3e460b8d130cb8eeb6bbb0579e78a0b18"
+  },
+  {
+    "id": 232,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/232.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2864,
+    "sha256": "f9235fdfd7bebbf0e6a769107f6793ab39a55ab47e5faf9457dac8fb0c651c22"
+  },
+  {
+    "id": 233,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/233.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2772,
+    "sha256": "e55709f5e07a30c3b290d8611743eed24bdfdbcb1b96c2202ce4c6fc2e95781e"
+  },
+  {
+    "id": 234,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/234.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3048,
+    "sha256": "731dbd49e2ff2a71d6220166096f374b732bbb08df86df7796f04063dffff98a"
+  },
+  {
+    "id": 235,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/235.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 6164,
+    "sha256": "db1d35059d3ba404f3391cb411b84e0d2c3f3917249b46553561f20677b3e00f"
+  },
+  {
+    "id": 236,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/236.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3836,
+    "sha256": "78c366892fc69849f7dadd7ec70ab8cce57ef0fa9edf06d4390c5af82b7852b2"
+  },
+  {
+    "id": 237,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/237.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 4922,
+    "sha256": "9521429e0ae5b1650a98bd7b5292e2a94de6d364d769a60db637d7f14a1f596c"
+  },
+  {
+    "id": 238,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/238.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 863,
+    "sha256": "c0e80522b865e8620e91e203cf4c28393c11bd5f610acf391c94cf8a7c436b8a"
+  },
+  {
+    "id": 239,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/239.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 6209,
+    "sha256": "6c86cbb9691919f6946cd00edcec562a77ed36481fd9022651a06db1037390c2"
+  },
+  {
+    "id": 240,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/240.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2579,
+    "sha256": "c6c6b5f112c07a01a322b5baf7dedfdabe1e40aee450273045fe62e911d6c124"
+  },
+  {
+    "id": 241,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/241.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2947,
+    "sha256": "d5ac48c9f0c129a1489340a410c66b9fed1ab35d028292e813f1b5026f280656"
+  },
+  {
+    "id": 242,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/242.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 3680,
+    "sha256": "5f497651e44543263dc122a7d8993523a3f0e6819a8ff7aca8cf2ac95791078c"
+  },
+  {
+    "id": 243,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/243.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2844,
+    "sha256": "f38085a374baf03a0775ea6d7e20401708a2e5a86b9587f9b9ea080a7e3cc002"
+  },
+  {
+    "id": 244,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/244.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 2984,
+    "sha256": "a5436f5f26caa2c02de26121a4110d0288ba13eccfe6963e66c11327a75e045e"
+  },
+  {
+    "id": 245,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/245.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 4795,
+    "sha256": "1219f2e65502c4d33d3f8a00787e8cef5373533047c588f0d3362ec6b464230a"
+  },
+  {
+    "id": 246,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/246.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 922,
+    "sha256": "646e00e0184a0abf5d2a9523d3ad3d5233e506fcc23674af114f8c6ac548d983"
+  },
+  {
+    "id": 247,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/247.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 1061,
+    "sha256": "cc8e2a04e67e2ca1e1d672d1100239e93fe60e20c2288ab1d55d8f8cfac25b97"
+  },
+  {
+    "id": 248,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/248.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 4998,
+    "sha256": "3b922bd9bff4d9047acdfe9af7d0fce7a8848a2d3c0013eb797a2d28d047db5e"
+  },
+  {
+    "id": 249,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/249.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 8990,
+    "sha256": "05adb98b72977b0680d03c8282a61d6fca753aaf1b593d8e6c4cdbf639d09c1d"
+  },
+  {
+    "id": 250,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/250.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 11035,
+    "sha256": "4808e5aac39de7ef2656853c48341864479fe8e25705e9119c4e236e35337fc0"
+  },
+  {
+    "id": 251,
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/251.gif",
+    "width": 56,
+    "height": 56,
+    "bytes": 4827,
+    "sha256": "00c1fa833f44b3ef82690cf32d4cba1d4cffc5a51f7e40605d3bb07df4ea0906"
+  }
+]

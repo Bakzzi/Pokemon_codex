@@ -1,0 +1,99 @@
+'use strict';
+const fs=require('node:fs/promises');
+const path=require('node:path');
+const crypto=require('node:crypto');
+const {StringDecoder}=require('node:string_decoder');
+const TAIL_BYTES=256*1024, MAX_LINE=8*1024*1024;
+
+// Strip every record at the input boundary. Never retain prompt/answer text, tool arguments,
+// account identifiers, balances, authentication, or arbitrary payload data.
+function selectEvent(line) {
+  if(!line.includes('"event_msg"')) return null;
+  let row; try {row=JSON.parse(line);} catch {return null;}
+  if(row.type!=='event_msg'||!row.payload) return null;
+  const p=row.payload;
+  if(!['task_started','task_complete','task_completed','turn_aborted','error','token_count'].includes(p.type)) return null;
+  const clean={type:'event_msg',timestamp:row.timestamp,payload:{type:p.type}};
+  if(p.type==='token_count') {
+    const c=p.info?.total_token_usage;
+    if(c) clean.payload.info={total_token_usage:{output_tokens:c.output_tokens,total_tokens:c.total_tokens}};
+    const r=p.rate_limits;
+    if(r && (!r.limit_id || r.limit_id==='codex')) {
+      clean.payload.rate_limits={};
+      for(const key of ['primary','secondary']) if(r[key]) {
+        const v=r[key];
+        clean.payload.rate_limits[key]={used_percent:v.used_percent,window_minutes:v.window_minutes,resets_at:v.resets_at};
+      }
+    }
+  }
+  return clean;
+}
+class CodexReader {
+  constructor(root,game) {this.root=root;this.game=game;this.files=new Map();this.lastScan=0;this.busy=false;this.status={connected:false,files:0,error:null};}
+  async discover(now) {
+    const found=[];
+    async function walk(dir,depth) {
+      if(depth>3)return;
+      const entries=await fs.readdir(dir,{withFileTypes:true});
+      for(const entry of entries) {
+        const full=path.join(dir,entry.name);
+        if(entry.isDirectory()&&/^\d{2,4}$/.test(entry.name)) await walk(full,depth+1);
+        else if(entry.isFile()&&entry.name.startsWith('rollout-')&&entry.name.endsWith('.jsonl')) {
+          try {const stat=await fs.stat(full);found.push({full,mtime:stat.mtimeMs});} catch {}
+        }
+      }
+    }
+    await walk(this.root,0);
+    // One file inventory per minute; append reads are bounded to the 64 most recently modified logs.
+    found.sort((a,b)=>b.mtime-a.mtime);
+    const keep=new Set(found.slice(0,64).map(x=>x.full));
+    for(const filename of this.files.keys()) if(!keep.has(filename)) this.files.delete(filename);
+    for(const {full} of found.slice(0,64)) if(!this.files.has(full)) {
+      const id=crypto.createHash('sha256').update(path.basename(full)).digest('hex').slice(0,24);
+      this.files.set(full,{id,offset:0,carry:'',decoder:new StringDecoder('utf8'),initial:true});
+    }
+    this.lastScan=now; this.status.files=this.files.size;
+  }
+  async poll(now=Date.now()) {
+    if(this.busy) return;
+    this.busy=true;
+    try {
+      if(!this.lastScan||now-this.lastScan>60000) await this.discover(now);
+      let readable=0;
+      for(const [filename,cursor] of this.files) {
+        let handle;
+        try {
+          handle=await fs.open(filename,'r');
+          const stat=await handle.stat();
+          if(stat.size<cursor.offset) {cursor.offset=0;cursor.initial=true;cursor.carry='';cursor.decoder=new StringDecoder('utf8');}
+          if(cursor.initial) {
+            const size=Math.min(stat.size,TAIL_BYTES), start=stat.size-size;
+            const bytes=Buffer.alloc(size); const {bytesRead}=await handle.read(bytes,0,size,start);
+            const decoded=cursor.decoder.write(bytes.subarray(0,bytesRead));
+            const parts=decoded.split('\n');
+            if(start>0)parts.shift();
+            cursor.carry=parts.pop()||'';
+            // Baseline the latest observed cumulative counter: no historical backfill or inferred usage.
+            for(const line of parts) {const e=selectEvent(line);if(e)this.game.observe(cursor.id,e,{baseline:true,now});}
+            cursor.offset=start+bytesRead; cursor.initial=false;
+          } else if(stat.size>cursor.offset) {
+            // Bound each poll. The next poll continues at the exact byte offset, including partial UTF-8.
+            const size=Math.min(stat.size-cursor.offset,2*1024*1024), bytes=Buffer.alloc(size);
+            const {bytesRead}=await handle.read(bytes,0,size,cursor.offset);
+            cursor.offset+=bytesRead;
+            const parts=(cursor.carry+cursor.decoder.write(bytes.subarray(0,bytesRead))).split('\n');
+            cursor.carry=parts.pop()||'';
+            for(const line of parts) {const e=selectEvent(line);if(e)this.game.observe(cursor.id,e,{now});}
+            if(cursor.carry.length>MAX_LINE) cursor.carry='';
+          }
+          readable++;
+        } catch(error) {if(!['ENOENT','EBUSY'].includes(error.code))this.status.error='일부 Codex 기록을 읽을 수 없어요';}
+        finally {if(handle)await handle.close();}
+      }
+      this.status.connected=readable>0;
+      if(readable)this.status.error=null;
+    } catch(error) {this.status.connected=false;this.status.error=error.code==='ENOENT'?'Codex의 첫 작업을 기다려요':'Codex 기록 읽기 권한을 확인해 주세요';}
+    finally {this.busy=false;}
+  }
+}
+module.exports={CodexReader,selectEvent};

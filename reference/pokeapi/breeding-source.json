@@ -1,0 +1,7 @@
+{
+  "url": "https://raw.githubusercontent.com/PokeAPI/pokeapi/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv/pokemon_egg_groups.csv",
+  "sha256": "a49e707ed5eb26fd27233ce2699ae336ca1c445b66b02fd653e9a06fee9e3c5a",
+  "bytes": 8141,
+  "checkedAt": "2026-10-13T04:22:16.231Z",
+  "rules": "https://github.com/pret/pokefirered/blob/master/src/daycare.c"
+}

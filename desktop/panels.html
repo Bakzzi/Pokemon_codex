@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; font-src 'self'">
+<title>포켓몬 도감 · Codex Buddy</title><link rel="stylesheet" href="panels.css">
+</head><body>
+<header class="top"><div><span class="kicker">POKÉMON / CODEX</span><h1>작은 모험의 기록</h1></div><div class="totals"><b id="totals">4 / 151</b><span id="region">관동 지방</span></div></header>
+<nav class="tabs" aria-label="모험 메뉴"><button data-tab="collection" aria-selected="true">포켓몬 도감</button><button data-tab="challenge">도전하기</button><button data-tab="daycare">키우미집</button><button data-tab="journal">모험 기록</button></nav>
+<div id="notice" role="status"></div>
+<main>
+<section id="collection" class="page">
+  <div class="tools"><label><input id="search" type="search" placeholder="번호나 이름으로 찾기" aria-label="번호나 이름으로 찾기"></label><select id="filter" aria-label="도감 필터"><option value="all">전체 도감</option><option value="owned">현재 보유</option><option value="caught">포획 완료</option><option value="seen">발견한 포켓몬</option></select><span id="seen-count"></span></div>
+  <div class="dex-layout"><div class="dex-grid" id="dex-grid"></div><aside id="detail" class="detail"><div class="placeholder">포켓몬을 눌러<br>모험의 동료를 골라 봐.</div></aside></div>
+</section>
+<section id="challenge" class="page" hidden>
+  <div class="intro"><div><h2>관동 체육관</h2><p>네 칸의 동료로 순서대로 도전해요. 도전 중에도 출전 교체는 가능해요.</p></div><b id="badges"></b></div>
+  <div id="ongoing" class="ongoing" hidden></div><div class="gym-grid" id="gyms"></div>
+  <div class="league"><div><span class="kicker">POKÉMON LEAGUE</span><h2>사천왕, 그리고 챔피언</h2><p>뱃지 8개를 모으면 도전할 수 있어요. 다섯 경기를 회복 없이 이어서 승리하면 성도 지방이 열려요.</p></div><button id="league-start" data-challenge="8">리그 도전</button></div>
+  <div id="league-team" class="league-team"></div><p id="league-progress" class="muted"></p>
+</section>
+<section id="daycare" class="page" hidden>
+  <div class="intro"><div><h2>함께 기다리는 새로운 만남</h2><p>두 동료를 골라 예상 알을 확인해요. 맡긴 동료들은 잠시 배틀을 쉬어요.</p></div></div>
+  <div class="nursery-layout"><div><div class="nursery-pair"><label>첫 번째 동료<select id="parent-a"><option value="">동료 선택</option></select></label><span>＋</span><label>두 번째 동료<select id="parent-b"><option value="">동료 선택</option></select></label></div>
+  <div id="egg-preview" class="egg-preview"></div><div class="nursery-actions"><button id="daycare-start">두 마리 맡기기</button><button id="daycare-withdraw" hidden>동료 데려오기</button></div></div>
+  <div><div id="nursery-progress"></div><div id="hatch-progress"></div>
+  <p class="muted">한 번 맡길 때 알 하나를 얻어요. 모험 걸음은 실제 Codex 작업량에 따라 쌓여요.<br><br>코딩하는 동안 알을 발견하고, 부화하면 동료 목록에 자동으로 들어와요.<br><br>부모는 그대로 돌아오고, 부화한 포켓몬은 Lv.5부터 따로 자라요. 키우미집에서는 부모의 경험치가 오르지 않아요.</p></div></div>
+</section>
+<section id="journal" class="page" hidden>
+  <div class="intro"><div><h2>네가 코딩하는 동안</h2><p>새로운 만남, 포획, 성장과 도전의 결과를 모아 뒀어.</p></div></div>
+  <nav class="journal-tabs" aria-label="기록 보기"><button data-journal-tab="summary" aria-selected="true">요약</button><button data-journal-tab="detail" aria-selected="false">상세</button></nav>
+  <div id="inventory" class="inventory"></div>
+  <div id="journal-summary"><div class="summary-heading"><p id="summary-since" class="muted"></p><button id="journal-ack">여기까지 확인</button></div><div id="summary-stats" class="summary-stats"></div><p id="summary-note" class="muted"></p><h3 class="summary-title">기억에 남는 순간</h3><div id="summary-highlights"></div></div>
+  <div id="journal-detail" hidden><p class="muted">최근 모험과 배틀의 기술·특성·상태이상 기록이에요. 오래된 상세 기록이 지나가도 요약 수치는 남아요.</p><div id="journal-list"></div></div>
+</section>
+</main>
+<footer>원작 모모찡 · momozzing <span>진행은 이 PC에 자동 저장돼요.</span></footer>
+<script src="panels.js"></script></body></html>

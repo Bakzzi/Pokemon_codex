@@ -1,0 +1,4112 @@
+{
+  "stats": [
+    {
+      "id": 1,
+      "damage_class_id": null,
+      "identifier": "hp",
+      "is_battle_only": 0,
+      "game_index": 1
+    },
+    {
+      "id": 2,
+      "damage_class_id": 2,
+      "identifier": "attack",
+      "is_battle_only": 0,
+      "game_index": 2
+    },
+    {
+      "id": 3,
+      "damage_class_id": 2,
+      "identifier": "defense",
+      "is_battle_only": 0,
+      "game_index": 3
+    },
+    {
+      "id": 4,
+      "damage_class_id": 3,
+      "identifier": "special-attack",
+      "is_battle_only": 0,
+      "game_index": 5
+    },
+    {
+      "id": 5,
+      "damage_class_id": 3,
+      "identifier": "special-defense",
+      "is_battle_only": 0,
+      "game_index": 6
+    },
+    {
+      "id": 6,
+      "damage_class_id": null,
+      "identifier": "speed",
+      "is_battle_only": 0,
+      "game_index": 4
+    },
+    {
+      "id": 7,
+      "damage_class_id": null,
+      "identifier": "accuracy",
+      "is_battle_only": 1,
+      "game_index": null
+    },
+    {
+      "id": 8,
+      "damage_class_id": null,
+      "identifier": "evasion",
+      "is_battle_only": 1,
+      "game_index": null
+    },
+    {
+      "id": 9,
+      "damage_class_id": 3,
+      "identifier": "special",
+      "is_battle_only": 0,
+      "game_index": 7
+    }
+  ],
+  "statNames": [
+    {
+      "stat_id": 1,
+      "local_language_id": 3,
+      "name": "HP"
+    },
+    {
+      "stat_id": 2,
+      "local_language_id": 3,
+      "name": "공격"
+    },
+    {
+      "stat_id": 3,
+      "local_language_id": 3,
+      "name": "방어"
+    },
+    {
+      "stat_id": 4,
+      "local_language_id": 3,
+      "name": "특수공격"
+    },
+    {
+      "stat_id": 5,
+      "local_language_id": 3,
+      "name": "특수방어"
+    },
+    {
+      "stat_id": 6,
+      "local_language_id": 3,
+      "name": "스피드"
+    },
+    {
+      "stat_id": 7,
+      "local_language_id": 3,
+      "name": "명중률"
+    },
+    {
+      "stat_id": 8,
+      "local_language_id": 3,
+      "name": "회피율"
+    }
+  ],
+  "habitats": [
+    {
+      "id": 1,
+      "identifier": "cave"
+    },
+    {
+      "id": 2,
+      "identifier": "forest"
+    },
+    {
+      "id": 3,
+      "identifier": "grassland"
+    },
+    {
+      "id": 4,
+      "identifier": "mountain"
+    },
+    {
+      "id": 5,
+      "identifier": "rare"
+    },
+    {
+      "id": 6,
+      "identifier": "rough-terrain"
+    },
+    {
+      "id": 7,
+      "identifier": "sea"
+    },
+    {
+      "id": 8,
+      "identifier": "urban"
+    },
+    {
+      "id": 9,
+      "identifier": "waters-edge"
+    }
+  ],
+  "habitatNames": [],
+  "abilities": [
+    {
+      "id": 1,
+      "identifier": "stench",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 2,
+      "identifier": "drizzle",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 3,
+      "identifier": "speed-boost",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 4,
+      "identifier": "battle-armor",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 5,
+      "identifier": "sturdy",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 6,
+      "identifier": "damp",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 7,
+      "identifier": "limber",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 8,
+      "identifier": "sand-veil",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 9,
+      "identifier": "static",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 10,
+      "identifier": "volt-absorb",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 11,
+      "identifier": "water-absorb",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 12,
+      "identifier": "oblivious",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 13,
+      "identifier": "cloud-nine",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 14,
+      "identifier": "compound-eyes",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 15,
+      "identifier": "insomnia",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 16,
+      "identifier": "color-change",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 17,
+      "identifier": "immunity",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 18,
+      "identifier": "flash-fire",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 19,
+      "identifier": "shield-dust",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 20,
+      "identifier": "own-tempo",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 21,
+      "identifier": "suction-cups",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 22,
+      "identifier": "intimidate",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 23,
+      "identifier": "shadow-tag",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 24,
+      "identifier": "rough-skin",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 25,
+      "identifier": "wonder-guard",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 26,
+      "identifier": "levitate",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 27,
+      "identifier": "effect-spore",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 28,
+      "identifier": "synchronize",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 29,
+      "identifier": "clear-body",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 30,
+      "identifier": "natural-cure",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 31,
+      "identifier": "lightning-rod",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 32,
+      "identifier": "serene-grace",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 33,
+      "identifier": "swift-swim",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 34,
+      "identifier": "chlorophyll",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 35,
+      "identifier": "illuminate",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 36,
+      "identifier": "trace",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 37,
+      "identifier": "huge-power",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 38,
+      "identifier": "poison-point",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 39,
+      "identifier": "inner-focus",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 40,
+      "identifier": "magma-armor",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 41,
+      "identifier": "water-veil",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 42,
+      "identifier": "magnet-pull",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 43,
+      "identifier": "soundproof",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 44,
+      "identifier": "rain-dish",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 45,
+      "identifier": "sand-stream",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 46,
+      "identifier": "pressure",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 47,
+      "identifier": "thick-fat",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 48,
+      "identifier": "early-bird",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 49,
+      "identifier": "flame-body",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 50,
+      "identifier": "run-away",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 51,
+      "identifier": "keen-eye",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 52,
+      "identifier": "hyper-cutter",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 53,
+      "identifier": "pickup",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 54,
+      "identifier": "truant",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 55,
+      "identifier": "hustle",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 56,
+      "identifier": "cute-charm",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 57,
+      "identifier": "plus",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 58,
+      "identifier": "minus",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 59,
+      "identifier": "forecast",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 60,
+      "identifier": "sticky-hold",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 61,
+      "identifier": "shed-skin",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 62,
+      "identifier": "guts",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 63,
+      "identifier": "marvel-scale",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 64,
+      "identifier": "liquid-ooze",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 65,
+      "identifier": "overgrow",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 66,
+      "identifier": "blaze",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 67,
+      "identifier": "torrent",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 68,
+      "identifier": "swarm",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 69,
+      "identifier": "rock-head",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 70,
+      "identifier": "drought",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 71,
+      "identifier": "arena-trap",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 72,
+      "identifier": "vital-spirit",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 73,
+      "identifier": "white-smoke",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 74,
+      "identifier": "pure-power",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 75,
+      "identifier": "shell-armor",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 76,
+      "identifier": "air-lock",
+      "generation_id": 3,
+      "is_main_series": 1
+    },
+    {
+      "id": 77,
+      "identifier": "tangled-feet",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 78,
+      "identifier": "motor-drive",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 79,
+      "identifier": "rivalry",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 80,
+      "identifier": "steadfast",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 81,
+      "identifier": "snow-cloak",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 82,
+      "identifier": "gluttony",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 83,
+      "identifier": "anger-point",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 84,
+      "identifier": "unburden",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 85,
+      "identifier": "heatproof",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 86,
+      "identifier": "simple",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 87,
+      "identifier": "dry-skin",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 88,
+      "identifier": "download",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 89,
+      "identifier": "iron-fist",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 90,
+      "identifier": "poison-heal",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 91,
+      "identifier": "adaptability",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 92,
+      "identifier": "skill-link",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 93,
+      "identifier": "hydration",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 94,
+      "identifier": "solar-power",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 95,
+      "identifier": "quick-feet",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 96,
+      "identifier": "normalize",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 97,
+      "identifier": "sniper",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 98,
+      "identifier": "magic-guard",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 99,
+      "identifier": "no-guard",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 100,
+      "identifier": "stall",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 101,
+      "identifier": "technician",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 102,
+      "identifier": "leaf-guard",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 103,
+      "identifier": "klutz",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 104,
+      "identifier": "mold-breaker",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 105,
+      "identifier": "super-luck",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 106,
+      "identifier": "aftermath",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 107,
+      "identifier": "anticipation",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 108,
+      "identifier": "forewarn",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 109,
+      "identifier": "unaware",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 110,
+      "identifier": "tinted-lens",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 111,
+      "identifier": "filter",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 112,
+      "identifier": "slow-start",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 113,
+      "identifier": "scrappy",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 114,
+      "identifier": "storm-drain",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 115,
+      "identifier": "ice-body",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 116,
+      "identifier": "solid-rock",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 117,
+      "identifier": "snow-warning",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 118,
+      "identifier": "honey-gather",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 119,
+      "identifier": "frisk",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 120,
+      "identifier": "reckless",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 121,
+      "identifier": "multitype",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 122,
+      "identifier": "flower-gift",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 123,
+      "identifier": "bad-dreams",
+      "generation_id": 4,
+      "is_main_series": 1
+    },
+    {
+      "id": 124,
+      "identifier": "pickpocket",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 125,
+      "identifier": "sheer-force",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 126,
+      "identifier": "contrary",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 127,
+      "identifier": "unnerve",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 128,
+      "identifier": "defiant",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 129,
+      "identifier": "defeatist",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 130,
+      "identifier": "cursed-body",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 131,
+      "identifier": "healer",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 132,
+      "identifier": "friend-guard",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 133,
+      "identifier": "weak-armor",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 134,
+      "identifier": "heavy-metal",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 135,
+      "identifier": "light-metal",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 136,
+      "identifier": "multiscale",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 137,
+      "identifier": "toxic-boost",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 138,
+      "identifier": "flare-boost",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 139,
+      "identifier": "harvest",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 140,
+      "identifier": "telepathy",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 141,
+      "identifier": "moody",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 142,
+      "identifier": "overcoat",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 143,
+      "identifier": "poison-touch",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 144,
+      "identifier": "regenerator",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 145,
+      "identifier": "big-pecks",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 146,
+      "identifier": "sand-rush",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 147,
+      "identifier": "wonder-skin",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 148,
+      "identifier": "analytic",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 149,
+      "identifier": "illusion",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 150,
+      "identifier": "imposter",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 151,
+      "identifier": "infiltrator",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 152,
+      "identifier": "mummy",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 153,
+      "identifier": "moxie",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 154,
+      "identifier": "justified",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 155,
+      "identifier": "rattled",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 156,
+      "identifier": "magic-bounce",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 157,
+      "identifier": "sap-sipper",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 158,
+      "identifier": "prankster",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 159,
+      "identifier": "sand-force",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 160,
+      "identifier": "iron-barbs",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 161,
+      "identifier": "zen-mode",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 162,
+      "identifier": "victory-star",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 163,
+      "identifier": "turboblaze",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 164,
+      "identifier": "teravolt",
+      "generation_id": 5,
+      "is_main_series": 1
+    },
+    {
+      "id": 165,
+      "identifier": "aroma-veil",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 166,
+      "identifier": "flower-veil",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 167,
+      "identifier": "cheek-pouch",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 168,
+      "identifier": "protean",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 169,
+      "identifier": "fur-coat",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 170,
+      "identifier": "magician",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 171,
+      "identifier": "bulletproof",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 172,
+      "identifier": "competitive",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 173,
+      "identifier": "strong-jaw",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 174,
+      "identifier": "refrigerate",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 175,
+      "identifier": "sweet-veil",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 176,
+      "identifier": "stance-change",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 177,
+      "identifier": "gale-wings",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 178,
+      "identifier": "mega-launcher",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 179,
+      "identifier": "grass-pelt",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 180,
+      "identifier": "symbiosis",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 181,
+      "identifier": "tough-claws",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 182,
+      "identifier": "pixilate",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 183,
+      "identifier": "gooey",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 184,
+      "identifier": "aerilate",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 185,
+      "identifier": "parental-bond",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 186,
+      "identifier": "dark-aura",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 187,
+      "identifier": "fairy-aura",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 188,
+      "identifier": "aura-break",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 189,
+      "identifier": "primordial-sea",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 190,
+      "identifier": "desolate-land",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 191,
+      "identifier": "delta-stream",
+      "generation_id": 6,
+      "is_main_series": 1
+    },
+    {
+      "id": 192,
+      "identifier": "stamina",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 193,
+      "identifier": "wimp-out",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 194,
+      "identifier": "emergency-exit",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 195,
+      "identifier": "water-compaction",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 196,
+      "identifier": "merciless",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 197,
+      "identifier": "shields-down",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 198,
+      "identifier": "stakeout",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 199,
+      "identifier": "water-bubble",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 200,
+      "identifier": "steelworker",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 201,
+      "identifier": "berserk",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 202,
+      "identifier": "slush-rush",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 203,
+      "identifier": "long-reach",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 204,
+      "identifier": "liquid-voice",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 205,
+      "identifier": "triage",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 206,
+      "identifier": "galvanize",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 207,
+      "identifier": "surge-surfer",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 208,
+      "identifier": "schooling",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 209,
+      "identifier": "disguise",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 210,
+      "identifier": "battle-bond",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 211,
+      "identifier": "power-construct",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 212,
+      "identifier": "corrosion",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 213,
+      "identifier": "comatose",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 214,
+      "identifier": "queenly-majesty",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 215,
+      "identifier": "innards-out",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 216,
+      "identifier": "dancer",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 217,
+      "identifier": "battery",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 218,
+      "identifier": "fluffy",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 219,
+      "identifier": "dazzling",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 220,
+      "identifier": "soul-heart",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 221,
+      "identifier": "tangling-hair",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 222,
+      "identifier": "receiver",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 223,
+      "identifier": "power-of-alchemy",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 224,
+      "identifier": "beast-boost",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 225,
+      "identifier": "rks-system",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 226,
+      "identifier": "electric-surge",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 227,
+      "identifier": "psychic-surge",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 228,
+      "identifier": "misty-surge",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 229,
+      "identifier": "grassy-surge",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 230,
+      "identifier": "full-metal-body",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 231,
+      "identifier": "shadow-shield",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 232,
+      "identifier": "prism-armor",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 233,
+      "identifier": "neuroforce",
+      "generation_id": 7,
+      "is_main_series": 1
+    },
+    {
+      "id": 234,
+      "identifier": "intrepid-sword",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 235,
+      "identifier": "dauntless-shield",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 236,
+      "identifier": "libero",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 237,
+      "identifier": "ball-fetch",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 238,
+      "identifier": "cotton-down",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 239,
+      "identifier": "propeller-tail",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 240,
+      "identifier": "mirror-armor",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 241,
+      "identifier": "gulp-missile",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 242,
+      "identifier": "stalwart",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 243,
+      "identifier": "steam-engine",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 244,
+      "identifier": "punk-rock",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 245,
+      "identifier": "sand-spit",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 246,
+      "identifier": "ice-scales",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 247,
+      "identifier": "ripen",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 248,
+      "identifier": "ice-face",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 249,
+      "identifier": "power-spot",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 250,
+      "identifier": "mimicry",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 251,
+      "identifier": "screen-cleaner",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 252,
+      "identifier": "steely-spirit",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 253,
+      "identifier": "perish-body",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 254,
+      "identifier": "wandering-spirit",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 255,
+      "identifier": "gorilla-tactics",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 256,
+      "identifier": "neutralizing-gas",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 257,
+      "identifier": "pastel-veil",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 258,
+      "identifier": "hunger-switch",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 259,
+      "identifier": "quick-draw",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 260,
+      "identifier": "unseen-fist",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 261,
+      "identifier": "curious-medicine",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 262,
+      "identifier": "transistor",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 263,
+      "identifier": "dragons-maw",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 264,
+      "identifier": "chilling-neigh",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 265,
+      "identifier": "grim-neigh",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 266,
+      "identifier": "as-one-glastrier",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 267,
+      "identifier": "as-one-spectrier",
+      "generation_id": 8,
+      "is_main_series": 1
+    },
+    {
+      "id": 268,
+      "identifier": "lingering-aroma",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 269,
+      "identifier": "seed-sower",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 270,
+      "identifier": "thermal-exchange",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 271,
+      "identifier": "anger-shell",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 272,
+      "identifier": "purifying-salt",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 273,
+      "identifier": "well-baked-body",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 274,
+      "identifier": "wind-rider",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 275,
+      "identifier": "guard-dog",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 276,
+      "identifier": "rocky-payload",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 277,
+      "identifier": "wind-power",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 278,
+      "identifier": "zero-to-hero",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 279,
+      "identifier": "commander",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 280,
+      "identifier": "electromorphosis",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 281,
+      "identifier": "protosynthesis",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 282,
+      "identifier": "quark-drive",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 283,
+      "identifier": "good-as-gold",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 284,
+      "identifier": "vessel-of-ruin",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 285,
+      "identifier": "sword-of-ruin",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 286,
+      "identifier": "tablets-of-ruin",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 287,
+      "identifier": "beads-of-ruin",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 288,
+      "identifier": "orichalcum-pulse",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 289,
+      "identifier": "hadron-engine",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 290,
+      "identifier": "opportunist",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 291,
+      "identifier": "cud-chew",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 292,
+      "identifier": "sharpness",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 293,
+      "identifier": "supreme-overlord",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 294,
+      "identifier": "costar",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 295,
+      "identifier": "toxic-debris",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 296,
+      "identifier": "armor-tail",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 297,
+      "identifier": "earth-eater",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 298,
+      "identifier": "mycelium-might",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 299,
+      "identifier": "minds-eye",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 300,
+      "identifier": "supersweet-syrup",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 301,
+      "identifier": "hospitality",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 302,
+      "identifier": "toxic-chain",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 303,
+      "identifier": "embody-aspect",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 304,
+      "identifier": "tera-shift",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 305,
+      "identifier": "tera-shell",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 306,
+      "identifier": "teraform-zero",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 307,
+      "identifier": "poison-puppeteer",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 308,
+      "identifier": "piercing-drill",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 309,
+      "identifier": "dragonize",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 310,
+      "identifier": "mega-sol",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 311,
+      "identifier": "spicy-spray",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 312,
+      "identifier": "eelevate",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 313,
+      "identifier": "fire-mane",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 314,
+      "identifier": "aura-guard",
+      "generation_id": 9,
+      "is_main_series": 1
+    },
+    {
+      "id": 10001,
+      "identifier": "mountaineer",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10002,
+      "identifier": "wave-rider",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10003,
+      "identifier": "skater",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10004,
+      "identifier": "thrust",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10005,
+      "identifier": "perception",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10006,
+      "identifier": "parry",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10007,
+      "identifier": "instinct",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10008,
+      "identifier": "dodge",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10009,
+      "identifier": "jagged-edge",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10010,
+      "identifier": "frostbite",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10011,
+      "identifier": "tenacity",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10012,
+      "identifier": "pride",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10013,
+      "identifier": "deep-sleep",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10014,
+      "identifier": "power-nap",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10015,
+      "identifier": "spirit",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10016,
+      "identifier": "warm-blanket",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10017,
+      "identifier": "gulp",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10018,
+      "identifier": "herbivore",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10019,
+      "identifier": "sandpit",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10020,
+      "identifier": "hot-blooded",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10021,
+      "identifier": "medic",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10022,
+      "identifier": "life-force",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10023,
+      "identifier": "lunchbox",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10024,
+      "identifier": "nurse",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10025,
+      "identifier": "melee",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10026,
+      "identifier": "sponge",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10027,
+      "identifier": "bodyguard",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10028,
+      "identifier": "hero",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10029,
+      "identifier": "last-bastion",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10030,
+      "identifier": "stealth",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10031,
+      "identifier": "vanguard",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10032,
+      "identifier": "nomad",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10033,
+      "identifier": "sequence",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10034,
+      "identifier": "grass-cloak",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10035,
+      "identifier": "celebrate",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10036,
+      "identifier": "lullaby",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10037,
+      "identifier": "calming",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10038,
+      "identifier": "daze",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10039,
+      "identifier": "frighten",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10040,
+      "identifier": "interference",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10041,
+      "identifier": "mood-maker",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10042,
+      "identifier": "confidence",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10043,
+      "identifier": "fortune",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10044,
+      "identifier": "bonanza",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10045,
+      "identifier": "explode",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10046,
+      "identifier": "omnipotent",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10047,
+      "identifier": "share",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10048,
+      "identifier": "black-hole",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10049,
+      "identifier": "shadow-dash",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10050,
+      "identifier": "sprint",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10051,
+      "identifier": "disgust",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10052,
+      "identifier": "high-rise",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10053,
+      "identifier": "climber",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10054,
+      "identifier": "flame-boost",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10055,
+      "identifier": "aqua-boost",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10056,
+      "identifier": "run-up",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10057,
+      "identifier": "conqueror",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10058,
+      "identifier": "shackle",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10059,
+      "identifier": "decoy",
+      "generation_id": 5,
+      "is_main_series": 0
+    },
+    {
+      "id": 10060,
+      "identifier": "shield",
+      "generation_id": 5,
+      "is_main_series": 0
+    }
+  ],
+  "abilityNames": [
+    {
+      "ability_id": 1,
+      "local_language_id": 3,
+      "name": "악취"
+    },
+    {
+      "ability_id": 2,
+      "local_language_id": 3,
+      "name": "잔비"
+    },
+    {
+      "ability_id": 3,
+      "local_language_id": 3,
+      "name": "가속"
+    },
+    {
+      "ability_id": 4,
+      "local_language_id": 3,
+      "name": "전투무장"
+    },
+    {
+      "ability_id": 5,
+      "local_language_id": 3,
+      "name": "옹골참"
+    },
+    {
+      "ability_id": 6,
+      "local_language_id": 3,
+      "name": "습기"
+    },
+    {
+      "ability_id": 7,
+      "local_language_id": 3,
+      "name": "유연"
+    },
+    {
+      "ability_id": 8,
+      "local_language_id": 3,
+      "name": "모래숨기"
+    },
+    {
+      "ability_id": 9,
+      "local_language_id": 3,
+      "name": "정전기"
+    },
+    {
+      "ability_id": 10,
+      "local_language_id": 3,
+      "name": "축전"
+    },
+    {
+      "ability_id": 11,
+      "local_language_id": 3,
+      "name": "저수"
+    },
+    {
+      "ability_id": 12,
+      "local_language_id": 3,
+      "name": "둔감"
+    },
+    {
+      "ability_id": 13,
+      "local_language_id": 3,
+      "name": "날씨부정"
+    },
+    {
+      "ability_id": 14,
+      "local_language_id": 3,
+      "name": "복안"
+    },
+    {
+      "ability_id": 15,
+      "local_language_id": 3,
+      "name": "불면"
+    },
+    {
+      "ability_id": 16,
+      "local_language_id": 3,
+      "name": "변색"
+    },
+    {
+      "ability_id": 17,
+      "local_language_id": 3,
+      "name": "면역"
+    },
+    {
+      "ability_id": 18,
+      "local_language_id": 3,
+      "name": "타오르는불꽃"
+    },
+    {
+      "ability_id": 19,
+      "local_language_id": 3,
+      "name": "인분"
+    },
+    {
+      "ability_id": 20,
+      "local_language_id": 3,
+      "name": "마이페이스"
+    },
+    {
+      "ability_id": 21,
+      "local_language_id": 3,
+      "name": "흡반"
+    },
+    {
+      "ability_id": 22,
+      "local_language_id": 3,
+      "name": "위협"
+    },
+    {
+      "ability_id": 23,
+      "local_language_id": 3,
+      "name": "그림자밟기"
+    },
+    {
+      "ability_id": 24,
+      "local_language_id": 3,
+      "name": "까칠한피부"
+    },
+    {
+      "ability_id": 25,
+      "local_language_id": 3,
+      "name": "불가사의부적"
+    },
+    {
+      "ability_id": 26,
+      "local_language_id": 3,
+      "name": "부유"
+    },
+    {
+      "ability_id": 27,
+      "local_language_id": 3,
+      "name": "포자"
+    },
+    {
+      "ability_id": 28,
+      "local_language_id": 3,
+      "name": "싱크로"
+    },
+    {
+      "ability_id": 29,
+      "local_language_id": 3,
+      "name": "클리어바디"
+    },
+    {
+      "ability_id": 30,
+      "local_language_id": 3,
+      "name": "자연회복"
+    },
+    {
+      "ability_id": 31,
+      "local_language_id": 3,
+      "name": "피뢰침"
+    },
+    {
+      "ability_id": 32,
+      "local_language_id": 3,
+      "name": "하늘의은총"
+    },
+    {
+      "ability_id": 33,
+      "local_language_id": 3,
+      "name": "쓱쓱"
+    },
+    {
+      "ability_id": 34,
+      "local_language_id": 3,
+      "name": "엽록소"
+    },
+    {
+      "ability_id": 35,
+      "local_language_id": 3,
+      "name": "발광"
+    },
+    {
+      "ability_id": 36,
+      "local_language_id": 3,
+      "name": "트레이스"
+    },
+    {
+      "ability_id": 37,
+      "local_language_id": 3,
+      "name": "천하장사"
+    },
+    {
+      "ability_id": 38,
+      "local_language_id": 3,
+      "name": "독가시"
+    },
+    {
+      "ability_id": 39,
+      "local_language_id": 3,
+      "name": "정신력"
+    },
+    {
+      "ability_id": 40,
+      "local_language_id": 3,
+      "name": "마그마의무장"
+    },
+    {
+      "ability_id": 41,
+      "local_language_id": 3,
+      "name": "수의베일"
+    },
+    {
+      "ability_id": 42,
+      "local_language_id": 3,
+      "name": "자력"
+    },
+    {
+      "ability_id": 43,
+      "local_language_id": 3,
+      "name": "방음"
+    },
+    {
+      "ability_id": 44,
+      "local_language_id": 3,
+      "name": "젖은접시"
+    },
+    {
+      "ability_id": 45,
+      "local_language_id": 3,
+      "name": "모래날림"
+    },
+    {
+      "ability_id": 46,
+      "local_language_id": 3,
+      "name": "프레셔"
+    },
+    {
+      "ability_id": 47,
+      "local_language_id": 3,
+      "name": "두꺼운지방"
+    },
+    {
+      "ability_id": 48,
+      "local_language_id": 3,
+      "name": "일찍기상"
+    },
+    {
+      "ability_id": 49,
+      "local_language_id": 3,
+      "name": "불꽃몸"
+    },
+    {
+      "ability_id": 50,
+      "local_language_id": 3,
+      "name": "도주"
+    },
+    {
+      "ability_id": 51,
+      "local_language_id": 3,
+      "name": "날카로운눈"
+    },
+    {
+      "ability_id": 52,
+      "local_language_id": 3,
+      "name": "괴력집게"
+    },
+    {
+      "ability_id": 53,
+      "local_language_id": 3,
+      "name": "픽업"
+    },
+    {
+      "ability_id": 54,
+      "local_language_id": 3,
+      "name": "게으름"
+    },
+    {
+      "ability_id": 55,
+      "local_language_id": 3,
+      "name": "의욕"
+    },
+    {
+      "ability_id": 56,
+      "local_language_id": 3,
+      "name": "헤롱헤롱바디"
+    },
+    {
+      "ability_id": 57,
+      "local_language_id": 3,
+      "name": "플러스"
+    },
+    {
+      "ability_id": 58,
+      "local_language_id": 3,
+      "name": "마이너스"
+    },
+    {
+      "ability_id": 59,
+      "local_language_id": 3,
+      "name": "기분파"
+    },
+    {
+      "ability_id": 60,
+      "local_language_id": 3,
+      "name": "점착"
+    },
+    {
+      "ability_id": 61,
+      "local_language_id": 3,
+      "name": "탈피"
+    },
+    {
+      "ability_id": 62,
+      "local_language_id": 3,
+      "name": "근성"
+    },
+    {
+      "ability_id": 63,
+      "local_language_id": 3,
+      "name": "이상한비늘"
+    },
+    {
+      "ability_id": 64,
+      "local_language_id": 3,
+      "name": "해감액"
+    },
+    {
+      "ability_id": 65,
+      "local_language_id": 3,
+      "name": "심록"
+    },
+    {
+      "ability_id": 66,
+      "local_language_id": 3,
+      "name": "맹화"
+    },
+    {
+      "ability_id": 67,
+      "local_language_id": 3,
+      "name": "급류"
+    },
+    {
+      "ability_id": 68,
+      "local_language_id": 3,
+      "name": "벌레의알림"
+    },
+    {
+      "ability_id": 69,
+      "local_language_id": 3,
+      "name": "돌머리"
+    },
+    {
+      "ability_id": 70,
+      "local_language_id": 3,
+      "name": "가뭄"
+    },
+    {
+      "ability_id": 71,
+      "local_language_id": 3,
+      "name": "개미지옥"
+    },
+    {
+      "ability_id": 72,
+      "local_language_id": 3,
+      "name": "의기양양"
+    },
+    {
+      "ability_id": 73,
+      "local_language_id": 3,
+      "name": "하얀연기"
+    },
+    {
+      "ability_id": 74,
+      "local_language_id": 3,
+      "name": "순수한힘"
+    },
+    {
+      "ability_id": 75,
+      "local_language_id": 3,
+      "name": "조가비갑옷"
+    },
+    {
+      "ability_id": 76,
+      "local_language_id": 3,
+      "name": "에어록"
+    },
+    {
+      "ability_id": 77,
+      "local_language_id": 3,
+      "name": "갈지자걸음"
+    },
+    {
+      "ability_id": 78,
+      "local_language_id": 3,
+      "name": "전기엔진"
+    },
+    {
+      "ability_id": 79,
+      "local_language_id": 3,
+      "name": "투쟁심"
+    },
+    {
+      "ability_id": 80,
+      "local_language_id": 3,
+      "name": "불굴의마음"
+    },
+    {
+      "ability_id": 81,
+      "local_language_id": 3,
+      "name": "눈숨기"
+    },
+    {
+      "ability_id": 82,
+      "local_language_id": 3,
+      "name": "먹보"
+    },
+    {
+      "ability_id": 83,
+      "local_language_id": 3,
+      "name": "분노의경혈"
+    },
+    {
+      "ability_id": 84,
+      "local_language_id": 3,
+      "name": "곡예"
+    },
+    {
+      "ability_id": 85,
+      "local_language_id": 3,
+      "name": "내열"
+    },
+    {
+      "ability_id": 86,
+      "local_language_id": 3,
+      "name": "단순"
+    },
+    {
+      "ability_id": 87,
+      "local_language_id": 3,
+      "name": "건조피부"
+    },
+    {
+      "ability_id": 88,
+      "local_language_id": 3,
+      "name": "다운로드"
+    },
+    {
+      "ability_id": 89,
+      "local_language_id": 3,
+      "name": "철주먹"
+    },
+    {
+      "ability_id": 90,
+      "local_language_id": 3,
+      "name": "포이즌힐"
+    },
+    {
+      "ability_id": 91,
+      "local_language_id": 3,
+      "name": "적응력"
+    },
+    {
+      "ability_id": 92,
+      "local_language_id": 3,
+      "name": "스킬링크"
+    },
+    {
+      "ability_id": 93,
+      "local_language_id": 3,
+      "name": "촉촉바디"
+    },
+    {
+      "ability_id": 94,
+      "local_language_id": 3,
+      "name": "선파워"
+    },
+    {
+      "ability_id": 95,
+      "local_language_id": 3,
+      "name": "속보"
+    },
+    {
+      "ability_id": 96,
+      "local_language_id": 3,
+      "name": "노말스킨"
+    },
+    {
+      "ability_id": 97,
+      "local_language_id": 3,
+      "name": "스나이퍼"
+    },
+    {
+      "ability_id": 98,
+      "local_language_id": 3,
+      "name": "매직가드"
+    },
+    {
+      "ability_id": 99,
+      "local_language_id": 3,
+      "name": "노가드"
+    },
+    {
+      "ability_id": 100,
+      "local_language_id": 3,
+      "name": "시간벌기"
+    },
+    {
+      "ability_id": 101,
+      "local_language_id": 3,
+      "name": "테크니션"
+    },
+    {
+      "ability_id": 102,
+      "local_language_id": 3,
+      "name": "리프가드"
+    },
+    {
+      "ability_id": 103,
+      "local_language_id": 3,
+      "name": "서투름"
+    },
+    {
+      "ability_id": 104,
+      "local_language_id": 3,
+      "name": "틀깨기"
+    },
+    {
+      "ability_id": 105,
+      "local_language_id": 3,
+      "name": "대운"
+    },
+    {
+      "ability_id": 106,
+      "local_language_id": 3,
+      "name": "유폭"
+    },
+    {
+      "ability_id": 107,
+      "local_language_id": 3,
+      "name": "위험예지"
+    },
+    {
+      "ability_id": 108,
+      "local_language_id": 3,
+      "name": "예지몽"
+    },
+    {
+      "ability_id": 109,
+      "local_language_id": 3,
+      "name": "천진"
+    },
+    {
+      "ability_id": 110,
+      "local_language_id": 3,
+      "name": "색안경"
+    },
+    {
+      "ability_id": 111,
+      "local_language_id": 3,
+      "name": "필터"
+    },
+    {
+      "ability_id": 112,
+      "local_language_id": 3,
+      "name": "슬로스타트"
+    },
+    {
+      "ability_id": 113,
+      "local_language_id": 3,
+      "name": "배짱"
+    },
+    {
+      "ability_id": 114,
+      "local_language_id": 3,
+      "name": "마중물"
+    },
+    {
+      "ability_id": 115,
+      "local_language_id": 3,
+      "name": "아이스바디"
+    },
+    {
+      "ability_id": 116,
+      "local_language_id": 3,
+      "name": "하드록"
+    },
+    {
+      "ability_id": 117,
+      "local_language_id": 3,
+      "name": "눈퍼뜨리기"
+    },
+    {
+      "ability_id": 118,
+      "local_language_id": 3,
+      "name": "꿀모으기"
+    },
+    {
+      "ability_id": 119,
+      "local_language_id": 3,
+      "name": "통찰"
+    },
+    {
+      "ability_id": 120,
+      "local_language_id": 3,
+      "name": "이판사판"
+    },
+    {
+      "ability_id": 121,
+      "local_language_id": 3,
+      "name": "멀티타입"
+    },
+    {
+      "ability_id": 122,
+      "local_language_id": 3,
+      "name": "플라워기프트"
+    },
+    {
+      "ability_id": 123,
+      "local_language_id": 3,
+      "name": "나이트메어"
+    },
+    {
+      "ability_id": 124,
+      "local_language_id": 3,
+      "name": "나쁜손버릇"
+    },
+    {
+      "ability_id": 125,
+      "local_language_id": 3,
+      "name": "우격다짐"
+    },
+    {
+      "ability_id": 126,
+      "local_language_id": 3,
+      "name": "심술꾸러기"
+    },
+    {
+      "ability_id": 127,
+      "local_language_id": 3,
+      "name": "긴장감"
+    },
+    {
+      "ability_id": 128,
+      "local_language_id": 3,
+      "name": "오기"
+    },
+    {
+      "ability_id": 129,
+      "local_language_id": 3,
+      "name": "무기력"
+    },
+    {
+      "ability_id": 130,
+      "local_language_id": 3,
+      "name": "저주받은바디"
+    },
+    {
+      "ability_id": 131,
+      "local_language_id": 3,
+      "name": "치유의마음"
+    },
+    {
+      "ability_id": 132,
+      "local_language_id": 3,
+      "name": "프렌드가드"
+    },
+    {
+      "ability_id": 133,
+      "local_language_id": 3,
+      "name": "깨어진갑옷"
+    },
+    {
+      "ability_id": 134,
+      "local_language_id": 3,
+      "name": "헤비메탈"
+    },
+    {
+      "ability_id": 135,
+      "local_language_id": 3,
+      "name": "라이트메탈"
+    },
+    {
+      "ability_id": 136,
+      "local_language_id": 3,
+      "name": "멀티스케일"
+    },
+    {
+      "ability_id": 137,
+      "local_language_id": 3,
+      "name": "독폭주"
+    },
+    {
+      "ability_id": 138,
+      "local_language_id": 3,
+      "name": "열폭주"
+    },
+    {
+      "ability_id": 139,
+      "local_language_id": 3,
+      "name": "수확"
+    },
+    {
+      "ability_id": 140,
+      "local_language_id": 3,
+      "name": "텔레파시"
+    },
+    {
+      "ability_id": 141,
+      "local_language_id": 3,
+      "name": "변덕쟁이"
+    },
+    {
+      "ability_id": 142,
+      "local_language_id": 3,
+      "name": "방진"
+    },
+    {
+      "ability_id": 143,
+      "local_language_id": 3,
+      "name": "독수"
+    },
+    {
+      "ability_id": 144,
+      "local_language_id": 3,
+      "name": "재생력"
+    },
+    {
+      "ability_id": 145,
+      "local_language_id": 3,
+      "name": "부풀린가슴"
+    },
+    {
+      "ability_id": 146,
+      "local_language_id": 3,
+      "name": "모래헤치기"
+    },
+    {
+      "ability_id": 147,
+      "local_language_id": 3,
+      "name": "미라클스킨"
+    },
+    {
+      "ability_id": 148,
+      "local_language_id": 3,
+      "name": "애널라이즈"
+    },
+    {
+      "ability_id": 149,
+      "local_language_id": 3,
+      "name": "일루전"
+    },
+    {
+      "ability_id": 150,
+      "local_language_id": 3,
+      "name": "괴짜"
+    },
+    {
+      "ability_id": 151,
+      "local_language_id": 3,
+      "name": "틈새포착"
+    },
+    {
+      "ability_id": 152,
+      "local_language_id": 3,
+      "name": "미라"
+    },
+    {
+      "ability_id": 153,
+      "local_language_id": 3,
+      "name": "자기과신"
+    },
+    {
+      "ability_id": 154,
+      "local_language_id": 3,
+      "name": "정의의마음"
+    },
+    {
+      "ability_id": 155,
+      "local_language_id": 3,
+      "name": "주눅"
+    },
+    {
+      "ability_id": 156,
+      "local_language_id": 3,
+      "name": "매직미러"
+    },
+    {
+      "ability_id": 157,
+      "local_language_id": 3,
+      "name": "초식"
+    },
+    {
+      "ability_id": 158,
+      "local_language_id": 3,
+      "name": "짓궂은마음"
+    },
+    {
+      "ability_id": 159,
+      "local_language_id": 3,
+      "name": "모래의힘"
+    },
+    {
+      "ability_id": 160,
+      "local_language_id": 3,
+      "name": "철가시"
+    },
+    {
+      "ability_id": 161,
+      "local_language_id": 3,
+      "name": "달마모드"
+    },
+    {
+      "ability_id": 162,
+      "local_language_id": 3,
+      "name": "승리의별"
+    },
+    {
+      "ability_id": 163,
+      "local_language_id": 3,
+      "name": "터보블레이즈"
+    },
+    {
+      "ability_id": 164,
+      "local_language_id": 3,
+      "name": "테라볼티지"
+    },
+    {
+      "ability_id": 165,
+      "local_language_id": 3,
+      "name": "아로마베일"
+    },
+    {
+      "ability_id": 166,
+      "local_language_id": 3,
+      "name": "플라워베일"
+    },
+    {
+      "ability_id": 167,
+      "local_language_id": 3,
+      "name": "볼주머니"
+    },
+    {
+      "ability_id": 168,
+      "local_language_id": 3,
+      "name": "변환자재"
+    },
+    {
+      "ability_id": 169,
+      "local_language_id": 3,
+      "name": "퍼코트"
+    },
+    {
+      "ability_id": 170,
+      "local_language_id": 3,
+      "name": "매지션"
+    },
+    {
+      "ability_id": 171,
+      "local_language_id": 3,
+      "name": "방탄"
+    },
+    {
+      "ability_id": 172,
+      "local_language_id": 3,
+      "name": "승기"
+    },
+    {
+      "ability_id": 173,
+      "local_language_id": 3,
+      "name": "옹골찬턱"
+    },
+    {
+      "ability_id": 174,
+      "local_language_id": 3,
+      "name": "프리즈스킨"
+    },
+    {
+      "ability_id": 175,
+      "local_language_id": 3,
+      "name": "스위트베일"
+    },
+    {
+      "ability_id": 176,
+      "local_language_id": 3,
+      "name": "배틀스위치"
+    },
+    {
+      "ability_id": 177,
+      "local_language_id": 3,
+      "name": "질풍날개"
+    },
+    {
+      "ability_id": 178,
+      "local_language_id": 3,
+      "name": "메가런처"
+    },
+    {
+      "ability_id": 179,
+      "local_language_id": 3,
+      "name": "풀모피"
+    },
+    {
+      "ability_id": 180,
+      "local_language_id": 3,
+      "name": "공생"
+    },
+    {
+      "ability_id": 181,
+      "local_language_id": 3,
+      "name": "단단한발톱"
+    },
+    {
+      "ability_id": 182,
+      "local_language_id": 3,
+      "name": "페어리스킨"
+    },
+    {
+      "ability_id": 183,
+      "local_language_id": 3,
+      "name": "미끈미끈"
+    },
+    {
+      "ability_id": 184,
+      "local_language_id": 3,
+      "name": "스카이스킨"
+    },
+    {
+      "ability_id": 185,
+      "local_language_id": 3,
+      "name": "부자유친"
+    },
+    {
+      "ability_id": 186,
+      "local_language_id": 3,
+      "name": "다크오라"
+    },
+    {
+      "ability_id": 187,
+      "local_language_id": 3,
+      "name": "페어리오라"
+    },
+    {
+      "ability_id": 188,
+      "local_language_id": 3,
+      "name": "오라브레이크"
+    },
+    {
+      "ability_id": 189,
+      "local_language_id": 3,
+      "name": "시작의바다"
+    },
+    {
+      "ability_id": 190,
+      "local_language_id": 3,
+      "name": "끝의대지"
+    },
+    {
+      "ability_id": 191,
+      "local_language_id": 3,
+      "name": "델타스트림"
+    },
+    {
+      "ability_id": 192,
+      "local_language_id": 3,
+      "name": "지구력"
+    },
+    {
+      "ability_id": 193,
+      "local_language_id": 3,
+      "name": "도망태세"
+    },
+    {
+      "ability_id": 194,
+      "local_language_id": 3,
+      "name": "위기회피"
+    },
+    {
+      "ability_id": 195,
+      "local_language_id": 3,
+      "name": "꾸덕꾸덕굳기"
+    },
+    {
+      "ability_id": 196,
+      "local_language_id": 3,
+      "name": "무도한행동"
+    },
+    {
+      "ability_id": 197,
+      "local_language_id": 3,
+      "name": "리밋실드"
+    },
+    {
+      "ability_id": 198,
+      "local_language_id": 3,
+      "name": "잠복"
+    },
+    {
+      "ability_id": 199,
+      "local_language_id": 3,
+      "name": "수포"
+    },
+    {
+      "ability_id": 200,
+      "local_language_id": 3,
+      "name": "강철술사"
+    },
+    {
+      "ability_id": 201,
+      "local_language_id": 3,
+      "name": "발끈"
+    },
+    {
+      "ability_id": 202,
+      "local_language_id": 3,
+      "name": "눈치우기"
+    },
+    {
+      "ability_id": 203,
+      "local_language_id": 3,
+      "name": "원격"
+    },
+    {
+      "ability_id": 204,
+      "local_language_id": 3,
+      "name": "촉촉보이스"
+    },
+    {
+      "ability_id": 205,
+      "local_language_id": 3,
+      "name": "힐링시프트"
+    },
+    {
+      "ability_id": 206,
+      "local_language_id": 3,
+      "name": "일렉트릭스킨"
+    },
+    {
+      "ability_id": 207,
+      "local_language_id": 3,
+      "name": "서핑테일"
+    },
+    {
+      "ability_id": 208,
+      "local_language_id": 3,
+      "name": "어군"
+    },
+    {
+      "ability_id": 209,
+      "local_language_id": 3,
+      "name": "탈"
+    },
+    {
+      "ability_id": 210,
+      "local_language_id": 3,
+      "name": "유대변화"
+    },
+    {
+      "ability_id": 211,
+      "local_language_id": 3,
+      "name": "스웜체인지"
+    },
+    {
+      "ability_id": 212,
+      "local_language_id": 3,
+      "name": "부식"
+    },
+    {
+      "ability_id": 213,
+      "local_language_id": 3,
+      "name": "절대안깸"
+    },
+    {
+      "ability_id": 214,
+      "local_language_id": 3,
+      "name": "여왕의위엄"
+    },
+    {
+      "ability_id": 215,
+      "local_language_id": 3,
+      "name": "내용물분출"
+    },
+    {
+      "ability_id": 216,
+      "local_language_id": 3,
+      "name": "무희"
+    },
+    {
+      "ability_id": 217,
+      "local_language_id": 3,
+      "name": "배터리"
+    },
+    {
+      "ability_id": 218,
+      "local_language_id": 3,
+      "name": "복슬복슬"
+    },
+    {
+      "ability_id": 219,
+      "local_language_id": 3,
+      "name": "비비드바디"
+    },
+    {
+      "ability_id": 220,
+      "local_language_id": 3,
+      "name": "소울하트"
+    },
+    {
+      "ability_id": 221,
+      "local_language_id": 3,
+      "name": "컬리헤어"
+    },
+    {
+      "ability_id": 222,
+      "local_language_id": 3,
+      "name": "리시버"
+    },
+    {
+      "ability_id": 223,
+      "local_language_id": 3,
+      "name": "과학의힘"
+    },
+    {
+      "ability_id": 224,
+      "local_language_id": 3,
+      "name": "비스트부스트"
+    },
+    {
+      "ability_id": 225,
+      "local_language_id": 3,
+      "name": "AR시스템"
+    },
+    {
+      "ability_id": 226,
+      "local_language_id": 3,
+      "name": "일렉트릭메이커"
+    },
+    {
+      "ability_id": 227,
+      "local_language_id": 3,
+      "name": "사이코메이커"
+    },
+    {
+      "ability_id": 228,
+      "local_language_id": 3,
+      "name": "미스트메이커"
+    },
+    {
+      "ability_id": 229,
+      "local_language_id": 3,
+      "name": "그래스메이커"
+    },
+    {
+      "ability_id": 230,
+      "local_language_id": 3,
+      "name": "메탈프로텍트"
+    },
+    {
+      "ability_id": 231,
+      "local_language_id": 3,
+      "name": "스펙터가드"
+    },
+    {
+      "ability_id": 232,
+      "local_language_id": 3,
+      "name": "프리즘아머"
+    },
+    {
+      "ability_id": 233,
+      "local_language_id": 3,
+      "name": "브레인포스"
+    },
+    {
+      "ability_id": 234,
+      "local_language_id": 3,
+      "name": "불요의검"
+    },
+    {
+      "ability_id": 235,
+      "local_language_id": 3,
+      "name": "불굴의방패"
+    },
+    {
+      "ability_id": 236,
+      "local_language_id": 3,
+      "name": "리베로"
+    },
+    {
+      "ability_id": 237,
+      "local_language_id": 3,
+      "name": "볼줍기"
+    },
+    {
+      "ability_id": 238,
+      "local_language_id": 3,
+      "name": "솜털"
+    },
+    {
+      "ability_id": 239,
+      "local_language_id": 3,
+      "name": "스크루지느러미"
+    },
+    {
+      "ability_id": 240,
+      "local_language_id": 3,
+      "name": "미러아머"
+    },
+    {
+      "ability_id": 241,
+      "local_language_id": 3,
+      "name": "그대로꿀꺽미사일"
+    },
+    {
+      "ability_id": 242,
+      "local_language_id": 3,
+      "name": "굳건한신념"
+    },
+    {
+      "ability_id": 243,
+      "local_language_id": 3,
+      "name": "증기기관"
+    },
+    {
+      "ability_id": 244,
+      "local_language_id": 3,
+      "name": "펑크록"
+    },
+    {
+      "ability_id": 245,
+      "local_language_id": 3,
+      "name": "모래뿜기"
+    },
+    {
+      "ability_id": 246,
+      "local_language_id": 3,
+      "name": "얼음인분"
+    },
+    {
+      "ability_id": 247,
+      "local_language_id": 3,
+      "name": "숙성"
+    },
+    {
+      "ability_id": 248,
+      "local_language_id": 3,
+      "name": "아이스페이스"
+    },
+    {
+      "ability_id": 249,
+      "local_language_id": 3,
+      "name": "파워스폿"
+    },
+    {
+      "ability_id": 250,
+      "local_language_id": 3,
+      "name": "의태"
+    },
+    {
+      "ability_id": 251,
+      "local_language_id": 3,
+      "name": "배리어프리"
+    },
+    {
+      "ability_id": 252,
+      "local_language_id": 3,
+      "name": "강철정신"
+    },
+    {
+      "ability_id": 253,
+      "local_language_id": 3,
+      "name": "멸망의바디"
+    },
+    {
+      "ability_id": 254,
+      "local_language_id": 3,
+      "name": "떠도는영혼"
+    },
+    {
+      "ability_id": 255,
+      "local_language_id": 3,
+      "name": "무아지경"
+    },
+    {
+      "ability_id": 256,
+      "local_language_id": 3,
+      "name": "화학변화가스"
+    },
+    {
+      "ability_id": 257,
+      "local_language_id": 3,
+      "name": "파스텔베일"
+    },
+    {
+      "ability_id": 258,
+      "local_language_id": 3,
+      "name": "꼬르륵스위치"
+    },
+    {
+      "ability_id": 259,
+      "local_language_id": 3,
+      "name": "퀵드로"
+    },
+    {
+      "ability_id": 260,
+      "local_language_id": 3,
+      "name": "보이지않는주먹"
+    },
+    {
+      "ability_id": 261,
+      "local_language_id": 3,
+      "name": "기묘한약"
+    },
+    {
+      "ability_id": 262,
+      "local_language_id": 3,
+      "name": "트랜지스터"
+    },
+    {
+      "ability_id": 263,
+      "local_language_id": 3,
+      "name": "용의턱"
+    },
+    {
+      "ability_id": 264,
+      "local_language_id": 3,
+      "name": "백의울음"
+    },
+    {
+      "ability_id": 265,
+      "local_language_id": 3,
+      "name": "흑의울음"
+    },
+    {
+      "ability_id": 266,
+      "local_language_id": 3,
+      "name": "혼연일체"
+    },
+    {
+      "ability_id": 267,
+      "local_language_id": 3,
+      "name": "혼연일체"
+    },
+    {
+      "ability_id": 268,
+      "local_language_id": 3,
+      "name": "가시지않는향기"
+    },
+    {
+      "ability_id": 269,
+      "local_language_id": 3,
+      "name": "넘치는씨"
+    },
+    {
+      "ability_id": 270,
+      "local_language_id": 3,
+      "name": "열교환"
+    },
+    {
+      "ability_id": 271,
+      "local_language_id": 3,
+      "name": "분노의껍질"
+    },
+    {
+      "ability_id": 272,
+      "local_language_id": 3,
+      "name": "정화의소금"
+    },
+    {
+      "ability_id": 273,
+      "local_language_id": 3,
+      "name": "노릇노릇바디"
+    },
+    {
+      "ability_id": 274,
+      "local_language_id": 3,
+      "name": "바람타기"
+    },
+    {
+      "ability_id": 275,
+      "local_language_id": 3,
+      "name": "파수견"
+    },
+    {
+      "ability_id": 276,
+      "local_language_id": 3,
+      "name": "바위나르기"
+    },
+    {
+      "ability_id": 277,
+      "local_language_id": 3,
+      "name": "풍력발전"
+    },
+    {
+      "ability_id": 278,
+      "local_language_id": 3,
+      "name": "마이티체인지"
+    },
+    {
+      "ability_id": 279,
+      "local_language_id": 3,
+      "name": "사령탑"
+    },
+    {
+      "ability_id": 280,
+      "local_language_id": 3,
+      "name": "전기로바꾸기"
+    },
+    {
+      "ability_id": 281,
+      "local_language_id": 3,
+      "name": "고대활성"
+    },
+    {
+      "ability_id": 282,
+      "local_language_id": 3,
+      "name": "쿼크차지"
+    },
+    {
+      "ability_id": 283,
+      "local_language_id": 3,
+      "name": "황금몸"
+    },
+    {
+      "ability_id": 284,
+      "local_language_id": 3,
+      "name": "재앙의그릇"
+    },
+    {
+      "ability_id": 285,
+      "local_language_id": 3,
+      "name": "재앙의검"
+    },
+    {
+      "ability_id": 286,
+      "local_language_id": 3,
+      "name": "재앙의목간"
+    },
+    {
+      "ability_id": 287,
+      "local_language_id": 3,
+      "name": "재앙의구슬"
+    },
+    {
+      "ability_id": 288,
+      "local_language_id": 3,
+      "name": "진홍빛고동"
+    },
+    {
+      "ability_id": 289,
+      "local_language_id": 3,
+      "name": "하드론엔진"
+    },
+    {
+      "ability_id": 290,
+      "local_language_id": 3,
+      "name": "편승"
+    },
+    {
+      "ability_id": 291,
+      "local_language_id": 3,
+      "name": "되새김질"
+    },
+    {
+      "ability_id": 292,
+      "local_language_id": 3,
+      "name": "예리함"
+    },
+    {
+      "ability_id": 293,
+      "local_language_id": 3,
+      "name": "총대장"
+    },
+    {
+      "ability_id": 294,
+      "local_language_id": 3,
+      "name": "협연"
+    },
+    {
+      "ability_id": 295,
+      "local_language_id": 3,
+      "name": "독치장"
+    },
+    {
+      "ability_id": 296,
+      "local_language_id": 3,
+      "name": "테일아머"
+    },
+    {
+      "ability_id": 297,
+      "local_language_id": 3,
+      "name": "흙먹기"
+    },
+    {
+      "ability_id": 298,
+      "local_language_id": 3,
+      "name": "균사의힘"
+    },
+    {
+      "ability_id": 299,
+      "local_language_id": 3,
+      "name": "심안"
+    },
+    {
+      "ability_id": 300,
+      "local_language_id": 3,
+      "name": "감미로운꿀"
+    },
+    {
+      "ability_id": 301,
+      "local_language_id": 3,
+      "name": "대접"
+    },
+    {
+      "ability_id": 302,
+      "local_language_id": 3,
+      "name": "독사슬"
+    },
+    {
+      "ability_id": 303,
+      "local_language_id": 3,
+      "name": "초상투영"
+    },
+    {
+      "ability_id": 304,
+      "local_language_id": 3,
+      "name": "테라체인지"
+    },
+    {
+      "ability_id": 305,
+      "local_language_id": 3,
+      "name": "테라셸"
+    },
+    {
+      "ability_id": 306,
+      "local_language_id": 3,
+      "name": "제로포밍"
+    },
+    {
+      "ability_id": 307,
+      "local_language_id": 3,
+      "name": "독조종"
+    },
+    {
+      "ability_id": 308,
+      "local_language_id": 3,
+      "name": "관통드릴"
+    },
+    {
+      "ability_id": 309,
+      "local_language_id": 3,
+      "name": "드래곤스킨"
+    },
+    {
+      "ability_id": 310,
+      "local_language_id": 3,
+      "name": "메가솔라"
+    },
+    {
+      "ability_id": 311,
+      "local_language_id": 3,
+      "name": "하바네로분출"
+    }
+  ],
+  "moveTargets": [
+    {
+      "id": 1,
+      "identifier": "specific-move"
+    },
+    {
+      "id": 2,
+      "identifier": "selected-pokemon-me-first"
+    },
+    {
+      "id": 3,
+      "identifier": "ally"
+    },
+    {
+      "id": 4,
+      "identifier": "users-field"
+    },
+    {
+      "id": 5,
+      "identifier": "user-or-ally"
+    },
+    {
+      "id": 6,
+      "identifier": "opponents-field"
+    },
+    {
+      "id": 7,
+      "identifier": "user"
+    },
+    {
+      "id": 8,
+      "identifier": "random-opponent"
+    },
+    {
+      "id": 9,
+      "identifier": "all-other-pokemon"
+    },
+    {
+      "id": 10,
+      "identifier": "selected-pokemon"
+    },
+    {
+      "id": 11,
+      "identifier": "all-opponents"
+    },
+    {
+      "id": 12,
+      "identifier": "entire-field"
+    },
+    {
+      "id": 13,
+      "identifier": "user-and-allies"
+    },
+    {
+      "id": 14,
+      "identifier": "all-pokemon"
+    },
+    {
+      "id": 15,
+      "identifier": "all-allies"
+    },
+    {
+      "id": 16,
+      "identifier": "fainting-pokemon"
+    }
+  ],
+  "moveAilments": [
+    {
+      "id": -1,
+      "identifier": "unknown"
+    },
+    {
+      "id": 0,
+      "identifier": "none"
+    },
+    {
+      "id": 1,
+      "identifier": "paralysis"
+    },
+    {
+      "id": 2,
+      "identifier": "sleep"
+    },
+    {
+      "id": 3,
+      "identifier": "freeze"
+    },
+    {
+      "id": 4,
+      "identifier": "burn"
+    },
+    {
+      "id": 5,
+      "identifier": "poison"
+    },
+    {
+      "id": 6,
+      "identifier": "confusion"
+    },
+    {
+      "id": 7,
+      "identifier": "infatuation"
+    },
+    {
+      "id": 8,
+      "identifier": "trap"
+    },
+    {
+      "id": 9,
+      "identifier": "nightmare"
+    },
+    {
+      "id": 12,
+      "identifier": "torment"
+    },
+    {
+      "id": 13,
+      "identifier": "disable"
+    },
+    {
+      "id": 14,
+      "identifier": "yawn"
+    },
+    {
+      "id": 15,
+      "identifier": "heal-block"
+    },
+    {
+      "id": 17,
+      "identifier": "no-type-immunity"
+    },
+    {
+      "id": 18,
+      "identifier": "leech-seed"
+    },
+    {
+      "id": 19,
+      "identifier": "embargo"
+    },
+    {
+      "id": 20,
+      "identifier": "perish-song"
+    },
+    {
+      "id": 21,
+      "identifier": "ingrain"
+    },
+    {
+      "id": 24,
+      "identifier": "silence"
+    },
+    {
+      "id": 42,
+      "identifier": "tar-shot"
+    },
+    {
+      "id": 43,
+      "identifier": "protect"
+    }
+  ],
+  "moveAilmentNames": []
+}

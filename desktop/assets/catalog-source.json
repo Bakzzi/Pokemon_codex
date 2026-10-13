@@ -1,0 +1,10 @@
+{
+  "source": "https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data/v2/csv/pokemon_species_names.csv",
+  "languageId": 3,
+  "locale": "ko",
+  "range": [
+    1,
+    151
+  ],
+  "sha256": "820cde17074cdb1c2b0595c997fb8f998e773bd5da3bb525dec85703c86c5fd9"
+}

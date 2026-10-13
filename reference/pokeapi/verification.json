@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "checkedAt": "2026-10-13T03:30:21.105Z",
+  "sources": 56,
+  "artifacts": 10,
+  "sprites": 604,
+  "kanto": 151,
+  "johto": 100,
+  "moves": 354,
+  "sampleChecks": [
+    {
+      "speciesId": 25,
+      "version": "crystal",
+      "matchingLevelUpMoves": 11
+    },
+    {
+      "speciesId": 25,
+      "version": "firered-leafgreen",
+      "matchingLevelUpMoves": 11
+    }
+  ],
+  "squirtleCrystalLevelUpSample": [
+    {
+      "level": 1,
+      "move": "몸통박치기"
+    },
+    {
+      "level": 4,
+      "move": "꼬리흔들기"
+    },
+    {
+      "level": 7,
+      "move": "거품"
+    },
+    {
+      "level": 10,
+      "move": "껍질에숨기"
+    },
+    {
+      "level": 13,
+      "move": "물대포"
+    }
+  ],
+  "totalDataBytes": 50439458
+}

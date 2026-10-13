@@ -1,0 +1,75 @@
+{
+  "validatedAt": "2026-10-13T03:26:12.823Z",
+  "upstreamCommit": "81d20919845b6a445969b9265aab5cec6b04cece",
+  "sourceFilesVerified": 56,
+  "kantoSpecies": 151,
+  "johtoSpecies": 100,
+  "moves": 354,
+  "learnsetEntries": 50041,
+  "evolutionRules": 149,
+  "experienceRows": 600,
+  "encounterSlots": 15044,
+  "kantoSpeciesWithEncounterReferences": 121,
+  "versions": [
+    "gold",
+    "silver",
+    "crystal",
+    "ruby",
+    "sapphire",
+    "emerald",
+    "firered",
+    "leafgreen"
+  ],
+  "artifacts": [
+    {
+      "file": "data/pokemon-kanto.json",
+      "bytes": 652047,
+      "sha256": "398afc7672cc7cecc0e8de8b5e2b990849107e70ccfcb5f5dd37800f0182f1cd"
+    },
+    {
+      "file": "data/pokemon-johto-future.json",
+      "bytes": 348288,
+      "sha256": "21ae592952ee6f9d19b3609d5f652136be033e74aaac3b59ca527e2cf84857b2"
+    },
+    {
+      "file": "data/moves-generation-2-3.json",
+      "bytes": 765217,
+      "sha256": "0e6e85bb8aca8376f4234409ea75e525468d33cd4389045dfbcc25efb1a92f4c"
+    },
+    {
+      "file": "data/learnsets-generation-2-3.json",
+      "bytes": 9219063,
+      "sha256": "afc5262256d42916ae3274dfc9e56153c33265475eb4725e57d924a53723a14c"
+    },
+    {
+      "file": "data/evolution-rules.json",
+      "bytes": 179858,
+      "sha256": "417a949147dfd3fd1045f222f75955ad4ba61af6fab302fd2e93ac59302e2c70"
+    },
+    {
+      "file": "data/growth-and-experience.json",
+      "bytes": 52467,
+      "sha256": "5ce56a0a0739833257b66c9654e0990a151718f9d2b6fb83205269171bf07233"
+    },
+    {
+      "file": "data/types-and-matchups.json",
+      "bytes": 30743,
+      "sha256": "da7f5186da9246889460ebff3e49a423838d1ba748bc47b94f44476964075cb1"
+    },
+    {
+      "file": "data/encounters-generation-2-3.json",
+      "bytes": 5881458,
+      "sha256": "5c71fa2c8fa64d71af4d90832e0c8d2f9fa197dda64b3e407420c194acddfb64"
+    },
+    {
+      "file": "data/sprites-generation-2-3.json",
+      "bytes": 180100,
+      "sha256": "8f2337a8a2df5b0ab85607e750e7f7065ca493ac9ba82f20e046a8e3d0cbade5"
+    },
+    {
+      "file": "data/reference-lookups.json",
+      "bytes": 78249,
+      "sha256": "7630417f3ebeb05cfcc005b2d9f4f4cb145bfddc8ad00789dc4adcbfd34aa1aa"
+    }
+  ]
+}
