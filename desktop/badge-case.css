@@ -1,0 +1,28 @@
+.badge-case{position:relative;border:1px solid #bda78c;border-radius:16px 16px 22px 22px;padding:15px 17px 0;margin:0 0 25px;background:linear-gradient(130deg,#e3d0af,#b8a183 48%,#e0cdb1);box-shadow:inset 0 2px 1px #fff6de,0 7px 18px #0004;color:#ded9c5}
+.badge-case:before,.badge-case:after{content:"";position:absolute;top:-4px;left:22%;width:43px;height:8px;border:1px solid #918068;border-radius:2px;background:linear-gradient(#ded1b8,#99886b)}
+.badge-case:after{left:auto;right:22%}
+.case-inlay{border-radius:10px;padding:14px 24px 18px;background:radial-gradient(ellipse at 50% 30%,#4b5150,#333936 78%);border:2px solid #7d7f73;box-shadow:inset 0 3px 9px #0009,0 1px 0 #fff8}
+.case-heading{display:flex;align-items:center;justify-content:space-between;color:#b1b6a7;font-size:11px;letter-spacing:3px;font-weight:700;padding:1px 4px 10px;text-shadow:0 -1px 1px #111}
+.case-heading b{font-size:9px;letter-spacing:4px;color:#949d90}
+.badge-slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 25px}
+.badge-slot{display:flex;flex-direction:column;align-items:center;position:relative;min-width:0;padding:5px 3px 8px;border:1px solid transparent;background:none;border-radius:7px}
+.badge-slot:hover:not(:disabled){background:#ffffff06;border-color:#b3bfac30}
+.badge-recess{display:block;position:relative;width:82px;height:82px;margin-bottom:8px}
+.badge-recess img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}
+.badge-edge{filter:brightness(0) invert(.40);transform:translateY(2px);opacity:.8}
+.badge-shadow{filter:brightness(0) drop-shadow(0 -1px 2px #000);opacity:.48;transform:translateY(-1px)}
+.badge-art{filter:drop-shadow(0 3px 2px #121710b0);z-index:2}
+.badge-label{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10px;color:#adb4a8}
+.badge-label b{font-weight:500;white-space:nowrap}.badge-label small{font-size:9px;color:#939e90}
+.earned .badge-label b{color:#e4ddbe}.earned .badge-label small{color:#b9cda5}
+.badge-glint{position:absolute;inset:-3px;z-index:3;pointer-events:none;opacity:0;background:linear-gradient(110deg,transparent 30%,#fff9ceaa 48%,transparent 62%);clip-path:polygon(15% 10%,85% 10%,93% 82%,8% 82%)}
+.just-earned .badge-art{animation:badge-seat 800ms cubic-bezier(.16,.8,.25,1)}
+.just-earned .badge-glint{animation:badge-shine 850ms 400ms ease-out}
+.case-bottom{position:relative;min-height:41px;padding:13px 6px;color:#655a46;font-size:10px;letter-spacing:.3px;text-shadow:0 1px #fffbdd77}
+.case-clasp{position:absolute;bottom:-4px;left:calc(50% - 25px);width:50px;height:17px;border:2px solid #9d896e;border-radius:5px;background:linear-gradient(#e8d8bd,#c0aa88);box-shadow:inset 0 1px #fff8}
+.case-clasp:after{content:"";position:absolute;inset:4px 10px;border:1px solid #ad9778;border-radius:2px}
+.gym .badge{display:flex;gap:5px;align-items:center}.gym-badge{width:24px;height:24px;object-fit:contain}.gym:not(.done) .gym-badge{filter:grayscale(1);opacity:.45}
+@keyframes badge-seat{0%{opacity:0;transform:translateY(-22px) scale(1.2)}65%{opacity:1;transform:translateY(2px) scale(.96)}100%{opacity:1;transform:none}}
+@keyframes badge-shine{0%{opacity:0;transform:translateX(-35px)}30%{opacity:.7}100%{opacity:0;transform:translateX(35px)}}
+@media(max-width:750px){.case-inlay{padding:12px 10px 16px}.badge-slots{gap:9px 8px}.badge-recess{width:70px;height:70px}.case-bottom{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.just-earned .badge-art,.just-earned .badge-glint{animation:none}}

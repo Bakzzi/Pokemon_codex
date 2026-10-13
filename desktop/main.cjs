@@ -48,7 +48,7 @@ async function start(){
     game.animate('encounter',{id:19,text:'야생 꼬렛 Lv.5 등장!'});
   }else if(demo)game.data.workTokens=25000;
   else reader=new CodexReader(path.join(process.env.CODEX_HOME||path.join(os.homedir(),'.codex'),'sessions'),game);
-  const area=screen.getPrimaryDisplay().workArea,width=400,height=settings.compact?268:456;
+  const area=screen.getPrimaryDisplay().workArea,width=400,height=settings.compact?296:484;
   let x=settings.x??area.x+area.width-width-28,y=settings.y??area.y+area.height-height-32;
   const display=screen.getDisplayMatching({x,y,width,height}).workArea;
   x=Math.max(display.x,Math.min(x,display.x+display.width-width));y=Math.max(display.y,Math.min(y,display.y+display.height-height));
@@ -67,7 +67,7 @@ async function start(){
       if(action==='hide')win.hide();
       if(action==='pin'){settings.pinned=settings.pinned===false;win.setAlwaysOnTop(settings.pinned,'floating');}
       if(action==='compact'){
-        settings.compact=!settings.compact;win.setResizable(true);win.setSize(400,settings.compact?268:456);win.setResizable(false);
+        settings.compact=!settings.compact;win.setResizable(true);win.setSize(400,settings.compact?296:484);win.setResizable(false);
         const b=win.getBounds(),a=screen.getDisplayMatching(b).workArea;
         win.setPosition(Math.max(a.x,Math.min(b.x,a.x+a.width-b.width)),Math.max(a.y,Math.min(b.y,a.y+a.height-b.height)));
       }
@@ -140,6 +140,7 @@ async function smokeTest(){
   await panel.webContents.executeJavaScript("document.querySelector('[data-assign=\"2\"]').click()");await wait(1400);
   const assigned=game.data.slots[2]===1&&game.data.activeId===1;
   await panel.webContents.executeJavaScript("document.querySelector('[data-tab=\"challenge\"]').click()");await wait(100);
+  const emptyBadgeCase=await panel.webContents.executeJavaScript("document.querySelectorAll('.badge-slot.empty').length===8&&document.querySelectorAll('.badge-slot .badge-art').length===0");
   fs.writeFileSync(path.join(dir,'challenge.png'),(await panel.webContents.capturePage()).toPNG());
   await panel.webContents.executeJavaScript("document.querySelector('[data-challenge=\"0\"]').click()");await wait(100);
   const challenge=game.data.battle?.kind==='trainer'&&game.data.battle.bossIndex===0;
@@ -165,6 +166,7 @@ async function smokeTest(){
   const acknowledged=game.panelState().summary.counts.wins===0&&game.data.journal.length>0;
   game.data.badges=['brock'];publish(true);await panel.webContents.executeJavaScript("document.querySelector('[data-tab=\"challenge\"]').click()");await wait(100);
   const earnedGymLocked=await panel.webContents.executeJavaScript("document.querySelector('[data-challenge=\"0\"]').disabled&&document.querySelector('[data-challenge=\"0\"]').textContent==='뱃지 획득 완료'");
+  const earnedBadgeCase=await panel.webContents.executeJavaScript("document.querySelectorAll('.badge-slot.earned').length===1&&document.querySelector('.badge-slot[data-badge=\"brock\"] .badge-art').complete&&document.querySelectorAll('.badge-slot.empty').length===7");
   fs.writeFileSync(path.join(dir,'earned-gym.png'),(await panel.webContents.capturePage()).toPNG());
   const {learnedMoves,xpAt}=require('./pokemon.cjs');game.data.owned[25].level=50;game.data.owned[25].xp=xpAt(25,50);game.data.owned[25].moves=learnedMoves(25,50);publish(true);
   await panel.webContents.executeJavaScript("document.querySelector('[data-tab=\"collection\"]').click();document.querySelector('.dex-card[data-id=\"25\"]').click()");await wait(100);
@@ -183,6 +185,30 @@ async function smokeTest(){
   const faintRotation=game.data.activeId===1&&game.data.battle?.kind==='wild'&&
     await win.webContents.executeJavaScript("document.querySelector('[data-id=\"7\"]').disabled&&document.querySelector('[data-id=\"7\"]').textContent==='기절'&&document.querySelector('[data-id=\"1\"]').getAttribute('aria-pressed')==='true'&&document.querySelector('#speech').textContent.includes('기절')");
   fs.writeFileSync(path.join(dir,'faint-switch.png'),(await win.webContents.capturePage()).toPNG());await wait(1000);
+  const moveCatalog=await win.webContents.executeJavaScript(`(()=>{
+    const canvas=document.createElement('canvas');canvas.width=185;canvas.height=79;const ctx=canvas.getContext('2d'),results=[];
+    for(const p of Object.values(MoveEffects.profiles)){
+      const e={moveId:p.id,actor:'hero',at:0,damage:10,outcome:'success',moveTarget:'opponent',hitCount:3};let pixels=0,hash=0;
+      for(const u of [.35,.65]){MoveEffects.drawFrame(ctx,e,MoveEffects.frameFor(e,p.duration*u));const a=ctx.getImageData(0,0,185,79).data;for(let i=0;i<a.length;i++){hash=(Math.imul(hash,31)+a[i])>>>0;if(i%4===3&&a[i])pixels++;}}
+      results.push({id:p.id,pixels,hash});
+    }
+    return {count:results.length,empty:results.filter(r=>!r.pixels).map(r=>r.id),distinctFire:new Set(results.filter(r=>[52,53,126].includes(r.id)).map(r=>r.hash)).size};
+  })()`);
+  game=new Game({},Date.now(),{random:()=>.73});game.newWild(Date.now());game.data.battle.foe=combatant(19,20);game.data.eventSerial=5000;
+  const {moves}=require('./pokemon.cjs'),{profileFor}=require('./move-effects.js');
+  const moveFixtures=[[52,4,'hero'],[53,4,'hero'],[126,4,'hero'],[55,7,'hero'],[22,1,'hero'],[10,4,'foe'],[45,25,'hero'],[106,7,'hero']];
+  let movePlayback=true;
+  for(const [id,uid,actor] of moveFixtures){
+    game.data.activeId=uid;const m=moves.get(id),self=id===106;
+    game.animate('attack',{moveId:id,move:m.name,actor,moveTarget:self?'self':'opponent',outcome:'success',hitCount:1,damage:m.damageClass===1?0:12,foe:game.snapshot().foe,text:m.name+'!'},Date.now()-profileFor(id).duration*.56);
+    publish(true);await wait(35);movePlayback=movePlayback&&await win.webContents.executeJavaScript(`(()=>{cancelAnimationFrame(moveRaf);moveRaf=0;return !document.querySelector('#attack-fx').hidden&&document.querySelector('#attack-fx').dataset.move==='${id}';})()`);
+    fs.writeFileSync(path.join(dir,'move-'+id+'.png'),(await win.webContents.capturePage()).toPNG());
+  }
+  await win.webContents.executeJavaScript('clearFx()');
+  game.data.badges=require('./pokemon.cjs').data.bosses.slice(0,8).map(b=>b.id);publish(true);
+  await panel.webContents.executeJavaScript("document.querySelector('[data-tab=\"challenge\"]').click();document.querySelector('#challenge').scrollTop=0");await wait(1000);
+  const fullBadgeCase=await panel.webContents.executeJavaScript("document.querySelectorAll('.badge-slot.earned').length===8&&[...document.querySelectorAll('.badge-art')].every(i=>i.complete&&i.naturalWidth===1280)&&!document.querySelector('#league-start').disabled&&document.documentElement.scrollWidth===innerWidth");
+  fs.writeFileSync(path.join(dir,'badge-case-full.png'),(await panel.webContents.capturePage()).toPNG());
   const {captureTiming}=require('./capture-animation.js');
   const prepareCatch=passes=>{
     game=new Game({},Date.now(),{random:()=>.73});game.newWild(Date.now());game.data.battle.foe=combatant(19,5);game.damageFoe(9999);
@@ -210,9 +236,13 @@ async function smokeTest(){
   }
   game.limits={primary:{used:25,minutes:300,resetsAt:Date.now()/1000+3600},secondary:{used:60,minutes:10080,resetsAt:Date.now()/1000+86400}};
   await win.webContents.executeJavaScript("document.querySelector('#compact').click();document.querySelector('#pin').click()");await wait(150);
+  const battleHud=await win.webContents.executeJavaScript(`(()=>{
+    const h=document.querySelector('#hero-hud'),f=document.querySelector('#foe-hud'),n=document.querySelector('#hero-battle-name'),bar=document.querySelector('#hero-hp'),number=document.querySelector('#hero-hp-number');
+    return !h.hidden&&!f.hidden&&getComputedStyle(h).display!=='none'&&n.textContent===${JSON.stringify(game.snapshot().hero.name)}&&number.textContent===${JSON.stringify(game.snapshot().hero.currentHp+' / '+game.snapshot().hero.maxHp)}&&n.getBoundingClientRect().top<bar.getBoundingClientRect().top&&bar.getBoundingClientRect().top<number.getBoundingClientRect().top&&getComputedStyle(document.querySelector('#speech')).display==='none';
+  })()`);
   fs.writeFileSync(path.join(dir,'compact.png'),(await win.webContents.capturePage()).toPNG());
-  const controls={switched,assigned,challenge,preview:preview.name&&preview.image&&!preview.overflow,boarded,eggVisible,hatched,summary,detail,acknowledged,earnedGymLocked,allMoves,nativeBattle,autoRotation,autoSprite,faintRotation,captureThreeShakes,captureSparkle,caughtBallOnly,captureBreakouts,compact:settings.compact===true,height:win.getSize()[1],pin:settings.pinned===false};
-  const ok=inspection.hero==='피카츄'&&inspection.images&&!inspection.overflow&&inspection.slots===4&&inspection.facing.startsWith('matrix(-1')&&collection.count===151&&collection.caught===4&&collection.unknown.includes('???')&&collection.silhouette&&collection.noPichu&&!collection.overflow&&Object.values(controls).every(Boolean)&&controls.height===268&&!errors.length;
+  const controls={switched,assigned,challenge,preview:preview.name&&preview.image&&!preview.overflow,boarded,eggVisible,hatched,summary,detail,acknowledged,earnedGymLocked,allMoves,nativeBattle,autoRotation,autoSprite,faintRotation,emptyBadgeCase,earnedBadgeCase,fullBadgeCase,moveCatalog:moveCatalog.count===354&&!moveCatalog.empty.length&&moveCatalog.distinctFire===3,movePlayback,battleHud,captureThreeShakes,captureSparkle,caughtBallOnly,captureBreakouts,compact:settings.compact===true,height:win.getSize()[1],pin:settings.pinned===false};
+  const ok=inspection.hero==='피카츄'&&inspection.images&&!inspection.overflow&&inspection.slots===4&&inspection.facing.startsWith('matrix(-1')&&collection.count===151&&collection.caught===4&&collection.unknown.includes('???')&&collection.silhouette&&collection.noPichu&&!collection.overflow&&Object.values(controls).every(Boolean)&&controls.height===296&&!errors.length;
   fs.writeFileSync(path.join(dir,'result.json'),JSON.stringify({ok,inspection,collection,controls,errors},null,2));console.log(JSON.stringify({smoke:ok,inspection,collection,controls,errors}));app.exit(ok?0:1);
 }
 app.on('before-quit',()=>{clearInterval(timer);try{save();}catch{}tray?.destroy();});

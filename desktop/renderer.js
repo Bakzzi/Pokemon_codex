@@ -1,12 +1,45 @@
 'use strict';
 const $=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('ko-KR');
-let serial=0,current=null,switching=false,timers=[],animations=[],captureRaf=0;
+let serial=0,current=null,switching=false,timers=[],animations=[],captureRaf=0,moveRaf=0,playingMove=null;
 for(const action of ['pin','compact','hide','close'])$(action).onclick=()=>window.buddy.action(action);
 for(const b of document.querySelectorAll('[data-panel]'))b.onclick=()=>window.buddy.action('panel',b.dataset.panel);
 function sprite(element,p){const img=$(element),src='assets/'+p.id+'.gif';if(img.getAttribute('src')!==src)img.src=src;img.alt=p.name;}
 function later(fn,ms){timers.push(setTimeout(fn,ms));}
 function animate(element,frames,options){const a=element.animate(frames,{fill:'none',...options});animations.push(a);return a;}
-function clearFx(){timers.forEach(clearTimeout);timers=[];animations.forEach(a=>a.cancel());animations=[];switching=false;$('ball-fx').style.display='none';$('attack-fx').style.display='none';$('hero-image').style.opacity='1';$('foe-image').style.opacity='1';}
+function clearMove(){
+  if(moveRaf)cancelAnimationFrame(moveRaf);moveRaf=0;playingMove=null;
+  const canvas=$('attack-fx');canvas.hidden=true;canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
+  for(const id of ['hero','foe']){$(id).style.transform='';$(id).style.opacity='';}
+}
+function clearFx(){timers.forEach(clearTimeout);timers=[];animations.forEach(a=>a.cancel());animations=[];clearMove();switching=false;$('ball-fx').style.display='none';$('hero-image').style.opacity='1';$('foe-image').style.opacity='1';}
+function playMove(event){
+  if(!event.moveId)return;playingMove=event;
+  const canvas=$('attack-fx'),ctx=canvas.getContext('2d');
+  canvas.hidden=false;canvas.dataset.move=String(event.moveId);canvas.dataset.family=MoveEffects.profileFor(event.moveId).family;
+  const draw=()=>{
+    if(playingMove!==event)return;
+    const frame=MoveEffects.frameFor(event,Date.now());
+    if(!frame.active){clearMove();if(current){renderHealth('hero',current.hero);renderFoe(current);}return;}
+    MoveEffects.drawFrame(ctx,event,frame);canvas.dataset.phase=frame.phase;canvas.dataset.outcome=frame.outcome;
+    for(const [id,m] of [[event.actor==='foe'?'foe':'hero',frame.actor],[event.actor==='foe'?'hero':'foe',frame.target]]){
+      $(id).style.transform=`translate(${m.x}px,${m.y}px) rotate(${m.rotate}deg) scale(${m.scale})`;$(id).style.opacity=String(m.opacity);
+    }
+    renderHeroHealth(current);renderFoe(current);moveRaf=requestAnimationFrame(draw);
+  };draw();
+}
+function renderHealth(side,p){
+  $(side==='hero'?'hero-battle-name':'foe-name').textContent=p.name;
+  $(side+'-battle-level').textContent='L'+p.level;
+  const bar=$(side+'-hp');bar.style.width=Math.max(0,Math.min(1,p.hp))*100+'%';
+  bar.dataset.health=p.hp<=.2?'low':p.hp<=.5?'mid':'high';
+  $(side+'-hp-number').textContent=Number.isFinite(p.maxHp)?`${p.currentHp ?? Math.ceil(p.hp*p.maxHp)} / ${p.maxHp}`:'';
+}
+function moveHealth(side,p){
+  return playingMove?.[side+'Before']&&MoveEffects.frameFor(playingMove,Date.now()).u<.58?{...p,...playingMove[side+'Before']}:p;
+}
+function renderHeroHealth(s){
+  const p=playingMove?.hero?.id===s.hero.id?playingMove.hero:s.hero;renderHealth('hero',moveHealth('hero',p));
+}
 function eventFx(e){
   if(!e||e.serial===serial)return;serial=e.serial;
   clearFx();if(Date.now()-e.at>2200)return;
@@ -19,22 +52,15 @@ function eventFx(e){
     later(()=>{hero.style.opacity='0';sprite('hero-image',current.hero);animate(ball,[{transform:'translate(-65px,-30px)',opacity:0},{transform:'translate(-15px,-85px) rotate(200deg)',opacity:1,offset:.45},{transform:'translate(8px,0) rotate(400deg)',opacity:1}],{duration:300});},670);
     later(()=>{ball.style.display='none';hero.style.opacity='1';animate(hero,[{transform:'scaleX(-1) scale(.1)',filter:'brightness(3)',opacity:0},{transform:'scaleX(-1) scale(1.08)',filter:'brightness(1.7)',opacity:1,offset:.7},{transform:'scaleX(-1) scale(1)',filter:'none',opacity:1}],{duration:280,fill:'forwards'});},980);
     later(()=>{clearFx();sprite('hero-image',current.hero);},1290);
-  }else if(e.kind==='attack'&&e.move){
-    const attacker=e.actor==='hero'?$('hero'):$('foe'),target=e.actor==='hero'?$('foe'):$('hero'),sign=e.actor==='hero'?1:-1;
-    animate(attacker,[{translate:'0 0'},{translate:(sign*11)+'px -3px',offset:.4},{translate:'0 0'}],{duration:380});
-    const styles={10:['♨','#ff9471'],11:['●','#75c9ee'],12:['❧','#9cda75'],13:['ϟ','#f6db63'],14:['◎','#f3a9cf'],15:['❄','#a9eff1'],8:['◉','#b49de6'],4:['●','#bd8fd8'],16:['◆','#b9a4f7'],5:['▰','#c9af7d'],6:['◆','#c8b58e'],3:['≋','#b8c6e9'],2:['✦','#f4bb84']};
-    const [shape,color]=styles[e.moveType]||['✦','#eee5c9'],fx=$('attack-fx');fx.textContent=shape;fx.style.color=color;fx.style.left=e.actor==='hero'?'135px':'215px';fx.style.display='block';
-    animate(fx,[{transform:'translateX(0) scale(.4)',opacity:0},{transform:'translateX('+(sign*35)+'px) scale(1)',opacity:1,offset:.45},{transform:'translateX('+(sign*70)+'px) scale(1.2)',opacity:0}],{duration:480});
-    if(e.damage>0)later(()=>animate(target,[{translate:'0 0',opacity:1},{translate:(sign*5)+'px 0',opacity:.4},{translate:'0 0',opacity:1}],{duration:220}),250);
-    later(()=>{$('attack-fx').style.display='none';},500);
-  }
+  }else if(e.kind==='attack'&&e.moveId)playMove(e);
+  else if(e.kind==='capture'&&e.leadIn&&Date.now()<e.at)playMove(e.leadIn);
 }
 function renderFoe(s){
-  const capture=s.capture,shown=capture||s.foe,foe=$('foe'),img=$('foe-image'),fx=$('capture-fx');
+  const capture=s.capture&&Date.now()>=s.capture.at?s.capture:null,shown=capture||playingMove?.foe||s.foe||(s.capture&&Date.now()<s.capture.at?s.capture.leadIn?.foe:null),foe=$('foe'),img=$('foe-image'),fx=$('capture-fx');
   foe.hidden=!shown;$('foe-ground').hidden=!shown;$('empty-foe').hidden=!!shown;
   img.style.opacity='1';img.style.transform='';img.style.filter='';
-  foe.querySelector('.health').hidden=false;$('foe-name').hidden=false;fx.hidden=!capture;
-  if(shown){sprite('foe-image',shown);$('foe-name').textContent=shown.name+' Lv.'+shown.level;$('foe-hp').style.width=Math.max(0,shown.hp*100)+'%';}
+  $('foe-hud').hidden=!shown;fx.hidden=!capture;
+  if(shown){sprite('foe-image',shown);renderHealth('foe',capture?shown:moveHealth('foe',shown));}
   if(!capture)return;
   const f=CaptureAnimation.captureFrame(capture,Date.now()),ball=$('capture-ball'),flash=$('capture-flash'),stars=$('capture-sparkles');
   fx.dataset.phase=f.phase;fx.dataset.shake=String(f.shake);
@@ -54,8 +80,7 @@ function renderFoe(s){
   }
   const resolving=f.age>=f.resultAt,spark=clamp((f.age-f.resultAt)/650);
   foe.hidden=f.age>=f.throwMs+f.absorbMs&&(!resolving||capture.caught);
-  foe.querySelector('.health').hidden=f.age>=f.throwMs&&(!resolving||capture.caught||f.age<f.resultAt+420);
-  $('foe-name').hidden=foe.querySelector('.health').hidden;
+  $('foe-hud').hidden=f.age>=f.throwMs&&(!resolving||capture.caught||f.age<f.resultAt+420);
   if(resolving&&!capture.caught){
     const t=clamp((f.age-f.resultAt)/420);opacity=1-clamp(t*2);brightness=4;
     img.style.transform=`translateY(${30*(1-t)-14*Math.sin(t*Math.PI)}px) scale(${.12+.88*t})`;
@@ -70,6 +95,7 @@ function renderFoe(s){
   [...stars.children].forEach((star,i)=>{const a=[[-27,-18],[0,-33],[27,-18],[8,9]][i];star.style.transform=`translate(${a[0]*spark}px,${a[1]*spark}px) scale(${1-.3*spark})`;});
 }
 function renderSpeech(s){
+  if(s.capture?.leadIn&&Date.now()<s.capture.at){$('speech').textContent=s.capture.leadIn.text;return;}
   const f=s.capture&&CaptureAnimation.captureFrame(s.capture,Date.now()),recent=s.animation&&Date.now()-s.animation.at<5000;
   $('speech').textContent=f&&(f.locked||s.animation?.kind==='capture')?f.text:recent?s.animation.text:s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.battle?'다음 작업과 함께 배틀을 이어가요':'오늘은 어떤 포켓몬을 만날까?';
   $('speech').title=s.animation?.detail||$('speech').textContent;
@@ -83,7 +109,7 @@ window.buddy.onState(s=>{
   current=s;document.body.classList.toggle('compact',s.compact);document.documentElement.style.setProperty('--accent',s.accent);
   $('pin').setAttribute('aria-pressed',String(s.pinned));$('compact').title=s.compact?'상태창 펼치기':'작게 보기';
   if(!switching)sprite('hero-image',s.hero);
-  $('hero-name').textContent=s.hero.name;$('level').textContent=s.level;$('hero-hp').style.width=Math.max(0,s.hero.hp*100)+'%';
+  $('hero-name').textContent=s.hero.name;$('level').textContent=s.level;renderHeroHealth(s);
   $('region').textContent=s.generation===1?'KANTO ADVENTURE':'KANTO + JOHTO';$('exp').textContent=s.level===100?'MAX LEVEL':fmt(s.expCurrent)+' / '+fmt(s.expRequired);
   $('xp-bar').style.width=s.progress*100+'%';$('evolution').textContent=s.evolution.some(e=>e.ready)?'진화 가능 · 도감에서 확인':'';
   $('status').textContent=s.notice||(s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.phase==='working'?'Codex 작업과 함께 모험 중':s.workTokens>=250?'작업의 여운으로 모험을 이어가는 중':s.phase==='done'?'작업 끝! 모험 기록을 확인해 봐':'다음 코딩을 기다리는 중');

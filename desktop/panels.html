@@ -2,7 +2,7 @@
 <html lang="ko"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; font-src 'self'">
-<title>포켓몬 도감 · Codex Buddy</title><link rel="stylesheet" href="panels.css">
+<title>포켓몬 도감 · Codex Buddy</title><link rel="stylesheet" href="panels.css"><link rel="stylesheet" href="badge-case.css">
 </head><body>
 <header class="top"><div><span class="kicker">POKÉMON / CODEX</span><h1>작은 모험의 기록</h1></div><div class="totals"><b id="totals">4 / 151</b><span id="region">관동 지방</span></div></header>
 <nav class="tabs" aria-label="모험 메뉴"><button data-tab="collection" aria-selected="true">포켓몬 도감</button><button data-tab="challenge">도전하기</button><button data-tab="daycare">키우미집</button><button data-tab="journal">모험 기록</button></nav>
@@ -14,6 +14,10 @@
 </section>
 <section id="challenge" class="page" hidden>
   <div class="intro"><div><h2>관동 체육관</h2><p>네 칸의 동료로 순서대로 도전해요. 도전 중에도 출전 교체는 가능해요.</p></div><b id="badges"></b></div>
+  <section class="badge-case" aria-label="관동 뱃지 홀더">
+    <div class="case-inlay"><div class="case-heading"><span>GYM BADGES</span><b>KANTO</b></div><div id="badge-slots" class="badge-slots"></div></div>
+    <div class="case-bottom"><span id="badge-case-note">여덟 번의 도전, 여덟 개의 증표</span><i class="case-clasp" aria-hidden="true"></i></div>
+  </section>
   <div id="ongoing" class="ongoing" hidden></div><div class="gym-grid" id="gyms"></div>
   <div class="league"><div><span class="kicker">POKÉMON LEAGUE</span><h2>사천왕, 그리고 챔피언</h2><p>뱃지 8개를 모으면 도전할 수 있어요. 다섯 경기를 회복 없이 이어서 승리하면 성도 지방이 열려요.</p></div><button id="league-start" data-challenge="8">리그 도전</button></div>
   <div id="league-team" class="league-team"></div><p id="league-progress" class="muted"></p>

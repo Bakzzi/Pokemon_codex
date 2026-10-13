@@ -42,7 +42,13 @@ Only the local simulator is used; this project does not connect to Showdown serv
 Catch formula requested by the user:
 https://pokemon.fandom.com/ko/wiki/포획률
 
-## Electron
+## Kanto badge artwork
+
+The eight Kanto badge illustrations were downloaded unchanged from Bulbagarden Archives. Original file pages, image URLs and SHA-256 hashes are recorded in desktop/assets/badges/sources.json. Example source: https://archives.bulbagarden.net/wiki/File:Boulder_Badge.png
+
+These are Pokemon artwork, not MIT-licensed code. Copyright remains with the original Pokemon rights holders. The source archive identifies these as copyrighted images. The holder UI, empty recess treatment and seating animation are this project's code; no asset is fetched at runtime.
+
+## Electron runtime
 
 Electron 44.7.0 — https://www.electronjs.org/
 The portable runtime includes Electron's unchanged LICENSE and LICENSES.chromium.html.

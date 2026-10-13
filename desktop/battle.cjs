@@ -191,6 +191,20 @@ function sync(game,b,sim){
   const foe=sim.p2.active[0];b.foe=readMon(foe);
   b.field={weather:sim.field.weather,turn:sim.turn};
 }
+function movePresentation(lines){
+  // Called moves (Metronome, Sleep Talk, Mirror Move) show the move actually executed.
+  const line=lines.findLast(l=>l.startsWith('|move|'));
+  if(!line)return {};
+  const parts=line.split('|'),m=dex.moves.get(parts[3]),actor=parts[2].startsWith('p2')?'foe':'hero';
+  const actionLines=lines.slice(lines.lastIndexOf(line));
+  const charging=actionLines.some(l=>l.startsWith('|-prepare|'));
+  const outcome=charging?'charging':actionLines.some(l=>l.startsWith('|-miss|'))||line.includes('[miss]')?'miss':
+    actionLines.some(l=>l.startsWith('|-activate|')&&/move: (Protect|Detect)/.test(l))?'protected':
+    actionLines.some(l=>l.startsWith('|-immune|'))?'immune':actionLines.some(l=>l.startsWith('|-fail|'))?'failed':'success';
+  const hit=actionLines.find(l=>l.startsWith('|-hitcount|'));
+  const moveTarget=['all','allAdjacent','foeSide'].includes(m.target)?'field':parts[4]===parts[2]||['self','allySide','allies'].includes(m.target)?'self':'opponent';
+  return {actor,move:m.num,moveTarget,outcome,hitCount:hit?Number(hit.split('|')[3])||1:1};
+}
 function step(game,b){
   const sim=engine(game,b);refreshOwned(game,sim);const start=sim.log.length,heroBefore=sim.p1.active[0].name,foeBefore=sim.p2.active[0].hp,heroHpBefore=sim.p1.active[0].hp;
   if(b.pendingSwitch&&!sim.requestState){
@@ -203,10 +217,9 @@ function step(game,b){
     for(let i=0;i<choices.length;i++)if(choices[i]&&!sim.sides[i].choose(choices[i]))sim.sides[i].autoChoose();
     sim.commitChoices();
   }else sim.turnLoop();
-  const lines=sim.log.slice(start),moveLine=lines.find(l=>l.startsWith('|move|')),parts=moveLine?.split('|');
-  const actor=parts?.[2]?.startsWith('p2')?'foe':'hero',m=parts?dex.moves.get(parts[3]):null,changed=heroBefore!==sim.p1.active[0].name;
+  const lines=sim.log.slice(start),presentation=movePresentation(lines),actor=presentation.actor||'hero',changed=heroBefore!==sim.p1.active[0].name;
   const messages=protocol(sim,lines);sync(game,b,sim);persist(b,sim);
-  return {actor,id:actor==='hero'?b.party[game.data.activeId].id:b.foe.id,move:m?.num,damage:Math.max(0,actor==='hero'?foeBefore-sim.p2.active[0].hp:heroHpBefore-sim.p1.active[0].hp),lines:messages,switched:changed,ended:sim.ended};
+  return {...presentation,actor,id:actor==='hero'?b.party[game.data.activeId].id:b.foe.id,damage:Math.max(0,actor==='hero'?foeBefore-sim.p2.active[0].hp:heroHpBefore-sim.p1.active[0].hp),lines:messages,switched:changed,ended:sim.ended};
 }
 function canSwitch(game,b,uid){
   const sim=cache.get(b)||(b.sim?engine(game,b):null);
@@ -224,4 +237,4 @@ function tryCatch(rate,hp,maxHp,status,random=Math.random){
   while(checks<4&&Math.floor(random()*65536)<threshold)checks++;
   return {caught:checks===4,shakes:Math.min(checks,3),a};
 }
-module.exports={combatant,abilityFor,step,canSwitch,invalidate,catchValue,tryCatch,engine,readMon,scoreMove,dex};
+module.exports={combatant,abilityFor,step,canSwitch,invalidate,catchValue,tryCatch,engine,readMon,scoreMove,movePresentation,dex};

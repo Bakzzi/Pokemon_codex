@@ -6,7 +6,7 @@
 
 **[Windows 실행 파일 받기 · 최신 릴리스](https://github.com/Bakzzi/Pokemon_codex/releases/latest)**
 
-릴리스의 `Pokemon-Codex-0.3.2-portable.zip`을 받아 압축을 풀고 `PokemonCodex.exe`를 실행하세요. ZIP 안의 폴더와 파일을 함께 유지하면 됩니다. 소스 코드 ZIP은 실행 파일 배포본과 다릅니다.
+릴리스의 `Pokemon-Codex-0.3.3-portable.zip`을 받아 압축을 풀고 `PokemonCodex.exe`를 실행하세요. ZIP 안의 폴더와 파일을 함께 유지하면 됩니다. 소스 코드 ZIP은 실행 파일 배포본과 다릅니다.
 
 ![코딩과 함께하는 포켓몬 위젯](docs/screenshots/widget.png)
 
@@ -26,6 +26,7 @@
 - 상단이나 배틀 배경을 드래그해 이동합니다. ⌖는 항상 위에, ▱는 작은 모드, −는 트레이로 숨기기, ×는 종료입니다.
 - 네 개의 빠른 선택 칸 중 하나를 눌러 출전시킵니다. 동시에 싸우는 포켓몬은 한 마리입니다.
 - 작게 보기에서는 배틀 아래에 **5시간·주간 남은 사용 한도**를 표시합니다. 하단 메뉴, 기술 대사와 Codex 연결 표시는 숨기며, 펼치면 일반 화면으로 돌아옵니다.
+- 양쪽 포켓몬 아래에는 **이름·L레벨 → HP 바 → 현재/최대 HP** 순서의 체력창이 항상 보입니다. 작게 보기에도 유지하며, 실제 전투 체력에 따라 초록·노랑·빨강으로 바뀝니다.
 - **도감 / 도전하기 / 모험 기록 / 키우미집**은 위젯 하단과 트레이에서 열 수 있습니다.
 
 ## 도감과 동료
@@ -72,6 +73,10 @@
 
 ## 기술과 진화
 
+기술 연출은 속성 기호 대신 **기술 ID**로 선택합니다. 포함된 354개 기술에 60가지 동작 패턴과 개별 변형을 연결했습니다. 불꽃세례는 여러 작은 불꽃, 화염방사는 이어지는 불길, 불대문자는 大자 불꽃으로 구분합니다. 물대포·거품·파도, 발톱·물기·돌진, 울음소리·단단해지기·회복도 다른 형태와 움직임으로 표현합니다. 픽셀 연출은 이 위젯용으로 제작한 것으로 원작의 전투 애니메이션을 그대로 복제한 것은 아닙니다.
+
+공격 방향, 자기 대상 기술, 실제 연속 타격 횟수와 빗나감·면역·방어·충전을 전투 엔진 결과에 맞춥니다. 손가락흔들기 등으로 다른 기술이 호출되면 실제 실행한 기술을 표시합니다. 포획이 시작되는 타격도 먼저 끝난 뒤 몬스터볼을 던집니다. 연출은 무음이며 화면 전체를 번쩍이지 않습니다.
+
 PokeAPI의 파이어레드·리프그린 레벨업 기술표, 3세대 당시 위력·타입·종족값과 타입 상성을 사용합니다. 해당 개체가 배운 기술은 **개수 제한 없이 전부 유지**하고 진화해도 계승합니다. 아직 배울 레벨에 도달하지 않은 기술을 미리 주지는 않습니다. PP, 상태, 상대 타입, 회복 필요성 등을 보고 자동으로 고르며 4개 제한과 기술 삭제는 없습니다. 기존 저장의 현재 종·레벨까지 배운 기술도 복구합니다. 관장·리그 상대는 원작의 지정 기술 편성을 사용합니다.
 
 레벨, 진화의돌, 교환, 도구를 지닌 교환, 친밀도와 시간대 조건을 구분합니다. 조건이 되면 도감에서 직접 진화시킵니다. 교환 진화는 혼자 이용하는 로컬 교환소에서 교환 후 되돌려 받는 방식으로 처리하며 통신 상대가 필요하지 않습니다. 친밀도 조건은 당시 기준 220, 낮/밤은 한국 시간 04~18시/그 외 시간입니다. 다음 세대 진화는 챔피언 달성 전까지 잠깁니다.
@@ -98,6 +103,10 @@ PokeAPI의 파이어레드·리프그린 레벨업 기술표, 3세대 당시 위
 - 유전 기술·개체값 유전·향로 선택은 이번 버전에 포함하지 않습니다. 3세대 밖의 아기 포켓몬은 등장하지 않습니다.
 
 ## 체육관과 세대 해금
+
+**관동 뱃지 홀더**에 여덟 뱃지가 두 줄로 놓입니다. 미획득 칸은 해당 뱃지 모양으로 파인 빈 홈이며, 관장에게 승리하면 실제 뱃지 이미지가 자리 잡고 짧게 빛납니다. 기존에 얻은 뱃지도 저장된 획득 상태에 맞춰 나타납니다. 뱃지 칸을 누르면 해당 체육관으로 이동합니다.
+
+![관동 뱃지 홀더](docs/screenshots/badge-case.png)
 
 **도전하기**에서 웅 → 이슬 → 마티스 → 민화 → 독수 → 초련 → 강연 → 비주기 순으로 도전합니다. 상대 편성·레벨·기술은 파이어레드 첫 도전 자료를 기준으로 합니다.
 
@@ -139,5 +148,6 @@ npm.cmd run package
 - [PokeAPI 데이터](https://github.com/PokeAPI/pokeapi/tree/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv). 원본과 변환 자료·검증 결과는 reference/pokeapi/, 런타임 자료는 desktop/data/에 있습니다.
 - [PokeAPI 크리스탈 스프라이트](https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/versions/generation-ii/crystal/animated). 251개 원본 URL·SHA-256은 desktop/assets/manifest.json에 있습니다.
 - [Pokémon Showdown 전투 엔진 / @pkmn/sim](https://github.com/pkmn/ps/tree/main/sim), MIT. 실행에 필요한 고정 버전 패키지와 라이선스는 배포 폴더에 포함됩니다.
+- 관동 뱃지 이미지는 [Bulbagarden Archives](https://archives.bulbagarden.net/wiki/File:Boulder_Badge.png)의 포켓몬 원본 일러스트를 사용합니다. 여덟 파일의 원본 URL과 SHA-256은 `desktop/assets/badges/sources.json`에 보관하며 앱은 로컬 이미지로만 표시합니다.
 - [파이어레드 트레이너 편성](https://github.com/pret/pokefirered/blob/master/src/data/trainer_parties.h), [진화](https://github.com/pret/pokefirered/blob/master/src/data/pokemon/evolution.h), [키우미집 규칙](https://github.com/pret/pokefirered/blob/master/src/daycare.c).
 - 포켓몬 명칭·캐릭터·게임 그림의 권리는 해당 권리자에게 있습니다. 코드의 MIT 라이선스가 포켓몬 자산에 적용되는 것은 아닙니다. Nintendo, Creatures, GAME FREAK, The Pokémon Company 또는 OpenAI의 공식·승인 프로젝트가 아닙니다.

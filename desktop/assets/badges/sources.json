@@ -1,0 +1,93 @@
+{
+  "source": "Pokemon Project Studio Red and Blue illustrations via Bulbagarden Archives; Pokemon assets retain their original copyright.",
+  "badges": [
+    {
+      "boss": "brock",
+      "name": "Boulder",
+      "file": "brock.png",
+      "source": "https://archives.bulbagarden.net/media/upload/d/dd/Boulder_Badge.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:Boulder_Badge.png",
+      "sha256": "8e3c46b48090faabc10396e8892abe1aa03a3131d35f37bb00df2dffbd53dae6",
+      "bytes": 107530,
+      "width": 1280,
+      "height": 1280
+    },
+    {
+      "boss": "misty",
+      "name": "Cascade",
+      "file": "misty.png",
+      "source": "https://archives.bulbagarden.net/media/upload/9/9c/Cascade_Badge.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:Cascade_Badge.png",
+      "sha256": "e41bf5b02b665f04c3541d04e84232b99c930b117beb06653f8783fad2bcbbb7",
+      "bytes": 98244,
+      "width": 1280,
+      "height": 1280
+    },
+    {
+      "boss": "surge",
+      "name": "Thunder",
+      "file": "surge.png",
+      "source": "https://archives.bulbagarden.net/media/upload/a/a6/Thunder_Badge.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:Thunder_Badge.png",
+      "sha256": "f43fb1a957d0e1f5136aaf97996d900c87ddec9e4d7e79f846b85c24b0c9384d",
+      "bytes": 243077,
+      "width": 1280,
+      "height": 1280
+    },
+    {
+      "boss": "erika",
+      "name": "Rainbow",
+      "file": "erika.png",
+      "source": "https://archives.bulbagarden.net/media/upload/b/b5/Rainbow_Badge.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:Rainbow_Badge.png",
+      "sha256": "6de18495decf9692f6669ac4142c91f84c305baffe41034d0bdbce395c5a3592",
+      "bytes": 251561,
+      "width": 1280,
+      "height": 1280
+    },
+    {
+      "boss": "koga",
+      "name": "Soul",
+      "file": "koga.png",
+      "source": "https://archives.bulbagarden.net/media/upload/7/7d/Soul_Badge.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:Soul_Badge.png",
+      "sha256": "8de0caa8cc99deffa314cbd700e2f7c7669141aefc9bbaa0e1c7a9298a919620",
+      "bytes": 124082,
+      "width": 1280,
+      "height": 1280
+    },
+    {
+      "boss": "sabrina",
+      "name": "Marsh",
+      "file": "sabrina.png",
+      "source": "https://archives.bulbagarden.net/media/upload/6/6b/Marsh_Badge.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:Marsh_Badge.png",
+      "sha256": "474616b99f3ae2fff2475ca8c964c7a43dc3f195e3e9db8c33f3ed0eefdc29b6",
+      "bytes": 188912,
+      "width": 1280,
+      "height": 1280
+    },
+    {
+      "boss": "blaine",
+      "name": "Volcano",
+      "file": "blaine.png",
+      "source": "https://archives.bulbagarden.net/media/upload/1/12/Volcano_Badge.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:Volcano_Badge.png",
+      "sha256": "f9ca2c43e408b7c81740e0d752f8d1a8cee3f13ab88be081ef63482f0b043c6b",
+      "bytes": 216379,
+      "width": 1280,
+      "height": 1280
+    },
+    {
+      "boss": "giovanni",
+      "name": "Earth",
+      "file": "giovanni.png",
+      "source": "https://archives.bulbagarden.net/media/upload/7/78/Earth_Badge.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:Earth_Badge.png",
+      "sha256": "824b2b19c446fe9e594d43a0669343bff849b2cddf75f533e64b0cd641ae3758",
+      "bytes": 26982,
+      "width": 1280,
+      "height": 1280
+    }
+  ]
+}

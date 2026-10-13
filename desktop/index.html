@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; font-src 'self'">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pokémon Codex Buddy</title><link rel="stylesheet" href="widget.css">
+<title>Pokémon Codex Buddy</title><link rel="stylesheet" href="widget.css"><link rel="stylesheet" href="battle-ui.css">
 </head><body>
 <main class="widget">
   <header class="toolbar">
@@ -19,9 +19,11 @@
     <div class="connection"><i></i><span id="connection-label">연결 준비 중</span></div>
     <div class="speech" id="speech" role="status">오늘도 함께 모험하자!</div>
     <div class="ground hero-ground"></div><div class="ground foe-ground" id="foe-ground"></div>
-    <div class="hero sprite" id="hero"><img id="hero-image" src="assets/25.gif" alt="피카츄" draggable="false"><div class="health"><i id="hero-hp"></i></div></div>
-    <div class="foe sprite" id="foe"><img id="foe-image" src="assets/19.gif" alt="" draggable="false"><div class="health"><i id="foe-hp"></i></div><div id="foe-name"></div></div>
-    <div id="attack-fx" aria-hidden="true"></div><div id="ball-fx" class="pokeball" aria-hidden="true"></div>
+    <div class="hero sprite" id="hero"><img id="hero-image" src="assets/25.gif" alt="피카츄" draggable="false"></div>
+    <div class="foe sprite" id="foe"><img id="foe-image" src="assets/19.gif" alt="" draggable="false"></div>
+    <div id="hero-hud" class="battle-hud hero-hud"><div class="battle-name"><b id="hero-battle-name">피카츄</b><span id="hero-battle-level">L5</span></div><div class="hp-row"><b>HP</b><div class="health"><i id="hero-hp"></i></div></div><div id="hero-hp-number" class="hp-number"></div></div>
+    <div id="foe-hud" class="battle-hud foe-hud"><div class="battle-name"><b id="foe-name"></b><span id="foe-battle-level"></span></div><div class="hp-row"><b>HP</b><div class="health"><i id="foe-hp"></i></div></div><div id="foe-hp-number" class="hp-number"></div></div>
+    <canvas id="attack-fx" width="185" height="79" aria-hidden="true" hidden></canvas><div id="ball-fx" class="pokeball" aria-hidden="true"></div>
     <div id="capture-fx" aria-hidden="true" hidden><div id="capture-ball" class="pokeball"></div><div id="capture-flash"></div><div id="capture-sparkles"><i>✦</i><i>✦</i><i>✦</i><i>✦</i></div></div>
     <div id="empty-foe">다음 만남을 기다리는 중</div>
   </section>
@@ -43,4 +45,4 @@
     <button data-panel="daycare">키우미집</button>
   </div>
   <footer class="credit">원작 모모찡 · momozzing</footer>
-</main><script src="capture-animation.js"></script><script src="renderer.js"></script></body></html>
+</main><script src="capture-animation.js"></script><script src="move-effects.js"></script><script src="renderer.js"></script></body></html>

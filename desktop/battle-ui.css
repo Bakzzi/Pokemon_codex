@@ -1,0 +1,21 @@
+/* Compact, fixed battle HUDs: name/level, HP gauge, then exact HP. */
+.scene{height:185px}
+.compact .scene{height:182px}
+.sprite{bottom:45px}
+.ground{bottom:50px}
+#capture-fx{bottom:50px}
+#attack-fx{display:block;position:absolute;inset:0 auto auto 0;width:370px;height:158px;z-index:5;pointer-events:none;image-rendering:pixelated}
+.battle-hud{position:absolute;bottom:3px;width:133px;height:41px;padding:4px 7px 3px;background:#f0efdc;border:2px solid #586751;border-radius:7px 2px 7px 2px;box-shadow:2px 2px 0 #26362bdd;color:#29372c;z-index:6;font-variant-numeric:tabular-nums;line-height:1}
+.hero-hud{left:20px}.foe-hud{right:11px}
+.battle-name{display:flex;justify-content:space-between;align-items:center;font-size:10px;line-height:11px;gap:3px;white-space:nowrap}
+.battle-name b{font-weight:650;overflow:hidden;text-overflow:ellipsis}
+.battle-name span{font-size:10px;flex-shrink:0;font-weight:650}
+#foe-name{position:static;background:none;padding:0;color:inherit;text-shadow:none;font-size:10px;border-radius:0}
+.hp-row{display:flex;gap:4px;align-items:center;margin-top:3px}
+.hp-row>b{font-size:8px;color:#8c642e;letter-spacing:.5px}
+.hp-row .health{position:static;width:auto;flex:1;height:6px;border:1px solid #58634b;background:#37462f;border-radius:4px;padding:1px;overflow:hidden}
+.hp-row .health i{height:2px;border-radius:2px;background:#63b46d}
+.hp-row .health i[data-health=mid]{background:#d9b349}
+.hp-row .health i[data-health=low]{background:#d76855}
+.hp-number{text-align:right;font:10px/11px Consolas,monospace;margin-top:2px}
+@media(prefers-reduced-motion:reduce){.health i{transition:none}}
