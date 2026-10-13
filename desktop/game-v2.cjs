@@ -56,11 +56,39 @@ class Game {
   acknowledgeJournal(now=Date.now()){journal.acknowledge(this.data,now);return true;}
   memberCombatant(p){return combatant(p.id,p.level,p.moves,p);}
   animate(kind,details={},now=Date.now()){this.data.animation={serial:++this.data.eventSerial,kind,at:now,...details};}
+  availablePartners(){
+    const b=this.data.battle;
+    return this.data.slots.filter(uid=>{
+      const p=this.data.owned[uid];
+      return p&&species.get(p.id).generation<=this.maxGeneration()&&!this.isBoarded(uid)&&
+        (!b||(b.party[uid]?b.party[uid].hp>0:b.kind==='wild'));
+    });
+  }
+  switchToLowest(reason,now){
+    const available=this.availablePartners();if(!available.length)return false;
+    const levels=available.map(uid=>this.data.owned[uid].level),lowest=Math.min(...levels);
+    if(reason==='balance'&&(this.data.battle||Math.max(...levels)-lowest<15))return false;
+    const from=this.data.owned[this.data.activeId];
+    // Keep an already-lowest partner; otherwise break ties by the user's slot order.
+    const next=available.includes(from.uid)&&from.level===lowest?from.uid:available.find(uid=>this.data.owned[uid].level===lowest);
+    if(!this.select(next,now))return false;
+    const to=this.data.owned[next],text=reason==='faint'?
+      `${species.get(from.id).name} 기절 · ${species.get(to.id).name} Lv.${to.level} 출전`:
+      `레벨 균형 · ${species.get(from.id).name} Lv.${from.level} → ${species.get(to.id).name} Lv.${to.level}`;
+    this.data.animation.reason=reason;this.data.animation.text=text;
+    this.log(text,'switch',to.id,now);return true;
+  }
+  handleFaint(now){
+    if(this.switchToLowest('faint',now))return;
+    const b=this.data.battle;
+    if(b.kind==='trainer')this.endChallenge(false,now);
+    else{this.log(`${species.get(b.foe.id).name}에게 패배 · 출전 가능한 동료들을 회복했다`,'loss',null,now);this.data.battle=null;this.nextTick=now+2200;}
+  }
   select(id,now=Date.now()){
     id=Number(id);
     if(!this.data.owned[id]||species.get(this.data.owned[id].id).generation>this.maxGeneration()||this.isBoarded(id)||id===this.data.activeId||now<this.data.switchUntil)return false;
     const battle=this.data.battle;
-    if(battle?.kind==='trainer'&&(!battle.party[id]||battle.party[id].hp<=0))return false;
+    if(battle&&(battle.party[id]?.hp<=0||(battle.kind==='trainer'&&!battle.party[id])))return false;
     if(battle&&!battleEngine.canSwitch(this,battle,id))return false;
     if(!this.data.slots.includes(id)){if(battle?.kind==='trainer')return false;this.data.slots[this.data.slots.indexOf(this.data.activeId)]=id;}
     const from=this.data.activeId;this.data.activeId=id;this.data.switchUntil=now+1300;
@@ -71,7 +99,7 @@ class Game {
     slot=Number(slot);id=Number(id);
     if(!Number.isInteger(slot)||slot<0||slot>3||!this.data.owned[id]||species.get(this.data.owned[id].id).generation>this.maxGeneration()||this.isBoarded(id)||this.data.battle?.kind==='trainer'||now<this.data.switchUntil)return false;
     const old=this.data.slots[slot],other=this.data.slots.indexOf(id);if(old===id)return true;
-    if(old===this.data.activeId){this.select(id,now);this.data.slots[slot]=id;if(other>=0)this.data.slots[other]=old;}
+    if(old===this.data.activeId){if(!this.select(id,now))return false;this.data.slots[slot]=id;if(other>=0)this.data.slots[other]=old;}
     else {this.data.slots[slot]=id;if(other>=0)this.data.slots[other]=old;}return true;
   }
   evolutions(id,now=Date.now()){
@@ -92,7 +120,7 @@ class Game {
     p.id=to;p.ability=abilityFor(to,p.abilitySlot);p.moves=learnedMoves(to,p.level,p.moves,p.level-1);p.xp=xpAt(to,p.level)+Math.max(0,p.xp-xpAt(from,p.level));
     this.data.seen[to]=this.data.seen[to]||now;this.data.caught[to]=this.data.caught[to]||now;
     const old=this.data.battle?.party[uid];
-    if(old){const fresh=this.memberCombatant(p);fresh.hp=Math.max(1,Math.round(fresh.maxHp*old.hp/old.maxHp));this.data.battle.party[uid]=fresh;battleEngine.invalidate(this.data.battle);}
+    if(old){const fresh=this.memberCombatant(p);fresh.hp=old.hp>0?Math.max(1,Math.round(fresh.maxHp*old.hp/old.maxHp)):0;this.data.battle.party[uid]=fresh;battleEngine.invalidate(this.data.battle);}
     this.log(species.get(from).name+' → '+species.get(to).name+' 진화!','evolution',to,now);
     if(this.data.activeId===uid){this.data.switchUntil=now+1300;this.animate('switch',{from,to,text:species.get(to).name+'로 진화했다!'},now);}return true;
   }
@@ -173,6 +201,10 @@ class Game {
   }
   tick(now=Date.now()){
     if(now<this.nextTick||now<this.data.switchUntil)return false;let b=this.data.battle;
+    // Rotation is free and waits until the previous battle's result has been shown.
+    // The next wild encounter is then scaled to the newly selected partner.
+    if(!b&&this.switchToLowest('balance',now))return true;
+    if(b?.party[this.data.activeId]?.hp<=0){this.handleFaint(now);return true;}
     if(b?.kind!=='trainer'){
       if(this.data.workTokens<balance.tokensPerAction)return false;this.data.workTokens-=balance.tokensPerAction;
       if(!b){this.newWild(now);this.nextTick=now+balance.actionMs;return true;}
@@ -186,17 +218,13 @@ class Game {
       this.log(species.get(hero.id).name+' 출전','switch',hero.id,now);
     }else this.animate('attack',{actor:action.actor||'hero',id:action.id||hero.id,move:move?.name,moveType:move?.type,damage:action.damage||0,text:action.lines[0]||'배틀을 이어가고 있어.',detail:action.lines.slice(1).join(' · ')},now);
     if(action.lines.length)this.log(action.lines.join(' · '),'battle',action.id||hero.id,now);
-    if(hero.hp<=0&&b.kind==='trainer'&&!Object.values(b.party).some(p=>p.hp>0)){this.endChallenge(false,now);return true;}
+    if(hero.hp<=0&&b.kind==='trainer'&&!this.availablePartners().length){this.endChallenge(false,now);return true;}
     if(foe.hp>0&&hero.hp>0&&this.capture(now))return true;
     if(foe.hp<=0){this.defeatOpponent(now);if(this.data.battle!==b)return true;
       // The simulator keeps the remaining trainer party and field state across knockouts.
       if(b.simBoss!==b.bossIndex)battleEngine.invalidate(b);}
-    if(hero.hp<=0){
-      if(b.kind==='trainer'){
-        const next=this.data.slots.find(id=>b.party[id]?.hp>0);
-        if(next){this.select(next,now);this.log(`${species.get(hero.id).name} 기절 · ${species.get(this.data.owned[next].id).name} 출전`,'switch',this.data.owned[next].id,now);}else this.endChallenge(false,now);
-      }else{this.log(`${species.get(foe.id).name}에게 패배 · ${species.get(hero.id).name} 회복`,'loss',hero.id,now);this.data.battle=null;this.nextTick=now+2200;}
-    }else if(b.turn>=300){this.log('긴 배틀을 마치고 회복했다','draw',null,now);if(b.kind==='trainer')this.endChallenge(false,now);else this.data.battle=null;}
+    if(hero.hp<=0)this.handleFaint(now);
+    else if(b.turn>=300){this.log('긴 배틀을 마치고 회복했다','draw',null,now);if(b.kind==='trainer')this.endChallenge(false,now);else this.data.battle=null;}
     return true;
   }
   observe(id,event,{baseline=false,now=Date.now()}={}){
@@ -219,7 +247,7 @@ class Game {
     const active=[...this.sessions.values()].filter(s=>s.phase==='working'&&now-s.at<600000),recent=[...this.sessions.values()].sort((a,b)=>b.at-a.at)[0];
     const phase=active.length?'working':recent&&now-recent.at<16000?recent.phase:'idle',available=[this.limits.primary,this.limits.secondary].filter(Boolean);
     const limits=[300,10080].map(minutes=>{const l=available.find(x=>x.minutes===minutes),fresh=l&&l.resetsAt*1000>now;return {label:minutes===300?'5시간':'주간',left:fresh?Math.round(100-l.used):null,resetsAt:fresh?l.resetsAt:null};});
-    return {version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,hp:hero?hero.hp/hero.maxHp:1,status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,hp:b.foe.hp/b.foe.maxHp,status:b.foe.status}:null,slots:this.data.slots.map(uid=>({...view(this.data.owned[uid].id),uid,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:b?.kind==='trainer'&&b.party[uid]?.hp<=0})),battle:b?{kind:b.kind,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?db.bosses[b.bossIndex].name:null,foeIndex:b.foeIndex,teamSize:b.kind==='trainer'?db.bosses[b.bossIndex].team.length:null}:null,animation:this.data.animation,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
+    return {version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,hp:hero?hero.hp/hero.maxHp:1,status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,hp:b.foe.hp/b.foe.maxHp,status:b.foe.status}:null,slots:this.data.slots.map(uid=>({...view(this.data.owned[uid].id),uid,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0})),battle:b?{kind:b.kind,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?db.bosses[b.bossIndex].name:null,foeIndex:b.foeIndex,teamSize:b.kind==='trainer'?db.bosses[b.bossIndex].team.length:null}:null,animation:this.data.animation,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
   }
   panelState(now=Date.now()){
     const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,level:p.level,xp:p.xp,gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:p.moves.map(id=>({id,name:moves.get(id).name,type:moves.get(id).type})),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));

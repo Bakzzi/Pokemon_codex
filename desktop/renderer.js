@@ -57,7 +57,7 @@ window.buddy.onState(s=>{
   if($('party').dataset.ids!==s.slots.map(p=>p.uid).join(',')){
     $('party').replaceChildren(...s.slots.map((p,i)=>{const b=document.createElement('button');b.dataset.slot=i;b.onclick=()=>window.buddy.action('select',Number(b.dataset.id));const img=document.createElement('img');img.alt='';b.append(img,document.createElement('small'));return b;}));$('party').dataset.ids=s.slots.map(p=>p.uid).join(',');
   }
-  s.slots.forEach((p,i)=>{const b=$('party').children[i];b.dataset.id=p.uid;b.disabled=p.boarded;b.title=p.name+' Lv.'+p.level+(p.boarded?' · 키우미집':' · 클릭하여 출전');b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed',String(p.selected));b.classList.toggle('fainted',p.fainted);const img=b.firstChild;if(img.getAttribute('src')!=='assets/'+p.id+'.gif')img.src='assets/'+p.id+'.gif';b.lastChild.textContent=p.boarded?'맡김':'Lv.'+p.level;});
+  s.slots.forEach((p,i)=>{const b=$('party').children[i];b.dataset.id=p.uid;b.disabled=p.boarded||p.fainted;b.title=p.name+' Lv.'+p.level+(p.boarded?' · 키우미집':p.fainted?' · 기절':' · 클릭하여 출전');b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed',String(p.selected));b.classList.toggle('fainted',p.fainted);const img=b.firstChild;if(img.getAttribute('src')!=='assets/'+p.id+'.gif')img.src='assets/'+p.id+'.gif';b.lastChild.textContent=p.boarded?'맡김':p.fainted?'기절':'Lv.'+p.level;});
   $('caught-count').textContent=s.caughtCount+' / '+(s.generation===1?151:251);$('badge-count').textContent=s.badges.length+' / 8';
   eventFx(s.animation);
 });
