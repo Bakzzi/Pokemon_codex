@@ -183,9 +183,35 @@ async function smokeTest(){
   const faintRotation=game.data.activeId===1&&game.data.battle?.kind==='wild'&&
     await win.webContents.executeJavaScript("document.querySelector('[data-id=\"7\"]').disabled&&document.querySelector('[data-id=\"7\"]').textContent==='기절'&&document.querySelector('[data-id=\"1\"]').getAttribute('aria-pressed')==='true'&&document.querySelector('#speech').textContent.includes('기절')");
   fs.writeFileSync(path.join(dir,'faint-switch.png'),(await win.webContents.capturePage()).toPNG());await wait(1000);
+  const {captureTiming}=require('./capture-animation.js');
+  const prepareCatch=passes=>{
+    game=new Game({},Date.now(),{random:()=>.73});game.newWild(Date.now());game.data.battle.foe=combatant(19,5);game.damageFoe(9999);
+    let checks=0;game.random=()=>checks++<passes?0:.999999;game.capture(Date.now());return game.data.captureAnimation;
+  };
+  const caught=prepareCatch(4),timing=captureTiming(caught);publish(true);
+  let captureThreeShakes=true;
+  for(let i=0;i<3;i++){
+    await wait(Math.max(0,caught.at+timing.shakeAt+timing.shakeEvery*i+150-Date.now()));
+    captureThreeShakes=captureThreeShakes&&await win.webContents.executeJavaScript(`document.querySelector('#capture-fx').dataset.shake==='${i+1}'&&!document.querySelector('#capture-fx').hidden&&document.querySelector('#foe').hidden&&!document.querySelector('#speech').textContent.includes('성공')`);
+    fs.writeFileSync(path.join(dir,'capture-shake-'+(i+1)+'.png'),(await win.webContents.capturePage()).toPNG());
+  }
+  await wait(Math.max(0,caught.at+timing.resultAt+400-Date.now()));
+  const captureSparkle=await win.webContents.executeJavaScript("!document.querySelector('#capture-sparkles').hidden&&document.querySelector('#capture-ball').classList.contains('caught')&&document.querySelector('#speech').textContent.includes('포획 성공!')");
+  fs.writeFileSync(path.join(dir,'capture-sparkle.png'),(await win.webContents.capturePage()).toPNG());
+  await wait(Math.max(0,caught.at+timing.duration+200-Date.now()));publish(true);await wait(80);
+  const caughtBallOnly=await win.webContents.executeJavaScript("document.querySelector('#foe').hidden&&!document.querySelector('#capture-fx').hidden&&document.querySelector('#empty-foe').hidden");
+  fs.writeFileSync(path.join(dir,'capture-success.png'),(await win.webContents.capturePage()).toPNG());
+  let captureBreakouts=true;
+  for(const shakes of [1,2]){
+    const c=prepareCatch(shakes),t=captureTiming(c);c.at=Date.now()-t.resultAt+100;publish(true);await wait(220);
+    captureBreakouts=captureBreakouts&&!c.caught&&c.shakes===shakes&&await win.webContents.executeJavaScript("document.querySelector('#capture-fx').dataset.phase==='escaped'&&!document.querySelector('#foe').hidden&&document.querySelector('#speech').textContent.includes('아쉽다!')");
+    fs.writeFileSync(path.join(dir,'capture-breakout-'+shakes+'.png'),(await win.webContents.capturePage()).toPNG());await wait(450);
+    captureBreakouts=captureBreakouts&&await win.webContents.executeJavaScript("document.querySelector('#capture-fx').hidden&&!document.querySelector('#foe').hidden&&document.querySelector('#foe-image').style.opacity==='1'");
+  }
+  game.limits={primary:{used:25,minutes:300,resetsAt:Date.now()/1000+3600},secondary:{used:60,minutes:10080,resetsAt:Date.now()/1000+86400}};
   await win.webContents.executeJavaScript("document.querySelector('#compact').click();document.querySelector('#pin').click()");await wait(150);
   fs.writeFileSync(path.join(dir,'compact.png'),(await win.webContents.capturePage()).toPNG());
-  const controls={switched,assigned,challenge,preview:preview.name&&preview.image&&!preview.overflow,boarded,eggVisible,hatched,summary,detail,acknowledged,earnedGymLocked,allMoves,nativeBattle,autoRotation,autoSprite,faintRotation,compact:settings.compact===true,height:win.getSize()[1],pin:settings.pinned===false};
+  const controls={switched,assigned,challenge,preview:preview.name&&preview.image&&!preview.overflow,boarded,eggVisible,hatched,summary,detail,acknowledged,earnedGymLocked,allMoves,nativeBattle,autoRotation,autoSprite,faintRotation,captureThreeShakes,captureSparkle,caughtBallOnly,captureBreakouts,compact:settings.compact===true,height:win.getSize()[1],pin:settings.pinned===false};
   const ok=inspection.hero==='피카츄'&&inspection.images&&!inspection.overflow&&inspection.slots===4&&inspection.facing.startsWith('matrix(-1')&&collection.count===151&&collection.caught===4&&collection.unknown.includes('???')&&collection.silhouette&&collection.noPichu&&!collection.overflow&&Object.values(controls).every(Boolean)&&controls.height===268&&!errors.length;
   fs.writeFileSync(path.join(dir,'result.json'),JSON.stringify({ok,inspection,collection,controls,errors},null,2));console.log(JSON.stringify({smoke:ok,inspection,collection,controls,errors}));app.exit(ok?0:1);
 }

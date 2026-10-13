@@ -4,6 +4,7 @@ const {data:db,species,moves,xpAt,levelAt,learnedMoves,view,pickWild,rarity,bala
 const battleEngine=require('./battle.cjs');
 const {combatant,tryCatch,abilityFor}=battleEngine;
 const journal=require('./journal.cjs');
+const {captureTiming}=require('./capture-animation.js');
 const validCount=n=>typeof n==='number'&&Number.isSafeInteger(n)&&n>=0;
 const STARTERS=[1,4,7,25];
 const nursery=require('./daycare.cjs');
@@ -55,7 +56,10 @@ class Game {
   log(text,kind='info',id=null,now=Date.now()){journal.record(this.data,{at:now,text,kind,id});}
   acknowledgeJournal(now=Date.now()){journal.acknowledge(this.data,now);return true;}
   memberCombatant(p){return combatant(p.id,p.level,p.moves,p);}
-  animate(kind,details={},now=Date.now()){this.data.animation={serial:++this.data.eventSerial,kind,at:now,...details};}
+  animate(kind,details={},now=Date.now()){
+    if(kind!=='capture'&&this.data.captureAnimation&&!this.data.captureAnimation.caught)this.data.captureAnimation=null;
+    this.data.animation={serial:++this.data.eventSerial,kind,at:now,...details};
+  }
   availablePartners(){
     const b=this.data.battle;
     return this.data.slots.filter(uid=>{
@@ -125,6 +129,7 @@ class Game {
     if(this.data.activeId===uid){this.data.switchUntil=now+1300;this.animate('switch',{from,to,text:species.get(to).name+'로 진화했다!'},now);}return true;
   }
   newWild(now){
+    this.data.captureAnimation=null;
     const hero=this.data.owned[this.data.activeId],id=pickWild(this.maxGeneration(),this.random,hero.level),p=species.get(id);
     const level=Math.max(wildMinimum(p),Math.min(100,hero.level-3+Math.floor(this.random()*7)));
     const party=Object.fromEntries(this.data.slots.filter(uid=>!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
@@ -137,6 +142,7 @@ class Game {
     index=Number(index);
     if(!Number.isInteger(index)||index<0||index>8||this.data.battle?.kind==='trainer'||now<this.data.switchUntil)return false;
     if(index<8&&(index>this.data.badges.length||this.data.badges.includes(db.bosses[index].id)))return false;if(index===8&&this.data.badges.length<8)return false;
+    this.data.captureAnimation=null;
     this.data.suspendedWild=this.data.battle;
     const party=Object.fromEntries(this.data.slots.filter(id=>!this.isBoarded(id)).map(id=>{const p=this.data.owned[id];return [id,this.memberCombatant(p)];}));
     this.data.battle={kind:'trainer',bossIndex:index,foeIndex:0,party,turn:0,captureAttempts:0,startedAt:now};
@@ -194,9 +200,12 @@ class Game {
     const b=this.data.battle;if(!b||b.kind!=='wild'||this.data.caught[b.foe.id]||b.captureAttempts>=10)return false;
     const threshold=(10-b.captureAttempts)/100;if(b.foe.hp/b.foe.maxHp>threshold+1e-9)return false;
     const outcome=tryCatch(species.get(b.foe.id).catchRate,b.foe.hp,b.foe.maxHp,b.foe.status,this.random);b.captureAttempts++;
-    this.animate('capture',{id:b.foe.id,caught:outcome.caught,shakes:outcome.shakes,attempt:b.captureAttempts,text:outcome.caught?`${species.get(b.foe.id).name} 포획 성공!`:`몬스터볼 ${b.captureAttempts}/10 · 빠져나왔다!`},now);
+    this.animate('capture',{id:b.foe.id,name:species.get(b.foe.id).name,level:b.foe.level,hp:b.foe.hp/b.foe.maxHp,caught:outcome.caught,shakes:outcome.shakes,attempt:b.captureAttempts,text:`몬스터볼을 던졌다! (${b.captureAttempts}/10)`},now);
+    this.data.captureAnimation={...this.data.animation};
     if(outcome.caught){const uid=this.addPokemon(b.foe.id,b.foe.level,'catch',now);const p=this.data.owned[uid];p.ability=b.foe.ability||p.ability;p.abilitySlot=Math.max(0,species.get(p.id).abilities.indexOf(p.ability));p.gender=b.foe.gender||p.gender;this.log(`${species.get(b.foe.id).name} Lv.${b.foe.level} 포획! (${b.captureAttempts}번째 몬스터볼)`,'catch',b.foe.id,now);this.defeatOpponent(now,true);}
     else if(b.captureAttempts===10)this.log(`${species.get(b.foe.id).name} 포획 10회 실패`,'escape',b.foe.id,now);
+    this.data.switchUntil=now+captureTiming(outcome).duration;
+    this.nextTick=Math.max(this.nextTick,this.data.switchUntil);
     return outcome.caught;
   }
   tick(now=Date.now()){
@@ -247,7 +256,7 @@ class Game {
     const active=[...this.sessions.values()].filter(s=>s.phase==='working'&&now-s.at<600000),recent=[...this.sessions.values()].sort((a,b)=>b.at-a.at)[0];
     const phase=active.length?'working':recent&&now-recent.at<16000?recent.phase:'idle',available=[this.limits.primary,this.limits.secondary].filter(Boolean);
     const limits=[300,10080].map(minutes=>{const l=available.find(x=>x.minutes===minutes),fresh=l&&l.resetsAt*1000>now;return {label:minutes===300?'5시간':'주간',left:fresh?Math.round(100-l.used):null,resetsAt:fresh?l.resetsAt:null};});
-    return {version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,hp:hero?hero.hp/hero.maxHp:1,status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,hp:b.foe.hp/b.foe.maxHp,status:b.foe.status}:null,slots:this.data.slots.map(uid=>({...view(this.data.owned[uid].id),uid,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0})),battle:b?{kind:b.kind,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?db.bosses[b.bossIndex].name:null,foeIndex:b.foeIndex,teamSize:b.kind==='trainer'?db.bosses[b.bossIndex].team.length:null}:null,animation:this.data.animation,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
+    return {version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,hp:hero?hero.hp/hero.maxHp:1,status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,hp:b.foe.hp/b.foe.maxHp,status:b.foe.status}:null,slots:this.data.slots.map(uid=>({...view(this.data.owned[uid].id),uid,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0})),battle:b?{kind:b.kind,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?db.bosses[b.bossIndex].name:null,foeIndex:b.foeIndex,teamSize:b.kind==='trainer'?db.bosses[b.bossIndex].team.length:null}:null,animation:this.data.animation,capture:this.data.captureAnimation||null,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
   }
   panelState(now=Date.now()){
     const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,level:p.level,xp:p.xp,gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:p.moves.map(id=>({id,name:moves.get(id).name,type:moves.get(id).type})),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
