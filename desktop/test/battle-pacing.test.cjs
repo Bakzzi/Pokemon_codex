@@ -56,8 +56,9 @@ test('capture starts only after the triggering attack and its result, across a r
   const c=g.data.captureAnimation,t=captureTiming(c);assert.equal(c.at,end);assert.equal(c.leadIn,null);assert.equal(c.at>=now+3000,true);
   assert.ok(c.caught);assert.equal(g.data.workTokens,tokens);assert.equal(g.tick(c.at+t.duration-1),false);
   assert.ok(t.duration-t.messageAt>=2800);assert.equal(g.snapshot(c.at+t.duration-1).capture.id,19);
-  assert.ok(g.tick(c.at+t.duration));assert.equal(g.data.animation.kind,'encounter');assert.equal(g.data.captureAnimation,null);
+  assert.ok(g.tick(c.at+t.duration));assert.equal(g.data.battle,null);assert.equal(g.data.animation.kind,'capture');assert.deepEqual(g.data.captureAnimation,c);
   assert.equal(Object.values(g.data.owned).filter(p=>p.id===19).length,1);
+  assert.ok(g.tick(c.at+t.duration+1));assert.equal(g.data.animation.kind,'encounter');assert.equal(g.data.captureAnimation,null);
 });
 
 test('a knockout preserves the victim until HP, fainting and the battle result finish',()=>{

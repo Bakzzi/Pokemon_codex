@@ -54,7 +54,8 @@ test('large hits stop at each 10% through 1% threshold, exactly ten balls, no re
   g.damageFoe(99999);assert.equal(g.data.battle.foe.hp,0);g.capture(now+12);assert.equal(g.data.battle.captureAttempts,10);
 });
 test('first successful ball registers once; already-caught species only battle even after evolving away',()=>{
-  const g=new Game({},now,{random:()=>0});wild(g,19);g.damageFoe(999);assert.equal(g.capture(now),true);assert.ok(g.data.caught[19]);assert.equal(g.data.battle,null);assert.equal(g.capture(now),false);
+  const g=new Game({},now,{random:()=>0});wild(g,19);g.damageFoe(999);assert.equal(g.capture(now),true);assert.ok(!g.data.caught[19]);assert.equal(g.capture(now),false);
+  assert.ok(g.tick(g.data.switchUntil));assert.ok(g.data.caught[19]);assert.equal(g.data.battle,null);assert.equal(g.capture(now),false);
   const p=Object.values(g.data.owned).find(p=>p.id===19);p.id=20;
   wild(g,19);g.damageFoe(999);assert.equal(g.data.battle.foe.hp,0);assert.equal(g.capture(now),false);
 });

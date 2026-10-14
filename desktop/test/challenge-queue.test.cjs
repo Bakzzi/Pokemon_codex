@@ -32,9 +32,10 @@ test('capture completion and its full result animation precede the queued challe
   assert.ok(g.challenge(0,now));assert.ok(g.capture(now));
   const capture=structuredClone(g.data.captureAnimation),end=capture.at+captureTiming(capture).duration,count=Object.keys(g.data.owned).length;
   g=new Game(g.data,now+1000,{random:()=>.73});assert.equal(g.snapshot(now+1000).pendingChallenge.name,'웅 체육관');
-  assert.equal(g.tick(end-1),false);assert.deepEqual(g.data.captureAnimation,capture);assert.equal(g.data.battle,null);
-  assert.ok(g.tick(end));assert.equal(g.data.battle.kind,'trainer');assert.equal(g.data.captureAnimation,null);
-  assert.equal(Object.keys(g.data.owned).length,count);assert.ok(g.data.caught[19]);
+  assert.equal(g.tick(end-1),false);assert.deepEqual(g.data.captureAnimation,capture);assert.equal(g.data.battle.kind,'wild');assert.ok(!g.data.caught[19]);
+  assert.ok(g.tick(end));assert.equal(g.data.battle,null);assert.deepEqual(g.data.captureAnimation,capture);assert.ok(g.data.pendingChallenge);
+  assert.equal(Object.keys(g.data.owned).length,count+1);assert.ok(g.data.caught[19]);
+  assert.ok(g.tick(end+1));assert.equal(g.data.battle.kind,'trainer');assert.equal(g.data.captureAnimation,null);
 });
 
 test('a defeat finishes before a queued challenge starts with the selected team recovered and no token cost',()=>{

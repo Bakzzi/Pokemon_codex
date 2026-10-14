@@ -278,7 +278,7 @@ async function smokeTest(){
   await wait(Math.max(0,caught.at+timing.resultAt+400-Date.now()));
   const captureSparkle=await win.webContents.executeJavaScript("!document.querySelector('#capture-sparkles').hidden&&document.querySelector('#capture-ball').classList.contains('caught')&&document.querySelector('#speech').textContent.includes('포획 성공!')&&document.querySelector('#speech').dataset.speaker==='scene'");
   fs.writeFileSync(path.join(dir,'capture-sparkle.png'),(await win.webContents.capturePage()).toPNG());
-  await wait(Math.max(0,caught.at+timing.duration+200-Date.now()));publish(true);await wait(80);
+  await wait(Math.max(0,caught.at+timing.duration+200-Date.now()));game.tick();publish(true);await wait(80);
   const caughtBallOnly=await win.webContents.executeJavaScript("document.querySelector('#foe').hidden&&!document.querySelector('#capture-fx').hidden&&document.querySelector('#empty-foe').hidden");
   fs.writeFileSync(path.join(dir,'capture-success.png'),(await win.webContents.capturePage()).toPNG());
   let captureBreakouts=true;

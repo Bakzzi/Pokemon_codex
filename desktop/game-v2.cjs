@@ -82,6 +82,7 @@ class Game {
     const pending=this.data.pendingBattle;this.data.pendingBattle=null;
     const b=this.data.battle;if(!b)return false;
     if(pending.kind==='capture'){this.capture(now);return true;}
+    if(pending.kind==='capture-result')return this.finishCapture(pending,now);
     if(pending.kind==='after-action'){this.showFaint(now);return true;}
     if(pending.kind==='draw'){
       this.log('긴 배틀을 마치고 회복했다','draw',null,now);
@@ -255,17 +256,30 @@ class Game {
     b.foe.hp=hp;
   }
   capture(now){
-    const b=this.data.battle;if(!b||b.kind!=='wild'||this.data.caught[b.foe.id]||b.captureAttempts>=10)return false;
+    const b=this.data.battle;if(!b||b.kind!=='wild'||this.data.pendingBattle?.kind==='capture-result'||this.data.caught[b.foe.id]||b.captureAttempts>=10)return false;
     const threshold=(10-b.captureAttempts)/100;if(b.foe.hp/b.foe.maxHp>threshold+1e-9)return false;
     const outcome=tryCatch(species.get(b.foe.id).catchRate,b.foe.hp,b.foe.maxHp,b.foe.status,this.random);b.captureAttempts++;
     const previous=this.data.animation,leadIn=previous?.kind==='attack'&&previous.moveId&&previous.at===now?previous:null;
     const startsAt=now+(leadIn?pacing.duration(leadIn):0);
     this.animate('capture',{id:b.foe.id,name:species.get(b.foe.id).name,level:b.foe.level,...healthView(b.foe),caught:outcome.caught,shakes:outcome.shakes,attempt:b.captureAttempts,leadIn,text:`몬스터볼을 던졌다! (${b.captureAttempts}/10)`},startsAt);
     this.data.captureAnimation={...this.data.animation};
-    if(outcome.caught){const uid=this.addPokemon(b.foe.id,b.foe.level,'catch',now);const p=this.data.owned[uid];p.ability=b.foe.ability||p.ability;p.abilitySlot=Math.max(0,species.get(p.id).abilities.indexOf(p.ability));p.gender=b.foe.gender||p.gender;this.log(`${species.get(b.foe.id).name} Lv.${b.foe.level} 포획! (${b.captureAttempts}번째 몬스터볼)`,'catch',b.foe.id,now);this.defeatOpponent(now,true);}
-    else if(b.captureAttempts===10)this.log(`${species.get(b.foe.id).name} 포획 10회 실패`,'escape',b.foe.id,now);
-    this.holdUntil(startsAt+captureTiming(outcome).duration);
+    const finishedAt=startsAt+captureTiming(outcome).duration;
+    if(outcome.caught){
+      // Persist the rolled result, but keep HP, ownership and rewards unchanged until playback ends.
+      this.deferBattle('capture-result',finishedAt);this.data.pendingBattle.serial=this.data.captureAnimation.serial;
+    }else{
+      if(b.captureAttempts===10)this.log(`${species.get(b.foe.id).name} 포획 10회 실패`,'escape',b.foe.id,now);
+      this.holdUntil(finishedAt);
+    }
     return outcome.caught;
+  }
+  finishCapture(pending,now){
+    const b=this.data.battle,c=this.data.captureAnimation;
+    if(!b||b.kind!=='wild'||!c?.caught||c.serial!==pending.serial||c.id!==b.foe.id||c.attempt!==b.captureAttempts||this.data.caught[b.foe.id])return false;
+    const uid=this.addPokemon(b.foe.id,b.foe.level,'catch',now),p=this.data.owned[uid];
+    p.ability=b.foe.ability||p.ability;p.abilitySlot=Math.max(0,species.get(p.id).abilities.indexOf(p.ability));p.gender=b.foe.gender||p.gender;
+    this.log(`${species.get(b.foe.id).name} Lv.${b.foe.level} 포획! (${b.captureAttempts}번째 몬스터볼)`,'catch',b.foe.id,now);
+    this.defeatOpponent(now,true);return true;
   }
   tick(now=Date.now()){
     if(now<this.nextTick||now<this.data.switchUntil)return false;let b=this.data.battle;
