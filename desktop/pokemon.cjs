@@ -23,8 +23,8 @@ const balance={tokensPerAction:250,legendaryPoolChance:0.001,mythicalPoolChance:
 function rarity(p){if(p.mythical)return 'mythical';if(p.legendary)return 'legendary';if(p.catchRate<=75||Object.values(p.stats).reduce((a,b)=>a+b,0)>=480)return 'rare';return p.catchRate>=190?'common':'uncommon';}
 function wildMinimum(p){return Math.max(p.minWildLevel||2,p.legendary?50:p.mythical?30:2);}
 function championBonus(minimumLevel=0){
-  const multiplier=minimumLevel>90?5:minimumLevel>80?4:minimumLevel>70?3:null;
-  return {rareMultiplier:multiplier||balance.championRareMultiplier,uncaughtWeight:multiplier||balance.championUncaughtWeight};
+  const levelMultiplier=minimumLevel>90?5:minimumLevel>80?4:minimumLevel>70?3:1;
+  return {levelMultiplier,rareMultiplier:balance.championRareMultiplier*levelMultiplier,uncaughtWeight:balance.championUncaughtWeight*levelMultiplier};
 }
 function encounterChances(champion=false,minimumLevel=0){
   const multiplier=champion?championBonus(minimumLevel).rareMultiplier:1;

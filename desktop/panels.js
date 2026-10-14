@@ -111,7 +111,7 @@ function renderBosses(){
     $('johto-title').textContent=unlocked?'성도 지방이 열렸어요':stay?'관동에서 도감을 완성하는 중':'다음 모험을 선택하세요';
     $('johto-note').textContent='관동 도감 '+state.kantoCaughtCount+' / 151 · '+(unlocked?'관동 151종과 성도 100종을 함께 만날 수 있어요.':stay?'151종 수집을 계속해요. 원할 때 언제든 2세대를 해금할 수 있어요.':'151종을 모을 때까지 관동에 머물러도 좋아요. 2세대를 해금하면 성도 100종이 추가돼요.');
     const bonus=state.encounterBonus,pct=n=>(n*100).toLocaleString('ko-KR',{maximumFractionDigits:3})+'%';
-    $('champion-bonus').textContent=bonus?'챔피언 보너스 · 희귀 '+pct(bonus.rates.rare)+' · 전설 '+pct(bonus.rates.legendary)+' · 환상 '+pct(bonus.rates.mythical)+'\n선택한 4마리 최저 Lv.'+bonus.minimumLevel+' · 희귀 출현 '+bonus.rareMultiplier+'배 · 미등록 종 '+bonus.uncaughtWeight+'배 우대\n네 마리 모두 Lv.71 이상 3배 · Lv.81 이상 4배 · Lv.91 이상 5배. 출전 레벨 조건을 충족한 종에 적용돼요.':'';
+    $('champion-bonus').textContent=bonus?'챔피언 보너스 · 희귀 '+pct(bonus.rates.rare)+' · 전설 '+pct(bonus.rates.legendary)+' · 환상 '+pct(bonus.rates.mythical)+'\n선택한 4마리 최저 Lv.'+bonus.minimumLevel+' · 출현 '+bonus.rareMultiplier+'배 · 미등록 종 '+bonus.uncaughtWeight+'배 우대\n챔피언 기본(출현 1.5배 · 미등록 가중치 2) × 레벨 보너스 '+bonus.levelMultiplier+'배\n네 마리 모두 Lv.71 이상 3배 · Lv.81 이상 4배 · Lv.91 이상 5배. 출전 레벨 조건을 충족한 종에 적용돼요.':'';
     $('johto-stay').hidden=unlocked||stay;$('johto-unlock').hidden=unlocked;
   }
 }
