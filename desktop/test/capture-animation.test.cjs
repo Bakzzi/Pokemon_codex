@@ -55,7 +55,7 @@ test('a failed throw waits for the breakout before resuming the same battle and 
 
 function outcomeState(g,at){
   const s=g.snapshot(at);
-  return structuredClone({hero:s.hero,level:s.level,xp:s.xp,caughtCount:s.caughtCount,battles:s.battles,owned:g.data.owned,caught:g.data.caught,inventory:g.data.inventory,journal:g.data.journal,totals:g.data.adventure.totals});
+  return structuredClone({hero:s.hero,level:s.level,xp:s.xp,experienceBoost:s.experienceBoost,caughtCount:s.caughtCount,battles:s.battles,owned:g.data.owned,caught:g.data.caught,inventory:g.data.inventory,journal:g.data.journal,totals:g.data.adventure.totals});
 }
 
 test('successful capture keeps injured HP, status, level, collection and rewards unchanged through the entire animation',()=>{

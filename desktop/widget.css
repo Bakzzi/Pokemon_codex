@@ -1,4 +1,5 @@
 :root{--accent:#f5ce52;--ink:#edf1e7;--muted:#a2b29e;--line:#445644}
+.xp-heading .xp-boost{color:var(--accent);font-size:8px;font-weight:600;border:1px solid #83995777;border-radius:3px;padding:1px 4px;white-space:nowrap}.xp-heading>span{white-space:nowrap}
 [hidden]{display:none!important}
 .compact .credit{display:none}
 #capture-fx{position:absolute;right:65px;bottom:18px;width:22px;height:22px;z-index:8;pointer-events:none}

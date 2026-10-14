@@ -184,6 +184,8 @@ window.buddy.onState(s=>{
   $('hero-name').textContent=s.hero.name;$('level').textContent=s.level;renderHeroHealth(s);
   $('region').textContent=s.generation===1?'KANTO ADVENTURE':'KANTO + JOHTO';$('exp').textContent=s.level===100?'MAX LEVEL':fmt(s.expCurrent)+' / '+fmt(s.expRequired);
   $('xp-bar').style.width=s.progress*100+'%';$('evolution').textContent=s.evolution.some(e=>e.ready)?'진화 가능 · 도감에서 확인':'';
+  const boost=s.experienceBoost,pct=boost.percent.toLocaleString('ko-KR',{maximumFractionDigits:2});
+  $('xp-boost').textContent='BOOST +'+pct+'%';$('xp-boost').title='도감 경험치 부스터 · 1세대 '+boost.count+' / '+boost.total+' 등록 · 기본 경험치의 '+pct+'% 추가';
   $('status').textContent=s.notice||(s.pendingChallenge?s.pendingChallenge.name+' 도전 예약 · 배틀 종료 후 시작':s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.phase==='working'?'Codex 작업과 함께 모험 중':s.workTokens>=250?'작업의 여운으로 모험을 이어가는 중':s.phase==='unknown'?'Codex 작업 상태를 확인하는 중':s.phase==='done'?'작업 끝! 모험 기록을 확인해 봐':'다음 코딩을 기다리는 중');
   $('mode-tag').textContent=s.demo?'DEMO':'LIVE';
   $('connection-label').textContent=s.demo?'미리보기':s.source.connected?'Codex 연결됨':'Codex 기다리는 중';
