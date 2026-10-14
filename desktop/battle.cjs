@@ -58,9 +58,10 @@ function engine(game,b){
   if(sim&&b.simBoss===boss)return sim;
   if(b.sim&&b.simBoss===boss)return attach(b,Battle.fromJSON(b.sim));
   const active=game.data.activeId,keys=Object.keys(b.party).map(Number).sort((a,c)=>Number(c===active)-Number(a===active));
-  const foes=b.kind==='trainer'?data.bosses[b.bossIndex].team.map((p,i)=>({p,i})).slice(b.foeIndex):[{p:b.foe,i:0}];
+  const bossData=b.kind==='trainer'?game.battleBoss(b):null;
+  const foes=bossData?bossData.team.map((p,i)=>({p,i})).slice(b.foeIndex):[{p:b.foe,i:0}];
   sim=new Battle({formatid:'gen3customgame',seed:Array.from({length:4},()=>Math.floor(game.random()*65536)),p1:{name:'동료',team:keys.map(uid=>setFor(b.party[uid],'u'+uid))},
-    p2:{name:b.kind==='wild'?'야생':data.bosses[b.bossIndex].name,team:foes.map(({p,i})=>setFor(i===(b.foeIndex||0)?b.foe:combatant(p.id,p.level,p.moves),'f'+i))}});
+    p2:{name:b.kind==='wild'?'야생':bossData.name,team:foes.map(({p,i})=>setFor(i===(b.foeIndex||0)?b.foe:combatant(p.id,p.level,p.moves),'f'+i))}});
   // Use ordinary PP (no PP Ups), neutral nature, IV15 / EV0, as in previous saves.
   for(const side of sim.sides)for(const mon of side.pokemon)for(const s of mon.moveSlots){s.pp=s.maxpp=dex.moves.get(s.id).pp;}
   for(const mon of sim.p1.pokemon)restoreMon(mon,b.party[Number(mon.name.slice(1))]);

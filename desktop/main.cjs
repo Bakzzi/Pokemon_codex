@@ -72,7 +72,7 @@ async function start(){
         win.setPosition(Math.max(a.x,Math.min(b.x,a.x+a.width-b.width)),Math.max(a.y,Math.min(b.y,a.y+a.height-b.height)));
       }
       if(action==='panel'){openPanel(['collection','challenge','journal','daycare'].includes(value)?value:'collection').catch(console.error);}
-      if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock'].includes(action))result=game.requestAction(action,value);
+      if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner'].includes(action))result=game.requestAction(action,value);
       if(action==='action-cancel')result=game.cancelAction(value);
       if(action==='challenge')result=game.challenge(value);
       if(action==='challenge-cancel')result=game.cancelChallenge();

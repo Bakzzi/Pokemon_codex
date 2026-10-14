@@ -9,6 +9,10 @@ $('search').oninput=()=>{dexSignature='';render();};$('filter').onchange=()=>{de
 $('league-start').onclick=()=>window.buddy.action('challenge',8);
 $('johto-stay').onclick=()=>window.buddy.action('johto-stay');
 $('johto-unlock').onclick=()=>window.buddy.action('johto-unlock');
+$('device-claim').onclick=()=>window.buddy.action('device-claim');
+$('device-register').onclick=()=>window.buddy.action('device-learner',Number($('device-learner').value));
+$('device-withdraw').onclick=()=>window.buddy.action('device-learner',null);
+$('device-learner').onchange=()=>renderDevice();
 window.buddy.onTab(switchTab);
 function renderDex(){
   const signature=JSON.stringify([state.collection.map(p=>[p.id,p.seen,p.caught,p.owned,p.level,p.count]),selected,$('filter').value,$('search').value]);
@@ -25,7 +29,7 @@ function renderDex(){
   const members=state.roster.filter(m=>m.id===p.id);
   if(!members.some(m=>m.uid===memberUid))memberUid=members[0]?.uid;
   const member=members.find(m=>m.uid===memberUid);
-  const detailKey=JSON.stringify([p,members,memberUid,state.slots,state.battle?.kind,state.hero.uid,state.pendingActions]);
+  const detailKey=JSON.stringify([p,members,memberUid,state.slots,state.battle?.kind,state.hero.uid,state.pendingActions,state.trainingDevice]);
   if(detailKey===detailSignature)return;detailSignature=detailKey;
   const root=$('detail');root.replaceChildren(img(p.id,'portrait'+(p.seen?'':' unseen')),node('div','number','No.'+p.id+' · '+(p.caught?'포획 완료':p.seen?'발견':'미발견')),node('h2','',p.name),node('div','types',p.types.join(' / ')),node('p','description',p.description));
   if(!p.owned){
@@ -40,15 +44,18 @@ function renderDex(){
   root.append(node('p','muted','Lv.'+member.level+gender(member.gender)+' · 누적 경험치 '+member.xp.toLocaleString('ko-KR')+(member.boarded?' · 키우미집에 맡긴 동료':'')));
   const queuedSelect=state.pendingActions.some(a=>a.kind==='select'&&a.uid===member.uid);
   const deploy=node('button','deploy',queuedSelect?'출전 예약됨':state.hero.uid===member.uid?'현재 출전 중':member.boarded?'데려온 뒤 출전 예약':'이 포켓몬 출전');deploy.disabled=queuedSelect||state.hero.uid===member.uid;deploy.onclick=()=>window.buddy.action('select',member.uid);root.append(deploy);
+  if(state.trainingDevice.obtained){
+    const current=state.trainingDevice.learnerUid===member.uid,queued=state.pendingActions.some(a=>a.kind==='device-learner'&&a.uid===member.uid),b=node('button','device-register',current?'학습장치 등록 중 · 경험치 10%':queued?'학습장치 등록 예약됨':'학습장치에 등록 · 경험치 10%');b.disabled=current||queued;b.onclick=()=>window.buddy.action('device-learner',member.uid);root.append(b);
+  }
   root.append(node('h3','','빠른 선택 칸에 배치'));
   const assign=node('div','assign');state.slots.forEach((s,i)=>{const queued=state.pendingActions.some(a=>a.kind==='slot'&&a.slot===i&&a.uid===member.uid),b=node('button');b.dataset.assign=i;b.title=(i+1)+'번 칸 · '+s.name+(queued?' · 배치 예약됨':' · 배틀 중에는 종료 후 배치');b.disabled=queued||s.uid===member.uid;b.append(img(s.id),document.createTextNode((i+1)+'번'+(queued?' · 예약':'')));b.onclick=()=>window.buddy.action('slot',{slot:i,id:member.uid});assign.append(b);});root.append(assign);
   root.append(node('p','muted','특성 · '+member.ability));
   root.append(node('h3','','배운 기술 '+member.moves.length+'개 · 자동 사용'));const list=node('ul','move-list');for(const m of member.moves||[])list.append(node('li','',m.name));root.append(list);
   for(const e of member.evolutions){
     const queued=state.pendingActions.some(a=>a.kind==='evolve'&&a.uid===member.uid&&a.to===e.to);
-    const box=node('div','evolution'),b=node('button','',(e.trigger===2?'교환소 · ':'')+e.name+(queued?' 진화 예약됨':e.ready?'로 진화':' 진화 예약'));
+    const box=node('div','evolution'),b=node('button','',(e.trigger===2?'학습장치 · ':'')+e.name+(queued?' 진화 예약됨':e.ready?'로 진화':' 진화 예약'));
     b.dataset.evolve=e.to;b.disabled=queued;b.onclick=()=>window.buddy.action('evolve',{id:member.uid,to:e.to});box.append(b,node('p','',e.conditions||'진화 조건 충족'),node('p','',queued?'예약 목록에서 취소할 수 있어요.':!e.ready?'조건을 충족하고 배틀이 끝나면 자동으로 진화해요.':state.battle?'현재 배틀이 끝나면 진화해요.':'진행 중인 연출이 있으면 끝난 뒤 진화해요.'));
-    if(e.trigger===2)box.append(node('p','','혼자 즐기는 교환소에서 교환 후 되돌려 받아요.'));
+    if(e.trigger===2)box.append(node('p','','오박사의 학습장치를 받고 이 동료를 등록하면 교환 없이 진화할 수 있어요. 필요한 진화 도구는 별도로 준비해요.'));
     root.append(box);
   }
 }
@@ -78,6 +85,7 @@ function renderBadgeCase(){
   $('badge-case-note').textContent=earned.size===8?'관동의 여덟 증표 · 포켓몬 리그로':earned.size+'개의 증표 · 다음 도전을 기다리는 자리';
 }
 function renderBosses(){
+  renderDevice();
   const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.badges,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
   $('badges').textContent='뱃지 '+state.badges.length+' / 8';
   renderBadgeCase();
@@ -86,7 +94,7 @@ function renderBosses(){
     const b=node('button','',done?'뱃지 획득 완료':queued?.index===i?'도전 예약됨':i>state.badges.length?'앞선 체육관 뱃지가 필요해요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||!!queued||i>state.badges.length;b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;
   }));
   $('ongoing').hidden=!busy&&!queued;
-  if(queued){$('ongoing').replaceChildren(node('span','',queued.name+' 도전 예약 · '+(state.battle?'현재 야생 배틀이 끝나면 시작해요.':'마지막 연출이 끝나면 시작해요.')));const b=node('button','','예약 취소');b.dataset.cancelChallenge='';b.onclick=()=>window.buddy.action('challenge-cancel');$('ongoing').append(b);}
+  if(queued){$('ongoing').replaceChildren(node('span','',queued.name+' 도전 예약 · '+(state.battle?'현재 배틀이 끝나면 시작해요.':'마지막 연출이 끝나면 시작해요.')));const b=node('button','','예약 취소');b.dataset.cancelChallenge='';b.onclick=()=>window.buddy.action('challenge-cancel');$('ongoing').append(b);}
   else if(busy){$('ongoing').replaceChildren(node('span','',state.battle.boss+' · '+(state.battle.foeIndex+1)+' / '+state.battle.teamSize+'마리와 배틀 중'));const b=node('button','','도전 그만두기');b.onclick=()=>window.buddy.action('abandon');$('ongoing').append(b);}
   $('league-start').disabled=state.badges.length<8||busy||!!queued;$('league-start').textContent=queued?.index===8?'리그 도전 예약됨':state.champion?'리그 재도전':'리그 도전';
   $('league-team').replaceChildren(...state.bosses.slice(8).map((b,i)=>{const e=node('article','league-member');e.append(node('h3','',(i===4?'챔피언 ':'')+b.name),teamMembers(b.team));return e;}));
@@ -100,6 +108,33 @@ function renderBosses(){
     $('champion-bonus').textContent=bonus?'챔피언 보너스 · 희귀 '+pct(bonus.rates.rare)+' · 전설 '+pct(bonus.rates.legendary)+' · 환상 '+pct(bonus.rates.mythical)+'\n선택한 4마리 최저 Lv.'+bonus.minimumLevel+' · 희귀 출현 '+bonus.rareMultiplier+'배 · 미등록 종 '+bonus.uncaughtWeight+'배 우대\n네 마리 모두 Lv.71 이상 3배 · Lv.81 이상 4배 · Lv.91 이상 5배. 출전 레벨 조건을 충족한 종에 적용돼요.':'';
     $('johto-stay').hidden=unlocked||stay;$('johto-unlock').hidden=unlocked;
   }
+}
+function renderDevice(){
+  if(!state)return;const d=state.trainingDevice,busy=state.battle?.kind==='trainer',queued=state.pendingChallenge;
+  $('device-title').textContent=d.obtained?'오박사의 학습장치':'오박사의 도감 의뢰';
+  $('device-note').textContent=d.obtained?'장치에 한 마리를 등록하면 경험치 학습과 교환 진화를 이용할 수 있어요.':d.canClaim?'오박사: 도감이 훌륭하게 채워졌구나! 15번도로의 내 조수에게 학습장치를 받아 가거라.':'민화에게 승리한 뒤 로켓단 비주기를 물리치고, 포켓몬피리로 길을 막는 잠만보를 깨워 배틀해요. 관동 도감 50종도 등록하면 오박사의 조수가 학습장치를 건네요.';
+  $('device-requirements').replaceChildren(...d.requirements.map(r=>node('div','device-requirement'+(r.done?' done':''),(r.done?'완료 · ':'대기 · ')+r.name)));
+  $('story-challenges').replaceChildren(...d.steps.map(step=>{
+    const card=node('article','story-challenge');card.append(node('h3','',step.name),teamMembers(step.team));
+    const ongoing=state.battle?.storyId===step.id,reserved=queued?.index===step.id,b=node('button','',step.done?'승리 완료':ongoing?'도전 중':reserved?'도전 예약됨':!step.available?(step.id==='rocket-giovanni'?'민화 뱃지가 필요해요':'로켓단 비주기 승리가 필요해요'):'도전하기');b.dataset.story=step.id;b.disabled=step.done||busy||!!queued||!step.available;b.onclick=()=>window.buddy.action('challenge',step.id);card.append(b);return card;
+  }));
+  const claimQueued=state.pendingActions.some(a=>a.kind==='device-claim');$('device-claim').hidden=d.obtained;$('device-claim').disabled=claimQueued;
+  $('device-claim').textContent=claimQueued?'학습장치 수령 예약됨':d.canClaim?'오박사 조수에게 학습장치 받기':'조건 달성 후 학습장치 받기 예약';
+  $('device-controls').hidden=!d.obtained;if(!d.obtained)return;
+  const select=$('device-learner'),current=Number(select.value),signature=JSON.stringify(state.roster.map(p=>[p.uid,p.id,p.level,p.boarded]));
+  if(select.dataset.signature!==signature){
+    select.dataset.signature=signature;select.replaceChildren(node('option','','동료 선택'));select.firstChild.value='';
+    for(const p of state.roster){const o=node('option','',p.name+' · Lv.'+p.level+(p.boarded?' · 키우미집':''));o.value=p.uid;select.append(o);}select.value=current||d.learnerUid||'';
+  }
+  const chosen=Number(select.value),registration=state.pendingActions.some(a=>a.kind==='device-learner'&&a.uid===chosen),withdrawal=state.pendingActions.some(a=>a.kind==='device-learner'&&a.uid===null);
+  $('device-register').disabled=!chosen||chosen===d.learnerUid||registration;$('device-register').textContent=registration?'등록 예약됨':'장치에 등록';
+  $('device-withdraw').disabled=!d.learnerUid||withdrawal;$('device-withdraw').textContent=withdrawal?'데려오기 예약됨':'동료 데려오기';
+  const root=$('device-current'),learner=state.roster.find(p=>p.uid===d.learnerUid);root.replaceChildren();
+  if(!learner){root.append(node('span','','등록된 동료가 없어요. 한 마리를 골라 주세요.'));return;}
+  const body=node('div');body.append(node('b','',learner.name+' · Lv.'+learner.level),node('div','muted',learner.boarded?'키우미집에서 돌아오면 학습을 이어가요.':learner.uid===state.hero.uid?'출전 중 · 경험치를 중복 지급하지 않아요.':'대기 동료 · 출전 동료 경험치의 10%를 추가로 받아요.'));
+  const evolutions=node('div','device-evolutions');for(const e of learner.evolutions.filter(e=>e.trigger===2)){
+    const queuedEvolution=state.pendingActions.some(a=>a.kind==='evolve'&&a.uid===learner.uid&&a.to===e.to),b=node('button','',e.name+(queuedEvolution?' 진화 예약됨':e.ready?'로 진화':' 진화 예약'));b.dataset.deviceEvolve=e.to;b.disabled=queuedEvolution;b.title=e.conditions;b.onclick=()=>window.buddy.action('evolve',{id:learner.uid,to:e.to});evolutions.append(b);
+  }body.append(evolutions);root.append(img(learner.id),body);
 }
 function journalRows(entries){
   return entries.map(entry=>{
@@ -121,7 +156,7 @@ function renderJournal(){
   $('summary-since').textContent=(s.first?'기록을 시작한 뒤':'지난 확인 이후')+' · '+new Date(s.since).toLocaleString('ko-KR');
   const stats=[['wins','배틀 승리'],['catch','새로운 포획'],['level','레벨 상승'],['evolution','진화'],['hatch','부화'],['xp','얻은 경험치']];
   $('summary-stats').replaceChildren(...stats.map(([key,label])=>{const box=node('div','summary-stat');box.append(node('b','',(c[key]||0).toLocaleString('ko-KR')),node('span','',label));return box;}));
-  $('summary-note').textContent='새로운 발견 '+(c.encounter||0)+' · 알 발견 '+(c.egg||0)+' · 관장·리그 승리 '+(c.badge||0)+' · 도구 발견 '+(c.item||0)+' · 패배 '+(c.loss||0);
+  $('summary-note').textContent='새로운 발견 '+(c.encounter||0)+' · 알 발견 '+(c.egg||0)+' · 관장·리그 승리 '+(c.badge||0)+' · 스토리 승리 '+(c.story||0)+' · 도구 발견 '+((c.item||0)+(c.device||0))+' · 패배 '+(c.loss||0);
   $('summary-highlights').replaceChildren(...(s.highlights.length?journalRows(s.highlights):[node('p','muted','새로운 모험을 기다리고 있어요. 확인하기 전까지 결과를 모아 둘게요.')]));
   $('journal-ack').disabled=!Object.values(c).some(v=>v>0);
   $('journal-list').replaceChildren(...(state.journal.length?journalRows(state.journal):[node('p','muted','첫 모험을 기다리고 있어요. Codex에서 작업하면 기록이 쌓여요.')]));

@@ -28,6 +28,7 @@ test('championship and explicit selection gate Gen II wild Pokemon, evolution an
   assert.equal(g.unlockJohto(now),false);assert.equal(g.stayInKanto(now),false);assert.equal(g.maxGeneration(),1);
   g.data.champion=true;assert.ok(g.stayInKanto(now));const onix=g.addPokemon(95,30,'fixture',now),ditto=g.addPokemon(132,30,'fixture',now);
   g.data.inventory[210]=1;assert.equal(g.evolve(onix,208,now),false);assert.equal(nursery.predict(g,[25,ditto]).compatible,false);assert.equal(g.addPokemon(172,5,'catch',now),false);
+  g.data.trainingDevice.obtainedAt=now;g.data.trainingDevice.learnerUid=onix;
   g.data.owned[25].level=100;g.data.owned[25].xp=xpAt(25,100);
   for(let i=0;i<500;i++){g.newWild(now);assert.ok(g.data.battle.foe.id<=151);}
   assert.equal(g.maxGeneration(),1);assert.ok(g.unlockJohto(now));assert.ok(g.evolve(onix,208,Math.max(now,g.data.switchUntil)));

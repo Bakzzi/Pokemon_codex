@@ -25,6 +25,17 @@
     <div class="case-inlay"><div class="case-heading"><span>GYM BADGES</span><b>KANTO</b></div><div id="badge-slots" class="badge-slots"></div></div>
     <div class="case-bottom"><span id="badge-case-note">여덟 번의 도전, 여덟 개의 증표</span><i class="case-clasp" aria-hidden="true"></i></div>
   </section>
+  <section class="device-quest" aria-labelledby="device-title">
+    <div class="device-heading"><div><span class="kicker">OAK'S RESEARCH</span><h2 id="device-title">오박사의 도감 의뢰</h2></div><img class="device-art" src="assets/items/exp-share.png" alt="학습장치"></div>
+    <p id="device-note"></p><div id="device-requirements" class="device-requirements"></div>
+    <div id="story-challenges" class="story-challenges"></div>
+    <button id="device-claim">학습장치 받기</button>
+    <div id="device-controls" class="device-controls" hidden>
+      <label>학습장치에 등록할 동료<select id="device-learner"><option value="">동료 선택</option></select></label>
+      <div class="device-actions"><button id="device-register">장치에 등록</button><button id="device-withdraw">동료 데려오기</button></div>
+      <div id="device-current" class="device-current"></div><p class="muted">출전 동료의 경험치는 그대로 · 등록한 한 마리에게만 추가 10%. 교환 진화 대상은 장치에서 진화를 예약할 수 있어요.</p>
+    </div>
+  </section>
   <div class="gym-grid" id="gyms"></div>
   <div class="league"><div><span class="kicker">POKÉMON LEAGUE</span><h2>사천왕, 그리고 챔피언</h2><p>뱃지 8개를 모으면 도전할 수 있어요. 다섯 경기를 회복 없이 이어서 승리하면 출현 보너스를 얻고, 2세대 해금을 직접 선택할 수 있어요.</p></div><button id="league-start" data-challenge="8">리그 도전</button></div>
   <div id="league-team" class="league-team"></div><p id="league-progress" class="muted"></p>

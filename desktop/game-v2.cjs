@@ -10,10 +10,12 @@ const validCount=n=>typeof n==='number'&&Number.isSafeInteger(n)&&n>=0;
 const STARTERS=[1,4,7,25];
 const CAPTURE_LIMITS={yellow:2,red:3};
 const nursery=require('./daycare.cjs');
-const ACTION_KINDS=new Set(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock']);
+const training=require('./training-device.cjs');
+const ACTION_KINDS=new Set(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner']);
 function actionPayload(kind,value){
   if(!ACTION_KINDS.has(kind))return null;
   if(kind==='select')return Number.isSafeInteger(Number(value))&&Number(value)>0?{uid:Number(value)}:null;
+  if(kind==='device-learner')return value===null?{uid:null}:Number.isSafeInteger(value)&&value>0?{uid:value}:null;
   if(kind==='slot')return Number.isInteger(value?.slot)&&value.slot>=0&&value.slot<4&&Number.isSafeInteger(value.id)&&value.id>0?{slot:value.slot,uid:value.id}:null;
   if(kind==='evolve')return Number.isSafeInteger(value?.id)&&value.id>0&&Number.isInteger(value.to)&&species.has(value.to)?{uid:value.id,to:value.to}:null;
   if(kind==='daycare-start')return Array.isArray(value)&&value.length===2&&value.every(uid=>Number.isSafeInteger(uid)&&uid>0)&&value[0]!==value[1]?{parents:[...value]}:null;
@@ -21,7 +23,7 @@ function actionPayload(kind,value){
 }
 function restoreAction(a){
   if(!a||!Number.isSafeInteger(a.id)||a.id<1||!validCount(a.queuedAt))return null;
-  const value=a.kind==='select'?a.uid:a.kind==='slot'?{slot:a.slot,id:a.uid}:a.kind==='evolve'?{id:a.uid,to:a.to}:a.parents;
+  const value=['select','device-learner'].includes(a.kind)?a.uid:a.kind==='slot'?{slot:a.slot,id:a.uid}:a.kind==='evolve'?{id:a.uid,to:a.to}:a.parents;
   const payload=actionPayload(a.kind,value);if(!payload)return null;
   if(a.kind==='evolve'&&!species.has(a.from))return null;
   return {id:a.id,kind:a.kind,queuedAt:a.queuedAt,...payload,...(a.kind==='evolve'?{from:a.from}:{})};
@@ -49,7 +51,7 @@ class Game {
     this.data.johtoDeferred=!!this.data.johtoDeferred&&!this.data.johtoUnlocked;
     for(const b of [this.data.battle,this.data.suspendedWild])if(b?.kind==='wild')captureCounts(b);
     const queued=this.data.pendingChallenge;
-    this.data.pendingChallenge=queued&&Number.isInteger(queued.index)&&queued.index>=0&&queued.index<=8?queued:null;
+    this.data.pendingChallenge=queued&&(training.battles[queued.index]||Number.isInteger(queued.index)&&queued.index>=0&&queued.index<=8)?queued:null;
     journal.init(this.data,now);
     for(const [uid,p] of Object.entries(this.data.owned)){
       p.uid=Number(uid);p.gender=p.gender||nursery.genderFor(p.id,this.random);
@@ -80,6 +82,7 @@ class Game {
     this.data.slots=this.data.slots.filter(id=>this.data.owned[id]&&species.get(this.data.owned[id].id)?.generation<=this.maxGeneration());
     for(const id of Object.keys(this.data.owned).map(Number))if(this.data.slots.length<4&&!this.data.slots.includes(id)&&species.get(this.data.owned[id].id)?.generation<=this.maxGeneration())this.data.slots.push(id);
     if(!this.data.slots.includes(this.data.activeId))this.data.activeId=this.data.slots[0];
+    training.init(this);
     const actionIds=new Set();
     this.data.pendingActions=(Array.isArray(this.data.pendingActions)?this.data.pendingActions:[]).slice(0,32).map(restoreAction).filter(a=>a&&!actionIds.has(a.id)&&actionIds.add(a.id));
     this.data.actionSerial=Math.max(validCount(this.data.actionSerial)?this.data.actionSerial:0,...actionIds);
@@ -105,17 +108,26 @@ class Game {
     this.log('성도 지방을 선택했다! 2세대 100종이 해금되었다.','unlock',null,now);return true;
   }
   isBoarded(uid){return this.data.daycare?.parents.includes(Number(uid))||false;}
+  battleBoss(b=this.data.battle){return training.battles[b.bossIndex]||db.bosses[b.bossIndex];}
   actionName(a){
     const name=uid=>species.get(this.data.owned[uid]?.id)?.name||'동료';
     if(a.kind==='select')return name(a.uid)+' 출전';
     if(a.kind==='slot')return name(a.uid)+' · '+(a.slot+1)+'번 칸 배치';
     if(a.kind==='evolve')return (species.get(a.from)?.name||name(a.uid))+' → '+species.get(a.to).name+' 진화';
     if(a.kind==='daycare-start')return a.parents.map(name).join(' · ')+' 키우미집 맡기기';
+    if(a.kind==='device-claim')return '오박사 조수에게 학습장치 받기';
+    if(a.kind==='device-learner')return a.uid===null?'학습장치 동료 데려오기':name(a.uid)+' 학습장치 등록';
     return {'daycare-withdraw':'키우미집 동료 데려오기',abandon:'도전 그만두기','johto-stay':'관동에 머물기','johto-unlock':'2세대 해금하기'}[a.kind];
   }
   actionStatus(a,now=Date.now()){
     const p=this.data.owned[a.uid],b=this.data.battle;
     const invalid=reason=>({state:'invalid',reason}),wait=reason=>({state:'waiting',reason}),done={state:'done',reason:'이미 완료했어요.'};
+    if(a.kind==='device-claim'&&training.has(this))return done;
+    if(a.kind==='device-learner'){
+      if(!training.has(this))return invalid('학습장치를 먼저 받아 주세요.');
+      if(a.uid!==null&&(!p||species.get(p.id)?.generation>this.maxGeneration()))return invalid('해당 동료를 사용할 수 없어요.');
+      if(a.uid===this.data.trainingDevice.learnerUid)return done;
+    }
     if(['select','slot','evolve'].includes(a.kind)&&(!p||species.get(p.id)?.generation>this.maxGeneration()))return invalid('해당 동료를 사용할 수 없어요.');
     if(a.kind==='evolve'){
       if(p.id===a.to)return done;
@@ -146,6 +158,7 @@ class Game {
         const rule=this.evolutions(a.uid,now).find(e=>e.to===a.to);
         if(!rule.ready)return wait('진화 조건 대기 · '+(rule.conditions||'조건을 충족하면 진화해요.'));
       }
+      if(a.kind==='device-claim'&&!training.canClaim(this))return wait('획득 조건 대기 · '+training.requirements(this).filter(r=>!r.done).map(r=>r.name).join(' · '));
       if(a.kind==='daycare-start'){
         if(this.data.egg)return wait('현재 알이 부화하면 맡겨요.');
         if(this.data.daycare&&!this.data.daycare.produced)return wait('키우미집에서 현재 알을 얻은 뒤 맡겨요.');
@@ -164,6 +177,11 @@ class Game {
     if(a.kind==='abandon')result=this.abandon(now);
     if(a.kind==='johto-stay')result=this.stayInKanto(now);
     if(a.kind==='johto-unlock')result=this.unlockJohto(now);
+    if(a.kind==='device-claim')result=training.claim(this,now);
+    if(a.kind==='device-learner'){
+      this.data.trainingDevice.learnerUid=a.uid;result=true;
+      this.log(this.actionName(a)+' 완료','training',a.uid?this.data.owned[a.uid].id:null,now);
+    }
     if(result&&['select','slot'].includes(a.kind))this.log(this.actionName(a)+' 완료','switch',this.data.owned[a.uid].id,now);
     return result;
   }
@@ -301,7 +319,8 @@ class Game {
       let ready=(!e.level||p.level>=e.level)&&(!e.happiness||p.happiness>=e.happiness)&&(!e.item||(this.data.inventory[e.item]||0)>0)&&(!e.time||(e.time==='day'?day:!day));
       if(e.relativeStats!==null){const s=combatant(p.id,p.level,p.moves).stats;ready=ready&&Math.sign(s[2]-s[3])===e.relativeStats;}
       const item=db.items.find(i=>i.id===e.item);
-      const conditions=[e.level&&`Lv.${e.level}`,e.happiness&&`친밀도 ${p.happiness}/${e.happiness}`,e.time==='day'&&'낮',e.time==='night'&&'밤',item&&`${item.name} ${(this.data.inventory[e.item]||0)}개`,e.trigger===2&&'교환소에서 교환'].filter(Boolean).join(' · ');
+      if(e.trigger===2)ready=ready&&training.has(this)&&this.data.trainingDevice.learnerUid===Number(id);
+      const conditions=[e.level&&`Lv.${e.level}`,e.happiness&&`친밀도 ${p.happiness}/${e.happiness}`,e.time==='day'&&'낮',e.time==='night'&&'밤',item&&`${item.name} ${(this.data.inventory[e.item]||0)}개`,e.trigger===2&&(!training.has(this)?'학습장치 획득 필요':this.data.trainingDevice.learnerUid===Number(id)?'학습장치 등록 완료':'학습장치에 이 동료 등록 필요')].filter(Boolean).join(' · ');
       return {...e,name:species.get(e.to).name,ready:ready&&!this.isBoarded(id),conditions};
     });
   }
@@ -329,11 +348,12 @@ class Game {
     if(first||p.legendary||p.mythical)this.log(`${p.name} Lv.${level} 발견`,'encounter',id,now);
   }
   canChallenge(index){
+    if(training.battles[index])return training.canChallenge(this,index);
     return Number.isInteger(index)&&index>=0&&index<=8&&(index===8?this.data.badges.length>=8:index<=this.data.badges.length&&!this.data.badges.includes(db.bosses[index].id));
   }
-  challengeName(index){return index===8?'포켓몬 리그':db.bosses[index].name+' 체육관';}
+  challengeName(index){return training.battles[index]?.name||(index===8?'포켓몬 리그':db.bosses[index].name+' 체육관');}
   challenge(index,now=Date.now()){
-    index=Number(index);
+    index=training.battles[index]?index:Number(index);
     if(!this.canChallenge(index)||this.data.battle?.kind==='trainer')return false;
     if(this.data.pendingChallenge)return this.data.pendingChallenge.index===index;
     if(this.data.battle||this.data.pendingBattle||now<this.data.switchUntil||now<this.nextTick){
@@ -354,14 +374,14 @@ class Game {
     this.data.captureAnimation=null;
     this.data.suspendedWild=null;
     const party=Object.fromEntries(this.data.slots.filter(id=>!this.isBoarded(id)).map(id=>{const p=this.data.owned[id];return [id,this.memberCombatant(p)];}));
-    this.data.battle={kind:'trainer',bossIndex:index,foeIndex:0,party,turn:0,captureAttempts:0,startedAt:now};
+    this.data.battle={kind:'trainer',bossIndex:index,storyId:training.battles[index]?index:null,foeIndex:0,party,turn:0,captureAttempts:0,startedAt:now};
     this.nextTrainer(now);
     this.log(this.challengeName(index)+' 도전 시작','challenge',null,now);return true;
   }
   nextTrainer(now){
-    const b=this.data.battle,boss=db.bosses[b.bossIndex],enemy=boss.team[b.foeIndex];
+    const b=this.data.battle,boss=this.battleBoss(b),enemy=boss.team[b.foeIndex];
     b.foe=combatant(enemy.id,enemy.level,enemy.moves);b.turn=0;
-    this.data.seen[enemy.id]=this.data.seen[enemy.id]||now;this.animate('encounter',{id:enemy.id,text:`${boss.name}의 ${species.get(enemy.id).name}!`},now);
+    this.data.seen[enemy.id]=this.data.seen[enemy.id]||now;this.animate('encounter',{id:enemy.id,text:b.storyId==='road-snorlax'?'길을 막는 잠만보 Lv.30 등장!':`${boss.name}의 ${species.get(enemy.id).name}!`},now);
   }
   abandon(now=Date.now()){
     if(this.data.battle?.kind!=='trainer')return false;
@@ -369,25 +389,35 @@ class Game {
     this.log('도전을 마치고 모험으로 돌아왔다','challenge',null,now);this.endChallenge(true,now);return true;
   }
   endChallenge(won,now){
-    const b=this.data.battle,boss=db.bosses[b.bossIndex];if(!won)this.log(`${boss.name}에게 패배 · 포켓몬들이 회복했다`,'loss',null,now);
+    const b=this.data.battle,boss=this.battleBoss(b);if(!won)this.log(`${boss.name}에게 패배 · 포켓몬들이 회복했다`,'loss',null,now);
     this.data.pendingBattle=null;
     this.data.battle=this.data.suspendedWild;this.data.suspendedWild=null;
     if(this.data.battle&&!this.data.battle.party[this.data.activeId]){const p=this.data.owned[this.data.activeId];this.data.battle.party[p.uid]=this.memberCombatant(p);battleEngine.invalidate(this.data.battle);}
-    if(this.data.animation?.kind!=='champion')this.animate('result',{text:won?(this.data.badges.includes(boss.id)?boss.badge+' 획득!':'모험으로 돌아왔어!'):'포켓몬들이 기절했다. 잠시 쉬고 다시 도전하자!'},now);
+    if(this.data.animation?.kind!=='champion')this.animate('result',{text:won?(b.storyId&&(b.storyId==='rocket-giovanni'?this.data.trainingDevice.rocketWonAt:this.data.trainingDevice.snorlaxWonAt)?boss.name+'에게 승리!':this.data.badges.includes(boss.id)?boss.badge+' 획득!':'모험으로 돌아왔어!'):'포켓몬들이 기절했다. 잠시 쉬고 다시 도전하자!'},now);
   }
-  awardXp(foe,trainer,now){
-    const p=this.data.owned[this.data.activeId],before=p.level;
-    const base=Math.max(1,Math.floor(species.get(foe.id).baseExperience*foe.level/7*(trainer?1.5:1))),boost=this.experienceBoost();
-    const gained=base+Math.floor(base*boost.count/boost.total);
-    journal.increment(this.data,'xp',Math.min(gained,xpAt(p.id,100)-p.xp));
-    p.xp=Math.min(xpAt(p.id,100),p.xp+gained);p.level=levelAt(p.id,p.xp);p.happiness=Math.min(255,p.happiness+3);
+  gainXp(uid,gained,now){
+    const p=this.data.owned[uid],before=p.level;if(gained<=0)return 0;
+    const actual=Math.max(0,Math.min(gained,xpAt(p.id,100)-p.xp));
+    journal.increment(this.data,'xp',actual);
+    p.xp+=actual;p.level=levelAt(p.id,p.xp);p.happiness=Math.min(255,p.happiness+3);
     if(p.level>before){
       p.moves=learnedMoves(p.id,p.level,p.moves,before);this.log(`${species.get(p.id).name} Lv.${before} → Lv.${p.level}`,'level',p.id,now);
-      const mon=this.data.battle?.party[p.uid];if(mon){const fresh=combatant(p.id,p.level,p.moves),diff=fresh.maxHp-mon.maxHp;mon.level=p.level;mon.stats=fresh.stats;mon.maxHp=fresh.maxHp;mon.hp=Math.min(mon.maxHp,mon.hp+diff);mon.moves=[...p.moves];for(const id of p.moves)if(mon.pp[id]===undefined)mon.pp[id]=moves.get(id).pp;}
-    }return gained;
+      const mon=this.data.battle?.party[p.uid];if(mon){const fresh=combatant(p.id,p.level,p.moves),diff=fresh.maxHp-mon.maxHp;mon.level=p.level;mon.stats=fresh.stats;mon.maxHp=fresh.maxHp;mon.hp=mon.hp>0?Math.min(mon.maxHp,mon.hp+diff):0;mon.moves=[...p.moves];for(const id of p.moves)if(mon.pp[id]===undefined)mon.pp[id]=moves.get(id).pp;}
+    }return actual;
+  }
+  awardXp(foe,trainer,now){
+    const base=Math.max(1,Math.floor(species.get(foe.id).baseExperience*foe.level/7*(trainer?1.5:1))),boost=this.experienceBoost();
+    const gained=base+Math.floor(base*boost.count/boost.total);
+    this.gainXp(this.data.activeId,gained,now);
+    const uid=this.data.trainingDevice.learnerUid,p=this.data.owned[uid];
+    if(training.has(this)&&p&&uid!==this.data.activeId&&!this.isBoarded(uid)&&species.get(p.id).generation<=this.maxGeneration()&&!(this.data.battle?.party[uid]?.hp<=0)){
+      const shared=this.gainXp(uid,Math.floor(gained/10),now);
+      if(shared)this.log(`${species.get(p.id).name} 학습장치 +${shared} 경험치`,'training',p.id,now);
+    }
+    return gained;
   }
   defeatOpponent(now,captured=false){
-    const b=this.data.battle,foe=b.foe;this.awardXp(foe,b.kind==='trainer',now);this.data.battles++;journal.increment(this.data,'wins');
+    const b=this.data.battle,foe=b.foe;this.awardXp(foe,b.kind==='trainer'&&this.battleBoss(b)?.xpTrainer!==false,now);this.data.battles++;journal.increment(this.data,'wins');
     if(b.kind==='wild'){
       if(!captured)this.log(`${species.get(foe.id).name}와의 배틀 승리`,'win',foe.id,now);
       if(this.random()<0.015){
@@ -397,8 +427,9 @@ class Game {
       this.data.battle=null;if(!captured)this.animate('result',{text:species.get(foe.id).name+'와의 배틀 승리!'},now);return;
     }
     b.foeIndex++;
-    if(b.foeIndex<db.bosses[b.bossIndex].team.length){this.nextTrainer(now);return;}
-    const boss=db.bosses[b.bossIndex];this.log(`${boss.name}에게 승리!${boss.badge?' '+boss.badge+' 획득':''}`,'badge',null,now);
+    if(b.foeIndex<this.battleBoss(b).team.length){this.nextTrainer(now);return;}
+    if(b.storyId){training.win(this,b.storyId,now);this.endChallenge(true,now);return;}
+    const boss=this.battleBoss(b);this.log(`${boss.name}에게 승리!${boss.badge?' '+boss.badge+' 획득':''}`,'badge',null,now);
     if(b.bossIndex<8){if(!this.data.badges.includes(boss.id))this.data.badges.push(boss.id);this.endChallenge(true,now);}
     else if(b.bossIndex<12){this.data.leagueBest=Math.max(this.data.leagueBest,b.bossIndex-7);b.bossIndex++;b.foeIndex=0;this.nextTrainer(now);}
     else {
@@ -502,7 +533,7 @@ class Game {
     const uncertain=[...this.sessions.values()].some(s=>s.phase==='working'&&now-s.at>=600000);
     const phase=active.length?'working':uncertain?'unknown':recent&&now-recent.at<16000?recent.phase:'idle',available=[this.limits.primary,this.limits.secondary].filter(Boolean);
     const limits=[300,10080].map(minutes=>{const l=available.find(x=>x.minutes===minutes),fresh=l&&l.resetsAt*1000>now;return {label:minutes===300?'5시간':'주간',left:fresh?Math.round(100-l.used):null,resetsAt:fresh?l.resetsAt:null};});
-    return {pendingActions:this.pendingActions(now),experienceBoost:this.experienceBoost(),version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,...healthView(hero||{hp:maxHp,maxHp}),status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,...healthView(b.foe),status:b.foe.status}:null,slots:this.data.slots.map(uid=>({...view(this.data.owned[uid].id),uid,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0})),battle:b?{kind:b.kind,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?db.bosses[b.bossIndex].name:null,foeIndex:b.foeIndex,teamSize:b.kind==='trainer'?db.bosses[b.bossIndex].team.length:null}:null,pendingChallenge:this.data.pendingChallenge?{...this.data.pendingChallenge,name:this.challengeName(this.data.pendingChallenge.index)}:null,animation:this.data.animation,capture:this.data.captureAnimation||null,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
+    return {trainingDevice:training.snapshot(this),pendingActions:this.pendingActions(now),experienceBoost:this.experienceBoost(),version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,...healthView(hero||{hp:maxHp,maxHp}),status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,...healthView(b.foe),status:b.foe.status}:null,slots:this.data.slots.map(uid=>({...view(this.data.owned[uid].id),uid,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0})),battle:b?{kind:b.kind,storyId:b.storyId||null,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?this.battleBoss(b).name:null,foeIndex:b.foeIndex,teamSize:b.kind==='trainer'?this.battleBoss(b).team.length:null}:null,pendingChallenge:this.data.pendingChallenge?{...this.data.pendingChallenge,name:this.challengeName(this.data.pendingChallenge.index)}:null,animation:this.data.animation,capture:this.data.captureAnimation||null,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
   }
   panelState(now=Date.now()){
     const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,level:p.level,xp:p.xp,gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:p.moves.map(id=>({id,name:moves.get(id).name,type:moves.get(id).type})),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
@@ -510,7 +541,7 @@ class Game {
       kantoCaughtCount:this.kantoCaughtCount(),
       encounterBonus:this.encounterBonus(),
       collection:db.pokemon.filter(p=>p.generation<=this.maxGeneration()).map(p=>{const owned=roster.filter(m=>m.id===p.id);return {id:p.id,seen:!!this.data.seen[p.id],caught:!!this.data.caught[p.id],name:this.data.seen[p.id]?p.name:'???',owned:owned.length>0,count:owned.length,level:owned.length?Math.max(...owned.map(m=>m.level)):null,types:this.data.seen[p.id]?view(p.id).types:[],description:this.data.seen[p.id]?p.description:'아직 만나지 않은 포켓몬',rarity:rarity(p)};}),
-      bosses:db.bosses,leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name,count}))};
+      bosses:db.bosses,leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:[...(training.has(this)?[{id:'training-device',name:'학습장치',count:1}]:[]),...Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name,count}))]};
   }
 }
 module.exports={Game,STARTERS};
