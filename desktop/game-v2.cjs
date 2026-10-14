@@ -139,7 +139,7 @@ class Game {
   switchToLowest(reason,now){
     const available=this.availablePartners();if(!available.length)return false;
     const levels=available.map(uid=>this.data.owned[uid].level),lowest=Math.min(...levels);
-    if(reason==='balance'&&(this.data.battle||Math.max(...levels)-lowest<15))return false;
+    if(reason==='balance'&&(this.data.battle||Math.max(...levels)-lowest<5))return false;
     const from=this.data.owned[this.data.activeId];
     // Keep an already-lowest partner; otherwise break ties by the user's slot order.
     const next=available.includes(from.uid)&&from.level===lowest?from.uid:available.find(uid=>this.data.owned[uid].level===lowest);
@@ -200,7 +200,7 @@ class Game {
     this.data.pendingBattle=null;
     this.data.captureAnimation=null;
     const hero=this.data.owned[this.data.activeId],id=pickWild(this.maxGeneration(),this.random,hero.level,{champion:this.data.champion,caught:this.data.caught,minimumLevel:this.encounterBonus()?.minimumLevel||0}),p=species.get(id);
-    const level=Math.max(wildMinimum(p),Math.min(100,hero.level-3+Math.floor(this.random()*7)));
+    const level=Math.max(wildMinimum(p),Math.min(100,hero.level-5+Math.floor(this.random()*11)));
     const party=Object.fromEntries(this.data.slots.filter(uid=>!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
     this.data.battle={kind:'wild',foe:combatant(id,level,null,{abilitySlot:Math.floor(this.random()*p.abilities.length),gender:nursery.genderFor(id,this.random)}),party,turn:0,captureAttempts:0,captureByHealth:{yellow:0,red:0},startedAt:now};
     const first=!this.data.seen[id];this.data.seen[id]=this.data.seen[id]||now;

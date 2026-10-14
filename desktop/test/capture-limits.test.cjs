@@ -76,5 +76,7 @@ test('an old pending successful throw finishes once while collection and HP rema
   assert.equal(reloaded.tick(end-1),false);assert.ok(!reloaded.data.caught[150]);assert.equal(reloaded.snapshot(end-1).hero.currentHp,2);
   assert.equal(captureFrame(reloaded.data.captureAnimation,now).text,'몬스터볼을 던졌다!');
   assert.ok(reloaded.tick(end));assert.ok(reloaded.data.caught[150]);assert.equal(reloaded.data.battle,null);
-  assert.equal(Object.values(reloaded.data.owned).filter(p=>p.id===150).length,1);assert.equal(reloaded.tick(end+1),false);
+  assert.equal(Object.values(reloaded.data.owned).filter(p=>p.id===150).length,1);const xp=reloaded.data.owned[25].xp;
+  assert.ok(reloaded.tick(end+1));assert.equal(reloaded.data.animation.kind,'switch');assert.equal(reloaded.data.animation.reason,'balance');
+  assert.equal(reloaded.data.owned[25].xp,xp);assert.equal(Object.values(reloaded.data.owned).filter(p=>p.id===150).length,1);
 });

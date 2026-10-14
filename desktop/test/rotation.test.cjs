@@ -19,10 +19,10 @@ function fixture(){
 }
 function advance(g){const at=Math.max(now,g.nextTick,g.data.switchUntil);assert.ok(g.tick(at));return at;}
 
-test('rotation starts at a 15-level gap, uses only selected slots and costs no work or XP',()=>{
-  const g=new Game({},now,{random:()=>.73});levels(g,{1:11,4:24,7:10,25:12});g.data.activeId=4;
+test('rotation starts at a 5-level gap, uses only selected slots and costs no work or XP',()=>{
+  const g=new Game({},now,{random:()=>.73});levels(g,{1:11,4:14,7:10,25:12});g.data.activeId=4;
   const outside=g.addPokemon(133,1,'hatch',now),slots=[...g.data.slots];
-  assert.equal(g.tick(now),false);assert.equal(g.data.activeId,4); // gap 14
+  assert.equal(g.tick(now),false);assert.equal(g.data.activeId,4); // gap 4
   levels(g,{7:9});const owned=structuredClone(g.data.owned);
   assert.equal(g.tick(now+1),true);assert.equal(g.data.activeId,7);assert.notEqual(g.data.activeId,outside);
   assert.deepEqual(g.data.slots,slots);assert.deepEqual(g.data.owned,owned);assert.equal(g.data.workTokens,0);
@@ -31,7 +31,7 @@ test('rotation starts at a 15-level gap, uses only selected slots and costs no w
   const serial=g.data.eventSerial;
   assert.equal(g.tick(now+1000),false);assert.equal(g.tick(now+1400),false);assert.equal(g.data.eventSerial,serial);
   g.data.workTokens=250;advance(g);assert.equal(g.data.workTokens,0);
-  assert.ok(g.data.battle.foe.level>=6&&g.data.battle.foe.level<=12);
+  assert.ok(g.data.battle.foe.level>=4&&g.data.battle.foe.level<=14);
 });
 
 test('ties keep an already-lowest partner, then follow slot order; boarded partners are excluded',()=>{
@@ -80,7 +80,7 @@ test('faint replacements ignore fainted, boarded and unselected Pokemon, includi
   advance(g);assert.equal(g.data.activeId,1);assert.ok(!g.data.slots.includes(outside));
 });
 
-test('trainer fainting also picks the lowest survivor, irrespective of the 15-level gap',()=>{
+test('trainer fainting also picks the lowest survivor, irrespective of the 5-level gap',()=>{
   const g=new Game({},now,{random:()=>.73});levels(g,{1:9,4:8,7:5,25:6});g.data.activeId=4;
   assert.ok(g.challenge(0,now));g.data.battle.party[4].hp=0; // also models a saved faint before replacement
   advance(g);assert.equal(g.data.animation.kind,'faint');advance(g);assert.equal(g.data.activeId,7);assert.equal(g.data.battle.pendingSwitch,7);

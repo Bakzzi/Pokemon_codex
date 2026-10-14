@@ -29,6 +29,21 @@ test('wild evolution floors propagate through level, trade and stone chains',()=
   }
   const seen=new Set(),rng=random(42);for(let i=0;i<4000;i++)seen.add(pickWild(1,rng,36));assert.ok(seen.has(6));assert.ok(!seen.has(149));
 });
+test('wild levels cover every integer from partner minus five to plus five, with species floors and level 100 respected',()=>{
+  const g=new Game({},now,{random:()=>.73}),p=g.data.owned[25];
+  for(const level of [5,70,100]){
+    p.level=level;p.xp=xpAt(p.id,level);const seen=new Set();
+    for(let offset=0;offset<=10;offset++){
+      let index=0;const draws=[.9,0,(offset+.5)/11];g.random=()=>draws[index++]??.73;
+      g.newWild(now);const foe=g.data.battle.foe;seen.add(foe.level);
+      assert.equal(foe.level,Math.max(wildMinimum(species.get(foe.id)),Math.min(100,level-5+offset)));
+    }
+    if(level===70)assert.deepEqual([...seen],Array.from({length:11},(_,i)=>65+i));
+    if(level===5){assert.equal(Math.min(...seen),2);assert.equal(Math.max(...seen),10);}
+    if(level===100){assert.equal(Math.min(...seen),95);assert.equal(Math.max(...seen),100);}
+  }
+});
+
 test('all level-learned moves persist, while unearned future moves remain locked',()=>{
   const list=learnedMoves(25,50);assert.ok(list.length>4);assert.ok(list.includes(84));assert.ok(list.includes(85));
   assert.ok(!learnedMoves(7,5).includes(56));
