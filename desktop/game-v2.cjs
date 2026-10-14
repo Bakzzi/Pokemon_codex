@@ -10,6 +10,22 @@ const validCount=n=>typeof n==='number'&&Number.isSafeInteger(n)&&n>=0;
 const STARTERS=[1,4,7,25];
 const CAPTURE_LIMITS={yellow:2,red:3};
 const nursery=require('./daycare.cjs');
+const ACTION_KINDS=new Set(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock']);
+function actionPayload(kind,value){
+  if(!ACTION_KINDS.has(kind))return null;
+  if(kind==='select')return Number.isSafeInteger(Number(value))&&Number(value)>0?{uid:Number(value)}:null;
+  if(kind==='slot')return Number.isInteger(value?.slot)&&value.slot>=0&&value.slot<4&&Number.isSafeInteger(value.id)&&value.id>0?{slot:value.slot,uid:value.id}:null;
+  if(kind==='evolve')return Number.isSafeInteger(value?.id)&&value.id>0&&Number.isInteger(value.to)&&species.has(value.to)?{uid:value.id,to:value.to}:null;
+  if(kind==='daycare-start')return Array.isArray(value)&&value.length===2&&value.every(uid=>Number.isSafeInteger(uid)&&uid>0)&&value[0]!==value[1]?{parents:[...value]}:null;
+  return {};
+}
+function restoreAction(a){
+  if(!a||!Number.isSafeInteger(a.id)||a.id<1||!validCount(a.queuedAt))return null;
+  const value=a.kind==='select'?a.uid:a.kind==='slot'?{slot:a.slot,id:a.uid}:a.kind==='evolve'?{id:a.uid,to:a.to}:a.parents;
+  const payload=actionPayload(a.kind,value);if(!payload)return null;
+  if(a.kind==='evolve'&&!species.has(a.from))return null;
+  return {id:a.id,kind:a.kind,queuedAt:a.queuedAt,...payload,...(a.kind==='evolve'?{from:a.from}:{})};
+}
 function healthView(p){return {hp:p.hp/p.maxHp,currentHp:Math.max(0,Math.ceil(p.hp)),maxHp:p.maxHp,status:p.status||null};}
 function captureCounts(b){
   if(!b.captureByHealth){
@@ -64,6 +80,9 @@ class Game {
     this.data.slots=this.data.slots.filter(id=>this.data.owned[id]&&species.get(this.data.owned[id].id)?.generation<=this.maxGeneration());
     for(const id of Object.keys(this.data.owned).map(Number))if(this.data.slots.length<4&&!this.data.slots.includes(id)&&species.get(this.data.owned[id].id)?.generation<=this.maxGeneration())this.data.slots.push(id);
     if(!this.data.slots.includes(this.data.activeId))this.data.activeId=this.data.slots[0];
+    const actionIds=new Set();
+    this.data.pendingActions=(Array.isArray(this.data.pendingActions)?this.data.pendingActions:[]).slice(0,32).map(restoreAction).filter(a=>a&&!actionIds.has(a.id)&&actionIds.add(a.id));
+    this.data.actionSerial=Math.max(validCount(this.data.actionSerial)?this.data.actionSerial:0,...actionIds);
   }
   maxGeneration(){return this.data.champion&&this.data.johtoUnlocked?2:1;}
   kantoCaughtCount(){return Object.entries(this.data.caught).filter(([id,registered])=>registered&&species.get(Number(id))?.generation===1).length;}
@@ -86,6 +105,102 @@ class Game {
     this.log('성도 지방을 선택했다! 2세대 100종이 해금되었다.','unlock',null,now);return true;
   }
   isBoarded(uid){return this.data.daycare?.parents.includes(Number(uid))||false;}
+  actionName(a){
+    const name=uid=>species.get(this.data.owned[uid]?.id)?.name||'동료';
+    if(a.kind==='select')return name(a.uid)+' 출전';
+    if(a.kind==='slot')return name(a.uid)+' · '+(a.slot+1)+'번 칸 배치';
+    if(a.kind==='evolve')return (species.get(a.from)?.name||name(a.uid))+' → '+species.get(a.to).name+' 진화';
+    if(a.kind==='daycare-start')return a.parents.map(name).join(' · ')+' 키우미집 맡기기';
+    return {'daycare-withdraw':'키우미집 동료 데려오기',abandon:'도전 그만두기','johto-stay':'관동에 머물기','johto-unlock':'2세대 해금하기'}[a.kind];
+  }
+  actionStatus(a,now=Date.now()){
+    const p=this.data.owned[a.uid],b=this.data.battle;
+    const invalid=reason=>({state:'invalid',reason}),wait=reason=>({state:'waiting',reason}),done={state:'done',reason:'이미 완료했어요.'};
+    if(['select','slot','evolve'].includes(a.kind)&&(!p||species.get(p.id)?.generation>this.maxGeneration()))return invalid('해당 동료를 사용할 수 없어요.');
+    if(a.kind==='evolve'){
+      if(p.id===a.to)return done;
+      if(p.id!==a.from||!this.evolutions(a.uid,now).some(e=>e.to===a.to))return invalid('동료의 진화 경로가 바뀌었어요.');
+    }
+    if(a.kind==='daycare-start'){
+      const preview=nursery.predict(this,a.parents);if(!preview.compatible)return invalid(preview.reason);
+    }
+    if(a.kind==='daycare-withdraw'&&!this.data.daycare||a.kind==='abandon'&&b?.kind!=='trainer')return done;
+    if(a.kind.startsWith('johto-')){
+      if(!this.data.champion)return invalid('챔피언이 된 뒤 선택할 수 있어요.');
+      if(this.data.johtoUnlocked||a.kind==='johto-stay'&&this.data.johtoDeferred)return done;
+    }
+    if(this.data.pendingBattle||now<this.data.switchUntil||now<this.nextTick)return wait('진행 중인 동작이 끝나면 실행해요.');
+    if(b&&(b.foe.hp<=0||b.party[this.data.activeId]?.hp<=0))return wait('기절과 배틀 결과를 기다려요.');
+    if(a.kind==='select'){
+      if(this.isBoarded(a.uid))return wait('키우미집에서 데려오면 출전해요.');
+      if(a.uid===this.data.activeId)return done;
+      if(b&&(b.party[a.uid]?.hp<=0||b.kind==='trainer'&&!b.party[a.uid]))return wait('배틀 종료 후 회복·출전해요.');
+      if(b&&!battleEngine.canSwitch(this,b,a.uid))return wait('교체할 수 있게 되면 출전해요.');
+    }else if(a.kind==='daycare-withdraw'||a.kind==='abandon'){
+      // These can resolve a waiting request without needing another battle to finish.
+    }else{
+      if(b)return wait('현재 배틀이 끝나면 실행해요.');
+      if(a.uid&&this.isBoarded(a.uid))return wait('키우미집에서 데려오면 실행해요.');
+      if(a.kind==='slot'&&this.data.slots[a.slot]===a.uid)return done;
+      if(a.kind==='evolve'){
+        const rule=this.evolutions(a.uid,now).find(e=>e.to===a.to);
+        if(!rule.ready)return wait('진화 조건 대기 · '+(rule.conditions||'조건을 충족하면 진화해요.'));
+      }
+      if(a.kind==='daycare-start'){
+        if(this.data.egg)return wait('현재 알이 부화하면 맡겨요.');
+        if(this.data.daycare&&!this.data.daycare.produced)return wait('키우미집에서 현재 알을 얻은 뒤 맡겨요.');
+      }
+    }
+    return {state:'ready',reason:'곧 실행해요.'};
+  }
+  executeAction(a,now){
+    let result=false;const previousActive=this.data.activeId;
+    if(a.kind==='select'){result=this.select(a.uid,now);if(result)this.data.manualSelection=true;}
+    if(a.kind==='slot')result=this.setSlot(a.slot,a.uid,now);
+    if(result&&a.kind==='slot'&&previousActive!==this.data.activeId)this.data.manualSelection=true;
+    if(a.kind==='evolve')result=this.evolve(a.uid,a.to,now);
+    if(a.kind==='daycare-start')result=nursery.start(this,a.parents,now);
+    if(a.kind==='daycare-withdraw')result=nursery.withdraw(this,now);
+    if(a.kind==='abandon')result=this.abandon(now);
+    if(a.kind==='johto-stay')result=this.stayInKanto(now);
+    if(a.kind==='johto-unlock')result=this.unlockJohto(now);
+    if(result&&['select','slot'].includes(a.kind))this.log(this.actionName(a)+' 완료','switch',this.data.owned[a.uid].id,now);
+    return result;
+  }
+  requestAction(kind,value,now=Date.now()){
+    const payload=actionPayload(kind,value);if(!payload)return false;
+    const a={kind,...payload,queuedAt:now};
+    if(kind==='evolve')a.from=this.data.owned[a.uid]?.id;
+    const status=this.actionStatus(a,now);if(status.state==='invalid')return false;
+    const sameIntent=q=>q.kind===kind&&(kind==='evolve'?q.uid===a.uid:kind==='slot'?q.slot===a.slot:true)||kind.startsWith('johto-')&&q.kind.startsWith('johto-');
+    const existing=this.data.pendingActions.find(sameIntent);
+    if(existing&&existing.uid===a.uid&&existing.to===a.to&&existing.from===a.from&&existing.slot===a.slot&&JSON.stringify(existing.parents)===JSON.stringify(a.parents))return true;
+    if(!existing&&this.data.pendingActions.length>=32&&status.state!=='done')return false;
+    if(existing)this.cancelAction(existing.id,now,'새 선택으로 변경');
+    if(status.state==='done')return true;
+    a.id=++this.data.actionSerial;
+    if(status.state==='ready'&&!this.data.pendingActions.length&&this.executeAction(a,now))return true;
+    this.data.pendingActions.push(a);
+    this.log(this.actionName(a)+' 예약','info',null,now);return true;
+  }
+  cancelAction(id,now=Date.now(),reason='예약 취소'){
+    const i=this.data.pendingActions.findIndex(a=>a.id===Number(id));if(i<0)return false;
+    const [a]=this.data.pendingActions.splice(i,1);this.log(this.actionName(a)+' · '+reason,'info',null,now);return true;
+  }
+  processActions(now){
+    for(const a of [...this.data.pendingActions]){
+      const status=this.actionStatus(a,now);
+      if(status.state==='waiting')continue;
+      if(status.state==='invalid'){this.cancelAction(a.id,now,status.reason);return true;}
+      if(status.state==='done'||this.executeAction(a,now)){
+        this.data.pendingActions=this.data.pendingActions.filter(q=>q.id!==a.id);return true;
+      }
+    }
+    return false;
+  }
+  pendingActions(now=Date.now()){
+    return this.data.pendingActions.map(a=>({...a,name:this.actionName(a),...this.actionStatus(a,now)}));
+  }
   addPokemon(id,level,origin,now=Date.now(),register=true){
     if(!species.has(id)||species.get(id).generation>this.maxGeneration())return false;
     let uid=id;if(this.data.owned[uid]){while(this.data.owned[this.data.nextUid])this.data.nextUid++;uid=this.data.nextUid++;}
@@ -202,6 +317,7 @@ class Game {
     if(this.data.activeId===uid)this.animate('switch',{from,to,fromPokemon,toPokemon:this.snapshot(now).hero,text:species.get(to).name+'로 진화했다!'},now);return true;
   }
   newWild(now){
+    this.data.manualSelection=false;
     this.data.pendingBattle=null;
     this.data.captureAnimation=null;
     const hero=this.data.owned[this.data.activeId],id=pickWild(this.maxGeneration(),this.random,hero.level,{champion:this.data.champion,caught:this.data.caught,minimumLevel:this.encounterBonus()?.minimumLevel||0}),p=species.get(id);
@@ -234,6 +350,7 @@ class Game {
   startChallenge(index,now){
     if(!this.canChallenge(index)||this.data.battle||this.data.pendingBattle||now<this.data.switchUntil)return false;
     this.data.pendingChallenge=null;
+    this.data.manualSelection=false;
     this.data.captureAnimation=null;
     this.data.suspendedWild=null;
     const party=Object.fromEntries(this.data.slots.filter(id=>!this.isBoarded(id)).map(id=>{const p=this.data.owned[id];return [id,this.memberCombatant(p)];}));
@@ -333,6 +450,8 @@ class Game {
       if(this.data.pendingBattle.kind==='replace'){this.data.pendingBattle=null;this.handleFaint(now);return true;}
       return this.finishBattleEvent(now);
     }
+    if(b&&(b.party[this.data.activeId]?.hp<=0||b.foe.hp<=0)){this.showFaint(now);return true;}
+    if(this.processActions(now))return true;
     if(!b&&this.data.pendingChallenge){
       const index=this.data.pendingChallenge.index;
       if(this.startChallenge(index,now))return true;
@@ -340,8 +459,7 @@ class Game {
     }
     // Rotation is free and waits until the previous battle's result has been shown.
     // The next wild encounter is then scaled to the newly selected partner.
-    if(!b&&this.switchToLowest('balance',now))return true;
-    if(b&&(b.party[this.data.activeId]?.hp<=0||b.foe.hp<=0)){this.showFaint(now);return true;}
+    if(!b&&!this.data.manualSelection&&this.switchToLowest('balance',now))return true;
     if(b?.kind!=='trainer'){
       if(this.data.workTokens<balance.tokensPerAction)return false;this.data.workTokens-=balance.tokensPerAction;
       if(!b){this.newWild(now);return true;}
@@ -384,7 +502,7 @@ class Game {
     const uncertain=[...this.sessions.values()].some(s=>s.phase==='working'&&now-s.at>=600000);
     const phase=active.length?'working':uncertain?'unknown':recent&&now-recent.at<16000?recent.phase:'idle',available=[this.limits.primary,this.limits.secondary].filter(Boolean);
     const limits=[300,10080].map(minutes=>{const l=available.find(x=>x.minutes===minutes),fresh=l&&l.resetsAt*1000>now;return {label:minutes===300?'5시간':'주간',left:fresh?Math.round(100-l.used):null,resetsAt:fresh?l.resetsAt:null};});
-    return {experienceBoost:this.experienceBoost(),version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,...healthView(hero||{hp:maxHp,maxHp}),status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,...healthView(b.foe),status:b.foe.status}:null,slots:this.data.slots.map(uid=>({...view(this.data.owned[uid].id),uid,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0})),battle:b?{kind:b.kind,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?db.bosses[b.bossIndex].name:null,foeIndex:b.foeIndex,teamSize:b.kind==='trainer'?db.bosses[b.bossIndex].team.length:null}:null,pendingChallenge:this.data.pendingChallenge?{...this.data.pendingChallenge,name:this.challengeName(this.data.pendingChallenge.index)}:null,animation:this.data.animation,capture:this.data.captureAnimation||null,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
+    return {pendingActions:this.pendingActions(now),experienceBoost:this.experienceBoost(),version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,...healthView(hero||{hp:maxHp,maxHp}),status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,...healthView(b.foe),status:b.foe.status}:null,slots:this.data.slots.map(uid=>({...view(this.data.owned[uid].id),uid,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0})),battle:b?{kind:b.kind,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?db.bosses[b.bossIndex].name:null,foeIndex:b.foeIndex,teamSize:b.kind==='trainer'?db.bosses[b.bossIndex].team.length:null}:null,pendingChallenge:this.data.pendingChallenge?{...this.data.pendingChallenge,name:this.challengeName(this.data.pendingChallenge.index)}:null,animation:this.data.animation,capture:this.data.captureAnimation||null,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
   }
   panelState(now=Date.now()){
     const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,level:p.level,xp:p.xp,gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:p.moves.map(id=>({id,name:moves.get(id).name,type:moves.get(id).type})),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));

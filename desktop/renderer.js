@@ -172,9 +172,9 @@ function renderPartyStatus(s){
   s.slots.forEach((p,i)=>{
     const b=$('party').children[i];if(!b)return;
     const fainted=p.fainted&&!(p.selected&&playingMove?.heroBefore&&moveHealth('hero',playingMove.hero||s.hero).currentHp>0);
-    b.dataset.id=p.uid;b.disabled=p.boarded||fainted;b.title=p.name+' Lv.'+p.level+(p.boarded?' · 키우미집':fainted?' · 기절':' · 클릭하여 출전');
+    const queued=s.pendingActions.some(a=>a.kind==='select'&&a.uid===p.uid);b.classList.toggle('queued',queued);b.dataset.id=p.uid;b.disabled=queued;b.title=p.name+' Lv.'+p.level+(queued?' · 출전 예약됨':p.boarded?' · 키우미집에서 데려온 뒤 출전 예약':fainted?' · 배틀 종료 후 회복·출전 예약':' · 클릭하여 출전');
     b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed',String(p.selected));b.classList.toggle('fainted',fainted);
-    const img=b.firstChild;if(img.getAttribute('src')!=='assets/'+p.id+'.gif')img.src='assets/'+p.id+'.gif';b.lastChild.textContent=p.boarded?'맡김':fainted?'기절':'Lv.'+p.level;
+    const img=b.firstChild;if(img.getAttribute('src')!=='assets/'+p.id+'.gif')img.src='assets/'+p.id+'.gif';b.lastChild.textContent=queued?'예약':p.boarded?'맡김':fainted?'기절':'Lv.'+p.level;
   });
 }
 window.buddy.onState(s=>{
@@ -186,7 +186,7 @@ window.buddy.onState(s=>{
   $('xp-bar').style.width=s.progress*100+'%';$('evolution').textContent=s.evolution.some(e=>e.ready)?'진화 가능 · 도감에서 확인':'';
   const boost=s.experienceBoost,pct=boost.percent.toLocaleString('ko-KR',{maximumFractionDigits:2});
   $('xp-boost').textContent='BOOST +'+pct+'%';$('xp-boost').title='도감 경험치 부스터 · 1세대 '+boost.count+' / '+boost.total+' 등록 · 기본 경험치의 '+pct+'% 추가';
-  $('status').textContent=s.notice||(s.pendingChallenge?s.pendingChallenge.name+' 도전 예약 · 배틀 종료 후 시작':s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.phase==='working'?'Codex 작업과 함께 모험 중':s.workTokens>=250?'작업의 여운으로 모험을 이어가는 중':s.phase==='unknown'?'Codex 작업 상태를 확인하는 중':s.phase==='done'?'작업 끝! 모험 기록을 확인해 봐':'다음 코딩을 기다리는 중');
+  $('status').textContent=s.notice||(s.pendingActions.length?'행동 '+s.pendingActions.length+'개 예약 · '+s.pendingActions[0].name:s.pendingChallenge?s.pendingChallenge.name+' 도전 예약 · 배틀 종료 후 시작':s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.phase==='working'?'Codex 작업과 함께 모험 중':s.workTokens>=250?'작업의 여운으로 모험을 이어가는 중':s.phase==='unknown'?'Codex 작업 상태를 확인하는 중':s.phase==='done'?'작업 끝! 모험 기록을 확인해 봐':'다음 코딩을 기다리는 중');
   $('mode-tag').textContent=s.demo?'DEMO':'LIVE';
   $('connection-label').textContent=s.demo?'미리보기':s.source.connected?'Codex 연결됨':'Codex 기다리는 중';
   $('connection-label').parentElement.classList.toggle('live',s.source.connected&&!s.demo);$('connection-label').title=s.demo?'미리보기 · 경험치 별도':s.source.error||'로컬 작업 상태만 읽어요';

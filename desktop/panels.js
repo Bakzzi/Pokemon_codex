@@ -25,7 +25,7 @@ function renderDex(){
   const members=state.roster.filter(m=>m.id===p.id);
   if(!members.some(m=>m.uid===memberUid))memberUid=members[0]?.uid;
   const member=members.find(m=>m.uid===memberUid);
-  const detailKey=JSON.stringify([p,members,memberUid,state.slots,state.battle?.kind,state.hero.uid]);
+  const detailKey=JSON.stringify([p,members,memberUid,state.slots,state.battle?.kind,state.hero.uid,state.pendingActions]);
   if(detailKey===detailSignature)return;detailSignature=detailKey;
   const root=$('detail');root.replaceChildren(img(p.id,'portrait'+(p.seen?'':' unseen')),node('div','number','No.'+p.id+' · '+(p.caught?'포획 완료':p.seen?'발견':'미발견')),node('h2','',p.name),node('div','types',p.types.join(' / ')),node('p','description',p.description));
   if(!p.owned){
@@ -38,14 +38,16 @@ function renderDex(){
     select.onchange=()=>{memberUid=Number(select.value);detailSignature='';render();};root.append(select);
   }
   root.append(node('p','muted','Lv.'+member.level+gender(member.gender)+' · 누적 경험치 '+member.xp.toLocaleString('ko-KR')+(member.boarded?' · 키우미집에 맡긴 동료':'')));
-  const deploy=node('button','deploy',member.boarded?'키우미집에서 쉬는 중':state.hero.uid===member.uid?'현재 출전 중':'이 포켓몬 출전');deploy.disabled=member.boarded||state.hero.uid===member.uid;deploy.onclick=()=>window.buddy.action('select',member.uid);root.append(deploy);
+  const queuedSelect=state.pendingActions.some(a=>a.kind==='select'&&a.uid===member.uid);
+  const deploy=node('button','deploy',queuedSelect?'출전 예약됨':state.hero.uid===member.uid?'현재 출전 중':member.boarded?'데려온 뒤 출전 예약':'이 포켓몬 출전');deploy.disabled=queuedSelect||state.hero.uid===member.uid;deploy.onclick=()=>window.buddy.action('select',member.uid);root.append(deploy);
   root.append(node('h3','','빠른 선택 칸에 배치'));
-  const assign=node('div','assign');state.slots.forEach((s,i)=>{const b=node('button');b.dataset.assign=i;b.title=(i+1)+'번 칸 · '+s.name;b.disabled=member.boarded||state.battle?.kind==='trainer';b.append(img(s.id),document.createTextNode((i+1)+'번'));b.onclick=()=>window.buddy.action('slot',{slot:i,id:member.uid});assign.append(b);});root.append(assign);
+  const assign=node('div','assign');state.slots.forEach((s,i)=>{const queued=state.pendingActions.some(a=>a.kind==='slot'&&a.slot===i&&a.uid===member.uid),b=node('button');b.dataset.assign=i;b.title=(i+1)+'번 칸 · '+s.name+(queued?' · 배치 예약됨':' · 배틀 중에는 종료 후 배치');b.disabled=queued||s.uid===member.uid;b.append(img(s.id),document.createTextNode((i+1)+'번'+(queued?' · 예약':'')));b.onclick=()=>window.buddy.action('slot',{slot:i,id:member.uid});assign.append(b);});root.append(assign);
   root.append(node('p','muted','특성 · '+member.ability));
   root.append(node('h3','','배운 기술 '+member.moves.length+'개 · 자동 사용'));const list=node('ul','move-list');for(const m of member.moves||[])list.append(node('li','',m.name));root.append(list);
   for(const e of member.evolutions){
-    const box=node('div','evolution'),b=node('button','',(e.trigger===2?'교환소 · ':'')+e.name+'로 진화');
-    b.disabled=!e.ready||state.battle?.kind==='trainer';b.onclick=()=>window.buddy.action('evolve',{id:member.uid,to:e.to});box.append(b,node('p','',e.conditions||'진화 조건 충족'));
+    const queued=state.pendingActions.some(a=>a.kind==='evolve'&&a.uid===member.uid&&a.to===e.to);
+    const box=node('div','evolution'),b=node('button','',(e.trigger===2?'교환소 · ':'')+e.name+(queued?' 진화 예약됨':e.ready?'로 진화':' 진화 예약'));
+    b.dataset.evolve=e.to;b.disabled=queued;b.onclick=()=>window.buddy.action('evolve',{id:member.uid,to:e.to});box.append(b,node('p','',e.conditions||'진화 조건 충족'),node('p','',queued?'예약 목록에서 취소할 수 있어요.':!e.ready?'조건을 충족하고 배틀이 끝나면 자동으로 진화해요.':state.battle?'현재 배틀이 끝나면 진화해요.':'진행 중인 연출이 있으면 끝난 뒤 진화해요.'));
     if(e.trigger===2)box.append(node('p','','혼자 즐기는 교환소에서 교환 후 되돌려 받아요.'));
     root.append(box);
   }
@@ -129,7 +131,17 @@ function render(){
   if(!state)return;$('totals').textContent=state.caughtCount+' / '+state.collection.length;$('region').textContent=state.generation===1?'관동 지방 · 1세대':'관동 + 성도 지방 · 2세대 해금';
   const boost=state.experienceBoost;$('xp-boost').textContent='경험치 +'+boost.percent.toLocaleString('ko-KR',{maximumFractionDigits:2})+'%';$('xp-boost').title='1세대 도감 '+boost.count+' / '+boost.total+' 등록';
   $('seen-count').textContent='발견 '+state.seenCount+' · 동료 '+state.roster.length;$('notice').textContent=state.notice||'';
+  renderActions();
   if(tab==='collection')renderDex();else if(tab==='challenge')renderBosses();else if(tab==='daycare')renderNursery();else renderJournal();
+}
+let actionSignature='';
+function renderActions(){
+  const actions=state.pendingActions,signature=JSON.stringify(actions);if(signature===actionSignature)return;actionSignature=signature;
+  $('action-queue').hidden=!actions.length;$('action-queue-title').textContent='예약한 행동 · '+actions.length+'개';
+  $('action-queue-list').replaceChildren(...actions.map(a=>{
+    const row=node('div','queued-action'),body=node('div');body.append(node('b','',a.name),node('small','',a.reason));
+    const cancel=node('button','','취소');cancel.dataset.cancelAction=a.id;cancel.setAttribute('aria-label',a.name+' 예약 취소');cancel.onclick=()=>window.buddy.action('action-cancel',a.id);row.append(body,cancel);return row;
+  }));
 }
 
 function gender(value){return value==='female'?' ♀':value==='male'?' ♂':' · 무성';}
@@ -158,9 +170,10 @@ function renderNursery(){
     const row=node('div','offspring');for(const p of preview.offspring){const card=node('div');card.append(img(p.id),node('h3','',p.name+'의 알'),node('span','muted',preview.offspring.length>1?Math.round(p.chance*100)+'%':'이 포켓몬이 태어나요'));row.append(card);}root.append(row);
     root.append(node('p','muted','알 발견까지 '+preview.eggTokens.toLocaleString('ko-KR')+'걸음 · 부화까지 '+preview.offspring[0].hatchTokens.toLocaleString('ko-KR')+'걸음'));
   }else root.append(node('p','',preview.reason));
-  const waiting=!!d.care&&!d.care.produced,busy=state.battle?.kind==='trainer';
-  $('daycare-start').disabled=!preview.compatible||waiting||!!d.egg||busy;
-  $('daycare-start').textContent=waiting?'알을 기다리는 중':d.egg?'현재 알이 부화하는 중':d.care?.produced?'다음 알 기다리기':'두 마리 맡기기';
+  const waiting=!!d.care&&!d.care.produced,queued=state.pendingActions.some(a=>a.kind==='daycare-start'&&a.parents.every((uid,i)=>uid===d.selection[i])),withdrawQueued=state.pendingActions.some(a=>a.kind==='daycare-withdraw');
+  $('daycare-start').disabled=!preview.compatible||queued;
+  $('daycare-start').textContent=queued?'맡기기 예약됨':waiting||d.egg?'다음 알 예약':d.care?.produced?'다음 알 기다리기':'두 마리 맡기기';
+  $('daycare-withdraw').disabled=withdrawQueued;$('daycare-withdraw').textContent=withdrawQueued?'데려오기 예약됨':'동료 데려오기';
   $('daycare-withdraw').hidden=!d.care;
   $('nursery-progress').replaceChildren();
   if(d.care){

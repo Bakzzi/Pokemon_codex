@@ -72,19 +72,13 @@ async function start(){
         win.setPosition(Math.max(a.x,Math.min(b.x,a.x+a.width-b.width)),Math.max(a.y,Math.min(b.y,a.y+a.height-b.height)));
       }
       if(action==='panel'){openPanel(['collection','challenge','journal','daycare'].includes(value)?value:'collection').catch(console.error);}
-      if(action==='select')result=game.select(value);
-      if(action==='slot')result=game.setSlot(value?.slot,value?.id);
-      if(action==='evolve')result=game.evolve(value?.id,value?.to);
+      if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock'].includes(action))result=game.requestAction(action,value);
+      if(action==='action-cancel')result=game.cancelAction(value);
       if(action==='challenge')result=game.challenge(value);
       if(action==='challenge-cancel')result=game.cancelChallenge();
-      if(action==='abandon')result=game.abandon();
-      if(action==='johto-stay')result=game.stayInKanto();
-      if(action==='johto-unlock')result=game.unlockJohto();
       if(action==='journal-ack')result=game.acknowledgeJournal();
       if(action==='daycare-preview')game.daycareSelection=Array.isArray(value)?value.slice(0,2).map(Number):[];
-      if(action==='daycare-start')result=nursery.start(game,value);
-      if(action==='daycare-withdraw')result=nursery.withdraw(game);
-      if(!result)notice='지금은 실행할 수 없어요. 교체 연출이나 도전 조건을 확인해 주세요.';
+      if(!result)notice='이 선택은 예약할 수 없어요. 동료·진화 경로·도전 조건을 확인해 주세요.';
       save();publish(true);
     }catch(error){console.error(error);notice='진행을 저장하지 못했어요. 저장 폴더를 확인해 주세요.';publish(true);}
   });
