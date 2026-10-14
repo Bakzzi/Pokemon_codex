@@ -34,7 +34,7 @@ function encounterChances(champion=false,minimumLevel=0){
 }
 function milestoneBonuses({badges=[],champion=false,caught={}}={}){
   const gymBonuses={144:'blaine',145:'sabrina',146:'giovanni'},completed=data.pokemon.filter(p=>p.generation===1&&p.id!==151).every(p=>!!caught[p.id]);
-  return [144,145,146,150,151].map(id=>({id,extra:id===151?(completed?.01:0):(badges.includes(gymBonuses[id])?.01:0)+(champion?.03:0)})).filter(b=>b.extra>0);
+  return [144,145,146,150,151].map(id=>({id,extra:id===151?(completed ? .01 : 0):caught[id]?0:(badges.includes(gymBonuses[id]) ? .001 : 0)+(champion ? .003 : 0)})).filter(b=>b.extra>0);
 }
 function wildDistribution(maxGeneration,partnerLevel,{champion=false,caught={},minimumLevel=0,additions=[]}={}){
   const all=data.pokemon.filter(p=>p.id!==143&&p.generation<=maxGeneration&&wildMinimum(p)<=partnerLevel),baseRates=encounterChances(champion,minimumLevel),common=all.filter(p=>rarity(p)==='common');

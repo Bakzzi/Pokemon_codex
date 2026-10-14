@@ -91,6 +91,6 @@ test('champion sampling still enforces generation and level eligibility, and all
 
 test('Game applies champion bonuses to encounters before choosing to unlock Johto',()=>{
   const g=champion();g.data.owned[25].level=100;g.data.owned[25].xp=xpAt(25,100);
-  let draw=0;g.random=()=>draw++===0?.1:.5;g.newWild(now);assert.equal(rarity(species.get(g.data.battle.foe.id)),'legendary');assert.equal(g.maxGeneration(),1);
+  let draw=0;g.random=()=>draw++===0?.1:.5;g.newWild(now);assert.equal(rarity(species.get(g.data.battle.foe.id)),'rare');assert.equal(g.maxGeneration(),1);
   g.data.champion=false;draw=0;g.newWild(now);assert.equal(rarity(species.get(g.data.battle.foe.id)),'uncommon');
 });
