@@ -249,6 +249,13 @@ class Game {
   finishBattleEvent(now){
     const pending=this.data.pendingBattle;this.data.pendingBattle=null;
     const b=this.data.battle;if(!b)return false;
+    if(pending.kind==='story-next'){
+      const next=training.nextRocket(this);if(!b.rocketChain||!next)return false;
+      if(b.party[this.data.activeId]?.hp<=0){
+        this.handleFaint(now);if(this.data.battle===b)this.deferBattle('story-next',this.data.switchUntil);return true;
+      }
+      b.bossIndex=next;b.storyId=next;b.foeIndex=0;this.nextTrainer(now);this.log(this.challengeName(next)+' 도전 시작','challenge',null,now);return true;
+    }
     if(pending.kind==='capture'){this.capture(now);return true;}
     if(pending.kind==='capture-result')return this.finishCapture(pending,now);
     if(pending.kind==='after-action'){this.showFaint(now);return true;}
@@ -262,7 +269,7 @@ class Game {
     if(b.foe.hp<=0){
       this.defeatOpponent(now);if(this.data.battle!==b)return true;
       if(b.simBoss!==b.bossIndex)battleEngine.invalidate(b);
-      if(hero.hp<=0)this.deferBattle('replace',this.data.switchUntil);
+      if(hero.hp<=0&&this.data.pendingBattle?.kind!=='story-next')this.deferBattle('replace',this.data.switchUntil);
     }else if(hero.hp<=0)this.handleFaint(now);
     return true;
   }
@@ -354,7 +361,7 @@ class Game {
   challengeName(index){return training.battles[index]?.name||(index===8?'포켓몬 리그':db.bosses[index].name+' 체육관');}
   challenge(index,now=Date.now()){
     index=training.battles[index]?index:Number(index);
-    if(!this.canChallenge(index)||this.data.battle?.kind==='trainer')return false;
+    if(!this.canChallenge(index)||this.data.battle?.kind==='trainer'||this.data.battle?.storyId===index)return false;
     if(this.data.pendingChallenge)return this.data.pendingChallenge.index===index;
     if(this.data.battle||this.data.pendingBattle||now<this.data.switchUntil||now<this.nextTick){
       this.data.pendingChallenge={index,queuedAt:now};
@@ -374,14 +381,15 @@ class Game {
     this.data.captureAnimation=null;
     this.data.suspendedWild=null;
     const party=Object.fromEntries(this.data.slots.filter(id=>!this.isBoarded(id)).map(id=>{const p=this.data.owned[id];return [id,this.memberCombatant(p)];}));
-    this.data.battle={kind:'trainer',bossIndex:index,storyId:training.battles[index]?index:null,foeIndex:0,party,turn:0,captureAttempts:0,startedAt:now};
+    const snorlax=index==='road-snorlax';
+    this.data.battle={kind:snorlax?'wild':'trainer',bossIndex:index,storyId:training.battles[index]?index:null,rocketChain:training.rocketOrder.includes(index),foeIndex:0,party,turn:0,captureAttempts:0,...(snorlax?{captureByHealth:{yellow:0,red:0}}:{}),startedAt:now};
     this.nextTrainer(now);
     this.log(this.challengeName(index)+' 도전 시작','challenge',null,now);return true;
   }
   nextTrainer(now){
     const b=this.data.battle,boss=this.battleBoss(b),enemy=boss.team[b.foeIndex];
     b.foe=combatant(enemy.id,enemy.level,enemy.moves);b.turn=0;
-    this.data.seen[enemy.id]=this.data.seen[enemy.id]||now;this.animate('encounter',{id:enemy.id,text:b.storyId==='road-snorlax'?'길을 막는 잠만보 Lv.30 등장!':`${boss.name}의 ${species.get(enemy.id).name}!`},now);
+    this.data.seen[enemy.id]=this.data.seen[enemy.id]||now;this.animate('encounter',{id:enemy.id,text:b.storyId==='road-snorlax'?'포켓몬피리를 불었다! 잠만보 Lv.30이 깨어났다!':`${boss.name}의 ${species.get(enemy.id).name}!`},now);
   }
   abandon(now=Date.now()){
     if(this.data.battle?.kind!=='trainer')return false;
@@ -419,6 +427,7 @@ class Game {
   defeatOpponent(now,captured=false){
     const b=this.data.battle,foe=b.foe;this.awardXp(foe,b.kind==='trainer'&&this.battleBoss(b)?.xpTrainer!==false,now);this.data.battles++;journal.increment(this.data,'wins');
     if(b.kind==='wild'){
+      if(b.storyId==='road-snorlax')training.win(this,b.storyId,now,captured);
       if(!captured)this.log(`${species.get(foe.id).name}와의 배틀 승리`,'win',foe.id,now);
       if(this.random()<0.015){
         const candidates=[...new Set(db.pokemon.filter(p=>p.generation<=this.maxGeneration()).flatMap(p=>p.evolutions.filter(e=>species.get(e.to)?.generation<=this.maxGeneration()).map(e=>e.item)).filter(Boolean))];
@@ -428,7 +437,16 @@ class Game {
     }
     b.foeIndex++;
     if(b.foeIndex<this.battleBoss(b).team.length){this.nextTrainer(now);return;}
-    if(b.storyId){training.win(this,b.storyId,now);this.endChallenge(true,now);return;}
+    if(b.storyId){
+      training.win(this,b.storyId,now);
+      const next=b.rocketChain&&training.nextRocket(this);
+      if(next){
+        this.animate('result',{text:this.battleBoss(b).name+'에게 승리! 다음은 '+training.battles[next].name+'!'},now);
+        this.deferBattle('story-next',this.data.switchUntil);return;
+      }
+      const flute=training.awardFlute(this,now);this.endChallenge(true,now);
+      if(flute)this.data.animation.text='로켓단을 물리쳤다! 포켓몬피리 획득!';return;
+    }
     const boss=this.battleBoss(b);this.log(`${boss.name}에게 승리!${boss.badge?' '+boss.badge+' 획득':''}`,'badge',null,now);
     if(b.bossIndex<8){if(!this.data.badges.includes(boss.id))this.data.badges.push(boss.id);this.endChallenge(true,now);}
     else if(b.bossIndex<12){this.data.leagueBest=Math.max(this.data.leagueBest,b.bossIndex-7);b.bossIndex++;b.foeIndex=0;this.nextTrainer(now);}
@@ -533,7 +551,7 @@ class Game {
     const uncertain=[...this.sessions.values()].some(s=>s.phase==='working'&&now-s.at>=600000);
     const phase=active.length?'working':uncertain?'unknown':recent&&now-recent.at<16000?recent.phase:'idle',available=[this.limits.primary,this.limits.secondary].filter(Boolean);
     const limits=[300,10080].map(minutes=>{const l=available.find(x=>x.minutes===minutes),fresh=l&&l.resetsAt*1000>now;return {label:minutes===300?'5시간':'주간',left:fresh?Math.round(100-l.used):null,resetsAt:fresh?l.resetsAt:null};});
-    return {trainingDevice:training.snapshot(this),pendingActions:this.pendingActions(now),experienceBoost:this.experienceBoost(),version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,...healthView(hero||{hp:maxHp,maxHp}),status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,...healthView(b.foe),status:b.foe.status}:null,slots:this.data.slots.map(uid=>({...view(this.data.owned[uid].id),uid,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0})),battle:b?{kind:b.kind,storyId:b.storyId||null,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?this.battleBoss(b).name:null,foeIndex:b.foeIndex,teamSize:b.kind==='trainer'?this.battleBoss(b).team.length:null}:null,pendingChallenge:this.data.pendingChallenge?{...this.data.pendingChallenge,name:this.challengeName(this.data.pendingChallenge.index)}:null,animation:this.data.animation,capture:this.data.captureAnimation||null,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
+    return {trainingDevice:training.snapshot(this),pendingActions:this.pendingActions(now),experienceBoost:this.experienceBoost(),version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,...healthView(hero||{hp:maxHp,maxHp}),status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,...healthView(b.foe),status:b.foe.status}:null,slots:this.data.slots.map(uid=>({...view(this.data.owned[uid].id),uid,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0})),battle:b?{kind:b.kind,storyId:b.storyId||null,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?this.battleBoss(b).name:null,foeIndex:b.kind==='trainer'?Math.min(b.foeIndex,this.battleBoss(b).team.length-1):b.foeIndex,teamSize:b.kind==='trainer'?this.battleBoss(b).team.length:null}:null,pendingChallenge:this.data.pendingChallenge?{...this.data.pendingChallenge,name:this.challengeName(this.data.pendingChallenge.index)}:null,animation:this.data.animation,capture:this.data.captureAnimation||null,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
   }
   panelState(now=Date.now()){
     const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,level:p.level,xp:p.xp,gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:p.moves.map(id=>({id,name:moves.get(id).name,type:moves.get(id).type})),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
@@ -541,7 +559,7 @@ class Game {
       kantoCaughtCount:this.kantoCaughtCount(),
       encounterBonus:this.encounterBonus(),
       collection:db.pokemon.filter(p=>p.generation<=this.maxGeneration()).map(p=>{const owned=roster.filter(m=>m.id===p.id);return {id:p.id,seen:!!this.data.seen[p.id],caught:!!this.data.caught[p.id],name:this.data.seen[p.id]?p.name:'???',owned:owned.length>0,count:owned.length,level:owned.length?Math.max(...owned.map(m=>m.level)):null,types:this.data.seen[p.id]?view(p.id).types:[],description:this.data.seen[p.id]?p.description:'아직 만나지 않은 포켓몬',rarity:rarity(p)};}),
-      bosses:db.bosses,leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:[...(training.has(this)?[{id:'training-device',name:'학습장치',count:1}]:[]),...Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name,count}))]};
+      bosses:db.bosses,leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:[...(this.data.trainingDevice.fluteObtainedAt?[{id:'poke-flute',name:'포켓몬피리',count:1}]:[]),...(training.has(this)?[{id:'training-device',name:'학습장치',count:1}]:[]),...Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name,count}))]};
   }
 }
 module.exports={Game,STARTERS};

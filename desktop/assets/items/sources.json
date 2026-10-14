@@ -6,5 +6,13 @@
     "sha256": "ac97eb2671b39bc40ff305d647a9711dbd7ded69d0f951bf1396e8fe1a438d6d",
     "width": 30,
     "height": 30
+  },
+  {
+    "name": "Poke Flute",
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-flute.png",
+    "bytes": 319,
+    "sha256": "cf3111c243aa41c4ce5324bebf1ecf43a01d4e4f06bf1c0d53e9e4dc69462957",
+    "width": 30,
+    "height": 30
   }
 ]

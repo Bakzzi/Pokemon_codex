@@ -54,7 +54,7 @@ function attach(b,sim){
 }
 function engine(game,b){
   let sim=cache.get(b);
-  const boss=b.kind==='trainer'?b.bossIndex:null;
+  const boss=b.storyId||(b.kind==='trainer'?b.bossIndex:null);
   if(sim&&b.simBoss===boss)return sim;
   if(b.sim&&b.simBoss===boss)return attach(b,Battle.fromJSON(b.sim));
   const active=game.data.activeId,keys=Object.keys(b.party).map(Number).sort((a,c)=>Number(c===active)-Number(a===active));

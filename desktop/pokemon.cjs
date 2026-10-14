@@ -33,7 +33,7 @@ function encounterChances(champion=false,minimumLevel=0){
   return {mythical,legendary,rare,uncommon,common:1-mythical-legendary-rare-uncommon};
 }
 function pickWild(maxGeneration,random=Math.random,partnerLevel=100,{champion=false,caught={},minimumLevel=0}={}){
-  const all=data.pokemon.filter(p=>p.generation<=maxGeneration&&wildMinimum(p)<=partnerLevel);
+  const all=data.pokemon.filter(p=>p.id!==143&&p.generation<=maxGeneration&&wildMinimum(p)<=partnerLevel);
   const rates=encounterChances(champion,minimumLevel),roll=random();
   const tier=roll<rates.mythical?'mythical':roll<rates.mythical+rates.legendary?'legendary':roll<rates.mythical+rates.legendary+rates.rare?'rare':roll<rates.mythical+rates.legendary+rates.rare+rates.uncommon?'uncommon':'common';
   const preferred=all.filter(p=>rarity(p)===tier),pool=preferred.length?preferred:all.filter(p=>rarity(p)==='common');

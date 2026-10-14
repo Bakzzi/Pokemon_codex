@@ -112,11 +112,17 @@ function renderBosses(){
 function renderDevice(){
   if(!state)return;const d=state.trainingDevice,busy=state.battle?.kind==='trainer',queued=state.pendingChallenge;
   $('device-title').textContent=d.obtained?'오박사의 학습장치':'오박사의 도감 의뢰';
-  $('device-note').textContent=d.obtained?'장치에 한 마리를 등록하면 경험치 학습과 교환 진화를 이용할 수 있어요.':d.canClaim?'오박사: 도감이 훌륭하게 채워졌구나! 15번도로의 내 조수에게 학습장치를 받아 가거라.':'민화에게 승리한 뒤 로켓단 비주기를 물리치고, 포켓몬피리로 길을 막는 잠만보를 깨워 배틀해요. 관동 도감 50종도 등록하면 오박사의 조수가 학습장치를 건네요.';
+  $('device-note').textContent=d.obtained?'장치에 한 마리를 등록하면 경험치 학습과 교환 진화를 이용할 수 있어요.':d.canClaim?'오박사: 도감이 훌륭하게 채워졌구나! 15번도로의 내 조수에게 학습장치를 받아 가거라.':'민화 뱃지를 얻으면 로켓단이 해금돼요. 조무래기 → 로이·로사 → 비주기, 3단계를 물리쳐 포켓몬피리를 받고 잠만보를 깨워요. 잠만보에게 승리하거나 포획하고 관동 도감 50종을 등록하면 학습장치를 받을 수 있어요.';
   $('device-requirements').replaceChildren(...d.requirements.map(r=>node('div','device-requirement'+(r.done?' done':''),(r.done?'완료 · ':'대기 · ')+r.name)));
+  $('flute-title').textContent='포켓몬피리 · '+(d.fluteObtained?'획득 완료':'미획득');
+  $('flute-note').textContent=d.fluteObtained?'잠만보는 피리로만 만날 수 있어요. 사용해도 피리는 남아요.':'로켓단 '+d.rocketCompleted+' / 3단계 완료 · 비주기를 이기면 받아요.';
   $('story-challenges').replaceChildren(...d.steps.map(step=>{
-    const card=node('article','story-challenge');card.append(node('h3','',step.name),teamMembers(step.team));
-    const ongoing=state.battle?.storyId===step.id,reserved=queued?.index===step.id,b=node('button','',step.done?'승리 완료':ongoing?'도전 중':reserved?'도전 예약됨':!step.available?(step.id==='rocket-giovanni'?'민화 뱃지가 필요해요':'로켓단 비주기 승리가 필요해요'):'도전하기');b.dataset.story=step.id;b.disabled=step.done||busy||!!queued||!step.available;b.onclick=()=>window.buddy.action('challenge',step.id);card.append(b);return card;
+    const road=step.id==='road-snorlax',card=node('article','story-challenge');card.append(node('h3','',(step.stage?step.stage+'단계 · ':'')+step.name),teamMembers(step.team));
+    const ongoing=state.battle?.storyId===step.id,reserved=queued?.index===step.id;
+    const label=ongoing?'배틀 중':reserved?(road?'피리 사용 예약됨':'도전 예약됨'):road?step.done&&d.snorlaxCaught?'포획 완료':!d.fluteObtained?'포켓몬피리가 필요해요':step.done?'다시 포켓몬피리 사용':'포켓몬피리 사용':step.done?'승리 완료':!step.available?!state.badges.includes('erika')?'민화 뱃지가 필요해요':'앞선 로켓단 단계를 이겨 주세요':'도전하기';
+    const b=node('button','',label);b.dataset.story=step.id;b.disabled=ongoing||busy||!!queued||!step.available;b.onclick=()=>window.buddy.action('challenge',step.id);card.append(b);
+    if(road){const note=node('p','muted',d.fluteObtained?'피리는 소모되지 않아요. 못 잡았다면 다시 깨울 수 있어요.':'비주기를 이기면 포켓몬피리를 받아요.');card.append(note);}
+    return card;
   }));
   const claimQueued=state.pendingActions.some(a=>a.kind==='device-claim');$('device-claim').hidden=d.obtained;$('device-claim').disabled=claimQueued;
   $('device-claim').textContent=claimQueued?'학습장치 수령 예약됨':d.canClaim?'오박사 조수에게 학습장치 받기':'조건 달성 후 학습장치 받기 예약';

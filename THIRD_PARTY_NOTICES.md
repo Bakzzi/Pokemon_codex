@@ -18,7 +18,7 @@ Original Crystal animated sprites, national numbers 1–251; only 1–151 are av
 Per-file URLs, byte counts and SHA-256 hashes are in desktop/assets/manifest.json.
 The reference directory also preserves original Generation III assets and offline source tables.
 
-The Exp. Share item sprite is downloaded unchanged from https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/exp-share.png. Its URL, byte count and SHA-256 hash are recorded in desktop/assets/items/sources.json. Runtime uses the local copy.
+The Exp. Share and Poke Flute item sprites are downloaded unchanged from https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/exp-share.png and https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-flute.png. Their URLs, byte counts and SHA-256 hashes are recorded in desktop/assets/items/sources.json. Runtime uses the local copies.
 
 Pokémon names, characters and game artwork belong to their respective rights holders, including Nintendo, Creatures, GAME FREAK and The Pokémon Company. They are separate from the MIT-licensed project source. This is an unofficial noncommercial fan project.
 
@@ -27,7 +27,7 @@ Pokémon names, characters and game artwork belong to their respective rights ho
 FRLG trainer party facts:
 https://github.com/pret/pokefirered/blob/master/src/data/trainer_parties.h
 
-The separate Rocket Hideout Giovanni event uses sParty_BossGiovanni (Onix 25, Rhyhorn 24, Kangaskhan 29) from the same source. The route-blocking Snorlax encounter is level 30. Opponents use the extracted FRLG level-up data for their default four moves. The event sequence, no-capture story battle, training-device evolution replacement and extra 10% experience for one registered learner are this project's rules.
+The Rocket grunt uses the FRLG Rocket Hideout Raticate / Zubat level-20 party. The separate Giovanni event uses sParty_BossGiovanni (Onix 25, Rhyhorn 24, Kangaskhan 29) from the same source. Jessie and James use their Yellow Rocket Hideout party (Koffing, Meowth, Ekans, all 25), as recorded at https://www.serebii.net/yellow/Walkthrough/28-game_corner.shtml and https://bulbapedia.bulbagarden.net/wiki/Jessie_and_James . Opponents use extracted FRLG level-up data for their default four moves. The route-blocking Snorlax is level 30 and can be caught with ordinary Gen III capture rules. The three-stage campaign, guaranteed Poke Flute after Giovanni, flute-only Snorlax encounters, training-device evolution replacement and extra 10% experience for one registered learner are this project's rules.
 
 Evolution and breeding references:
 https://github.com/pret/pokefirered/blob/master/src/data/pokemon/evolution.h

@@ -1,32 +1,49 @@
 'use strict';
-// FRLG Rocket Hideout party: pret/pokefirered, sParty_BossGiovanni.
-// These story victories are separate from the Viridian Gym badge and wild captures.
+// FRLG Rocket Hideout grunt / Giovanni parties, plus the Yellow Jessie-James party.
+// Story victories are separate from the Viridian Gym badge.
 const {learnedMoves}=require('./pokemon.cjs');
 const battles=Object.assign(Object.create(null),{
-  'rocket-giovanni':{id:'rocket-giovanni',name:'로켓단 비주기',kind:'story',team:[{id:95,level:25},{id:111,level:24},{id:115,level:29}]},
+  'rocket-grunt':{id:'rocket-grunt',name:'로켓단 조무래기',stage:1,kind:'story',team:[{id:20,level:20},{id:41,level:20}]},
+  'rocket-duo':{id:'rocket-duo',name:'로이·로사',stage:2,kind:'story',team:[{id:109,level:25},{id:52,level:25},{id:23,level:25}]},
+  'rocket-giovanni':{id:'rocket-giovanni',name:'로켓단 비주기',stage:3,kind:'story',team:[{id:95,level:25},{id:111,level:24},{id:115,level:29}]},
   'road-snorlax':{id:'road-snorlax',name:'길을 막는 잠만보',kind:'story',xpTrainer:false,team:[{id:143,level:30}]}
 });
 for(const battle of Object.values(battles))for(const p of battle.team)p.moves=learnedMoves(p.id,p.level).slice(-4);
+const rocketOrder=['rocket-grunt','rocket-duo','rocket-giovanni'];
+const progressKeys={'rocket-grunt':'gruntWonAt','rocket-duo':'duoWonAt','rocket-giovanni':'rocketWonAt','road-snorlax':'snorlaxWonAt'};
 function init(game){
   const saved=game.data.trainingDevice||{},stamp=n=>Number.isSafeInteger(n)&&n>0?n:null;
-  game.data.trainingDevice={rocketWonAt:stamp(saved.rocketWonAt),snorlaxWonAt:stamp(saved.snorlaxWonAt),obtainedAt:stamp(saved.obtainedAt),learnerUid:game.data.owned[saved.learnerUid]?Number(saved.learnerUid):null};
+  const rocket=stamp(saved.rocketWonAt),legacy=saved.storyRevision!==2;
+  const activeLegacy=legacy&&game.data.battle?.storyId==='rocket-giovanni'?stamp(game.data.battle.startedAt):null;
+  game.data.trainingDevice={storyRevision:2,gruntWonAt:stamp(saved.gruntWonAt)||(legacy?rocket||activeLegacy:null),duoWonAt:stamp(saved.duoWonAt)||(legacy?rocket||activeLegacy:null),rocketWonAt:rocket,fluteObtainedAt:stamp(saved.fluteObtainedAt)||(legacy?rocket:null),snorlaxWonAt:stamp(saved.snorlaxWonAt),obtainedAt:stamp(saved.obtainedAt),learnerUid:game.data.owned[saved.learnerUid]?Number(saved.learnerUid):null};
+  if(legacy&&game.data.pendingChallenge?.index==='rocket-giovanni'&&!rocket&&!activeLegacy)game.data.pendingChallenge.index=nextRocket(game);
+  const b=game.data.battle;
+  if(b?.storyId==='road-snorlax'&&b.kind==='trainer'){
+    // Keep the old pending native turn and animation; only enable normal wild capture.
+    b.kind='wild';b.captureByHealth ||= {yellow:0,red:0};
+  }
 }
+function nextRocket(game){return rocketOrder.find(id=>!game.data.trainingDevice[progressKeys[id]])||null;}
 function has(game){return !!game.data.trainingDevice.obtainedAt;}
 function requirements(game){
   const d=game.data.trainingDevice;
-  return [{id:'erika',name:'민화의 무지개배지',done:game.data.badges.includes('erika')},{id:'rocket',name:'로켓단 비주기에게 승리',done:!!d.rocketWonAt},{id:'snorlax',name:'길을 막는 잠만보에게 승리',done:!!d.snorlaxWonAt},{id:'dex',name:'관동 도감 '+game.kantoCaughtCount()+' / 50종 등록',done:game.kantoCaughtCount()>=50}];
+  return [{id:'erika',name:'민화의 무지개배지',done:game.data.badges.includes('erika')},{id:'rocket',name:'로켓단 3단계 승리 · 포켓몬피리 획득',done:!!d.rocketWonAt&&!!d.fluteObtainedAt},{id:'snorlax',name:'피리로 잠만보를 만나 승리 또는 포획',done:!!d.snorlaxWonAt},{id:'dex',name:'관동 도감 '+game.kantoCaughtCount()+' / 50종 등록',done:game.kantoCaughtCount()>=50}];
 }
 function canClaim(game){return !has(game)&&requirements(game).every(r=>r.done);}
 function canChallenge(game,id){
   const d=game.data.trainingDevice;if(!battles[id]||!game.data.badges.includes('erika'))return false;
-  return id==='rocket-giovanni'?!d.rocketWonAt:!!d.rocketWonAt&&!d.snorlaxWonAt;
+  return id==='road-snorlax'?!!d.fluteObtainedAt&&(!d.snorlaxWonAt||!game.data.caught[143]):id===nextRocket(game);
 }
-function win(game,id,now){
-  const key=id==='rocket-giovanni'?'rocketWonAt':id==='road-snorlax'?'snorlaxWonAt':null;
+function win(game,id,now,captured=false){
+  const key=Object.hasOwn(progressKeys,id)?progressKeys[id]:null;
   if(!key||game.data.trainingDevice[key])return false;
   game.data.trainingDevice[key]=now;
-  const text=id==='rocket-giovanni'?'로켓단 비주기에게 승리! 포켓몬피리로 잠만보를 깨울 수 있게 되었다.':'길을 막는 잠만보에게 승리! 15번도로로 가는 길이 열렸다.';
+  const text=id==='rocket-giovanni'?'로켓단 비주기에게 승리! 로켓단 3단계를 모두 물리쳤다.':id==='road-snorlax'?(captured?'피리로 깨운 잠만보를 포획했다!':'피리로 깨운 잠만보에게 승리!')+' 15번도로로 가는 길이 열렸다.':battles[id].name+'에게 승리! 로켓단 '+battles[id].stage+'단계를 돌파했다.';
   game.log(text,'story',id==='road-snorlax'?143:null,now);return true;
+}
+function awardFlute(game,now){
+  const d=game.data.trainingDevice;if(!d.rocketWonAt||d.fluteObtainedAt)return false;
+  d.fluteObtainedAt=now;game.log('비주기를 물리치고 포켓몬피리를 얻었다! 피리를 사용하면 잠만보를 만날 수 있다.','item',null,now);return true;
 }
 function claim(game,now){
   if(!canClaim(game))return false;
@@ -36,7 +53,7 @@ function claim(game,now){
 }
 function snapshot(game){
   const d=game.data.trainingDevice,p=game.data.owned[d.learnerUid];
-  return {...d,obtained:has(game),canClaim:canClaim(game),requirements:requirements(game),learner:p?{uid:p.uid,id:p.id,level:p.level,boarded:game.isBoarded(p.uid),active:p.uid===game.data.activeId}:null,
-    steps:Object.values(battles).map(b=>({...b,done:!!d[b.id==='rocket-giovanni'?'rocketWonAt':'snorlaxWonAt'],available:canChallenge(game,b.id)}))};
+  return {...d,fluteObtained:!!d.fluteObtainedAt,snorlaxCaught:!!game.data.caught[143],rocketCompleted:rocketOrder.filter(id=>d[progressKeys[id]]).length,nextRocket:nextRocket(game),obtained:has(game),canClaim:canClaim(game),requirements:requirements(game),learner:p?{uid:p.uid,id:p.id,level:p.level,boarded:game.isBoarded(p.uid),active:p.uid===game.data.activeId}:null,
+    steps:Object.values(battles).map(b=>({...b,done:!!d[progressKeys[b.id]],available:canChallenge(game,b.id)}))};
 }
-module.exports={battles,init,has,requirements,canClaim,canChallenge,win,claim,snapshot};
+module.exports={battles,rocketOrder,nextRocket,init,has,requirements,canClaim,canChallenge,win,awardFlute,claim,snapshot};
