@@ -265,7 +265,7 @@ async function smokeTest(){
   fs.writeFileSync(path.join(dir,'badge-case-full.png'),(await panel.webContents.capturePage()).toPNG());
   const {captureTiming}=require('./capture-animation.js');
   const prepareCatch=passes=>{
-    game=new Game({},Date.now(),{random:()=>.73});game.newWild(Date.now());game.data.battle.foe=combatant(19,5);game.damageFoe(9999);
+    game=new Game({},Date.now(),{random:()=>.73});game.newWild(Date.now());game.data.battle.foe=combatant(19,5);game.data.battle.foe.hp=game.data.battle.foe.maxHp*.1;
     let checks=0;game.random=()=>checks++<passes?0:.999999;game.capture(Date.now());return game.data.captureAnimation;
   };
   const caught=prepareCatch(4),timing=captureTiming(caught);publish(true);

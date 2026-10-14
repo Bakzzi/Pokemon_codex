@@ -6,7 +6,7 @@ const {xpAt}=require('../pokemon.cjs'),pacing=require('../battle-pacing.js');
 const now=Date.parse('2026-10-13T07:00:00Z');
 function fixture(passes){
   const g=new Game({},now,{random:()=>.73});g.data.owned[25].moves=[45];g.newWild(now);
-  g.data.battle.foe=battle.combatant(19,5,[150]);g.damageFoe(9999);
+  g.data.battle.foe=battle.combatant(19,5,[150]);g.data.battle.foe.hp=g.data.battle.foe.maxHp*.1;
   let checks=0;g.random=()=>checks++<passes?0:.999999;return g;
 }
 test('actual shake checks produce failures at 0, 1, 2 or 3 shakes, and success always shows three',()=>{

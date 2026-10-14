@@ -5,7 +5,7 @@ const pacing=require('../battle-pacing.js'),{captureTiming}=require('../capture-
 const now=Date.parse('2026-10-13T10:00:00Z');
 function fixture(id=143,caught=true){
   const g=new Game({},now,{random:()=>0});g.data.owned[25].moves=[84];g.newWild(now-pacing.pauses.encounter);
-  g.data.battle.foe=combatant(id,5,[150]);if(caught)g.data.caught[id]=now;
+  g.data.battle.foe=combatant(id,5,[150]);g.data.seen[id]=now;if(caught)g.data.caught[id]=now;
   g.data.workTokens=10000;return g;
 }
 function advance(g){const at=Math.max(g.nextTick,g.data.switchUntil);assert.ok(g.tick(at));return at;}
@@ -49,7 +49,8 @@ test('a counterattack waits for the previous action even when more work arrives'
 });
 
 test('capture starts only after the triggering attack and its result, across a reload',()=>{
-  let g=fixture(19,false);g.data.battle.foe.hp=g.data.battle.foe.maxHp*.11;g.tick(now);assert.equal(g.data.pendingBattle.kind,'capture');
+  let g=fixture(19,false);g.data.owned[25].moves=[206];g.data.battle.party[25]=g.memberCombatant(g.data.owned[25]);
+  g.data.battle.foe.hp=3;g.tick(now);assert.equal(g.data.pendingBattle.kind,'capture');assert.equal(g.data.battle.foe.hp,1);
   assert.equal(g.snapshot(now).capture,null);assert.equal(g.data.battle.captureAttempts,0);assert.ok(!g.data.caught[19]);
   const end=g.data.switchUntil,tokens=g.data.workTokens;assert.equal(g.select(7,end),false);
   g=new Game(g.data,now+700,{random:()=>0});assert.equal(g.tick(end-1),false);assert.ok(g.tick(end));
@@ -61,8 +62,8 @@ test('capture starts only after the triggering attack and its result, across a r
   assert.ok(g.tick(c.at+t.duration+1));assert.equal(g.data.animation.kind,'encounter');assert.equal(g.data.captureAnimation,null);
 });
 
-test('a knockout preserves the victim until HP, fainting and the battle result finish',()=>{
-  let g=fixture(19);g.data.battle.foe.hp=1;const xp=g.data.owned[25].xp;g.tick(now);
+test('an uncaught knockout preserves the victim until HP, fainting and victory finish without capturing',()=>{
+  let g=fixture(19,false);g.data.battle.foe.hp=1;const xp=g.data.owned[25].xp;g.tick(now);
   assert.equal(g.data.animation.kind,'attack');assert.equal(g.data.battle.foe.hp,0);assert.equal(g.data.owned[25].xp,xp);
   const attackEnd=g.data.switchUntil;assert.equal(g.tick(attackEnd-1),false);
   g=new Game(g.data,now+800,{random:()=>0});assert.ok(g.tick(attackEnd));assert.equal(g.data.animation.kind,'faint');
@@ -71,6 +72,7 @@ test('a knockout preserves the victim until HP, fainting and the battle result f
   assert.ok(g.tick(faintEnd));assert.equal(g.data.animation.kind,'result');assert.equal(g.data.battle,null);assert.ok(g.data.owned[25].xp>xp);
   const earned=g.data.owned[25].xp,resultEnd=g.data.switchUntil;assert.equal(g.tick(resultEnd-1),false);assert.ok(g.tick(resultEnd));
   assert.equal(g.data.animation.kind,'encounter');assert.equal(g.data.owned[25].xp,earned);
+  assert.ok(!g.data.caught[19]);assert.ok(g.data.seen[19]);assert.equal(Object.values(g.data.owned).filter(p=>p.id===19).length,0);assert.equal(g.data.captureAnimation,null);
 });
 
 test('a gym leader sends the next Pokemon after the original target finishes fainting',()=>{

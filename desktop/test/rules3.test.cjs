@@ -67,12 +67,38 @@ test('weather, screens and end-of-round poison use persistent native battle effe
   s.makeChoices('move 3','move 1');assert.equal(s.p1.active[0].hp,hp);s.turnLoop();assert.ok(s.p1.active[0].hp<hp);
   for(let i=0;i<5;i++)round(s,'move 3');assert.ok(!s.p1.sideConditions.reflect);
 });
-test('ten fractional capture boundaries survive real engine damage and a midbattle reload',()=>{
-  const f=fixture(3,150,[33],[150],100);let g=f.g;delete g.data.caught[150];g.random=()=>.999999;g.data.workTokens=100000;
-  let last=0,reloaded=false,steps=0;const boundaries=[];
-  while(g.data.battle&&steps<200){g.tick(now+(++steps)*2000);const b=g.data.battle;if(b&&b.captureAttempts>last){last=b.captureAttempts;boundaries.push(Math.round(b.foe.hp/b.foe.maxHp*100));}
-    if(last===5&&!reloaded){g=new Game(g.data,now+steps*2000,{random:()=>.999999});reloaded=true;}}
-  assert.deepEqual(boundaries,[10,9,8,7,6,5,4,3,2,1]);assert.equal(g.data.battle,null);assert.ok(!g.data.caught[150]);
+test('uncaught wild targets take the same super-effective damage as caught species and can be knocked out',()=>{
+  const run=(caught,remaining)=>{
+    const f=fixture(7,37,[55],[150],15);if(!caught)delete f.g.data.caught[37];
+    if(remaining!==undefined)f.b.foe.hp=remaining;
+    const s=f.sim(),before=s.p2.active[0].hp;round(s);return {hp:s.p2.active[0].hp,damage:before-s.p2.active[0].hp,maxHp:s.p2.active[0].maxhp,log:s.log};
+  };
+  const caught=run(true),uncaught=run(false);assert.equal(uncaught.damage,caught.damage);assert.ok(uncaught.damage>1);
+  assert.ok(uncaught.log.some(l=>l.includes('|-supereffective|')));
+  const low=run(false,uncaught.maxHp*.1);assert.equal(low.hp,0);assert.equal(low.damage,uncaught.maxHp*.1);assert.ok(low.log.some(l=>l.startsWith('|faint|p2')));
+});
+
+test('a saved uncaught battle resumes native damage and knockout instead of restoring capture protection',()=>{
+  const f=fixture(7,37,[55],[150],15);let g=f.g;delete g.data.caught[37];g.data.workTokens=5000;
+  g.data.battle.foe.hp=1;assert.ok(g.tick(now));assert.equal(g.data.animation.actor,'foe');assert.ok(g.data.battle.sim);
+  g.random=()=>.999999;assert.ok(g.tick(g.data.switchUntil));assert.equal(g.data.captureAnimation.caught,false);assert.equal(g.data.battle.captureAttempts,1);
+  g=new Game(g.data,g.data.captureAnimation.at+1,{random:()=>.73});const at=g.data.switchUntil;assert.ok(g.tick(at));
+  assert.equal(g.data.animation.actor,'hero');assert.equal(g.data.animation.moveId,55);assert.equal(g.data.battle.foe.hp,0);
+  assert.equal(g.data.pendingBattle.kind,'after-action');assert.equal(g.data.battle.captureAttempts,1);assert.equal(g.data.captureAnimation,null);
+  assert.ok(g.tick(g.data.switchUntil));assert.equal(g.data.animation.kind,'faint');assert.ok(g.tick(g.data.switchUntil));
+  assert.equal(g.data.battle,null);assert.ok(!g.data.caught[37]);assert.equal(Object.values(g.data.owned).filter(p=>p.id===37).length,0);
+});
+
+test('uncaught wild Pokemon can faint from native self-destruct and poison residuals',()=>{
+  const self=fixture(129,74,[150],[120],30);delete self.g.data.caught[74];const a=self.sim();round(a);
+  assert.equal(a.p2.active[0].hp,0);assert.ok(a.log.some(l=>l.startsWith('|faint|p2')));
+  const poison=fixture(25,19,[150],[150],30);delete poison.g.data.caught[19];const b=poison.sim();b.p2.active[0].hp=1;b.p2.active[0].setStatus('psn');round(b);
+  assert.equal(b.p2.active[0].hp,0);assert.ok(b.log.some(l=>l.includes('[from] psn')));
+});
+
+test('False Swipe keeps its original one-HP effect without global capture protection',()=>{
+  const f=fixture(25,19,[206],[150],30);delete f.g.data.caught[19];f.b.foe.hp=2;
+  const s=f.sim();round(s);assert.equal(s.p2.active[0].hp,1);assert.ok(!s.p2.active[0].fainted);
 });
 test('native trainer simulation awards a badge without capturing, then refuses rematches',()=>{
   const g=new Game({},now,{random:random(17)});const p=g.data.owned[1];p.level=100;p.xp=xpAt(1,100);p.moves=[202];g.data.activeId=1;assert.ok(g.challenge(0,now));

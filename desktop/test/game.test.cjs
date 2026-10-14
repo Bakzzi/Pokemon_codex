@@ -43,18 +43,26 @@ test('wild battles require observed work and spend exactly one action credit per
   g.data.workTokens=500;assert.equal(g.tick(now),true);assert.equal(g.data.workTokens,250);
   assert.equal(g.tick(now+100),false);assert.equal(g.tick(g.data.switchUntil),true);assert.equal(g.data.workTokens,0);
 });
-test('large hits stop at each 10% through 1% threshold, exactly ten balls, no replay after restart',()=>{
+test('capture attempts still use ten HP thresholds without repeating a used threshold after restart',()=>{
   let g=new Game({},now,{random:()=>.999999});wild(g,150,50);
+  g.data.battle.foe.hp=g.data.battle.foe.maxHp*.101;assert.equal(g.capture(now),false);assert.equal(g.data.battle.captureAttempts,0);
   for(let attempt=0;attempt<10;attempt++){
-    g.damageFoe(99999);assert.ok(Math.abs(g.data.battle.foe.hp/g.data.battle.foe.maxHp-(10-attempt)/100)<1e-9);
+    const foe=g.data.battle.foe;foe.hp=foe.maxHp*(10-attempt)/100;
     assert.equal(g.capture(now+attempt),false);assert.equal(g.data.battle.captureAttempts,attempt+1);
     if(attempt===4)g=new Game(g.data,now+5,{random:()=>.999999});
     g.capture(now+attempt);assert.equal(g.data.battle.captureAttempts,attempt+1);
   }
   g.damageFoe(99999);assert.equal(g.data.battle.foe.hp,0);g.capture(now+12);assert.equal(g.data.battle.captureAttempts,10);
 });
+
+test('large hits can cross capture thresholds and knock out an uncaught wild Pokemon without a ball',()=>{
+  const g=new Game({},now,{random:()=>0}),b=wild(g,150,50);
+  g.damageFoe(b.foe.maxHp*.95);assert.ok(b.foe.hp/b.foe.maxHp<.1);assert.ok(Math.abs(b.foe.hp/b.foe.maxHp-.05)<1e-9);
+  g.damageFoe(99999);assert.equal(b.foe.hp,0);assert.equal(g.capture(now),false);assert.equal(b.captureAttempts,0);
+  assert.ok(!g.data.caught[150]);assert.equal(g.snapshot(now).capture,null);
+});
 test('first successful ball registers once; already-caught species only battle even after evolving away',()=>{
-  const g=new Game({},now,{random:()=>0});wild(g,19);g.damageFoe(999);assert.equal(g.capture(now),true);assert.ok(!g.data.caught[19]);assert.equal(g.capture(now),false);
+  const g=new Game({},now,{random:()=>0}),b=wild(g,19);b.foe.hp=b.foe.maxHp*.1;assert.equal(g.capture(now),true);assert.ok(!g.data.caught[19]);assert.equal(g.capture(now),false);
   assert.ok(g.tick(g.data.switchUntil));assert.ok(g.data.caught[19]);assert.equal(g.data.battle,null);assert.equal(g.capture(now),false);
   const p=Object.values(g.data.owned).find(p=>p.id===19);p.id=20;
   wild(g,19);g.damageFoe(999);assert.equal(g.data.battle.foe.hp,0);assert.equal(g.capture(now),false);

@@ -251,12 +251,10 @@ class Game {
     else {this.data.champion=true;this.data.leagueBest=5;this.log('관동 챔피언 달성! 성도 2세대 포켓몬이 해금되었다.','champion',null,now);this.animate('champion',{text:'관동 챔피언! 성도 지방이 열렸어!'},now);this.endChallenge(true,now);}
   }
   damageFoe(amount){
-    const b=this.data.battle;let hp=Math.max(0,b.foe.hp-amount);
-    if(b.kind==='wild'&&!this.data.caught[b.foe.id]&&b.captureAttempts<10){const threshold=b.foe.maxHp*(10-b.captureAttempts)/100;if(b.foe.hp>=threshold&&hp<threshold)hp=threshold;}
-    b.foe.hp=hp;
+    const b=this.data.battle;b.foe.hp=Math.max(0,b.foe.hp-amount);
   }
   capture(now){
-    const b=this.data.battle;if(!b||b.kind!=='wild'||this.data.pendingBattle?.kind==='capture-result'||this.data.caught[b.foe.id]||b.captureAttempts>=10)return false;
+    const b=this.data.battle;if(!b||b.kind!=='wild'||b.foe.hp<=0||this.data.pendingBattle?.kind==='capture-result'||this.data.caught[b.foe.id]||b.captureAttempts>=10)return false;
     const threshold=(10-b.captureAttempts)/100;if(b.foe.hp/b.foe.maxHp>threshold+1e-9)return false;
     const outcome=tryCatch(species.get(b.foe.id).catchRate,b.foe.hp,b.foe.maxHp,b.foe.status,this.random);b.captureAttempts++;
     const previous=this.data.animation,leadIn=previous?.kind==='attack'&&previous.moveId&&previous.at===now?previous:null;

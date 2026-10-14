@@ -48,35 +48,15 @@ function pump(){
   }
   this.endTurn();this.midTurn=false;this.queue.clear();
 }
-function captureFloor(game,b,mon){
-  if(b.kind!=='wild'||game.data.caught[mon.baseSpecies.num]||b.captureAttempts>=10)return 0;
-  return mon.maxhp*(10-b.captureAttempts)/100;
-}
-function attach(game,b,sim){
+function attach(b,sim){
   Object.defineProperty(sim,'turnLoop',{value:pump,configurable:true});
-  if(b.kind==='wild')for(const mon of sim.p2.pokemon){
-    const originalDamage=Object.getPrototypeOf(mon).damage,originalFaint=Object.getPrototypeOf(mon).faint;
-    Object.defineProperty(mon,'damage',{configurable:true,value:function(d,source,effect){
-      const floor=captureFloor(game,b,this);
-      if(floor&&this.hp>0&&Number.isFinite(d)&&d>0&&this.hp-Math.max(1,Math.trunc(d))<floor){
-        const lost=Math.max(0,this.hp-floor);this.hp=Math.max(this.hp-lost,floor);return lost;
-      }
-      return originalDamage.call(this,d,source,effect);
-    }});
-    // Self-destruct, Perish Song, Destiny Bond and OHKO also honor the ten-ball rule.
-    Object.defineProperty(mon,'faint',{configurable:true,value:function(source,effect){
-      const floor=captureFloor(game,b,this);
-      if(floor){const lost=Math.max(0,this.hp-floor);this.hp=Math.max(floor,this.hp-lost);this.faintQueued=false;return lost;}
-      return originalFaint.call(this,source,effect);
-    }});
-  }
   cache.set(b,sim);return sim;
 }
 function engine(game,b){
   let sim=cache.get(b);
   const boss=b.kind==='trainer'?b.bossIndex:null;
   if(sim&&b.simBoss===boss)return sim;
-  if(b.sim&&b.simBoss===boss)return attach(game,b,Battle.fromJSON(b.sim));
+  if(b.sim&&b.simBoss===boss)return attach(b,Battle.fromJSON(b.sim));
   const active=game.data.activeId,keys=Object.keys(b.party).map(Number).sort((a,c)=>Number(c===active)-Number(a===active));
   const foes=b.kind==='trainer'?data.bosses[b.bossIndex].team.map((p,i)=>({p,i})).slice(b.foeIndex):[{p:b.foe,i:0}];
   sim=new Battle({formatid:'gen3customgame',seed:Array.from({length:4},()=>Math.floor(game.random()*65536)),p1:{name:'동료',team:keys.map(uid=>setFor(b.party[uid],'u'+uid))},
@@ -86,7 +66,7 @@ function engine(game,b){
   for(const mon of sim.p1.pokemon)restoreMon(mon,b.party[Number(mon.name.slice(1))]);
   restoreMon(sim.p2.active[0],b.foe);
   sim.makeRequest('move');sim.log=[];sim.sentLogPos=0;sim.inputLog=[];
-  b.simBoss=boss;return attach(game,b,sim);
+  b.simBoss=boss;return attach(b,sim);
 }
 function persist(b,sim){
   // Protocol is rendered into our bounded Korean journal; don't grow the save indefinitely.
