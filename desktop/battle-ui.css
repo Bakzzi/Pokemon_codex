@@ -33,6 +33,12 @@
 #foe-name{position:static;background:none;padding:0;color:inherit;text-shadow:none;font-size:10px;border-radius:0}
 .hp-row{display:flex;gap:4px;align-items:center;margin-top:3px}
 .hp-row>b{font-size:8px;color:#8c642e;letter-spacing:.5px}
+.hp-row>b[data-status]{flex-shrink:0;min-width:22px;padding:0 3px;line-height:8px;letter-spacing:0;text-align:center;border-radius:2px;color:#fff;box-shadow:0 1px 0 #23302566}
+.hp-row>b[data-status=poison],.hp-row>b[data-status=toxic]{background:#8c559c}
+.hp-row>b[data-status=paralysis]{background:#d2a63f;color:#382913}
+.hp-row>b[data-status=burn]{background:#b65436}
+.hp-row>b[data-status=sleep]{background:#707981}
+.hp-row>b[data-status=freeze]{background:#75b8c7;color:#193740}
 .hp-row .health{position:static;width:auto;flex:1;height:6px;border:1px solid #58634b;background:#37462f;border-radius:4px;padding:1px;overflow:hidden}
 .hp-row .health i{height:2px;border-radius:2px;background:#63b46d;transition:none}
 .hp-row .health i[data-health=mid]{background:#d9b349}

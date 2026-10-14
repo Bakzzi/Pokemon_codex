@@ -16,7 +16,8 @@
     const t=actionTiming(event),progress=clamp((now-event.at-t.healthAt)/t.healthMs);
     if(progress===1)return after;
     return {...after,maxHp:before.maxHp,hp:before.hp+(after.hp-before.hp)*progress,
-      currentHp:Math.round(before.currentHp+(after.currentHp-before.currentHp)*progress)};
+      currentHp:Math.round(before.currentHp+(after.currentHp-before.currentHp)*progress),
+      status:now<event.at+t.impactAt&&Object.hasOwn(before,'status')?before.status:after.status};
   }
   function damageReaction(event,side,now){
     const lost=(event[side+'Before']?.currentHp||0)-(event[side]?.currentHp??event[side+'Before']?.currentHp??0);

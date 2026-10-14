@@ -56,9 +56,14 @@ function playSwitch(event){
     renderHeroHealth(current);renderSpeech(current);switchRaf=requestAnimationFrame(draw);
   };draw();
 }
+const statusLabels={poison:'독',toxic:'독',paralysis:'마비',burn:'화상',sleep:'잠듦',freeze:'얼음'};
 function renderHealth(side,p){
   $(side==='hero'?'hero-battle-name':'foe-name').textContent=p.name;
   $(side+'-battle-level').textContent='L'+p.level;
+  const label=$(side+'-hp-label'),status=statusLabels[p.status];
+  label.textContent=status||'HP';label.title=status?(p.status==='toxic'?'맹독':status):'체력';
+  label.setAttribute('aria-label',status?p.name+' · '+label.title:'HP');
+  if(status)label.dataset.status=p.status;else delete label.dataset.status;
   const bar=$(side+'-hp');bar.style.width=Math.max(0,Math.min(1,p.hp))*100+'%';
   bar.dataset.health=p.hp<=.2?'low':p.hp<=.5?'mid':'high';
   $(side+'-hp-number').textContent=Number.isFinite(p.maxHp)?`${p.currentHp ?? Math.ceil(p.hp*p.maxHp)} / ${p.maxHp}`:'';
@@ -72,7 +77,7 @@ function renderHeroHealth(s){
     $('hero-hud').hidden=f.opacity===0;renderHealth('hero',p);return;
   }
   $('hero-hud').hidden=false;
-  const p=playingMove?.hero?.id===s.hero.id?playingMove.hero:s.hero;renderHealth('hero',moveHealth('hero',p));
+  const p=playingMove?.hero?.id===s.hero.id?{...s.hero,...playingMove.hero}:s.hero;renderHealth('hero',moveHealth('hero',p));
 }
 function eventFx(e){
   if(!e||e.serial===serial)return;serial=e.serial;
@@ -86,7 +91,7 @@ function eventFx(e){
   else if(e.kind==='capture'&&e.leadIn&&Date.now()<e.at)playMove(e.leadIn);
 }
 function renderFoe(s){
-  const capture=s.capture&&Date.now()>=s.capture.at?s.capture:null,shown=capture||playingMove?.foe||s.foe||(s.capture&&Date.now()<s.capture.at?s.capture.leadIn?.foe:null),foe=$('foe'),img=$('foe-image'),fx=$('capture-fx');
+  const capture=s.capture&&Date.now()>=s.capture.at?s.capture:null,shown=capture?{...s.foe,...capture}:playingMove?.foe?{...s.foe,...playingMove.foe}:s.foe||(s.capture&&Date.now()<s.capture.at?s.capture.leadIn?.foe:null),foe=$('foe'),img=$('foe-image'),fx=$('capture-fx');
   foe.hidden=!shown;$('foe-ground').hidden=!shown;$('empty-foe').hidden=!!shown;
   img.style.opacity='1';img.style.transform='';img.style.filter='';
   $('foe-hud').hidden=!shown;fx.hidden=!capture;

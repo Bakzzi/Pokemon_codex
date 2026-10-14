@@ -19,6 +19,24 @@ test('a hit precedes gradual HP loss and leaves time to read the result',()=>{
   assert.ok(t.duration-t.resultAt>=1200);assert.ok(t.duration>=3000&&t.duration<=4000);
 });
 
+test('native status effects reach the HUD only after the move impact and survive capture',()=>{
+  const g=fixture(19,false);g.data.owned[25].moves=[86];g.data.battle.party[25]=g.memberCombatant(g.data.owned[25]);
+  assert.ok(g.tick(now));const event=g.data.animation,t=pacing.actionTiming(event);
+  assert.equal(event.actor,'hero');assert.equal(event.moveId,86);assert.equal(event.foeBefore.status,null);assert.equal(event.foe.status,'paralysis');
+  assert.equal(pacing.healthAt(event,'foe',now+t.impactAt-1,event.foe).status,null);
+  assert.equal(pacing.healthAt(event,'foe',now+t.impactAt,event.foe).status,'paralysis');
+  g.data.battle.foe.hp=g.data.battle.foe.maxHp*.1;g.capture(g.data.switchUntil);
+  assert.equal(g.data.captureAnimation.status,'paralysis');
+});
+
+test('native healing clears the status badge at impact, with the previous status kept during announcement',()=>{
+  const g=fixture();g.data.owned[25].moves=[215];g.data.battle.party[25]=g.memberCombatant(g.data.owned[25]);g.data.battle.party[25].status='burn';
+  assert.ok(g.tick(now));const event=g.data.animation,t=pacing.actionTiming(event);
+  assert.equal(event.actor,'hero');assert.equal(event.moveId,215);assert.equal(event.heroBefore.status,'burn');assert.equal(event.hero.status,null);
+  assert.equal(pacing.healthAt(event,'hero',now+t.impactAt-1,event.hero).status,'burn');
+  assert.equal(pacing.healthAt(event,'hero',now+t.impactAt,event.hero).status,null);
+});
+
 test('a counterattack waits for the previous action even when more work arrives',()=>{
   const g=fixture();g.tick(now);const action=structuredClone(g.data.animation),end=g.data.switchUntil;
   assert.equal(action.actor,'hero');assert.equal(g.data.workTokens,9750);
