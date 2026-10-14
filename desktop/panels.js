@@ -111,7 +111,7 @@ function renderBosses(){
 }
 function renderDevice(){
   if(!state)return;const d=state.trainingDevice,busy=state.battle?.kind==='trainer',queued=state.pendingChallenge;
-  $('device-title').textContent=d.obtained?'오박사의 학습장치':'오박사의 도감 의뢰';
+  $('device-title').textContent='로켓단의 아지트';
   $('device-note').textContent=d.obtained?'장치에 한 마리를 등록하면 경험치 10%를 추가로 받아요. 교환 진화 대상은 그 모습에서 장치 경험치로 한 레벨 오르면 배틀·결과 연출 후 자동 진화해요.':d.canClaim?'오박사: 도감이 훌륭하게 채워졌구나! 15번도로의 내 조수에게 학습장치를 받아 가거라.':'민화 뱃지를 얻으면 로켓단이 해금돼요. 조무래기 → 로이·로사 → 비주기, 3단계를 물리쳐 포켓몬피리를 받고 잠만보를 깨워요. 잠만보에게 승리하거나 포획하고 관동 도감 50종을 등록하면 학습장치를 받을 수 있어요.';
   $('device-requirements').replaceChildren(...d.requirements.map(r=>node('div','device-requirement'+(r.done?' done':''),(r.done?'완료 · ':'대기 · ')+r.name)));
   $('flute-title').textContent='포켓몬피리 · '+(d.fluteObtained?'획득 완료':'미획득');
