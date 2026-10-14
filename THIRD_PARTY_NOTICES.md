@@ -52,6 +52,12 @@ The eight Kanto badge illustrations were downloaded unchanged from Bulbagarden A
 
 These are Pokemon artwork, not MIT-licensed code. Copyright remains with the original Pokemon rights holders. The source archive identifies these as copyrighted images. The holder UI, empty recess treatment and seating animation are this project's code; no asset is fetched at runtime.
 
+## Kanto trainer artwork and Team Rocket logo
+
+The eight Gym Leader illustrations are official Pokemon FireRed and LeafGreen character artwork by Ken Sugimori, downloaded as unchanged thumbnails requested at up to 384 pixels in height from Bulbagarden Archives. Source image pages, original URLs, downloaded thumbnail URLs, dimensions, byte counts and SHA-256 hashes are recorded in desktop/assets/trainers/sources.json. Example source: https://archives.bulbagarden.net/wiki/File:FireRed_LeafGreen_Brock.png
+
+The Team Rocket R logo is downloaded unchanged from https://archives.bulbagarden.net/wiki/File:Rocket-logo.png . Its URL, dimensions, byte count and SHA-256 hash are recorded in desktop/assets/logos/sources.json. These images retain the original Pokemon rights holders' copyright and are not MIT-licensed code. All artwork is loaded from local files at runtime.
+
 ## Electron runtime
 
 Electron 44.7.0 — https://www.electronjs.org/

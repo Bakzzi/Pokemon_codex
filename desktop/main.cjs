@@ -115,7 +115,7 @@ function createTray(){
   tray.setToolTip('Pokémon Codex Buddy');
   tray.setContextMenu(Menu.buildFromTemplate([
     {label:'포켓몬 보기',click:()=>win.showInactive()},{label:'도감',click:()=>openPanel('collection')},
-    {label:'도전하기',click:()=>openPanel('challenge')},{label:'키우미집',click:()=>openPanel('daycare')},{label:'모험 기록',click:()=>openPanel('journal')},
+    {label:'도전하기',click:()=>openPanel('challenge')},{label:'육성',click:()=>openPanel('daycare')},{label:'모험 기록',click:()=>openPanel('journal')},
     {type:'separator'},{label:'종료',click:()=>app.quit()}
   ]));tray.on('click',()=>win.isVisible()?win.hide():win.showInactive());
 }

@@ -89,7 +89,8 @@ function renderBosses(){
   $('badges').textContent='뱃지 '+state.badges.length+' / 8';
   renderBadgeCase();
   $('gyms').replaceChildren(...state.bosses.slice(0,8).map((boss,i)=>{
-    const done=state.badges.includes(boss.id),card=node('article','gym'+(done?' done':'')),title=node('div','gym-title'),badge=node('span','badge');badge.append(badgeImage(boss,'gym-badge'),document.createTextNode(boss.badge));title.append(node('h3','',(i+1)+'. '+boss.name),badge);card.append(title,teamMembers(boss.team));
+    const done=state.badges.includes(boss.id),card=node('article','gym'+(done?' done':'')),title=node('div','gym-title'),badge=node('span','badge');badge.append(badgeImage(boss,'gym-badge'),document.createTextNode(boss.badge));title.append(node('h3','',(i+1)+'. '+boss.name),badge);
+    const body=node('div','gym-body'),info=node('div','gym-info'),portrait=node('img','gym-trainer');portrait.src='assets/trainers/'+boss.id+'.png';portrait.alt=boss.name+' · 파이어레드·리프그린 원작 일러스트';portrait.draggable=false;info.append(title,teamMembers(boss.team));body.append(info,portrait);card.append(body);
     const roadLocked=i===4&&!state.trainingDevice.routeOpen,b=node('button','',done?'뱃지 획득 완료':queued?.index===i?'도전 예약됨':roadLocked?'길을 막는 잠만보 해결 시 해금':i>state.badges.length?'앞선 체육관 뱃지가 필요해요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||!!queued||!state.gymAccess[i];b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;
   }));
   $('ongoing').hidden=!busy&&!queued;
