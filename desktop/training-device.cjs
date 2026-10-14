@@ -1,7 +1,7 @@
 'use strict';
 // FRLG Rocket Hideout grunt / Giovanni parties, plus the Yellow Jessie-James party.
 // Story victories are separate from the Viridian Gym badge.
-const {learnedMoves}=require('./pokemon.cjs');
+const {learnedMoves,species}=require('./pokemon.cjs');
 const battles=Object.assign(Object.create(null),{
   'rocket-grunt':{id:'rocket-grunt',name:'로켓단 조무래기',stage:1,kind:'story',team:[{id:20,level:20},{id:41,level:20}]},
   'rocket-duo':{id:'rocket-duo',name:'로이·로사',stage:2,kind:'story',team:[{id:109,level:25},{id:52,level:25},{id:23,level:25}]},
@@ -16,6 +16,11 @@ function init(game){
   const rocket=stamp(saved.rocketWonAt),legacy=saved.storyRevision!==2;
   const activeLegacy=legacy&&game.data.battle?.storyId==='rocket-giovanni'?stamp(game.data.battle.startedAt):null;
   game.data.trainingDevice={storyRevision:2,gruntWonAt:stamp(saved.gruntWonAt)||(legacy?rocket||activeLegacy:null),duoWonAt:stamp(saved.duoWonAt)||(legacy?rocket||activeLegacy:null),rocketWonAt:rocket,fluteObtainedAt:stamp(saved.fluteObtainedAt)||(legacy?rocket:null),snorlaxWonAt:stamp(saved.snorlaxWonAt),obtainedAt:stamp(saved.obtainedAt),learnerUid:game.data.owned[saved.learnerUid]?Number(saved.learnerUid):null};
+  for(const p of Object.values(game.data.owned)){
+    const lesson=p.deviceLevelUp;
+    if(!hasLearnedLevel(game,p))delete p.deviceLevelUp;
+    else p.deviceLevelUp={from:lesson.from,before:lesson.before,level:lesson.level,at:lesson.at,autoPending:lesson.autoPending===true};
+  }
   if(legacy&&game.data.pendingChallenge?.index==='rocket-giovanni'&&!rocket&&!activeLegacy)game.data.pendingChallenge.index=nextRocket(game);
   const b=game.data.battle;
   if(b?.storyId==='road-snorlax'&&b.kind==='trainer'){
@@ -25,6 +30,25 @@ function init(game){
 }
 function nextRocket(game){return rocketOrder.find(id=>!game.data.trainingDevice[progressKeys[id]])||null;}
 function has(game){return !!game.data.trainingDevice.obtainedAt;}
+function hasLearnedLevel(game,p){
+  const lesson=p?.deviceLevelUp;
+  return !!(has(game)&&lesson&&lesson.from===p.id&&Number.isInteger(lesson.before)&&lesson.before>=1&&Number.isInteger(lesson.level)&&lesson.level>lesson.before&&lesson.level<=p.level&&Number.isSafeInteger(lesson.at)&&lesson.at>=game.data.trainingDevice.obtainedAt&&species.get(p.id)?.evolutions.some(e=>e.trigger===2));
+}
+function queueEvolutions(game,now,records=Object.values(game.data.owned)){
+  for(const p of records){
+    if(!p.deviceLevelUp?.autoPending||!hasLearnedLevel(game,p))continue;
+    const rule=species.get(p.id).evolutions.find(e=>e.trigger===2&&species.get(e.to)?.generation<=game.maxGeneration());
+    if(!rule)continue;
+    const lesson=p.deviceLevelUp;
+    if(game.requestAction('evolve',{id:p.uid,to:rule.to},now)){lesson.autoPending=false;return true;}
+  }
+  return false;
+}
+function learnedLevel(game,p,before,now){
+  if(!has(game)||game.data.trainingDevice.learnerUid!==p.uid||p.level<=before||!species.get(p.id).evolutions.some(e=>e.trigger===2))return false;
+  p.deviceLevelUp={from:p.id,before,level:p.level,at:now,autoPending:true};
+  queueEvolutions(game,now,[p]);return true;
+}
 function requirements(game){
   const d=game.data.trainingDevice;
   return [{id:'erika',name:'민화의 무지개배지',done:game.data.badges.includes('erika')},{id:'rocket',name:'로켓단 3단계 승리 · 포켓몬피리 획득',done:!!d.rocketWonAt&&!!d.fluteObtainedAt},{id:'snorlax',name:'피리로 잠만보를 만나 승리 또는 포획',done:!!d.snorlaxWonAt},{id:'dex',name:'관동 도감 '+game.kantoCaughtCount()+' / 50종 등록',done:game.kantoCaughtCount()>=50}];
@@ -56,4 +80,4 @@ function snapshot(game){
   return {...d,fluteObtained:!!d.fluteObtainedAt,snorlaxCaught:!!game.data.caught[143],rocketCompleted:rocketOrder.filter(id=>d[progressKeys[id]]).length,nextRocket:nextRocket(game),obtained:has(game),canClaim:canClaim(game),requirements:requirements(game),learner:p?{uid:p.uid,id:p.id,level:p.level,boarded:game.isBoarded(p.uid),active:p.uid===game.data.activeId}:null,
     steps:Object.values(battles).map(b=>({...b,done:!!d[progressKeys[b.id]],available:canChallenge(game,b.id)}))};
 }
-module.exports={battles,rocketOrder,nextRocket,init,has,requirements,canClaim,canChallenge,win,awardFlute,claim,snapshot};
+module.exports={battles,rocketOrder,nextRocket,init,has,hasLearnedLevel,learnedLevel,queueEvolutions,requirements,canClaim,canChallenge,win,awardFlute,claim,snapshot};

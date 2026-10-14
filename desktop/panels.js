@@ -55,7 +55,7 @@ function renderDex(){
     const queued=state.pendingActions.some(a=>a.kind==='evolve'&&a.uid===member.uid&&a.to===e.to);
     const box=node('div','evolution'),b=node('button','',(e.trigger===2?'학습장치 · ':'')+e.name+(queued?' 진화 예약됨':e.ready?'로 진화':' 진화 예약'));
     b.dataset.evolve=e.to;b.disabled=queued;b.onclick=()=>window.buddy.action('evolve',{id:member.uid,to:e.to});box.append(b,node('p','',e.conditions||'진화 조건 충족'),node('p','',queued?'예약 목록에서 취소할 수 있어요.':!e.ready?'조건을 충족하고 배틀이 끝나면 자동으로 진화해요.':state.battle?'현재 배틀이 끝나면 진화해요.':'진행 중인 연출이 있으면 끝난 뒤 진화해요.'));
-    if(e.trigger===2)box.append(node('p','','오박사의 학습장치를 받고 이 동료를 등록하면 교환 없이 진화할 수 있어요. 필요한 진화 도구는 별도로 준비해요.'));
+    if(e.trigger===2)box.append(node('p','','이 모습에서 학습장치 경험치로 한 레벨 오르면 배틀·결과 연출 종료 후 자동 진화해요. 최소 레벨 조건은 없고, 필요한 진화 도구는 별도로 준비해요.'));
     root.append(box);
   }
 }
@@ -112,7 +112,7 @@ function renderBosses(){
 function renderDevice(){
   if(!state)return;const d=state.trainingDevice,busy=state.battle?.kind==='trainer',queued=state.pendingChallenge;
   $('device-title').textContent=d.obtained?'오박사의 학습장치':'오박사의 도감 의뢰';
-  $('device-note').textContent=d.obtained?'장치에 한 마리를 등록하면 경험치 학습과 교환 진화를 이용할 수 있어요.':d.canClaim?'오박사: 도감이 훌륭하게 채워졌구나! 15번도로의 내 조수에게 학습장치를 받아 가거라.':'민화 뱃지를 얻으면 로켓단이 해금돼요. 조무래기 → 로이·로사 → 비주기, 3단계를 물리쳐 포켓몬피리를 받고 잠만보를 깨워요. 잠만보에게 승리하거나 포획하고 관동 도감 50종을 등록하면 학습장치를 받을 수 있어요.';
+  $('device-note').textContent=d.obtained?'장치에 한 마리를 등록하면 경험치 10%를 추가로 받아요. 교환 진화 대상은 그 모습에서 장치 경험치로 한 레벨 오르면 배틀·결과 연출 후 자동 진화해요.':d.canClaim?'오박사: 도감이 훌륭하게 채워졌구나! 15번도로의 내 조수에게 학습장치를 받아 가거라.':'민화 뱃지를 얻으면 로켓단이 해금돼요. 조무래기 → 로이·로사 → 비주기, 3단계를 물리쳐 포켓몬피리를 받고 잠만보를 깨워요. 잠만보에게 승리하거나 포획하고 관동 도감 50종을 등록하면 학습장치를 받을 수 있어요.';
   $('device-requirements').replaceChildren(...d.requirements.map(r=>node('div','device-requirement'+(r.done?' done':''),(r.done?'완료 · ':'대기 · ')+r.name)));
   $('flute-title').textContent='포켓몬피리 · '+(d.fluteObtained?'획득 완료':'미획득');
   $('flute-note').textContent=d.fluteObtained?'잠만보는 피리로만 만날 수 있어요. 사용해도 피리는 남아요.':'로켓단 '+d.rocketCompleted+' / 3단계 완료 · 비주기를 이기면 받아요.';
@@ -139,7 +139,7 @@ function renderDevice(){
   if(!learner){root.append(node('span','','등록된 동료가 없어요. 한 마리를 골라 주세요.'));return;}
   const body=node('div');body.append(node('b','',learner.name+' · Lv.'+learner.level),node('div','muted',learner.boarded?'키우미집에서 돌아오면 학습을 이어가요.':learner.uid===state.hero.uid?'출전 중 · 경험치를 중복 지급하지 않아요.':'대기 동료 · 출전 동료 경험치의 10%를 추가로 받아요.'));
   const evolutions=node('div','device-evolutions');for(const e of learner.evolutions.filter(e=>e.trigger===2)){
-    const queuedEvolution=state.pendingActions.some(a=>a.kind==='evolve'&&a.uid===learner.uid&&a.to===e.to),b=node('button','',e.name+(queuedEvolution?' 진화 예약됨':e.ready?'로 진화':' 진화 예약'));b.dataset.deviceEvolve=e.to;b.disabled=queuedEvolution;b.title=e.conditions;b.onclick=()=>window.buddy.action('evolve',{id:learner.uid,to:e.to});evolutions.append(b);
+    const queuedEvolution=state.pendingActions.some(a=>a.kind==='evolve'&&a.uid===learner.uid&&a.to===e.to),box=node('div'),b=node('button','',e.name+(queuedEvolution?' 진화 예약됨':e.ready?'로 진화':' 진화 예약'));b.dataset.deviceEvolve=e.to;b.disabled=queuedEvolution;b.title=e.conditions;b.onclick=()=>window.buddy.action('evolve',{id:learner.uid,to:e.to});box.append(b,node('div','muted',e.conditions));evolutions.append(box);
   }body.append(evolutions);root.append(img(learner.id),body);
 }
 function journalRows(entries){

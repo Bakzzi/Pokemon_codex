@@ -98,8 +98,8 @@ test('level, stone, trade and cross-generation evolution conditions remain enfor
   const g=new Game({},now);assert.equal(g.evolve(1,2,now),false);assert.equal(g.evolve(25,26,now),false);
   g.data.owned[1].level=16;g.data.owned[1].xp=xpAt(1,16);assert.ok(g.evolve(1,2,now));
   assert.equal(g.data.owned[1].id,2);assert.ok(g.data.caught[1]&&g.data.caught[2]);
-  const kadabra=g.addPokemon(64,20,'catch',now);assert.equal(g.evolve(kadabra,65,now),false);g.data.trainingDevice.obtainedAt=now;g.data.trainingDevice.learnerUid=kadabra;assert.ok(g.evolve(kadabra,65,now));
-  const onix=g.addPokemon(95,20,'catch',now);g.data.trainingDevice.learnerUid=onix;g.data.inventory[210]=1;assert.equal(g.evolve(onix,208,now),false);
+  const kadabra=g.addPokemon(64,20,'catch',now);assert.equal(g.evolve(kadabra,65,now),false);g.data.trainingDevice.obtainedAt=now;g.data.trainingDevice.learnerUid=kadabra;assert.equal(g.evolve(kadabra,65,now),false);g.data.owned[kadabra].xp=xpAt(64,21)-1;g.awardXp(combatant(19,20),false,now);assert.equal(g.data.owned[kadabra].id,65);
+  const onix=g.addPokemon(95,20,'catch',now);g.data.trainingDevice.learnerUid=onix;g.data.owned[onix].xp=xpAt(95,21)-1;g.awardXp(combatant(19,20),false,now);g.data.inventory[210]=1;assert.equal(g.evolve(onix,208,now),false);
   g.data.champion=true;assert.equal(g.evolve(onix,208,now),false);assert.ok(g.unlockJohto(now));assert.ok(g.evolve(onix,208,now));assert.equal(g.data.inventory[210],0);
 });
 test('gyms and champion victory grant the choice of unlocking the next generation',()=>{

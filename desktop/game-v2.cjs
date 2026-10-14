@@ -326,8 +326,8 @@ class Game {
       let ready=(!e.level||p.level>=e.level)&&(!e.happiness||p.happiness>=e.happiness)&&(!e.item||(this.data.inventory[e.item]||0)>0)&&(!e.time||(e.time==='day'?day:!day));
       if(e.relativeStats!==null){const s=combatant(p.id,p.level,p.moves).stats;ready=ready&&Math.sign(s[2]-s[3])===e.relativeStats;}
       const item=db.items.find(i=>i.id===e.item);
-      if(e.trigger===2)ready=ready&&training.has(this)&&this.data.trainingDevice.learnerUid===Number(id);
-      const conditions=[e.level&&`Lv.${e.level}`,e.happiness&&`친밀도 ${p.happiness}/${e.happiness}`,e.time==='day'&&'낮',e.time==='night'&&'밤',item&&`${item.name} ${(this.data.inventory[e.item]||0)}개`,e.trigger===2&&(!training.has(this)?'학습장치 획득 필요':this.data.trainingDevice.learnerUid===Number(id)?'학습장치 등록 완료':'학습장치에 이 동료 등록 필요')].filter(Boolean).join(' · ');
+      if(e.trigger===2)ready=ready&&training.hasLearnedLevel(this,p);
+      const conditions=[e.level&&`Lv.${e.level}`,e.happiness&&`친밀도 ${p.happiness}/${e.happiness}`,e.time==='day'&&'낮',e.time==='night'&&'밤',item&&`${item.name} ${(this.data.inventory[e.item]||0)}개`,e.trigger===2&&(!training.has(this)?'학습장치 획득 필요':training.hasLearnedLevel(this,p)?'학습장치로 1레벨 상승 완료':'이 모습에서 학습장치로 1레벨 상승 필요')].filter(Boolean).join(' · ');
       return {...e,name:species.get(e.to).name,ready:ready&&!this.isBoarded(id),conditions};
     });
   }
@@ -335,7 +335,7 @@ class Game {
     uid=Number(uid);to=Number(to);if(this.data.battle?.kind==='trainer'||this.data.pendingBattle||now<this.data.switchUntil||this.isBoarded(uid))return false;
     const rule=this.evolutions(uid,now).find(e=>e.to===to&&e.ready);if(!rule)return false;
     const p=this.data.owned[uid],from=p.id,fromPokemon=this.snapshot(now).hero;if(rule.item)this.data.inventory[rule.item]--;
-    p.id=to;p.ability=abilityFor(to,p.abilitySlot);p.moves=learnedMoves(to,p.level,p.moves,p.level-1);p.xp=xpAt(to,p.level)+Math.max(0,p.xp-xpAt(from,p.level));
+    p.id=to;delete p.deviceLevelUp;p.ability=abilityFor(to,p.abilitySlot);p.moves=learnedMoves(to,p.level,p.moves,p.level-1);p.xp=xpAt(to,p.level)+Math.max(0,p.xp-xpAt(from,p.level));
     this.data.seen[to]=this.data.seen[to]||now;this.data.caught[to]=this.data.caught[to]||now;
     const old=this.data.battle?.party[uid];
     if(old){const fresh=this.memberCombatant(p);fresh.hp=old.hp>0?Math.max(1,Math.round(fresh.maxHp*old.hp/old.maxHp)):0;this.data.battle.party[uid]=fresh;battleEngine.invalidate(this.data.battle);}
@@ -419,8 +419,9 @@ class Game {
     this.gainXp(this.data.activeId,gained,now);
     const uid=this.data.trainingDevice.learnerUid,p=this.data.owned[uid];
     if(training.has(this)&&p&&uid!==this.data.activeId&&!this.isBoarded(uid)&&species.get(p.id).generation<=this.maxGeneration()&&!(this.data.battle?.party[uid]?.hp<=0)){
-      const shared=this.gainXp(uid,Math.floor(gained/10),now);
+      const before=p.level,shared=this.gainXp(uid,Math.floor(gained/10),now);
       if(shared)this.log(`${species.get(p.id).name} 학습장치 +${shared} 경험치`,'training',p.id,now);
+      if(p.level>before)training.learnedLevel(this,p,before,now);
     }
     return gained;
   }
@@ -500,7 +501,7 @@ class Game {
       return this.finishBattleEvent(now);
     }
     if(b&&(b.party[this.data.activeId]?.hp<=0||b.foe.hp<=0)){this.showFaint(now);return true;}
-    if(this.processActions(now))return true;
+    if(training.queueEvolutions(this,now)||this.processActions(now))return true;
     if(!b&&this.data.pendingChallenge){
       const index=this.data.pendingChallenge.index;
       if(this.startChallenge(index,now))return true;
