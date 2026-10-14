@@ -4,18 +4,27 @@ const {data:db,species,moves,xpAt,levelAt,learnedMoves,view,pickWild,rarity,bala
 const battleEngine=require('./battle.cjs');
 const {combatant,tryCatch,abilityFor}=battleEngine;
 const journal=require('./journal.cjs');
-const {captureTiming}=require('./capture-animation.js');
+const {captureTiming,captureText}=require('./capture-animation.js');
 const pacing=require('./battle-pacing.js');
 const validCount=n=>typeof n==='number'&&Number.isSafeInteger(n)&&n>=0;
 const STARTERS=[1,4,7,25];
+const CAPTURE_LIMITS={yellow:2,red:3};
 const nursery=require('./daycare.cjs');
 function healthView(p){return {hp:p.hp/p.maxHp,currentHp:Math.max(0,Math.ceil(p.hp)),maxHp:p.maxHp,status:p.status||null};}
+function captureCounts(b){
+  if(!b.captureByHealth){
+    // Earlier versions only threw below 10% HP, so existing attempts belong to red HP.
+    b.captureByHealth={yellow:0,red:Math.min(3,validCount(b.captureAttempts)?b.captureAttempts:0)};
+  }
+  return b.captureByHealth;
+}
 class Game {
   constructor(saved={},now=Date.now(),{random=Math.random}={}){
     this.random=random;this.sessions=new Map();this.limits={};this.lastEvent=0;this.nextTick=now;
     this.data=saved.version===2?JSON.parse(JSON.stringify(saved)):{version:2,outputTokens:saved.outputTokens||0,totalTokens:saved.totalTokens||0,baselines:saved.baselines||{},owned:{},seen:{},caught:{},slots:[...STARTERS],activeId:25,badges:[],champion:false,leagueBest:0,inventory:{},workTokens:0,battles:0,journal:[],eventSerial:0,animation:null,battle:null,suspendedWild:null,switchUntil:0};
     this.data.nextUid=this.data.nextUid||1000;this.data.daycare=this.data.daycare||null;this.data.egg=this.data.egg||null;this.daycareSelection=null;
     this.data.pendingBattle=this.data.pendingBattle||null;
+    for(const b of [this.data.battle,this.data.suspendedWild])if(b?.kind==='wild')captureCounts(b);
     const queued=this.data.pendingChallenge;
     this.data.pendingChallenge=queued&&Number.isInteger(queued.index)&&queued.index>=0&&queued.index<=8?queued:null;
     journal.init(this.data,now);
@@ -172,7 +181,7 @@ class Game {
     const hero=this.data.owned[this.data.activeId],id=pickWild(this.maxGeneration(),this.random,hero.level),p=species.get(id);
     const level=Math.max(wildMinimum(p),Math.min(100,hero.level-3+Math.floor(this.random()*7)));
     const party=Object.fromEntries(this.data.slots.filter(uid=>!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
-    this.data.battle={kind:'wild',foe:combatant(id,level,null,{abilitySlot:Math.floor(this.random()*p.abilities.length),gender:nursery.genderFor(id,this.random)}),party,turn:0,captureAttempts:0,startedAt:now};
+    this.data.battle={kind:'wild',foe:combatant(id,level,null,{abilitySlot:Math.floor(this.random()*p.abilities.length),gender:nursery.genderFor(id,this.random)}),party,turn:0,captureAttempts:0,captureByHealth:{yellow:0,red:0},startedAt:now};
     const first=!this.data.seen[id];this.data.seen[id]=this.data.seen[id]||now;
     this.animate('encounter',{text:`야생 ${p.name} Lv.${level} 등장!`,id},now);
     if(first||p.legendary||p.mythical)this.log(`${p.name} Lv.${level} 발견`,'encounter',id,now);
@@ -253,20 +262,27 @@ class Game {
   damageFoe(amount){
     const b=this.data.battle;b.foe.hp=Math.max(0,b.foe.hp-amount);
   }
+  captureOpportunity(b=this.data.battle){
+    if(!b||b.kind!=='wild'||b.foe.hp<=0||this.data.caught[b.foe.id])return null;
+    const hp=b.foe.hp/b.foe.maxHp,band=hp<=.2?'red':hp<=.5?'yellow':null;
+    if(!band)return null;
+    const used=captureCounts(b)[band],limit=CAPTURE_LIMITS[band];
+    return used<limit?{band,used,limit}:null;
+  }
   capture(now){
-    const b=this.data.battle;if(!b||b.kind!=='wild'||b.foe.hp<=0||this.data.pendingBattle?.kind==='capture-result'||this.data.caught[b.foe.id]||b.captureAttempts>=10)return false;
-    const threshold=(10-b.captureAttempts)/100;if(b.foe.hp/b.foe.maxHp>threshold+1e-9)return false;
+    const b=this.data.battle,opportunity=this.captureOpportunity(b),playing=this.data.captureAnimation;
+    if(!opportunity||this.data.pendingBattle?.kind==='capture-result'||playing&&now<playing.at+captureTiming(playing).duration)return false;
     const outcome=tryCatch(species.get(b.foe.id).catchRate,b.foe.hp,b.foe.maxHp,b.foe.status,this.random);b.captureAttempts++;
+    const bandAttempt=++captureCounts(b)[opportunity.band],quota={band:opportunity.band,bandAttempt,bandLimit:opportunity.limit};
     const previous=this.data.animation,leadIn=previous?.kind==='attack'&&previous.moveId&&previous.at===now?previous:null;
     const startsAt=now+(leadIn?pacing.duration(leadIn):0);
-    this.animate('capture',{id:b.foe.id,name:species.get(b.foe.id).name,level:b.foe.level,...healthView(b.foe),caught:outcome.caught,shakes:outcome.shakes,attempt:b.captureAttempts,leadIn,text:`몬스터볼을 던졌다! (${b.captureAttempts}/10)`},startsAt);
+    this.animate('capture',{id:b.foe.id,name:species.get(b.foe.id).name,level:b.foe.level,...healthView(b.foe),caught:outcome.caught,shakes:outcome.shakes,attempt:b.captureAttempts,...quota,leadIn,text:captureText(quota)},startsAt);
     this.data.captureAnimation={...this.data.animation};
     const finishedAt=startsAt+captureTiming(outcome).duration;
     if(outcome.caught){
       // Persist the rolled result, but keep HP, ownership and rewards unchanged until playback ends.
       this.deferBattle('capture-result',finishedAt);this.data.pendingBattle.serial=this.data.captureAnimation.serial;
     }else{
-      if(b.captureAttempts===10)this.log(`${species.get(b.foe.id).name} 포획 10회 실패`,'escape',b.foe.id,now);
       this.holdUntil(finishedAt);
     }
     return outcome.caught;
@@ -312,7 +328,7 @@ class Game {
     if(action.lines.length)this.log(action.lines.join(' · '),'battle',action.id||hero.id,now);
     const finishedAt=now+this.data.animation.duration;
     if(foe.hp<=0||hero.hp<=0)this.deferBattle('after-action',finishedAt);
-    else if(b.kind==='wild'&&!this.data.caught[foe.id]&&b.captureAttempts<10&&foe.hp/foe.maxHp<=(10-b.captureAttempts)/100+1e-9)this.deferBattle('capture',finishedAt);
+    else if(this.captureOpportunity(b))this.deferBattle('capture',finishedAt);
     else if(b.turn>=300)this.deferBattle('draw',finishedAt);
     return true;
   }
