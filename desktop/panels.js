@@ -3,6 +3,8 @@ const $=id=>document.getElementById(id),node=(tag,cls,text)=>{const e=document.c
 let journalTab='summary';
 let state=null,selected=25,memberUid=null,nurserySignature='',tab=new URLSearchParams(location.search).get('tab')||'collection',dexSignature='',detailSignature='',bossSignature='',journalSignature='';
 const img=(id,cls='')=>{const e=node('img',cls);e.src='assets/'+id+'.gif';e.alt='';return e;};
+// Original image width, then the square viewport's x/y/size in source pixels.
+const trainerFaces={brock:[196,52,5,104],misty:[228,61,7,112],surge:[156,22,1,110],erika:[198,22,3,114],koga:[217,113,5,103],sabrina:[216,17,13,112],blaine:[273,24,18,112],giovanni:[179,25,5,112]};
 function switchTab(value){tab=['collection','challenge','journal','daycare'].includes(value)?value:'collection';for(const e of document.querySelectorAll('.page'))e.hidden=e.id!==tab;for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-selected',String(b.dataset.tab===tab));render();}
 for(const b of document.querySelectorAll('[data-tab]'))b.onclick=()=>switchTab(b.dataset.tab);
 $('search').oninput=()=>{dexSignature='';render();};$('filter').onchange=()=>{dexSignature='';render();};
@@ -90,7 +92,7 @@ function renderBosses(){
   renderBadgeCase();
   $('gyms').replaceChildren(...state.bosses.slice(0,8).map((boss,i)=>{
     const done=state.badges.includes(boss.id),card=node('article','gym'+(done?' done':'')),title=node('div','gym-title'),badge=node('span','badge');badge.append(badgeImage(boss,'gym-badge'),document.createTextNode(boss.badge));title.append(node('h3','',(i+1)+'. '+boss.name),badge);
-    const body=node('div','gym-body'),info=node('div','gym-info'),portrait=node('img','gym-trainer');portrait.src='assets/trainers/'+boss.id+'.png';portrait.alt=boss.name+' · 파이어레드·리프그린 원작 일러스트';portrait.draggable=false;info.append(title,teamMembers(boss.team));body.append(info,portrait);card.append(body);
+    const body=node('div','gym-body'),info=node('div','gym-info'),face=node('div','gym-portrait'),portrait=node('img','gym-trainer'),[width,x,y,size]=trainerFaces[boss.id];portrait.src='assets/trainers/'+boss.id+'.png';portrait.alt=boss.name+' · 원작 얼굴 초상화';portrait.draggable=false;portrait.style.width=width/size*100+'%';portrait.style.left=-x/size*100+'%';portrait.style.top=-y/size*100+'%';face.dataset.trainer=boss.id;face.append(portrait);info.append(title,teamMembers(boss.team));body.append(info,face);card.append(body);
     const roadLocked=i===4&&!state.trainingDevice.routeOpen,b=node('button','',done?'뱃지 획득 완료':queued?.index===i?'도전 예약됨':roadLocked?'길을 막는 잠만보 해결 시 해금':i>state.badges.length?'앞선 체육관 뱃지가 필요해요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||!!queued||!state.gymAccess[i];b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;
   }));
   $('ongoing').hidden=!busy&&!queued;

@@ -6,7 +6,7 @@
 
 **[Windows 실행 파일 받기 · 최신 릴리스](https://github.com/Bakzzi/Pokemon_codex/releases/latest)**
 
-릴리스의 `Pokemon-Codex-0.3.26-portable.zip`을 받아 압축을 풀고 `PokemonCodex.exe`를 실행하세요. ZIP 안의 폴더와 파일을 함께 유지하면 됩니다. 소스 코드 ZIP은 실행 파일 배포본과 다릅니다.
+릴리스의 `Pokemon-Codex-0.3.27-portable.zip`을 받아 압축을 풀고 `PokemonCodex.exe`를 실행하세요. ZIP 안의 폴더와 파일을 함께 유지하면 됩니다. 소스 코드 ZIP은 실행 파일 배포본과 다릅니다.
 
 ![코딩과 함께하는 포켓몬 위젯](docs/screenshots/widget.png)
 
@@ -142,9 +142,9 @@ PokeAPI의 파이어레드·리프그린 레벨업 기술표, 3세대 당시 위
 
 **관동 뱃지 홀더**에 여덟 뱃지가 두 줄로 놓입니다. 미획득 칸은 해당 뱃지 모양으로 파인 빈 홈이며, 관장에게 승리하면 실제 뱃지 이미지가 자리 잡고 짧게 빛납니다. 기존에 얻은 뱃지도 저장된 획득 상태에 맞춰 나타납니다. 뱃지 칸을 누르면 해당 체육관으로 이동합니다.
 
-로켓단 아지트에는 원작 R 마크를 표시하며, 여덟 관장 카드에는 파이어레드·리프그린 원작 일러스트를 이름·뱃지·포켓몬 편성과 함께 표시합니다. 그림은 앱에 포함해 로컬에서 불러옵니다. 원본 출처와 파일 해시는 `desktop/assets/trainers/sources.json`, `desktop/assets/logos/sources.json`에 기록했습니다.
+로켓단 아지트에는 원작 R 마크를 표시하며, 여덟 관장 카드에는 파이어레드·리프그린 원작 일러스트의 **얼굴 부분을 초상화로** 표시합니다. 관장마다 얼굴 위치를 맞추고 이름·뱃지·포켓몬 편성과 함께 배치합니다. 그림은 앱에 포함해 로컬에서 불러옵니다. 원본 출처와 파일 해시는 `desktop/assets/trainers/sources.json`, `desktop/assets/logos/sources.json`에 기록했습니다.
 
-![관장 원작 일러스트와 도전 카드](docs/screenshots/gym-leaders.png)
+![관장 얼굴 초상화와 도전 카드](docs/screenshots/gym-leaders.png)
 
 ![관동 뱃지 홀더](docs/screenshots/badge-case.png)
 
