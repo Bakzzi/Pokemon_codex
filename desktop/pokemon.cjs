@@ -22,20 +22,24 @@ function view(id){const p=species.get(id);return {id:p.id,name:p.name,types:p.ty
 const balance={tokensPerAction:250,legendaryPoolChance:0.001,mythicalPoolChance:0.0001,rarePoolChance:0.08,championRareMultiplier:1.5,championUncaughtWeight:2};
 function rarity(p){if(p.mythical)return 'mythical';if(p.legendary)return 'legendary';if(p.catchRate<=75||Object.values(p.stats).reduce((a,b)=>a+b,0)>=480)return 'rare';return p.catchRate>=190?'common':'uncommon';}
 function wildMinimum(p){return Math.max(p.minWildLevel||2,p.legendary?50:p.mythical?30:2);}
-function encounterChances(champion=false){
-  const multiplier=champion?balance.championRareMultiplier:1;
+function championBonus(minimumLevel=0){
+  const multiplier=minimumLevel>90?5:minimumLevel>80?4:minimumLevel>70?3:null;
+  return {rareMultiplier:multiplier||balance.championRareMultiplier,uncaughtWeight:multiplier||balance.championUncaughtWeight};
+}
+function encounterChances(champion=false,minimumLevel=0){
+  const multiplier=champion?championBonus(minimumLevel).rareMultiplier:1;
   const mythical=balance.mythicalPoolChance*multiplier,legendary=balance.legendaryPoolChance*multiplier,rare=balance.rarePoolChance*multiplier;
   const uncommon=.36-balance.mythicalPoolChance-balance.legendaryPoolChance-balance.rarePoolChance;
   return {mythical,legendary,rare,uncommon,common:1-mythical-legendary-rare-uncommon};
 }
-function pickWild(maxGeneration,random=Math.random,partnerLevel=100,{champion=false,caught={}}={}){
+function pickWild(maxGeneration,random=Math.random,partnerLevel=100,{champion=false,caught={},minimumLevel=0}={}){
   const all=data.pokemon.filter(p=>p.generation<=maxGeneration&&wildMinimum(p)<=partnerLevel);
-  const rates=encounterChances(champion),roll=random();
+  const rates=encounterChances(champion,minimumLevel),roll=random();
   const tier=roll<rates.mythical?'mythical':roll<rates.mythical+rates.legendary?'legendary':roll<rates.mythical+rates.legendary+rates.rare?'rare':roll<rates.mythical+rates.legendary+rates.rare+rates.uncommon?'uncommon':'common';
   const preferred=all.filter(p=>rarity(p)===tier),pool=preferred.length?preferred:all.filter(p=>rarity(p)==='common');
   if(!champion)return pool[Math.min(pool.length-1,Math.floor(random()*pool.length))].id;
-  const weights=pool.map(p=>caught[p.id]?1:balance.championUncaughtWeight);let pick=random()*weights.reduce((sum,w)=>sum+w,0);
+  const uncaughtWeight=championBonus(minimumLevel).uncaughtWeight,weights=pool.map(p=>caught[p.id]?1:uncaughtWeight);let pick=random()*weights.reduce((sum,w)=>sum+w,0);
   for(let i=0;i<pool.length;i++){pick-=weights[i];if(pick<0)return pool[i].id;}
   return pool.at(-1).id;
 }
-module.exports={data,species,moves,xpAt,levelAt,learnedMoves,effective,statsAt,view,pickWild,rarity,balance,wildMinimum,encounterChances};
+module.exports={data,species,moves,xpAt,levelAt,learnedMoves,effective,statsAt,view,pickWild,rarity,balance,wildMinimum,encounterChances,championBonus};
