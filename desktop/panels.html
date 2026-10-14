@@ -25,23 +25,30 @@
     <div class="case-inlay"><div class="case-heading"><span>GYM BADGES</span><b>KANTO</b></div><div id="badge-slots" class="badge-slots"></div></div>
     <div class="case-bottom"><span id="badge-case-note">여덟 번의 도전, 여덟 개의 증표</span><i class="case-clasp" aria-hidden="true"></i></div>
   </section>
-  <section class="device-quest" aria-labelledby="device-title">
-    <div class="device-heading"><div><span class="kicker">TEAM ROCKET HIDEOUT</span><h2 id="device-title">로켓단의 아지트</h2></div><img class="device-art" src="assets/items/exp-share.png" alt="학습장치"></div>
-    <p id="device-note"></p><div id="device-requirements" class="device-requirements"></div>
-    <div class="flute-status"><img src="assets/items/poke-flute.png" alt="포켓몬피리"><div><b id="flute-title">포켓몬피리 · 미획득</b><p id="flute-note"></p></div></div>
-    <div id="story-challenges" class="story-challenges"></div>
-    <button id="device-claim">학습장치 받기</button>
-    <div id="device-controls" class="device-controls" hidden>
-      <label>학습장치에 등록할 동료<select id="device-learner"><option value="">동료 선택</option></select></label>
-      <div class="device-actions"><button id="device-register">장치에 등록</button><button id="device-withdraw">동료 데려오기</button></div>
-      <div id="device-current" class="device-current"></div><p class="muted">출전 동료의 경험치는 그대로 · 등록한 한 마리에게만 추가 10%. 교환 진화 대상은 그 모습에서 장치로 한 레벨 오르면 자동 진화해요.</p>
-    </div>
+  <section id="rocket-hideout" class="story-board" aria-labelledby="rocket-title">
+    <span class="kicker">TEAM ROCKET HIDEOUT</span><h2 id="rocket-title">로켓단의 아지트</h2>
+    <ol id="rocket-steps" class="rocket-steps"></ol>
+  </section>
+  <section id="snorlax-road" class="story-board" aria-labelledby="snorlax-title">
+    <span class="kicker">A BLOCKED ROAD</span><h2 id="snorlax-title">길을 막는 잠만보</h2>
+    <p class="muted">포켓몬피리가 있어야 도전할 수 있어요.</p>
+    <div id="snorlax-encounter" class="snorlax-encounter"></div>
   </section>
   <div class="gym-grid" id="gyms"></div>
   <div class="league"><div><span class="kicker">POKÉMON LEAGUE</span><h2>사천왕, 그리고 챔피언</h2><p>뱃지 8개를 모으면 도전할 수 있어요. 다섯 경기를 회복 없이 이어서 승리하면 출현 보너스를 얻고, 2세대 해금을 직접 선택할 수 있어요.</p></div><button id="league-start" data-challenge="8">리그 도전</button></div>
   <div id="league-team" class="league-team"></div><p id="league-progress" class="muted"></p>
 </section>
 <section id="daycare" class="page" hidden>
+  <section id="learning-device" class="device-quest" aria-labelledby="device-title">
+    <div class="device-heading"><div><span class="kicker">EXP. SHARE</span><h2 id="device-title">학습장치</h2></div><img class="device-art" src="assets/items/exp-share.png" alt="학습장치"></div>
+    <p id="device-note">학습장치를 얻으면 사용할 수 있어요.</p>
+    <button id="device-locked" disabled>미획득 · 획득 후 이용 가능</button>
+    <div id="device-controls" class="device-controls" hidden>
+      <label>학습장치에 등록할 동료<select id="device-learner"><option value="">동료 선택</option></select></label>
+      <div class="device-actions"><button id="device-register">장치에 등록</button><button id="device-withdraw">동료 데려오기</button></div>
+      <div id="device-current" class="device-current"></div><p class="muted">출전 동료의 경험치는 그대로 · 등록한 한 마리에게만 추가 10%. 교환 진화 대상은 그 모습에서 장치로 한 레벨 오르면 자동 진화해요.</p>
+    </div>
+  </section>
   <div class="intro"><div><h2>함께 기다리는 새로운 만남</h2><p>두 동료를 골라 예상 알을 확인해요. 맡긴 동료들은 잠시 배틀을 쉬어요.</p></div></div>
   <div class="nursery-layout"><div><div class="nursery-pair"><label>첫 번째 동료<select id="parent-a"><option value="">동료 선택</option></select></label><span>＋</span><label>두 번째 동료<select id="parent-b"><option value="">동료 선택</option></select></label></div>
   <div id="egg-preview" class="egg-preview"></div><div class="nursery-actions"><button id="daycare-start">두 마리 맡기기</button><button id="daycare-withdraw" hidden>동료 데려오기</button></div></div>

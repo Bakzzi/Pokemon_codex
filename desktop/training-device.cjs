@@ -54,7 +54,7 @@ function learnedLevel(game,p,before,now){
 }
 function requirements(game){
   const d=game.data.trainingDevice;
-  return [{id:'erika',name:'민화 승리 → 로켓단 도전',done:game.data.badges.includes('erika')},{id:'flute',name:'잠만보 도전 · 포켓몬피리 필요',done:!!d.fluteObtainedAt},{id:'snorlax',name:'잠만보 포획 또는 기절 → 학습장치 · 5번째 체육관',done:!!d.snorlaxWonAt}];
+  return [{id:'erika',name:'민화 뱃지 획득',done:game.data.badges.includes('erika')},{id:'rocket-grunt',name:'조무래기에게 승리',done:!!d.gruntWonAt},{id:'rocket-duo',name:'로이·로사에게 승리',done:!!d.duoWonAt},{id:'rocket-giovanni',name:'비주기에게 승리',done:!!d.rocketWonAt}];
 }
 function canClaim(game){return !has(game)&&!!game.data.trainingDevice.snorlaxWonAt;}
 function canChallenge(game,id){

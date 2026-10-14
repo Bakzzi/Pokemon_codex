@@ -38,7 +38,7 @@ test('loss, abandon and incomplete teams do not complete story quests, and nativ
 });
 
 test('a claim can wait for unmet requirements and its final animation without granting effects early',()=>{
-  const g=fixture();assert.ok(g.requestAction('device-claim',undefined,now));assert.equal(advance(g),false);assert.equal(training.has(g),false);assert.match(g.pendingActions(now)[0].reason,/잠만보/);
+  const g=fixture();assert.ok(g.requestAction('device-claim',undefined,now));assert.equal(advance(g),false);assert.equal(training.has(g),false);assert.match(g.pendingActions(now)[0].reason,/학습장치/);
   g.data.badges=data.bosses.slice(0,4).map(b=>b.id);g.data.trainingDevice.snorlaxWonAt=now;g.animate('result',{text:'잠만보 승리'},now);assert.equal(g.tick(g.data.switchUntil-1),false);assert.equal(training.has(g),false);
   assert.ok(advance(g));assert.ok(training.has(g));assert.equal(g.data.pendingActions.length,0);assert.match(g.data.animation.text,/학습장치/);assert.ok(g.panelState(now).summary.highlights.some(e=>e.kind==='device'));
 });

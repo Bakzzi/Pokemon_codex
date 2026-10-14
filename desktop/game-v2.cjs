@@ -158,7 +158,7 @@ class Game {
         const rule=this.evolutions(a.uid,now).find(e=>e.to===a.to);
         if(!rule.ready)return wait('진화 조건 대기 · '+(rule.conditions||'조건을 충족하면 진화해요.'));
       }
-      if(a.kind==='device-claim'&&!training.canClaim(this))return wait('잠만보를 한 번 포획하거나 기절시키면 받아요.');
+      if(a.kind==='device-claim'&&!training.canClaim(this))return wait('학습장치를 아직 얻지 못했어요.');
       if(a.kind==='daycare-start'){
         if(this.data.egg)return wait('현재 알이 부화하면 맡겨요.');
         if(this.data.daycare&&!this.data.daycare.produced)return wait('키우미집에서 현재 알을 얻은 뒤 맡겨요.');
