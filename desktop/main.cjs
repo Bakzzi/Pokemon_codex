@@ -78,6 +78,8 @@ async function start(){
       if(action==='challenge')result=game.challenge(value);
       if(action==='challenge-cancel')result=game.cancelChallenge();
       if(action==='abandon')result=game.abandon();
+      if(action==='johto-stay')result=game.stayInKanto();
+      if(action==='johto-unlock')result=game.unlockJohto();
       if(action==='journal-ack')result=game.acknowledgeJournal();
       if(action==='daycare-preview')game.daycareSelection=Array.isArray(value)?value.slice(0,2).map(Number):[];
       if(action==='daycare-start')result=nursery.start(game,value);

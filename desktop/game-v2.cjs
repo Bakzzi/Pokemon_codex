@@ -1,6 +1,6 @@
 'use strict';
 const {monthOf,levelOf}=require('./season.cjs');
-const {data:db,species,moves,xpAt,levelAt,learnedMoves,view,pickWild,rarity,balance,wildMinimum,statsAt}=require('./pokemon.cjs');
+const {data:db,species,moves,xpAt,levelAt,learnedMoves,view,pickWild,rarity,balance,wildMinimum,statsAt,encounterChances}=require('./pokemon.cjs');
 const battleEngine=require('./battle.cjs');
 const {combatant,tryCatch,abilityFor}=battleEngine;
 const journal=require('./journal.cjs');
@@ -18,12 +18,19 @@ function captureCounts(b){
   }
   return b.captureByHealth;
 }
+function hasJohtoProgress(data){
+  const ids=[...Object.keys(data.seen||{}),...Object.keys(data.caught||{}),...Object.values(data.owned||{}).map(p=>p.id),data.egg?.id,...(data.daycare?.offspring||[])];
+  return ids.some(id=>species.get(Number(id))?.generation===2);
+}
 class Game {
   constructor(saved={},now=Date.now(),{random=Math.random}={}){
     this.random=random;this.sessions=new Map();this.limits={};this.lastEvent=0;this.nextTick=now;
     this.data=saved.version===2?JSON.parse(JSON.stringify(saved)):{version:2,outputTokens:saved.outputTokens||0,totalTokens:saved.totalTokens||0,baselines:saved.baselines||{},owned:{},seen:{},caught:{},slots:[...STARTERS],activeId:25,badges:[],champion:false,leagueBest:0,inventory:{},workTokens:0,battles:0,journal:[],eventSerial:0,animation:null,battle:null,suspendedWild:null,switchUntil:0};
     this.data.nextUid=this.data.nextUid||1000;this.data.daycare=this.data.daycare||null;this.data.egg=this.data.egg||null;this.daycareSelection=null;
     this.data.pendingBattle=this.data.pendingBattle||null;
+    // Keep existing Gen II progress available; old champions with no Gen II progress choose now.
+    if(typeof this.data.johtoUnlocked!=='boolean')this.data.johtoUnlocked=!!this.data.champion&&hasJohtoProgress(this.data);
+    this.data.johtoDeferred=!!this.data.johtoDeferred&&!this.data.johtoUnlocked;
     for(const b of [this.data.battle,this.data.suspendedWild])if(b?.kind==='wild')captureCounts(b);
     const queued=this.data.pendingChallenge;
     this.data.pendingChallenge=queued&&Number.isInteger(queued.index)&&queued.index>=0&&queued.index<=8?queued:null;
@@ -58,7 +65,16 @@ class Game {
     for(const id of Object.keys(this.data.owned).map(Number))if(this.data.slots.length<4&&!this.data.slots.includes(id)&&species.get(this.data.owned[id].id)?.generation<=this.maxGeneration())this.data.slots.push(id);
     if(!this.data.slots.includes(this.data.activeId))this.data.activeId=this.data.slots[0];
   }
-  maxGeneration(){return this.data.champion?2:1;}
+  maxGeneration(){return this.data.champion&&this.data.johtoUnlocked?2:1;}
+  stayInKanto(now=Date.now()){
+    if(!this.data.champion||this.data.johtoUnlocked||this.data.johtoDeferred)return false;
+    this.data.johtoDeferred=true;this.log('관동에 머물며 151종 도감 수집을 계속하기로 했다.','region',null,now);return true;
+  }
+  unlockJohto(now=Date.now()){
+    if(!this.data.champion||this.data.johtoUnlocked)return false;
+    this.data.johtoUnlocked=true;this.data.johtoDeferred=false;
+    this.log('성도 지방을 선택했다! 2세대 100종이 해금되었다.','unlock',null,now);return true;
+  }
   isBoarded(uid){return this.data.daycare?.parents.includes(Number(uid))||false;}
   addPokemon(id,level,origin,now=Date.now(),register=true){
     if(!species.has(id)||species.get(id).generation>this.maxGeneration())return false;
@@ -178,7 +194,7 @@ class Game {
   newWild(now){
     this.data.pendingBattle=null;
     this.data.captureAnimation=null;
-    const hero=this.data.owned[this.data.activeId],id=pickWild(this.maxGeneration(),this.random,hero.level),p=species.get(id);
+    const hero=this.data.owned[this.data.activeId],id=pickWild(this.maxGeneration(),this.random,hero.level,{champion:this.data.champion,caught:this.data.caught}),p=species.get(id);
     const level=Math.max(wildMinimum(p),Math.min(100,hero.level-3+Math.floor(this.random()*7)));
     const party=Object.fromEntries(this.data.slots.filter(uid=>!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
     this.data.battle={kind:'wild',foe:combatant(id,level,null,{abilitySlot:Math.floor(this.random()*p.abilities.length),gender:nursery.genderFor(id,this.random)}),party,turn:0,captureAttempts:0,captureByHealth:{yellow:0,red:0},startedAt:now};
@@ -257,7 +273,11 @@ class Game {
     const boss=db.bosses[b.bossIndex];this.log(`${boss.name}에게 승리!${boss.badge?' '+boss.badge+' 획득':''}`,'badge',null,now);
     if(b.bossIndex<8){if(!this.data.badges.includes(boss.id))this.data.badges.push(boss.id);this.endChallenge(true,now);}
     else if(b.bossIndex<12){this.data.leagueBest=Math.max(this.data.leagueBest,b.bossIndex-7);b.bossIndex++;b.foeIndex=0;this.nextTrainer(now);}
-    else {this.data.champion=true;this.data.leagueBest=5;this.log('관동 챔피언 달성! 성도 2세대 포켓몬이 해금되었다.','champion',null,now);this.animate('champion',{text:'관동 챔피언! 성도 지방이 열렸어!'},now);this.endChallenge(true,now);}
+    else {
+      const first=!this.data.champion;this.data.champion=true;this.data.leagueBest=5;
+      this.log(first?'관동 챔피언 달성! 출현 보너스를 얻었다. 성도 지방은 원할 때 선택할 수 있다.':'관동 챔피언 타이틀을 지켰다!','champion',null,now);
+      this.animate('champion',{text:first?'관동 챔피언! 출현 보너스 획득!':'관동 챔피언 타이틀 방어!'},now);this.endChallenge(true,now);
+    }
   }
   damageFoe(amount){
     const b=this.data.battle;b.foe.hp=Math.max(0,b.foe.hp-amount);
@@ -357,7 +377,9 @@ class Game {
   }
   panelState(now=Date.now()){
     const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,level:p.level,xp:p.xp,gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:p.moves.map(id=>({id,name:moves.get(id).name,type:moves.get(id).type})),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
-    return {...this.snapshot(now),roster,daycare:nursery.snapshot(this),
+    return {...this.snapshot(now),roster,daycare:nursery.snapshot(this),johtoUnlocked:this.maxGeneration()===2,johtoDeferred:this.data.johtoDeferred,
+      kantoCaughtCount:Object.keys(this.data.caught).filter(id=>species.get(Number(id))?.generation===1).length,
+      encounterBonus:this.data.champion?{rareMultiplier:balance.championRareMultiplier,uncaughtWeight:balance.championUncaughtWeight,rates:encounterChances(true)}:null,
       collection:db.pokemon.filter(p=>p.generation<=this.maxGeneration()).map(p=>{const owned=roster.filter(m=>m.id===p.id);return {id:p.id,seen:!!this.data.seen[p.id],caught:!!this.data.caught[p.id],name:this.data.seen[p.id]?p.name:'???',owned:owned.length>0,count:owned.length,level:owned.length?Math.max(...owned.map(m=>m.level)):null,types:this.data.seen[p.id]?view(p.id).types:[],description:this.data.seen[p.id]?p.description:'아직 만나지 않은 포켓몬',rarity:rarity(p)};}),
       bosses:db.bosses,leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name,count}))};
   }

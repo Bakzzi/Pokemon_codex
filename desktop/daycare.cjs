@@ -23,7 +23,7 @@ function predict(game,parents=[]){
   let id=mother.id;
   while(species.has(species.get(id).preEvolution))id=species.get(id).preEvolution;
   const possibilities=[29,32].includes(id)?[29,32]:[id];
-  if(possibilities.some(id=>species.get(id).generation>game.maxGeneration()))return fail('태어날 포켓몬은 2세대예요. 관동 챔피언이 된 뒤 맡길 수 있어요.');
+  if(possibilities.some(id=>species.get(id).generation>game.maxGeneration()))return fail('태어날 포켓몬은 2세대예요. 관동 챔피언이 된 뒤 2세대 해금을 선택하면 맡길 수 있어요.');
   return {compatible:true,reason:'이 조합으로 알을 얻을 수 있어요.',offspring:possibilities.map(id=>({...view(id),chance:1/possibilities.length,hatchTokens:species.get(id).hatchCycles*breedingBalance.tokensPerHatchCycle})),eggTokens:breedingBalance.eggTokens};
 }
 function start(game,parents,now=Date.now()){
