@@ -5,6 +5,7 @@ const now=Date.parse('2026-10-14T07:00:00Z');
 const rng=seed=>()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
 function champion(){const g=new Game({},now,{random:()=>.73});g.data.champion=true;g.data.leagueBest=5;return g;}
 function lastLeagueOpponent(g,at){
+  g.data.trainingDevice.snorlaxWonAt=at;
   g.data.badges=data.bosses.slice(0,8).map(b=>b.id);assert.ok(g.challenge(8,at));
   g.data.battle.bossIndex=12;g.data.battle.foeIndex=data.bosses[12].team.length-1;g.nextTrainer(at);g.defeatOpponent(at);
 }

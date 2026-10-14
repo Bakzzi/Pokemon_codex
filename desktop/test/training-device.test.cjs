@@ -10,14 +10,12 @@ function win(g){let i=0;while(g.data.battle){assert.ok(i++<25);if(g.data.pending
 function unlock(g){g.data.badges=data.bosses.slice(0,4).map(b=>b.id);count(g,50);assert.ok(g.challenge('rocket-grunt',now));win(g);assert.ok(g.challenge('road-snorlax',g.data.switchUntil));win(g);assert.ok(g.requestAction('device-claim',undefined,g.data.switchUntil));if(!training.has(g))assert.ok(advance(g));assert.ok(training.has(g));}
 function device(g,uid){g.data.trainingDevice.obtainedAt=now;g.data.trainingDevice.learnerUid=uid;}
 
-test('Erika, Rocket Giovanni, road Snorlax and 50 registered Kanto species are all required, with no old-progress inference',()=>{
-  const g=fixture();count(g,50);g.data.badges=data.bosses.slice(0,8).map(b=>b.id);g.data.champion=true;
+test('Erika unlocks Rocket, the flute unlocks Snorlax, and a single Snorlax clear awards the device without a dex quota',()=>{
+  const g=fixture();g.data.badges=data.bosses.slice(0,4).map(b=>b.id);
   assert.equal(training.has(g),false);assert.equal(training.canClaim(g),false);assert.equal(g.canChallenge('road-snorlax'),false);assert.equal(g.canChallenge('__proto__'),false);
   assert.equal(g.canChallenge('rocket-giovanni'),false);assert.ok(g.canChallenge('rocket-grunt'));assert.ok(g.challenge('rocket-grunt',now));const badges=[...g.data.badges];win(g);
   assert.deepEqual(g.data.badges,badges);assert.ok(g.data.trainingDevice.rocketWonAt);assert.equal(g.canChallenge('rocket-giovanni'),false);assert.equal(training.canClaim(g),false);assert.ok(g.canChallenge('road-snorlax'));
-  assert.ok(g.challenge('road-snorlax',g.data.switchUntil));win(g);assert.ok(training.canClaim(g));g.data.caught[143]=now;delete g.data.caught[19];delete g.data.caught[20];assert.equal(g.kantoCaughtCount(),49);assert.equal(training.canClaim(g),false);g.data.caught[19]=now;
-  g.data.badges=g.data.badges.filter(b=>b!=='erika');assert.equal(training.canClaim(g),false);g.data.badges.push('erika');assert.ok(training.canClaim(g));
-  assert.ok(g.requestAction('device-claim',undefined,g.data.switchUntil));assert.ok(training.has(g));assert.equal(training.canClaim(g),false);const serial=g.data.eventSerial;
+  assert.equal(g.canChallenge(4),false);assert.ok(g.challenge('road-snorlax',g.data.switchUntil));win(g);assert.ok(training.has(g));assert.ok(g.canChallenge(4));assert.ok(g.kantoCaughtCount()<50);assert.equal(training.canClaim(g),false);const serial=g.data.eventSerial;
   assert.ok(g.requestAction('device-claim',undefined,g.data.switchUntil));assert.equal(g.data.eventSerial,serial);assert.equal(g.data.journal.filter(e=>e.kind==='device').length,1);
 });
 
@@ -40,8 +38,8 @@ test('loss, abandon and incomplete teams do not complete story quests, and nativ
 });
 
 test('a claim can wait for unmet requirements and its final animation without granting effects early',()=>{
-  const g=fixture();assert.ok(g.requestAction('device-claim',undefined,now));assert.equal(advance(g),false);assert.equal(training.has(g),false);assert.match(g.pendingActions(now)[0].reason,/민화/);
-  g.data.badges=data.bosses.slice(0,4).map(b=>b.id);g.data.trainingDevice.rocketWonAt=now;g.data.trainingDevice.fluteObtainedAt=now;g.data.trainingDevice.snorlaxWonAt=now;count(g,49);assert.equal(advance(g),false);count(g,50);g.animate('result',{text:'잠만보 승리'},now);assert.equal(g.tick(g.data.switchUntil-1),false);assert.equal(training.has(g),false);
+  const g=fixture();assert.ok(g.requestAction('device-claim',undefined,now));assert.equal(advance(g),false);assert.equal(training.has(g),false);assert.match(g.pendingActions(now)[0].reason,/잠만보/);
+  g.data.badges=data.bosses.slice(0,4).map(b=>b.id);g.data.trainingDevice.snorlaxWonAt=now;g.animate('result',{text:'잠만보 승리'},now);assert.equal(g.tick(g.data.switchUntil-1),false);assert.equal(training.has(g),false);
   assert.ok(advance(g));assert.ok(training.has(g));assert.equal(g.data.pendingActions.length,0);assert.match(g.data.animation.text,/학습장치/);assert.ok(g.panelState(now).summary.highlights.some(e=>e.kind==='device'));
 });
 

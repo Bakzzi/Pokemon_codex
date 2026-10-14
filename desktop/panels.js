@@ -86,12 +86,12 @@ function renderBadgeCase(){
 }
 function renderBosses(){
   renderDevice();
-  const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.badges,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
+  const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.badges,state.gymAccess,state.trainingDevice.routeOpen,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
   $('badges').textContent='뱃지 '+state.badges.length+' / 8';
   renderBadgeCase();
   $('gyms').replaceChildren(...state.bosses.slice(0,8).map((boss,i)=>{
     const done=state.badges.includes(boss.id),card=node('article','gym'+(done?' done':'')),title=node('div','gym-title'),badge=node('span','badge');badge.append(badgeImage(boss,'gym-badge'),document.createTextNode(boss.badge));title.append(node('h3','',(i+1)+'. '+boss.name),badge);card.append(title,teamMembers(boss.team));
-    const b=node('button','',done?'뱃지 획득 완료':queued?.index===i?'도전 예약됨':i>state.badges.length?'앞선 체육관 뱃지가 필요해요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||!!queued||i>state.badges.length;b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;
+    const roadLocked=i===4&&!state.trainingDevice.routeOpen,b=node('button','',done?'뱃지 획득 완료':queued?.index===i?'도전 예약됨':i>state.badges.length?'앞선 체육관 뱃지가 필요해요':roadLocked?'잠만보를 먼저 포획하거나 기절시켜 주세요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||!!queued||!state.gymAccess[i];b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;
   }));
   $('ongoing').hidden=!busy&&!queued;
   if(queued){$('ongoing').replaceChildren(node('span','',queued.name+' 도전 예약 · '+(state.battle?'현재 배틀이 끝나면 시작해요.':'마지막 연출이 끝나면 시작해요.')));const b=node('button','','예약 취소');b.dataset.cancelChallenge='';b.onclick=()=>window.buddy.action('challenge-cancel');$('ongoing').append(b);}
@@ -112,20 +112,20 @@ function renderBosses(){
 function renderDevice(){
   if(!state)return;const d=state.trainingDevice,busy=state.battle?.kind==='trainer',queued=state.pendingChallenge;
   $('device-title').textContent='로켓단의 아지트';
-  $('device-note').textContent=d.obtained?'장치에 한 마리를 등록하면 경험치 10%를 추가로 받아요. 교환 진화 대상은 그 모습에서 장치 경험치로 한 레벨 오르면 배틀·결과 연출 후 자동 진화해요.':d.canClaim?'오박사: 도감이 훌륭하게 채워졌구나! 15번도로의 내 조수에게 학습장치를 받아 가거라.':'민화 뱃지를 얻으면 로켓단이 해금돼요. 조무래기 → 로이·로사 → 비주기, 3단계를 물리쳐 포켓몬피리를 받고 잠만보를 깨워요. 잠만보에게 승리하거나 포획하고 관동 도감 50종을 등록하면 학습장치를 받을 수 있어요.';
+  $('device-note').textContent='민화에게 승리하면 로켓단에 도전할 수 있어요. 잠만보는 포켓몬피리를 사용해야 도전할 수 있어요. 잠만보를 한 번 포획하거나 기절시키면 학습장치를 받고 5번째 체육관이 열려요.';
   $('device-requirements').replaceChildren(...d.requirements.map(r=>node('div','device-requirement'+(r.done?' done':''),(r.done?'완료 · ':'대기 · ')+r.name)));
   $('flute-title').textContent='포켓몬피리 · '+(d.fluteObtained?'획득 완료':'미획득');
-  $('flute-note').textContent=d.fluteObtained?'잠만보는 피리로만 만날 수 있어요. 사용해도 피리는 남아요.':'로켓단 '+d.rocketCompleted+' / 3단계 완료 · 비주기를 이기면 받아요.';
+  $('flute-note').textContent=d.fluteObtained?'잠만보는 피리로만 만날 수 있어요. 사용해도 피리는 남아요.':'잠만보를 깨우려면 포켓몬피리가 필요해요.';
   $('story-challenges').replaceChildren(...d.steps.map(step=>{
     const road=step.id==='road-snorlax',card=node('article','story-challenge');card.append(node('h3','',(step.stage?step.stage+'단계 · ':'')+step.name),teamMembers(step.team));
     const ongoing=state.battle?.storyId===step.id,reserved=queued?.index===step.id;
     const label=ongoing?'배틀 중':reserved?(road?'피리 사용 예약됨':'도전 예약됨'):road?step.done&&d.snorlaxCaught?'포획 완료':!d.fluteObtained?'포켓몬피리가 필요해요':step.done?'다시 포켓몬피리 사용':'포켓몬피리 사용':step.done?'승리 완료':!step.available?!state.badges.includes('erika')?'민화 뱃지가 필요해요':'앞선 로켓단 단계를 이겨 주세요':'도전하기';
     const b=node('button','',label);b.dataset.story=step.id;b.disabled=ongoing||busy||!!queued||!step.available;b.onclick=()=>window.buddy.action('challenge',step.id);card.append(b);
-    if(road){const note=node('p','muted',d.fluteObtained?'피리는 소모되지 않아요. 못 잡았다면 다시 깨울 수 있어요.':'비주기를 이기면 포켓몬피리를 받아요.');card.append(note);}
+    if(road){const note=node('p','muted',d.fluteObtained?'피리는 소모되지 않아요. 못 잡았다면 다시 깨울 수 있어요.':'포켓몬피리가 있어야 잠만보에게 도전할 수 있어요.');card.append(note);}
     return card;
   }));
-  const claimQueued=state.pendingActions.some(a=>a.kind==='device-claim');$('device-claim').hidden=d.obtained;$('device-claim').disabled=claimQueued;
-  $('device-claim').textContent=claimQueued?'학습장치 수령 예약됨':d.canClaim?'오박사 조수에게 학습장치 받기':'조건 달성 후 학습장치 받기 예약';
+  const claimQueued=state.pendingActions.some(a=>a.kind==='device-claim');$('device-claim').hidden=d.obtained||!d.canClaim;$('device-claim').disabled=claimQueued;
+  $('device-claim').textContent=claimQueued?'학습장치 수령 예약됨':'학습장치 받기';
   $('device-controls').hidden=!d.obtained;if(!d.obtained)return;
   const select=$('device-learner'),current=Number(select.value),signature=JSON.stringify(state.roster.map(p=>[p.uid,p.id,p.level,p.boarded]));
   if(select.dataset.signature!==signature){

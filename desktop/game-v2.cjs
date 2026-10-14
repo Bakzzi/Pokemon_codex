@@ -82,7 +82,7 @@ class Game {
     this.data.slots=this.data.slots.filter(id=>this.data.owned[id]&&species.get(this.data.owned[id].id)?.generation<=this.maxGeneration());
     for(const id of Object.keys(this.data.owned).map(Number))if(this.data.slots.length<4&&!this.data.slots.includes(id)&&species.get(this.data.owned[id].id)?.generation<=this.maxGeneration())this.data.slots.push(id);
     if(!this.data.slots.includes(this.data.activeId))this.data.activeId=this.data.slots[0];
-    training.init(this);
+    training.init(this,now);
     const actionIds=new Set();
     this.data.pendingActions=(Array.isArray(this.data.pendingActions)?this.data.pendingActions:[]).slice(0,32).map(restoreAction).filter(a=>a&&!actionIds.has(a.id)&&actionIds.add(a.id));
     this.data.actionSerial=Math.max(validCount(this.data.actionSerial)?this.data.actionSerial:0,...actionIds);
@@ -115,7 +115,7 @@ class Game {
     if(a.kind==='slot')return name(a.uid)+' · '+(a.slot+1)+'번 칸 배치';
     if(a.kind==='evolve')return (species.get(a.from)?.name||name(a.uid))+' → '+species.get(a.to).name+' 진화';
     if(a.kind==='daycare-start')return a.parents.map(name).join(' · ')+' 키우미집 맡기기';
-    if(a.kind==='device-claim')return '오박사 조수에게 학습장치 받기';
+    if(a.kind==='device-claim')return '학습장치 받기';
     if(a.kind==='device-learner')return a.uid===null?'학습장치 동료 데려오기':name(a.uid)+' 학습장치 등록';
     return {'daycare-withdraw':'키우미집 동료 데려오기',abandon:'도전 그만두기','johto-stay':'관동에 머물기','johto-unlock':'2세대 해금하기'}[a.kind];
   }
@@ -158,7 +158,7 @@ class Game {
         const rule=this.evolutions(a.uid,now).find(e=>e.to===a.to);
         if(!rule.ready)return wait('진화 조건 대기 · '+(rule.conditions||'조건을 충족하면 진화해요.'));
       }
-      if(a.kind==='device-claim'&&!training.canClaim(this))return wait('획득 조건 대기 · '+training.requirements(this).filter(r=>!r.done).map(r=>r.name).join(' · '));
+      if(a.kind==='device-claim'&&!training.canClaim(this))return wait('잠만보를 한 번 포획하거나 기절시키면 받아요.');
       if(a.kind==='daycare-start'){
         if(this.data.egg)return wait('현재 알이 부화하면 맡겨요.');
         if(this.data.daycare&&!this.data.daycare.produced)return wait('키우미집에서 현재 알을 얻은 뒤 맡겨요.');
@@ -356,7 +356,7 @@ class Game {
   }
   canChallenge(index){
     if(training.battles[index])return training.canChallenge(this,index);
-    return Number.isInteger(index)&&index>=0&&index<=8&&(index===8?this.data.badges.length>=8:index<=this.data.badges.length&&!this.data.badges.includes(db.bosses[index].id));
+    return Number.isInteger(index)&&index>=0&&index<=8&&(index!==4||training.routeOpen(this))&&(index===8?this.data.badges.length>=8:index<=this.data.badges.length&&!this.data.badges.includes(db.bosses[index].id));
   }
   challengeName(index){return training.battles[index]?.name||(index===8?'포켓몬 리그':db.bosses[index].name+' 체육관');}
   challenge(index,now=Date.now()){
@@ -428,13 +428,13 @@ class Game {
   defeatOpponent(now,captured=false){
     const b=this.data.battle,foe=b.foe;this.awardXp(foe,b.kind==='trainer'&&this.battleBoss(b)?.xpTrainer!==false,now);this.data.battles++;journal.increment(this.data,'wins');
     if(b.kind==='wild'){
-      if(b.storyId==='road-snorlax')training.win(this,b.storyId,now,captured);
+      const roadCleared=b.storyId==='road-snorlax'&&training.win(this,b.storyId,now,captured);
       if(!captured)this.log(`${species.get(foe.id).name}와의 배틀 승리`,'win',foe.id,now);
       if(this.random()<0.015){
         const candidates=[...new Set(db.pokemon.filter(p=>p.generation<=this.maxGeneration()).flatMap(p=>p.evolutions.filter(e=>species.get(e.to)?.generation<=this.maxGeneration()).map(e=>e.item)).filter(Boolean))];
         const id=candidates[Math.floor(this.random()*candidates.length)];if(id){this.data.inventory[id]=(this.data.inventory[id]||0)+1;this.log(`${db.items.find(i=>i.id===id)?.name||'진화 도구'} 발견`,'item',null,now);}
       }
-      this.data.battle=null;if(!captured)this.animate('result',{text:species.get(foe.id).name+'와의 배틀 승리!'},now);return;
+      this.data.battle=null;if(roadCleared)this.animate('result',{text:'학습장치 획득! 5번째 관장 독수에게 도전할 수 있어요.'},now);else if(!captured)this.animate('result',{text:species.get(foe.id).name+'와의 배틀 승리!'},now);return;
     }
     b.foeIndex++;
     if(b.foeIndex<this.battleBoss(b).team.length){this.nextTrainer(now);return;}
@@ -560,7 +560,7 @@ class Game {
       kantoCaughtCount:this.kantoCaughtCount(),
       encounterBonus:this.encounterBonus(),
       collection:db.pokemon.filter(p=>p.generation<=this.maxGeneration()).map(p=>{const owned=roster.filter(m=>m.id===p.id);return {id:p.id,seen:!!this.data.seen[p.id],caught:!!this.data.caught[p.id],name:this.data.seen[p.id]?p.name:'???',owned:owned.length>0,count:owned.length,level:owned.length?Math.max(...owned.map(m=>m.level)):null,types:this.data.seen[p.id]?view(p.id).types:[],description:this.data.seen[p.id]?p.description:'아직 만나지 않은 포켓몬',rarity:rarity(p)};}),
-      bosses:db.bosses,leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:[...(this.data.trainingDevice.fluteObtainedAt?[{id:'poke-flute',name:'포켓몬피리',count:1}]:[]),...(training.has(this)?[{id:'training-device',name:'학습장치',count:1}]:[]),...Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name,count}))]};
+      bosses:db.bosses,gymAccess:db.bosses.slice(0,8).map((_,i)=>this.canChallenge(i)),leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:[...(this.data.trainingDevice.fluteObtainedAt?[{id:'poke-flute',name:'포켓몬피리',count:1}]:[]),...(training.has(this)?[{id:'training-device',name:'학습장치',count:1}]:[]),...Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name,count}))]};
   }
 }
 module.exports={Game,STARTERS};

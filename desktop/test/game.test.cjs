@@ -104,6 +104,7 @@ test('level, stone, trade and cross-generation evolution conditions remain enfor
 });
 test('gyms and champion victory grant the choice of unlocking the next generation',()=>{
   const g=new Game({},now);for(let id=1;id<=151;id++)g.data.caught[id]=now;
+  g.data.trainingDevice.snorlaxWonAt=now;
   assert.equal(g.maxGeneration(),1);assert.equal(g.challenge(1,now),false);assert.equal(g.challenge(8,now),false);
   for(let i=0;i<8;i++){
     assert.ok(g.challenge(i,Math.max(now,g.data.switchUntil)));while(g.data.battle?.kind==='trainer')g.defeatOpponent(g.data.switchUntil);
