@@ -129,8 +129,11 @@ function renderSpeech(s){
   const now=Date.now(),capture=s.capture,f=capture&&CaptureAnimation.captureFrame(capture,now);
   let event=capture?.leadIn&&now<capture.at?capture.leadIn:s.animation,text='',speaker='scene',expires=0;
   const actionActive=event&&now>=event.at&&now-event.at<BattlePacing.duration(event);
-  const waiting=s.phase!=='working'&&s.workTokens<250&&s.battle?.kind!=='trainer'&&!actionActive&&!f?.locked;
-  if(waiting)text='작업 대기중..';
+  const quiet=s.workTokens<250&&s.battle?.kind!=='trainer'&&!actionActive&&!f?.locked;
+  const checking=quiet&&(s.phase==='unknown'||!s.demo&&s.source?.connected===false);
+  const waiting=quiet&&!checking&&(s.phase==='idle'||s.phase==='done');
+  if(checking)text='작업 상태 확인 중..';
+  else if(waiting)text='작업 대기중..';
   else if(capture&&now>=capture.at&&(f.locked||s.animation?.kind==='capture'))text=f.text;
   else if(actionActive){
     text=event.text;expires=event.at+BattlePacing.duration(event);
@@ -150,8 +153,8 @@ function renderSpeech(s){
       if(causes.length){text=causes.map(c=>event[c.side].name+' · '+c.cause+' 피해!').join(' · ');speaker=causes.length===1?causes[0].side:'scene';}
     }
   }else text=s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.battle?'다음 작업과 함께 배틀을 이어가요':'오늘은 어떤 포켓몬을 만날까?';
-  const bubble=$('speech');bubble.dataset.speaker=speaker;bubble.classList.toggle('waiting',waiting);$('speech-text').textContent=text;
-  bubble.title=!waiting&&event?.detail?text+' · '+event.detail:text;
+  const bubble=$('speech');bubble.dataset.speaker=speaker;bubble.classList.toggle('waiting',waiting||checking);$('speech-text').textContent=text;
+  bubble.title=!waiting&&!checking&&event?.detail?text+' · '+event.detail:text;
   // Clear an expired action even when no new state arrives from an idle Codex session.
   if(expires&&!(f?.locked))speechTimer=setTimeout(()=>{if(current)renderSpeech(current);},Math.max(1,expires-now+10));
 }
@@ -176,7 +179,7 @@ window.buddy.onState(s=>{
   $('hero-name').textContent=s.hero.name;$('level').textContent=s.level;renderHeroHealth(s);
   $('region').textContent=s.generation===1?'KANTO ADVENTURE':'KANTO + JOHTO';$('exp').textContent=s.level===100?'MAX LEVEL':fmt(s.expCurrent)+' / '+fmt(s.expRequired);
   $('xp-bar').style.width=s.progress*100+'%';$('evolution').textContent=s.evolution.some(e=>e.ready)?'진화 가능 · 도감에서 확인':'';
-  $('status').textContent=s.notice||(s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.phase==='working'?'Codex 작업과 함께 모험 중':s.workTokens>=250?'작업의 여운으로 모험을 이어가는 중':s.phase==='done'?'작업 끝! 모험 기록을 확인해 봐':'다음 코딩을 기다리는 중');
+  $('status').textContent=s.notice||(s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.phase==='working'?'Codex 작업과 함께 모험 중':s.workTokens>=250?'작업의 여운으로 모험을 이어가는 중':s.phase==='unknown'?'Codex 작업 상태를 확인하는 중':s.phase==='done'?'작업 끝! 모험 기록을 확인해 봐':'다음 코딩을 기다리는 중');
   $('mode-tag').textContent=s.demo?'DEMO':'LIVE';
   $('connection-label').textContent=s.demo?'미리보기':s.source.connected?'Codex 연결됨':'Codex 기다리는 중';
   $('connection-label').parentElement.classList.toggle('live',s.source.connected&&!s.demo);$('connection-label').title=s.demo?'미리보기 · 경험치 별도':s.source.error||'로컬 작업 상태만 읽어요';

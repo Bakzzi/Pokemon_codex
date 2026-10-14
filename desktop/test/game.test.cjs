@@ -164,12 +164,16 @@ test('v1 store is backed up byte-for-byte before v2 migration; corrupt records a
   await fs.writeFile(store.file,'broken');assert.throws(()=>new Store(dir).load());assert.equal(await fs.readFile(store.file,'utf8'),'broken');
 });
 
-test('multiple tasks keep battling when only one completes; stale work expires',()=>{
+test('multiple tasks stay active until completion; silent unfinished work is not called idle',()=>{
   const g=new Game({},now);
   for(const id of ['a','b'])g.observe(id,event('task_started'),{now});
   g.observe('a',event('task_complete',now+1),{now:now+1});assert.equal(g.snapshot(now+1).phase,'working');
   g.observe('b',event('task_complete',now+2),{now:now+2});assert.equal(g.snapshot(now+2).phase,'done');
-  g.observe('a',event('task_started',now+3),{now:now+3});assert.equal(g.snapshot(now+11*60000).phase,'idle');
+  g.observe('a',event('task_started',now+3),{now:now+3});assert.equal(g.snapshot(now+11*60000).phase,'unknown');
+  g.observe('a',event('task_complete',now+12*60000),{now:now+12*60000});assert.equal(g.snapshot(now+12*60000).phase,'done');
+  assert.equal(g.snapshot(now+13*60000).phase,'idle');
+  const restored=new Game({},now);restored.observe('old',tokens(100,now-3600000),{baseline:true,now});
+  assert.equal(restored.snapshot(now).phase,'idle');
 });
 test('rate limits use window duration, missing or expired values stay unknown',()=>{
   const g=new Game({},now);const t=tokens(0);t.payload.rate_limits={primary:{used_percent:21,window_minutes:10080,resets_at:Math.floor(now/1000)+60}};
@@ -193,6 +197,39 @@ test('read-only follower handles appended partial lines without double counting'
   await r.poll(now+1002);assert.equal(g.data.outputTokens,10000);
   assert.equal(await fs.readFile(file,'utf8'),JSON.stringify(tokens(10))+'\n'+next+'\n');
   assert.equal(r.status.connected,true);
+});
+
+test('an open rollout with old Windows mtime is selected by its current record timestamps',async()=>{
+  const root=await fs.mkdtemp(path.join(os.tmpdir(),'pokemon-reader-open-'));
+  const active=path.join(root,'rollout-active.jsonl'),old=new Date(now-86400000);
+  for(let i=0;i<65;i++){
+    const file=path.join(root,'rollout-idle-'+i+'.jsonl');
+    await fs.writeFile(file,JSON.stringify(event('task_complete',now-1000))+'\n');
+    await fs.utimes(file,new Date(now-1000),new Date(now-1000));
+  }
+  await fs.writeFile(active,JSON.stringify(tokens(500))+'\n');await fs.utimes(active,old,old);
+  const g=new Game({},now),r=new CodexReader(root,g);await r.poll(now);
+  assert.equal(r.files.has(active),true);assert.equal(r.files.size,64);assert.equal(g.snapshot(now).phase,'working');
+  assert.equal(g.data.outputTokens,0);
+  await fs.appendFile(active,JSON.stringify(tokens(750,now+1000))+'\n');await fs.utimes(active,old,old);
+  await r.poll(now+1000);assert.equal(g.data.workTokens,250);
+});
+
+test('a resumed old rollout is found within five seconds and its new tokens are counted once',async()=>{
+  const root=await fs.mkdtemp(path.join(os.tmpdir(),'pokemon-reader-resume-'));
+  const resumed=path.join(root,'rollout-resumed.jsonl'),old=new Date(now-86400000);
+  await fs.writeFile(resumed,JSON.stringify(tokens(100,now-86400000))+'\n');await fs.utimes(resumed,old,old);
+  for(let i=0;i<65;i++){
+    const file=path.join(root,'rollout-idle-'+i+'.jsonl');
+    await fs.writeFile(file,JSON.stringify(event('task_complete',now-1000))+'\n');
+    await fs.utimes(file,new Date(now-1000),new Date(now-1000));
+  }
+  const g=new Game({},now),r=new CodexReader(root,g);await r.poll(now);assert.equal(r.files.has(resumed),false);
+  await fs.appendFile(resumed,JSON.stringify(tokens(400,now+5000))+'\n');await fs.utimes(resumed,old,old);
+  await r.poll(now+5000);assert.equal(r.files.has(resumed),true);assert.equal(g.snapshot(now+5000).phase,'working');
+  assert.equal(g.data.outputTokens,300);await r.poll(now+6000);assert.equal(g.data.outputTokens,300);
+  const fresh=path.join(root,'rollout-new.jsonl');await fs.writeFile(fresh,JSON.stringify(event('task_started',now+7000))+'\n');
+  await r.poll(now+10000);assert.equal(r.files.has(fresh),true);
 });
 test('atomic progress store survives a fresh instance',async()=>{
   const dir=await fs.mkdtemp(path.join(os.tmpdir(),'pokemon-buddy-save-'));

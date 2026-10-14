@@ -291,13 +291,14 @@ class Game {
     }
     this.lastEvent=Math.max(this.lastEvent,at);const s=this.sessions.get(id)||{phase:'idle',at:0};if(at<s.at)return;
     const phases={task_started:'working',task_complete:'done',task_completed:'done',turn_aborted:'idle',error:'error'};
-    if(phases[p.type]){s.phase=baseline&&phases[p.type]==='done'?'idle':phases[p.type];s.at=at;this.sessions.set(id,s);}
-    if(p.type==='token_count'){s.phase='working';s.at=at;this.sessions.set(id,s);}
+    const phase=phases[p.type]||(p.type==='token_count'?'working':null);
+    if(phase){s.phase=baseline&&(phase==='done'||phase==='working'&&now-at>=600000)?'idle':phase;s.at=at;this.sessions.set(id,s);}
   }
   snapshot(now=Date.now()){
     const p=this.data.owned[this.data.activeId],b=this.data.battle,hero=b?.party[p.uid],next=xpAt(p.id,Math.min(100,p.level+1)),floor=xpAt(p.id,p.level),maxHp=hero?.maxHp||statsAt(p.id,p.level)[1];
     const active=[...this.sessions.values()].filter(s=>s.phase==='working'&&now-s.at<600000),recent=[...this.sessions.values()].sort((a,b)=>b.at-a.at)[0];
-    const phase=active.length?'working':recent&&now-recent.at<16000?recent.phase:'idle',available=[this.limits.primary,this.limits.secondary].filter(Boolean);
+    const uncertain=[...this.sessions.values()].some(s=>s.phase==='working'&&now-s.at>=600000);
+    const phase=active.length?'working':uncertain?'unknown':recent&&now-recent.at<16000?recent.phase:'idle',available=[this.limits.primary,this.limits.secondary].filter(Boolean);
     const limits=[300,10080].map(minutes=>{const l=available.find(x=>x.minutes===minutes),fresh=l&&l.resetsAt*1000>now;return {label:minutes===300?'5시간':'주간',left:fresh?Math.round(100-l.used):null,resetsAt:fresh?l.resetsAt:null};});
     return {version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,...healthView(hero||{hp:maxHp,maxHp}),status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,...healthView(b.foe),status:b.foe.status}:null,slots:this.data.slots.map(uid=>({...view(this.data.owned[uid].id),uid,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0})),battle:b?{kind:b.kind,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?db.bosses[b.bossIndex].name:null,foeIndex:b.foeIndex,teamSize:b.kind==='trainer'?db.bosses[b.bossIndex].team.length:null}:null,animation:this.data.animation,capture:this.data.captureAnimation||null,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
   }
