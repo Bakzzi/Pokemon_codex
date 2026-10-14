@@ -130,10 +130,10 @@ test('battle simulation respects team defeat and never unlocks badges on a loss'
   let steps=0;while(g.data.battle&&steps<300)g.tick(now+(++steps)*2000);
   assert.equal(g.data.battle,null);assert.equal(g.data.badges.length,0);assert.ok(g.data.journal.some(e=>e.kind==='loss'));
 });
-test('wild sampler uses every species in the allowed generation without a caught-species boost',()=>{
+test('wild sampler covers eligible species without a caught-species boost and excludes starter families',()=>{
   const allowed=new Set();const g=new Game({},now,{random:rng(11)});
   for(let i=0;i<10000;i++){const id=pickWild(1,g.random);assert.ok(id>=1&&id<=151);allowed.add(id);}
-  assert.ok(allowed.size>=145);assert.equal(pickWild(1,(()=>{let i=0;return()=>i++===0?0:.5;})()),151);
+  assert.ok(allowed.size>=134);for(const id of [1,2,3,4,5,6,7,8,9,25,26])assert.ok(!allowed.has(id));assert.equal(pickWild(1,(()=>{let i=0;return()=>i++===0?0:.5;})()),151);
 });
 test('breeding preview resolves Vaporeon plus Ditto to Eevee without marking the dex as seen',()=>{
   const g=new Game({},now),a=g.addPokemon(134,20,'catch',now),b=g.addPokemon(132,20,'catch',now);

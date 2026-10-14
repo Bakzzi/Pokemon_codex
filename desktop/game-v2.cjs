@@ -259,6 +259,15 @@ class Game {
   pendingActions(now=Date.now()){
     return this.data.pendingActions.map(a=>({...a,name:this.actionName(a),...this.actionStatus(a,now)}));
   }
+  autoLevelEvolution(now){
+    if(this.data.battle)return false;
+    for(const p of Object.values(this.data.owned)){
+      if(this.data.pendingActions.some(a=>a.kind==='evolve'&&a.uid===p.uid))continue;
+      const rule=this.evolutions(p.uid,now).find(e=>e.automatic&&e.ready);
+      if(rule&&this.requestAction('evolve',{id:p.uid,to:rule.to},now))return true;
+    }
+    return false;
+  }
   addPokemon(id,level,origin,now=Date.now(),register=true){
     if(!species.has(id)||species.get(id).generation>this.maxGeneration())return false;
     let uid=id;if(this.data.owned[uid]){while(this.data.owned[this.data.nextUid])this.data.nextUid++;uid=this.data.nextUid++;}
@@ -368,7 +377,7 @@ class Game {
       const item=db.items.find(i=>i.id===e.item);
       if(e.trigger===2)ready=ready&&training.hasLearnedLevel(this,p);
       const conditions=[e.level&&`Lv.${e.level}`,e.happiness&&`친밀도 ${p.happiness}/${e.happiness}`,e.time==='day'&&'낮',e.time==='night'&&'밤',item&&`${item.name} ${(this.data.inventory[e.item]||0)}개`,e.trigger===2&&(!training.has(this)?'학습장치 획득 필요':training.hasLearnedLevel(this,p)?'학습장치로 1레벨 상승 완료':'이 모습에서 학습장치로 1레벨 상승 필요')].filter(Boolean).join(' · ');
-      return {...e,name:species.get(e.to).name,ready:ready&&!this.isBoarded(id),conditions};
+      return {...e,name:species.get(e.to).name,automatic:e.trigger===1&&e.level>0,ready:ready&&!this.isBoarded(id),conditions};
     });
   }
   evolve(uid,to,now=Date.now()){
@@ -549,7 +558,7 @@ class Game {
     }
     if(b&&(b.party[this.data.activeId]?.hp<=0||b.foe.hp<=0)){this.showFaint(now);return true;}
     if(!b&&this.seasonDue(now)){this.resetSeason(now);return true;}
-    if(training.queueEvolutions(this,now)||this.processActions(now))return true;
+    if(training.queueEvolutions(this,now)||this.processActions(now)||this.autoLevelEvolution(now))return true;
     if(!b&&this.data.pendingChallenge){
       const index=this.data.pendingChallenge.index;
       if(this.startChallenge(index,now))return true;

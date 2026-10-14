@@ -12,7 +12,7 @@ test('ordinary wild pools exclude Snorlax in both generations, every category, a
     const rates=encounterChances(champion,minimumLevel);let floor=0;
     for(const tier of ['mythical','legendary','rare','uncommon','common']){
       const roll=floor+rates[tier]/2;floor+=rates[tier];
-      const pool=data.pokemon.filter(p=>p.id!==143&&p.generation<=gen&&wildMinimum(p)<=100&&rarity(p)===tier),seen=new Set();
+      const pool=data.pokemon.filter(p=>![1,2,3,4,5,6,7,8,9,25,26,143].includes(p.id)&&p.generation<=gen&&wildMinimum(p)<=100&&rarity(p)===tier),seen=new Set();
       for(let i=0;i<pool.length;i++){let draw=0;const id=pickWild(gen,()=>draw++===0?roll:(i+.5)/pool.length,100,{champion,minimumLevel});assert.notEqual(id,143);seen.add(id);}
       assert.deepEqual(seen,new Set(pool.map(p=>p.id)));
     }

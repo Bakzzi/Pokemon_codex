@@ -35,7 +35,7 @@ test('rotation starts at a 5-level gap, uses only selected slots and costs no wo
 });
 
 test('ties keep an already-lowest partner, then follow slot order; boarded partners are excluded',()=>{
-  const g=new Game({},now);levels(g,{4:24});g.data.activeId=7;
+  const g=new Game({},now);g.data.owned[4].id=5;levels(g,{4:24});g.data.activeId=7;
   assert.equal(g.tick(now),false);assert.equal(g.data.activeId,7);
   levels(g,{7:6});assert.ok(g.tick(now+1));assert.equal(g.data.activeId,1);
   g.data.activeId=4;g.data.switchUntil=0;levels(g,{25:9});g.data.daycare={parents:[1,7]};
@@ -43,7 +43,7 @@ test('ties keep an already-lowest partner, then follow slot order; boarded partn
 });
 
 test('level balancing waits for wild battle results and does not override a trainer lineup',()=>{
-  const g=new Game({},now,{random:()=>.73});levels(g,{4:24});g.data.activeId=4;g.newWild(now);
+  const g=new Game({},now,{random:()=>.73});g.data.owned[4].id=5;levels(g,{4:24});g.data.activeId=4;g.newWild(now);
   assert.equal(g.tick(now),false);assert.equal(g.data.activeId,4);
   const before=Object.fromEntries(Object.values(g.data.owned).map(p=>[p.uid,p.xp]));
   g.defeatOpponent(now);assert.equal(g.data.activeId,4);assert.ok(g.data.owned[4].xp>before[4]);

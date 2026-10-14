@@ -2,6 +2,7 @@
 const data=require('./data/game-data.json');
 const species=new Map(data.pokemon.map(p=>[p.id,p]));
 const moves=new Map(data.moves.map(m=>[m.id,m]));
+const STARTER_FAMILY=new Set([1,2,3,4,5,6,7,8,9,25,26]);
 const colors={1:'#d0c8b4',2:'#e79571',3:'#b5b4ec',4:'#cb91e2',5:'#d3b78b',6:'#c8bd8a',7:'#b4cb72',8:'#ac9de0',9:'#aac1ca',10:'#ff9975',11:'#79cdf4',12:'#9ee5a2',13:'#f5ce52',14:'#f29bb9',15:'#99e2e4',16:'#aea0ed',17:'#ad9a91'};
 const effectMap=new Map(data.matchups.map(([a,b,value])=>[`${a}:${b}`,value]));
 function xpAt(id,level){return data.experience[species.get(id).growth][Math.max(1,Math.min(100,level))-1];}
@@ -22,6 +23,7 @@ function view(id){const p=species.get(id);return {id:p.id,name:p.name,types:p.ty
 const balance={tokensPerAction:250,legendaryPoolChance:0.001,mythicalPoolChance:0.0001,rarePoolChance:0.08,championRareMultiplier:1.5,championUncaughtWeight:2};
 function rarity(p){if(p.mythical)return 'mythical';if(p.legendary)return 'legendary';if(p.catchRate<=75||Object.values(p.stats).reduce((a,b)=>a+b,0)>=480)return 'rare';return p.catchRate>=190?'common':'uncommon';}
 function wildMinimum(p){return Math.max(p.minWildLevel||2,p.legendary||p.mythical?50:2);}
+function wildEligible(p,maxGeneration,partnerLevel){return p.id!==143&&!STARTER_FAMILY.has(p.id)&&p.generation<=maxGeneration&&wildMinimum(p)<=partnerLevel;}
 function championBonus(minimumLevel=0){
   const levelMultiplier=minimumLevel>90?5:minimumLevel>80?4:minimumLevel>70?3:1;
   return {levelMultiplier,rareMultiplier:balance.championRareMultiplier*levelMultiplier,uncaughtWeight:balance.championUncaughtWeight*levelMultiplier};
@@ -37,7 +39,7 @@ function milestoneBonuses({badges=[],champion=false,caught={}}={}){
   return [144,145,146,150,151].map(id=>({id,extra:id===151?(completed ? .01 : 0):caught[id]?0:(badges.includes(gymBonuses[id]) ? .001 : 0)+(champion ? .003 : 0)})).filter(b=>b.extra>0);
 }
 function wildDistribution(maxGeneration,partnerLevel,{champion=false,caught={},minimumLevel=0,additions=[]}={}){
-  const all=data.pokemon.filter(p=>p.id!==143&&p.generation<=maxGeneration&&wildMinimum(p)<=partnerLevel),baseRates=encounterChances(champion,minimumLevel),common=all.filter(p=>rarity(p)==='common');
+  const all=data.pokemon.filter(p=>wildEligible(p,maxGeneration,partnerLevel)),baseRates=encounterChances(champion,minimumLevel),common=all.filter(p=>rarity(p)==='common');
   const pokemon=all.map(p=>({id:p.id,tier:rarity(p),base:0,chance:0})),byId=new Map(pokemon.map(p=>[p.id,p])),missingWeight=champion?championBonus(minimumLevel).uncaughtWeight:1;
   for(const [tier,rate] of Object.entries(baseRates)){
     const preferred=all.filter(p=>rarity(p)===tier),pool=preferred.length?preferred:common,total=pool.reduce((n,p)=>n+(caught[p.id]?1:missingWeight),0);
@@ -60,7 +62,7 @@ function pickWild(maxGeneration,random=Math.random,partnerLevel=100,{champion=fa
       for(const p of pool){draw-=p.chance;if(draw<0)return p.id;}return pool.at(-1).id;
     }
   }
-  const all=data.pokemon.filter(p=>p.id!==143&&p.generation<=maxGeneration&&wildMinimum(p)<=partnerLevel);
+  const all=data.pokemon.filter(p=>wildEligible(p,maxGeneration,partnerLevel));
   const rates=encounterChances(champion,minimumLevel),roll=random();
   const tier=roll<rates.mythical?'mythical':roll<rates.mythical+rates.legendary?'legendary':roll<rates.mythical+rates.legendary+rates.rare?'rare':roll<rates.mythical+rates.legendary+rates.rare+rates.uncommon?'uncommon':'common';
   const preferred=all.filter(p=>rarity(p)===tier),pool=preferred.length?preferred:all.filter(p=>rarity(p)==='common');

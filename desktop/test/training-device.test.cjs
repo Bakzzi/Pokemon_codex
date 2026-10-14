@@ -88,7 +88,7 @@ test('capture success defers all active and learner XP until full animation comp
   let g=fixture(),uid=g.addPokemon(133,5,'fixture',now);device(g,uid);g.newWild(now);g.data.battle.foe=combatant(19,20,[150]);g.data.battle.foe.hp=1;g.random=()=>0;
   const before=structuredClone(g.data.owned);assert.ok(g.capture(now));const end=g.data.switchUntil;g=new Game(g.data,now+1);assert.equal(g.tick(end-1),false);assert.deepEqual(g.data.owned,before);assert.ok(g.tick(end));
   const activeGain=g.data.owned[25].xp-before[25].xp,shared=g.data.owned[uid].xp-before[uid].xp;assert.ok(activeGain>0);assert.equal(shared,Math.floor(activeGain/10));const after=structuredClone(g.data.owned);
-  g=new Game(g.data,end+1);g.tick(end+1);assert.deepEqual(g.data.owned,after);assert.equal(g.data.journal.filter(e=>e.kind==='catch').length,1);
+  g=new Game(g.data,end+1);g.tick(end+1);assert.deepEqual(g.data.owned[25],after[25]);assert.deepEqual(g.data.owned[uid],after[uid]);assert.equal(g.data.owned[19].id,20);assert.equal(g.data.owned[19].xp,after[19].xp);assert.equal(g.data.journal.filter(e=>e.kind==='catch').length,1);
 });
 
 test('trade evolutions require a device level-up in the exact prior form; other conditions and old species records remain',()=>{

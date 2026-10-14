@@ -27,7 +27,7 @@ test('capture awards and automatic evolution wait through success playback and s
   let {g,uid}=fixture();boundary(g,uid);const b=wild(g);b.foe.hp=1;g.random=()=>0;const xp=g.data.owned[uid].xp;assert.ok(g.capture(g.data.switchUntil));const end=g.data.switchUntil;
   g=new Game(g.data,end-1);assert.equal(g.tick(end-1),false);assert.equal(g.data.owned[uid].xp,xp);assert.equal(g.data.owned[uid].deviceLevelUp,undefined);assert.equal(g.data.pendingActions.length,0);
   assert.ok(g.tick(end));assert.equal(g.data.owned[uid].id,64);assert.equal(g.data.owned[uid].level,17);assert.equal(g.data.pendingActions.length,1);
-  g=new Game(g.data,g.data.switchUntil);assert.ok(advance(g));assert.equal(g.data.owned[uid].id,65);const evolved=structuredClone(g.data.owned[uid]);g=new Game(g.data,g.data.switchUntil);advance(g);assert.deepEqual(g.data.owned[uid],evolved);assert.equal(g.data.journal.filter(e=>e.kind==='evolution').length,1);
+  g=new Game(g.data,g.data.switchUntil);assert.ok(advance(g));assert.equal(g.data.owned[uid].id,65);const evolved=structuredClone(g.data.owned[uid]);g=new Game(g.data,g.data.switchUntil);advance(g);assert.deepEqual(g.data.owned[uid],evolved);assert.equal(g.data.journal.filter(e=>e.kind==='evolution'&&e.id===65).length,1);
 });
 
 test('earned evolution remains per individual when changing learners; cancellation lasts until a new device level-up',()=>{

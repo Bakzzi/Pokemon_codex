@@ -69,13 +69,13 @@ test('actual sampling gives the approved 1.5x rare, legendary and mythical categ
 });
 
 test('unregistered species receive twice the selection weight within a category, including species already evolved away',()=>{
-  const pool=data.pokemon.filter(p=>p.generation===1&&wildMinimum(p)<=100&&rarity(p)==='common');
+  const pool=data.pokemon.filter(p=>![1,2,3,4,5,6,7,8,9,25,26,143].includes(p.id)&&p.generation===1&&wildMinimum(p)<=100&&rarity(p)==='common');
   const caught=Object.fromEntries(pool.map(p=>[p.id,now])),missing=pool.find(p=>p.id!==25);delete caught[missing.id];
   for(const champion of [false,true]){
     const counts=Object.fromEntries(pool.map(p=>[p.id,0])),samples=pool.length*300;
     for(let i=0;i<samples;i++){let draw=0;counts[pickWild(1,()=>draw++===0?.9:(i+.5)/samples,100,{champion,caught})]++;}
     for(const p of pool)if(p.id!==missing.id)assert.ok(Math.abs(counts[missing.id]-(champion?2:1)*counts[p.id])<=3);
-    assert.ok(counts[25]>0); // Its dex registration remains relevant even if no current Pikachu is owned.
+    assert.ok(counts[19]>0); // Registration still matters when no current Rattata is owned.
   }
 });
 

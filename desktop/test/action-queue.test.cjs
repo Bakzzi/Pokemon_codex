@@ -34,7 +34,7 @@ test('duplicate requests are idempotent, latest conflicting choice wins and canc
 });
 
 test('manual selection waits for an action boundary, keeps that choice for the next wild encounter and remains free',()=>{
-  const g=fixture();level(g,1,30);g.animate('attack',{moveId:33,actor:'hero'},now);assert.ok(g.requestAction('select',1,now));assert.equal(g.data.activeId,25);
+  const g=fixture();g.data.owned[1].id=2;level(g,1,30);g.animate('attack',{moveId:33,actor:'hero'},now);assert.ok(g.requestAction('select',1,now));assert.equal(g.data.activeId,25);
   assert.ok(advance(g));assert.equal(g.data.activeId,1);assert.equal(g.data.animation.kind,'switch');assert.equal(g.data.workTokens,0);assert.equal(advance(g),false);assert.equal(g.data.activeId,1);
   g.data.workTokens=250;assert.ok(advance(g));assert.equal(g.data.battle.kind,'wild');assert.equal(g.data.battle.party[1].level,30);assert.equal(g.data.manualSelection,false);
 });
