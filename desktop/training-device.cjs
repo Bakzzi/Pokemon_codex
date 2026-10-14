@@ -53,8 +53,11 @@ function learnedLevel(game,p,before,now){
   queueEvolutions(game,now,[p]);return true;
 }
 function requirements(game){
-  const d=game.data.trainingDevice;
-  return [{id:'erika',name:'민화 뱃지 획득',done:game.data.badges.includes('erika')},{id:'rocket-grunt',name:'조무래기에게 승리',done:!!d.gruntWonAt},{id:'rocket-duo',name:'로이·로사에게 승리',done:!!d.duoWonAt},{id:'rocket-giovanni',name:'비주기에게 승리',done:!!d.rocketWonAt}];
+  const d=game.data.trainingDevice,unlocked=game.data.badges.includes('erika'),next=nextRocket(game);
+  return [{id:'erika',name:'민화 뱃지 획득',done:unlocked,revealed:true},...rocketOrder.map((id,i)=>{
+    const done=!!d[progressKeys[id]],revealed=done||unlocked&&id===next;
+    return {id,name:revealed?['조무래기','로이·로사','비주기'][i]+'에게 승리':'???에게 승리',done,revealed};
+  })];
 }
 function canClaim(game){return !has(game)&&!!game.data.trainingDevice.snorlaxWonAt;}
 function canChallenge(game,id){
@@ -79,8 +82,11 @@ function claim(game,now,present=true){
   if(present)game.animate('result',{text:'학습장치 획득! 5번째 체육관에 도전할 수 있어요.'},now);return true;
 }
 function snapshot(game){
-  const d=game.data.trainingDevice,p=game.data.owned[d.learnerUid];
-  return {...d,routeOpen:routeOpen(game),fluteObtained:!!d.fluteObtainedAt,snorlaxCaught:!!game.data.caught[143],rocketCompleted:rocketOrder.filter(id=>d[progressKeys[id]]).length,nextRocket:nextRocket(game),obtained:has(game),canClaim:canClaim(game),requirements:requirements(game),learner:p?{uid:p.uid,id:p.id,level:p.level,boarded:game.isBoarded(p.uid),active:p.uid===game.data.activeId}:null,
-    steps:Object.values(battles).map(b=>({...b,done:!!d[progressKeys[b.id]],available:canChallenge(game,b.id)}))};
+  const d=game.data.trainingDevice,p=game.data.owned[d.learnerUid],rows=requirements(game);
+  return {...d,routeOpen:routeOpen(game),fluteObtained:!!d.fluteObtainedAt,snorlaxCaught:!!game.data.caught[143],rocketCompleted:rocketOrder.filter(id=>d[progressKeys[id]]).length,nextRocket:nextRocket(game),obtained:has(game),canClaim:canClaim(game),requirements:rows,learner:p?{uid:p.uid,id:p.id,level:p.level,boarded:game.isBoarded(p.uid),active:p.uid===game.data.activeId}:null,
+    steps:Object.values(battles).map(b=>{
+      const revealed=rows.find(r=>r.id===b.id)?.revealed!==false;
+      return {...b,name:revealed?b.name:'???',team:revealed?b.team:[],revealed,done:!!d[progressKeys[b.id]],available:canChallenge(game,b.id)};
+    })};
 }
 module.exports={battles,rocketOrder,nextRocket,init,has,routeOpen,hasLearnedLevel,learnedLevel,queueEvolutions,requirements,canClaim,canChallenge,win,awardFlute,claim,snapshot};

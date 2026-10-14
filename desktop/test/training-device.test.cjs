@@ -10,6 +10,30 @@ function win(g){let i=0;while(g.data.battle){assert.ok(i++<25);if(g.data.pending
 function unlock(g){g.data.badges=data.bosses.slice(0,4).map(b=>b.id);count(g,50);assert.ok(g.challenge('rocket-grunt',now));win(g);assert.ok(g.challenge('road-snorlax',g.data.switchUntil));win(g);assert.ok(g.requestAction('device-claim',undefined,g.data.switchUntil));if(!training.has(g))assert.ok(advance(g));assert.ok(training.has(g));}
 function device(g,uid){g.data.trainingDevice.obtainedAt=now;g.data.trainingDevice.learnerUid=uid;}
 
+test('the hideout reveals only completed opponents and the next unlocked opponent across battle and restart',()=>{
+  let g=fixture();
+  const check=revealed=>{
+    const s=training.snapshot(g);
+    assert.equal(s.requirements[0].name,'민화 뱃지 획득');
+    for(const [i,id] of training.rocketOrder.entries()){
+      const row=s.requirements[i+1],step=s.steps.find(b=>b.id===id),known=i<revealed;
+      assert.equal(row.revealed,known);assert.equal(step.revealed,known);
+      if(known){assert.notEqual(row.name,'???에게 승리');assert.equal(step.name,training.battles[id].name);assert.ok(step.team.length);}
+      else {assert.equal(row.name,'???에게 승리');assert.equal(step.name,'???');assert.deepEqual(step.team,[]);assert.equal(step.available,false);}
+    }
+    assert.equal(s.steps.find(b=>b.id==='road-snorlax').name,'길을 막는 잠만보');
+  };
+  check(0);g.data.badges=data.bosses.slice(0,4).map(b=>b.id);check(1);
+  assert.ok(g.challenge('rocket-grunt',now));check(1);
+  // Finish one opponent's full party, retaining the pause before the next stage.
+  while(!g.data.trainingDevice.gruntWonAt)g.defeatOpponent(Math.max(now,g.data.switchUntil));
+  check(2);g=new Game(g.data,now+1);check(2);
+  assert.ok(advance(g));assert.equal(g.data.battle.storyId,'rocket-duo');check(2);
+  while(!g.data.trainingDevice.duoWonAt)g.defeatOpponent(Math.max(now,g.data.switchUntil));
+  check(3);g=new Game(g.data,now+2);check(3);win(g);check(3);
+  assert.ok(training.rocketOrder.every(id=>!g.canChallenge(id)));
+});
+
 test('Erika unlocks Rocket, the flute unlocks Snorlax, and a single Snorlax clear awards the device without a dex quota',()=>{
   const g=fixture();g.data.badges=data.bosses.slice(0,4).map(b=>b.id);
   assert.equal(training.has(g),false);assert.equal(training.canClaim(g),false);assert.equal(g.canChallenge('road-snorlax'),false);assert.equal(g.canChallenge('__proto__'),false);
