@@ -8,6 +8,7 @@ const {captureTiming,captureText}=require('./capture-animation.js');
 const pacing=require('./battle-pacing.js');
 const validCount=n=>typeof n==='number'&&Number.isSafeInteger(n)&&n>=0;
 const STARTERS=[1,4,7,25];
+const SECRET_TRAINERS=new Set(['giovanni','champion']);
 const CAPTURE_LIMITS={yellow:2,red:3};
 const nursery=require('./daycare.cjs');
 const training=require('./training-device.cjs');
@@ -52,6 +53,13 @@ class Game {
     for(const b of [this.data.battle,this.data.suspendedWild])if(b?.kind==='wild')captureCounts(b);
     const queued=this.data.pendingChallenge;
     this.data.pendingChallenge=queued&&(training.battles[queued.index]||Number.isInteger(queued.index)&&queued.index>=0&&queued.index<=8)?queued:null;
+    this.data.trainerSeen=Object.fromEntries(Object.entries(this.data.trainerSeen||{}).filter(([id,at])=>SECRET_TRAINERS.has(id)&&validCount(at)&&at>0));
+    for(const boss of db.bosses.filter(b=>SECRET_TRAINERS.has(b.id))){
+      const met=this.trainerRevealed(boss)||(this.data.journal||[]).some(e=>
+        e.kind==='challenge'&&e.text===boss.name+' 체육관 도전 시작'||
+        ['loss','badge'].includes(e.kind)&&e.text?.startsWith(boss.name+'에게 '));
+      if(met)this.data.trainerSeen[boss.id] ||= now;
+    }
     journal.init(this.data,now);
     for(const [uid,p] of Object.entries(this.data.owned)){
       p.uid=Number(uid);p.gender=p.gender||nursery.genderFor(p.id,this.random);
@@ -358,7 +366,12 @@ class Game {
     if(training.battles[index])return training.canChallenge(this,index);
     return Number.isInteger(index)&&index>=0&&index<=8&&(index!==4||training.routeOpen(this))&&(index===8?this.data.badges.length>=8:index<=this.data.badges.length&&!this.data.badges.includes(db.bosses[index].id));
   }
-  challengeName(index){return training.battles[index]?.name||(index===8?'포켓몬 리그':db.bosses[index].name+' 체육관');}
+  trainerRevealed(boss){
+    return !SECRET_TRAINERS.has(boss.id)||!!this.data.trainerSeen[boss.id]||this.data.badges.includes(boss.id)||
+      boss.id==='champion'&&(this.data.champion||this.data.leagueBest>=4)||
+      this.data.battle?.kind==='trainer'&&!this.data.battle.storyId&&db.bosses[this.data.battle.bossIndex]?.id===boss.id;
+  }
+  challengeName(index){return training.battles[index]?.name||(index===8?'포켓몬 리그':(this.trainerRevealed(db.bosses[index])?db.bosses[index].name:'???')+' 체육관');}
   challenge(index,now=Date.now()){
     index=training.battles[index]?index:Number(index);
     if(!this.canChallenge(index)||this.data.battle?.kind==='trainer'||this.data.battle?.storyId===index)return false;
@@ -388,6 +401,7 @@ class Game {
   }
   nextTrainer(now){
     const b=this.data.battle,boss=this.battleBoss(b),enemy=boss.team[b.foeIndex];
+    if(!b.storyId&&SECRET_TRAINERS.has(boss.id))this.data.trainerSeen[boss.id] ||= now;
     b.foe=combatant(enemy.id,enemy.level,enemy.moves);b.turn=0;
     this.data.seen[enemy.id]=this.data.seen[enemy.id]||now;this.animate('encounter',{id:enemy.id,text:b.storyId==='road-snorlax'?'포켓몬피리를 불었다! 잠만보 Lv.30이 깨어났다!':`${boss.name}의 ${species.get(enemy.id).name}!`},now);
   }
@@ -560,7 +574,7 @@ class Game {
       kantoCaughtCount:this.kantoCaughtCount(),
       encounterBonus:this.encounterBonus(),
       collection:db.pokemon.filter(p=>p.generation<=this.maxGeneration()).map(p=>{const owned=roster.filter(m=>m.id===p.id);return {id:p.id,seen:!!this.data.seen[p.id],caught:!!this.data.caught[p.id],name:this.data.seen[p.id]?p.name:'???',owned:owned.length>0,count:owned.length,level:owned.length?Math.max(...owned.map(m=>m.level)):null,types:this.data.seen[p.id]?view(p.id).types:[],description:this.data.seen[p.id]?p.description:'아직 만나지 않은 포켓몬',rarity:rarity(p)};}),
-      bosses:db.bosses,gymAccess:db.bosses.slice(0,8).map((_,i)=>this.canChallenge(i)),leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:[...(this.data.trainingDevice.fluteObtainedAt?[{id:'poke-flute',name:'포켓몬피리',count:1}]:[]),...(training.has(this)?[{id:'training-device',name:'학습장치',count:1}]:[]),...Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name,count}))]};
+      bosses:db.bosses.map(b=>{const revealed=this.trainerRevealed(b);return {...b,revealed,name:revealed?b.name:'???',team:revealed?b.team:[]};}),gymAccess:db.bosses.slice(0,8).map((_,i)=>this.canChallenge(i)),leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].map(e=>!this.trainerRevealed(db.bosses[7])&&e.kind==='challenge'&&e.text.startsWith(db.bosses[7].name+' 체육관 도전 예약')?{...e,text:e.text.replace(db.bosses[7].name,'???')}:e).sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:[...(this.data.trainingDevice.fluteObtainedAt?[{id:'poke-flute',name:'포켓몬피리',count:1}]:[]),...(training.has(this)?[{id:'training-device',name:'학습장치',count:1}]:[]),...Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name,count}))]};
   }
 }
 module.exports={Game,STARTERS};

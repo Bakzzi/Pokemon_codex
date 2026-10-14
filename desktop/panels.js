@@ -65,12 +65,13 @@ function teamMembers(team){
   for(const p of team){const mon=node('span');mon.title='No.'+p.id+' · Lv.'+p.level;mon.append(img(p.id),document.createTextNode('Lv.'+p.level));row.append(mon);}
   return row;
 }
+function trainerTeam(boss){return boss.revealed===false?node('p','muted','포켓몬 편성 미공개'):teamMembers(boss.team);}
 let shownBadges=null;
 function badgeImage(boss,className=''){
   const image=node('img',className);image.src='assets/badges/'+boss.id+'.png';image.alt='';image.draggable=false;return image;
 }
 function renderBadgeCase(){
-  const earned=new Set(state.badges),signature=state.badges.join(',');
+  const earned=new Set(state.badges),signature=JSON.stringify([state.badges,state.bosses.slice(0,8).map(b=>b.revealed)]);
   if($('badge-slots').dataset.signature===signature)return;
   $('badge-slots').dataset.signature=signature;
   $('badge-slots').replaceChildren(...state.bosses.slice(0,8).map((boss,i)=>{
@@ -87,19 +88,22 @@ function renderBadgeCase(){
 }
 function renderBosses(){
   renderStory();
-  const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.badges,state.gymAccess,state.trainingDevice.routeOpen,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
+  const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.badges,state.bosses.map(b=>b.revealed),state.gymAccess,state.trainingDevice.routeOpen,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
   $('badges').textContent='뱃지 '+state.badges.length+' / 8';
   renderBadgeCase();
   $('gyms').replaceChildren(...state.bosses.slice(0,8).map((boss,i)=>{
     const done=state.badges.includes(boss.id),card=node('article','gym'+(done?' done':'')),title=node('div','gym-title'),badge=node('span','badge');badge.append(badgeImage(boss,'gym-badge'),document.createTextNode(boss.badge));title.append(node('h3','',(i+1)+'. '+boss.name),badge);
-    const body=node('div','gym-body'),info=node('div','gym-info'),face=node('div','gym-portrait'),portrait=node('img','gym-trainer'),[width,x,y,size]=trainerFaces[boss.id];portrait.src='assets/trainers/'+boss.id+'.png';portrait.alt=boss.name+' · 원작 얼굴 초상화';portrait.draggable=false;portrait.style.width=width/size*100+'%';portrait.style.left=-x/size*100+'%';portrait.style.top=-y/size*100+'%';face.dataset.trainer=boss.id;face.append(portrait);info.append(title,teamMembers(boss.team));body.append(info,face);card.append(body);
+    const body=node('div','gym-body'),info=node('div','gym-info'),face=node('div','gym-portrait');face.dataset.trainer=boss.id;
+    if(boss.revealed===false){face.classList.add('unknown');face.textContent='?';face.setAttribute('aria-label','아직 만나지 않은 관장');}
+    else{const portrait=node('img','gym-trainer'),[width,x,y,size]=trainerFaces[boss.id];portrait.src='assets/trainers/'+boss.id+'.png';portrait.alt=boss.name+' · 원작 얼굴 초상화';portrait.draggable=false;portrait.style.width=width/size*100+'%';portrait.style.left=-x/size*100+'%';portrait.style.top=-y/size*100+'%';face.append(portrait);}
+    info.append(title,trainerTeam(boss));body.append(info,face);card.append(body);
     const roadLocked=i===4&&!state.trainingDevice.routeOpen,b=node('button','',done?'뱃지 획득 완료':queued?.index===i?'도전 예약됨':roadLocked?'길을 막는 잠만보 해결 시 해금':i>state.badges.length?'앞선 체육관 뱃지가 필요해요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||!!queued||!state.gymAccess[i];b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;
   }));
   $('ongoing').hidden=!busy&&!queued;
   if(queued){$('ongoing').replaceChildren(node('span','',queued.name+' 도전 예약 · '+(state.battle?'현재 배틀이 끝나면 시작해요.':'마지막 연출이 끝나면 시작해요.')));const b=node('button','','예약 취소');b.dataset.cancelChallenge='';b.onclick=()=>window.buddy.action('challenge-cancel');$('ongoing').append(b);}
   else if(busy){$('ongoing').replaceChildren(node('span','',state.battle.boss+' · '+(state.battle.foeIndex+1)+' / '+state.battle.teamSize+'마리와 배틀 중'));const b=node('button','','도전 그만두기');b.onclick=()=>window.buddy.action('abandon');$('ongoing').append(b);}
   $('league-start').disabled=state.badges.length<8||busy||!!queued;$('league-start').textContent=queued?.index===8?'리그 도전 예약됨':state.champion?'리그 재도전':'리그 도전';
-  $('league-team').replaceChildren(...state.bosses.slice(8).map((b,i)=>{const e=node('article','league-member');e.append(node('h3','',(i===4?'챔피언 ':'')+b.name),teamMembers(b.team));return e;}));
+  $('league-team').replaceChildren(...state.bosses.slice(8).map((b,i)=>{const e=node('article','league-member');e.append(node('h3','',(i===4?'챔피언 ':'')+b.name),trainerTeam(b));return e;}));
   $('league-progress').textContent=state.champion?(state.johtoUnlocked?'관동 챔피언 · 성도 지방 해금 완료':'관동 챔피언 · 151종을 모으며 머물거나 원할 때 2세대를 해금하세요.'):'리그 최고 기록 '+state.leagueBest+' / 5 · 챔피언이 되면 출현 보너스와 2세대 해금 선택권을 얻어요.';
   $('johto-choice').hidden=!state.champion;
   if(state.champion){
