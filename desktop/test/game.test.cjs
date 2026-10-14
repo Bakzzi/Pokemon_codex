@@ -23,14 +23,14 @@ test('initial collection has exactly 151 species, four caught starters and no Pi
   assert.equal(g.select(172,now),false);assert.equal(g.setSlot(0,172,now),false);
   assert.equal(s.hero.name,'피카츄');
 });
-test('observed work deduplicates, avoids backfill, preserves month changes and does not directly level anyone',()=>{
+test('observed work deduplicates across a season reset without backfill or directly levelling anyone',()=>{
   const g=new Game({},now);g.observe('a',tokens(50000),{baseline:true,now});g.observe('a',tokens(60000,now+1),{now:now+1});g.observe('a',tokens(60000,now+1),{now:now+1});
   assert.equal(g.data.workTokens,10000);assert.equal(g.data.outputTokens,10000);assert.equal(g.snapshot(now).level,5);
   const nextMonth=Date.parse('2026-11-01T01:00:00Z'),resumed=new Game(g.data,nextMonth);
   resumed.observe('a',tokens(65000,nextMonth),{baseline:true,now:nextMonth});
-  assert.equal(resumed.data.outputTokens,10000);assert.equal(resumed.data.workTokens,10000);
-  resumed.observe('a',tokens(66000,nextMonth+1),{now:nextMonth+1});assert.equal(resumed.data.workTokens,11000);
-  resumed.observe('a',tokens(10,nextMonth+2),{now:nextMonth+2});assert.equal(resumed.data.workTokens,11000);
+  assert.equal(resumed.data.outputTokens,10000);assert.equal(resumed.data.workTokens,0);
+  resumed.observe('a',tokens(66000,nextMonth+1),{now:nextMonth+1});assert.equal(resumed.data.workTokens,1000);
+  resumed.observe('a',tokens(10,nextMonth+2),{now:nextMonth+2});assert.equal(resumed.data.workTokens,1000);
 });
 test('XP belongs only to the individual currently battling, including same-species siblings',()=>{
   const g=new Game({},now),sibling=g.addPokemon(25,5,'hatch',now),before=structuredClone(g.data.owned);

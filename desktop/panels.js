@@ -34,7 +34,7 @@ function renderDex(){
   if(detailKey===detailSignature)return;detailSignature=detailKey;
   const root=$('detail');root.replaceChildren(img(p.id,'portrait'+(p.seen?'':' unseen')),node('div','number','No.'+p.id+' · '+(p.caught?'포획 완료':p.seen?'발견':'미발견')),node('h2','',p.name),node('div','types',p.types.join(' / ')),node('p','description',p.description));
   if(!p.owned){
-    if(p.caught)root.append(node('p','muted','도감 기록은 남아 있어요. 현재 동료 목록에는 없는 포켓몬이에요.'));
+    if(p.caught)root.append(node('p','muted','도감 기록은 남아 있어요. '+(p.seasonCaught?'이번 시즌에 등록한 종이에요.':'이번 시즌에는 다시 포획할 수 있어요.')));
     return;
   }
   if(members.length>1){
@@ -182,7 +182,9 @@ function renderJournal(){
 
 function render(){
   if(!state)return;$('totals').textContent=state.caughtCount+' / '+state.collection.length;$('region').textContent=state.generation===1?'관동 지방 · 1세대':'관동 + 성도 지방 · 2세대 해금';
-  const boost=state.experienceBoost;$('xp-boost').textContent='경험치 +'+boost.percent.toLocaleString('ko-KR',{maximumFractionDigits:2})+'%';$('xp-boost').title='1세대 도감 '+boost.count+' / '+boost.total+' 등록';
+  const boost=state.experienceBoost;$('xp-boost').textContent='경험치 +'+boost.percent.toLocaleString('ko-KR',{maximumFractionDigits:2})+'%';$('xp-boost').title='누적 도감 '+boost.count+'종 · 1종당 경험치 +1% · 시즌이 바뀌어도 유지';
+  $('season-note').textContent=state.season.key.replace('-','.')+' 시즌 · '+(state.season.pending?'현재 배틀 종료 후 새 시즌 시작':'매월 1일 새 모험 · 누적 도감과 부스터 유지');
+  $('season-note').title='한국시간 매월 1일 00:00 · 스타팅 Lv.5부터 다시 시작 · 뱃지·지방 해금·스토리·도구 초기화';
   $('seen-count').textContent='발견 '+state.seenCount+' · 동료 '+state.roster.length;$('notice').textContent=state.notice||'';
   renderActions();
   if(tab==='collection')renderDex();else if(tab==='challenge')renderBosses();else if(tab==='daycare')renderNursery();else renderJournal();

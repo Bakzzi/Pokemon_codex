@@ -41,10 +41,16 @@ function hasJohtoProgress(data){
   const ids=[...Object.keys(data.seen||{}),...Object.keys(data.caught||{}),...Object.values(data.owned||{}).map(p=>p.id),data.egg?.id,...(data.daycare?.offspring||[])];
   return ids.some(id=>species.get(Number(id))?.generation===2);
 }
+function freshData(saved={}){
+  return {version:2,outputTokens:saved.outputTokens||0,totalTokens:saved.totalTokens||0,baselines:saved.baselines||{},owned:{},seen:saved.seen||{},caught:saved.caught||{},seasonCaught:{},slots:[...STARTERS],activeId:25,badges:[],champion:false,johtoUnlocked:false,johtoDeferred:false,leagueBest:0,inventory:{},workTokens:0,battles:0,journal:[],eventSerial:saved.eventSerial||0,animation:null,battle:null,suspendedWild:null,switchUntil:0};
+}
 class Game {
   constructor(saved={},now=Date.now(),{random=Math.random}={}){
     this.random=random;this.sessions=new Map();this.limits={};this.lastEvent=0;this.nextTick=now;
-    this.data=saved.version===2?JSON.parse(JSON.stringify(saved)):{version:2,outputTokens:saved.outputTokens||0,totalTokens:saved.totalTokens||0,baselines:saved.baselines||{},owned:{},seen:{},caught:{},slots:[...STARTERS],activeId:25,badges:[],champion:false,leagueBest:0,inventory:{},workTokens:0,battles:0,journal:[],eventSerial:0,animation:null,battle:null,suspendedWild:null,switchUntil:0};
+    this.data=saved.version===2?JSON.parse(JSON.stringify(saved)):freshData(saved);
+    const month=monthOf(now);
+    if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(this.data.season?.key))this.data.season={key:month.key,startedAt:now};
+    this.data.seasonCaught ||= {...this.data.caught};
     this.data.nextUid=this.data.nextUid||1000;this.data.daycare=this.data.daycare||null;this.data.egg=this.data.egg||null;this.daycareSelection=null;
     this.data.pendingBattle=this.data.pendingBattle||null;
     // Keep existing Gen II progress available; old champions with no Gen II progress choose now.
@@ -78,7 +84,8 @@ class Game {
       delete b.round;battleEngine.invalidate(b);
     }
     this.data.rulesRevision=3;
-    for(const id of STARTERS)if(!this.data.caught[id])this.addPokemon(id,5,'starter',now);
+    const newRoster=Object.keys(this.data.owned).length===0;
+    for(const id of STARTERS)if(newRoster||!this.data.caught[id])this.addPokemon(id,5,'starter',now);
     if(saved.version!==2&&saved.family){
       const level=Math.max(5,levelOf((saved.outputTokens||0)/5000));
       const forms={electric:[25,25,26],fire:[4,5,6],water:[7,8,9],grass:[1,2,3]};
@@ -94,12 +101,31 @@ class Game {
     const actionIds=new Set();
     this.data.pendingActions=(Array.isArray(this.data.pendingActions)?this.data.pendingActions:[]).slice(0,32).map(restoreAction).filter(a=>a&&!actionIds.has(a.id)&&actionIds.add(a.id));
     this.data.actionSerial=Math.max(validCount(this.data.actionSerial)?this.data.actionSerial:0,...actionIds);
+    if(this.seasonDue(now)&&now>=this.data.switchUntil){
+      // An offline success was already rolled: register it before starting over.
+      if(this.data.pendingBattle?.kind==='capture-result')this.finishCapture(this.data.pendingBattle,now);
+      this.resetSeason(now);
+    }
   }
   maxGeneration(){return this.data.champion&&this.data.johtoUnlocked?2:1;}
+  registeredThisSeason(id){return !!this.data.caught[id]&&(!this.data.season.resetAt||!!this.data.seasonCaught[id]);}
+  seasonDue(now){return this.data.season.key<monthOf(now).key;}
+  resetSeason(now){
+    const previous=this.data,month=monthOf(now);
+    this.data=freshData(previous);
+    this.data.season={key:month.key,startedAt:now,resetAt:now};
+    this.data.rulesRevision=3;this.data.nextUid=1000;this.data.pendingActions=[];this.data.actionSerial=0;this.data.pendingChallenge=null;this.data.pendingBattle=null;this.data.trainerSeen={};this.data.daycare=null;this.data.egg=null;
+    this.nextTick=now;this.daycareSelection=null;
+    journal.init(this.data,now);
+    for(const id of STARTERS)this.addPokemon(id,5,'starter',now);
+    training.init(this,now);
+    const text=month.key+' 새 시즌! 스타팅 4마리와 다시 출발 · 도감 '+this.experienceBoost().count+'종 유지';
+    this.log(text,'season',null,now);this.animate('result',{text},now);
+  }
   kantoCaughtCount(){return Object.entries(this.data.caught).filter(([id,registered])=>registered&&species.get(Number(id))?.generation===1).length;}
   experienceBoost(){
-    const count=this.kantoCaughtCount(),total=151;
-    return {count,total,percent:count*100/total,multiplier:1+count/total};
+    const count=new Set(Object.entries(this.data.caught).filter(([id,registered])=>registered&&species.has(Number(id))).map(([id])=>Number(id))).size;
+    return {count,percent:count,multiplier:(100+count)/100};
   }
   encounterBonus(){
     if(!this.data.champion)return null;
@@ -238,7 +264,7 @@ class Game {
     let uid=id;if(this.data.owned[uid]){while(this.data.owned[this.data.nextUid])this.data.nextUid++;uid=this.data.nextUid++;}
     const abilitySlot=Math.floor(this.random()*species.get(id).abilities.length);
     this.data.owned[uid]={uid,id,level,xp:xpAt(id,level),moves:learnedMoves(id,level),abilitySlot,ability:abilityFor(id,abilitySlot),happiness:70,gender:nursery.genderFor(id,this.random),origin,obtainedAt:now};
-    this.data.seen[id]=this.data.seen[id]||now;if(register)this.data.caught[id]=this.data.caught[id]||now;return uid;
+    this.data.seen[id]=this.data.seen[id]||now;if(register){this.data.caught[id]=this.data.caught[id]||now;this.data.seasonCaught[id]=this.data.seasonCaught[id]||now;}return uid;
   }
   log(text,kind='info',id=null,now=Date.now()){journal.record(this.data,{at:now,text,kind,id});}
   acknowledgeJournal(now=Date.now()){journal.acknowledge(this.data,now);return true;}
@@ -351,6 +377,7 @@ class Game {
     const p=this.data.owned[uid],from=p.id,fromPokemon=this.snapshot(now).hero;if(rule.item)this.data.inventory[rule.item]--;
     p.id=to;delete p.deviceLevelUp;p.ability=abilityFor(to,p.abilitySlot);p.moves=learnedMoves(to,p.level,p.moves,p.level-1);p.xp=xpAt(to,p.level)+Math.max(0,p.xp-xpAt(from,p.level));
     this.data.seen[to]=this.data.seen[to]||now;this.data.caught[to]=this.data.caught[to]||now;
+    this.data.seasonCaught[to]=this.data.seasonCaught[to]||now;
     const old=this.data.battle?.party[uid];
     if(old){const fresh=this.memberCombatant(p);fresh.hp=old.hp>0?Math.max(1,Math.round(fresh.maxHp*old.hp/old.maxHp)):0;this.data.battle.party[uid]=fresh;battleEngine.invalidate(this.data.battle);}
     this.log(species.get(from).name+' → '+species.get(to).name+' 진화!','evolution',to,now);
@@ -435,7 +462,7 @@ class Game {
   }
   awardXp(foe,trainer,now){
     const base=Math.max(1,Math.floor(species.get(foe.id).baseExperience*foe.level/7*(trainer?1.5:1))),boost=this.experienceBoost();
-    const gained=base+Math.floor(base*boost.count/boost.total);
+    const gained=base+Math.floor(base*boost.percent/100);
     this.gainXp(this.data.activeId,gained,now);
     const uid=this.data.trainingDevice.learnerUid,p=this.data.owned[uid];
     if(training.has(this)&&p&&uid!==this.data.activeId&&!this.isBoarded(uid)&&species.get(p.id).generation<=this.maxGeneration()&&!(this.data.battle?.party[uid]?.hp<=0)){
@@ -481,7 +508,7 @@ class Game {
     const b=this.data.battle;b.foe.hp=Math.max(0,b.foe.hp-amount);
   }
   captureOpportunity(b=this.data.battle){
-    if(!b||b.kind!=='wild'||b.foe.hp<=0||this.data.caught[b.foe.id])return null;
+    if(!b||b.kind!=='wild'||b.foe.hp<=0||this.registeredThisSeason(b.foe.id))return null;
     const hp=b.foe.hp/b.foe.maxHp,band=hp<=.2?'red':hp<=.5?'yellow':null;
     if(!band)return null;
     const used=captureCounts(b)[band],limit=CAPTURE_LIMITS[band];
@@ -507,7 +534,7 @@ class Game {
   }
   finishCapture(pending,now){
     const b=this.data.battle,c=this.data.captureAnimation;
-    if(!b||b.kind!=='wild'||!c?.caught||c.serial!==pending.serial||c.id!==b.foe.id||c.attempt!==b.captureAttempts||this.data.caught[b.foe.id])return false;
+    if(!b||b.kind!=='wild'||!c?.caught||c.serial!==pending.serial||c.id!==b.foe.id||c.attempt!==b.captureAttempts||this.registeredThisSeason(b.foe.id))return false;
     const uid=this.addPokemon(b.foe.id,b.foe.level,'catch',now),p=this.data.owned[uid];
     p.ability=b.foe.ability||p.ability;p.abilitySlot=Math.max(0,species.get(p.id).abilities.indexOf(p.ability));p.gender=b.foe.gender||p.gender;
     this.log(`${species.get(b.foe.id).name} Lv.${b.foe.level} 포획! (${b.captureAttempts}번째 몬스터볼)`,'catch',b.foe.id,now);
@@ -521,6 +548,7 @@ class Game {
       return this.finishBattleEvent(now);
     }
     if(b&&(b.party[this.data.activeId]?.hp<=0||b.foe.hp<=0)){this.showFaint(now);return true;}
+    if(!b&&this.seasonDue(now)){this.resetSeason(now);return true;}
     if(training.queueEvolutions(this,now)||this.processActions(now))return true;
     if(!b&&this.data.pendingChallenge){
       const index=this.data.pendingChallenge.index;
@@ -572,7 +600,7 @@ class Game {
     const uncertain=[...this.sessions.values()].some(s=>s.phase==='working'&&now-s.at>=600000);
     const phase=active.length?'working':uncertain?'unknown':recent&&now-recent.at<16000?recent.phase:'idle',available=[this.limits.primary,this.limits.secondary].filter(Boolean);
     const limits=[300,10080].map(minutes=>{const l=available.find(x=>x.minutes===minutes),fresh=l&&l.resetsAt*1000>now;return {label:minutes===300?'5시간':'주간',left:fresh?Math.round(100-l.used):null,resetsAt:fresh?l.resetsAt:null};});
-    return {trainingDevice:training.snapshot(this),pendingActions:this.pendingActions(now),experienceBoost:this.experienceBoost(),version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,...healthView(hero||{hp:maxHp,maxHp}),status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,...healthView(b.foe),status:b.foe.status}:null,slots:this.data.slots.map(uid=>({...view(this.data.owned[uid].id),uid,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0})),battle:b?{kind:b.kind,storyId:b.storyId||null,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?this.battleBoss(b).name:null,foeIndex:b.kind==='trainer'?Math.min(b.foeIndex,this.battleBoss(b).team.length-1):b.foeIndex,teamSize:b.kind==='trainer'?this.battleBoss(b).team.length:null}:null,pendingChallenge:this.data.pendingChallenge?{...this.data.pendingChallenge,name:this.challengeName(this.data.pendingChallenge.index)}:null,animation:this.data.animation,capture:this.data.captureAnimation||null,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
+    return {season:{...this.data.season,nextResetAt:monthOf(now).end,pending:this.seasonDue(now)},trainingDevice:training.snapshot(this),pendingActions:this.pendingActions(now),experienceBoost:this.experienceBoost(),version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,...healthView(hero||{hp:maxHp,maxHp}),status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,...healthView(b.foe),status:b.foe.status}:null,slots:this.data.slots.map(uid=>({...view(this.data.owned[uid].id),uid,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0})),battle:b?{kind:b.kind,storyId:b.storyId||null,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?this.battleBoss(b).name:null,foeIndex:b.kind==='trainer'?Math.min(b.foeIndex,this.battleBoss(b).team.length-1):b.foeIndex,teamSize:b.kind==='trainer'?this.battleBoss(b).team.length:null}:null,pendingChallenge:this.data.pendingChallenge?{...this.data.pendingChallenge,name:this.challengeName(this.data.pendingChallenge.index)}:null,animation:this.data.animation,capture:this.data.captureAnimation||null,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
   }
   panelState(now=Date.now()){
     const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,level:p.level,xp:p.xp,gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:p.moves.map(id=>({id,name:moves.get(id).name,type:moves.get(id).type})),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
@@ -580,7 +608,7 @@ class Game {
       kantoCaughtCount:this.kantoCaughtCount(),
       encounterBonus:this.encounterBonus(),
       specialEncounters:this.specialEncounters(),
-      collection:db.pokemon.filter(p=>p.generation<=this.maxGeneration()).map(p=>{const owned=roster.filter(m=>m.id===p.id);return {id:p.id,seen:!!this.data.seen[p.id],caught:!!this.data.caught[p.id],name:this.data.seen[p.id]?p.name:'???',owned:owned.length>0,count:owned.length,level:owned.length?Math.max(...owned.map(m=>m.level)):null,types:this.data.seen[p.id]?view(p.id).types:[],description:this.data.seen[p.id]?p.description:'아직 만나지 않은 포켓몬',rarity:rarity(p)};}),
+      collection:db.pokemon.filter(p=>p.generation<=this.maxGeneration()).map(p=>{const owned=roster.filter(m=>m.id===p.id);return {id:p.id,seen:!!this.data.seen[p.id],caught:!!this.data.caught[p.id],seasonCaught:this.registeredThisSeason(p.id),name:this.data.seen[p.id]?p.name:'???',owned:owned.length>0,count:owned.length,level:owned.length?Math.max(...owned.map(m=>m.level)):null,types:this.data.seen[p.id]?view(p.id).types:[],description:this.data.seen[p.id]?p.description:'아직 만나지 않은 포켓몬',rarity:rarity(p)};}),
       bosses:db.bosses.map(b=>{const revealed=this.trainerRevealed(b);return {...b,revealed,name:revealed?b.name:'???',team:revealed?b.team:[]};}),gymAccess:db.bosses.slice(0,8).map((_,i)=>this.canChallenge(i)),leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].map(e=>!this.trainerRevealed(db.bosses[7])&&e.kind==='challenge'&&e.text.startsWith(db.bosses[7].name+' 체육관 도전 예약')?{...e,text:e.text.replace(db.bosses[7].name,'???')}:e).sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:[...(this.data.trainingDevice.fluteObtainedAt?[{id:'poke-flute',name:'포켓몬피리',count:1}]:[]),...(training.has(this)?[{id:'training-device',name:'학습장치',count:1}]:[]),...Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name,count}))]};
   }
 }

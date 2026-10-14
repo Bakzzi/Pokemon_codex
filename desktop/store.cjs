@@ -7,7 +7,7 @@ class Store {
     try{
       const value=JSON.parse(fs.readFileSync(this.file,'utf8'));
       if(![1,2].includes(value.version))throw new Error('Unsupported save version');
-      this.loadedVersion=value.version;this.loadedRules=value.game?.rulesRevision||0;return value;
+      this.loadedVersion=value.version;this.loadedRules=value.game?.rulesRevision||0;this.loadedSeason=value.game?.season?.key||null;return value;
     }catch(error){
       if(error.code!=='ENOENT'){
         try{fs.copyFileSync(this.file,this.file+'.damaged-'+Date.now());}catch{}
@@ -19,6 +19,10 @@ class Store {
   save(data){
     const text=JSON.stringify(data,null,2)+'\n';if(text===this.last)return;
     fs.mkdirSync(this.dir,{recursive:true});
+    const season=data.game?.season?.key;
+    if(this.loadedSeason&&season&&this.loadedSeason!==season){
+      fs.copyFileSync(this.file,path.join(this.dir,'progress.before-season-'+Date.now()+'.json'));
+    }
     if(this.loadedVersion===1&&data.version===2){
       fs.copyFileSync(this.file,path.join(this.dir,'progress.pre-v2-'+Date.now()+'.json'));
       this.loadedVersion=2;
@@ -27,7 +31,7 @@ class Store {
       fs.copyFileSync(this.file,path.join(this.dir,'progress.pre-rules3-'+Date.now()+'.json'));
       this.loadedRules=3;
     }
-    const tmp=this.file+'.tmp';fs.writeFileSync(tmp,text);fs.renameSync(tmp,this.file);this.last=text;
+    const tmp=this.file+'.tmp';fs.writeFileSync(tmp,text);fs.renameSync(tmp,this.file);this.last=text;this.loadedSeason=season||null;
   }
 }
 module.exports={Store};
