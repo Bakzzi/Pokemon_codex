@@ -88,6 +88,7 @@ function renderBadgeCase(){
 }
 function renderBosses(){
   renderStory();
+  renderSpecialEncounters();
   const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.badges,state.bosses.map(b=>b.revealed),state.gymAccess,state.trainingDevice.routeOpen,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
   $('badges').textContent='뱃지 '+state.badges.length+' / 8';
   renderBadgeCase();
@@ -111,9 +112,15 @@ function renderBosses(){
     $('johto-title').textContent=unlocked?'성도 지방이 열렸어요':stay?'관동에서 도감을 완성하는 중':'다음 모험을 선택하세요';
     $('johto-note').textContent='관동 도감 '+state.kantoCaughtCount+' / 151 · '+(unlocked?'관동 151종과 성도 100종을 함께 만날 수 있어요.':stay?'151종 수집을 계속해요. 원할 때 언제든 2세대를 해금할 수 있어요.':'151종을 모을 때까지 관동에 머물러도 좋아요. 2세대를 해금하면 성도 100종이 추가돼요.');
     const bonus=state.encounterBonus,pct=n=>(n*100).toLocaleString('ko-KR',{maximumFractionDigits:3})+'%';
-    $('champion-bonus').textContent=bonus?'챔피언 보너스 · 희귀 '+pct(bonus.rates.rare)+' · 전설 '+pct(bonus.rates.legendary)+' · 환상 '+pct(bonus.rates.mythical)+'\n선택한 4마리 최저 Lv.'+bonus.minimumLevel+' · 출현 '+bonus.rareMultiplier+'배 · 미등록 종 '+bonus.uncaughtWeight+'배 우대\n챔피언 기본(출현 1.5배 · 미등록 가중치 2) × 레벨 보너스 '+bonus.levelMultiplier+'배\n네 마리 모두 Lv.71 이상 3배 · Lv.81 이상 4배 · Lv.91 이상 5배. 출전 레벨 조건을 충족한 종에 적용돼요.':'';
+    $('champion-bonus').textContent=bonus?'챔피언 기본 확률 · 희귀 '+pct(bonus.rates.rare)+' · 전설 '+pct(bonus.rates.legendary)+' · 환상 '+pct(bonus.rates.mythical)+'\n선택한 4마리 최저 Lv.'+bonus.minimumLevel+' · 출현 '+bonus.rareMultiplier+'배 · 미등록 종 '+bonus.uncaughtWeight+'배 우대\n챔피언 기본(출현 1.5배 · 미등록 가중치 2) × 레벨 보너스 '+bonus.levelMultiplier+'배\n네 마리 모두 Lv.71 이상 3배 · Lv.81 이상 4배 · Lv.91 이상 5배. 종별 추가 확률은 특별한 만남에 더해 표시해요.':'';
     $('johto-stay').hidden=unlocked||stay;$('johto-unlock').hidden=unlocked;
   }
+}
+function renderSpecialEncounters(){
+  const bonus=state.specialEncounters,root=$('special-encounters');root.hidden=!bonus;if(!bonus)return;
+  const pct=n=>(n*100).toLocaleString('ko-KR',{maximumFractionDigits:5});
+  $('special-encounters-note').textContent='현재 출전 동료 Lv.'+bonus.activeLevel+' · 모두 Lv.50부터 만나요. 추가 확률은 기본 배율 적용 뒤에 더해져요.';
+  $('special-encounters-list').replaceChildren(...bonus.entries.map(p=>{const row=node('tr');row.dataset.encounter=p.id;row.append(node('td','',p.name),node('td','','+'+pct(p.extra)+'%p'),node('td','',p.eligible?pct(p.chance)+'%':'출전 Lv.50부터'));return row;}));
 }
 function renderStory(){
   if(!state)return;const d=state.trainingDevice,busy=state.battle?.kind==='trainer',queued=state.pendingChallenge;
