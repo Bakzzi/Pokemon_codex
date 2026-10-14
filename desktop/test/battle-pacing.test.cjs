@@ -25,7 +25,7 @@ test('a counterattack waits for the previous action even when more work arrives'
   const token=(output,t)=>({type:'event_msg',timestamp:new Date(t).toISOString(),payload:{type:'token_count',info:{total_token_usage:{output_tokens:output,total_tokens:output}}}});
   g.observe('test',token(0,now),{baseline:true,now});g.observe('test',token(50000,now+50),{now:now+50});
   const queued=g.data.workTokens;assert.equal(g.tick(end-1),false);assert.equal(g.data.workTokens,queued);assert.deepEqual(g.data.animation,action);
-  assert.equal(g.select(7,end-1),false);assert.equal(g.challenge(0,end-1),false);
+  assert.equal(g.select(7,end-1),false);assert.ok(g.challenge(0,end-1));assert.equal(g.data.pendingChallenge.index,0);assert.deepEqual(g.data.animation,action);
   const loaded=new Game(g.data,now+100,{random:()=>0});assert.equal(loaded.tick(end-1),false);
   assert.ok(loaded.tick(end));assert.equal(loaded.data.animation.actor,'foe');assert.equal(loaded.data.workTokens,queued-250);
 });

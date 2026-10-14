@@ -74,15 +74,17 @@ function renderBadgeCase(){
   $('badge-case-note').textContent=earned.size===8?'관동의 여덟 증표 · 포켓몬 리그로':earned.size+'개의 증표 · 다음 도전을 기다리는 자리';
 }
 function renderBosses(){
-  const busy=state.battle?.kind==='trainer',signature=JSON.stringify([state.badges,state.battle,state.champion,state.leagueBest]);if(signature===bossSignature)return;bossSignature=signature;
+  const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.badges,state.battle,queued,state.champion,state.leagueBest]);if(signature===bossSignature)return;bossSignature=signature;
   $('badges').textContent='뱃지 '+state.badges.length+' / 8';
   renderBadgeCase();
   $('gyms').replaceChildren(...state.bosses.slice(0,8).map((boss,i)=>{
     const done=state.badges.includes(boss.id),card=node('article','gym'+(done?' done':'')),title=node('div','gym-title'),badge=node('span','badge');badge.append(badgeImage(boss,'gym-badge'),document.createTextNode(boss.badge));title.append(node('h3','',(i+1)+'. '+boss.name),badge);card.append(title,teamMembers(boss.team));
-    const b=node('button','',done?'뱃지 획득 완료':i>state.badges.length?'앞선 체육관 뱃지가 필요해요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||i>state.badges.length;b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;
+    const b=node('button','',done?'뱃지 획득 완료':queued?.index===i?'도전 예약됨':i>state.badges.length?'앞선 체육관 뱃지가 필요해요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||!!queued||i>state.badges.length;b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;
   }));
-  $('ongoing').hidden=!busy;if(busy){$('ongoing').replaceChildren(node('span','',state.battle.boss+' · '+(state.battle.foeIndex+1)+' / '+state.battle.teamSize+'마리와 배틀 중'));const b=node('button','','도전 그만두기');b.onclick=()=>window.buddy.action('abandon');$('ongoing').append(b);}
-  $('league-start').disabled=state.badges.length<8||busy;$('league-start').textContent=state.champion?'리그 재도전':'리그 도전';
+  $('ongoing').hidden=!busy&&!queued;
+  if(queued){$('ongoing').replaceChildren(node('span','',queued.name+' 도전 예약 · '+(state.battle?'현재 야생 배틀이 끝나면 시작해요.':'마지막 연출이 끝나면 시작해요.')));const b=node('button','','예약 취소');b.dataset.cancelChallenge='';b.onclick=()=>window.buddy.action('challenge-cancel');$('ongoing').append(b);}
+  else if(busy){$('ongoing').replaceChildren(node('span','',state.battle.boss+' · '+(state.battle.foeIndex+1)+' / '+state.battle.teamSize+'마리와 배틀 중'));const b=node('button','','도전 그만두기');b.onclick=()=>window.buddy.action('abandon');$('ongoing').append(b);}
+  $('league-start').disabled=state.badges.length<8||busy||!!queued;$('league-start').textContent=queued?.index===8?'리그 도전 예약됨':state.champion?'리그 재도전':'리그 도전';
   $('league-team').replaceChildren(...state.bosses.slice(8).map((b,i)=>{const e=node('article','league-member');e.append(node('h3','',(i===4?'챔피언 ':'')+b.name),teamMembers(b.team));return e;}));
   $('league-progress').textContent=state.champion?'관동 챔피언! 성도 지방의 2세대 포켓몬이 해금되었어요.':'리그 최고 기록 '+state.leagueBest+' / 5 · 챔피언이 되면 2세대가 해금돼요.';
 }

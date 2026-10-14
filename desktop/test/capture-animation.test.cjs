@@ -32,7 +32,7 @@ test('capture playback blocks battles and manual changes, survives reload, and p
   let g=fixture(4);g.data.workTokens=500;g.capture(now);
   const c=structuredClone(g.data.captureAnimation),t=captureTiming(c),count=Object.keys(g.data.owned).length;
   assert.equal(g.tick(now+t.duration-1),false);assert.equal(g.data.workTokens,500);
-  assert.equal(g.select(7,now+1),false);assert.equal(g.challenge(0,now+1),false);
+  assert.equal(g.select(7,now+1),false);assert.ok(g.challenge(0,now+1));assert.ok(g.cancelChallenge(now+2));
   g=new Game(g.data,now+1000,{random:()=>.73});assert.equal(g.tick(now+t.duration-1),false);
   assert.deepEqual(g.snapshot(now+1000).capture,c);assert.equal(Object.keys(g.data.owned).length,count);
   g.data.workTokens=0;assert.equal(g.tick(now+t.duration+1),false);assert.equal(g.data.battle,null);

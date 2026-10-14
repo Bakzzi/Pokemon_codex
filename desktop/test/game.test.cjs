@@ -102,9 +102,9 @@ test('gym order, eight badges, Elite Four and actual champion victory are the on
   }
   assert.equal(g.data.champion,true);assert.equal(g.panelState(now).collection.length,251);assert.ok(g.addPokemon(172,5,'catch',now));
 });
-test('trainer Pokemon cannot be caught; withdrawal restores suspended wild capture progress',()=>{
+test('trainer Pokemon cannot be caught; older suspended-wild saves still restore capture progress',()=>{
   const g=new Game({},now);const b=wild(g,150,50);b.captureAttempts=6;b.foe.hp=b.foe.maxHp*.04;
-  g.challenge(0,now);g.data.battle.foe.hp=1;assert.equal(g.capture(now),false);assert.ok(!g.data.caught[74]);
+  g.data.battle=null;g.challenge(0,now);g.data.suspendedWild=b;g.data.battle.foe.hp=1;assert.equal(g.capture(now),false);assert.ok(!g.data.caught[74]);
   assert.ok(g.abandon(now));assert.equal(g.data.battle,b);assert.equal(g.data.battle.captureAttempts,6);
   assert.ok(!g.data.journal.some(e=>e.kind==='loss'));
 });

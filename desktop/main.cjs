@@ -76,6 +76,7 @@ async function start(){
       if(action==='slot')result=game.setSlot(value?.slot,value?.id);
       if(action==='evolve')result=game.evolve(value?.id,value?.to);
       if(action==='challenge')result=game.challenge(value);
+      if(action==='challenge-cancel')result=game.cancelChallenge();
       if(action==='abandon')result=game.abandon();
       if(action==='journal-ack')result=game.acknowledgeJournal();
       if(action==='daycare-preview')game.daycareSelection=Array.isArray(value)?value.slice(0,2).map(Number):[];
@@ -164,6 +165,12 @@ async function smokeTest(){
   const emptyBadgeCase=await panel.webContents.executeJavaScript("document.querySelectorAll('.badge-slot.empty').length===8&&document.querySelectorAll('.badge-slot .badge-art').length===0");
   fs.writeFileSync(path.join(dir,'challenge.png'),(await panel.webContents.capturePage()).toPNG());
   await panel.webContents.executeJavaScript("document.querySelector('[data-challenge=\"0\"]').click()");await wait(100);
+  const challengeQueued=game.data.battle?.kind==='wild'&&game.data.pendingChallenge?.index===0&&await panel.webContents.executeJavaScript("!document.querySelector('#ongoing').hidden&&document.querySelector('#ongoing').textContent.includes('도전 예약')&&document.querySelector('[data-challenge=\"0\"]').textContent==='도전 예약됨'");
+  fs.writeFileSync(path.join(dir,'challenge-queued.png'),(await panel.webContents.capturePage()).toPNG());
+  await panel.webContents.executeJavaScript("document.querySelector('[data-cancel-challenge]').click()");await wait(80);
+  const challengeCancelled=!game.data.pendingChallenge&&game.data.battle?.kind==='wild'&&await panel.webContents.executeJavaScript("document.querySelector('#ongoing').hidden&&!document.querySelector('[data-challenge=\"0\"]').disabled");
+  await panel.webContents.executeJavaScript("document.querySelector('[data-challenge=\"0\"]').click()");await wait(80);
+  game.defeatOpponent(Date.now());publish(true);await finishPresentation();game.tick();publish(true);await wait(100);
   const challenge=game.data.battle?.kind==='trainer'&&game.data.battle.bossIndex===0;
   game.abandon();game.addPokemon(134,20,'fixture');game.addPokemon(132,20,'fixture');publish(true);
   await panel.webContents.executeJavaScript("document.querySelector('[data-tab=\"daycare\"]').click();document.querySelector('#parent-a').value='134';document.querySelector('#parent-b').value='132';document.querySelector('#parent-b').dispatchEvent(new Event('change'))");await wait(180);
@@ -194,7 +201,7 @@ async function smokeTest(){
   await panel.webContents.executeJavaScript("document.querySelector('[data-tab=\"collection\"]').click();document.querySelector('.dex-card[data-id=\"25\"]').click()");await wait(100);
   const allMoves=await panel.webContents.executeJavaScript("document.querySelectorAll('.move-list li').length>4&&document.querySelector('#detail').textContent.includes('특성 · 정전기')");
   fs.writeFileSync(path.join(dir,'all-moves.png'),(await panel.webContents.capturePage()).toPNG());
-  game.data.workTokens=2000;game.data.switchUntil=0;game.nextTick=0;game.tick(Date.now());const nativeBattle=!!game.data.battle?.sim;
+  game.data.workTokens=2000;game.newWild(Date.now()-require('./battle-pacing.js').pauses.encounter);game.data.switchUntil=0;game.nextTick=0;game.tick(Date.now());const nativeBattle=!!game.data.battle?.sim;
   game=new Game({},Date.now(),{random:()=>.73});
   for(const [uid,level] of [[1,10],[4,24],[25,12]]){const p=game.data.owned[uid];p.level=level;p.xp=xpAt(p.id,level);p.moves=learnedMoves(p.id,level);}
   game.addPokemon(133,1,'fixture');game.data.activeId=4;game.tick();publish(true);await wait(300);
@@ -288,7 +295,7 @@ async function smokeTest(){
     return !h.hidden&&!f.hidden&&getComputedStyle(h).display!=='none'&&n.textContent===${JSON.stringify(game.snapshot().hero.name)}&&number.textContent===${JSON.stringify(game.snapshot().hero.currentHp+' / '+game.snapshot().hero.maxHp)}&&n.getBoundingClientRect().top<bar.getBoundingClientRect().top&&bar.getBoundingClientRect().top<number.getBoundingClientRect().top&&getComputedStyle(document.querySelector('#speech')).display==='none'&&getComputedStyle(document.querySelector('.connection')).display==='none';
   })()`);
   fs.writeFileSync(path.join(dir,'compact.png'),(await win.webContents.capturePage()).toPNG());
-  const controls={switched,recallBall,recallAbsorb,recallReturn,sendBall,sendRelease,assigned,challenge,preview:preview.name&&preview.image&&!preview.overflow,boarded,eggVisible,hatched,summary,detail,acknowledged,earnedGymLocked,allMoves,nativeBattle,autoRotation,autoSprite,attackBeforeFaint,hitBeforeFaint,faintAfterAttack,faintRotation,headerLayout,actorMessages,actionMessageExpires,hpBeforeImpact,hpDraining,hpResultPause,emptyBadgeCase,earnedBadgeCase,fullBadgeCase,moveCatalog:moveCatalog.count===354&&!moveCatalog.empty.length&&moveCatalog.distinctFire===3,movePlayback,battleHud,captureThreeShakes,captureSparkle,caughtBallOnly,captureBreakouts,compact:settings.compact===true,height:win.getSize()[1],pin:settings.pinned===false};
+  const controls={switched,recallBall,recallAbsorb,recallReturn,sendBall,sendRelease,assigned,challengeQueued,challengeCancelled,challenge,preview:preview.name&&preview.image&&!preview.overflow,boarded,eggVisible,hatched,summary,detail,acknowledged,earnedGymLocked,allMoves,nativeBattle,autoRotation,autoSprite,attackBeforeFaint,hitBeforeFaint,faintAfterAttack,faintRotation,headerLayout,actorMessages,actionMessageExpires,hpBeforeImpact,hpDraining,hpResultPause,emptyBadgeCase,earnedBadgeCase,fullBadgeCase,moveCatalog:moveCatalog.count===354&&!moveCatalog.empty.length&&moveCatalog.distinctFire===3,movePlayback,battleHud,captureThreeShakes,captureSparkle,caughtBallOnly,captureBreakouts,compact:settings.compact===true,height:win.getSize()[1],pin:settings.pinned===false};
   const ok=inspection.hero==='피카츄'&&inspection.images&&!inspection.overflow&&inspection.slots===4&&inspection.facing.startsWith('matrix(-1')&&collection.count===151&&collection.caught===4&&collection.unknown.includes('???')&&collection.silhouette&&collection.noPichu&&!collection.overflow&&Object.values(controls).every(Boolean)&&controls.height===276&&!errors.length;
   fs.writeFileSync(path.join(dir,'result.json'),JSON.stringify({ok,inspection,collection,controls,errors},null,2));console.log(JSON.stringify({smoke:ok,inspection,collection,controls,errors}));app.exit(ok?0:1);
 }
