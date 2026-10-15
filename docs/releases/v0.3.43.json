@@ -15,15 +15,10 @@
     "packaging": "Windows native runtime, changed sources and new artwork copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.42. Every portable ZIP file verified against the package."
   },
   "validation": {
-    "command": "node --test desktop/test/rocket-flute.test.cjs desktop/test/trainer-secrets.test.cjs",
+    "description": "Verified release. Gameplay scenario details are omitted from public documentation.",
     "passed": 10,
     "packagedRuntimeFilesMatched": 25,
     "packagedUiCasesPassed": 7,
-    "narrowChallengeWidth": 650,
-    "navigationStartedBattle": false,
-    "unrevealedPortraitsAreSilhouettes": true,
-    "stablePortraits": true,
-    "newArtworkHashesMatched": 3,
     "uiErrors": 0,
     "archiveFilesVerified": 692,
     "liveCodexConnected": true,

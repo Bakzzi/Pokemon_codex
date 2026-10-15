@@ -15,27 +15,13 @@
     "packaging": "Windows native runtime, current sources and item assets copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.57. Every portable ZIP file verified against the package."
   },
   "validation": {
-    "scope": "Low-HP Snorlax replacement during native opponent entry; queued switch reuse and supersession; one ball animation with no stale ally restoration or fabricated attacks; mid-switch reload, manual choice, simultaneous knockouts, fainted learner level-up and legacy ended-save recovery",
-    "command": "node --test desktop/test/*.test.cjs; isolated Electron fixture using exact packaged runtime; git diff --check",
+    "description": "Verified release. Gameplay scenario details are omitted from public documentation.",
     "testsPassed": 234,
     "testsFailed": 0,
     "packagedRuntimeFilesMatched": 25,
     "packagedDocumentationFilesMatched": 3,
     "packagedUiCasesPassed": 6,
-    "uiCases": [
-      "low-hp-snorlax-recalled-once",
-      "recalled-snorlax-stays-hidden",
-      "lapras-released-from-ball",
-      "native-acknowledgement-never-restores-snorlax-or-replays-switch",
-      "mid-switch-reload-completes-once",
-      "manual-choice-during-opponent-entry-is-not-overridden"
-    ],
     "uiErrors": 0,
-    "pendingOpponentEntryAcknowledgedBeforeAllySync": true,
-    "queuedSwitchesDeduplicated": true,
-    "nativeOnlyAcknowledgementsDoNotReplayAnimations": true,
-    "faintedLevelUpsStayAtZeroHp": true,
-    "legacyEndedGhostBattleSettlesNormally": true,
     "partyCapacity": 6,
     "archiveFilesVerified": 706,
     "liveCodexConnected": true,

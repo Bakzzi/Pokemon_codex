@@ -15,19 +15,9 @@
     "packaging": "Windows native runtime and current sources copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.43. Every portable ZIP file verified against the package."
   },
   "validation": {
-    "scope": "Erika recognition button completion; no game-engine changes",
-    "syntax": "node --check desktop/panels.js",
+    "description": "Verified release. Gameplay scenario details are omitted from public documentation.",
     "packagedRuntimeFilesMatched": 25,
     "packagedUiCasesPassed": 4,
-    "uiCases": [
-      "before-recognition",
-      "earned-while-open",
-      "saved-and-reopened",
-      "completed-narrow"
-    ],
-    "narrowChallengeWidth": 650,
-    "completionDisablesNavigation": true,
-    "noBattleActionsDispatched": true,
     "uiErrors": 0,
     "archiveFilesVerified": 692,
     "liveCodexConnected": true,

@@ -15,25 +15,10 @@
     "packaging": "Windows native runtime and current sources copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.44. Every portable ZIP file verified against the package."
   },
   "validation": {
-    "scope": "Rocket opponent lineups, names, levels, staged secrecy and layout",
-    "command": "node --test desktop/test/rocket-flute.test.cjs desktop/test/trainer-secrets.test.cjs",
+    "description": "Verified release. Gameplay scenario details are omitted from public documentation.",
     "passed": 10,
-    "syntax": "node --check desktop/panels.js",
     "packagedRuntimeFilesMatched": 25,
     "packagedUiCasesPassed": 6,
-    "uiCases": [
-      "locked",
-      "grunt-revealed",
-      "duo-revealed",
-      "giovanni-revealed",
-      "saved-and-reopened",
-      "narrow-all-lineups"
-    ],
-    "narrowChallengeWidth": 650,
-    "revealedTeamsMatchBattleData": true,
-    "unknownTeamsHidden": true,
-    "completionDisablesNavigation": true,
-    "noBattleActionsDispatched": true,
     "uiErrors": 0,
     "archiveFilesVerified": 692,
     "liveCodexConnected": true,

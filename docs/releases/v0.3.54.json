@@ -15,32 +15,10 @@
     "packaging": "Windows native runtime, current sources and item assets copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.53. Every portable ZIP file verified against the package."
   },
   "validation": {
-    "scope": "Challenge sections in requested order, separate special-encounter bonus after league, champion region choice within league; final gym name/face/team revealed upon seventh badge, Rocket next-stage visibility and champion visibility after Lance, reservations/reloads/monthly preservation",
-    "command": "node --check desktop/game-v2.cjs; node --test desktop/test/trainer-secrets.test.cjs desktop/test/challenge-queue.test.cjs desktop/test/rocket-flute.test.cjs desktop/test/monthly-season.test.cjs; isolated Electron fixture using exact packaged runtime; git diff --check",
+    "description": "Verified release. Gameplay scenario details are omitted from public documentation.",
     "passed": 26,
-    "failed": 0,
     "packagedRuntimeFilesMatched": 25,
     "packagedUiCasesPassed": 3,
-    "uiCases": [
-      "six-badges-ordered-sections-and-hidden-final-gym",
-      "seventh-badge-immediately-reveals-giovanni-face-and-lineup",
-      "lance-completion-reveals-champion-and-rewards-follow-league"
-    ],
-    "panelWidth": 650,
-    "sectionOrder": [
-      "kanto-gyms-title",
-      "badge-case",
-      "gyms",
-      "rocket-hideout",
-      "snorlax-road",
-      "pokemon-league",
-      "special-encounters"
-    ],
-    "lastGymRevealedAtSeventhBadge": true,
-    "giovanniTeamSize": 5,
-    "championRevealedAfterFourEliteFourWins": true,
-    "specialEncountersAfterLeague": true,
-    "legacySelectedPositionsPreserved": true,
     "partyCapacity": 6,
     "uiErrors": 0,
     "archiveFilesVerified": 706,

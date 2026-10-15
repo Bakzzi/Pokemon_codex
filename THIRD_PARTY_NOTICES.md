@@ -14,11 +14,11 @@ Data: https://github.com/PokeAPI/pokeapi/tree/81d20919845b6a445969b9265aab5cec6b
 PokeAPI's license is copied to desktop/data/LICENSE-PokeAPI.txt.
 
 Runtime sprites: https://github.com/PokeAPI/sprites/tree/master/sprites/pokemon/versions/generation-ii/crystal/animated
-Original Crystal animated sprites, national numbers 1–251; only 1–151 are available before the champion unlock.
+Original Crystal animated sprites.
 Per-file URLs, byte counts and SHA-256 hashes are in desktop/assets/manifest.json.
 The reference directory also preserves original Generation III assets and offline source tables.
 
-Item sprites, including Exp. Share, Poke Flute, evolution stones, held evolution items and the Xtransceiver used for the daycare phone contact, are downloaded unchanged from https://github.com/PokeAPI/sprites/tree/master/sprites/items . Their per-file URLs, byte counts and SHA-256 hashes are recorded in desktop/assets/items/sources.json. Runtime uses local copies without network requests. Xtransceiver is used as an in-game contact illustration; phone-based daycare requests are this project's presentation.
+Item sprites are downloaded unchanged from https://github.com/PokeAPI/sprites/tree/master/sprites/items . Their per-file URLs, byte counts and SHA-256 hashes are recorded in desktop/assets/items/sources.json. Runtime uses local copies without network requests.
 
 Pokémon names, characters and game artwork belong to their respective rights holders, including Nintendo, Creatures, GAME FREAK and The Pokémon Company. They are separate from the MIT-licensed project source. This is an unofficial noncommercial fan project.
 
@@ -27,7 +27,7 @@ Pokémon names, characters and game artwork belong to their respective rights ho
 FRLG trainer party facts:
 https://github.com/pret/pokefirered/blob/master/src/data/trainer_parties.h
 
-The Rocket grunt uses the FRLG Rocket Hideout Raticate / Zubat level-20 party. The separate Giovanni event uses sParty_BossGiovanni (Onix 25, Rhyhorn 24, Kangaskhan 29) from the same source. Jessie and James use their Yellow Rocket Hideout party (Koffing, Meowth, Ekans, all 25), as recorded at https://www.serebii.net/yellow/Walkthrough/28-game_corner.shtml and https://bulbapedia.bulbagarden.net/wiki/Jessie_and_James . Opponents use extracted FRLG level-up data for their default four moves. The route-blocking Snorlax is level 30 and can be caught with ordinary Gen III capture rules. The three-stage campaign, flute-only Snorlax encounters, fifth-gym access after clearing that encounter, replacement of trade evolution with one level gained from device experience in the prior form, and extra 10% experience for one registered learner are this project's rules. Item acquisition clues and undiscovered rewards are intentionally omitted from advance player guidance.
+Trainer and encounter references are credited in the source data and artwork manifests. Event progression, encounter selection and other game-specific adjustments are implemented by this project; their solutions are omitted from public player guidance.
 
 Evolution and breeding references:
 https://github.com/pret/pokefirered/blob/master/src/data/pokemon/evolution.h
@@ -58,7 +58,7 @@ The eight Gym Leader illustrations are official Pokemon FireRed and LeafGreen ch
 
 The Team Rocket R logo is downloaded unchanged from https://archives.bulbagarden.net/wiki/File:Rocket-logo.png . Its URL, dimensions, byte count and SHA-256 hash are recorded in desktop/assets/logos/sources.json. These images retain the original Pokemon rights holders' copyright and are not MIT-licensed code. All artwork is loaded from local files at runtime.
 
-The Rocket Hideout uses the existing Erika and Giovanni illustrations, official FireRed/LeafGreen Team Rocket grunt artwork, and original-series animation artwork for Jessie and James. New images are unchanged Bulbagarden Archives thumbnails displayed through small CSS face viewports; their pages, URLs, dimensions, byte counts and SHA-256 hashes are recorded in desktop/assets/trainers/rocket-sources.json. Unrevealed opponents are rendered as black silhouettes. These images retain the original Pokemon rights holders' copyright and are not MIT-licensed code.
+Additional trainer illustrations use original game and animation artwork. Images are unchanged Bulbagarden Archives thumbnails displayed through small CSS face viewports; their pages, URLs, dimensions, byte counts and SHA-256 hashes are recorded in desktop/assets/trainers/rocket-sources.json. These images retain the original Pokemon rights holders' copyright and are not MIT-licensed code.
 
 ## Electron runtime
 

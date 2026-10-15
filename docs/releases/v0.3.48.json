@@ -15,43 +15,11 @@
     "packaging": "Windows native runtime and current sources copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.47. Every portable ZIP file verified against the package."
   },
   "validation": {
-    "scope": "Pikachu-only start, six optional positions, gym gifts, empty-position persistence and queues, legacy save and monthly migration, event labels, Snorlax retry during a trainer battle",
-    "command": "node --test desktop/test/*.test.cjs (all test files enumerated by PowerShell)",
+    "description": "Verified release. Gameplay scenario details are omitted from public documentation.",
     "passed": 210,
-    "failed": 0,
     "packagedRuntimeFilesMatched": 25,
     "packagedUiCasesPassed": 7,
-    "uiCases": [
-      "fresh-one-member",
-      "six-assignments-last-member-protected",
-      "brock-gift-joins",
-      "cleared-position-reloaded",
-      "six-members-fit",
-      "snorlax-retry-queued-during-gym",
-      "compact-party-hidden"
-    ],
-    "widgetWidths": [
-      370
-    ],
-    "panelWidth": 650,
-    "starterGiftLevels": [
-      10,
-      10,
-      10
-    ],
-    "initialParty": [
-      25,
-      null,
-      null,
-      null,
-      null,
-      null
-    ],
-    "legacySelectedPositionsPreserved": true,
     "partyCapacity": 6,
-    "partyRevision": 1,
-    "snorlaxRetryQueuedWithoutInterruptingGym": true,
-    "plainEventLabels": true,
     "uiErrors": 0,
     "archiveFilesVerified": 692,
     "liveCodexConnected": true,

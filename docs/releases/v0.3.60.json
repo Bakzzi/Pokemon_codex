@@ -15,17 +15,11 @@
     "packaging": "Windows native runtime, current sources and item assets copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.59. Every portable ZIP file verified against the package."
   },
   "validation": {
-    "scope": "Captured Snorlax road summary uses the requested waking-up and adventuring-together sentence; collapsed summary, knockout wording and reload",
-    "command": "node --check desktop/panels.js; isolated Electron fixture using exact packaged runtime; git diff --check",
+    "description": "Verified release. Gameplay scenario details are omitted from public documentation.",
     "syntaxCheckPassed": true,
     "packagedRuntimeFilesMatched": 25,
     "packagedDocumentationFilesMatched": 3,
     "packagedUiCasesPassed": 3,
-    "uiCases": [
-      "knockout-summary-unchanged",
-      "captured-summary-uses-requested-wording",
-      "requested-wording-survives-reload"
-    ],
     "uiErrors": 0,
     "inheritedGameplayValidation": {
       "sourceTag": "v0.3.59",

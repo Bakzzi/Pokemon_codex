@@ -15,27 +15,11 @@
     "packaging": "Windows native runtime, current sources and item assets copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.54. Every portable ZIP file verified against the package."
   },
   "validation": {
-    "scope": "Completed gyms, Rocket Hideout and road Snorlax default to collapsed details with summary text, Rocket logo and badges retained; independent completion transitions, user expansion across state updates/tabs, badge navigation, repeat Snorlax capture, fresh-render defaults and new season",
-    "command": "node --check desktop/panels.js; isolated Electron fixture using exact packaged runtime; git diff --check",
+    "description": "Verified release. Gameplay scenario details are omitted from public documentation.",
     "syntaxCheckPassed": true,
     "packagedRuntimeFilesMatched": 25,
     "packagedDocumentationFilesMatched": 3,
     "packagedUiCasesPassed": 5,
-    "uiCases": [
-      "unfinished-sections-expanded",
-      "completed-sections-collapse-independently-with-summaries-visible",
-      "manual-expansion-survives-refresh-and-tabs-with-snorlax-retry",
-      "badge-navigation-expands-gym-list-and-focuses-card",
-      "fresh-render-defaults-and-new-season-expanded"
-    ],
-    "panelWidth": 650,
-    "completedSectionsCollapsedByDefault": true,
-    "unfinishedSectionsExpandedByDefault": true,
-    "userExpansionPreserved": true,
-    "badgeNavigationExpandsGymList": true,
-    "snorlaxRecaptureAvailable": true,
-    "gameplaySourceUnchangedFrom": "v0.3.54",
-    "legacySelectedPositionsPreserved": true,
     "partyCapacity": 6,
     "uiErrors": 0,
     "archiveFilesVerified": 706,
