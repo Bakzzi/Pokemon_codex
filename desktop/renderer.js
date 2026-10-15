@@ -192,7 +192,7 @@ window.buddy.onState(s=>{
   $('status').textContent=s.notice||(s.pendingActions.length?'행동 '+s.pendingActions.length+'개 예약 · '+s.pendingActions[0].name:s.pendingChallenge?s.pendingChallenge.name+' 도전 예약 · 배틀 종료 후 시작':s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.phase==='working'?'Codex 작업과 함께 모험 중':s.workTokens>=250?'작업의 여운으로 모험을 이어가는 중':s.phase==='unknown'?'Codex 작업 상태를 확인하는 중':s.phase==='done'?'작업 끝! 모험 기록을 확인해 봐':'다음 코딩을 기다리는 중');
   $('mode-tag').textContent=s.demo?'DEMO':'LIVE';
   $('connection-label').textContent=s.demo?'미리보기':s.source.connected?'Codex 연결됨':'Codex 기다리는 중';
-  $('connection-label').parentElement.classList.toggle('live',s.source.connected&&!s.demo);$('connection-label').title=s.demo?'미리보기 · 경험치 별도':s.source.error||'로컬 작업 상태만 읽어요';
+  $('connection-label').parentElement.classList.toggle('live',s.source.connected&&!s.demo);$('connection-label').title=s.demo?'미리보기 · 경험치 별도':s.source.remoteConnected?'원격 PC '+s.source.remoteConnected+'대 연결됨':s.source.error||'로컬 작업 상태를 읽어요 · 원격 연동은 설정에서 추가할 수 있어요';
   s.limits.forEach((limit,i)=>{const prefix=i===0?'limit-a':'limit-b';$(prefix+'-value').textContent=limit.left===null?'미제공':limit.left+'%';$(prefix+'-bar').style.width=(limit.left??0)+'%';});
   if($('party').dataset.ids!==s.slots.map(p=>p.uid).join(',')){
     $('party').replaceChildren(...s.slots.map((p,i)=>{const b=document.createElement('button');b.dataset.slot=i;b.onclick=()=>b.dataset.id?window.buddy.action('select',Number(b.dataset.id)):window.buddy.action('panel','collection');const img=document.createElement('img');img.alt='';b.append(img,document.createElement('small'));return b;}));$('party').dataset.ids=s.slots.map(p=>p.uid).join(',');

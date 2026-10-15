@@ -2,10 +2,10 @@
 <html lang="ko"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; font-src 'self'">
-<title>포켓몬 도감 · Codex Buddy</title><link rel="stylesheet" href="panels.css"><link rel="stylesheet" href="badge-case.css">
+<title>포켓몬 도감 · Codex Buddy</title><link rel="stylesheet" href="panels.css"><link rel="stylesheet" href="badge-case.css"><link rel="stylesheet" href="connections.css">
 </head><body>
 <header class="top"><div><span class="kicker">POKÉMON / CODEX</span><h1>작은 모험의 기록</h1></div><div class="totals"><b id="totals">4 / 151</b><span id="region">관동 지방</span><span id="xp-boost"></span></div></header>
-<nav class="tabs" aria-label="모험 메뉴"><button data-tab="collection" aria-selected="true">포켓몬 도감</button><button data-tab="challenge">도전하기</button><button data-tab="daycare">가방</button><button data-tab="journal">모험 기록</button></nav>
+<nav class="tabs" aria-label="모험 메뉴"><button data-tab="collection" aria-selected="true">포켓몬 도감</button><button data-tab="challenge">도전하기</button><button data-tab="daycare">가방</button><button data-tab="journal">모험 기록</button><button data-tab="connections">연동 설정</button></nav>
 <p id="season-note" class="season-note"></p>
 <div id="notice" role="status"></div>
 <section id="action-queue" class="action-queue" aria-label="예약한 행동" hidden><b id="action-queue-title"></b><div id="action-queue-list"></div></section>
@@ -86,6 +86,27 @@
   <div id="journal-summary"><div class="summary-heading"><p id="summary-since" class="muted"></p><button id="journal-ack">여기까지 확인</button></div><div id="summary-stats" class="summary-stats"></div><p id="summary-note" class="muted"></p><h3 class="summary-title">기억에 남는 순간</h3><div id="summary-highlights"></div></div>
   <div id="journal-detail" hidden><p class="muted">최근 모험과 배틀의 기술·특성·상태이상 기록이에요. 오래된 상세 기록이 지나가도 요약 수치는 남아요.</p><div id="journal-list"></div></div>
 </section>
+<section id="connections" class="page" hidden>
+  <div class="intro"><div><h2>Codex 원격 연동</h2><p>다른 PC에서 코딩해도 이 PC의 동료들이 함께 모험해요. 로컬 사용량은 계속 자동으로 반영돼요.</p></div></div>
+  <div id="remote-list" aria-live="polite"></div>
+  <form id="remote-form" class="remote-form">
+    <h3>원격 PC 추가</h3>
+    <div class="remote-fields">
+      <label>이름<input id="remote-name" maxlength="60" placeholder="작업용 PC"></label>
+      <label>호스트 주소<input id="remote-host" maxlength="253" placeholder="IP 주소 또는 호스트 이름" required></label>
+      <label>SSH 계정<input id="remote-user" maxlength="128" autocomplete="username" required></label>
+      <label>포트<input id="remote-port" type="number" min="1" max="65535" value="22" required></label>
+      <label>로그인 방식<select id="remote-auth"><option value="password">비밀번호</option><option value="key">SSH 개인키</option></select></label>
+      <label id="remote-key-label" hidden>개인키 파일<div class="remote-key"><input id="remote-key" readonly placeholder="개인키 선택"><button id="remote-key-pick" type="button">파일 선택</button></div></label>
+      <label><span id="remote-secret-label">비밀번호</span><input id="remote-secret" type="password" autocomplete="off"></label>
+    </div>
+    <label class="remote-remember"><input id="remote-remember" type="checkbox"> 이 PC에 로그인 정보 암호화 저장</label>
+    <p class="muted">저장하지 않으면 프로그램을 다시 켤 때 로그인 정보를 입력해요. 처음 연결할 때 서버 지문을 확인해 주세요.</p>
+    <details><summary>원격 실행 환경</summary><label>Node.js 실행 파일<input id="remote-node" value="node" placeholder="node 또는 실행 파일의 전체 경로"></label><p class="muted">원격 PC에서 Node.js 18 이상을 실행할 수 있어야 해요. 별도 위젯 설치 없이 수집기를 메모리에서 실행해요.</p></details>
+    <button type="submit">추가하고 연결</button>
+  </form>
+  <p class="muted">작업 시작·종료, 숫자 사용량·한도만 SSH로 받아요. 대화 본문·명령 내용·Codex 인증정보는 전송하지 않아요. 처음 연결하기 전 기록은 경험치로 가져오지 않으며, 재연결 시 확인한 기록의 증가분만 한 번 반영해요.</p>
+</section>
 </main>
 <footer>원작 모모찡 · momozzing <span>진행은 이 PC에 자동 저장돼요.</span></footer>
-<script src="panels.js"></script></body></html>
+<script src="connections.js"></script><script src="panels.js"></script></body></html>

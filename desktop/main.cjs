@@ -1,16 +1,17 @@
 'use strict';
-const {app,BrowserWindow,ipcMain,Menu,Tray,nativeImage,screen,dialog}=require('electron');
+const {app,BrowserWindow,ipcMain,Menu,Tray,nativeImage,screen,dialog,safeStorage}=require('electron');
 const path=require('node:path'),os=require('node:os'),fs=require('node:fs');
 const {Game}=require('./game.cjs');
 const {combatant}=require('./battle.cjs');
 const nursery=require('./daycare.cjs');
 const {CodexReader}=require('./codex-reader.cjs');
+const {RemoteCodex}=require('./remote-codex.cjs');
 const {Store}=require('./store.cjs');
 const placement=require('./window-placement.cjs');
 const demo=process.argv.includes('--demo'),smoke=process.argv.includes('--smoke-test');
 const dataDir=smoke?(process.env.POKEMON_SMOKE_DIR||path.join(__dirname,'.smoke')):demo?path.join(__dirname,'.demo'):path.join(app.getPath('appData'),'PokemonCodexBuddy');
 app.setPath('userData',dataDir);app.setName('Pokemon Codex Buddy');app.disableHardwareAcceleration();
-let win,panel,tray,timer,game,store,reader,widgetPlacement,settings={},busy=false,lastRead=0,previous='',panelPrevious='',notice='';
+let win,panel,tray,timer,game,store,reader,remotes,widgetPlacement,settings={},busy=false,lastRead=0,previous='',panelPrevious='',notice='';
 const gotLock=app.requestSingleInstanceLock();
 if(!gotLock)app.quit();
 else{
@@ -22,12 +23,15 @@ function secure(window){
   window.webContents.setWindowOpenHandler(()=>({action:'deny'}));
   window.webContents.on('will-navigate',e=>e.preventDefault());
 }
-function snapshot(){return {...game.snapshot(),source:reader?.status||{connected:false,files:0},compact:!!settings.compact,pinned:settings.pinned!==false,demo:demo||smoke,notice};}
+function snapshot(){
+  const local=reader?.status||{connected:false,files:0},remote=remotes?.snapshot().connections||[],connected=remote.filter(e=>e.connected).length;
+  return {...game.snapshot(),source:{...local,connected:local.connected||connected>0,remoteConnected:connected,localConnected:local.connected},compact:!!settings.compact,pinned:settings.pinned!==false,demo:demo||smoke,notice};
+}
 function publish(force=false){
   const state=snapshot(),encoded=JSON.stringify(state);
   if(win&&!win.isDestroyed()&&(force||encoded!==previous)){win.webContents.send('state',state);previous=encoded;}
   if(panel&&!panel.isDestroyed()){
-    const state={...game.panelState(),notice,demo:demo||smoke},encoded=JSON.stringify(state);
+    const state={...game.panelState(),remote:remotes?.snapshot()||{connections:[],canRemember:false},notice,demo:demo||smoke},encoded=JSON.stringify(state);
     if(force||encoded!==panelPrevious){panel.webContents.send('state',state);panelPrevious=encoded;}
   }
 }
@@ -48,7 +52,10 @@ async function start(){
     game.newWild(Date.now());game.data.battle.foe=combatant(19,5);game.data.seen={1:1,4:1,7:1,25:1,19:1};
     game.animate('encounter',{id:19,text:'야생 꼬렛 Lv.5 등장!'});
   }else if(demo)game.data.workTokens=25000;
-  else reader=new CodexReader(path.join(process.env.CODEX_HOME||path.join(os.homedir(),'.codex'),'sessions'),game);
+  else {
+    reader=new CodexReader(path.join(process.env.CODEX_HOME||path.join(os.homedir(),'.codex'),'sessions'),game);
+    remotes=new RemoteCodex(game,dataDir,{vault:{available:()=>safeStorage.isEncryptionAvailable(),encrypt:value=>safeStorage.encryptString(value).toString('base64'),decrypt:value=>safeStorage.decryptString(Buffer.from(value,'base64'))},onChange:()=>publish()});
+  }
   const area=screen.getPrimaryDisplay().workArea,{width,height}=placement.size(settings.compact);
   let x=settings.x??area.x+area.width-width-28,y=settings.y??area.y+area.height-height-32;
   const display=screen.getDisplayMatching({x,y,width,height}).workArea;
@@ -71,7 +78,15 @@ async function start(){
       if(action==='compact'){
         settings.compact=!settings.compact;win.setResizable(true);widgetPlacement.resize(settings.compact);win.setResizable(false);
       }
-      if(action==='panel'){openPanel(['collection','challenge','journal','daycare'].includes(value)?value:'collection').catch(console.error);}
+      if(action==='panel'){openPanel(['collection','challenge','journal','daycare','connections'].includes(value)?value:'collection').catch(console.error);}
+      if(action==='remote-add'&&remotes)result=!!remotes.add(value?.config,value?.secret||'',!!value?.remember);
+      if(action==='remote-connect'&&remotes)result=remotes.connect(value?.id,value?.credentials);
+      if(action==='remote-stop'&&remotes)result=remotes.stop(value);
+      if(action==='remote-remove'&&remotes)result=remotes.remove(value);
+      if(action==='remote-trust'&&remotes)result=remotes.trust(value?.id,value?.fingerprint);
+      if(action==='remote-key-file'&&panel){
+        dialog.showOpenDialog(panel,{title:'SSH 개인키 선택',properties:['openFile']}).then(result=>{if(!result.canceled&&panel&&!panel.isDestroyed())panel.webContents.send('key-file',result.filePaths[0]);}).catch(()=>{});
+      }
       if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner'].includes(action))result=game.requestAction(action,value);
       if(action==='action-cancel')result=game.cancelAction(value);
       if(action==='challenge')result=game.challenge(value);
@@ -80,17 +95,17 @@ async function start(){
       if(action==='daycare-preview')game.daycareSelection=Array.isArray(value)?value.slice(0,2).map(Number):[];
       if(!result)notice='이 선택은 예약할 수 없어요. 동료·진화 경로·도전 조건을 확인해 주세요.';
       save();publish(true);
-    }catch(error){console.error(error);notice='진행을 저장하지 못했어요. 저장 폴더를 확인해 주세요.';publish(true);}
+    }catch(error){if(action?.startsWith('remote-'))notice=error.message;else{console.error(error);notice='진행을 저장하지 못했어요. 저장 폴더를 확인해 주세요.';}publish(true);}
   });
   await win.loadFile(path.join(__dirname,'index.html'));
   if(smoke)win.setOpacity(0);else createTray();
   win.showInactive();
-  if(reader)await reader.poll();save();publish(true);
+  if(reader)await reader.poll();remotes?.start();save();publish(true);
   if(!smoke)timer=setInterval(async()=>{
     if(busy)return;busy=true;
     try{
       if(reader&&Date.now()-lastRead>=1500){await reader.poll();lastRead=Date.now();}
-      game.tick();save();publish();
+      remotes?.poll();game.tick();save();publish();
     }catch(error){console.error(error);notice='진행 저장 오류 · 저장 폴더를 확인해 주세요.';clearInterval(timer);publish(true);}
     finally{busy=false;}
   },350);
@@ -116,6 +131,7 @@ function createTray(){
   tray.setContextMenu(Menu.buildFromTemplate([
     {label:'포켓몬 보기',click:()=>win.showInactive()},{label:'포켓기어',click:()=>openPanel('collection')},
     {label:'도전하기',click:()=>openPanel('challenge')},{label:'가방보기',click:()=>openPanel('daycare')},{label:'모험 기록',click:()=>openPanel('journal')},
+    {label:'Codex 원격 연동 설정',click:()=>openPanel('connections')},
     {type:'separator'},{label:'종료',click:()=>app.quit()}
   ]));tray.on('click',()=>win.isVisible()?win.hide():win.showInactive());
 }
@@ -295,5 +311,5 @@ async function smokeTest(){
   const ok=inspection.hero==='피카츄'&&inspection.images&&!inspection.overflow&&inspection.slots===4&&inspection.facing.startsWith('matrix(-1')&&collection.count===151&&collection.caught===4&&collection.unknown.includes('???')&&collection.silhouette&&collection.noPichu&&!collection.overflow&&Object.values(controls).every(Boolean)&&controls.height===276&&!errors.length;
   fs.writeFileSync(path.join(dir,'result.json'),JSON.stringify({ok,inspection,collection,controls,errors},null,2));console.log(JSON.stringify({smoke:ok,inspection,collection,controls,errors}));app.exit(ok?0:1);
 }
-app.on('before-quit',()=>{clearInterval(timer);try{save();}catch{}tray?.destroy();});
+app.on('before-quit',()=>{clearInterval(timer);remotes?.close();try{save();}catch{}tray?.destroy();});
 app.on('window-all-closed',()=>app.quit());

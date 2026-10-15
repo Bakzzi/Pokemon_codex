@@ -35,7 +35,7 @@ function storyArtwork(requirement){
   if(requirement.id==='erika')art.append(badgeImage(state.bosses[3],'rocket-badge'+(requirement.done?' earned':'')));
   return art;
 }
-function switchTab(value){tab=['collection','challenge','journal','daycare'].includes(value)?value:'collection';for(const e of document.querySelectorAll('.page'))e.hidden=e.id!==tab;for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-selected',String(b.dataset.tab===tab));render();}
+function switchTab(value){tab=['collection','challenge','journal','daycare','connections'].includes(value)?value:'collection';for(const e of document.querySelectorAll('.page'))e.hidden=e.id!==tab;for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-selected',String(b.dataset.tab===tab));render();}
 for(const b of document.querySelectorAll('[data-tab]'))b.onclick=()=>switchTab(b.dataset.tab);
 $('search').oninput=()=>{dexSignature='';render();};$('filter').onchange=()=>{dexSignature='';render();};
 $('league-start').onclick=()=>window.buddy.action('challenge',8);
@@ -239,7 +239,7 @@ function render(){
   $('season-note').title='한국시간 매월 1일 00:00 · 스타팅 Lv.5부터 다시 시작 · 뱃지·지방 해금·스토리·도구 초기화';
   $('seen-count').textContent='발견 '+state.seenCount+' · 동료 '+state.roster.length;$('notice').textContent=state.notice||'';
   renderActions();
-  if(tab==='collection')renderDex();else if(tab==='challenge')renderBosses();else if(tab==='daycare')renderNursery();else renderJournal();
+  if(tab==='collection')renderDex();else if(tab==='challenge')renderBosses();else if(tab==='daycare')renderNursery();else if(tab==='connections')renderConnections(state.remote);else renderJournal();
 }
 let actionSignature='';
 function renderActions(){
@@ -294,4 +294,4 @@ function renderNursery(){
   if(d.egg)$('hatch-progress').append(progressCard(d.egg.name+'의 알을 품는 중',d.egg.progress,d.egg.required,'코딩을 이어가면 부화해요. 부모를 데려와도 알은 남아요.',d.egg.id));
 }
 
-switchTab(tab);window.buddy.onState(s=>{state=s;render();});
+initConnections();switchTab(tab);window.buddy.onState(s=>{state=s;render();});

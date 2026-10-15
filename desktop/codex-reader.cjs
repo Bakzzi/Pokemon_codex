@@ -32,15 +32,20 @@ function selectEvent(line) {
   const p=row.payload;
   if(!['task_started','task_complete','task_completed','turn_aborted','error','token_count'].includes(p.type)) return null;
   const clean={type:'event_msg',timestamp:row.timestamp,payload:{type:p.type}};
+  const time=Date.parse(row.timestamp);
+  if(!Number.isFinite(time))return null;
+  clean.timestamp=new Date(time).toISOString();
+  const count=v=>Number.isSafeInteger(v)&&v>=0;
   if(p.type==='token_count') {
     const c=p.info?.total_token_usage;
-    if(c) clean.payload.info={total_token_usage:{output_tokens:c.output_tokens,total_tokens:c.total_tokens}};
+    if(c&&count(c.output_tokens)&&count(c.total_tokens)) clean.payload.info={total_token_usage:{output_tokens:c.output_tokens,total_tokens:c.total_tokens}};
     const r=p.rate_limits;
     if(r && (!r.limit_id || r.limit_id==='codex')) {
       clean.payload.rate_limits={};
       for(const key of ['primary','secondary']) if(r[key]) {
         const v=r[key];
-        clean.payload.rate_limits[key]={used_percent:v.used_percent,window_minutes:v.window_minutes,resets_at:v.resets_at};
+        if(typeof v.used_percent==='number'&&Number.isFinite(v.used_percent)&&count(v.window_minutes)&&count(v.resets_at))
+          clean.payload.rate_limits[key]={used_percent:Math.max(0,Math.min(100,v.used_percent)),window_minutes:v.window_minutes,resets_at:v.resets_at};
       }
     }
   }

@@ -12,3 +12,5 @@ dist/
 !.env.example
 .codex/
 **/progress*.json
+**/remote-connections.json
+**/remote-secrets.json
