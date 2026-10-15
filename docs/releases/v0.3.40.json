@@ -1,0 +1,39 @@
+{
+  "version": "0.3.40",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "c3bcd3b0f4d141ed96e68dce495cb2337aa71412",
+  "sourceTag": "v0.3.40",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.40",
+  "build": {
+    "commands": ["npm.cmd ci", "npm.cmd run package"],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Runtime source and active locale packs copied independently; unchanged immutable files hardlinked from verified 0.3.39. Portable ZIP verified against every packaged file."
+  },
+  "validation": {
+    "command": "node --test desktop/test/window-placement.test.cjs",
+    "passed": 4,
+    "packagedRuntimeFilesMatched": 25,
+    "windowsNativeDragEventsPassed": 5,
+    "packagedModeLayoutsPassed": 2,
+    "uiErrors": 0,
+    "archiveFilesVerified": 688,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {"top": 15, "left": 0, "right": 0, "bottom": 0},
+    "width": 370,
+    "expandedHeight": 481,
+    "compactHeight": 271,
+    "edgesRespectTaskbarWorkArea": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.40-portable.zip",
+    "bytes": 165691655,
+    "sha256": "eba121168e15529820cc20f023d3456072c83958da96d4472102116cd5beb2a2"
+  }
+}
