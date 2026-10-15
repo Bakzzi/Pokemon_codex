@@ -1,0 +1,50 @@
+{
+  "version": "0.3.42",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "5c2a25f53b5f40ee3d14fb5270021a93c3fc6b65",
+  "sourceTag": "v0.3.42",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.42",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime and changed sources copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.41. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "command": "node --test desktop/test/acquisition-hints.test.cjs desktop/test/special-evolution-wild.test.cjs desktop/test/window-placement.test.cjs",
+    "passed": 19,
+    "packagedRuntimeFilesMatched": 25,
+    "packagedHintCasesPassed": 4,
+    "packagedModeLayoutsPassed": 2,
+    "narrowCollectionWidth": 650,
+    "uiErrors": 0,
+    "archiveFilesVerified": 688,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.42-portable.zip",
+    "bytes": 165692075,
+    "sha256": "d78578b65b7011dec1ca8c4a92eec157ba6f4d0ab2b3181a10d78d14d797fbf7"
+  }
+}
