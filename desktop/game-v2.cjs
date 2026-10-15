@@ -389,6 +389,7 @@ class Game {
     if(next===null||next===this.data.activeId){delete b.matchupPending;return false;}
     const from=this.data.owned[this.data.activeId];
     if(!this.select(next,now))return false;
+    delete b.manualMatchup;
     const to=this.data.owned[next],text=(reason==='faint'?species.get(from.id).name+' 기절 · ':'상성 판단 · ')+species.get(to.id).name+' Lv.'+to.level+' 출전';
     this.data.animation.reason=reason;this.data.animation.text=text;this.log(text,'switch',to.id,now);return true;
   }
@@ -406,7 +407,7 @@ class Game {
     if(battle&&!battleEngine.canSwitch(this,battle,id))return false;
     if(!this.data.slots.includes(id)){if(battle?.kind==='trainer')return false;const empty=this.data.slots.indexOf(null);this.data.slots[empty>=0?empty:this.data.slots.indexOf(this.data.activeId)]=id;}
     const from=this.data.activeId,fromPokemon=this.snapshot(now).hero;this.data.activeId=id;
-    if(battle){if(!battle.party[id]){battle.party[id]=this.memberCombatant(this.data.owned[id]);battleEngine.invalidate(battle);}battle.pendingSwitch=id;delete battle.matchupPending;}
+    if(battle){if(!battle.party[id]){battle.party[id]=this.memberCombatant(this.data.owned[id]);battleEngine.invalidate(battle);}battle.pendingSwitch=id;delete battle.matchupPending;if(battle.kind==='trainer')battle.manualMatchup=true;}
     this.animate('switch',{from:this.data.owned[from].id,to:this.data.owned[id].id,fromPokemon,toPokemon:this.snapshot(now).hero,text:`${species.get(this.data.owned[id].id).name}, 너로 정했다!`},now);return true;
   }
   setSlot(slot,id,now=Date.now()){
@@ -501,7 +502,7 @@ class Game {
     const b=this.data.battle,boss=this.battleBoss(b),enemy=boss.team[b.foeIndex];
     if(!b.storyId&&SECRET_TRAINERS.has(boss.id))this.data.trainerSeen[boss.id] ||= now;
     b.foe=combatant(enemy.id,enemy.level,enemy.moves);b.turn=0;
-    if(b.kind==='trainer'){b.matchupRevision=1;b.matchupPending=true;}
+    if(b.kind==='trainer'){b.matchupRevision=1;b.matchupPending=true;delete b.manualMatchup;delete b.aiLastSwitch;}
     this.data.seen[enemy.id]=this.data.seen[enemy.id]||now;this.animate('encounter',{id:enemy.id,text:b.storyId==='road-snorlax'?'포켓몬피리를 불었다! 잠만보 Lv.30이 깨어났다!':`${boss.name}의 ${species.get(enemy.id).name}!`},now);
   }
   abandon(now=Date.now()){

@@ -1,6 +1,7 @@
 'use strict';
 // Pinned simulator: @pkmn/sim 0.10.11, Gen III rules, entirely offline.
 const {Battle,Dex}=require('@pkmn/sim');
+const ai=require('./battle-ai.cjs');
 const {data,species,moves,statsAt,learnedMoves}=require('./pokemon.cjs');
 const dex=Dex.forGen(3);
 const simMoves=new Map(data.moves.map(m=>[m.id,dex.moves.get(m.identifier)]));
@@ -85,32 +86,8 @@ function refreshOwned(game,sim){
   }
 }
 function scoreMove(sim,actor,target,move){
-  if(move.id==='recharge')return 1000;
-  if(actor.status==='slp'&&['sleeptalk','snore'].includes(move.id))return 1000;
-  if(['sleeptalk','snore'].includes(move.id)&&actor.status!=='slp')return 0;
-  if(move.category!=='Status'){
-    if(!target.runImmunity(move.type))return 0;
-    const ability=target.ability;
-    if((move.type==='Ground'&&ability==='levitate')||(move.type==='Water'&&ability==='waterabsorb')||(move.type==='Electric'&&ability==='voltabsorb')||(move.type==='Fire'&&ability==='flashfire')||(move.flags.sound&&ability==='soundproof'))return 0;
-    if(move.id==='dreameater'&&target.status!=='slp')return 0;
-    let power=move.basePower|| (move.damage==='level'?actor.level:typeof move.damage==='number'?move.damage:move.ohko?60:50);
-    if(move.multihit)power*=Array.isArray(move.multihit)?3:move.multihit;
-    const type=2**sim.dex.getEffectiveness(move.type,target);
-    const physical=sim.getCategory(move)==='Physical',stat=physical?'atk':'spa',def=physical?'def':'spd';
-    let result=power*type*(actor.hasType(move.type)?1.5:1)*(move.accuracy===true?1:(move.accuracy||100)/100)*actor.getStat(stat)/target.getStat(def);
-    if(move.selfdestruct&&actor.hp>actor.maxhp*.3)result*=.15;
-    if(actor.lastMove?.id===move.id)result*=.65;
-    return Math.max(1,result);
-  }
-  if(move.heal||move.id==='rest')return actor.hp<actor.maxhp*.55?110:0;
-  if(move.status)return !target.status&&target.runStatusImmunity(move.status)?40:0;
-  if(move.boosts){const receiver=['self','allySide','allies'].includes(move.target)?actor:target;return Object.entries(move.boosts).some(([s,n])=>n>0?receiver.boosts[s]<4:receiver.boosts[s]>-4)?24:0;}
-  if(move.sideCondition)return !actor.side.sideConditions[move.sideCondition]?22:0;
-  if(move.volatileStatus){const receiver=move.target==='self'?actor:target;return receiver.volatiles[move.volatileStatus]?0:24;}
-  if(move.weather)return sim.field.weather===move.weather?0:22;
-  if(move.id==='splash'||move.id==='teleport')return 0;
-  if(move.id==='transform')return actor.transformed?0:80;
-  return 16;
+  const copy=ai.model(sim.toJSON()),a=copy.sides[actor.side.n].pokemon.find(p=>p.name===actor.name),b=copy.sides[target.side.n].pokemon.find(p=>p.name===target.name);
+  return ai.rankMove(copy,a,b,copy.dex.moves.get(move.id));
 }
 // Deterministic party preview, using the same Gen III types/category/stats as combat.
 // This estimates a matchup; it never advances the native battle or consumes its RNG.
@@ -151,8 +128,12 @@ function matchupScore(hero,foe){
     return damage*((actor.status==='sleep'||actor.status==='freeze') ? .5 : actor.status==='paralysis' ? .75 : 1);
   };
   const offense=best(hero,foe)/Math.max(1,foe.hp),threat=best(foe,hero)/Math.max(1,hero.hp);
-  // Survival matters: a nearly fainted counter should not displace a healthy winner.
-  return Math.min(2,offense)/(Math.max(.05,threat))+(hero.hp/hero.maxHp)*.01;
+  if(!offense)return (hero.hp/hero.maxHp)*.01;
+  const speed=mon=>{const n=mon.stages?.[6]||0;return mon.stats[6]*(mon.status==='paralysis'?.25:1)*(n>=0?(2+n)/2:2/(2-n));};
+  const kill=Math.ceil(1/offense),survive=Math.ceil(1/Math.max(.001,threat));
+  const wins=kill<survive||(kill===survive&&speed(hero)>=speed(foe));
+  // Winning quickly beats indefinite tanking; survival breaks equal kill races.
+  return (wins?100:10)+30/Math.max(1,kill)+10*Math.max(-1,Math.min(1,(survive-kill)/Math.max(1,survive,kill)))+(hero.hp/hero.maxHp)*.01;
 }
 function bestPartner(game,b){
   let next=null,score=-Infinity;
@@ -162,22 +143,16 @@ function bestPartner(game,b){
   }
   return next;
 }
-function choose(sim,side,random,preferred){
+function choose(sim,side,preferred,allowSwitch,eligible){
   const mon=side.active[0];
   if(side.activeRequest?.forceSwitch){
-    const living=side.pokemon.filter(p=>!p.isActive&&p.hp>0&&!p.fainted);
-    const pick=living.find(p=>p.name==='u'+preferred)||living[0];
+    const living=side.pokemon.filter(p=>!p.isActive&&p.hp>0&&!p.fainted&&(!eligible||eligible.includes(p.name)));
+    const pick=living.find(p=>p.name==='u'+preferred)||(side.n===1?living[0]:living.sort((a,b)=>matchupScore(readMon(b),readMon(side.foe.active[0]))-matchupScore(readMon(a),readMon(side.foe.active[0])))[0]);
     return pick?'switch '+(side.pokemon.indexOf(pick)+1):'pass';
   }
   if(side.activeRequest?.wait)return null;
   if(preferred&&mon.name!=='u'+preferred){const pick=side.pokemon.find(p=>p.name==='u'+preferred&&p.hp>0&&!p.fainted);if(pick&&!mon.trapped)return 'switch '+(side.pokemon.indexOf(pick)+1);}
-  const available=mon.getMoves().filter(m=>!m.disabled&&m.pp>0);
-  if(!available.length)return 'move struggle';
-  const target=side.foe.active[0],scores=available.map(m=>scoreMove(sim,mon,target,dex.moves.get(m.id)));
-  const total=scores.reduce((a,b)=>a+b,0);
-  if(!total)return 'move '+available[Math.floor(random()*available.length)].id;
-  let roll=random()*total;for(let i=0;i<available.length;i++){roll-=scores[i];if(roll<=0)return 'move '+available[i].id;}
-  return 'move '+available.at(-1).id;
+  return ai.plan(sim,side.n,{allowSwitch,eligible}).action;
 }
 const names={slp:'잠듦',frz:'얼음',par:'마비',brn:'화상',psn:'독',tox:'맹독',confusion:'혼란',recoil:'반동',trapped:'교체 불가',partiallytrapped:'조이기',leechseed:'씨뿌리기',substitute:'대타출동',reflect:'리플렉터',lightscreen:'빛의장막',protect:'방어',mustrecharge:'반동',sunnyday:'쾌청',raindance:'비',sandstorm:'모래바람',hail:'싸라기눈',atk:'공격',def:'방어',spa:'특수공격',spd:'특수방어',spe:'스피드',accuracy:'명중률',evasion:'회피율'};
 const effectId=value=>value.replace(/^(move|ability):\s*/,'').toLowerCase().replace(/[^a-z0-9]/g,'');
@@ -285,7 +260,8 @@ function step(game,b){
     }
     const offset=sim.log.length;
     if(sim.requestState){
-      const choices=sim.sides.map(s=>choose(sim,s,game.random,s.n===0?b.pendingSwitch:null));
+      const eligible=game.availablePartners().map(uid=>'u'+uid);
+      const choices=sim.sides.map(s=>choose(sim,s,s.n===0?b.pendingSwitch:null,s.n===0&&b.kind==='trainer'&&!b.manualMatchup&&!b.pendingSwitch&&sim.turn-(b.aiLastSwitch??-10)>=3,s.n===0?eligible:null));
       for(let i=0;i<choices.length;i++)if(choices[i]&&!sim.sides[i].choose(choices[i]))sim.sides[i].autoChoose();
       sim.commitChoices();
     }else sim.turnLoop();
@@ -295,6 +271,7 @@ function step(game,b){
     if(!b.pendingSwitch||sim.ended||sim.p1.active[0].name==='u'+b.pendingSwitch||!foeArrival||update.some(l=>l.startsWith('|move|')||l.startsWith('|cant|')))break;
   }
   const lines=protocolLines(sim.log.slice(start)),presentation=movePresentation(lines),actor=presentation.actor||'hero',changed=heroBefore!==sim.p1.active[0].name;
+  if(changed)b.aiLastSwitch=sim.turn;
   const messages=protocol(sim,lines);sync(game,b,sim);persist(b,sim);
   const causeName=ref=>{const mon=sim.sides.flatMap(s=>s.pokemon).find(p=>p.name===ref.split(': ')[1]);return species.get(mon?.baseSpecies.num)?.name||'포켓몬';};
   const damageCauses=[...new Map(lines.filter(line=>line.startsWith('|-damage|')).map(line=>damageCause(line,causeName)).filter(Boolean).map(c=>[c.side+':'+c.cause,c])).values()];
