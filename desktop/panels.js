@@ -84,12 +84,12 @@ function renderDex(){
     root.append(box);
   }
 }
-function teamMembers(team){
+function teamMembers(team,showNames=false){
   const row=node('div','team');
-  for(const p of team){const mon=node('span');mon.title='No.'+p.id+' · Lv.'+p.level;mon.append(img(p.id),document.createTextNode('Lv.'+p.level));row.append(mon);}
+  for(const p of team){const mon=node('span');mon.title='No.'+p.id+' · Lv.'+p.level;mon.append(img(p.id));if(showNames)mon.append(node('small','',p.name||'No.'+p.id));mon.append(document.createTextNode('Lv.'+p.level));row.append(mon);}
   return row;
 }
-function trainerTeam(boss){return boss.revealed===false?node('p','muted','포켓몬 편성 미공개'):teamMembers(boss.team);}
+function trainerTeam(boss,showNames=false){return boss.revealed===false?node('p','muted','포켓몬 편성 미공개'):teamMembers(boss.team,showNames);}
 let shownBadges=null;
 function badgeImage(boss,className=''){
   const image=node('img',className);image.src='assets/badges/'+boss.id+'.png';image.alt='';image.draggable=false;return image;
@@ -150,8 +150,9 @@ function renderStory(){
   if(!state)return;const d=state.trainingDevice,busy=state.battle?.kind==='trainer',queued=state.pendingChallenge;
   const signature=JSON.stringify([d.requirements,d.steps,busy,state.battle?.storyId,queued?.index,d.fluteObtained,d.snorlaxCaught]);if(signature===storySignature)return;storySignature=signature;
   $('rocket-steps').replaceChildren(...d.requirements.map(r=>{
-    const row=node('li','rocket-step'+(r.done?' done':''));row.dataset.requirement=r.id;row.append(node('b','',r.name),storyArtwork(r));
+    const row=node('li','rocket-step'+(r.done?' done':'')),info=node('div','rocket-step-info');row.dataset.requirement=r.id;info.append(node('b','',r.name));row.append(info,storyArtwork(r));
     const step=d.steps.find(s=>s.id===r.id);if(!step){const link=node('button','',r.done?'인정 완료':'체육관 보기');link.dataset.gymLink='erika';link.disabled=r.done;link.setAttribute('aria-label',r.done?'민화의 인정 완료':'민화 체육관 카드로 이동');link.onclick=()=>focusGym(3);row.append(link);return row;}
+    info.append(trainerTeam(step,true));
     const ongoing=state.battle?.storyId===step.id,reserved=queued?.index===step.id;
     const b=node('button','',ongoing?'배틀 중':reserved?'도전 예약됨':step.done?'승리 완료':'도전하기');b.dataset.story=step.id;b.disabled=ongoing||busy||!!queued||!step.available;b.onclick=()=>window.buddy.action('challenge',step.id);row.append(b);return row;
   }));
