@@ -151,7 +151,7 @@ function renderStory(){
   const signature=JSON.stringify([d.requirements,d.steps,busy,state.battle?.storyId,queued?.index,d.fluteObtained,d.snorlaxCaught]);if(signature===storySignature)return;storySignature=signature;
   $('rocket-steps').replaceChildren(...d.requirements.map(r=>{
     const row=node('li','rocket-step'+(r.done?' done':''));row.dataset.requirement=r.id;row.append(node('b','',r.name),storyArtwork(r));
-    const step=d.steps.find(s=>s.id===r.id);if(!step){const link=node('button','','체육관 보기');link.dataset.gymLink='erika';link.setAttribute('aria-label','민화 체육관 카드로 이동');link.onclick=()=>focusGym(3);row.append(link);return row;}
+    const step=d.steps.find(s=>s.id===r.id);if(!step){const link=node('button','',r.done?'인정 완료':'체육관 보기');link.dataset.gymLink='erika';link.disabled=r.done;link.setAttribute('aria-label',r.done?'민화의 인정 완료':'민화 체육관 카드로 이동');link.onclick=()=>focusGym(3);row.append(link);return row;}
     const ongoing=state.battle?.storyId===step.id,reserved=queued?.index===step.id;
     const b=node('button','',ongoing?'배틀 중':reserved?'도전 예약됨':step.done?'승리 완료':'도전하기');b.dataset.story=step.id;b.disabled=ongoing||busy||!!queued||!step.available;b.onclick=()=>window.buddy.action('challenge',step.id);row.append(b);return row;
   }));
