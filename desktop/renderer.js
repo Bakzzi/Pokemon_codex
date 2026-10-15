@@ -144,7 +144,7 @@ function renderSpeech(s){
   else if(actionActive){
     text=event.text;expires=event.at+BattlePacing.duration(event);
     if(event.kind==='attack'&&now-event.at>=BattlePacing.actionTiming(event).resultAt){
-      const result=(event.detail||'').split(' · ').filter(line=>line&&!line.includes('기절')).slice(0,2).join(' · ');
+      const result=(event.detail||'').split(' · ').find(line=>line&&!line.includes('기절'));
       if(result)text=result;
     }
     if(event.kind==='attack')speaker=event.actor==='foe'?'foe':'hero';
@@ -155,12 +155,12 @@ function renderSpeech(s){
     else if(event.kind==='encounter')speaker='foe';
     else if(event.kind==='faint'&&event.sides?.length===1)speaker=event.sides[0];
     if(event.kind==='attack'&&now-event.at>=BattlePacing.actionTiming(event).healthAt){
-      const causes=(event.damageCauses||[]).filter(c=>(event[c.side+'Before']?.currentHp||0)>(event[c.side]?.currentHp??Infinity));
-      if(causes.length){text=causes.map(c=>event[c.side].name+' · '+c.cause+' 피해!').join(' · ');speaker=causes.length===1?causes[0].side:'scene';}
+      const causes=BattlePacing.damageMessages(event);
+      if(causes.length){text=causes.map(c=>c.text).join(' ');speaker=causes.every(c=>c.side===causes[0].side)?causes[0].side:'scene';}
     }
   }else text=s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.battle?'다음 작업과 함께 배틀을 이어가요':'오늘은 어떤 포켓몬을 만날까?';
   const bubble=$('speech');bubble.dataset.speaker=speaker;bubble.classList.toggle('waiting',waiting||checking);$('speech-text').textContent=text;
-  bubble.title=!waiting&&!checking&&event?.detail?text+' · '+event.detail:text;
+  bubble.title=!waiting&&!checking&&event?.detail?[...new Set([text,...event.detail.split(' · ').filter(line=>!text.includes(line))])].join(' '):text;
   // Clear an expired action even when no new state arrives from an idle Codex session.
   if(expires&&!(f?.locked))speechTimer=setTimeout(()=>{if(current)renderSpeech(current);},Math.max(1,expires-now+10));
 }

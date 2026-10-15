@@ -179,39 +179,72 @@ function choose(sim,side,random,preferred){
   let roll=random()*total;for(let i=0;i<available.length;i++){roll-=scores[i];if(roll<=0)return 'move '+available[i].id;}
   return 'move '+available.at(-1).id;
 }
-const names={slp:'잠듦',frz:'얼음',par:'마비',brn:'화상',psn:'독',tox:'맹독',confusion:'혼란',leechseed:'씨뿌리기',substitute:'대타출동',reflect:'리플렉터',lightscreen:'빛의장막',protect:'방어',mustrecharge:'반동으로 움직일 수 없음',sunnyday:'쾌청',raindance:'비',sandstorm:'모래바람',hail:'싸라기눈',atk:'공격',def:'방어',spa:'특수공격',spd:'특수방어',spe:'스피드',accuracy:'명중률',evasion:'회피율'};
+const names={slp:'잠듦',frz:'얼음',par:'마비',brn:'화상',psn:'독',tox:'맹독',confusion:'혼란',recoil:'반동',trapped:'교체 불가',partiallytrapped:'조이기',leechseed:'씨뿌리기',substitute:'대타출동',reflect:'리플렉터',lightscreen:'빛의장막',protect:'방어',mustrecharge:'반동',sunnyday:'쾌청',raindance:'비',sandstorm:'모래바람',hail:'싸라기눈',atk:'공격',def:'방어',spa:'특수공격',spd:'특수방어',spe:'스피드',accuracy:'명중률',evasion:'회피율'};
+const effectId=value=>value.replace(/^(move|ability):\s*/,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+function particle(word,closed,open){const last=word.at(-1)||'',code=last.charCodeAt(0);return word+((code>=0xac00&&code<=0xd7a3?(code-0xac00)%28!==0:/[013678]/.test(last))?closed:open);}
 function effectName(value=''){
-  const id=value.replace(/^(move|ability):\s*/,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  const id=effectId(value);
   const a=abilityIds.get(id);if(a)return abilities.get(a).name;
-  const m=dex.moves.get(id);return moves.get(m.num)?.name||names[id]||value;
+  const m=dex.moves.get(id);return moves.get(m.num)?.name||names[id]||'';
+}
+function protocolLines(lines){
+  // Showdown emits a private and public HP line for the same event. Use one view.
+  const result=[];
+  for(let i=0;i<lines.length;i++){
+    if(lines[i].startsWith('|split|')){if(lines[i+1])result.push(lines[i+1]);i+=2;}
+    else result.push(lines[i]);
+  }
+  return result;
+}
+function damageCause(line,who){
+  const parts=line.split('|'),raw=parts.find(p=>p.startsWith('[from] '))?.slice(7);if(!raw)return null;
+  const id=effectId(raw),cause=id==='confusion'?'혼란 자해':effectName(raw)||'지속 효과',name=who(parts[2]),subject=particle(name,'은','는');
+  const text=id==='confusion'?subject+' 혼란에 빠져 자신을 공격했다!':id==='recoil'?subject+' 반동으로 피해를 입었다!':subject+' '+cause+' 때문에 피해를 입었다!';
+  return {side:parts[2].startsWith('p2')?'foe':'hero',cause,text};
 }
 function protocol(sim,lines){
-  const who=ref=>{const name=(ref||'').split(': ')[1],mon=sim.sides.flatMap(s=>s.pokemon).find(p=>p.name===name);return mon?species.get(mon.baseSpecies.num)?.name||mon.species.name:'';};
-  const output=[],seen=new Set();
+  lines=protocolLines(lines);
+  const who=ref=>{const name=(ref||'').split(': ')[1],mon=sim.sides.flatMap(s=>s.pokemon).find(p=>p.name===name);return (mon&&species.get(mon.baseSpecies.num)?.name)||(ref?.startsWith('p2')?'상대 포켓몬':'우리 포켓몬');};
+  const output=[],seen=new Set();let used=null;
   for(const line of lines){
-    if(seen.has(line))continue;seen.add(line);const [,kind,a,b,c]=line.split('|');let text='';
-    if(kind==='move')text=who(a)+'의 '+effectName(b)+'!';
-    if(kind==='-supereffective')text=who(a)+'에게 효과가 굉장했다.';
-    if(kind==='-resisted')text=who(a)+'에게 효과가 별로였다.';
-    if(kind==='-immune')text=who(a)+'에게 효과가 없었다.';
-    if(kind==='-crit')text='급소에 맞았다!';
-    if(kind==='-miss')text=who(a)+'의 공격이 빗나갔다.';
-    if(kind==='-status')text=who(a)+' · '+effectName(b);
-    if(kind==='-curestatus')text=who(a)+'의 '+effectName(b)+'이 풀렸다.';
-    if(kind==='-boost'||kind==='-unboost')text=who(a)+'의 '+effectName(b)+' '+c+'단계 '+(kind==='-boost'?'상승':'하락');
-    if(kind==='-ability')text=who(a)+'의 특성 '+effectName(b)+' 발동';
-    if(kind==='-activate'||kind==='-start'||kind==='-end')text=who(a)+' · '+effectName(b)+(kind==='-end'?' 종료':'');
-    if(kind==='-sidestart'||kind==='-sideend')text=(a?.startsWith('p1')?'동료':'상대')+' · '+effectName(b)+(kind==='-sideend'?' 종료':'');
-    if(kind==='-weather'&&a!=='none')text='날씨 · '+effectName(a);
-    if(kind==='-prepare')text=who(a)+' · '+effectName(b)+' 준비';
-    if(kind==='-mustrecharge')text=who(a)+'는 다음 행동에 쉬어야 한다.';
-    if(kind==='cant')text=who(a)+' · '+effectName(b)+' 때문에 행동하지 못했다.';
-    if(kind==='-fail')text=who(a)+'의 기술은 실패했다.';
-    if(kind==='-heal')text=who(a)+'의 체력이 회복되었다.';
-    if(kind==='-hitcount')text=c||b?who(a)+'에게 '+b+'번 맞았다.':'';
-    if(kind==='faint')text=who(a)+' 기절';
-    if(kind==='-damage'&&c?.startsWith('[from]'))text=who(a)+' · '+effectName(c.replace('[from] ',''))+' 대미지';
-    const via=line.match(/\[from\] ability: ([^|]+)/)?.[1];if(via&&text)text+=' (특성 '+effectName(via)+')';
+    if(seen.has(line))continue;seen.add(line);const parts=line.split('|'),[,kind,a,b,c]=parts,name=who(a),subject=particle(name,'은','는'),effect=effectName(b||''),id=effectId(b||'');let text='';
+    if(kind==='move'){used={name,move:effect};text=name+'의 '+(effect||'기술')+'!';}
+    if(kind==='-supereffective')text=name+'에게 효과가 굉장했다!';
+    if(kind==='-resisted')text=name+'에게 효과가 별로인 듯하다.';
+    if(kind==='-immune')text=name+'에게는 효과가 없었다!';
+    if(kind==='-crit')text=name+'의 급소에 맞았다!';
+    if(kind==='-miss')text=name+'의 공격은 빗나갔다!';
+    if(kind==='-status')text=subject+' '+({slp:'잠들었다!',frz:'얼어붙었다!',par:'마비되었다!',brn:'화상을 입었다!',psn:'독에 걸렸다!',tox:'맹독에 걸렸다!'}[b]||'상태이상에 걸렸다!');
+    if(kind==='-curestatus')text=subject+' '+({slp:'잠에서 깨어났다!',frz:'얼어붙은 상태에서 풀려났다!',par:'마비에서 풀려났다!',brn:'화상에서 회복되었다!',psn:'독에서 회복되었다!',tox:'맹독에서 회복되었다!'}[b]||'상태이상에서 회복되었다!');
+    if(kind==='-boost'||kind==='-unboost')text=name+'의 '+particle(effect||'능력','이','가')+' '+c+'단계 '+(kind==='-boost'?'올랐다!':'떨어졌다!');
+    if(kind==='-ability'&&effect)text=name+'의 특성 '+particle(effect,'이','가')+' 발동했다!';
+    if(['-activate','-start','-end','-singleturn','-singlemove'].includes(kind)){
+      const ending=kind==='-end',perish=id.match(/^perish([0-3])$/),stockpile=id.match(/^stockpile([1-3])$/);
+      if(perish){if(!parts.includes('[silent]'))text=perish[1]==='0'?name+'의 멸망의노래 카운트가 0이 되었다!':name+'의 멸망의노래 카운트: '+perish[1];}
+      else if(stockpile)text=subject+' '+stockpile[1]+'번 비축했다!';
+      else if(id==='confusion')text=ending?name+'의 혼란이 풀렸다!':kind==='-start'?subject+' 혼란에 빠졌다!':lines.some(l=>l.startsWith('|-damage|'+a+'|')&&l.includes('[from] confusion'))?'':subject+' 혼란스러워하고 있다!';
+      else if(id==='typechange'){const types=(c||'').split('/').map(t=>data.types.find(x=>x.identifier===t.toLowerCase())?.name).filter(Boolean);if(types.length)text=name+'의 타입이 '+types.join('/')+' 타입으로 바뀌었다!';}
+      else if(id==='trapped')text=subject+' 도망치거나 교체할 수 없다!';
+      else if(id==='protect'||id==='detect')text=subject+' 공격을 막았다!';
+      else if(id==='substitute')text=ending?name+'의 대타가 사라졌다!':subject+' 대타를 내보냈다!';
+      else if(effect)text=ending?name+'에게 걸린 '+effect+' 효과가 풀렸다!':name+'에게 '+effect+' 효과가 적용되었다!';
+    }
+    if((kind==='-sidestart'||kind==='-sideend')&&effect)text=(a?.startsWith('p1')?'우리 편':'상대 편')+'의 '+particle(effect,'이','가')+(kind==='-sideend'?' 사라졌다!':' 펼쳐졌다!');
+    if(['-fieldstart','-fieldend','-fieldactivate'].includes(kind)){const field=effectName(a||'');if(field)text=field+(kind==='-fieldend'?' 효과가 사라졌다!':kind==='-fieldactivate'?' 효과가 전장에 울려 퍼졌다!':' 효과가 전장을 감쌌다!');}
+    if(kind==='-weather')text=a==='none'?'날씨가 원래대로 돌아왔다.':({sunnyday:'햇살이 강하게 내리쬐고 있다!',raindance:'비가 내리고 있다!',sandstorm:'모래바람이 불고 있다!',hail:'싸라기눈이 내리고 있다!'}[a]||'');
+    if(kind==='-prepare')text=subject+' '+particle(effect||'공격','을','를')+' 준비하고 있다!';
+    if(kind==='-mustrecharge')text=subject+' 공격의 반동으로 쉬어야 한다!';
+    if(kind==='cant')text=subject+' '+({slp:'잠들어 있다!',frz:'얼어붙어서 움직일 수 없다!',par:'마비되어 움직일 수 없다!',flinch:'풀이 죽어서 움직일 수 없다!',recharge:'공격의 반동으로 쉬고 있다!',truant:'게으름을 피우고 있다!',attract:'헤롱헤롱해서 움직일 수 없다!',nopp:'기술의 PP가 부족하다!',taunt:'도발 때문에 이 기술을 쓸 수 없다!',disable:'사슬묶기 때문에 이 기술을 쓸 수 없다!',focuspunch:'집중력이 흐트러져 힘껏펀치를 쓰지 못했다!'}[id]||'이번에는 움직일 수 없다!');
+    if(kind==='-fail')text=used?used.name+'의 '+particle(used.move||'기술','은','는')+' 효과를 내지 못했다!':subject+' 행동에 실패했다!';
+    if(kind==='-notarget')text='하지만 공격할 대상이 없었다!';
+    if(kind==='-nothing')text='하지만 아무 일도 일어나지 않았다!';
+    if(kind==='-heal')text=name+'의 체력이 회복되었다!';
+    if(kind==='-hitcount'&&/^\d+$/.test(b))text=name+'에게 '+b+'번 명중했다!';
+    if(kind==='-transform')text=subject+' '+who(b)+'의 모습으로 변신했다!';
+    if(kind==='faint')text=particle(name,'이','가')+' 기절했다!';
+    if(kind==='-damage')text=damageCause(line,who)?.text||'';
+    if(parts.includes('[silent]')&&!/^perish[0-3]$/.test(id))text='';
+    const via=line.match(/\[from\] ability: ([^|]+)/)?.[1],ability=via&&effectName(via);if(ability&&text)text+=' (특성 '+ability+')';
     if(text&&!output.includes(text))output.push(text);
   }
   return output;
@@ -226,7 +259,7 @@ function movePresentation(lines){
   // Called moves (Metronome, Sleep Talk, Mirror Move) show the move actually executed.
   const line=lines.findLast(l=>l.startsWith('|move|'));
   if(!line){
-    const stopped=lines.find(l=>/^\|(cant|-mustrecharge)\|p[12]/.test(l));
+    const stopped=lines.find(l=>/^\|(cant|-mustrecharge)\|p[12]/.test(l))||lines.find(l=>l.startsWith('|-damage|')&&l.includes('[from] confusion'));
     return stopped?{actor:stopped.split('|')[2].startsWith('p2')?'foe':'hero',moveTarget:'self'}:{};
   }
   const parts=line.split('|'),m=dex.moves.get(parts[3]),actor=parts[2].startsWith('p2')?'foe':'hero';
@@ -251,14 +284,10 @@ function step(game,b){
     for(let i=0;i<choices.length;i++)if(choices[i]&&!sim.sides[i].choose(choices[i]))sim.sides[i].autoChoose();
     sim.commitChoices();
   }else sim.turnLoop();
-  const lines=sim.log.slice(start),presentation=movePresentation(lines),actor=presentation.actor||'hero',changed=heroBefore!==sim.p1.active[0].name;
+  const lines=protocolLines(sim.log.slice(start)),presentation=movePresentation(lines),actor=presentation.actor||'hero',changed=heroBefore!==sim.p1.active[0].name;
   const messages=protocol(sim,lines);sync(game,b,sim);persist(b,sim);
-  const damageCauses=lines.filter(line=>line.startsWith('|-damage|')).flatMap(line=>{
-    const parts=line.split('|'),source=parts.find(p=>p.startsWith('[from] '));
-    if(!source)return [];
-    const raw=source.slice(7),cause=raw==='recoil'?'반동':raw==='confusion'?'혼란 자해':effectName(raw);
-    return [{side:parts[2].startsWith('p2')?'foe':'hero',cause}];
-  });
+  const causeName=ref=>{const mon=sim.sides.flatMap(s=>s.pokemon).find(p=>p.name===ref.split(': ')[1]);return species.get(mon?.baseSpecies.num)?.name||'포켓몬';};
+  const damageCauses=[...new Map(lines.filter(line=>line.startsWith('|-damage|')).map(line=>damageCause(line,causeName)).filter(Boolean).map(c=>[c.side+':'+c.cause,c])).values()];
   return {...presentation,actor,id:actor==='hero'?b.party[game.data.activeId].id:b.foe.id,damage:Math.max(0,actor==='hero'?foeBefore-sim.p2.active[0].hp:heroHpBefore-sim.p1.active[0].hp),damageCauses,lines:messages,switched:changed,ended:sim.ended};
 }
 function canSwitch(game,b,uid){
@@ -277,4 +306,4 @@ function tryCatch(rate,hp,maxHp,status,random=Math.random){
   while(checks<4&&Math.floor(random()*65536)<threshold)checks++;
   return {caught:checks===4,shakes:Math.min(checks,3),a};
 }
-module.exports={bestPartner,matchupScore,combatant,abilityFor,step,canSwitch,invalidate,catchValue,tryCatch,engine,readMon,scoreMove,movePresentation,dex};
+module.exports={protocol,protocolLines,bestPartner,matchupScore,combatant,abilityFor,step,canSwitch,invalidate,catchValue,tryCatch,engine,readMon,scoreMove,movePresentation,dex};

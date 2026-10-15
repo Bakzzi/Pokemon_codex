@@ -24,6 +24,14 @@
     const age=now-event.at-actionTiming(event).impactAt,t=clamp(age/700),active=lost>0&&age>=0&&age<700;
     return {active,x:active?6*Math.sin(t*Math.PI*8)*(1-t):0,opacity:active?.3+.7*Math.abs(Math.cos(t*Math.PI*3)):1};
   }
+  function damageMessages(event){
+    const seen=new Set();
+    return (event.damageCauses||[]).filter(c=>{
+      const key=c.side+':'+c.cause;
+      if(!['hero','foe'].includes(c.side)||seen.has(key)||(event[c.side+'Before']?.currentHp||0)<=(event[c.side]?.currentHp??Infinity))return false;
+      seen.add(key);return true;
+    }).map(c=>({side:c.side,text:c.text||event[c.side].name+' · '+c.cause+' 피해!'}));
+  }
   function switchFrame(event,now){
     const s=switchTiming,age=Math.max(0,now-event.at),incoming=age>=s.sendAt;
     let phase='recall-throw',x=0,y=0,angle=0,ballVisible=true,ballOpacity=1,scale=1,opacity=event.reason==='faint'?.45:1,heroY=event.reason==='faint'?18:0,glow=0;
@@ -42,6 +50,6 @@
     }
     return {age,phase,incoming,x,y,angle,ballVisible,ballOpacity,scale,opacity,heroY,glow,done:age>=s.duration};
   }
-  const api={pauses,actionTiming,duration,healthAt,damageReaction,switchTiming,switchFrame};
+  const api={pauses,actionTiming,duration,healthAt,damageReaction,damageMessages,switchTiming,switchFrame};
   if(typeof module==='object'&&module.exports)module.exports=api;else globalThis.BattlePacing=api;
 })();
