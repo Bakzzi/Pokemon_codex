@@ -1,0 +1,71 @@
+{
+  "version": "0.3.50",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "71b11bbe80b8988d66f03a66529846da530d0b6e",
+  "sourceTag": "v0.3.50",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.50",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime and current sources copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.49. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "scope": "Level-only party labels at six occupied positions, slightly larger text, retained collection and Exp. Share experience, empty positions and compact layout",
+    "command": "node --check desktop/renderer.js; isolated Electron fixture using exact packaged runtime; git diff --check",
+    "syntaxCheckPassed": true,
+    "packagedRuntimeFilesMatched": 25,
+    "packagedUiCasesPassed": 3,
+    "uiCases": [
+      "six-readable-level-only-labels",
+      "collection-and-device-experience-retained",
+      "empty-slot-and-compact-preserved"
+    ],
+    "widgetWidths": [
+      370
+    ],
+    "panelWidth": 650,
+    "partyLabelExample": "Lv.20",
+    "partyLabelFontPx": 8,
+    "collectionAndDeviceExperienceRetained": true,
+    "experienceUnitEvidenceInheritedFrom": "v0.3.49; game logic, panels and dependency versions unchanged",
+    "legacySelectedPositionsPreserved": true,
+    "partyCapacity": 6,
+    "uiErrors": 0,
+    "archiveFilesVerified": 692,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.50-portable.zip",
+    "bytes": 165959756,
+    "sha256": "7ad82bdf355ba9a809967e21cc1137f81944d8fc93d7f52e370c75ed0ce3a55c"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "portraitWidths": [
+      48,
+      40
+    ]
+  }
+}
