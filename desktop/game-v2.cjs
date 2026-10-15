@@ -443,6 +443,7 @@ class Game {
   }
   trainerRevealed(boss){
     return !SECRET_TRAINERS.has(boss.id)||!!this.data.trainerSeen[boss.id]||this.data.badges.includes(boss.id)||
+      boss.id==='giovanni'&&this.canChallenge(7)||
       boss.id==='champion'&&(this.data.champion||this.data.leagueBest>=4)||
       this.data.battle?.kind==='trainer'&&!this.data.battle.storyId&&db.bosses[this.data.battle.bossIndex]?.id===boss.id;
   }

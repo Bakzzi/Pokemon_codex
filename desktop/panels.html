@@ -15,20 +15,14 @@
   <div class="dex-layout"><div class="dex-grid" id="dex-grid"></div><aside id="detail" class="detail"><div class="placeholder">포켓몬을 눌러<br>모험의 동료를 골라 봐.</div></aside></div>
 </section>
 <section id="challenge" class="page" hidden>
-  <div class="intro"><div><h2>관동 체육관</h2><p>네 칸의 동료로 순서대로 도전해요. 야생 배틀 중 누르면 배틀이 끝난 뒤 시작해요.</p></div><b id="badges"></b></div>
-  <section id="special-encounters" class="special-encounters" aria-labelledby="special-encounters-title" hidden>
-    <h2 id="special-encounters-title">특별한 만남</h2><p id="special-encounters-note"></p>
-    <table><thead><tr><th>포켓몬</th><th>추가 확률</th><th>현재 출현 확률</th></tr></thead><tbody id="special-encounters-list"></tbody></table>
-  </section>
-  <section id="johto-choice" class="region-choice" aria-labelledby="johto-title" hidden>
-    <span class="kicker">KANTO CHAMPION</span><h2 id="johto-title">다음 모험을 선택하세요</h2>
-    <p id="johto-note"></p><p id="champion-bonus" class="champion-bonus"></p>
-    <div class="region-actions"><button id="johto-stay">관동에 머물기</button><button id="johto-unlock">2세대 해금하기</button></div>
-  </section>
   <div id="ongoing" class="ongoing" hidden></div>
+  <section id="kanto-gyms" aria-labelledby="kanto-gyms-title">
+  <div class="intro"><div><h2 id="kanto-gyms-title">관동 체육관</h2><p>배치한 동료로 순서대로 도전해요. 야생 배틀 중 누르면 배틀이 끝난 뒤 시작해요.</p></div><b id="badges"></b></div>
   <section class="badge-case" aria-label="관동 뱃지 홀더">
     <div class="case-inlay"><div class="case-heading"><span>GYM BADGES</span><b>KANTO</b></div><div id="badge-slots" class="badge-slots"></div></div>
     <div class="case-bottom"><span id="badge-case-note">여덟 번의 도전, 여덟 개의 증표</span><i class="case-clasp" aria-hidden="true"></i></div>
+  </section>
+  <div class="gym-grid" id="gyms"></div>
   </section>
   <section id="rocket-hideout" class="story-board" aria-labelledby="rocket-title">
     <div class="rocket-heading"><div><span class="kicker">TEAM ROCKET HIDEOUT</span><h2 id="rocket-title">로켓단의 아지트</h2></div><img class="rocket-logo" src="assets/logos/team-rocket.png" alt="로켓단 R 마크"></div>
@@ -40,9 +34,19 @@
     <p class="muted">연분홍시티로 향하는 길목에 잠만보가 깊이 잠들어 있어요. 아무리 불러도 일어나지 않네요. 깨울 방법을 찾아야겠어요.</p>
     <div id="snorlax-encounter" class="snorlax-encounter"></div>
   </section>
-  <div class="gym-grid" id="gyms"></div>
-  <div class="league"><div><span class="kicker">POKÉMON LEAGUE</span><h2>사천왕, 그리고 챔피언</h2><p>뱃지 8개를 모으면 도전할 수 있어요. 다섯 경기를 회복 없이 이어서 승리하면 출현 보너스를 얻고, 2세대 해금을 직접 선택할 수 있어요.</p></div><button id="league-start" data-challenge="8">리그 도전</button></div>
+  <section id="pokemon-league" aria-labelledby="league-title">
+  <div class="league"><div><span class="kicker">POKÉMON LEAGUE</span><h2 id="league-title">사천왕, 그리고 챔피언</h2><p>뱃지 8개를 모으면 도전할 수 있어요. 다섯 경기를 회복 없이 이어서 승리하면 출현 보너스를 얻고, 2세대 해금을 직접 선택할 수 있어요.</p></div><button id="league-start" data-challenge="8">리그 도전</button></div>
   <div id="league-team" class="league-team"></div><p id="league-progress" class="muted"></p>
+  <section id="johto-choice" class="region-choice" aria-labelledby="johto-title" hidden>
+    <span class="kicker">KANTO CHAMPION</span><h2 id="johto-title">다음 모험을 선택하세요</h2>
+    <p id="johto-note"></p><p id="champion-bonus" class="champion-bonus"></p>
+    <div class="region-actions"><button id="johto-stay">관동에 머물기</button><button id="johto-unlock">2세대 해금하기</button></div>
+  </section>
+  </section>
+  <section id="special-encounters" class="special-encounters" aria-labelledby="special-encounters-title" hidden>
+    <h2 id="special-encounters-title">특별한 만남</h2><p id="special-encounters-note"></p>
+    <table><thead><tr><th>포켓몬</th><th>추가 확률</th><th>현재 출현 확률</th></tr></thead><tbody id="special-encounters-list"></tbody></table>
+  </section>
 </section>
 <section id="daycare" class="page" hidden>
   <section class="device-quest" aria-labelledby="inventory-title">
