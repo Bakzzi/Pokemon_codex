@@ -30,12 +30,12 @@ test('starter families never get a wild route; starter, level and stone methods 
   for(const id of [1,2,3,4,5,6,7,8,9,25,26]){const p=entry(g,id);assert.equal(p.acquisition.wildAllowed,false);assert.ok(!p.acquisition.routes.some(r=>r.kind==='wild'));}
   assert.ok(entry(g,4).acquisition.routes.some(r=>r.kind==='starter'));
   assert.ok(entry(g,5).acquisition.routes.some(r=>r.kind==='evolution'&&r.text.includes('파이리')&&r.text.includes('Lv.16')));
-  const raichu=entry(g,26).acquisition.routes.find(r=>r.kind==='evolution');assert.ok(raichu.text.includes('천둥의돌'));assert.ok(raichu.text.includes('선택·예약'));
+  const raichu=entry(g,26).acquisition.routes.find(r=>r.kind==='evolution');assert.equal(raichu.text,'No.25 피카츄 · 천둥의돌 1개');
 });
 
 test('trade alternatives show device learning and held items without revealing the device reward chain',()=>{
   const g=fixture();g.data.seen[64]=now;
-  const text=entry(g,65).acquisition.routes.find(r=>r.kind==='evolution').text;assert.match(text,/윤겔라/);assert.match(text,/학습장치.*한 레벨 상승/);assert.ok(!/40|로켓|잠만보|독수/.test(text));
+  const text=entry(g,65).acquisition.routes.find(r=>r.kind==='evolution').text;assert.equal(text,'No.64 윤겔라 · 학습장치로 1레벨 상승 자동진화');assert.ok(!/40|로켓|잠만보|독수/.test(text));
   g.data.champion=true;g.unlockJohto(now);const steelix=entry(g,208).acquisition.routes.find(r=>r.kind==='evolution');assert.ok(steelix.text.includes('금속코트'));assert.ok(steelix.text.includes('학습장치'));
 });
 

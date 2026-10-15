@@ -48,9 +48,9 @@ function collectionHints(game){
       if(rule.happiness)conditions.push('친밀도 '+rule.happiness+' 이상');
       if(rule.time)conditions.push(rule.time==='day'?'한국시간 04~18시':'한국시간 18~04시');
       if(rule.relativeStats!==null)conditions.push(rule.relativeStats>0?'공격 > 방어':rule.relativeStats<0?'공격 < 방어':'공격 = 방어');
-      if(rule.trigger===2)conditions.push('이 모습에서 학습장치 경험치로 한 레벨 상승');
+      if(rule.trigger===2)conditions.push('학습장치로 1레벨 상승');
       const automatic=rule.trigger===1&&rule.level>0||rule.trigger===2;
-      const text=ref(rule.from)+' · '+conditions.join(' + ')+' → '+(automatic?'배틀·결과 연출 후 자동진화':'도감에서 진화 선택·예약');
+      const text=ref(rule.from)+' · '+conditions.join(' + ')+(automatic?' 자동진화':'');
       routes.push({kind:'evolution',from:rule.from,text,...(rule.item?{note:'진화 도구는 야생 배틀 승리·포획 후 발견할 수 있어요.'}:{})});
     }
     // Acquiring a missing species must not require already owning that same species.
