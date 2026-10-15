@@ -1,0 +1,50 @@
+{
+  "version": "0.3.41",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "04931c1369d3b1bbc7d151001bbd6284b4dc6171",
+  "sourceTag": "v0.3.41",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.41",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime and changed sources copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.40. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "command": "node --test desktop/test/window-placement.test.cjs",
+    "passed": 4,
+    "packagedRuntimeFilesMatched": 25,
+    "windowsNativeDragEventsPassed": 10,
+    "packagedModeLayoutsPassed": 2,
+    "uiErrors": 0,
+    "archiveFilesVerified": 688,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200,
+    "dragDetachesWithoutResistance": true
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 15,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 481,
+    "compactHeight": 271,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.41-portable.zip",
+    "bytes": 165691890,
+    "sha256": "a50d53305880930ca9aabfb63e1cce4d675c08c5e3475ea7370b914c3a39cc5c"
+  }
+}
