@@ -1,6 +1,7 @@
 MIT License
 
 Copyright (c) 2026 momozzing
+Copyright (c) 2026 Bakzzi (Pokemon Codex Buddy additions and modifications)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,11 +20,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-This license covers the source code only. Digimon characters, names and
-artwork (art/, sprites/, hooks/img/, docs/) are the property of Bandai Namco and
-Toei Animation. They are not covered by this license and are included for
-non-commercial fan use only. This project is not affiliated with or endorsed
-by Bandai Namco or Toei Animation.

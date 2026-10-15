@@ -1,10 +1,22 @@
 # Third-party notices
 
+## Pokemon Codex Buddy
+
+Project additions and modifications: Copyright (c) 2026 Bakzzi. MIT License, as set out in LICENSE. The upstream copyright notice and license terms are retained. Pokemon artwork and other third-party materials retain the rights, licenses and notices described below.
+
 ## Digimon_mod
 
 Original: https://github.com/momozzing/Digimon_mod
 Revision: 687711ee4524e9cdaaf6849825fc837ab96038d7 (2026-10-13).
-Copyright (c) 2026 momozzing. MIT License. The original LICENSE remains unmodified.
+Copyright (c) 2026 momozzing. MIT License. The original copyright notice and MIT terms are preserved in LICENSE, alongside the copyright notice for this project's additions and modifications. The upstream artwork notice is preserved verbatim below:
+
+~~~text
+This license covers the source code only. Digimon characters, names and
+artwork (art/, sprites/, hooks/img/, docs/) are the property of Bandai Namco and
+Toei Animation. They are not covered by this license and are included for
+non-commercial fan use only. This project is not affiliated with or endorsed
+by Bandai Namco or Toei Animation.
+~~~
 
 The concept is visibly credited to **원작 모모찡 · momozzing**. desktop/season.cjs adapts original season helpers; the new engine uses month formatting and the legacy level conversion for save migration. New collection, battle, nursery, host and Codex reader code are separate implementations. The upstream source and artwork stay in the source checkout for provenance and are not loaded by the portable widget.
 

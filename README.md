@@ -2,7 +2,7 @@
 
 코딩하는 동안 포켓몬을 만나고, 잡고, 키우는 작은 Windows 데스크톱 게임입니다. 작업에 집중한 뒤 포켓기어와 모험 기록에서 동료들의 모험을 돌아볼 수 있습니다.
 
-**원작 모모찡 · momozzing** — [Digimon_mod](https://github.com/momozzing/Digimon_mod)에서 출발한 비영리 팬 프로젝트입니다. 원작의 MIT 라이선스와 표기를 유지합니다.
+**원작 모모찡 · momozzing** — [Digimon_mod](https://github.com/momozzing/Digimon_mod)에서 출발한 비영리 팬 프로젝트입니다. 원작의 MIT 라이선스와 표기를 유지하며, Bakzzi가 추가·수정한 코드도 [MIT 라이선스](LICENSE)로 공개합니다.
 
 **[Windows 실행 파일 받기 · 최신 릴리스](https://github.com/Bakzzi/Pokemon_codex/releases/latest)**
 
