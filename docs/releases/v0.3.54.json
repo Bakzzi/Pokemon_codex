@@ -1,0 +1,79 @@
+{
+  "version": "0.3.54",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "3aab8767396563d9d39e3a33e03775ac67c878fe",
+  "sourceTag": "v0.3.54",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.54",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime, current sources and item assets copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.53. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "scope": "Challenge sections in requested order, separate special-encounter bonus after league, champion region choice within league; final gym name/face/team revealed upon seventh badge, Rocket next-stage visibility and champion visibility after Lance, reservations/reloads/monthly preservation",
+    "command": "node --check desktop/game-v2.cjs; node --test desktop/test/trainer-secrets.test.cjs desktop/test/challenge-queue.test.cjs desktop/test/rocket-flute.test.cjs desktop/test/monthly-season.test.cjs; isolated Electron fixture using exact packaged runtime; git diff --check",
+    "passed": 26,
+    "failed": 0,
+    "packagedRuntimeFilesMatched": 25,
+    "packagedUiCasesPassed": 3,
+    "uiCases": [
+      "six-badges-ordered-sections-and-hidden-final-gym",
+      "seventh-badge-immediately-reveals-giovanni-face-and-lineup",
+      "lance-completion-reveals-champion-and-rewards-follow-league"
+    ],
+    "panelWidth": 650,
+    "sectionOrder": [
+      "kanto-gyms-title",
+      "badge-case",
+      "gyms",
+      "rocket-hideout",
+      "snorlax-road",
+      "pokemon-league",
+      "special-encounters"
+    ],
+    "lastGymRevealedAtSeventhBadge": true,
+    "giovanniTeamSize": 5,
+    "championRevealedAfterFourEliteFourWins": true,
+    "specialEncountersAfterLeague": true,
+    "legacySelectedPositionsPreserved": true,
+    "partyCapacity": 6,
+    "uiErrors": 0,
+    "archiveFilesVerified": 706,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.54-portable.zip",
+    "bytes": 165969000,
+    "sha256": "b8e211d243eb12c402afa1d263f57a42b9fd884f8be87881cc659a7574b7165b"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "portraitWidths": [
+      48,
+      40
+    ],
+    "itemSources": "desktop/assets/items/sources.json"
+  }
+}
