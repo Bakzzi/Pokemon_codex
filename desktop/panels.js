@@ -5,6 +5,7 @@ let state=null,selected=25,memberUid=null,nurserySignature='',tab=new URLSearchP
 const img=(id,cls='')=>{const e=node('img',cls);e.src='assets/'+id+'.gif';e.alt='';return e;};
 // Original image width, then the square viewport's x/y/size in source pixels.
 const trainerFaces={brock:[196,52,5,104],misty:[228,61,7,112],surge:[156,22,1,110],erika:[198,22,3,114],koga:[217,113,5,103],sabrina:[216,17,13,112],blaine:[273,24,18,112],giovanni:[179,25,5,112]};
+const gymLocations={brock:'회색시티',misty:'블루시티',surge:'갈색시티',erika:'무지개시티',koga:'연분홍시티',sabrina:'노랑시티',blaine:'홍련섬',giovanni:'상록시티'};
 const storyFaces={erika:[['erika.png',trainerFaces.erika]],'rocket-grunt':[['rocket-grunts.png',[433,238,0,112]]],'rocket-duo':[['james.png',[150,16,4,112]],['jessie.png',[197,32,10,112]]],'rocket-giovanni':[['giovanni.png',trainerFaces.giovanni]]};
 function focusGym(index){
   const card=$('gyms').children[index];if(!card)return;
@@ -117,7 +118,7 @@ function renderBosses(){
   $('badges').textContent='뱃지 '+state.badges.length+' / 8';
   renderBadgeCase();
   $('gyms').replaceChildren(...state.bosses.slice(0,8).map((boss,i)=>{
-    const done=state.badges.includes(boss.id),card=node('article','gym'+(done?' done':'')),title=node('div','gym-title'),badge=node('span','badge');badge.append(badgeImage(boss,'gym-badge'),document.createTextNode(boss.badge));title.append(node('h3','',(i+1)+'. '+boss.name),badge);
+    const done=state.badges.includes(boss.id),card=node('article','gym'+(done?' done':'')),title=node('div','gym-title'),badge=node('span','badge');badge.append(badgeImage(boss,'gym-badge'),document.createTextNode(boss.badge));title.append(node('h3','',(i+1)+'. '+gymLocations[boss.id]+' 체육관 관장 '+boss.name),badge);
     const body=node('div','gym-body'),info=node('div','gym-info'),face=node('div','gym-portrait');face.dataset.trainer=boss.id;
     if(boss.revealed===false){face.classList.add('unknown');face.textContent='?';face.setAttribute('aria-label','아직 만나지 않은 관장');}
     else{const portrait=node('img','gym-trainer'),[width,x,y,size]=trainerFaces[boss.id];portrait.src='assets/trainers/'+boss.id+'.png';portrait.alt=boss.name+' · 원작 얼굴 초상화';portrait.draggable=false;portrait.style.width=width/size*100+'%';portrait.style.left=-x/size*100+'%';portrait.style.top=-y/size*100+'%';face.append(portrait);}
