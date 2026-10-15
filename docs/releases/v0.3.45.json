@@ -1,0 +1,74 @@
+{
+  "version": "0.3.45",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "320cb0cd63869f020c3505a8d0bcbcc14b93c6c2",
+  "sourceTag": "v0.3.45",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.45",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime and current sources copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.44. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "scope": "Rocket opponent lineups, names, levels, staged secrecy and layout",
+    "command": "node --test desktop/test/rocket-flute.test.cjs desktop/test/trainer-secrets.test.cjs",
+    "passed": 10,
+    "syntax": "node --check desktop/panels.js",
+    "packagedRuntimeFilesMatched": 25,
+    "packagedUiCasesPassed": 6,
+    "uiCases": [
+      "locked",
+      "grunt-revealed",
+      "duo-revealed",
+      "giovanni-revealed",
+      "saved-and-reopened",
+      "narrow-all-lineups"
+    ],
+    "narrowChallengeWidth": 650,
+    "revealedTeamsMatchBattleData": true,
+    "unknownTeamsHidden": true,
+    "completionDisablesNavigation": true,
+    "noBattleActionsDispatched": true,
+    "uiErrors": 0,
+    "archiveFilesVerified": 692,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.45-portable.zip",
+    "bytes": 165956472,
+    "sha256": "b5caed26c6f83743ce580e81079564ee058401d7f3d4da105f69199297edba5e"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "portraitWidths": [
+      48,
+      40
+    ],
+    "erikaBadgeWidths": [
+      20,
+      18
+    ]
+  }
+}
