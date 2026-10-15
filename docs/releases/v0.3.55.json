@@ -1,0 +1,74 @@
+{
+  "version": "0.3.55",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "eb9156605befb07497a167307c18ee684f3c8b10",
+  "sourceTag": "v0.3.55",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.55",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime, current sources and item assets copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.54. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "scope": "Completed gyms, Rocket Hideout and road Snorlax default to collapsed details with summary text, Rocket logo and badges retained; independent completion transitions, user expansion across state updates/tabs, badge navigation, repeat Snorlax capture, fresh-render defaults and new season",
+    "command": "node --check desktop/panels.js; isolated Electron fixture using exact packaged runtime; git diff --check",
+    "syntaxCheckPassed": true,
+    "packagedRuntimeFilesMatched": 25,
+    "packagedDocumentationFilesMatched": 3,
+    "packagedUiCasesPassed": 5,
+    "uiCases": [
+      "unfinished-sections-expanded",
+      "completed-sections-collapse-independently-with-summaries-visible",
+      "manual-expansion-survives-refresh-and-tabs-with-snorlax-retry",
+      "badge-navigation-expands-gym-list-and-focuses-card",
+      "fresh-render-defaults-and-new-season-expanded"
+    ],
+    "panelWidth": 650,
+    "completedSectionsCollapsedByDefault": true,
+    "unfinishedSectionsExpandedByDefault": true,
+    "userExpansionPreserved": true,
+    "badgeNavigationExpandsGymList": true,
+    "snorlaxRecaptureAvailable": true,
+    "gameplaySourceUnchangedFrom": "v0.3.54",
+    "legacySelectedPositionsPreserved": true,
+    "partyCapacity": 6,
+    "uiErrors": 0,
+    "archiveFilesVerified": 706,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.55-portable.zip",
+    "bytes": 165969621,
+    "sha256": "a9662e27d552e234ef13a3b20630e58eb7405a9b735df3cbede86ae097d1e0fe"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "portraitWidths": [
+      48,
+      40
+    ],
+    "itemSources": "desktop/assets/items/sources.json"
+  }
+}
