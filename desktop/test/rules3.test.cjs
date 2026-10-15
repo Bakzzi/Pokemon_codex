@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),battle=require('../battle.cjs');
+const {Game}=require('./helpers/four-party.cjs'),battle=require('../battle.cjs');
 const {species,data,xpAt,learnedMoves,pickWild,wildMinimum}=require('../pokemon.cjs');
 const journal=require('../journal.cjs');
 const now=Date.parse('2026-10-13T05:00:00Z');
@@ -27,7 +27,7 @@ test('wild evolution floors propagate through level, trade and stone chains',()=
     const g=new Game({},now,{random:random(level)});g.data.owned[25].level=level;g.data.owned[25].xp=xpAt(25,level);
     for(let i=0;i<400;i++){g.newWild(now);const p=species.get(g.data.battle.foe.id);assert.ok(wildMinimum(p)<=level);assert.ok(g.data.battle.foe.level>=wildMinimum(p));assert.ok(p.id<=151);}
   }
-  const seen=new Set(),rng=random(42);for(let i=0;i<4000;i++)seen.add(pickWild(1,rng,36));assert.ok(seen.has(6));assert.ok(!seen.has(149));
+  const seen=new Set(),rng=random(42);for(let i=0;i<4000;i++)seen.add(pickWild(1,rng,36));assert.ok(!seen.has(6));assert.ok(!seen.has(149));assert.ok(seen.has(18));
 });
 test('wild levels cover every integer from partner minus five to plus five, with species floors and level 100 respected',()=>{
   const g=new Game({},now,{random:()=>.73}),p=g.data.owned[25];

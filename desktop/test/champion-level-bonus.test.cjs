@@ -1,9 +1,9 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),{data,species,rarity,wildMinimum,pickWild,encounterChances,xpAt}=require('../pokemon.cjs');
+const {Game}=require('./helpers/four-party.cjs'),{data,species,rarity,wildMinimum,wildEligible,pickWild,encounterChances,xpAt}=require('../pokemon.cjs');
 const now=Date.parse('2026-10-14T08:00:00Z');
 function fixture(level){const g=new Game({},now,{random:()=>.73});g.data.champion=true;setLevels(g,level);return g;}
-function setLevels(g,level){for(const uid of g.data.slots){const p=g.data.owned[uid];p.level=level;p.xp=xpAt(p.id,level);}}
+function setLevels(g,level){for(const uid of g.data.slots.filter(uid=>uid!==null)){const p=g.data.owned[uid];p.level=level;p.xp=xpAt(p.id,level);}}
 
 test('the four selected Pokemon must all strictly exceed 70, 80 or 90 to multiply both champion bonuses',()=>{
   const g=fixture(5);
@@ -26,11 +26,11 @@ test('low-level reserves do not lower the bonus until selected; selected fainted
   g.data.owned[sibling].level=71;g.newWild(now);g.data.battle.party[sibling].hp=0;assert.equal(g.encounterBonus().rareMultiplier,4.5);
 });
 
-test('the current four-member bonus is recomputed after reload and partial teams do not earn higher tiers',()=>{
+test('the bonus is recomputed from occupied slots after reload, including a partial party',()=>{
   let g=fixture(81);const reserve=g.addPokemon(133,5,'hatch',now),before=structuredClone(g.data);
   g=new Game(g.data,now+1);assert.equal(g.encounterBonus().rareMultiplier,6);assert.deepEqual(g.data.owned,before.owned);assert.deepEqual(g.data.slots,before.slots);
   assert.ok(g.setSlot(0,reserve,now+1));g=new Game(g.data,now+2);assert.equal(g.encounterBonus().rareMultiplier,1.5);
-  g.data.slots=g.data.slots.slice(0,3);assert.equal(g.encounterBonus().minimumLevel,0);assert.equal(g.encounterBonus().rareMultiplier,1.5);
+  g.data.slots=g.data.slots.slice(0,3);assert.equal(g.encounterBonus().minimumLevel,5);assert.equal(g.encounterBonus().rareMultiplier,1.5);
 });
 
 test('actual category draws multiply the champion bonus by each level tier, with nonnegative rates summing to one',()=>{
@@ -45,7 +45,7 @@ test('actual category draws multiply the champion bonus by each level tier, with
 });
 
 test('actual within-category draws use 6, 8 and 10 missing-species weights while caught species keep weight one',()=>{
-  const pool=data.pokemon.filter(p=>p.generation===1&&wildMinimum(p)<=100&&rarity(p)==='common'),missing=pool[0];
+  const pool=data.pokemon.filter(p=>wildEligible(p,1,100)&&rarity(p)==='common'),missing=pool[0];
   const caught=Object.fromEntries(pool.slice(1).map(p=>[p.id,now]));
   for(const [minimumLevel,multiplier]of [[71,6],[81,8],[91,10]]){
     const counts=Object.fromEntries(pool.map(p=>[p.id,0])),samples=(pool.length-1+multiplier)*100;

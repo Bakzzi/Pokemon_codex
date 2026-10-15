@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),battle=require('../battle.cjs');
+const {Game}=require('./helpers/four-party.cjs'),battle=require('../battle.cjs');
 const {data,statsAt}=require('../pokemon.cjs');
 const {profiles,profileFor,frameFor}=require('../move-effects.js');
 const {captureTiming}=require('../capture-animation.js');

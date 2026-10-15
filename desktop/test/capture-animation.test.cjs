@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),battle=require('../battle.cjs');
+const {Game}=require('./helpers/four-party.cjs'),battle=require('../battle.cjs');
 const {captureTiming,captureFrame}=require('../capture-animation.js');
 const {xpAt}=require('../pokemon.cjs'),pacing=require('../battle-pacing.js');
 const now=Date.parse('2026-10-13T07:00:00Z');

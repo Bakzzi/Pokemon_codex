@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),training=require('../training-device.cjs'),{combatant}=require('../battle.cjs'),{xpAt}=require('../pokemon.cjs');
+const {Game}=require('./helpers/four-party.cjs'),training=require('../training-device.cjs'),{combatant}=require('../battle.cjs'),{xpAt}=require('../pokemon.cjs');
 const now=Date.parse('2026-10-14T11:00:00Z');
 function fixture(id=64,level=16){const g=new Game({},now,{random:()=>.73}),uid=g.addPokemon(id,level,'fixture',now);g.data.trainingDevice.obtainedAt=now;g.requestAction('device-learner',uid,now);return {g,uid};}
 function boundary(g,uid){const p=g.data.owned[uid];p.xp=xpAt(p.id,p.level+1)-1;}

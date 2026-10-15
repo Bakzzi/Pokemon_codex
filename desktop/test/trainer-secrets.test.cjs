@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),{data}=require('../pokemon.cjs');
+const {Game}=require('./helpers/four-party.cjs'),{data}=require('../pokemon.cjs');
 const now=Date.parse('2026-10-14T15:00:00Z'),fixture=()=>new Game({},now,{random:()=>.73});
 function hidden(g,index){const boss=g.panelState(now).bosses[index];assert.equal(boss.name,'???');assert.equal(boss.revealed,false);assert.deepEqual(boss.team,[]);}
 function known(g,index){const boss=g.panelState(now).bosses[index];assert.equal(boss.name,data.bosses[index].name);assert.equal(boss.revealed,true);assert.deepEqual(boss.team,data.bosses[index].team);}

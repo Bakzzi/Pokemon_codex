@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),{species,wildEligible,wildDistribution,pickWild}=require('../pokemon.cjs');
+const {Game}=require('./helpers/four-party.cjs'),{species,wildEligible,wildDistribution,pickWild}=require('../pokemon.cjs');
 const trade=[65,68,76,94,186,199,208,212,230,233],other=[26,31,34,36,38,40,45,59,62,71,91,103,121,134,135,136,169,176,182,192,196,197,242];
 const excluded=[...trade,...other],now=Date.parse('2026-10-15T06:00:00Z');
 

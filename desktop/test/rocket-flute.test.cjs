@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),training=require('../training-device.cjs'),{data,pickWild,encounterChances,rarity,wildMinimum,wildEligible,xpAt,learnedMoves}=require('../pokemon.cjs'),{captureTiming}=require('../capture-animation.js');
+const {Game}=require('./helpers/four-party.cjs'),training=require('../training-device.cjs'),{data,pickWild,encounterChances,rarity,wildMinimum,wildEligible,xpAt,learnedMoves}=require('../pokemon.cjs'),{captureTiming}=require('../capture-animation.js');
 const now=Date.parse('2026-10-14T10:00:00Z');
 function fixture(){const g=new Game({},now,{random:()=>.73});g.data.badges=['brock','misty','surge'];return g;}
 function advance(g){assert.ok(g.tick(Math.max(now,g.data.switchUntil,g.nextTick)));}

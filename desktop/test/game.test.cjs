@@ -1,7 +1,8 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os');
-const {Game}=require('../game.cjs');
+const {Game}=require('./helpers/four-party.cjs');
+const {Game:FreshGame}=require('../game.cjs');
 const {data,species,moves,xpAt,learnedMoves,pickWild,wildEligible,effective}=require('../pokemon.cjs');
 const {combatant,attack,catchValue,tryCatch}=require('../battle.cjs');
 const nursery=require('../daycare.cjs');
@@ -16,9 +17,9 @@ function wild(g,id=19,level=5){
   g.data.battle={kind:'wild',foe:combatant(id,level),party:{[p.uid]:combatant(p.id,p.level,p.moves)},turn:0,captureAttempts:0};g.data.seen[id]=now;
   return g.data.battle;
 }
-test('initial collection has exactly 151 species, four caught starters and no Pichu access',()=>{
-  const g=new Game({},now),s=g.panelState(now);
-  assert.equal(s.collection.length,151);assert.deepEqual(s.collection.filter(p=>p.caught).map(p=>p.id),[1,4,7,25]);
+test('initial collection has exactly 151 species, only Pikachu caught, five empty slots and no Pichu access',()=>{
+  const g=new FreshGame({},now),s=g.panelState(now);
+  assert.equal(s.collection.length,151);assert.deepEqual(s.collection.filter(p=>p.caught).map(p=>p.id),[25]);assert.equal(s.slots.filter(s=>s.empty).length,5);
   assert.equal(s.collection.find(p=>p.id===2).name,'???');assert.equal(g.addPokemon(172,5,'catch'),false);
   assert.equal(g.select(172,now),false);assert.equal(g.setSlot(0,172,now),false);
   assert.equal(s.hero.name,'피카츄');

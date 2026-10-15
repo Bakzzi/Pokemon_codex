@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),training=require('../training-device.cjs'),{combatant}=require('../battle.cjs'),{data,species,xpAt,learnedMoves}=require('../pokemon.cjs');
+const {Game}=require('./helpers/four-party.cjs'),training=require('../training-device.cjs'),{combatant}=require('../battle.cjs'),{data,species,xpAt,learnedMoves}=require('../pokemon.cjs');
 const now=Date.parse('2026-10-14T10:00:00Z'),rng=seed=>()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
 function fixture(){return new Game({},now,{random:()=>.73});}
 function count(g,n){for(let id=1;g.kantoCaughtCount()<n;id++)g.data.caught[id]=now;}
@@ -56,7 +56,7 @@ test('story reservations wait through capture and result playback, cancel, survi
 test('loss, abandon and incomplete teams do not complete story quests, and native simulator resumes a story battle',()=>{
   let g=fixture();assert.equal(g.challenge('rocket-grunt',now),false);g.data.badges=data.bosses.slice(0,3).map(b=>b.id);g.challenge('rocket-grunt',now);assert.ok(g.requestAction('abandon',undefined,now));assert.ok(advance(g));assert.equal(g.data.trainingDevice.rocketWonAt,null);assert.ok(g.canChallenge('rocket-grunt'));
   g.challenge('rocket-grunt',g.data.switchUntil);for(const p of Object.values(g.data.battle.party))p.hp=0;assert.ok(advance(g));assert.ok(advance(g));assert.equal(g.data.battle,null);assert.equal(g.data.trainingDevice.rocketWonAt,null);
-  for(const uid of g.data.slots)level(g,uid,45);g.random=rng(5);g.challenge('rocket-grunt',g.data.switchUntil);assert.ok(advance(g));assert.ok(g.data.battle.sim);const turn=g.data.battle.turn;
+  for(const uid of g.data.slots.filter(uid=>uid!==null))level(g,uid,45);g.random=rng(5);g.challenge('rocket-grunt',g.data.switchUntil);assert.ok(advance(g));assert.ok(g.data.battle.sim);const turn=g.data.battle.turn;
   g=new Game(g.data,g.data.switchUntil,{random:rng(6)});assert.ok(advance(g));assert.ok(g.data.battle.turn>turn||g.data.pendingBattle);
   let i=0;while(g.data.battle&&i++<200)assert.ok(advance(g));assert.ok(i<200);assert.ok(g.data.trainingDevice.rocketWonAt);assert.equal(g.data.badges.length,3);assert.equal(g.canChallenge('rocket-giovanni'),false);winErika(g);
   const fighter=g.addPokemon(68,50,'fixture',now);g.data.slots[0]=fighter;g.data.activeId=fighter;g.data.workTokens=50000;assert.ok(g.challenge('road-snorlax',g.data.switchUntil));i=0;while(g.data.battle&&i++<200)assert.ok(advance(g));assert.ok(i<200);assert.ok(g.data.trainingDevice.snorlaxWonAt,JSON.stringify(g.data.journal.slice(-5)));assert.equal(g.data.badges.length,4);

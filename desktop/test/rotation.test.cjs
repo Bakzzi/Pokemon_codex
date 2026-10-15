@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),battle=require('../battle.cjs');
+const {Game}=require('./helpers/four-party.cjs'),battle=require('../battle.cjs');
 const {xpAt,learnedMoves}=require('../pokemon.cjs');
 const pacing=require('../battle-pacing.js');
 const now=Date.parse('2026-10-13T08:00:00Z');
@@ -39,7 +39,7 @@ test('ties keep an already-lowest partner, then follow slot order; boarded partn
   assert.equal(g.tick(now),false);assert.equal(g.data.activeId,7);
   levels(g,{7:6});assert.ok(g.tick(now+1));assert.equal(g.data.activeId,1);
   g.data.activeId=4;g.data.switchUntil=0;levels(g,{25:9});g.data.daycare={parents:[1,7]};
-  advance(g);assert.equal(g.data.activeId,25);assert.deepEqual(g.data.slots,[1,4,7,25]);
+  advance(g);assert.equal(g.data.activeId,25);assert.deepEqual(g.data.slots,[1,4,7,25,null,null]);
 });
 
 test('level balancing waits for wild battle results and does not override a trainer lineup',()=>{
@@ -94,7 +94,7 @@ test('only defeat of all available picked slots ends a battle; unselected reserv
     for(const p of Object.values(g.data.battle.party))p.hp=0;
     g.data.battle.party[outside]=g.memberCombatant(g.data.owned[outside]);
     advance(g);assert.equal(g.data.animation.kind,'faint');advance(g);assert.equal(g.data.battle,null);assert.deepEqual(g.data.badges,[]);
-    assert.ok(g.data.journal.some(e=>e.kind==='loss'));assert.deepEqual(g.data.slots,[1,4,7,25]);
+    assert.ok(g.data.journal.some(e=>e.kind==='loss'));assert.deepEqual(g.data.slots,[1,4,7,25,null,null]);
     g.data.workTokens=250;advance(g);
     assert.ok(Object.values(g.data.battle.party).every(p=>p.hp===p.maxHp));
   }

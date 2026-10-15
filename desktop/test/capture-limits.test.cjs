@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),battle=require('../battle.cjs'),pacing=require('../battle-pacing.js');
+const {Game}=require('./helpers/four-party.cjs'),battle=require('../battle.cjs'),pacing=require('../battle-pacing.js');
 const {captureFrame,captureTiming}=require('../capture-animation.js');
 const now=Date.parse('2026-10-14T06:00:00Z');
 function fixture(fraction=.5){

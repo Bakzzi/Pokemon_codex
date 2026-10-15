@@ -1,9 +1,10 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),os=require('node:os');
 const {Game,STARTERS}=require('../game.cjs'),{monthOf}=require('../season.cjs'),{data,xpAt}=require('../pokemon.cjs'),{combatant}=require('../battle.cjs'),{Store}=require('../store.cjs');
+const {Game:FourPartyGame}=require('./helpers/four-party.cjs');
 const before=Date.parse('2026-10-31T14:59:59Z'),boundary=before+1000;
 function veteran(){
-  const g=new Game({},before,{random:()=>.73});
+  const g=new FourPartyGame({},before,{random:()=>.73});
   g.data.badges=data.bosses.slice(0,8).map(b=>b.id);g.data.champion=true;g.unlockJohto(before);
   g.addPokemon(172,5,'hatch',before);g.addPokemon(143,30,'catch',before);
   g.data.owned[4].level=36;g.data.owned[4].xp=xpAt(4,36);g.evolve(4,6,before);
@@ -15,7 +16,7 @@ function veteran(){
   g.data.animation=null;g.data.switchUntil=0;g.nextTick=before;return g;
 }
 function fresh(g,at=boundary){
-  assert.equal(g.data.season.key,monthOf(at).key);assert.deepEqual(g.data.slots,STARTERS);assert.equal(g.data.activeId,25);
+  assert.equal(g.data.season.key,monthOf(at).key);assert.deepEqual(g.data.slots,[25,null,null,null,null,null]);assert.equal(g.data.activeId,25);
   assert.deepEqual(Object.values(g.data.owned).map(p=>[p.id,p.level,p.xp]),STARTERS.map(id=>[id,5,xpAt(id,5)]));
   assert.deepEqual(g.data.badges,[]);assert.equal(g.data.champion,false);assert.equal(g.data.johtoUnlocked,false);assert.equal(g.maxGeneration(),1);assert.equal(g.data.leagueBest,0);
   assert.equal(g.data.workTokens,0);assert.deepEqual(g.data.inventory,{});assert.equal(g.data.daycare,null);assert.equal(g.data.egg,null);assert.equal(g.data.pendingChallenge,null);assert.deepEqual(g.data.pendingActions,[]);assert.deepEqual(g.data.trainerSeen,{});
@@ -49,16 +50,16 @@ test('live capture finishes before rollover; old registrations are catchable onc
   assert.equal(g.tick(boundary),false);assert.equal(g.data.season.key,'2026-10');assert.equal(g.snapshot(boundary).season.pending,true);
   assert.ok(g.capture(g.data.switchUntil));const end=g.data.pendingBattle.at;
   g=new Game(g.data,end-1,{random:()=>0});assert.ok(!g.data.caught[16]);assert.equal(g.data.season.key,'2026-10');
-  assert.ok(g.tick(end));assert.ok(g.data.caught[16]);assert.equal(g.data.season.key,'2026-10');assert.ok(g.tick(end+1));assert.equal(g.data.season.key,'2026-11');assert.equal(g.experienceBoost().count,6);
+  assert.ok(g.tick(end));assert.ok(g.data.caught[16]);assert.equal(g.data.season.key,'2026-10');assert.ok(g.tick(end+1));assert.equal(g.data.season.key,'2026-11');assert.equal(g.experienceBoost().count,3);
   g.newWild(g.data.switchUntil);g.data.battle.foe=combatant(19,5,[150]);g.data.battle.foe.hp=1;
-  assert.ok(g.captureOpportunity());assert.ok(g.capture(g.data.switchUntil));assert.ok(g.tick(g.data.pendingBattle.at));assert.equal(g.experienceBoost().count,6);
+  assert.ok(g.captureOpportunity());assert.ok(g.capture(g.data.switchUntil));assert.ok(g.tick(g.data.pendingBattle.at));assert.equal(g.experienceBoost().count,3);
   g.newWild(g.data.switchUntil);g.data.battle.foe=combatant(19,5,[150]);g.data.battle.foe.hp=1;assert.equal(g.captureOpportunity(),null);
 });
 
 test('offline completed success registers before reset and cannot duplicate rewards on reload',()=>{
   const g=new Game({},before,{random:()=>0});g.newWild(before);g.data.battle.foe=combatant(19,5,[150]);g.data.battle.foe.hp=1;assert.ok(g.capture(g.data.switchUntil));
-  const loaded=new Game(g.data,g.data.pendingBattle.at+1);assert.ok(loaded.data.caught[19]);assert.equal(loaded.experienceBoost().count,5);assert.equal(loaded.registeredThisSeason(19),false);assert.equal(Object.keys(loaded.data.owned).length,4);
-  const reloaded=new Game(loaded.data,loaded.data.switchUntil+1);assert.equal(reloaded.experienceBoost().count,5);assert.equal(reloaded.data.adventure.totals.xp,0);
+  const loaded=new Game(g.data,g.data.pendingBattle.at+1);assert.ok(loaded.data.caught[19]);assert.equal(loaded.experienceBoost().count,2);assert.equal(loaded.registeredThisSeason(19),false);assert.equal(Object.keys(loaded.data.owned).length,1);
+  const reloaded=new Game(loaded.data,loaded.data.switchUntil+1);assert.equal(reloaded.experienceBoost().count,2);assert.equal(reloaded.data.adventure.totals.xp,0);
 });
 
 test('Snorlax can be revisited after a new-season knockout even if last season registered it',()=>{

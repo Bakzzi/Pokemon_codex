@@ -1,7 +1,7 @@
 'use strict';
 const {data,species,wildDistribution,wildEligible,wildMinimum}=require('./pokemon.cjs');
 const nursery=require('./daycare.cjs');
-const starters=new Set([1,4,7,25]),parents=new Map(),breedingCache=new Map();
+const parents=new Map(),breedingCache=new Map();
 for(const p of data.pokemon)for(const rule of p.evolutions){
   if(!parents.has(rule.to))parents.set(rule.to,[]);
   parents.get(rule.to).push({from:p.id,...rule});
@@ -38,7 +38,8 @@ function collectionHints(game){
       if(p.id===151)text+=' · No.1~150을 모두 등록하면 추가 출현 보너스';
       routes.push({kind:'wild',text,chance,minimumLevel:minimum});
     }
-    if(starters.has(p.id))routes.push({kind:'starter',text:'매 시즌 시작할 때 Lv.5 동료로 지급'});
+    if(p.id===25)routes.push({kind:'starter',text:'매 시즌 시작할 때 Lv.5 동료로 지급'});
+    if([1,4,7].includes(p.id))routes.push({kind:'event',text:game.data.starterGifts[p.id]?'이번 시즌 모험에서 동료로 받은 포켓몬이에요.':'모험 중 특별한 만남으로 동료가 될 수 있어요.'});
     if(p.id===143)routes.push({kind:'event',text:game.data.trainingDevice.fluteObtainedAt?'도전하기에서 포켓몬피리로 길을 막은 상대를 깨워 도전 · 피리 보유 중':'연분홍시티로 향하는 길목에 깊이 잠든 포켓몬 · 깨울 방법을 찾아야 해요.'});
     for(const rule of parents.get(p.id)||[]){
       if(species.get(rule.from).generation>generation)continue;
@@ -59,7 +60,7 @@ function collectionHints(game){
       const parent=family[0];
       routes.push({kind:'hatch',from:parent.from,text:'부모 '+ref(parent.from)+' + 메타몽을 키우미집에 맡김 → 부화 결과 '+ref(p.id)+(parent.chance<1?' · 알에서 '+percent(parent.chance):'')+' · 부모 동료를 먼저 마련해야 해요.'});
     }
-    const labels={wild:activeLevel<minimum?'Lv.'+minimum+'부터 야생':'야생',starter:'스타팅',event:game.data.trainingDevice.fluteObtainedAt?'피리 이벤트':'특수 이벤트',evolution:'진화',hatch:'부화'};
+    const labels={wild:activeLevel<minimum?'Lv.'+minimum+'부터 야생':'야생',starter:'스타팅',event:'이벤트',evolution:'진화',hatch:'부화'};
     const evolutionOnly=routes.length>0&&routes.every(r=>r.kind==='evolution');
     result.set(p.id,{wildAllowed,routes,summary:[...new Set(routes.map(r=>r.kind==='evolution'&&r.special?'특수진화':labels[r.kind]))].join(' · '),note:wildAllowed?'야생 확률은 현재 출전 동료와 진행 상태에서 다음 야생 1회에 만날 확률이에요. 포획 성공률과는 달라요.':evolutionOnly?'진화로만 얻을 수 있어요.':'일반 야생에서는 출현하지 않아요.'});
   }

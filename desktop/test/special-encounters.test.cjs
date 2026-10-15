@@ -1,9 +1,9 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),{data,species,xpAt,rarity,wildMinimum,milestoneBonuses,wildDistribution,pickWild,encounterChances}=require('../pokemon.cjs');
+const {Game}=require('./helpers/four-party.cjs'),{data,species,xpAt,rarity,wildMinimum,milestoneBonuses,wildDistribution,pickWild,encounterChances}=require('../pokemon.cjs');
 const now=Date.parse('2026-10-15T01:00:00Z'),badges=n=>data.bosses.slice(0,n).map(b=>b.id),dex=()=>Object.fromEntries(Array.from({length:150},(_,i)=>[i+1,now]));
 const close=(a,b)=>assert.ok(Math.abs(a-b)<1e-12,`${a} differs from ${b}`);
-function fixture(level=71){const g=new Game({},now,{random:()=>.73});for(const uid of g.data.slots){const p=g.data.owned[uid];p.level=level;p.xp=xpAt(p.id,level);}return g;}
+function fixture(level=71){const g=new Game({},now,{random:()=>.73});for(const uid of g.data.slots.filter(uid=>uid!==null)){const p=g.data.owned[uid];p.level=level;p.xp=xpAt(p.id,level);}return g;}
 
 test('specific badges award 0.1 percentage points, and championship adds 0.3 without rematch accumulation',()=>{
   assert.deepEqual(milestoneBonuses({badges:badges(5)}),[]);

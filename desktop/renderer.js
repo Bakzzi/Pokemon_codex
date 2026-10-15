@@ -171,6 +171,8 @@ function refreshScene(){
 function renderPartyStatus(s){
   s.slots.forEach((p,i)=>{
     const b=$('party').children[i];if(!b)return;
+    b.classList.toggle('empty',p.empty);b.firstChild.hidden=!!p.empty;
+    if(p.empty){b.dataset.id='';b.disabled=false;b.title=(i+1)+'번 빈칸 · 도감에서 동료 배치';b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed','false');b.classList.remove('queued','fainted');b.firstChild.removeAttribute('src');b.lastChild.textContent='빈칸';return;}
     const fainted=p.fainted&&!(p.selected&&playingMove?.heroBefore&&moveHealth('hero',playingMove.hero||s.hero).currentHp>0);
     const queued=s.pendingActions.some(a=>a.kind==='select'&&a.uid===p.uid);b.classList.toggle('queued',queued);b.dataset.id=p.uid;b.disabled=queued;b.title=p.name+' Lv.'+p.level+(queued?' · 출전 예약됨':p.boarded?' · 키우미집에서 데려온 뒤 출전 예약':fainted?' · 배틀 종료 후 회복·출전 예약':' · 클릭하여 출전');
     b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed',String(p.selected));b.classList.toggle('fainted',fainted);
@@ -192,7 +194,7 @@ window.buddy.onState(s=>{
   $('connection-label').parentElement.classList.toggle('live',s.source.connected&&!s.demo);$('connection-label').title=s.demo?'미리보기 · 경험치 별도':s.source.error||'로컬 작업 상태만 읽어요';
   s.limits.forEach((limit,i)=>{const prefix=i===0?'limit-a':'limit-b';$(prefix+'-value').textContent=limit.left===null?'미제공':limit.left+'%';$(prefix+'-bar').style.width=(limit.left??0)+'%';});
   if($('party').dataset.ids!==s.slots.map(p=>p.uid).join(',')){
-    $('party').replaceChildren(...s.slots.map((p,i)=>{const b=document.createElement('button');b.dataset.slot=i;b.onclick=()=>window.buddy.action('select',Number(b.dataset.id));const img=document.createElement('img');img.alt='';b.append(img,document.createElement('small'));return b;}));$('party').dataset.ids=s.slots.map(p=>p.uid).join(',');
+    $('party').replaceChildren(...s.slots.map((p,i)=>{const b=document.createElement('button');b.dataset.slot=i;b.onclick=()=>b.dataset.id?window.buddy.action('select',Number(b.dataset.id)):window.buddy.action('panel','collection');const img=document.createElement('img');img.alt='';b.append(img,document.createElement('small'));return b;}));$('party').dataset.ids=s.slots.map(p=>p.uid).join(',');
   }
   renderPartyStatus(s);
   $('caught-count').textContent=s.caughtCount+' / '+(s.generation===1?151:251);$('badge-count').textContent=s.badges.length+' / 8';

@@ -1,9 +1,9 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),{species,wildDistribution}=require('../pokemon.cjs');
+const {Game}=require('./helpers/four-party.cjs'),{species,wildDistribution}=require('../pokemon.cjs');
 const now=Date.parse('2026-10-15T05:00:00Z'),fixture=()=>new Game({},now,{random:()=>.73});
 const entry=(g,id)=>g.panelState(now).collection.find(p=>p.id===id);
-function level(g,n){for(const uid of g.data.slots)g.data.owned[uid].level=n;}
+function level(g,n){for(const uid of g.data.slots.filter(uid=>uid!==null))g.data.owned[uid].level=n;}
 
 test('every allowed species has an acquisition route, while unknown identities and descriptions stay hidden',()=>{
   for(const generation of [1,2]){
@@ -28,7 +28,7 @@ test('level-gated wild encounters show zero now and the actual entry level rathe
 test('starter families never get a wild route; starter, level and stone methods remain accurate',()=>{
   const g=fixture();level(g,100);
   for(const id of [1,2,3,4,5,6,7,8,9,25,26]){const p=entry(g,id);assert.equal(p.acquisition.wildAllowed,false);assert.ok(!p.acquisition.routes.some(r=>r.kind==='wild'));}
-  assert.ok(entry(g,4).acquisition.routes.some(r=>r.kind==='starter'));
+  assert.ok(entry(g,4).acquisition.routes.some(r=>r.kind==='event'));assert.ok(entry(g,4).acquisition.summary.split(' · ').includes('이벤트'));assert.ok(!entry(g,4).acquisition.summary.includes('스타팅'));
   assert.ok(entry(g,5).acquisition.routes.some(r=>r.kind==='evolution'&&r.text.includes('파이리')&&r.text.includes('Lv.16')));
   const raichu=entry(g,26).acquisition.routes.find(r=>r.kind==='evolution');assert.equal(raichu.text,'No.25 피카츄 · 천둥의돌 1개 사용 시 진화');assert.equal(raichu.special,true);assert.equal(entry(g,26).acquisition.summary,'특수진화');
 });
@@ -42,7 +42,7 @@ test('trade alternatives show device learning and held items without revealing t
 test('the sleeping road event hides its required item until the player actually owns it',()=>{
   const g=fixture(),p=entry(g,143),json=JSON.stringify(p.acquisition);
   assert.equal(p.acquisition.wildAllowed,false);assert.ok(p.acquisition.routes.some(r=>r.kind==='event'&&r.text.includes('연분홍시티')));
-  assert.ok(!/피리|로켓|비주기|민화|학습장치|독수/.test(json));assert.ok(json.includes('깨울 방법'));assert.equal(p.acquisition.summary,'특수 이벤트');
+  assert.ok(!/피리|로켓|비주기|민화|학습장치|독수/.test(json));assert.ok(json.includes('깨울 방법'));assert.equal(p.acquisition.summary,'이벤트');
   g.data.trainingDevice.fluteObtainedAt=now;assert.ok(entry(g,143).acquisition.routes.find(r=>r.kind==='event').text.includes('피리 보유 중'));
 });
 

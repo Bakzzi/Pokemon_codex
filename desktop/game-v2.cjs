@@ -7,7 +7,8 @@ const journal=require('./journal.cjs');
 const {captureTiming,captureText}=require('./capture-animation.js');
 const pacing=require('./battle-pacing.js');
 const validCount=n=>typeof n==='number'&&Number.isSafeInteger(n)&&n>=0;
-const STARTERS=[1,4,7,25];
+const STARTERS=[25],PARTY_SIZE=6;
+const STARTER_GIFTS=[{badge:'brock',id:1},{badge:'misty',id:4},{badge:'surge',id:7}];
 const SECRET_TRAINERS=new Set(['giovanni','champion']);
 const CAPTURE_LIMITS={yellow:2,red:3};
 const nursery=require('./daycare.cjs');
@@ -18,7 +19,7 @@ function actionPayload(kind,value){
   if(!ACTION_KINDS.has(kind))return null;
   if(kind==='select')return Number.isSafeInteger(Number(value))&&Number(value)>0?{uid:Number(value)}:null;
   if(kind==='device-learner')return value===null?{uid:null}:Number.isSafeInteger(value)&&value>0?{uid:value}:null;
-  if(kind==='slot')return Number.isInteger(value?.slot)&&value.slot>=0&&value.slot<4&&Number.isSafeInteger(value.id)&&value.id>0?{slot:value.slot,uid:value.id}:null;
+  if(kind==='slot')return Number.isInteger(value?.slot)&&value.slot>=0&&value.slot<PARTY_SIZE&&(value.id===null||Number.isSafeInteger(value.id)&&value.id>0)?{slot:value.slot,uid:value.id}:null;
   if(kind==='evolve')return Number.isSafeInteger(value?.id)&&value.id>0&&Number.isInteger(value.to)&&species.has(value.to)?{uid:value.id,to:value.to}:null;
   if(kind==='daycare-start')return Array.isArray(value)&&value.length===2&&value.every(uid=>Number.isSafeInteger(uid)&&uid>0)&&value[0]!==value[1]?{parents:[...value]}:null;
   return {};
@@ -43,7 +44,7 @@ function hasJohtoProgress(data){
   return ids.some(id=>species.get(Number(id))?.generation===2);
 }
 function freshData(saved={}){
-  return {version:2,outputTokens:saved.outputTokens||0,totalTokens:saved.totalTokens||0,baselines:saved.baselines||{},owned:{},seen:saved.seen||{},caught:saved.caught||{},seasonCaught:{},slots:[...STARTERS],activeId:25,badges:[],champion:false,johtoUnlocked:false,johtoDeferred:false,leagueBest:0,inventory:{},workTokens:0,battles:0,journal:[],eventSerial:saved.eventSerial||0,animation:null,battle:null,suspendedWild:null,switchUntil:0};
+  return {version:2,partyRevision:1,starterGifts:{},outputTokens:saved.outputTokens||0,totalTokens:saved.totalTokens||0,baselines:saved.baselines||{},owned:{},seen:saved.seen||{},caught:saved.caught||{},seasonCaught:{},slots:[25,null,null,null,null,null],activeId:25,badges:[],champion:false,johtoUnlocked:false,johtoDeferred:false,leagueBest:0,inventory:{},workTokens:0,battles:0,journal:[],eventSerial:saved.eventSerial||0,animation:null,battle:null,suspendedWild:null,switchUntil:0};
 }
 class Game {
   constructor(saved={},now=Date.now(),{random=Math.random}={}){
@@ -86,18 +87,26 @@ class Game {
     }
     this.data.rulesRevision=3;
     const newRoster=Object.keys(this.data.owned).length===0;
-    for(const id of STARTERS)if(newRoster||!this.data.caught[id])this.addPokemon(id,5,'starter',now);
+    if(newRoster)this.addPokemon(25,5,'starter',now);
+    const oldParty=this.data.partyRevision!==1;
+    this.data.starterGifts ||= {};
+    if(oldParty)for(const gift of STARTER_GIFTS){
+      const old=Object.values(this.data.owned).find(p=>p.origin==='starter'&&[gift.id,gift.id+1,gift.id+2].includes(p.id));
+      if(old||this.data.badges.includes(gift.badge))this.data.starterGifts[gift.id] ||= old?.obtainedAt||now;
+    }
+    this.data.partyRevision=1;
     if(saved.version!==2&&saved.family){
       const level=Math.max(5,levelOf((saved.outputTokens||0)/5000));
       const forms={electric:[25,25,26],fire:[4,5,6],water:[7,8,9],grass:[1,2,3]};
       const id=(forms[saved.family]||forms.electric)[level>=36?2:level>=16?1:0];
       const uid=Object.values(this.data.owned).find(p=>p.id===id)?.uid||this.addPokemon(id,level,'migration',now);
       const record=this.data.owned[uid];record.level=level;record.xp=xpAt(id,level);record.moves=learnedMoves(id,level);this.data.activeId=uid;
-      if(!this.data.slots.includes(id))this.data.slots[this.data.slots.indexOf((forms[saved.family]||forms.electric)[0])]=id;
+      if(!this.data.slots.includes(uid)){const slot=this.data.slots.indexOf((forms[saved.family]||forms.electric)[0]);this.data.slots[slot>=0?slot:0]=uid;}
     }
-    this.data.slots=this.data.slots.filter(id=>this.data.owned[id]&&species.get(this.data.owned[id].id)?.generation<=this.maxGeneration());
-    for(const id of Object.keys(this.data.owned).map(Number))if(this.data.slots.length<4&&!this.data.slots.includes(id)&&species.get(this.data.owned[id].id)?.generation<=this.maxGeneration())this.data.slots.push(id);
-    if(!this.data.slots.includes(this.data.activeId))this.data.activeId=this.data.slots[0];
+    const selected=new Set(),savedSlots=Array.isArray(this.data.slots)?this.data.slots:[];
+    this.data.slots=Array.from({length:PARTY_SIZE},(_,i)=>{const uid=savedSlots[i],p=this.data.owned[uid];if(!p||selected.has(uid)||species.get(p.id)?.generation>this.maxGeneration())return null;selected.add(uid);return uid;});
+    if(!selected.size){const uid=this.data.owned[this.data.activeId]?this.data.activeId:Object.keys(this.data.owned).map(Number)[0];this.data.slots[0]=uid;}
+    if(!this.data.slots.includes(this.data.activeId))this.data.activeId=this.data.slots.find(uid=>uid!==null&&!this.isBoarded(uid))||this.data.slots.find(uid=>uid!==null);
     training.init(this,now);
     const actionIds=new Set();
     this.data.pendingActions=(Array.isArray(this.data.pendingActions)?this.data.pendingActions:[]).slice(0,32).map(restoreAction).filter(a=>a&&!actionIds.has(a.id)&&actionIds.add(a.id));
@@ -120,7 +129,7 @@ class Game {
     journal.init(this.data,now);
     for(const id of STARTERS)this.addPokemon(id,5,'starter',now);
     training.init(this,now);
-    const text=month.key+' 새 시즌! 스타팅 4마리와 다시 출발 · 도감 '+this.experienceBoost().count+'종 유지';
+    const text=month.key+' 새 시즌! 피카츄와 다시 출발 · 도감 '+this.experienceBoost().count+'종 유지';
     this.log(text,'season',null,now);this.animate('result',{text},now);
   }
   kantoCaughtCount(){return Object.entries(this.data.caught).filter(([id,registered])=>registered&&species.get(Number(id))?.generation===1).length;}
@@ -130,8 +139,8 @@ class Game {
   }
   encounterBonus(){
     if(!this.data.champion)return null;
-    const selected=this.data.slots.map(uid=>this.data.owned[uid]).filter(Boolean),minimumLevel=selected.length===4?Math.min(...selected.map(p=>p.level)):0;
-    return {...championBonus(minimumLevel),minimumLevel,rates:encounterChances(true,minimumLevel)};
+    const selected=this.data.slots.map(uid=>this.data.owned[uid]).filter(Boolean),minimumLevel=selected.length?Math.min(...selected.map(p=>p.level)):0;
+    return {...championBonus(minimumLevel),minimumLevel,selectedCount:selected.length,rates:encounterChances(true,minimumLevel)};
   }
   wildOptions(){return {champion:this.data.champion,caught:this.data.caught,minimumLevel:this.encounterBonus()?.minimumLevel||0,additions:milestoneBonuses(this.data)};}
   specialEncounters(){
@@ -153,7 +162,7 @@ class Game {
   actionName(a){
     const name=uid=>species.get(this.data.owned[uid]?.id)?.name||'동료';
     if(a.kind==='select')return name(a.uid)+' 출전';
-    if(a.kind==='slot')return name(a.uid)+' · '+(a.slot+1)+'번 칸 배치';
+    if(a.kind==='slot')return a.uid===null?(a.slot+1)+'번 칸 비우기':name(a.uid)+' · '+(a.slot+1)+'번 칸 배치';
     if(a.kind==='evolve')return (species.get(a.from)?.name||name(a.uid))+' → '+species.get(a.to).name+' 진화';
     if(a.kind==='daycare-start')return a.parents.map(name).join(' · ')+' 키우미집 맡기기';
     if(a.kind==='device-claim')return '학습장치 받기';
@@ -169,7 +178,11 @@ class Game {
       if(a.uid!==null&&(!p||species.get(p.id)?.generation>this.maxGeneration()))return invalid('해당 동료를 사용할 수 없어요.');
       if(a.uid===this.data.trainingDevice.learnerUid)return done;
     }
-    if(['select','slot','evolve'].includes(a.kind)&&(!p||species.get(p.id)?.generation>this.maxGeneration()))return invalid('해당 동료를 사용할 수 없어요.');
+    if(['select','slot','evolve'].includes(a.kind)&&!(a.kind==='slot'&&a.uid===null)&&(!p||species.get(p.id)?.generation>this.maxGeneration()))return invalid('해당 동료를 사용할 수 없어요.');
+    if(a.kind==='slot'&&a.uid===null){
+      if(this.data.slots[a.slot]===null)return done;
+      if(!this.data.slots.some((uid,i)=>i!==a.slot&&uid!==null&&!this.isBoarded(uid)))return invalid('모험할 동료 한 마리는 남겨 주세요.');
+    }
     if(a.kind==='evolve'){
       if(p.id===a.to)return done;
       if(p.id!==a.from||!this.evolutions(a.uid,now).some(e=>e.to===a.to))return invalid('동료의 진화 경로가 바뀌었어요.');
@@ -223,7 +236,7 @@ class Game {
       this.data.trainingDevice.learnerUid=a.uid;result=true;
       this.log(this.actionName(a)+' 완료','training',a.uid?this.data.owned[a.uid].id:null,now);
     }
-    if(result&&['select','slot'].includes(a.kind))this.log(this.actionName(a)+' 완료','switch',this.data.owned[a.uid].id,now);
+    if(result&&['select','slot'].includes(a.kind))this.log(this.actionName(a)+' 완료','switch',this.data.owned[a.uid]?.id||null,now);
     return result;
   }
   requestAction(kind,value,now=Date.now()){
@@ -275,6 +288,14 @@ class Game {
     const abilitySlot=Math.floor(this.random()*species.get(id).abilities.length);
     this.data.owned[uid]={uid,id,level,xp:xpAt(id,level),moves:learnedMoves(id,level),abilitySlot,ability:abilityFor(id,abilitySlot),happiness:70,gender:nursery.genderFor(id,this.random),origin,obtainedAt:now};
     this.data.seen[id]=this.data.seen[id]||now;if(register){this.data.caught[id]=this.data.caught[id]||now;this.data.seasonCaught[id]=this.data.seasonCaught[id]||now;}return uid;
+  }
+  awardStarterGift(badge,now){
+    const gift=STARTER_GIFTS.find(g=>g.badge===badge);
+    if(!gift||!this.data.badges.includes(badge)||this.data.starterGifts[gift.id])return false;
+    const uid=this.addPokemon(gift.id,10,'gift',now);if(!uid)return false;
+    this.data.starterGifts[gift.id]=now;
+    const slot=this.data.slots.indexOf(null);if(slot>=0)this.data.slots[slot]=uid;
+    this.log(`${db.bosses.find(b=>b.id===badge).name}에게 ${species.get(gift.id).name} Lv.10을 받았다!`,'gift',gift.id,now);return uid;
   }
   log(text,kind='info',id=null,now=Date.now()){journal.record(this.data,{at:now,text,kind,id});}
   acknowledgeJournal(now=Date.now()){journal.acknowledge(this.data,now);return true;}
@@ -357,14 +378,21 @@ class Game {
     const battle=this.data.battle;
     if(battle&&(battle.party[id]?.hp<=0||(battle.kind==='trainer'&&!battle.party[id])))return false;
     if(battle&&!battleEngine.canSwitch(this,battle,id))return false;
-    if(!this.data.slots.includes(id)){if(battle?.kind==='trainer')return false;this.data.slots[this.data.slots.indexOf(this.data.activeId)]=id;}
+    if(!this.data.slots.includes(id)){if(battle?.kind==='trainer')return false;const empty=this.data.slots.indexOf(null);this.data.slots[empty>=0?empty:this.data.slots.indexOf(this.data.activeId)]=id;}
     const from=this.data.activeId,fromPokemon=this.snapshot(now).hero;this.data.activeId=id;
     if(battle){if(!battle.party[id]){battle.party[id]=this.memberCombatant(this.data.owned[id]);battleEngine.invalidate(battle);}battle.pendingSwitch=id;}
     this.animate('switch',{from:this.data.owned[from].id,to:this.data.owned[id].id,fromPokemon,toPokemon:this.snapshot(now).hero,text:`${species.get(this.data.owned[id].id).name}, 너로 정했다!`},now);return true;
   }
   setSlot(slot,id,now=Date.now()){
-    slot=Number(slot);id=Number(id);
-    if(!Number.isInteger(slot)||slot<0||slot>3||!this.data.owned[id]||species.get(this.data.owned[id].id).generation>this.maxGeneration()||this.isBoarded(id)||this.data.battle?.kind==='trainer'||this.data.pendingBattle||now<this.data.switchUntil)return false;
+    slot=Number(slot);id=id===null?null:Number(id);
+    if(!Number.isInteger(slot)||slot<0||slot>=PARTY_SIZE||this.data.battle?.kind==='trainer'||this.data.pendingBattle||now<this.data.switchUntil)return false;
+    if(id===null){
+      if(this.data.battle)return false;
+      const next=this.data.slots.find((uid,i)=>i!==slot&&uid!==null&&!this.isBoarded(uid));if(next===undefined)return false;
+      if(this.data.slots[slot]===this.data.activeId&&!this.select(next,now))return false;
+      this.data.slots[slot]=null;return true;
+    }
+    if(!this.data.owned[id]||species.get(this.data.owned[id].id).generation>this.maxGeneration()||this.isBoarded(id))return false;
     const old=this.data.slots[slot],other=this.data.slots.indexOf(id);if(old===id)return true;
     if(old===this.data.activeId){if(!this.select(id,now))return false;this.data.slots[slot]=id;if(other>=0)this.data.slots[other]=old;}
     else {this.data.slots[slot]=id;if(other>=0)this.data.slots[other]=old;}return true;
@@ -399,7 +427,7 @@ class Game {
     this.data.captureAnimation=null;
     const hero=this.data.owned[this.data.activeId],id=pickWild(this.maxGeneration(),this.random,hero.level,this.wildOptions()),p=species.get(id);
     const level=Math.max(wildMinimum(p),Math.min(100,hero.level-5+Math.floor(this.random()*11)));
-    const party=Object.fromEntries(this.data.slots.filter(uid=>!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
+    const party=Object.fromEntries(this.data.slots.filter(uid=>uid!==null&&!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
     this.data.battle={kind:'wild',foe:combatant(id,level,null,{abilitySlot:Math.floor(this.random()*p.abilities.length),gender:nursery.genderFor(id,this.random)}),party,turn:0,captureAttempts:0,captureByHealth:{yellow:0,red:0},startedAt:now};
     const first=!this.data.seen[id];this.data.seen[id]=this.data.seen[id]||now;
     this.animate('encounter',{text:`야생 ${p.name} Lv.${level} 등장!`,id},now);
@@ -417,7 +445,7 @@ class Game {
   challengeName(index){return training.battles[index]?.name||(index===8?'포켓몬 리그':(this.trainerRevealed(db.bosses[index])?db.bosses[index].name:'???')+' 체육관');}
   challenge(index,now=Date.now()){
     index=training.battles[index]?index:Number(index);
-    if(!this.canChallenge(index)||this.data.battle?.kind==='trainer'||this.data.battle?.storyId===index)return false;
+    if(!this.canChallenge(index)||this.data.battle?.kind==='trainer'&&index!=='road-snorlax'||this.data.battle?.storyId===index)return false;
     if(this.data.pendingChallenge)return this.data.pendingChallenge.index===index;
     if(this.data.battle||this.data.pendingBattle||now<this.data.switchUntil||now<this.nextTick){
       this.data.pendingChallenge={index,queuedAt:now};
@@ -436,7 +464,7 @@ class Game {
     this.data.manualSelection=false;
     this.data.captureAnimation=null;
     this.data.suspendedWild=null;
-    const party=Object.fromEntries(this.data.slots.filter(id=>!this.isBoarded(id)).map(id=>{const p=this.data.owned[id];return [id,this.memberCombatant(p)];}));
+    const party=Object.fromEntries(this.data.slots.filter(id=>id!==null&&!this.isBoarded(id)).map(id=>{const p=this.data.owned[id];return [id,this.memberCombatant(p)];}));
     const snorlax=index==='road-snorlax';
     this.data.battle={kind:snorlax?'wild':'trainer',bossIndex:index,storyId:training.battles[index]?index:null,rocketChain:training.rocketOrder.includes(index),foeIndex:0,party,turn:0,captureAttempts:0,...(snorlax?{captureByHealth:{yellow:0,red:0}}:{}),startedAt:now};
     this.nextTrainer(now);
@@ -505,7 +533,7 @@ class Game {
       this.endChallenge(true,now);this.data.animation.text='로켓단을 모두 물리쳤다! 민화에게 도전할 수 있어요.';return;
     }
     const boss=this.battleBoss(b);this.log(`${boss.name}에게 승리!${boss.badge?' '+boss.badge+' 획득':''}`,'badge',null,now);
-    if(b.bossIndex<8){if(!this.data.badges.includes(boss.id))this.data.badges.push(boss.id);const flute=boss.id==='erika'&&training.awardFlute(this,now);this.endChallenge(true,now);if(flute)this.data.animation.text='민화에게 승리! 무지개뱃지와 포켓몬피리를 받았다!';}
+    if(b.bossIndex<8){if(!this.data.badges.includes(boss.id))this.data.badges.push(boss.id);const gift=this.awardStarterGift(boss.id,now),flute=boss.id==='erika'&&training.awardFlute(this,now);this.endChallenge(true,now);if(gift)this.data.animation.text=boss.name+'에게 승리! '+species.get(this.data.owned[gift].id).name+' Lv.10이 동료가 됐다!';if(flute)this.data.animation.text='민화에게 승리! 무지개뱃지와 포켓몬피리를 받았다!';}
     else if(b.bossIndex<12){this.data.leagueBest=Math.max(this.data.leagueBest,b.bossIndex-7);b.bossIndex++;b.foeIndex=0;this.nextTrainer(now);}
     else {
       const first=!this.data.champion;this.data.champion=true;this.data.leagueBest=5;
@@ -609,7 +637,7 @@ class Game {
     const uncertain=[...this.sessions.values()].some(s=>s.phase==='working'&&now-s.at>=600000);
     const phase=active.length?'working':uncertain?'unknown':recent&&now-recent.at<16000?recent.phase:'idle',available=[this.limits.primary,this.limits.secondary].filter(Boolean);
     const limits=[300,10080].map(minutes=>{const l=available.find(x=>x.minutes===minutes),fresh=l&&l.resetsAt*1000>now;return {label:minutes===300?'5시간':'주간',left:fresh?Math.round(100-l.used):null,resetsAt:fresh?l.resetsAt:null};});
-    return {season:{...this.data.season,nextResetAt:monthOf(now).end,pending:this.seasonDue(now)},trainingDevice:training.snapshot(this),pendingActions:this.pendingActions(now),experienceBoost:this.experienceBoost(),version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,...healthView(hero||{hp:maxHp,maxHp}),status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,...healthView(b.foe),status:b.foe.status}:null,slots:this.data.slots.map(uid=>({...view(this.data.owned[uid].id),uid,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0})),battle:b?{kind:b.kind,storyId:b.storyId||null,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?this.battleBoss(b).name:null,foeIndex:b.kind==='trainer'?Math.min(b.foeIndex,this.battleBoss(b).team.length-1):b.foeIndex,teamSize:b.kind==='trainer'?this.battleBoss(b).team.length:null}:null,pendingChallenge:this.data.pendingChallenge?{...this.data.pendingChallenge,name:this.challengeName(this.data.pendingChallenge.index)}:null,animation:this.data.animation,capture:this.data.captureAnimation||null,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
+    return {season:{...this.data.season,nextResetAt:monthOf(now).end,pending:this.seasonDue(now)},trainingDevice:training.snapshot(this),pendingActions:this.pendingActions(now),experienceBoost:this.experienceBoost(),version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,...healthView(hero||{hp:maxHp,maxHp}),status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,...healthView(b.foe),status:b.foe.status}:null,slots:this.data.slots.map(uid=>uid===null?{uid:null,id:null,name:'빈칸',empty:true,selected:false,boarded:false,fainted:false}:{...view(this.data.owned[uid].id),uid,empty:false,level:this.data.owned[uid].level,selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0}),battle:b?{kind:b.kind,storyId:b.storyId||null,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?this.battleBoss(b).name:null,foeIndex:b.kind==='trainer'?Math.min(b.foeIndex,this.battleBoss(b).team.length-1):b.foeIndex,teamSize:b.kind==='trainer'?this.battleBoss(b).team.length:null}:null,pendingChallenge:this.data.pendingChallenge?{...this.data.pendingChallenge,name:this.challengeName(this.data.pendingChallenge.index)}:null,animation:this.data.animation,capture:this.data.captureAnimation||null,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
   }
   panelState(now=Date.now()){
     const hints=collectionHints(this);
@@ -622,4 +650,4 @@ class Game {
       bosses:db.bosses.map(b=>{const revealed=this.trainerRevealed(b);return {...b,revealed,name:revealed?b.name:'???',team:revealed?b.team:[]};}),gymAccess:db.bosses.slice(0,8).map((_,i)=>this.canChallenge(i)),leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].map(e=>!this.trainerRevealed(db.bosses[7])&&e.kind==='challenge'&&e.text.startsWith(db.bosses[7].name+' 체육관 도전 예약')?{...e,text:e.text.replace(db.bosses[7].name,'???')}:e).sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:[...(this.data.trainingDevice.fluteObtainedAt?[{id:'poke-flute',name:'포켓몬피리',count:1}]:[]),...(training.has(this)?[{id:'training-device',name:'학습장치',count:1}]:[]),...Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name,count}))]};
   }
 }
-module.exports={Game,STARTERS};
+module.exports={Game,STARTERS,PARTY_SIZE,STARTER_GIFTS};

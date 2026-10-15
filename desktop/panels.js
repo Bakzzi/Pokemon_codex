@@ -71,7 +71,10 @@ function renderDex(){
     const current=state.trainingDevice.learnerUid===member.uid,queued=state.pendingActions.some(a=>a.kind==='device-learner'&&a.uid===member.uid),b=node('button','device-register',current?'학습장치 등록 중 · 경험치 10%':queued?'학습장치 등록 예약됨':'학습장치에 등록 · 경험치 10%');b.disabled=current||queued;b.onclick=()=>window.buddy.action('device-learner',member.uid);root.append(b);
   }
   root.append(node('h3','','빠른 선택 칸에 배치'));
-  const assign=node('div','assign');state.slots.forEach((s,i)=>{const queued=state.pendingActions.some(a=>a.kind==='slot'&&a.slot===i&&a.uid===member.uid),b=node('button');b.dataset.assign=i;b.title=(i+1)+'번 칸 · '+s.name+(queued?' · 배치 예약됨':' · 배틀 중에는 종료 후 배치');b.disabled=queued||s.uid===member.uid;b.append(img(s.id),document.createTextNode((i+1)+'번'+(queued?' · 예약':'')));b.onclick=()=>window.buddy.action('slot',{slot:i,id:member.uid});assign.append(b);});root.append(assign);
+  const assign=node('div','assign');state.slots.forEach((s,i)=>{const queued=state.pendingActions.some(a=>a.kind==='slot'&&a.slot===i&&a.uid===member.uid),b=node('button');b.dataset.assign=i;b.title=(i+1)+'번 칸 · '+s.name+(queued?' · 배치 예약됨':' · 배틀 중에는 종료 후 배치');b.disabled=queued||s.uid===member.uid;b.append(s.empty?node('span','empty-slot','—'):img(s.id),document.createTextNode((i+1)+'번'+(queued?' · 예약':'')));b.onclick=()=>window.buddy.action('slot',{slot:i,id:member.uid});assign.append(b);});root.append(assign);
+  const assigned=state.slots.findIndex(s=>s.uid===member.uid);
+  if(assigned>=0){const queued=state.pendingActions.some(a=>a.kind==='slot'&&a.slot===assigned&&a.uid===null),remove=node('button','',queued?'칸 비우기 예약됨':'선택 칸에서 빼기');remove.dataset.removeSlot=assigned;remove.disabled=queued||!state.slots.some((s,i)=>i!==assigned&&!s.empty&&!s.boarded);remove.title=remove.disabled&&!queued?'모험할 동료 한 마리는 남겨 주세요.':'배틀 중에는 종료 후 칸을 비워요.';remove.onclick=()=>window.buddy.action('slot',{slot:assigned,id:null});root.append(remove);}
+  root.append(node('p','muted','최대 6마리 · 빈칸이 있어도 모험할 수 있어요.'));
   root.append(node('p','muted','특성 · '+member.ability));
   root.append(node('h3','','배운 기술 '+member.moves.length+'개 · 자동 사용'));const list=node('ul','move-list');for(const m of member.moves||[])list.append(node('li','',m.name));root.append(list);
   for(const e of member.evolutions){
@@ -139,7 +142,7 @@ function renderBosses(){
     $('johto-title').textContent=unlocked?'성도 지방이 열렸어요':stay?'관동에서 도감을 완성하는 중':'다음 모험을 선택하세요';
     $('johto-note').textContent='관동 도감 '+state.kantoCaughtCount+' / 151 · '+(unlocked?'관동 151종과 성도 100종을 함께 만날 수 있어요.':stay?'151종 수집을 계속해요. 원할 때 언제든 2세대를 해금할 수 있어요.':'151종을 모을 때까지 관동에 머물러도 좋아요. 2세대를 해금하면 성도 100종이 추가돼요.');
     const bonus=state.encounterBonus,pct=n=>(n*100).toLocaleString('ko-KR',{maximumFractionDigits:3})+'%';
-    $('champion-bonus').textContent=bonus?'챔피언 기본 확률 · 희귀 '+pct(bonus.rates.rare)+' · 전설 '+pct(bonus.rates.legendary)+' · 환상 '+pct(bonus.rates.mythical)+'\n선택한 4마리 최저 Lv.'+bonus.minimumLevel+' · 출현 '+bonus.rareMultiplier+'배 · 미등록 종 '+bonus.uncaughtWeight+'배 우대\n챔피언 기본(출현 1.5배 · 미등록 가중치 2) × 레벨 보너스 '+bonus.levelMultiplier+'배\n네 마리 모두 Lv.71 이상 3배 · Lv.81 이상 4배 · Lv.91 이상 5배. 종별 추가 확률은 특별한 만남에 더해 표시해요.':'';
+    $('champion-bonus').textContent=bonus?'챔피언 기본 확률 · 희귀 '+pct(bonus.rates.rare)+' · 전설 '+pct(bonus.rates.legendary)+' · 환상 '+pct(bonus.rates.mythical)+'\n배치한 '+bonus.selectedCount+'마리 최저 Lv.'+bonus.minimumLevel+' · 출현 '+bonus.rareMultiplier+'배 · 미등록 종 '+bonus.uncaughtWeight+'배 우대\n챔피언 기본(출현 1.5배 · 미등록 가중치 2) × 레벨 보너스 '+bonus.levelMultiplier+'배\n배치한 동료 모두 Lv.71 이상 3배 · Lv.81 이상 4배 · Lv.91 이상 5배. 빈칸은 제외하며 종별 추가 확률은 특별한 만남에 더해 표시해요.':'';
     $('johto-stay').hidden=unlocked||stay;$('johto-unlock').hidden=unlocked;
   }
 }
@@ -161,7 +164,7 @@ function renderStory(){
     const b=node('button','',ongoing?'배틀 중':reserved?'도전 예약됨':step.done?'승리 완료':'도전하기');b.dataset.story=step.id;b.disabled=ongoing||busy||!!queued||!step.available;b.onclick=()=>window.buddy.action('challenge',step.id);row.append(b);return row;
   }));
   const road=d.steps.find(s=>s.id==='road-snorlax'),body=node('div','snorlax-body'),ongoing=state.battle?.storyId===road.id,reserved=queued?.index===road.id;
-  const b=node('button','',ongoing?'배틀 중':reserved?'피리 사용 예약됨':road.done&&d.snorlaxCaught?'포획 완료':!d.fluteObtained?'깨울 방법이 필요해요':road.done?'다시 포켓몬피리 사용':'포켓몬피리 사용');b.dataset.story=road.id;b.disabled=ongoing||busy||!!queued||!road.available;b.onclick=()=>window.buddy.action('challenge',road.id);
+  const b=node('button','',ongoing?'배틀 중':reserved?'피리 사용 예약됨':road.done&&d.snorlaxCaught?'포획 완료':!d.fluteObtained?'깨울 방법이 필요해요':road.done?'다시 포켓몬피리 사용':'포켓몬피리 사용');b.dataset.story=road.id;b.disabled=ongoing||!!queued||!road.available;b.title=busy&&road.available?'현재 관장 배틀이 끝난 뒤 사용하도록 예약해요.':'';b.onclick=()=>window.buddy.action('challenge',road.id);
   body.append(node('b','','잠만보 · Lv.'+road.team[0].level),node('p','muted',d.fluteObtained?'포켓몬피리 · 보유 중':'깊이 잠들어 있어 길을 지나갈 수 없어요.'),b);$('snorlax-encounter').replaceChildren(img(143,'snorlax-sprite'),body);
 }
 function renderDevice(){

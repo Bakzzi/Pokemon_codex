@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),{xpAt}=require('../pokemon.cjs'),{combatant}=require('../battle.cjs');
+const {Game}=require('./helpers/four-party.cjs'),{xpAt}=require('../pokemon.cjs'),{combatant}=require('../battle.cjs');
 const now=Date.parse('2026-10-15T03:00:00Z');
 const fixture=()=>new Game({},now,{random:()=>.73});
 function level(g,uid,n){const p=g.data.owned[uid];p.level=n;p.xp=xpAt(p.id,n);}
@@ -49,5 +49,5 @@ test('stones, friendship and trade paths retain their own conditions, while a le
 
 test('manual requests still run once, and a season reset clears old high-level evolution eligibility',()=>{
   const g=fixture();level(g,4,16);assert.ok(g.requestAction('evolve',{id:4,to:5},now));advance(g);assert.equal(g.data.journal.filter(e=>e.kind==='evolution').length,1);
-  const loaded=new Game(g.data,Date.parse('2026-11-01T00:00:00+09:00'));assert.equal(loaded.data.owned[4].level,5);assert.equal(loaded.data.owned[4].id,4);assert.equal(loaded.autoLevelEvolution(loaded.data.switchUntil),false);
+  const loaded=new Game(g.data,Date.parse('2026-11-01T00:00:00+09:00'));assert.equal(loaded.data.owned[25].level,5);assert.equal(loaded.data.owned[4],undefined);assert.equal(loaded.autoLevelEvolution(loaded.data.switchUntil),false);
 });

@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),{species,xpAt,learnedMoves}=require('../pokemon.cjs'),{combatant}=require('../battle.cjs'),nursery=require('../daycare.cjs');
+const {Game}=require('./helpers/four-party.cjs'),{species,xpAt,learnedMoves}=require('../pokemon.cjs'),{combatant}=require('../battle.cjs'),nursery=require('../daycare.cjs');
 const now=Date.parse('2026-10-14T03:00:00Z');
 function fixture(){return new Game({},now,{random:()=>.73});}
 function advance(g){return g.tick(Math.max(now,g.nextTick,g.data.switchUntil));}
@@ -67,7 +67,7 @@ test('a successful capture is fully finalized before any queued evolution or slo
 });
 
 test('invalid, stale and malformed requests are rejected or removed without consuming a stone',()=>{
-  const g=fixture();for(const [kind,value] of [['select',9999],['slot',{slot:4,id:1}],['evolve',{id:4,to:6}],['daycare-start',[1,1]],['johto-unlock',undefined],['abandon',undefined]])assert.equal(g.requestAction(kind,value,now),kind==='abandon');
+  const g=fixture();for(const [kind,value] of [['select',9999],['slot',{slot:6,id:1}],['evolve',{id:4,to:6}],['daycare-start',[1,1]],['johto-unlock',undefined],['abandon',undefined]])assert.equal(g.requestAction(kind,value,now),kind==='abandon');
   assert.ok(g.requestAction('evolve',{id:4,to:5},now));g.data.owned[4].id=6;assert.ok(advance(g));assert.equal(g.data.pendingActions.length,0);assert.ok(g.data.journal.some(e=>e.text.includes('진화 경로가 바뀌었어요.')));
   g.data.pendingActions=[null,{id:1,kind:'evolve',uid:1,to:9999,from:1,queuedAt:now},{id:2,kind:'slot',slot:99,uid:1,queuedAt:now}];assert.equal(new Game(g.data,now).data.pendingActions.length,0);
 });

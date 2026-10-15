@@ -86,7 +86,7 @@ function claim(game,now,present=true){
 }
 function snapshot(game){
   const d=game.data.trainingDevice,p=game.data.owned[d.learnerUid],rows=requirements(game);
-  return {...d,routeOpen:routeOpen(game),rocketUnlocked:rocketUnlocked(game),fluteObtained:!!d.fluteObtainedAt,snorlaxCaught:!!game.data.caught[143],rocketCompleted:rocketOrder.filter(id=>d[progressKeys[id]]).length,nextRocket:nextRocket(game),obtained:has(game),canClaim:canClaim(game),requirements:rows,learner:p?{uid:p.uid,id:p.id,level:p.level,boarded:game.isBoarded(p.uid),active:p.uid===game.data.activeId}:null,
+  return {...d,routeOpen:routeOpen(game),rocketUnlocked:rocketUnlocked(game),fluteObtained:!!d.fluteObtainedAt,snorlaxCaught:game.registeredThisSeason(143),rocketCompleted:rocketOrder.filter(id=>d[progressKeys[id]]).length,nextRocket:nextRocket(game),obtained:has(game),canClaim:canClaim(game),requirements:rows,learner:p?{uid:p.uid,id:p.id,level:p.level,boarded:game.isBoarded(p.uid),active:p.uid===game.data.activeId}:null,
     steps:Object.values(battles).map(b=>{
       const revealed=rows.find(r=>r.id===b.id)?.revealed!==false;
       return {...b,name:revealed?b.name:'???',team:revealed?b.team.map(p=>({...p,name:species.get(p.id).name})):[],revealed,done:!!d[progressKeys[b.id]],available:canChallenge(game,b.id)};

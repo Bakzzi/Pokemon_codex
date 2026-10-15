@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),{data,species,rarity,wildMinimum,pickWild,encounterChances,xpAt}=require('../pokemon.cjs'),nursery=require('../daycare.cjs');
+const {Game}=require('./helpers/four-party.cjs'),{data,species,rarity,wildMinimum,pickWild,encounterChances,xpAt}=require('../pokemon.cjs'),nursery=require('../daycare.cjs');
 const now=Date.parse('2026-10-14T07:00:00Z');
 const rng=seed=>()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
 function champion(){const g=new Game({},now,{random:()=>.73});g.data.champion=true;g.data.leagueBest=5;return g;}
