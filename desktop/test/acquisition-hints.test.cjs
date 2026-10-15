@@ -61,3 +61,20 @@ test('hints refresh with active level, generation, registration and champion bon
   const boosted=entry(g,145).acquisition.routes.find(r=>r.kind==='wild').chance;assert.ok(boosted>base);assert.equal(boosted,wildDistribution(1,71,g.wildOptions()).pokemon.find(p=>p.id===145).chance);
   g.data.caught[145]=now;assert.equal(entry(g,145).acquisition.routes.find(r=>r.kind==='wild').chance,wildDistribution(1,71,g.wildOptions()).pokemon.find(p=>p.id===145).chance);
 });
+
+test('hatch acquisition hints never require owning the target itself, including Lapras and Tauros',()=>{
+  for(const generation of [1,2]){
+    const g=fixture();if(generation===2){g.data.champion=true;g.unlockJohto(now);}
+    for(const id of [128,131]){const p=entry(g,id);assert.ok(!p.acquisition.routes.some(r=>r.kind==='hatch'));assert.ok(!p.acquisition.summary.includes('부화'));}
+    for(const p of g.panelState(now).collection)for(const r of p.acquisition.routes.filter(r=>r.kind==='hatch'))assert.notEqual(r.from,p.id);
+    g.addPokemon(128,20,'catch',now);g.addPokemon(131,20,'catch',now);
+    for(const id of [128,131])assert.ok(!entry(g,id).acquisition.routes.some(r=>r.kind==='hatch'));
+  }
+});
+
+test('different-parent hatch routes show the exact parent and offspring, while same-species breeding remains playable',()=>{
+  const g=fixture(),nursery=require('../daycare.cjs');g.addPokemon(134,20,'catch',now);
+  const eevee=entry(g,133).acquisition.routes.find(r=>r.kind==='hatch');assert.equal(eevee.from,134);assert.match(eevee.text,/부모 No\.134 샤미드.*부화 결과 No\.133 \?\?\?/);
+  const ditto=g.addPokemon(132,20,'catch',now);
+  for(const id of [128,131]){const uid=g.addPokemon(id,20,'catch',now),preview=nursery.predict(g,[uid,ditto]);assert.equal(preview.compatible,true);assert.deepEqual(preview.offspring.map(p=>p.id),[id]);}
+});

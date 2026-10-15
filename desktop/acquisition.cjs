@@ -53,10 +53,11 @@ function collectionHints(game){
       const text=ref(rule.from)+' · '+conditions.join(' + ')+' → '+(automatic?'배틀·결과 연출 후 자동진화':'도감에서 진화 선택·예약');
       routes.push({kind:'evolution',from:rule.from,text,...(rule.item?{note:'진화 도구는 야생 배틀 승리·포획 후 발견할 수 있어요.'}:{})});
     }
-    const family=[...(eggs.get(p.id)||[])].sort((a,b)=>Number(owned.has(b.from))-Number(owned.has(a.from))||Number(!!game.data.seen[b.from])-Number(!!game.data.seen[a.from])||a.from-b.from);
+    // Acquiring a missing species must not require already owning that same species.
+    const family=[...(eggs.get(p.id)||[])].filter(parent=>parent.from!==p.id).sort((a,b)=>Number(owned.has(b.from))-Number(owned.has(a.from))||Number(!!game.data.seen[b.from])-Number(!!game.data.seen[a.from])||a.from-b.from);
     if(family.length){
       const parent=family[0];
-      routes.push({kind:'hatch',from:parent.from,text:ref(parent.from)+' 계열의 번식 가능한 동료와 메타몽을 포켓기어의 키우미집에 맡겨 부화'+(parent.chance<1?' · 알에서 '+percent(parent.chance):'')+' · 부모 동료를 먼저 마련해야 해요.'});
+      routes.push({kind:'hatch',from:parent.from,text:'부모 '+ref(parent.from)+' + 메타몽을 키우미집에 맡김 → 부화 결과 '+ref(p.id)+(parent.chance<1?' · 알에서 '+percent(parent.chance):'')+' · 부모 동료를 먼저 마련해야 해요.'});
     }
     const labels={wild:activeLevel<minimum?'Lv.'+minimum+'부터 야생':'야생',starter:'스타팅',event:'피리 이벤트',evolution:'진화',hatch:'부화'};
     result.set(p.id,{wildAllowed,routes,summary:[...new Set(routes.map(r=>labels[r.kind]))].join(' · '),note:wildAllowed?'야생 확률은 현재 출전 동료와 진행 상태에서 다음 야생 1회에 만날 확률이에요. 포획 성공률과는 달라요.':'일반 야생에서는 출현하지 않아요.'});
