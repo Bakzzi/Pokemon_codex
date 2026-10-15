@@ -20,7 +20,7 @@ async function main(){
   for(const name of ['main.cjs','preload.cjs','game.cjs','game-v2.cjs','battle.cjs','battle-ai.cjs','training-device.cjs','capture-animation.js','move-effects.js','battle-pacing.js','battle-ui.css','badge-case.css','journal.cjs','daycare.cjs','season.cjs','pokemon.cjs','acquisition.cjs','window-placement.cjs','codex-reader.cjs','store.cjs','index.html','widget.css','renderer.js','panels.html','panels.css','panels.js'])
     await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));
   for(const name of ['assets','data'])await fs.cp(path.join(root,'desktop',name),path.join(appDir,'desktop',name),{recursive:true});
-  for(const name of ['remote-agent.cjs','remote-codex.cjs','known-hosts.cjs','connections.js','connections.css'])await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));
+  for(const name of ['remote-agent.cjs','remote-codex.cjs','known-hosts.cjs','connections.js','connections.css','auto-update.cjs','update-helper.ps1'])await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));
   const lock=JSON.parse(await fs.readFile(path.join(root,'package-lock.json'),'utf8'));
   for(const [location,meta] of Object.entries(lock.packages))if(location.startsWith('node_modules/')&&!meta.dev){
     try{await fs.cp(path.join(root,location),path.join(appDir,location),{recursive:true,filter:file=>!file.endsWith('.map')&&!file.includes(path.sep+'esm'+path.sep)});}
@@ -29,6 +29,7 @@ async function main(){
   await fs.writeFile(path.join(appDir,'package.json'),JSON.stringify({name:pkg.name,version:pkg.version,main:'desktop/main.cjs',license:pkg.license},null,2));
   for(const name of ['README.md','THIRD_PARTY_NOTICES.md'])await fs.copyFile(path.join(root,name),path.join(target,name));
   await fs.copyFile(path.join(root,'LICENSE'),path.join(target,'LICENSE-Digimon-mod.txt'));
+  require('./release-manifest.cjs').releaseManifest(target,pkg.version);
   console.log('Portable release: '+target);
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

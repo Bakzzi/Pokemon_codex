@@ -8,10 +8,12 @@ const {CodexReader}=require('./codex-reader.cjs');
 const {RemoteCodex}=require('./remote-codex.cjs');
 const {Store}=require('./store.cjs');
 const placement=require('./window-placement.cjs');
+const {AutoUpdate,canRestart,markHealthy}=require('./auto-update.cjs');
 const demo=process.argv.includes('--demo'),smoke=process.argv.includes('--smoke-test');
 const dataDir=smoke?(process.env.POKEMON_SMOKE_DIR||path.join(__dirname,'.smoke')):demo?path.join(__dirname,'.demo'):path.join(app.getPath('appData'),'PokemonCodexBuddy');
 app.setPath('userData',dataDir);app.setName('Pokemon Codex Buddy');app.disableHardwareAcceleration();
 let win,panel,tray,timer,game,store,reader,remotes,widgetPlacement,settings={},busy=false,lastRead=0,previous='',panelPrevious='',notice='';
+let updater,updating=false,healthyTicks=0;
 const gotLock=app.requestSingleInstanceLock();
 if(!gotLock)app.quit();
 else{
@@ -25,13 +27,14 @@ function secure(window){
 }
 function snapshot(){
   const local=reader?.status||{connected:false,files:0},remote=remotes?.snapshot().connections||[],connected=remote.filter(e=>e.connected).length;
-  return {...game.snapshot(),source:{...local,connected:local.connected||connected>0,remoteConnected:connected,localConnected:local.connected},compact:!!settings.compact,pinned:settings.pinned!==false,demo:demo||smoke,notice};
+  const update=updater?.snapshot();
+  return {...game.snapshot(),source:{...local,connected:local.connected||connected>0,remoteConnected:connected,localConnected:local.connected},compact:!!settings.compact,pinned:settings.pinned!==false,demo:demo||smoke,update,notice:notice||update?.notice||''};
 }
 function publish(force=false){
   const state=snapshot(),encoded=JSON.stringify(state);
   if(win&&!win.isDestroyed()&&(force||encoded!==previous)){win.webContents.send('state',state);previous=encoded;}
   if(panel&&!panel.isDestroyed()){
-    const state={...game.panelState(),remote:remotes?.snapshot()||{connections:[],canRemember:false},notice,demo:demo||smoke},encoded=JSON.stringify(state);
+    const state={...game.panelState(),remote:remotes?.snapshot()||{connections:[],canRemember:false},update:updater?.snapshot(),notice:notice||updater?.snapshot().notice||'',demo:demo||smoke},encoded=JSON.stringify(state);
     if(force||encoded!==panelPrevious){panel.webContents.send('state',state);panelPrevious=encoded;}
   }
 }
@@ -101,18 +104,31 @@ async function start(){
   if(smoke)win.setOpacity(0);else createTray();
   win.showInactive();
   if(reader)await reader.poll();remotes?.start();save();publish(true);
+  if(!smoke&&!demo&&process.platform==='win32'&&app.isPackaged&&path.basename(process.execPath).toLowerCase()==='pokemoncodex.exe'){
+    try{
+      updater=new AutoUpdate({installRoot:path.dirname(process.execPath),dataDir,version:app.getVersion(),enabled:settings.autoUpdate!==false,
+        onChange:()=>{updateTray();publish(true);},canRestart:()=>!busy&&!updating&&!(panel&&!panel.isDestroyed()&&panel.isVisible())&&canRestart(game),
+        prepareRestart:()=>{if(busy||updating||!canRestart(game))return false;updating=true;save();},resume:()=>{updating=false;},quit:()=>app.quit()});
+      updater.start();updateTray();
+    }catch(error){console.error('Automatic updates unavailable:',error.message);}
+  }
   if(!smoke)timer=setInterval(async()=>{
-    if(busy)return;busy=true;
+    if(busy||updating)return;
+    // Claim the gap before creating the next action; continuous adventures
+    // otherwise start another animation before an updater ever sees a gap.
+    if(updater&&await updater.maybeApply())return;
+    if(busy||updating)return;busy=true;
     try{
       if(reader&&Date.now()-lastRead>=1500){await reader.poll();lastRead=Date.now();}
       remotes?.poll();game.tick();save();publish();
+      if(++healthyTicks===3){const token=process.argv.find(a=>a.startsWith('--update-transaction='))?.split('=')[1];if(token)try{markHealthy(path.dirname(process.execPath),app.getVersion(),token);}catch(error){console.error('Update startup confirmation failed:',error.message);}}
     }catch(error){console.error(error);notice='진행 저장 오류 · 저장 폴더를 확인해 주세요.';clearInterval(timer);publish(true);}
     finally{busy=false;}
   },350);
   if(process.argv.includes('--capture-once')&&!smoke)setTimeout(async()=>{
     try{
       const s=snapshot();
-      fs.writeFileSync(path.join(dataDir,'launch-check.json'),JSON.stringify({checkedAt:new Date().toISOString(),visible:win.isVisible(),bounds:win.getBounds(),version:s.version,phase:s.phase,source:s.source,hero:s.hero.name,level:s.level,outputTokens:s.outputTokens,limits:s.limits,caughtCount:s.caughtCount,generation:s.generation,slots:s.slots.map(p=>p.id)},null,2));
+      fs.writeFileSync(path.join(dataDir,'launch-check.json'),JSON.stringify({checkedAt:new Date().toISOString(),visible:win.isVisible(),bounds:win.getBounds(),version:s.version,appVersion:app.getVersion(),phase:s.phase,source:s.source,hero:s.hero.name,level:s.level,outputTokens:s.outputTokens,limits:s.limits,caughtCount:s.caughtCount,generation:s.generation,slots:s.slots.map(p=>p.id)},null,2));
       fs.writeFileSync(path.join(dataDir,'widget.png'),(await win.webContents.capturePage()).toPNG());
     }catch(error){console.error(error.message);}
   },3000);
@@ -128,12 +144,20 @@ function createTray(){
   }
   tray=new Tray(nativeImage.createFromBitmap(pixels,{width:16,height:16}));
   tray.setToolTip('Pokémon Codex Buddy');
+  updateTray();tray.on('click',()=>win.isVisible()?win.hide():win.showInactive());
+}
+function updateTray(){
+  if(!tray||tray.isDestroyed())return;
+  const update=updater?.snapshot();
   tray.setContextMenu(Menu.buildFromTemplate([
     {label:'포켓몬 보기',click:()=>win.showInactive()},{label:'포켓기어',click:()=>openPanel('collection')},
     {label:'도전하기',click:()=>openPanel('challenge')},{label:'가방보기',click:()=>openPanel('daycare')},{label:'모험 기록',click:()=>openPanel('journal')},
     {label:'Codex 원격 연동 설정',click:()=>openPanel('connections')},
+    {type:'separator'},{label:'v'+app.getVersion()+(update?' · '+update.label:''),enabled:false},
+    {label:'자동 업데이트',type:'checkbox',checked:settings.autoUpdate!==false,enabled:!!updater,click:item=>{settings.autoUpdate=item.checked;save();updater.setEnabled(item.checked);}},
+    {label:'업데이트 확인',enabled:!!updater&&!['downloading','staging','applying'].includes(update?.phase),click:()=>updater?.check(true)},
     {type:'separator'},{label:'종료',click:()=>app.quit()}
-  ]));tray.on('click',()=>win.isVisible()?win.hide():win.showInactive());
+  ]));
 }
 async function smokeTest(){
   const dir=dataDir,errors=[];fs.mkdirSync(dir,{recursive:true});
@@ -311,5 +335,5 @@ async function smokeTest(){
   const ok=inspection.hero==='피카츄'&&inspection.images&&!inspection.overflow&&inspection.slots===4&&inspection.facing.startsWith('matrix(-1')&&collection.count===151&&collection.caught===4&&collection.unknown.includes('???')&&collection.silhouette&&collection.noPichu&&!collection.overflow&&Object.values(controls).every(Boolean)&&controls.height===276&&!errors.length;
   fs.writeFileSync(path.join(dir,'result.json'),JSON.stringify({ok,inspection,collection,controls,errors},null,2));console.log(JSON.stringify({smoke:ok,inspection,collection,controls,errors}));app.exit(ok?0:1);
 }
-app.on('before-quit',()=>{clearInterval(timer);remotes?.close();try{save();}catch{}tray?.destroy();});
+app.on('before-quit',()=>{clearInterval(timer);updater?.close();remotes?.close();try{save();}catch{}tray?.destroy();});
 app.on('window-all-closed',()=>app.quit());
