@@ -1,0 +1,73 @@
+{
+  "version": "0.3.58",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "3c23801ff02733b438cc1f234d28db7327d125f4",
+  "sourceTag": "v0.3.58",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.58",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime, current sources and item assets copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.57. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "scope": "Low-HP Snorlax replacement during native opponent entry; queued switch reuse and supersession; one ball animation with no stale ally restoration or fabricated attacks; mid-switch reload, manual choice, simultaneous knockouts, fainted learner level-up and legacy ended-save recovery",
+    "command": "node --test desktop/test/*.test.cjs; isolated Electron fixture using exact packaged runtime; git diff --check",
+    "testsPassed": 234,
+    "testsFailed": 0,
+    "packagedRuntimeFilesMatched": 25,
+    "packagedDocumentationFilesMatched": 3,
+    "packagedUiCasesPassed": 6,
+    "uiCases": [
+      "low-hp-snorlax-recalled-once",
+      "recalled-snorlax-stays-hidden",
+      "lapras-released-from-ball",
+      "native-acknowledgement-never-restores-snorlax-or-replays-switch",
+      "mid-switch-reload-completes-once",
+      "manual-choice-during-opponent-entry-is-not-overridden"
+    ],
+    "uiErrors": 0,
+    "pendingOpponentEntryAcknowledgedBeforeAllySync": true,
+    "queuedSwitchesDeduplicated": true,
+    "nativeOnlyAcknowledgementsDoNotReplayAnimations": true,
+    "faintedLevelUpsStayAtZeroHp": true,
+    "legacyEndedGhostBattleSettlesNormally": true,
+    "partyCapacity": 6,
+    "archiveFilesVerified": 706,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.58-portable.zip",
+    "bytes": 165973517,
+    "sha256": "63ee911840886567de2d36c511840db2f98b8ea57a68bd19f0cebd88aca5a4c6"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "portraitWidths": [
+      48,
+      40
+    ],
+    "itemSources": "desktop/assets/items/sources.json"
+  }
+}
