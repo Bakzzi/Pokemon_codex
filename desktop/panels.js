@@ -123,7 +123,9 @@ function renderBosses(){
     if(boss.revealed===false){face.classList.add('unknown');face.textContent='?';face.setAttribute('aria-label','아직 만나지 않은 관장');}
     else{const portrait=node('img','gym-trainer'),[width,x,y,size]=trainerFaces[boss.id];portrait.src='assets/trainers/'+boss.id+'.png';portrait.alt=boss.name+' · 원작 얼굴 초상화';portrait.draggable=false;portrait.style.width=width/size*100+'%';portrait.style.left=-x/size*100+'%';portrait.style.top=-y/size*100+'%';face.append(portrait);}
     info.append(title,trainerTeam(boss));body.append(info,face);card.append(body);
-    const roadLocked=i===4&&!state.trainingDevice.routeOpen,b=node('button','',done?'뱃지 획득 완료':queued?.index===i?'도전 예약됨':roadLocked?'길을 막는 잠만보 해결 시 해금':i>state.badges.length?'앞선 체육관 뱃지가 필요해요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||!!queued||!state.gymAccess[i];b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;
+    const rocketLocked=i===3&&!state.trainingDevice.rocketWonAt,roadLocked=i===4&&!state.trainingDevice.routeOpen;
+    if(i===3&&!done)card.append(node('p','muted',rocketLocked?'민화는 무지개시티에 숨어든 로켓단 때문에 골머리를 앓고 있어요. 아지트의 로켓단을 모두 물리친 뒤 도전해 주세요.':'로켓단 문제가 해결됐어요. 민화가 체육관에서 도전을 기다리고 있어요.'));
+    const b=node('button','',done?'뱃지 획득 완료':queued?.index===i?'도전 예약됨':rocketLocked?'로켓단 아지트 격파 시 해금':roadLocked?'길을 막는 잠만보 해결 시 해금':i>state.badges.length?'앞선 체육관 뱃지가 필요해요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||!!queued||!state.gymAccess[i];b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;
   }));
   $('ongoing').hidden=!busy&&!queued;
   if(queued){$('ongoing').replaceChildren(node('span','',queued.name+' 도전 예약 · '+(state.battle?'현재 배틀이 끝나면 시작해요.':'마지막 연출이 끝나면 시작해요.')));const b=node('button','','예약 취소');b.dataset.cancelChallenge='';b.onclick=()=>window.buddy.action('challenge-cancel');$('ongoing').append(b);}
@@ -149,17 +151,18 @@ function renderSpecialEncounters(){
 }
 function renderStory(){
   if(!state)return;const d=state.trainingDevice,busy=state.battle?.kind==='trainer',queued=state.pendingChallenge;
-  const signature=JSON.stringify([d.requirements,d.steps,busy,state.battle?.storyId,queued?.index,d.fluteObtained,d.snorlaxCaught]);if(signature===storySignature)return;storySignature=signature;
+  const signature=JSON.stringify([d.requirements,d.steps,d.rocketUnlocked,busy,state.battle?.storyId,queued?.index,d.fluteObtained,d.snorlaxCaught]);if(signature===storySignature)return;storySignature=signature;
+  $('rocket-intro').textContent=d.rocketCompleted===3?'로켓단을 모두 물리쳐 무지개시티에 평화가 돌아왔어요. 민화도 한시름 놓았겠어요.':d.rocketUnlocked?'오렌지배지를 확인한 민화가 도움을 부탁했어요. “게임코너 지하의 로켓단을 물리쳐 주세요. 모두 해결되면 체육관에서 도전을 받을게요.”':'민화는 게임코너 지하에 숨어든 로켓단 때문에 골머리를 앓고 있어요. “오렌지배지가 있다면 당신의 실력을 믿고 아지트 조사를 부탁하고 싶어요.”';
   $('rocket-steps').replaceChildren(...d.requirements.map(r=>{
     const row=node('li','rocket-step'+(r.done?' done':'')),info=node('div','rocket-step-info');row.dataset.requirement=r.id;info.append(node('b','',r.name));row.append(info,storyArtwork(r));
-    const step=d.steps.find(s=>s.id===r.id);if(!step){const link=node('button','',r.done?'인정 완료':'체육관 보기');link.dataset.gymLink='erika';link.disabled=r.done;link.setAttribute('aria-label',r.done?'민화의 인정 완료':'민화 체육관 카드로 이동');link.onclick=()=>focusGym(3);row.append(link);return row;}
+    const step=d.steps.find(s=>s.id===r.id);
     info.append(trainerTeam(step,true));
     const ongoing=state.battle?.storyId===step.id,reserved=queued?.index===step.id;
     const b=node('button','',ongoing?'배틀 중':reserved?'도전 예약됨':step.done?'승리 완료':'도전하기');b.dataset.story=step.id;b.disabled=ongoing||busy||!!queued||!step.available;b.onclick=()=>window.buddy.action('challenge',step.id);row.append(b);return row;
   }));
   const road=d.steps.find(s=>s.id==='road-snorlax'),body=node('div','snorlax-body'),ongoing=state.battle?.storyId===road.id,reserved=queued?.index===road.id;
-  const b=node('button','',ongoing?'배틀 중':reserved?'피리 사용 예약됨':road.done&&d.snorlaxCaught?'포획 완료':!d.fluteObtained?'포켓몬피리가 필요해요':road.done?'다시 포켓몬피리 사용':'포켓몬피리 사용');b.dataset.story=road.id;b.disabled=ongoing||busy||!!queued||!road.available;b.onclick=()=>window.buddy.action('challenge',road.id);
-  body.append(node('b','','잠만보 · Lv.'+road.team[0].level),node('p','muted',d.fluteObtained?'포켓몬피리 · 보유 중':'포켓몬피리 · 미획득'),b);$('snorlax-encounter').replaceChildren(img(143,'snorlax-sprite'),body);
+  const b=node('button','',ongoing?'배틀 중':reserved?'피리 사용 예약됨':road.done&&d.snorlaxCaught?'포획 완료':!d.fluteObtained?'깨울 방법이 필요해요':road.done?'다시 포켓몬피리 사용':'포켓몬피리 사용');b.dataset.story=road.id;b.disabled=ongoing||busy||!!queued||!road.available;b.onclick=()=>window.buddy.action('challenge',road.id);
+  body.append(node('b','','잠만보 · Lv.'+road.team[0].level),node('p','muted',d.fluteObtained?'포켓몬피리 · 보유 중':'깊이 잠들어 있어 길을 지나갈 수 없어요.'),b);$('snorlax-encounter').replaceChildren(img(143,'snorlax-sprite'),body);
 }
 function renderDevice(){
   if(!state)return;const d=state.trainingDevice;

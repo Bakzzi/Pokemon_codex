@@ -7,23 +7,24 @@ function count(g,n){for(let id=1;g.kantoCaughtCount()<n;id++)g.data.caught[id]=n
 function level(g,uid,n){const p=g.data.owned[uid];p.level=n;p.xp=xpAt(p.id,n);p.moves=learnedMoves(p.id,n);}
 function advance(g){return g.tick(Math.max(now,g.data.switchUntil,g.nextTick));}
 function win(g){let i=0;while(g.data.battle){assert.ok(i++<25);if(g.data.pendingBattle?.kind==='story-next')advance(g);else g.defeatOpponent(Math.max(now,g.data.switchUntil,g.nextTick));}}
-function unlock(g){g.data.badges=data.bosses.slice(0,4).map(b=>b.id);count(g,50);assert.ok(g.challenge('rocket-grunt',now));win(g);assert.ok(g.challenge('road-snorlax',g.data.switchUntil));win(g);assert.ok(g.requestAction('device-claim',undefined,g.data.switchUntil));if(!training.has(g))assert.ok(advance(g));assert.ok(training.has(g));}
+function winErika(g){assert.ok(g.challenge(3,Math.max(now,g.data.switchUntil,g.nextTick)));win(g);}
+function unlock(g){g.data.badges=data.bosses.slice(0,3).map(b=>b.id);count(g,50);assert.ok(g.challenge('rocket-grunt',now));win(g);winErika(g);assert.ok(g.challenge('road-snorlax',g.data.switchUntil));win(g);assert.ok(g.requestAction('device-claim',undefined,g.data.switchUntil));if(!training.has(g))assert.ok(advance(g));assert.ok(training.has(g));}
 function device(g,uid){g.data.trainingDevice.obtainedAt=now;g.data.trainingDevice.learnerUid=uid;}
 
 test('the hideout reveals only completed opponents and the next unlocked opponent across battle and restart',()=>{
   let g=fixture();
   const check=revealed=>{
     const s=training.snapshot(g);
-    assert.equal(s.requirements[0].name,'민화 뱃지 획득');
+    assert.equal(s.requirements.length,3);
     for(const [i,id] of training.rocketOrder.entries()){
-      const row=s.requirements[i+1],step=s.steps.find(b=>b.id===id),known=i<revealed;
+      const row=s.requirements[i],step=s.steps.find(b=>b.id===id),known=i<revealed;
       assert.equal(row.revealed,known);assert.equal(step.revealed,known);
       if(known){assert.notEqual(row.name,'???에게 승리');assert.equal(step.name,training.battles[id].name);assert.ok(step.team.length);}
       else {assert.equal(row.name,'???에게 승리');assert.equal(step.name,'???');assert.deepEqual(step.team,[]);assert.equal(step.available,false);}
     }
     assert.equal(s.steps.find(b=>b.id==='road-snorlax').name,'길을 막는 잠만보');
   };
-  check(0);g.data.badges=data.bosses.slice(0,4).map(b=>b.id);check(1);
+  check(0);g.data.badges=data.bosses.slice(0,3).map(b=>b.id);check(1);
   assert.ok(g.challenge('rocket-grunt',now));check(1);
   // Finish one opponent's full party, retaining the pause before the next stage.
   while(!g.data.trainingDevice.gruntWonAt)g.defeatOpponent(Math.max(now,g.data.switchUntil));
@@ -34,30 +35,30 @@ test('the hideout reveals only completed opponents and the next unlocked opponen
   assert.ok(training.rocketOrder.every(id=>!g.canChallenge(id)));
 });
 
-test('Erika unlocks Rocket, the flute unlocks Snorlax, and a single Snorlax clear awards the device without a dex quota',()=>{
-  const g=fixture();g.data.badges=data.bosses.slice(0,4).map(b=>b.id);
+test('the Orange Badge unlocks Rocket, Rocket unlocks Erika, and her flute unlocks Snorlax and the device route',()=>{
+  const g=fixture();g.data.badges=data.bosses.slice(0,3).map(b=>b.id);
   assert.equal(training.has(g),false);assert.equal(training.canClaim(g),false);assert.equal(g.canChallenge('road-snorlax'),false);assert.equal(g.canChallenge('__proto__'),false);
   assert.equal(g.canChallenge('rocket-giovanni'),false);assert.ok(g.canChallenge('rocket-grunt'));assert.ok(g.challenge('rocket-grunt',now));const badges=[...g.data.badges];win(g);
-  assert.deepEqual(g.data.badges,badges);assert.ok(g.data.trainingDevice.rocketWonAt);assert.equal(g.canChallenge('rocket-giovanni'),false);assert.equal(training.canClaim(g),false);assert.ok(g.canChallenge('road-snorlax'));
+  assert.deepEqual(g.data.badges,badges);assert.ok(g.data.trainingDevice.rocketWonAt);assert.equal(g.canChallenge('rocket-giovanni'),false);assert.equal(training.canClaim(g),false);assert.equal(g.canChallenge('road-snorlax'),false);winErika(g);assert.ok(g.canChallenge('road-snorlax'));
   assert.equal(g.canChallenge(4),false);assert.ok(g.challenge('road-snorlax',g.data.switchUntil));win(g);assert.ok(training.has(g));assert.ok(g.canChallenge(4));assert.ok(g.kantoCaughtCount()<50);assert.equal(training.canClaim(g),false);const serial=g.data.eventSerial;
   assert.ok(g.requestAction('device-claim',undefined,g.data.switchUntil));assert.equal(g.data.eventSerial,serial);assert.equal(g.data.journal.filter(e=>e.kind==='device').length,1);
 });
 
 test('story reservations wait through capture and result playback, cancel, survive restart and cannot capture or award badges',()=>{
-  let g=fixture();g.data.badges=data.bosses.slice(0,4).map(b=>b.id);g.newWild(now);g.data.battle.foe=combatant(19,5,[150]);g.data.battle.foe.hp=1;g.random=()=>0;assert.ok(g.capture(now));
+  let g=fixture();g.data.badges=data.bosses.slice(0,3).map(b=>b.id);g.newWild(now);g.data.battle.foe=combatant(19,5,[150]);g.data.battle.foe.hp=1;g.random=()=>0;assert.ok(g.capture(now));
   assert.ok(g.challenge('rocket-grunt',now));assert.equal(g.snapshot(now).pendingChallenge.name,'로켓단 조무래기');assert.ok(g.cancelChallenge(now));assert.ok(g.challenge('rocket-grunt',now));
   const end=g.data.switchUntil;g=new Game(g.data,now+1,{random:()=>.73});assert.equal(g.tick(end-1),false);assert.ok(g.tick(end));assert.equal(g.data.battle,null);assert.ok(g.tick(end+1));
   assert.equal(g.data.battle.storyId,'rocket-grunt');assert.equal(g.snapshot(end+1).battle.teamSize,2);assert.equal(g.data.battle.foe.id,20);g.data.battle.foe.hp=1;assert.equal(g.capture(end+2),false);
-  win(g);assert.equal(g.data.badges.length,4);assert.equal(g.data.adventure.totals.story,3);assert.ok(!g.data.caught[95]);
+  win(g);assert.equal(g.data.badges.length,3);assert.equal(g.data.adventure.totals.story,3);assert.ok(!g.data.caught[95]);winErika(g);
   assert.ok(g.challenge('road-snorlax',g.data.switchUntil));assert.equal(g.data.battle.foe.id,143);assert.equal(g.data.battle.foe.level,30);win(g);assert.ok(!g.data.caught[143]);assert.equal(g.data.badges.length,4);assert.equal(g.canChallenge('road-snorlax'),true);
 });
 
 test('loss, abandon and incomplete teams do not complete story quests, and native simulator resumes a story battle',()=>{
-  let g=fixture();assert.equal(g.challenge('rocket-grunt',now),false);g.data.badges=data.bosses.slice(0,4).map(b=>b.id);g.challenge('rocket-grunt',now);assert.ok(g.requestAction('abandon',undefined,now));assert.ok(advance(g));assert.equal(g.data.trainingDevice.rocketWonAt,null);assert.ok(g.canChallenge('rocket-grunt'));
+  let g=fixture();assert.equal(g.challenge('rocket-grunt',now),false);g.data.badges=data.bosses.slice(0,3).map(b=>b.id);g.challenge('rocket-grunt',now);assert.ok(g.requestAction('abandon',undefined,now));assert.ok(advance(g));assert.equal(g.data.trainingDevice.rocketWonAt,null);assert.ok(g.canChallenge('rocket-grunt'));
   g.challenge('rocket-grunt',g.data.switchUntil);for(const p of Object.values(g.data.battle.party))p.hp=0;assert.ok(advance(g));assert.ok(advance(g));assert.equal(g.data.battle,null);assert.equal(g.data.trainingDevice.rocketWonAt,null);
   for(const uid of g.data.slots)level(g,uid,45);g.random=rng(5);g.challenge('rocket-grunt',g.data.switchUntil);assert.ok(advance(g));assert.ok(g.data.battle.sim);const turn=g.data.battle.turn;
   g=new Game(g.data,g.data.switchUntil,{random:rng(6)});assert.ok(advance(g));assert.ok(g.data.battle.turn>turn||g.data.pendingBattle);
-  let i=0;while(g.data.battle&&i++<200)assert.ok(advance(g));assert.ok(i<200);assert.ok(g.data.trainingDevice.rocketWonAt);assert.equal(g.data.badges.length,4);assert.equal(g.canChallenge('rocket-giovanni'),false);
+  let i=0;while(g.data.battle&&i++<200)assert.ok(advance(g));assert.ok(i<200);assert.ok(g.data.trainingDevice.rocketWonAt);assert.equal(g.data.badges.length,3);assert.equal(g.canChallenge('rocket-giovanni'),false);winErika(g);
   const fighter=g.addPokemon(68,50,'fixture',now);g.data.slots[0]=fighter;g.data.activeId=fighter;g.data.workTokens=50000;assert.ok(g.challenge('road-snorlax',g.data.switchUntil));i=0;while(g.data.battle&&i++<200)assert.ok(advance(g));assert.ok(i<200);assert.ok(g.data.trainingDevice.snorlaxWonAt,JSON.stringify(g.data.journal.slice(-5)));assert.equal(g.data.badges.length,4);
 });
 

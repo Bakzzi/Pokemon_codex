@@ -407,7 +407,7 @@ class Game {
   }
   canChallenge(index){
     if(training.battles[index])return training.canChallenge(this,index);
-    return Number.isInteger(index)&&index>=0&&index<=8&&(index!==4||training.routeOpen(this))&&(index===8?this.data.badges.length>=8:index<=this.data.badges.length&&!this.data.badges.includes(db.bosses[index].id));
+    return Number.isInteger(index)&&index>=0&&index<=8&&(index!==3||!!this.data.trainingDevice.rocketWonAt)&&(index!==4||training.routeOpen(this))&&(index===8?this.data.badges.length>=8:index<=this.data.badges.length&&!this.data.badges.includes(db.bosses[index].id));
   }
   trainerRevealed(boss){
     return !SECRET_TRAINERS.has(boss.id)||!!this.data.trainerSeen[boss.id]||this.data.badges.includes(boss.id)||
@@ -502,11 +502,10 @@ class Game {
         this.animate('result',{text:this.battleBoss(b).name+'에게 승리! 다음은 '+training.battles[next].name+'!'},now);
         this.deferBattle('story-next',this.data.switchUntil);return;
       }
-      const flute=training.awardFlute(this,now);this.endChallenge(true,now);
-      if(flute)this.data.animation.text='로켓단을 물리쳤다! 포켓몬피리 획득!';return;
+      this.endChallenge(true,now);this.data.animation.text='로켓단을 모두 물리쳤다! 민화에게 도전할 수 있어요.';return;
     }
     const boss=this.battleBoss(b);this.log(`${boss.name}에게 승리!${boss.badge?' '+boss.badge+' 획득':''}`,'badge',null,now);
-    if(b.bossIndex<8){if(!this.data.badges.includes(boss.id))this.data.badges.push(boss.id);this.endChallenge(true,now);}
+    if(b.bossIndex<8){if(!this.data.badges.includes(boss.id))this.data.badges.push(boss.id);const flute=boss.id==='erika'&&training.awardFlute(this,now);this.endChallenge(true,now);if(flute)this.data.animation.text='민화에게 승리! 무지개뱃지와 포켓몬피리를 받았다!';}
     else if(b.bossIndex<12){this.data.leagueBest=Math.max(this.data.leagueBest,b.bossIndex-7);b.bossIndex++;b.foeIndex=0;this.nextTrainer(now);}
     else {
       const first=!this.data.champion;this.data.champion=true;this.data.leagueBest=5;

@@ -9,7 +9,7 @@ function snorlax(){const g=fixture();g.data.trainingDevice.fluteObtainedAt=now;a
 test('four badges and large dex never bypass the Snorlax gate, and ordinary Snorlax ownership is insufficient',()=>{
   const g=fixture();for(let id=1;id<=151;id++)g.data.caught[id]=now;
   assert.equal(g.canChallenge(4),false);assert.equal(g.challenge(4,now),false);assert.equal(g.panelState(now).gymAccess[4],false);assert.equal(training.has(g),false);assert.equal(g.data.pendingChallenge,null);
-  assert.ok(g.canChallenge('rocket-grunt'));assert.equal(g.canChallenge('road-snorlax'),false);g.data.badges.pop();assert.equal(g.canChallenge('rocket-grunt'),false);g.data.trainingDevice.fluteObtainedAt=now;assert.ok(g.canChallenge('road-snorlax'));
+  assert.ok(g.canChallenge('rocket-grunt'));assert.equal(g.canChallenge('road-snorlax'),false);g.data.badges=g.data.badges.filter(id=>id!=='surge');assert.equal(g.canChallenge('rocket-grunt'),false);g.data.trainingDevice.fluteObtainedAt=now;assert.ok(g.canChallenge('road-snorlax'));
 });
 
 test('a knockout grants device and fifth-gym access together after fainting playback, without catching or a fifty-species quota',()=>{

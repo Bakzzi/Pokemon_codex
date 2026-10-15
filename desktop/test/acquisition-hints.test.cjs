@@ -39,10 +39,10 @@ test('trade alternatives show device learning and held items without revealing t
   g.data.champion=true;g.unlockJohto(now);const steelix=entry(g,208).acquisition.routes.find(r=>r.kind==='evolution');assert.ok(steelix.text.includes('금속코트'));assert.ok(steelix.text.includes('학습장치'));
 });
 
-test('event hints tell the required action but keep item and reward sources secret',()=>{
+test('the sleeping road event hides its required item until the player actually owns it',()=>{
   const g=fixture(),p=entry(g,143),json=JSON.stringify(p.acquisition);
-  assert.equal(p.acquisition.wildAllowed,false);assert.ok(p.acquisition.routes.some(r=>r.kind==='event'&&r.text.includes('포켓몬피리')));
-  assert.ok(!/로켓|비주기|민화|학습장치|독수/.test(json));assert.ok(json.includes('입수 방법은 비밀'));
+  assert.equal(p.acquisition.wildAllowed,false);assert.ok(p.acquisition.routes.some(r=>r.kind==='event'&&r.text.includes('연분홍시티')));
+  assert.ok(!/피리|로켓|비주기|민화|학습장치|독수/.test(json));assert.ok(json.includes('깨울 방법'));assert.equal(p.acquisition.summary,'특수 이벤트');
   g.data.trainingDevice.fluteObtainedAt=now;assert.ok(entry(g,143).acquisition.routes.find(r=>r.kind==='event').text.includes('피리 보유 중'));
 });
 

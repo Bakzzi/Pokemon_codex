@@ -13,10 +13,12 @@ const rocketOrder=['rocket-grunt','rocket-duo','rocket-giovanni'];
 const progressKeys={'rocket-grunt':'gruntWonAt','rocket-duo':'duoWonAt','rocket-giovanni':'rocketWonAt','road-snorlax':'snorlaxWonAt'};
 function init(game,now=Date.now()){
   const saved=game.data.trainingDevice||{},stamp=n=>Number.isSafeInteger(n)&&n>0?n:null;
-  const rocket=stamp(saved.rocketWonAt),legacy=saved.storyRevision!==2;
+  const rocket=stamp(saved.rocketWonAt),legacy=!(saved.storyRevision>=2);
   const activeLegacy=legacy&&game.data.battle?.storyId==='rocket-giovanni'?stamp(game.data.battle.startedAt):null;
   const legacyRoadAccess=saved.legacyRoadAccess===true||saved.routeRevision!==1&&(!!stamp(saved.obtainedAt)||['koga','sabrina','blaine','giovanni'].some(id=>game.data.badges.includes(id))||game.data.battle?.kind==='trainer'&&Number.isInteger(game.data.battle.bossIndex)&&game.data.battle.bossIndex>=4);
-  game.data.trainingDevice={storyRevision:2,routeRevision:1,legacyRoadAccess,gruntWonAt:stamp(saved.gruntWonAt)||(legacy?rocket||activeLegacy:null),duoWonAt:stamp(saved.duoWonAt)||(legacy?rocket||activeLegacy:null),rocketWonAt:rocket,fluteObtainedAt:stamp(saved.fluteObtainedAt)||(legacy?rocket:null),snorlaxWonAt:stamp(saved.snorlaxWonAt),obtainedAt:stamp(saved.obtainedAt),learnerUid:game.data.owned[saved.learnerUid]?Number(saved.learnerUid):null};
+  game.data.trainingDevice={storyRevision:3,routeRevision:1,legacyRoadAccess,gruntWonAt:stamp(saved.gruntWonAt)||(legacy?rocket||activeLegacy:null),duoWonAt:stamp(saved.duoWonAt)||(legacy?rocket||activeLegacy:null),rocketWonAt:rocket,fluteObtainedAt:stamp(saved.fluteObtainedAt)||(legacy?rocket:null),snorlaxWonAt:stamp(saved.snorlaxWonAt),obtainedAt:stamp(saved.obtainedAt),learnerUid:game.data.owned[saved.learnerUid]?Number(saved.learnerUid):null};
+  // A badge already earned under the old order keeps its new reward, once.
+  if(saved.storyRevision!==3&&game.data.badges.includes('erika'))awardFlute(game,now);
   if(canClaim(game))claim(game,now,false);
   for(const p of Object.values(game.data.owned)){
     const lesson=p.deviceLevelUp;
@@ -31,6 +33,7 @@ function init(game,now=Date.now()){
   }
 }
 function nextRocket(game){return rocketOrder.find(id=>!game.data.trainingDevice[progressKeys[id]])||null;}
+function rocketUnlocked(game){return game.data.badges.includes('surge');}
 function has(game){return !!game.data.trainingDevice.obtainedAt;}
 function routeOpen(game){return !!game.data.trainingDevice.snorlaxWonAt||game.data.trainingDevice.legacyRoadAccess===true;}
 function hasLearnedLevel(game,p){
@@ -53,16 +56,16 @@ function learnedLevel(game,p,before,now){
   queueEvolutions(game,now,[p]);return true;
 }
 function requirements(game){
-  const d=game.data.trainingDevice,unlocked=game.data.badges.includes('erika'),next=nextRocket(game);
-  return [{id:'erika',name:'민화의 인정',done:unlocked,revealed:true},...rocketOrder.map((id,i)=>{
+  const d=game.data.trainingDevice,unlocked=rocketUnlocked(game),next=nextRocket(game);
+  return rocketOrder.map((id,i)=>{
     const done=!!d[progressKeys[id]],revealed=done||unlocked&&id===next;
     return {id,name:revealed?['조무래기','로이·로사','비주기'][i]+'에게 승리':'???에게 승리',done,revealed};
-  })];
+  });
 }
 function canClaim(game){return !has(game)&&!!game.data.trainingDevice.snorlaxWonAt;}
 function canChallenge(game,id){
   const d=game.data.trainingDevice;if(!battles[id])return false;
-  return id==='road-snorlax'?!!d.fluteObtainedAt&&(!d.snorlaxWonAt||!game.registeredThisSeason(143)):game.data.badges.includes('erika')&&id===nextRocket(game);
+  return id==='road-snorlax'?!!d.fluteObtainedAt&&(!d.snorlaxWonAt||!game.registeredThisSeason(143)):rocketUnlocked(game)&&id===nextRocket(game);
 }
 function win(game,id,now,captured=false){
   const key=Object.hasOwn(progressKeys,id)?progressKeys[id]:null;
@@ -72,8 +75,8 @@ function win(game,id,now,captured=false){
   game.log(text,'story',id==='road-snorlax'?143:null,now);if(id==='road-snorlax')claim(game,now,false);return true;
 }
 function awardFlute(game,now){
-  const d=game.data.trainingDevice;if(!d.rocketWonAt||d.fluteObtainedAt)return false;
-  d.fluteObtainedAt=now;game.log('포켓몬피리를 얻었다! 잠만보를 깨울 수 있을 것 같다.','item',null,now);return true;
+  const d=game.data.trainingDevice;if(!game.data.badges.includes('erika')||d.fluteObtainedAt)return false;
+  d.fluteObtainedAt=now;game.log('민화에게 포켓몬피리를 받았다! 잠만보를 깨울 수 있을 것 같다.','item',null,now);return true;
 }
 function claim(game,now,present=true){
   if(!canClaim(game))return false;
@@ -83,7 +86,7 @@ function claim(game,now,present=true){
 }
 function snapshot(game){
   const d=game.data.trainingDevice,p=game.data.owned[d.learnerUid],rows=requirements(game);
-  return {...d,routeOpen:routeOpen(game),fluteObtained:!!d.fluteObtainedAt,snorlaxCaught:!!game.data.caught[143],rocketCompleted:rocketOrder.filter(id=>d[progressKeys[id]]).length,nextRocket:nextRocket(game),obtained:has(game),canClaim:canClaim(game),requirements:rows,learner:p?{uid:p.uid,id:p.id,level:p.level,boarded:game.isBoarded(p.uid),active:p.uid===game.data.activeId}:null,
+  return {...d,routeOpen:routeOpen(game),rocketUnlocked:rocketUnlocked(game),fluteObtained:!!d.fluteObtainedAt,snorlaxCaught:!!game.data.caught[143],rocketCompleted:rocketOrder.filter(id=>d[progressKeys[id]]).length,nextRocket:nextRocket(game),obtained:has(game),canClaim:canClaim(game),requirements:rows,learner:p?{uid:p.uid,id:p.id,level:p.level,boarded:game.isBoarded(p.uid),active:p.uid===game.data.activeId}:null,
     steps:Object.values(battles).map(b=>{
       const revealed=rows.find(r=>r.id===b.id)?.revealed!==false;
       return {...b,name:revealed?b.name:'???',team:revealed?b.team.map(p=>({...p,name:species.get(p.id).name})):[],revealed,done:!!d[progressKeys[b.id]],available:canChallenge(game,b.id)};
