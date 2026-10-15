@@ -1,0 +1,76 @@
+{
+  "version": "0.3.56",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "146fc43a0d5dd90e357e5558b455f68305e9acfa",
+  "sourceTag": "v0.3.56",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.56",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime, current sources and item assets copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.55. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "scope": "Trainer battle matchup selection at opening, new foe and fainting; selected-only living/unboarded partners; Gen III type and ability immunities, HP, PP; native trapping, manual override, saved state, original wild training rotation, ball animations and complete regression suite",
+    "command": "node --test desktop/test/*.test.cjs; isolated Electron fixture using exact packaged runtime; git diff --check",
+    "testsPassed": 219,
+    "testsFailed": 0,
+    "packagedRuntimeFilesMatched": 25,
+    "packagedDocumentationFilesMatched": 3,
+    "packagedUiCasesPassed": 6,
+    "uiCases": [
+      "trainer-counter-recalls-original-with-ball",
+      "absorb",
+      "pause",
+      "send-throw",
+      "release",
+      "attack-starts-after-complete-switch"
+    ],
+    "uiErrors": 0,
+    "matchupMethod": "Deterministic expected offense versus incoming threat estimate using usable moves, Gen III types/category, stats, STAB, ability immunities, HP and PP; no exhaustive battle search",
+    "trainerEvaluationPoints": [
+      "opponent-entry",
+      "opponent-change",
+      "ally-faint"
+    ],
+    "wildRotationUnchanged": true,
+    "manualChoiceHonoredForCurrentOpponent": true,
+    "partyCapacity": 6,
+    "archiveFilesVerified": 706,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.56-portable.zip",
+    "bytes": 165971238,
+    "sha256": "efe83476a243a47819a76493f1b1c810db4ce7dd9b12700c06432535cd5711ab"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "portraitWidths": [
+      48,
+      40
+    ],
+    "itemSources": "desktop/assets/items/sources.json"
+  }
+}
