@@ -54,7 +54,7 @@ function learnedLevel(game,p,before,now){
 }
 function requirements(game){
   const d=game.data.trainingDevice,unlocked=game.data.badges.includes('erika'),next=nextRocket(game);
-  return [{id:'erika',name:'민화 뱃지 획득',done:unlocked,revealed:true},...rocketOrder.map((id,i)=>{
+  return [{id:'erika',name:'민화의 인정',done:unlocked,revealed:true},...rocketOrder.map((id,i)=>{
     const done=!!d[progressKeys[id]],revealed=done||unlocked&&id===next;
     return {id,name:revealed?['조무래기','로이·로사','비주기'][i]+'에게 승리':'???에게 승리',done,revealed};
   })];

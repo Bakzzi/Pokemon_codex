@@ -1,10 +1,26 @@
 'use strict';
 const $=id=>document.getElementById(id),node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;};
 let journalTab='summary';
-let state=null,selected=25,memberUid=null,nurserySignature='',tab=new URLSearchParams(location.search).get('tab')||'collection',dexSignature='',detailSignature='',bossSignature='',journalSignature='';
+let state=null,selected=25,memberUid=null,nurserySignature='',tab=new URLSearchParams(location.search).get('tab')||'collection',dexSignature='',detailSignature='',bossSignature='',journalSignature='',storySignature='';
 const img=(id,cls='')=>{const e=node('img',cls);e.src='assets/'+id+'.gif';e.alt='';return e;};
 // Original image width, then the square viewport's x/y/size in source pixels.
 const trainerFaces={brock:[196,52,5,104],misty:[228,61,7,112],surge:[156,22,1,110],erika:[198,22,3,114],koga:[217,113,5,103],sabrina:[216,17,13,112],blaine:[273,24,18,112],giovanni:[179,25,5,112]};
+const storyFaces={erika:[['erika.png',trainerFaces.erika]],'rocket-grunt':[['rocket-grunts.png',[433,238,0,112]]],'rocket-duo':[['james.png',[150,16,4,112]],['jessie.png',[197,32,10,112]]],'rocket-giovanni':[['giovanni.png',trainerFaces.giovanni]]};
+function focusGym(index){
+  const card=$('gyms').children[index];if(!card)return;
+  card.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});
+  const button=card.querySelector('[data-challenge]');
+  if(button&&!button.disabled)button.focus({preventScroll:true});else{card.tabIndex=-1;card.focus({preventScroll:true});}
+}
+function storyArtwork(requirement){
+  const hidden=requirement.revealed===false,art=node('span','rocket-art'+(hidden?' unseen':''));
+  art.setAttribute('role','img');art.setAttribute('aria-label',hidden?'아직 만나지 않은 상대':requirement.id==='erika'?'민화의 얼굴과 무지개뱃지':requirement.name.replace('에게 승리','')+' 얼굴 초상화');
+  for(const [file,[width,x,y,size]] of storyFaces[requirement.id]||[]){
+    const frame=node('span','rocket-portrait'),portrait=node('img','rocket-trainer');portrait.src='assets/trainers/'+file;portrait.alt='';portrait.draggable=false;portrait.style.width=width/size*100+'%';portrait.style.left=-x/size*100+'%';portrait.style.top=-y/size*100+'%';frame.append(portrait);art.append(frame);
+  }
+  if(requirement.id==='erika')art.append(badgeImage(state.bosses[3],'rocket-badge'+(requirement.done?' earned':'')));
+  return art;
+}
 function switchTab(value){tab=['collection','challenge','journal','daycare'].includes(value)?value:'collection';for(const e of document.querySelectorAll('.page'))e.hidden=e.id!==tab;for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-selected',String(b.dataset.tab===tab));render();}
 for(const b of document.querySelectorAll('[data-tab]'))b.onclick=()=>switchTab(b.dataset.tab);
 $('search').oninput=()=>{dexSignature='';render();};$('filter').onchange=()=>{dexSignature='';render();};
@@ -89,7 +105,7 @@ function renderBadgeCase(){
     const recess=node('span','badge-recess');recess.append(badgeImage(boss,'badge-edge'),badgeImage(boss,'badge-shadow'));
     if(done)recess.append(badgeImage(boss,'badge-art'),node('i','badge-glint'));
     const label=node('span','badge-label');label.append(node('b','',boss.badge),node('small','',done?'획득 완료':boss.name+' · 미획득'));
-    slot.append(recess,label);slot.onclick=()=>{const card=$('gyms').children[i];card?.scrollIntoView({behavior:'smooth',block:'center'});card?.querySelector('button')?.focus({preventScroll:true});};return slot;
+    slot.append(recess,label);slot.onclick=()=>focusGym(i);return slot;
   }));
   shownBadges=earned;
   $('badge-case-note').textContent=earned.size===8?'관동의 여덟 증표 · 포켓몬 리그로':earned.size+'개의 증표 · 다음 도전을 기다리는 자리';
@@ -132,9 +148,10 @@ function renderSpecialEncounters(){
 }
 function renderStory(){
   if(!state)return;const d=state.trainingDevice,busy=state.battle?.kind==='trainer',queued=state.pendingChallenge;
+  const signature=JSON.stringify([d.requirements,d.steps,busy,state.battle?.storyId,queued?.index,d.fluteObtained,d.snorlaxCaught]);if(signature===storySignature)return;storySignature=signature;
   $('rocket-steps').replaceChildren(...d.requirements.map(r=>{
-    const row=node('li','rocket-step'+(r.done?' done':''));row.append(node('b','',r.name));
-    const step=d.steps.find(s=>s.id===r.id);if(!step){row.append(node('span','muted',r.done?'획득 완료':'뱃지가 필요해요'));return row;}
+    const row=node('li','rocket-step'+(r.done?' done':''));row.dataset.requirement=r.id;row.append(node('b','',r.name),storyArtwork(r));
+    const step=d.steps.find(s=>s.id===r.id);if(!step){const link=node('button','','체육관 보기');link.dataset.gymLink='erika';link.setAttribute('aria-label','민화 체육관 카드로 이동');link.onclick=()=>focusGym(3);row.append(link);return row;}
     const ongoing=state.battle?.storyId===step.id,reserved=queued?.index===step.id;
     const b=node('button','',ongoing?'배틀 중':reserved?'도전 예약됨':step.done?'승리 완료':'도전하기');b.dataset.story=step.id;b.disabled=ongoing||busy||!!queued||!step.available;b.onclick=()=>window.buddy.action('challenge',step.id);row.append(b);return row;
   }));

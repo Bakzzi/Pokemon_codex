@@ -58,6 +58,8 @@ The eight Gym Leader illustrations are official Pokemon FireRed and LeafGreen ch
 
 The Team Rocket R logo is downloaded unchanged from https://archives.bulbagarden.net/wiki/File:Rocket-logo.png . Its URL, dimensions, byte count and SHA-256 hash are recorded in desktop/assets/logos/sources.json. These images retain the original Pokemon rights holders' copyright and are not MIT-licensed code. All artwork is loaded from local files at runtime.
 
+The Rocket Hideout uses the existing Erika and Giovanni illustrations, official FireRed/LeafGreen Team Rocket grunt artwork, and original-series animation artwork for Jessie and James. New images are unchanged Bulbagarden Archives thumbnails displayed through small CSS face viewports; their pages, URLs, dimensions, byte counts and SHA-256 hashes are recorded in desktop/assets/trainers/rocket-sources.json. Unrevealed opponents are rendered as black silhouettes. These images retain the original Pokemon rights holders' copyright and are not MIT-licensed code.
+
 ## Electron runtime
 
 Electron 44.7.0 — https://www.electronjs.org/

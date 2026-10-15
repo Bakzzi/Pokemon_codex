@@ -1,0 +1,44 @@
+{
+  "source": "Official Pokemon FireRed/LeafGreen Team Rocket grunt artwork and original-series animation artwork for Jessie and James, via Bulbagarden Archives. Unchanged archive thumbnails; original copyright retained.",
+  "trainers": [
+    {
+      "id": "rocket-grunt",
+      "file": "rocket-grunts.png",
+      "source": "https://archives.bulbagarden.net/media/upload/thumb/4/4a/FireRed_LeafGreen_Team_Rocket_grunts.png/433px-FireRed_LeafGreen_Team_Rocket_grunts.png",
+      "originalSource": "https://archives.bulbagarden.net/media/upload/4/4a/FireRed_LeafGreen_Team_Rocket_grunts.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:FireRed_LeafGreen_Team_Rocket_grunts.png",
+      "width": 433,
+      "height": 384,
+      "originalWidth": 2309,
+      "originalHeight": 2050,
+      "bytes": 113663,
+      "sha256": "289e66b923baa6f3128b1b729a364bfe7beff6bd1b603b9f6c5d7ffbebc3eb16"
+    },
+    {
+      "id": "jessie",
+      "file": "jessie.png",
+      "source": "https://archives.bulbagarden.net/media/upload/thumb/9/99/Jessie_OS_anime.png/197px-Jessie_OS_anime.png",
+      "originalSource": "https://archives.bulbagarden.net/media/upload/9/99/Jessie_OS_anime.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:Jessie_OS_anime.png",
+      "width": 197,
+      "height": 384,
+      "originalWidth": 308,
+      "originalHeight": 600,
+      "bytes": 89235,
+      "sha256": "6ddb29e6b4208c9e76e943a6696ac48a94ca17a03d25aee13cbae5d318aad54d"
+    },
+    {
+      "id": "james",
+      "file": "james.png",
+      "source": "https://archives.bulbagarden.net/media/upload/thumb/0/00/James.png/150px-James.png",
+      "originalSource": "https://archives.bulbagarden.net/media/upload/0/00/James.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:James.png",
+      "width": 150,
+      "height": 383,
+      "originalWidth": 225,
+      "originalHeight": 575,
+      "bytes": 59180,
+      "sha256": "c70f36bfcb85a9fef9022945b8151064efa1f59929739119c61043cf4063b4c7"
+    }
+  ]
+}
