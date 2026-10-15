@@ -118,7 +118,7 @@ test('gyms and champion victory grant the choice of unlocking the next generatio
     g.defeatOpponent(now);assert.ok(++count<40);
   }
   assert.equal(g.data.champion,true);assert.equal(g.panelState(now).collection.length,151);assert.equal(g.addPokemon(172,5,'catch',now),false);
-  assert.ok(g.unlockJohto(now));assert.equal(g.panelState(now).collection.length,251);assert.ok(g.addPokemon(172,5,'catch',now));
+  assert.ok(g.unlockJohto(Math.max(now,g.data.switchUntil)));assert.equal(g.panelState(now).collection.length,251);assert.ok(g.addPokemon(172,5,'catch',now));
 });
 test('trainer Pokemon cannot be caught; older suspended-wild saves still restore capture progress',()=>{
   const g=new Game({},now);const b=wild(g,150,50);b.captureAttempts=6;b.foe.hp=b.foe.maxHp*.04;

@@ -17,11 +17,11 @@ test('champion grants a persistent stay-or-unlock choice even with an incomplete
   const owned=structuredClone(g.data.owned),caught=structuredClone(g.data.caught);assert.ok(g.stayInKanto(now+1));assert.equal(g.stayInKanto(now+2),false);
   g=new Game(g.data,now+10,{random:()=>.73});assert.ok(g.data.johtoDeferred);assert.equal(g.maxGeneration(),1);
   assert.deepEqual(g.data.owned,owned);assert.deepEqual(g.data.caught,caught);
-  assert.ok(g.unlockJohto(now+11));assert.equal(g.unlockJohto(now+12),false);assert.equal(g.stayInKanto(now+12),false);
+  assert.ok(g.unlockJohto(Math.max(now+11,g.data.switchUntil)));const unlockedOwned=structuredClone(g.data.owned);assert.equal(g.unlockJohto(now+12),false);assert.equal(g.stayInKanto(now+12),false);
   assert.equal(g.maxGeneration(),2);assert.equal(g.panelState(now+12).collection.length,251);assert.equal(g.panelState(now+12).kantoCaughtCount,4);
   assert.equal(g.data.journal.filter(e=>e.kind==='unlock').length,1);assert.ok(g.panelState(now+12).summary.highlights.some(e=>e.kind==='unlock'));
   const loaded=new Game(g.data,now+20);assert.equal(loaded.maxGeneration(),2);assert.ok(!loaded.data.johtoDeferred);
-  assert.deepEqual(loaded.data.owned,owned);assert.deepEqual(loaded.data.caught,caught);
+  assert.deepEqual(loaded.data.owned,unlockedOwned);assert.deepEqual(loaded.data.caught,caught);
 });
 
 test('championship and explicit selection gate Gen II wild Pokemon, evolution and breeding together',()=>{
@@ -33,7 +33,7 @@ test('championship and explicit selection gate Gen II wild Pokemon, evolution an
   g.data.owned[25].level=100;g.data.owned[25].xp=xpAt(25,100);
   for(let i=0;i<500;i++){g.newWild(now);assert.ok(g.data.battle.foe.id<=151);}
   g.data.owned[onix].xp=xpAt(95,31)-1;g.awardXp({id:19,level:30},false,now);assert.equal(g.data.owned[onix].level,31);
-  assert.equal(g.maxGeneration(),1);assert.ok(g.unlockJohto(now));assert.ok(g.evolve(onix,208,Math.max(now,g.data.switchUntil)));
+  assert.equal(g.maxGeneration(),1);assert.equal(g.unlockJohto(now),false);g.defeatOpponent(g.data.switchUntil);assert.ok(g.unlockJohto(g.data.switchUntil));assert.ok(g.evolve(onix,208,Math.max(now,g.data.switchUntil)));
   assert.equal(nursery.predict(g,[25,ditto]).offspring[0].id,172);
   const encountered=new Set();for(let i=0;i<1000;i++){g.newWild(now);encountered.add(g.data.battle.foe.id);}
   assert.ok([...encountered].some(id=>id>151));assert.ok([...encountered].some(id=>id<=151));

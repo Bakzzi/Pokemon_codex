@@ -157,10 +157,23 @@ class Game {
     if(!this.data.champion||this.data.johtoUnlocked||this.data.johtoDeferred)return false;
     this.data.johtoDeferred=true;this.log('관동에 머물며 151종 도감 수집을 계속하기로 했다.','region',null,now);return true;
   }
+  johtoUnlockPreview(){
+    const changes=this.data.johtoUnlocked?[]:Object.values(this.data.owned).filter(p=>p.level>=15).map(p=>({uid:p.uid,id:p.id,from:p.level,to:Math.floor(p.level/3)}));
+    return {minimumLevel:15,divisor:3,count:changes.length,changes};
+  }
   unlockJohto(now=Date.now()){
-    if(!this.data.champion||this.data.johtoUnlocked)return false;
+    if(!this.data.champion||this.data.johtoUnlocked||this.data.battle||this.data.pendingBattle||now<this.data.switchUntil)return false;
+    const reduction=this.johtoUnlockPreview();
+    for(const change of reduction.changes){
+      const p=this.data.owned[change.uid],oldFloor=xpAt(p.id,p.level),oldNext=xpAt(p.id,p.level+1);
+      const progress=p.level===100?0:Math.max(0,Math.min(1,(p.xp-oldFloor)/Math.max(1,oldNext-oldFloor)));
+      p.level=change.to;
+      const floor=xpAt(p.id,p.level),required=xpAt(p.id,p.level+1)-floor;
+      p.xp=floor+Math.min(required-1,Math.floor(required*progress));
+    }
+    this.data.johtoLevelReduction={at:now,...reduction};
     this.data.johtoUnlocked=true;this.data.johtoDeferred=false;
-    this.log('성도 지방을 선택했다! 2세대 100종이 해금되었다.','unlock',null,now);return true;
+    this.log('성도 지방을 선택했다! 2세대 100종 해금 · Lv.15 이상 보유 동료 '+reduction.count+'마리의 레벨을 1/3로 조정했다.','unlock',null,now);return true;
   }
   isBoarded(uid){return this.data.daycare?.parents.includes(Number(uid))||false;}
   battleBoss(b=this.data.battle){return training.battles[b.bossIndex]||db.bosses[b.bossIndex];}
@@ -661,7 +674,7 @@ class Game {
   panelState(now=Date.now()){
     const hints=collectionHints(this);
     const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,level:p.level,xp:p.xp,...experienceView(p),gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:p.moves.map(id=>({id,name:moves.get(id).name,type:moves.get(id).type})),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
-    return {...this.snapshot(now),roster,daycare:nursery.snapshot(this),johtoUnlocked:this.maxGeneration()===2,johtoDeferred:this.data.johtoDeferred,
+    return {...this.snapshot(now),roster,daycare:nursery.snapshot(this),johtoUnlocked:this.maxGeneration()===2,johtoDeferred:this.data.johtoDeferred,johtoUnlockPreview:this.johtoUnlockPreview(),
       kantoCaughtCount:this.kantoCaughtCount(),
       encounterBonus:this.encounterBonus(),
       specialEncounters:this.specialEncounters(),

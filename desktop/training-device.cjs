@@ -38,7 +38,10 @@ function has(game){return !!game.data.trainingDevice.obtainedAt;}
 function routeOpen(game){return !!game.data.trainingDevice.snorlaxWonAt||game.data.trainingDevice.legacyRoadAccess===true;}
 function hasLearnedLevel(game,p){
   const lesson=p?.deviceLevelUp;
-  return !!(has(game)&&lesson&&lesson.from===p.id&&Number.isInteger(lesson.before)&&lesson.before>=1&&Number.isInteger(lesson.level)&&lesson.level>lesson.before&&lesson.level<=p.level&&Number.isSafeInteger(lesson.at)&&lesson.at>=game.data.trainingDevice.obtainedAt&&species.get(p.id)?.evolutions.some(e=>e.trigger===2));
+  const reduction=game.data.johtoLevelReduction,previous=reduction?.changes?.find(c=>c.uid===p?.uid&&c.id===p.id&&lesson?.at<=reduction.at);
+  // An earned device evolution survives the one-time regional level reduction.
+  const reachedLevel=Math.max(p?.level||0,previous?.from||0);
+  return !!(has(game)&&lesson&&lesson.from===p.id&&Number.isInteger(lesson.before)&&lesson.before>=1&&Number.isInteger(lesson.level)&&lesson.level>lesson.before&&lesson.level<=reachedLevel&&Number.isSafeInteger(lesson.at)&&lesson.at>=game.data.trainingDevice.obtainedAt&&species.get(p.id)?.evolutions.some(e=>e.trigger===2));
 }
 function queueEvolutions(game,now,records=Object.values(game.data.owned)){
   for(const p of records){

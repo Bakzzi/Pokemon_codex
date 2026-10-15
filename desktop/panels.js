@@ -132,7 +132,7 @@ function renderBosses(){
   syncDisclosure('gym-details',state.bosses.slice(0,8).every(b=>state.badges.includes(b.id)));
   renderStory();
   renderSpecialEncounters();
-  const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.badges,state.bosses.map(b=>b.revealed),state.gymAccess,state.trainingDevice.routeOpen,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
+  const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.badges,state.bosses.map(b=>b.revealed),state.gymAccess,state.trainingDevice.routeOpen,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.johtoUnlockPreview,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
   $('badges').textContent='뱃지 '+state.badges.length+' / 8';
   renderBadgeCase();
   $('gyms').replaceChildren(...state.bosses.slice(0,8).map((boss,i)=>{
@@ -156,6 +156,8 @@ function renderBosses(){
     const unlocked=state.johtoUnlocked,stay=state.johtoDeferred;
     $('johto-title').textContent=unlocked?'성도 지방이 열렸어요':stay?'관동에서 도감을 완성하는 중':'다음 모험을 선택하세요';
     $('johto-note').textContent='관동 도감 '+state.kantoCaughtCount+' / 151 · '+(unlocked?'관동 151종과 성도 100종을 함께 만날 수 있어요.':stay?'151종 수집을 계속해요. 원할 때 언제든 2세대를 해금할 수 있어요.':'151종을 모을 때까지 관동에 머물러도 좋아요. 2세대를 해금하면 성도 100종이 추가돼요.');
+    $('johto-level-notice').hidden=unlocked;
+    $('johto-level-notice').textContent='해금 시 Lv.15 이상인 보유 포켓몬 '+(state.johtoUnlockPreview?.count??0)+'마리의 레벨이 현재의 1/3로 내려가요. 소수점은 버립니다. 예: Lv.15 → Lv.5 · Lv.90 → Lv.30. 출전·보관·키우미집 동료 모두 포함하며, Lv.14 이하는 그대로예요. 진화 모습·배운 기술·도감과 경험치 부스터는 유지돼요. 배틀 중 누르면 종료 후 한 번만 적용해요.';
     const bonus=state.encounterBonus,pct=n=>(n*100).toLocaleString('ko-KR',{maximumFractionDigits:3})+'%';
     $('champion-bonus').textContent=bonus?'챔피언 기본 확률 · 희귀 '+pct(bonus.rates.rare)+' · 전설 '+pct(bonus.rates.legendary)+' · 환상 '+pct(bonus.rates.mythical)+'\n배치한 '+bonus.selectedCount+'마리 최저 Lv.'+bonus.minimumLevel+' · 출현 '+bonus.rareMultiplier+'배 · 미등록 종 '+bonus.uncaughtWeight+'배 우대\n챔피언 기본(출현 1.5배 · 미등록 가중치 2) × 레벨 보너스 '+bonus.levelMultiplier+'배\n배치한 동료 모두 Lv.71 이상 3배 · Lv.81 이상 4배 · Lv.91 이상 5배. 빈칸은 제외하며 종별 추가 확률은 특별한 만남에 더해 표시해요.':'';
     $('johto-stay').hidden=unlocked||stay;$('johto-unlock').hidden=unlocked;
@@ -170,9 +172,10 @@ function renderSpecialEncounters(){
 function renderStory(){
   if(!state)return;const d=state.trainingDevice,busy=state.battle?.kind==='trainer',queued=state.pendingChallenge;
   syncDisclosure('rocket-hideout',d.rocketCompleted===3);
-  syncDisclosure('snorlax-road',!!d.steps.find(s=>s.id==='road-snorlax').done);
+  const road=d.steps.find(s=>s.id==='road-snorlax');syncDisclosure('snorlax-road',!!road.done);
   const signature=JSON.stringify([d.requirements,d.steps,d.rocketUnlocked,busy,state.battle?.storyId,queued?.index,d.fluteObtained,d.snorlaxCaught]);if(signature===storySignature)return;storySignature=signature;
   $('rocket-intro').textContent=d.rocketCompleted===3?'로켓단을 모두 물리쳐 무지개시티에 평화가 돌아왔어요. 민화도 한시름 놓았겠어요.':d.rocketUnlocked?'오렌지배지를 확인한 민화가 도움을 부탁했어요. “게임코너 지하의 로켓단을 물리쳐 주세요. 모두 해결되면 체육관에서 도전을 받을게요.”':'민화는 게임코너 지하에 숨어든 로켓단 때문에 골머리를 앓고 있어요. “오렌지배지가 있다면 당신의 실력을 믿고 아지트 조사를 부탁하고 싶어요.”';
+  $('snorlax-intro').textContent=road.done?(d.snorlaxCaught?'잠만보를 포획해 함께 모험하게 되었어요. 연분홍시티로 향하는 길도 활짝 열렸어요.':'잠만보를 물리쳐 연분홍시티로 향하는 길이 열렸어요. 이제 길을 지나갈 수 있어요.'):'연분홍시티로 향하는 길목에 잠만보가 깊이 잠들어 있어요. 아무리 불러도 일어나지 않네요. 깨울 방법을 찾아야겠어요.';
   $('rocket-steps').replaceChildren(...d.requirements.map(r=>{
     const row=node('li','rocket-step'+(r.done?' done':'')),info=node('div','rocket-step-info');row.dataset.requirement=r.id;info.append(node('b','',r.name));row.append(info,storyArtwork(r));
     const step=d.steps.find(s=>s.id===r.id);
@@ -180,7 +183,7 @@ function renderStory(){
     const ongoing=state.battle?.storyId===step.id,reserved=queued?.index===step.id;
     const b=node('button','',ongoing?'배틀 중':reserved?'도전 예약됨':step.done?'승리 완료':'도전하기');b.dataset.story=step.id;b.disabled=ongoing||busy||!!queued||!step.available;b.onclick=()=>window.buddy.action('challenge',step.id);row.append(b);return row;
   }));
-  const road=d.steps.find(s=>s.id==='road-snorlax'),body=node('div','snorlax-body'),ongoing=state.battle?.storyId===road.id,reserved=queued?.index===road.id;
+  const body=node('div','snorlax-body'),ongoing=state.battle?.storyId===road.id,reserved=queued?.index===road.id;
   const b=node('button','',ongoing?'배틀 중':reserved?'피리 사용 예약됨':road.done&&d.snorlaxCaught?'포획 완료':!d.fluteObtained?'깨울 방법이 필요해요':road.done?'다시 포켓몬피리 사용':'포켓몬피리 사용');b.dataset.story=road.id;b.disabled=ongoing||!!queued||!road.available;b.title=busy&&road.available?'현재 관장 배틀이 끝난 뒤 사용하도록 예약해요.':'';b.onclick=()=>window.buddy.action('challenge',road.id);
   body.append(node('b','','잠만보 · Lv.'+road.team[0].level),node('p','muted',d.fluteObtained?'포켓몬피리 · 보유 중':'깊이 잠들어 있어 길을 지나갈 수 없어요.'),b);$('snorlax-encounter').replaceChildren(img(143,'snorlax-sprite'),body);
 }
