@@ -6,7 +6,7 @@
 
 **[Windows 실행 파일 받기 · 최신 릴리스](https://github.com/Bakzzi/Pokemon_codex/releases/latest)**
 
-릴리스의 `Pokemon-Codex-0.3.59-portable.zip`을 받아 압축을 풀고 `PokemonCodex.exe`를 실행하세요. ZIP 안의 폴더와 파일을 함께 유지하면 됩니다. 소스 코드 ZIP은 실행 파일 배포본과 다릅니다.
+릴리스의 `Pokemon-Codex-0.3.60-portable.zip`을 받아 압축을 풀고 `PokemonCodex.exe`를 실행하세요. ZIP 안의 폴더와 파일을 함께 유지하면 됩니다. 소스 코드 ZIP은 실행 파일 배포본과 다릅니다.
 
 ![코딩과 함께하는 포켓몬 위젯](docs/screenshots/widget.png)
 

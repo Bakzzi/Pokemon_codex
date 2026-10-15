@@ -175,7 +175,7 @@ function renderStory(){
   const road=d.steps.find(s=>s.id==='road-snorlax');syncDisclosure('snorlax-road',!!road.done);
   const signature=JSON.stringify([d.requirements,d.steps,d.rocketUnlocked,busy,state.battle?.storyId,queued?.index,d.fluteObtained,d.snorlaxCaught]);if(signature===storySignature)return;storySignature=signature;
   $('rocket-intro').textContent=d.rocketCompleted===3?'로켓단을 모두 물리쳐 무지개시티에 평화가 돌아왔어요. 민화도 한시름 놓았겠어요.':d.rocketUnlocked?'오렌지배지를 확인한 민화가 도움을 부탁했어요. “게임코너 지하의 로켓단을 물리쳐 주세요. 모두 해결되면 체육관에서 도전을 받을게요.”':'민화는 게임코너 지하에 숨어든 로켓단 때문에 골머리를 앓고 있어요. “오렌지배지가 있다면 당신의 실력을 믿고 아지트 조사를 부탁하고 싶어요.”';
-  $('snorlax-intro').textContent=road.done?(d.snorlaxCaught?'잠만보를 포획해 함께 모험하게 되었어요. 연분홍시티로 향하는 길도 활짝 열렸어요.':'잠만보를 물리쳐 연분홍시티로 향하는 길이 열렸어요. 이제 길을 지나갈 수 있어요.'):'연분홍시티로 향하는 길목에 잠만보가 깊이 잠들어 있어요. 아무리 불러도 일어나지 않네요. 깨울 방법을 찾아야겠어요.';
+  $('snorlax-intro').textContent=road.done?(d.snorlaxCaught?'잠만보를 깨워 함께 모험하기로 했어요. 연분홍시티로 향하는 길도 활짝 열렸어요.':'잠만보를 물리쳐 연분홍시티로 향하는 길이 열렸어요. 이제 길을 지나갈 수 있어요.'):'연분홍시티로 향하는 길목에 잠만보가 깊이 잠들어 있어요. 아무리 불러도 일어나지 않네요. 깨울 방법을 찾아야겠어요.';
   $('rocket-steps').replaceChildren(...d.requirements.map(r=>{
     const row=node('li','rocket-step'+(r.done?' done':'')),info=node('div','rocket-step-info');row.dataset.requirement=r.id;info.append(node('b','',r.name));row.append(info,storyArtwork(r));
     const step=d.steps.find(s=>s.id===r.id);
