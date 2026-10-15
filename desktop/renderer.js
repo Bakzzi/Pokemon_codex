@@ -1,5 +1,6 @@
 'use strict';
 const $=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('ko-KR');
+const levelText=p=>'Lv.'+p.level+' '+(p.level>=100?'MAX':p.expPercent+'%');
 let serial=0,current=null,switching=false,captureRaf=0,moveRaf=0,faintRaf=0,switchRaf=0,playingMove=null,playingSwitch=null,speechTimer=0;
 for(const action of ['pin','compact','hide','close'])$(action).onclick=()=>window.buddy.action(action);
 for(const b of document.querySelectorAll('[data-panel]'))b.onclick=()=>window.buddy.action('panel',b.dataset.panel);
@@ -174,9 +175,9 @@ function renderPartyStatus(s){
     b.classList.toggle('empty',p.empty);b.firstChild.hidden=!!p.empty;
     if(p.empty){b.dataset.id='';b.disabled=false;b.title=(i+1)+'번 빈칸 · 도감에서 동료 배치';b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed','false');b.classList.remove('queued','fainted');b.firstChild.removeAttribute('src');b.lastChild.textContent='빈칸';return;}
     const fainted=p.fainted&&!(p.selected&&playingMove?.heroBefore&&moveHealth('hero',playingMove.hero||s.hero).currentHp>0);
-    const queued=s.pendingActions.some(a=>a.kind==='select'&&a.uid===p.uid);b.classList.toggle('queued',queued);b.dataset.id=p.uid;b.disabled=queued;b.title=p.name+' Lv.'+p.level+(queued?' · 출전 예약됨':p.boarded?' · 키우미집에서 데려온 뒤 출전 예약':fainted?' · 배틀 종료 후 회복·출전 예약':' · 클릭하여 출전');
+    const queued=s.pendingActions.some(a=>a.kind==='select'&&a.uid===p.uid);b.classList.toggle('queued',queued);b.dataset.id=p.uid;b.disabled=queued;b.title=p.name+' '+levelText(p)+(queued?' · 출전 예약됨':p.boarded?' · 키우미집에서 데려온 뒤 출전 예약':fainted?' · 배틀 종료 후 회복·출전 예약':' · 클릭하여 출전');
     b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed',String(p.selected));b.classList.toggle('fainted',fainted);
-    const img=b.firstChild;if(img.getAttribute('src')!=='assets/'+p.id+'.gif')img.src='assets/'+p.id+'.gif';b.lastChild.textContent=queued?'예약':p.boarded?'맡김':fainted?'기절':'Lv.'+p.level;
+    const img=b.firstChild;if(img.getAttribute('src')!=='assets/'+p.id+'.gif')img.src='assets/'+p.id+'.gif';b.lastChild.textContent=queued?'예약':p.boarded?'맡김':fainted?'기절':levelText(p);
   });
 }
 window.buddy.onState(s=>{
