@@ -8,6 +8,11 @@
 
 릴리스의 portable ZIP을 받아 압축을 풀고 **PokemonCodex.exe**를 실행하세요. 폴더 안의 파일을 함께 유지하면 됩니다. 포터블 실행에는 Node.js가 필요 없습니다. GitHub의 Source code ZIP은 실행 파일 배포본과 다릅니다.
 
+<p align="center">
+  <img src="docs/screenshots/widget.png" width="300" alt="코딩과 함께하는 포켓몬 위젯 화면">
+  <img src="docs/screenshots/collection.png" width="488" alt="만난 포켓몬과 잡은 포켓몬을 살펴보는 도감 화면">
+</p>
+
 ## 사용하기
 
 - Codex에서 작업하면 위젯이 로컬 작업 상태와 사용량을 읽어 모험을 진행합니다. API 키나 hooks를 따로 설정하지 않습니다.
