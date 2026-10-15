@@ -1,0 +1,70 @@
+{
+  "version": "0.3.60",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "dfb114d04df28aa11d5baf8ada275a1dcbcf3653",
+  "sourceTag": "v0.3.60",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.60",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime, current sources and item assets copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.59. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "scope": "Captured Snorlax road summary uses the requested waking-up and adventuring-together sentence; collapsed summary, knockout wording and reload",
+    "command": "node --check desktop/panels.js; isolated Electron fixture using exact packaged runtime; git diff --check",
+    "syntaxCheckPassed": true,
+    "packagedRuntimeFilesMatched": 25,
+    "packagedDocumentationFilesMatched": 3,
+    "packagedUiCasesPassed": 3,
+    "uiCases": [
+      "knockout-summary-unchanged",
+      "captured-summary-uses-requested-wording",
+      "requested-wording-survives-reload"
+    ],
+    "uiErrors": 0,
+    "inheritedGameplayValidation": {
+      "sourceTag": "v0.3.59",
+      "testsPassed": 240,
+      "unchangedRuntimeFiles": 24,
+      "dependencyVersionsUnchanged": true
+    },
+    "partyCapacity": 6,
+    "archiveFilesVerified": 706,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.60-portable.zip",
+    "bytes": 165974558,
+    "sha256": "1e2f01c2388a39fe0ac05e0cdfa5055415e8328fcfcc156864e288b23bf62095"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "portraitWidths": [
+      48,
+      40
+    ],
+    "itemSources": "desktop/assets/items/sources.json"
+  }
+}
