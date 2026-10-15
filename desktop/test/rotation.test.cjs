@@ -80,10 +80,10 @@ test('faint replacements ignore fainted, boarded and unselected Pokemon, includi
   advance(g);assert.equal(g.data.activeId,1);assert.ok(!g.data.slots.includes(outside));
 });
 
-test('trainer fainting also picks the lowest survivor, irrespective of the 5-level gap',()=>{
+test('trainer fainting picks a favorable survivor rather than the lowest level',()=>{
   const g=new Game({},now,{random:()=>.73});levels(g,{1:9,4:8,7:5,25:6});g.data.activeId=4;
   assert.ok(g.challenge(0,now));g.data.battle.party[4].hp=0; // also models a saved faint before replacement
-  advance(g);assert.equal(g.data.animation.kind,'faint');advance(g);assert.equal(g.data.activeId,7);assert.equal(g.data.battle.pendingSwitch,7);
+  advance(g);assert.equal(g.data.animation.kind,'faint');advance(g);assert.equal(g.data.activeId,1);assert.equal(g.data.battle.pendingSwitch,1);
   assert.equal(g.data.animation.reason,'faint');assert.deepEqual(g.data.badges,[]);
 });
 

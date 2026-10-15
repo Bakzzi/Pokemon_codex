@@ -112,6 +112,7 @@ class Game {
     if(!selected.size){const uid=this.data.owned[this.data.activeId]?this.data.activeId:Object.keys(this.data.owned).map(Number)[0];this.data.slots[0]=uid;}
     if(!this.data.slots.includes(this.data.activeId))this.data.activeId=this.data.slots.find(uid=>uid!==null&&!this.isBoarded(uid))||this.data.slots.find(uid=>uid!==null);
     training.init(this,now);
+    if(this.data.battle?.kind==='trainer'&&this.data.battle.matchupRevision!==1){this.data.battle.matchupRevision=1;this.data.battle.matchupPending=true;}
     const actionIds=new Set();
     this.data.pendingActions=(Array.isArray(this.data.pendingActions)?this.data.pendingActions:[]).slice(0,32).map(restoreAction).filter(a=>a&&!actionIds.has(a.id)&&actionIds.add(a.id));
     this.data.actionSerial=Math.max(validCount(this.data.actionSerial)?this.data.actionSerial:0,...actionIds);
@@ -370,8 +371,16 @@ class Game {
     this.data.animation.reason=reason;this.data.animation.text=text;
     this.log(text,'switch',to.id,now);return true;
   }
+  switchToMatchup(reason,now){
+    const b=this.data.battle,next=battleEngine.bestPartner(this,b);
+    if(next===null||next===this.data.activeId){delete b.matchupPending;return false;}
+    const from=this.data.owned[this.data.activeId];
+    if(!this.select(next,now))return false;
+    const to=this.data.owned[next],text=(reason==='faint'?species.get(from.id).name+' 기절 · ':'상성 판단 · ')+species.get(to.id).name+' Lv.'+to.level+' 출전';
+    this.data.animation.reason=reason;this.data.animation.text=text;this.log(text,'switch',to.id,now);return true;
+  }
   handleFaint(now){
-    if(this.switchToLowest('faint',now))return;
+    if(this.data.battle.kind==='trainer'?this.switchToMatchup('faint',now):this.switchToLowest('faint',now))return;
     const b=this.data.battle;
     if(b.kind==='trainer')this.endChallenge(false,now);
     else{const text=`${species.get(b.foe.id).name}에게 패배 · 동료들을 회복했다`;this.log(text,'loss',null,now);this.data.battle=null;this.animate('result',{text},now);}
@@ -384,7 +393,7 @@ class Game {
     if(battle&&!battleEngine.canSwitch(this,battle,id))return false;
     if(!this.data.slots.includes(id)){if(battle?.kind==='trainer')return false;const empty=this.data.slots.indexOf(null);this.data.slots[empty>=0?empty:this.data.slots.indexOf(this.data.activeId)]=id;}
     const from=this.data.activeId,fromPokemon=this.snapshot(now).hero;this.data.activeId=id;
-    if(battle){if(!battle.party[id]){battle.party[id]=this.memberCombatant(this.data.owned[id]);battleEngine.invalidate(battle);}battle.pendingSwitch=id;}
+    if(battle){if(!battle.party[id]){battle.party[id]=this.memberCombatant(this.data.owned[id]);battleEngine.invalidate(battle);}battle.pendingSwitch=id;delete battle.matchupPending;}
     this.animate('switch',{from:this.data.owned[from].id,to:this.data.owned[id].id,fromPokemon,toPokemon:this.snapshot(now).hero,text:`${species.get(this.data.owned[id].id).name}, 너로 정했다!`},now);return true;
   }
   setSlot(slot,id,now=Date.now()){
@@ -479,6 +488,7 @@ class Game {
     const b=this.data.battle,boss=this.battleBoss(b),enemy=boss.team[b.foeIndex];
     if(!b.storyId&&SECRET_TRAINERS.has(boss.id))this.data.trainerSeen[boss.id] ||= now;
     b.foe=combatant(enemy.id,enemy.level,enemy.moves);b.turn=0;
+    if(b.kind==='trainer'){b.matchupRevision=1;b.matchupPending=true;}
     this.data.seen[enemy.id]=this.data.seen[enemy.id]||now;this.animate('encounter',{id:enemy.id,text:b.storyId==='road-snorlax'?'포켓몬피리를 불었다! 잠만보 Lv.30이 깨어났다!':`${boss.name}의 ${species.get(enemy.id).name}!`},now);
   }
   abandon(now=Date.now()){
@@ -597,6 +607,7 @@ class Game {
       if(this.startChallenge(index,now))return true;
       this.cancelChallenge(now);
     }
+    if(b?.kind==='trainer'&&b.matchupPending&&this.switchToMatchup('matchup',now))return true;
     // Rotation is free and waits until the previous battle's result has been shown.
     // The next wild encounter is then scaled to the newly selected partner.
     if(!b&&!this.data.manualSelection&&this.switchToLowest('balance',now))return true;

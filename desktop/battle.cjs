@@ -112,6 +112,56 @@ function scoreMove(sim,actor,target,move){
   if(move.id==='transform')return actor.transformed?0:80;
   return 16;
 }
+// Deterministic party preview, using the same Gen III types/category/stats as combat.
+// This estimates a matchup; it never advances the native battle or consumes its RNG.
+function previewDamage(actor,target,move){
+  if(move.category==='Status'||(move.id==='dreameater'&&target.status!=='sleep')||(['snore','sleeptalk'].includes(move.id)&&actor.status!=='sleep'))return 0;
+  const typing=mon=>dex.species.get(species.get(mon.id).identifier).types;
+  const ability=mon=>abilities.get(mon.ability||abilityFor(mon.id))?.identifier.replaceAll('-','');
+  const defending=ability(target),attacking=ability(actor),types=typing(target);
+  const effectiveness=2**dex.getEffectiveness(move.type,types);
+  if(!dex.getImmunity(move.type,types)||(move.type==='Ground'&&defending==='levitate')||(move.type==='Water'&&defending==='waterabsorb')||(move.type==='Electric'&&defending==='voltabsorb')||(move.type==='Fire'&&defending==='flashfire')||(move.flags.sound&&defending==='soundproof')||(defending==='wonderguard'&&effectiveness<=1&&move.id!=='struggle'))return 0;
+  const accuracy=move.accuracy===true?1:(move.accuracy||100)/100;
+  if(move.ohko)return actor.level>=target.level?target.hp*.3:0;
+  if(move.damage)return Math.min(target.hp,move.damage==='level'?actor.level:typeof move.damage==='number'?move.damage:0)*accuracy;
+  const physical=move.category==='Physical',stage=(mon,key)=>{const n=mon.stages?.[key]||0;return n>=0?(2+n)/2:2/(2-n);};
+  let attack=actor.stats[physical?2:4]*stage(actor,physical?2:4),defense=target.stats[physical?3:5]*stage(target,physical?3:5);
+  if(physical&&['hugepower','purepower'].includes(attacking))attack*=2;
+  if(physical&&attacking==='hustle')attack*=1.5;
+  if(physical&&actor.status){if(attacking==='guts')attack*=1.5;else if(actor.status==='burn')attack*=.5;}
+  if(physical&&defending==='intimidate')attack*=2/3;
+  let power=move.basePower||50;
+  if(move.id==='return')power=Math.max(1,Math.floor((actor.happiness??70)*.4));
+  if(move.id==='frustration')power=Math.max(1,Math.floor((255-(actor.happiness??70))*.4));
+  if(move.id==='eruption'||move.id==='waterspout')power=Math.max(1,150*actor.hp/actor.maxHp);
+  let damage=((2*actor.level/5+2)*power*attack/Math.max(1,defense)/50+2)*effectiveness*accuracy*.925;
+  if(typing(actor).includes(move.type))damage*=1.5;
+  if(defending==='thickfat'&&['Fire','Ice'].includes(move.type))damage*=.5;
+  if(actor.hp<=actor.maxHp/3&&({overgrow:'Grass',blaze:'Fire',torrent:'Water',swarm:'Bug'})[attacking]===move.type)damage*=1.5;
+  if(move.multihit)damage*=Array.isArray(move.multihit)?3:move.multihit;
+  if(move.flags.charge||move.selfSwitch||move.id==='hyperbeam')damage*=.5;
+  if(move.selfdestruct)damage*=.15;
+  if(physical&&attacking==='hustle')damage*=.8;
+  return damage;
+}
+function matchupScore(hero,foe){
+  const best=(actor,target)=>{
+    const usable=actor.moves.filter(id=>(actor.pp[id]??0)>0).map(id=>simMoves.get(id)).filter(Boolean);
+    const damage=Math.max(0,...(usable.length?usable:[dex.moves.get('struggle')]).map(move=>previewDamage(actor,target,move)));
+    return damage*((actor.status==='sleep'||actor.status==='freeze') ? .5 : actor.status==='paralysis' ? .75 : 1);
+  };
+  const offense=best(hero,foe)/Math.max(1,foe.hp),threat=best(foe,hero)/Math.max(1,hero.hp);
+  // Survival matters: a nearly fainted counter should not displace a healthy winner.
+  return Math.min(2,offense)/(Math.max(.05,threat))+(hero.hp/hero.maxHp)*.01;
+}
+function bestPartner(game,b){
+  let next=null,score=-Infinity;
+  for(const uid of game.availablePartners()){
+    const value=matchupScore(b.party[uid],b.foe);
+    if(value>score+1e-9||(Math.abs(value-score)<=1e-9&&uid===game.data.activeId)){next=uid;score=value;}
+  }
+  return next;
+}
 function choose(sim,side,random,preferred){
   const mon=side.active[0];
   if(side.activeRequest?.forceSwitch){
@@ -227,4 +277,4 @@ function tryCatch(rate,hp,maxHp,status,random=Math.random){
   while(checks<4&&Math.floor(random()*65536)<threshold)checks++;
   return {caught:checks===4,shakes:Math.min(checks,3),a};
 }
-module.exports={combatant,abilityFor,step,canSwitch,invalidate,catchValue,tryCatch,engine,readMon,scoreMove,movePresentation,dex};
+module.exports={bestPartner,matchupScore,combatant,abilityFor,step,canSwitch,invalidate,catchValue,tryCatch,engine,readMon,scoreMove,movePresentation,dex};
