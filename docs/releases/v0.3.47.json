@@ -1,0 +1,73 @@
+{
+  "version": "0.3.47",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "0f03be9d6bf0c94230e98b247e6cd43e89b66f39",
+  "sourceTag": "v0.3.47",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.47",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime and current sources copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.46. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "scope": "Orange Badge request, three-stage Rocket quest, Erika gate, reward timing, sleeping-road hints, migration and season reset",
+    "command": "node --test desktop/test/rocket-flute.test.cjs desktop/test/story-gate.test.cjs desktop/test/training-device.test.cjs desktop/test/acquisition-hints.test.cjs desktop/test/monthly-season.test.cjs desktop/test/trainer-secrets.test.cjs desktop/test/game.test.cjs",
+    "passed": 73,
+    "syntax": "node --check desktop/panels.js",
+    "packagedRuntimeFilesMatched": 25,
+    "packagedUiCasesPassed": 7,
+    "uiCases": [
+      "no-orange-badge",
+      "orange-badge-confirmed",
+      "grunt-complete",
+      "duo-complete",
+      "hideout-complete",
+      "erika-won",
+      "road-cleared"
+    ],
+    "narrowChallengeWidth": 650,
+    "threeRocketSteps": true,
+    "rewardSolutionHiddenUntilOwned": true,
+    "existingStoryProgressPreserved": true,
+    "storyRevision": 3,
+    "legacyEarnedRewardBackfilled": false,
+    "noBattleActionsDispatched": true,
+    "uiErrors": 0,
+    "archiveFilesVerified": 692,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.47-portable.zip",
+    "bytes": 165957414,
+    "sha256": "1a3f17e65c02bbb244fe20ac71ae2ee352aa188637b42d10ddfb7a055d95d0e4"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "portraitWidths": [
+      48,
+      40
+    ]
+  }
+}
