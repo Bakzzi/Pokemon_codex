@@ -71,4 +71,4 @@ function pickWild(maxGeneration,random=Math.random,partnerLevel=100,{champion=fa
   for(let i=0;i<pool.length;i++){pick-=weights[i];if(pick<0)return pool[i].id;}
   return pool.at(-1).id;
 }
-module.exports={data,species,moves,xpAt,levelAt,learnedMoves,effective,statsAt,view,pickWild,rarity,balance,wildMinimum,encounterChances,championBonus,milestoneBonuses,wildDistribution};
+module.exports={data,species,moves,xpAt,levelAt,learnedMoves,effective,statsAt,view,pickWild,rarity,balance,wildMinimum,wildEligible,encounterChances,championBonus,milestoneBonuses,wildDistribution};
