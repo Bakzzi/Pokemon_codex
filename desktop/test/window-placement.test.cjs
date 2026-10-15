@@ -9,11 +9,11 @@ test('all four edges and corners attract nearby drops while the middle and posit
 test('negative monitor origins and taskbar work areas keep every edge in the selected display',()=>{
   const second={x:-1600,y:-200,width:1600,height:860},bounds={x:-1592,y:-191,...size(false)};
   assert.deepEqual(fit(bounds,second,true),{...bounds,x:-1600,y:-200});
-  assert.deepEqual(fit({...bounds,x:100,y:900},second,true),{...bounds,x:-370,y:179});
+  assert.deepEqual(fit({...bounds,x:100,y:900},second,true),{...bounds,x:-370,y:169});
 });
 test('changing modes keeps a docked bottom corner anchored and only clamps a free window if needed',()=>{
-  const compact={...size(true),x:1550,y:769},expanded=resized(compact,false,area);
-  assert.deepEqual(expanded,{...size(false),x:1550,y:559});assert.deepEqual(resized(expanded,true,area),compact);
+  const compact={...size(true),x:1550,y:759},expanded=resized(compact,false,area);
+  assert.deepEqual(expanded,{...size(false),x:1550,y:549});assert.deepEqual(resized(expanded,true,area),compact);
   assert.deepEqual(resized({...compact,x:500,y:200},false,area),{...size(false),x:500,y:200});
 });
 test('dragging away stays free at every pixel and only the final drop snaps on the destination monitor',()=>{
@@ -25,5 +25,5 @@ test('dragging away stays free at every pixel and only the final drop snaps on t
   drop();assert.equal(win.bounds.x,30);
   drag({...win.bounds,x:8});assert.equal(win.bounds.x,8);drop();assert.equal(win.bounds.x,0);
   drag({...win.bounds,x:-1592});assert.equal(win.bounds.x,-1592);drop();assert.equal(win.bounds.x,-1600);
-  control.resize(false);assert.equal(win.bounds.height,481);win.emit('close');const last=positions.at(-1);win.bounds.x=0;win.emit('move');win.emit('moved');assert.deepEqual(positions.at(-1),last);
+  control.resize(false);assert.equal(win.bounds.height,491);win.emit('close');const last=positions.at(-1);win.bounds.x=0;win.emit('move');win.emit('moved');assert.deepEqual(positions.at(-1),last);
 });

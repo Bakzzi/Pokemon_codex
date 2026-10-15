@@ -16,7 +16,7 @@ test('every allowed species has an acquisition route, while unknown identities a
 test('ordinary and evolved species combine their exact current wild probability with their other legal routes',()=>{
   const g=fixture();level(g,20);g.data.seen[10]=now;
   const p=entry(g,11),routes=p.acquisition.routes,d=wildDistribution(1,20,g.wildOptions()).pokemon.find(p=>p.id===11);
-  assert.equal(routes.find(r=>r.kind==='wild').chance,d.chance);assert.ok(routes.some(r=>r.kind==='evolution'&&r.text.includes('캐터피')&&r.text.includes('Lv.7')&&r.text.includes('자동진화')));
+  assert.equal(routes.find(r=>r.kind==='wild').chance,d.chance);const evolution=routes.find(r=>r.kind==='evolution');assert.equal(evolution.text,'No.10 캐터피 · Lv.7 레벨업 시 자동진화');assert.equal(evolution.special,false);
   assert.equal(p.name,'???');assert.equal(p.description,'');
 });
 
@@ -30,12 +30,12 @@ test('starter families never get a wild route; starter, level and stone methods 
   for(const id of [1,2,3,4,5,6,7,8,9,25,26]){const p=entry(g,id);assert.equal(p.acquisition.wildAllowed,false);assert.ok(!p.acquisition.routes.some(r=>r.kind==='wild'));}
   assert.ok(entry(g,4).acquisition.routes.some(r=>r.kind==='starter'));
   assert.ok(entry(g,5).acquisition.routes.some(r=>r.kind==='evolution'&&r.text.includes('파이리')&&r.text.includes('Lv.16')));
-  const raichu=entry(g,26).acquisition.routes.find(r=>r.kind==='evolution');assert.equal(raichu.text,'No.25 피카츄 · 천둥의돌 1개');
+  const raichu=entry(g,26).acquisition.routes.find(r=>r.kind==='evolution');assert.equal(raichu.text,'No.25 피카츄 · 천둥의돌 1개 사용 시 진화');assert.equal(raichu.special,true);assert.equal(entry(g,26).acquisition.summary,'특수진화');
 });
 
 test('trade alternatives show device learning and held items without revealing the device reward chain',()=>{
   const g=fixture();g.data.seen[64]=now;
-  const text=entry(g,65).acquisition.routes.find(r=>r.kind==='evolution').text;assert.equal(text,'No.64 윤겔라 · 학습장치로 1레벨 상승 자동진화');assert.ok(!/40|로켓|잠만보|독수/.test(text));
+  const route=entry(g,65).acquisition.routes.find(r=>r.kind==='evolution'),text=route.text;assert.equal(text,'No.64 윤겔라 · 학습장치로 1레벨 상승 시 자동진화');assert.equal(route.special,true);assert.equal(entry(g,65).acquisition.summary,'특수진화');assert.ok(!/40|로켓|잠만보|독수/.test(text));
   g.data.champion=true;g.unlockJohto(now);const steelix=entry(g,208).acquisition.routes.find(r=>r.kind==='evolution');assert.ok(steelix.text.includes('금속코트'));assert.ok(steelix.text.includes('학습장치'));
 });
 

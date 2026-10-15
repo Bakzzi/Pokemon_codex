@@ -36,7 +36,7 @@ function renderDex(){
   const root=$('detail');root.replaceChildren(img(p.id,'portrait'+(p.seen?'':' unseen')),node('div','number','No.'+p.id+' · '+(p.caught?'포획 완료':p.seen?'발견':'미발견')),node('h2','',p.name),node('div','types',p.types.join(' / ')),node('p','description',p.description));
   const hints=node('section','acquisition-hints');hints.setAttribute('aria-label','획득 힌트');hints.append(node('h3','','획득 힌트'));
   const labels={wild:'야생',starter:'스타팅',event:'이벤트',evolution:'진화',hatch:'부화'};
-  p.acquisition.routes.forEach((r,i)=>{const row=node('p','');row.append(node('b','',(i?'또는 ':'')+labels[r.kind]),document.createTextNode(' · '+r.text));hints.append(row);if(r.note)hints.append(node('small','',r.note));});
+  p.acquisition.routes.forEach((r,i)=>{const row=node('p','');row.append(node('b','',(i?'또는 ':'')+(r.kind==='evolution'&&r.special?'특수진화':labels[r.kind])),document.createTextNode(' · '+r.text));hints.append(row);if(r.note)hints.append(node('small','',r.note));});
   hints.append(node('small','',p.acquisition.note));root.append(hints);
   if(!p.owned){
     if(p.caught)root.append(node('p','muted','도감 기록은 남아 있어요. '+(p.seasonCaught?'이번 시즌에 등록한 종이에요.':p.acquisition.wildAllowed?'이번 시즌에는 다시 포획할 수 있어요.':'위 획득 경로로 동료를 다시 얻을 수 있어요.')));

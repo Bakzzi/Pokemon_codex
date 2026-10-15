@@ -20,9 +20,10 @@ test('actual ordinary, champion and special-bonus draws cannot select special ev
 
 test('hints for all legal special forms show evolution instead of wild appearance or hatching',()=>{
   const g=new Game({},now);g.data.champion=true;g.unlockJohto(now);
+  const markedSpecial=new Set([...trade,26,31,34,36,38,40,45,59,62,71,91,103,121,134,135,136,182,192]);
   const collection=g.panelState(now).collection;
   for(const id of excluded.filter(id=>id!==26)){
-    const hint=collection.find(p=>p.id===id).acquisition;assert.equal(hint.wildAllowed,false);assert.deepEqual(hint.routes.map(r=>r.kind),['evolution']);assert.equal(hint.summary,'진화');assert.equal(hint.note,'진화로만 얻을 수 있어요.');
+    const hint=collection.find(p=>p.id===id).acquisition;assert.equal(hint.wildAllowed,false);assert.deepEqual(hint.routes.map(r=>r.kind),['evolution']);assert.equal(hint.routes[0].special,markedSpecial.has(id));assert.equal(hint.summary,markedSpecial.has(id)?'특수진화':'진화');assert.equal(hint.note,'진화로만 얻을 수 있어요.');
   }
   for(const id of trade)assert.ok(collection.find(p=>p.id===id).acquisition.routes[0].text.includes('학습장치'));
 });

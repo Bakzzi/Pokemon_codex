@@ -49,9 +49,9 @@ function collectionHints(game){
       if(rule.time)conditions.push(rule.time==='day'?'한국시간 04~18시':'한국시간 18~04시');
       if(rule.relativeStats!==null)conditions.push(rule.relativeStats>0?'공격 > 방어':rule.relativeStats<0?'공격 < 방어':'공격 = 방어');
       if(rule.trigger===2)conditions.push('학습장치로 1레벨 상승');
-      const automatic=rule.trigger===1&&rule.level>0||rule.trigger===2;
-      const text=ref(rule.from)+' · '+conditions.join(' + ')+(automatic?' 자동진화':'');
-      routes.push({kind:'evolution',from:rule.from,text,...(rule.item?{note:'진화 도구는 야생 배틀 승리·포획 후 발견할 수 있어요.'}:{})});
+      const ending=rule.trigger===2?' 시 자동진화':rule.trigger===1&&rule.level>0?' 레벨업 시 자동진화':rule.item?' 사용 시 진화':'';
+      const text=ref(rule.from)+' · '+conditions.join(' + ')+ending;
+      routes.push({kind:'evolution',special:rule.trigger===2||!!rule.item,from:rule.from,text,...(rule.item?{note:'진화 도구는 야생 배틀 승리·포획 후 발견할 수 있어요.'}:{})});
     }
     // Acquiring a missing species must not require already owning that same species.
     const family=[...(eggs.get(p.id)||[])].filter(parent=>parent.from!==p.id).sort((a,b)=>Number(owned.has(b.from))-Number(owned.has(a.from))||Number(!!game.data.seen[b.from])-Number(!!game.data.seen[a.from])||a.from-b.from);
@@ -61,7 +61,7 @@ function collectionHints(game){
     }
     const labels={wild:activeLevel<minimum?'Lv.'+minimum+'부터 야생':'야생',starter:'스타팅',event:'피리 이벤트',evolution:'진화',hatch:'부화'};
     const evolutionOnly=routes.length>0&&routes.every(r=>r.kind==='evolution');
-    result.set(p.id,{wildAllowed,routes,summary:[...new Set(routes.map(r=>labels[r.kind]))].join(' · '),note:wildAllowed?'야생 확률은 현재 출전 동료와 진행 상태에서 다음 야생 1회에 만날 확률이에요. 포획 성공률과는 달라요.':evolutionOnly?'진화로만 얻을 수 있어요.':'일반 야생에서는 출현하지 않아요.'});
+    result.set(p.id,{wildAllowed,routes,summary:[...new Set(routes.map(r=>r.kind==='evolution'&&r.special?'특수진화':labels[r.kind]))].join(' · '),note:wildAllowed?'야생 확률은 현재 출전 동료와 진행 상태에서 다음 야생 1회에 만날 확률이에요. 포획 성공률과는 달라요.':evolutionOnly?'진화로만 얻을 수 있어요.':'일반 야생에서는 출현하지 않아요.'});
   }
   return result;
 }

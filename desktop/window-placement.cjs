@@ -1,6 +1,6 @@
 'use strict';
-const WIDTH=370,TOP_INSET=15,SNAP_DISTANCE=20;
-const size=compact=>({width:WIDTH,height:compact?271:481});
+const WIDTH=370,TOP_INSET=25,SNAP_DISTANCE=20;
+const size=compact=>({width:WIDTH,height:TOP_INSET+(compact?256:466)});
 function fit(bounds,area,snap=false){
   const right=Math.max(area.x,area.x+area.width-bounds.width),bottom=Math.max(area.y,area.y+area.height-bounds.height);
   let x=Math.max(area.x,Math.min(bounds.x,right)),y=Math.max(area.y,Math.min(bounds.y,bottom));
