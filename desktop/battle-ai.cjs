@@ -11,8 +11,14 @@ function model(state){
   sim.randomizer=damage=>Math.floor(damage*.925);
   return sim;
 }
-function legal(mon){return mon.getMoves().filter(m=>!m.disabled&&m.pp>0).map(m=>mon.battle.dex.moves.get(m.id));}
+function legal(mon){
+  // Match the simulator's choice contract, including hard locks (recharge,
+  // charge/continuation turns) and soft locks (Encore). Forced requests omit PP.
+  const locked=mon.getLockedMove()||mon.getSemiLockedMove(false);
+  return mon.getMoves(locked).filter(m=>!m.disabled&&(m.pp===undefined||m.pp>0)).map(m=>mon.battle.dex.moves.get(m.id));
+}
 function accuracy(sim,actor,target,move){
+  if(move.id==='recharge')return 1; // Simulator action, not a Dex move.
   if(move.accuracy===true||move.alwaysHit||move.target==='self')return 1;
   if(move.ohko)return actor.level<target.level?0:clamp((30+actor.level-target.level)/100,0,1);
   let value=sim.runEvent('ModifyAccuracy',target,actor,move,move.accuracy);
@@ -35,6 +41,7 @@ function blocked(actor,target,move){
     (move.id==='dreameater'&&target.status!=='slp')||(move.id==='snore'&&actor.status!=='slp');
 }
 function damage(sim,actor,target,move){
+  if(move.id==='recharge')return 0;
   if(move.category==='Status'||blocked(actor,target,move))return 0;
   const active=sim.dex.getActiveMove(move);active.willCrit=false;
   let value=sim.actions.getDamage(actor,target,active,true);

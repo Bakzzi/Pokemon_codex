@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),{Battle}=re
 const ai=require('../battle-ai.cjs'),battle=require('../battle.cjs'),{data,learnedMoves,species}=require('../pokemon.cjs');
 const {Game}=require('../game.cjs');
 function set(name,moves,level=50){const p=battle.dex.species.get(name);return {species:name,level,moves,ability:p.abilities[0],nature:'Serious',ivs:{hp:15,atk:15,def:15,spa:15,spd:15,spe:15},evs:{hp:0,atk:0,def:0,spa:0,spd:0,spe:0}};}
-function fixture(a,am,b,bm,level=50){return new Battle({formatid:'gen3customgame',seed:[1,2,3,4],p1:{name:'one',team:[set(a,am,level)]},p2:{name:'two',team:[set(b,bm,level)]}});}
+function fixture(a,am,b,bm,level=50,seed=[1,2,3,4]){return new Battle({formatid:'gen3customgame',seed,p1:{name:'one',team:[set(a,am,level)]},p2:{name:'two',team:[set(b,bm,level)]}});}
 function pick(sim,options){return ai.plan(sim,0,options).action;}
 
 test('coverage uses the attacking move type, including off-type moves and compound weaknesses',()=>{
@@ -97,4 +97,33 @@ test('tactical switches persist their cooldown; manual choices stay honored for 
   const reloaded=new Game(structuredClone(g.data),now,{random:()=>.73});assert.equal(reloaded.data.battle.aiLastSwitch,state.aiLastSwitch);
   g.data.switchUntil=0;assert.ok(g.select(a,now));assert.equal(state.manualMatchup,true);battle.step(g,state);assert.equal(g.data.activeId,a);
   state.foeIndex=0;g.nextTrainer(now);assert.equal(state.manualMatchup,undefined);assert.equal(state.aiLastSwitch,undefined);
+});
+
+test('Hyper Beam recharge is a legal forced action for either side, including after restore',()=>{
+  const s=fixture('Snorlax',['hyperbeam','headbutt','rest'],'Lapras',['watergun'],50,[5,6,7,8]);s.makeChoices('move hyperbeam','move watergun');
+  assert.equal(s.p1.active[0].getLockedMove(),'recharge');
+  const restored=Battle.fromJSON(JSON.parse(JSON.stringify(s.toJSON()))),before=JSON.stringify(restored.toJSON());
+  const result=ai.plan(restored,0,{allowSwitch:true});assert.equal(result.action,'move recharge');assert.ok(Number.isFinite(result.value));
+  assert.equal(JSON.stringify(restored.toJSON()),before);assert.ok(Number.isFinite(ai.plan(restored,1).value));
+  restored.makeChoices(result.action,ai.plan(restored,1).action);assert.equal(restored.p1.active[0].getLockedMove(),null);
+  assert.ok(restored.log.some(line=>line.includes('|cant|')&&line.includes('recharge')));
+});
+test('charge, consecutive moves, Encore and zero-PP continuation honor native action locks',()=>{
+  for(const id of ['solarbeam','fly','outrage','rollout','bide']){
+    const s=fixture('Dragonite',[id,'tackle','agility'],'Snorlax',['splash']);s.makeChoices('move '+id,'move splash');
+    assert.equal(s.p1.active[0].getLockedMove(),id,id);
+    const slot=s.p1.active[0].moveSlots.find(m=>m.id===id);slot.pp=0;s.makeRequest('move');
+    const result=ai.plan(s,0,{allowSwitch:true});assert.equal(result.action,'move '+id);assert.ok(Number.isFinite(ai.plan(s,1).value));
+    s.makeChoices(result.action,'move splash');
+  }
+  const s=fixture('Pikachu',['thunderbolt','quickattack','growl'],'Snorlax',['encore']);s.makeChoices('move growl','move encore');
+  assert.ok(s.p1.active[0].volatiles.encore);
+  assert.equal(pick(s),'move growl');s.makeChoices(pick(s),'move encore');
+});
+test('a forecasting exception falls back to a native legal action without stopping game ticks',()=>{
+  const now=Date.parse('2026-10-15T09:00:00Z'),g=new Game({},now,{random:()=>.73});g.data.workTokens=10000;g.data.caught[129]=now;
+  g.data.battle={kind:'wild',turn:0,captureAttempts:0,party:{25:g.memberCombatant(g.data.owned[25])},foe:battle.combatant(129,5,[150])};
+  const original=ai.plan,log=console.error;let errors=0;ai.plan=()=>{throw new Error('injected prediction failure');};console.error=()=>errors++;
+  try{for(let i=0;i<3;i++)assert.ok(g.tick(Math.max(now,g.nextTick,g.data.switchUntil)));assert.equal(errors,1);assert.ok(g.data.eventSerial>0);}
+  finally{ai.plan=original;console.error=log;}
 });

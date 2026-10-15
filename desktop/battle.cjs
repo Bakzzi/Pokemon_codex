@@ -11,6 +11,7 @@ const statKeys={1:'hp',2:'atk',3:'def',4:'spa',5:'spd',6:'spe',7:'accuracy',8:'e
 const statusCodes={sleep:'slp',freeze:'frz',paralysis:'par',burn:'brn',poison:'psn',toxic:'tox'};
 const statusNames=Object.fromEntries(Object.entries(statusCodes).map(([k,v])=>[v,k]));
 const cache=new WeakMap();
+const planningErrors=new WeakSet();
 const clone=v=>JSON.parse(JSON.stringify(v));
 function abilityFor(id,slot=0){const list=species.get(id).abilities;return list[slot%list.length]||list[0];}
 function combatant(id,level,known,options={}){
@@ -152,7 +153,13 @@ function choose(sim,side,preferred,allowSwitch,eligible){
   }
   if(side.activeRequest?.wait)return null;
   if(preferred&&mon.name!=='u'+preferred){const pick=side.pokemon.find(p=>p.name==='u'+preferred&&p.hp>0&&!p.fainted);if(pick&&!mon.trapped)return 'switch '+(side.pokemon.indexOf(pick)+1);}
-  return ai.plan(sim,side.n,{allowSwitch,eligible}).action;
+  try{return ai.plan(sim,side.n,{allowSwitch,eligible}).action;}
+  catch(error){
+    // Prediction is optional. An AI error must not escape into the application
+    // timer and stop saving/reading Codex activity. Native default is legal.
+    if(!planningErrors.has(sim)){planningErrors.add(sim);console.error('Battle forecast failed; using the simulator legal default.',error);}
+    return 'default';
+  }
 }
 const names={slp:'잠듦',frz:'얼음',par:'마비',brn:'화상',psn:'독',tox:'맹독',confusion:'혼란',recoil:'반동',trapped:'교체 불가',partiallytrapped:'조이기',leechseed:'씨뿌리기',substitute:'대타출동',reflect:'리플렉터',lightscreen:'빛의장막',protect:'방어',mustrecharge:'반동',sunnyday:'쾌청',raindance:'비',sandstorm:'모래바람',hail:'싸라기눈',atk:'공격',def:'방어',spa:'특수공격',spd:'특수방어',spe:'스피드',accuracy:'명중률',evasion:'회피율'};
 const effectId=value=>value.replace(/^(move|ability):\s*/,'').toLowerCase().replace(/[^a-z0-9]/g,'');
