@@ -1,0 +1,74 @@
+{
+  "version": "0.3.49",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "794fed45dda3e69460e48e606a9b85d3fdc11508",
+  "sourceTag": "v0.3.49",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.49",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime and current sources copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.48. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "scope": "Owned Pokemon current-level experience percentage in party slots, collection and individual details, Exp. Share and daycare; per-species growth curves, updates within the same level, level-up reset, duplicates and maximum level",
+    "command": "node --test desktop/test/experience-boost.test.cjs desktop/test/training-device.test.cjs desktop/test/device-evolution.test.cjs",
+    "passed": 24,
+    "failed": 0,
+    "packagedRuntimeFilesMatched": 25,
+    "packagedUiCasesPassed": 6,
+    "uiCases": [
+      "different-growth-curves",
+      "percent-updates-without-level-up",
+      "level-up-resets-percent",
+      "same-species-individuals",
+      "individual-detail-selector",
+      "six-party-and-max-level"
+    ],
+    "widgetWidths": [
+      370
+    ],
+    "panelWidth": 650,
+    "legacySelectedPositionsPreserved": true,
+    "partyCapacity": 6,
+    "perIndividualExperience": true,
+    "maximumLevelLabel": "Lv.100 MAX",
+    "expShareRemainingXpDisplayed": true,
+    "uiErrors": 0,
+    "archiveFilesVerified": 692,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.49-portable.zip",
+    "bytes": 165959741,
+    "sha256": "6ddd7db50af621fb1119774f22b615b4638eb7fbc29aa036386dbd2c6ba8ad95"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "portraitWidths": [
+      48,
+      40
+    ]
+  }
+}
