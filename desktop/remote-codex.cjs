@@ -3,6 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypt
 const {Client}=require('ssh2');
 const {selectEvent}=require('./codex-reader.cjs');
 const {agentScript}=require('./remote-agent.cjs');
+const {loadKnownHosts,verifyHost,preferredAlgorithms}=require('./known-hosts.cjs');
 const MAX_LINE=32768;
 function connectionConfig(input){
   if(!input||typeof input!=='object')throw new Error('연결 정보를 입력해 주세요.');
@@ -16,8 +17,9 @@ function connectionConfig(input){
   return {id:typeof input.id==='string'&&/^[a-f0-9-]{36}$/.test(input.id)?input.id:crypto.randomUUID(),name,host,username,port,auth,keyPath,nodePath,enabled:input.enabled!==false};
 }
 class RemoteCodex {
-  constructor(game,dir,{vault,clientFactory=()=>new Client(),onChange=()=>{}}={}){
+  constructor(game,dir,{vault,clientFactory=()=>new Client(),onChange=()=>{},knownHosts=loadKnownHosts}={}){
     this.game=game;this.dir=dir;this.vault=vault;this.clientFactory=clientFactory;this.onChange=onChange;
+    this.knownHosts=knownHosts;
     this.entries=new Map();this.secrets=new Map();this.encrypted={};this.closed=false;this.error=null;
     this.file=path.join(dir,'remote-connections.json');this.secretFile=path.join(dir,'remote-secrets.json');
     try{
@@ -31,7 +33,7 @@ class RemoteCodex {
   }
   write(file,data){fs.mkdirSync(this.dir,{recursive:true});fs.writeFileSync(file+'.tmp',JSON.stringify(data,null,2)+'\n',{mode:0o600});fs.renameSync(file+'.tmp',file);}
   save(){if(this.error)throw new Error(this.error);this.write(this.file,{version:1,connections:[...this.entries.values()].map(e=>e.config)});}
-  snapshot(){return {error:this.error,canRemember:!!this.vault?.available(),connections:[...this.entries.values()].map(e=>({...e.config,state:e.state,connected:e.connected,files:e.files,message:e.message||'',candidate:e.candidate||null,hasSavedSecret:!!this.encrypted[e.config.id]}))};}
+  snapshot(){return {error:this.error,canRemember:!!this.vault?.available(),connections:[...this.entries.values()].map(e=>({...e.config,state:e.state,connected:e.connected,files:e.files,message:e.message||'',candidate:e.candidate||null,trustSource:e.trustSource||null,hasSavedSecret:!!this.encrypted[e.config.id]}))};}
   changed(){this.onChange();}
   add(input,secret='',remember=false){
     if(this.entries.size>=8)throw new Error('원격 PC는 최대 8대까지 연결할 수 있어요.');
@@ -60,13 +62,13 @@ class RemoteCodex {
     e.state='connecting';e.message='SSH 연결 중…';e.candidate=null;const client=this.clientFactory();e.client=client;
     const fail=(state,message)=>{if(e.client!==client)return;e.state=state;e.message=message;e.connected=false;this.changed();};
     client.on('error',error=>{
-      if(e.state==='trust'||e.state==='changed')return;
+      if(e.state==='trust'||e.state==='changed'||e.state==='revoked')return;
       fail(error.level==='client-authentication'?'login':'error',error.level==='client-authentication'?'로그인에 실패했어요. 계정과 인증 정보를 확인해 주세요.':'연결하지 못했어요. 주소·포트·네트워크를 확인해 주세요.');
     });
     client.on('close',()=>{
       if(e.client!==client)return;e.client=null;e.connected=false;
       for(const id of e.ids){const s=this.game.sessions.get(id);if(s?.phase==='working')s.at=Math.min(s.at,Date.now()-600001);}
-      if(e.config.enabled&&!this.closed&&!['trust','changed','login','runtime'].includes(e.state)){
+      if(e.config.enabled&&!this.closed&&!['trust','changed','revoked','login','runtime'].includes(e.state)){
         e.state='retry';e.message='연결이 끊겨 다시 연결을 기다리고 있어요.';
         e.attempts=(e.attempts||0)+1;e.retry=setTimeout(()=>this.connect(id),Math.min(60000,2000*2**Math.min(e.attempts,5)));e.retry.unref?.();
       }
@@ -91,12 +93,13 @@ class RemoteCodex {
         stream.end(agentScript());
       });
     });
-    try{client.connect({host:e.config.host,port:e.config.port,username:e.config.username,privateKey,password:e.config.auth==='password'?secret:undefined,passphrase:e.config.auth==='key'?secret:undefined,tryKeyboard:e.config.auth==='password',readyTimeout:12000,keepaliveInterval:5000,keepaliveCountMax:2,
+    const known=this.knownHosts(e.config.host,e.config.port),preferred=e.config.fingerprint?[]:preferredAlgorithms(known);
+    try{client.connect({host:e.config.host,port:e.config.port,username:e.config.username,privateKey,password:e.config.auth==='password'?secret:undefined,passphrase:e.config.auth==='key'?secret:undefined,tryKeyboard:e.config.auth==='password',readyTimeout:12000,keepaliveInterval:5000,keepaliveCountMax:2,...(preferred.length?{algorithms:{serverHostKey:{prepend:preferred}}}:{}),
       hostVerifier:key=>{
-        const fingerprint='SHA256:'+crypto.createHash('sha256').update(key).digest('base64').replace(/=+$/,'');
-        if(e.config.fingerprint===fingerprint)return true;
-        e.candidate=fingerprint;e.state=e.config.fingerprint?'changed':'trust';
-        e.message=e.config.fingerprint?'서버 키가 변경되어 연결을 중단했어요. 서버를 확인한 뒤 연결을 다시 추가해 주세요.':'처음 연결하는 서버예요. 지문을 확인한 뒤 연결을 허용해 주세요.';this.changed();return false;
+        const result=verifyHost(known,key,e.config.fingerprint);
+        if(result.state==='match'){e.trustSource=result.source;if(!e.config.fingerprint){e.config.fingerprint=result.fingerprint;try{this.save();}catch{fail('runtime','서버 확인 결과를 저장하지 못했어요. 설정 폴더를 확인해 주세요.');return false;}}return true;}
+        e.candidate=result.fingerprint;e.state=result.state==='unknown'?'trust':result.state;
+        e.message=result.state==='changed'?'기존에 신뢰한 서버 정보와 달라 연결을 중단했어요. 원격 PC를 확인한 뒤 기존 SSH 접속 기록을 점검해 주세요.':result.state==='revoked'?'기존 SSH 기록에서 사용 중지한 서버 키여서 연결하지 않았어요. 서버 관리자에게 확인해 주세요.':known.unreadable?'기존 SSH 접속 기록을 읽지 못했어요. 아래 방법으로 원격 PC의 서버 식별 번호를 확인해 주세요.':'이 PC에 저장된 SSH 접속 기록으로 자동 확인할 수 없어요. 아래 방법으로 원격 PC의 서버 식별 번호를 확인해 주세요.';this.changed();return false;
       }
     });}catch{fail('login','SSH 키 또는 로그인 정보를 확인해 주세요.');client.destroy();}
     this.changed();return true;

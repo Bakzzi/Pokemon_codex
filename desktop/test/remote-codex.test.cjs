@@ -30,7 +30,7 @@ async function fixture(t,{acceptPassword=true,publicKey=null}={}){
     })));
   });
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
-  const game=new Game(),manager=new RemoteCodex(game,path.join(dir,'local'));
+  const game=new Game(),manager=new RemoteCodex(game,path.join(dir,'local'),{knownHosts:()=>({records:[],unreadable:false})});
   const config={host:'127.0.0.1',port:server.address().port,username:'fixture',name:'Fixture PC',auth:'password'};
   t.after(async()=>{manager.close();for(const c of clients)c.end();for(const c of children)c.kill();await new Promise(r=>server.close(r));await fsp.rm(dir,{recursive:true,force:true});});
   return {manager,game,config,dir,file,sessions,children,clients,authentications:()=>authentications,executions:()=>executions};
@@ -103,4 +103,17 @@ test('unexpected network closure retries automatically and applies missed growth
 test('missing remote runtime shows a stable actionable error instead of a retry loop',async t=>{
   const f=await fixture(t);f.config.nodePath='missing-node';const id=f.manager.add(f.config,'fixture-secret');await until(()=>f.manager.entries.get(id).state==='trust');
   const entry=f.manager.entries.get(id);f.manager.trust(id,entry.candidate);await until(()=>entry.state==='runtime');assert.equal(entry.connected,false);assert.equal(entry.retry,null);
+});
+test('an existing trusted OpenSSH record verifies and pins the server without a manual prompt',async t=>{
+  const f=await fixture(t),{loadKnownHosts}=require('../known-hosts.cjs'),file=path.join(f.dir,'known_hosts'),publicKey=utils.parseKey(key).getPublicSSH();
+  const record='[127.0.0.1]:'+f.config.port+' ssh-rsa '+publicKey.toString('base64')+'\n';await fsp.writeFile(file,record);
+  f.manager.knownHosts=(host,port)=>loadKnownHosts(host,port,[file]);const id=f.manager.add(f.config,'fixture-secret'),entry=f.manager.entries.get(id);await until(()=>entry.connected);
+  assert.equal(entry.trustSource,'ssh');assert(entry.config.fingerprint.startsWith('SHA256:'));assert.equal(await fsp.readFile(file,'utf8'),record);assert.equal(f.executions(),1);
+});
+test('a conflicting or revoked OpenSSH key blocks authentication and cannot be manually bypassed',async t=>{
+  const f=await fixture(t),{parseKnownHosts}=require('../known-hosts.cjs'),different=crypto.generateKeyPairSync('ed25519').publicKey.export({type:'spki',format:'der'});
+  const trusted=utils.parseKey(key).getPublicSSH();const bad=Buffer.from(trusted);bad[bad.length-1]^=1;
+  let records=parseKnownHosts('[127.0.0.1]:'+f.config.port+' ssh-rsa '+bad.toString('base64'),f.config.host,f.config.port);
+  f.manager.knownHosts=()=>({records,unreadable:false});const id=f.manager.add(f.config,'fixture-secret'),entry=f.manager.entries.get(id);await until(()=>entry.state==='changed');assert.equal(f.authentications(),0);assert.equal(f.manager.trust(id,entry.candidate),false);
+  records=parseKnownHosts('@revoked [127.0.0.1]:'+f.config.port+' ssh-rsa '+trusted.toString('base64'),f.config.host,f.config.port);f.manager.connect(id);await until(()=>entry.state==='revoked');assert.equal(f.authentications(),0);assert.equal(f.executions(),0);
 });
