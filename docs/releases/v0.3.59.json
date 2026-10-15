@@ -1,0 +1,81 @@
+{
+  "version": "0.3.59",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "ed2a51d8821a24f5b40b74b3067c18150a4deaad",
+  "sourceTag": "v0.3.59",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.59",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime, current sources and item assets copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.58. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "scope": "Explicit Johto unlock reduces all owned Lv15+ individuals to floor(level/3), reserves and daycare included; lower levels unchanged; XP interval ratio, one-time persistence, action queue, old unlocked saves and device evolution proof; pre-button rule/count disclosure and dynamic cleared/captured Snorlax summaries",
+    "command": "node --test desktop/test/*.test.cjs; node --check desktop/panels.js; isolated Electron fixture using exact packaged runtime; git diff --check",
+    "testsPassed": 240,
+    "testsFailed": 0,
+    "packagedRuntimeFilesMatched": 25,
+    "packagedDocumentationFilesMatched": 3,
+    "packagedUiCasesPassed": 9,
+    "uiCases": [
+      "rule-count-and-examples-visible-before-unlock-button",
+      "preview-count-updates-at-level-fifteen",
+      "staying-preserves-levels-and-keeps-disclosure",
+      "battle-reservation-does-not-reduce-levels-early",
+      "unlock-applies-once-after-result-and-hides-consumed-action",
+      "reload-and-repeat-action-never-reduce-levels-again",
+      "uncleared-snorlax-keeps-mystery-hint",
+      "defeated-snorlax-summary-explains-cleared-road",
+      "captured-snorlax-summary-updates-while-collapsed-and-survives-reload"
+    ],
+    "uiErrors": 0,
+    "johtoMinimumLevel": 15,
+    "johtoLevelDivisor": 3,
+    "johtoLevelRounding": "floor",
+    "allOwnedIndividualsIncluded": true,
+    "lowerLevelsUnchanged": true,
+    "levelIntervalProgressPreserved": true,
+    "alreadyUnlockedSavesUnchanged": true,
+    "priorDeviceEvolutionProofPreserved": true,
+    "preUnlockRulesAndCountVisible": true,
+    "snorlaxSummaryMatchesClearAndCaptureState": true,
+    "partyCapacity": 6,
+    "archiveFilesVerified": 706,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.59-portable.zip",
+    "bytes": 165974563,
+    "sha256": "63b1d08d8890148d6d72f90234abf1d4664bfb6d543d6a9532dbbbbee74d33e8"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "portraitWidths": [
+      48,
+      40
+    ],
+    "itemSources": "desktop/assets/items/sources.json"
+  }
+}
