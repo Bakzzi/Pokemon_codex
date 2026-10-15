@@ -198,6 +198,6 @@ window.buddy.onState(s=>{
     $('party').replaceChildren(...s.slots.map((p,i)=>{const b=document.createElement('button');b.dataset.slot=i;b.onclick=()=>b.dataset.id?window.buddy.action('select',Number(b.dataset.id)):window.buddy.action('panel','collection');const img=document.createElement('img');img.alt='';b.append(img,document.createElement('small'));return b;}));$('party').dataset.ids=s.slots.map(p=>p.uid).join(',');
   }
   renderPartyStatus(s);
-  $('caught-count').textContent=s.caughtCount+' / '+(s.generation===1?151:251);$('badge-count').textContent=s.badges.length+' / 8';
+  $('caught-count').textContent=s.caughtCount+'/'+(s.generation===1?151:251);document.querySelector('[data-panel="challenge"]').title='획득한 뱃지 '+s.badges.length+' / 8';
   eventFx(s.animation);refreshScene();
 });
