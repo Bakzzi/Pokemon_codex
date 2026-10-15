@@ -45,6 +45,10 @@
   <div id="league-team" class="league-team"></div><p id="league-progress" class="muted"></p>
 </section>
 <section id="daycare" class="page" hidden>
+  <section class="device-quest" aria-labelledby="inventory-title">
+    <div class="device-heading"><h2 id="inventory-title">보유 물품</h2></div>
+    <div id="inventory" class="inventory"></div>
+  </section>
   <section id="learning-device" class="device-quest" aria-labelledby="device-title">
     <div class="device-heading"><div><span class="kicker">EXP. SHARE</span><h2 id="device-title">학습장치</h2></div><img class="device-art" src="assets/items/exp-share.png" alt="학습장치"></div>
     <p id="device-note">학습장치를 얻으면 사용할 수 있어요.</p>
@@ -64,7 +68,6 @@
 <section id="journal" class="page" hidden>
   <div class="intro"><div><h2>네가 코딩하는 동안</h2><p>새로운 만남, 포획, 성장과 도전의 결과를 모아 뒀어.</p></div></div>
   <nav class="journal-tabs" aria-label="기록 보기"><button data-journal-tab="summary" aria-selected="true">요약</button><button data-journal-tab="detail" aria-selected="false">상세</button></nav>
-  <div id="inventory" class="inventory"></div>
   <div id="journal-summary"><div class="summary-heading"><p id="summary-since" class="muted"></p><button id="journal-ack">여기까지 확인</button></div><div id="summary-stats" class="summary-stats"></div><p id="summary-note" class="muted"></p><h3 class="summary-title">기억에 남는 순간</h3><div id="summary-highlights"></div></div>
   <div id="journal-detail" hidden><p class="muted">최근 모험과 배틀의 기술·특성·상태이상 기록이에요. 오래된 상세 기록이 지나가도 요약 수치는 남아요.</p><div id="journal-list"></div></div>
 </section>

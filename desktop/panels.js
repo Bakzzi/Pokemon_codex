@@ -202,8 +202,7 @@ for(const b of document.querySelectorAll('[data-journal-tab]'))b.onclick=()=>{
 $('journal-ack').onclick=()=>window.buddy.action('journal-ack');
 function renderJournal(){
   if(!state)return;
-  const signature=JSON.stringify([state.journal,state.inventory,state.summary,journalTab]);if(signature===journalSignature)return;journalSignature=signature;
-  $('inventory').replaceChildren(...state.inventory.map(i=>node('span','',i.name+' × '+i.count)));
+  const signature=JSON.stringify([state.journal,state.summary,journalTab]);if(signature===journalSignature)return;journalSignature=signature;
   for(const b of document.querySelectorAll('[data-journal-tab]'))b.setAttribute('aria-selected',String(b.dataset.journalTab===journalTab));
   $('journal-summary').hidden=journalTab!=='summary';$('journal-detail').hidden=journalTab!=='detail';
   const s=state.summary,c=s.counts;
@@ -247,6 +246,7 @@ function progressCard(title,current,required,description,pokemon){
   body.append(track,node('p','muted',Math.floor(current/required*100)+'% · '+Math.max(0,required-current).toLocaleString('ko-KR')+' 모험 걸음 남음'));box.append(body);return box;
 }
 function renderNursery(){
+  $('inventory').replaceChildren(...(state.inventory.length?state.inventory.map(i=>node('span','',i.name+' × '+i.count)):[node('p','muted','아직 보유한 물품이 없어요.')]));
   renderDevice();
   const d=state.daycare,signature=JSON.stringify(state.roster.map(p=>[p.uid,p.id,p.level,p.expPercent,p.gender,p.boarded]));
   if(nurserySignature!==signature){
