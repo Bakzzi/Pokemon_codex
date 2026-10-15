@@ -17,21 +17,27 @@ function resized(bounds,compact,area){
   return fit(next,area);
 }
 function attach(win,screen,remember){
-  let placing=false,closing=false;
+  let placing=false,closing=false,dragging=false;
   function record(){if(!closing&&!win.isDestroyed()){const {x,y}=win.getBounds();remember(x,y);}}
   function place(bounds){
     if(closing||win.isDestroyed())return;
     placing=true;
     try{win.setBounds(bounds);record();}finally{placing=false;}
   }
-  win.on('will-move',(event,bounds)=>{
-    if(placing||closing)return;
-    const next=fit(bounds,screen.getDisplayMatching(bounds).workArea,true);
-    if(next.x!==bounds.x||next.y!==bounds.y){event.preventDefault();place(next);}
-  });
+  function dropped(){
+    if(!dragging||placing||closing||win.isDestroyed())return;
+    dragging=false;
+    const bounds=win.getBounds(),next=fit(bounds,screen.getDisplayMatching(bounds).workArea,true);
+    if(next.x!==bounds.x||next.y!==bounds.y)place(next);else record();
+  }
+  win.on('will-move',()=>{if(!placing&&!closing)dragging=true;});
+  // Windows sends this only after the native drag loop ends, so even a 1px
+  // movement away from an edge stays free while the mouse is held down.
+  if(process.platform==='win32'&&typeof win.hookWindowMessage==='function')win.hookWindowMessage(0x0232,dropped);
+  else win.on('moved',dropped);
   win.on('move',record);
   win.on('moved',record);
-  win.on('close',()=>{record();closing=true;});
+  win.on('close',()=>{dragging=false;record();closing=true;});
   return {place,resize(compact){const bounds=win.getBounds();place(resized(bounds,compact,screen.getDisplayMatching(bounds).workArea));}};
 }
 module.exports={WIDTH,TOP_INSET,SNAP_DISTANCE,size,fit,resized,attach};
