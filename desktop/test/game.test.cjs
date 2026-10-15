@@ -2,7 +2,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os');
 const {Game}=require('../game.cjs');
-const {data,species,moves,xpAt,learnedMoves,pickWild,effective}=require('../pokemon.cjs');
+const {data,species,moves,xpAt,learnedMoves,pickWild,wildEligible,effective}=require('../pokemon.cjs');
 const {combatant,attack,catchValue,tryCatch}=require('../battle.cjs');
 const nursery=require('../daycare.cjs');
 const {CodexReader,selectEvent}=require('../codex-reader.cjs');
@@ -133,7 +133,7 @@ test('battle simulation respects team defeat and never unlocks badges on a loss'
 test('wild sampler covers eligible species without a caught-species boost and excludes starter families',()=>{
   const allowed=new Set();const g=new Game({},now,{random:rng(11)});
   for(let i=0;i<10000;i++){const id=pickWild(1,g.random);assert.ok(id>=1&&id<=151);allowed.add(id);}
-  assert.ok(allowed.size>=134);for(const id of [1,2,3,4,5,6,7,8,9,25,26])assert.ok(!allowed.has(id));assert.equal(pickWild(1,(()=>{let i=0;return()=>i++===0?0:.5;})()),151);
+  assert.ok(allowed.size>=data.pokemon.filter(p=>wildEligible(p,1,100)).length-6);for(const id of [1,2,3,4,5,6,7,8,9,25,26])assert.ok(!allowed.has(id));assert.equal(pickWild(1,(()=>{let i=0;return()=>i++===0?0:.5;})()),151);
 });
 test('breeding preview resolves Vaporeon plus Ditto to Eevee without marking the dex as seen',()=>{
   const g=new Game({},now),a=g.addPokemon(134,20,'catch',now),b=g.addPokemon(132,20,'catch',now);

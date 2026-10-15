@@ -60,7 +60,8 @@ function collectionHints(game){
       routes.push({kind:'hatch',from:parent.from,text:'부모 '+ref(parent.from)+' + 메타몽을 키우미집에 맡김 → 부화 결과 '+ref(p.id)+(parent.chance<1?' · 알에서 '+percent(parent.chance):'')+' · 부모 동료를 먼저 마련해야 해요.'});
     }
     const labels={wild:activeLevel<minimum?'Lv.'+minimum+'부터 야생':'야생',starter:'스타팅',event:'피리 이벤트',evolution:'진화',hatch:'부화'};
-    result.set(p.id,{wildAllowed,routes,summary:[...new Set(routes.map(r=>labels[r.kind]))].join(' · '),note:wildAllowed?'야생 확률은 현재 출전 동료와 진행 상태에서 다음 야생 1회에 만날 확률이에요. 포획 성공률과는 달라요.':'일반 야생에서는 출현하지 않아요.'});
+    const evolutionOnly=routes.length>0&&routes.every(r=>r.kind==='evolution');
+    result.set(p.id,{wildAllowed,routes,summary:[...new Set(routes.map(r=>labels[r.kind]))].join(' · '),note:wildAllowed?'야생 확률은 현재 출전 동료와 진행 상태에서 다음 야생 1회에 만날 확률이에요. 포획 성공률과는 달라요.':evolutionOnly?'진화로만 얻을 수 있어요.':'일반 야생에서는 출현하지 않아요.'});
   }
   return result;
 }

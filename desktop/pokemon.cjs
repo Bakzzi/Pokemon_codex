@@ -3,6 +3,8 @@ const data=require('./data/game-data.json');
 const species=new Map(data.pokemon.map(p=>[p.id,p]));
 const moves=new Map(data.moves.map(m=>[m.id,m]));
 const STARTER_FAMILY=new Set([1,2,3,4,5,6,7,8,9,25,26]);
+// A later-generation baby does not make an original base species evolution-only.
+const SPECIAL_EVOLUTIONS=new Set(data.pokemon.flatMap(parent=>parent.evolutions.filter(e=>species.has(e.to)&&parent.generation<=species.get(e.to).generation&&!(e.trigger===1&&e.level>0)).map(e=>e.to)));
 const colors={1:'#d0c8b4',2:'#e79571',3:'#b5b4ec',4:'#cb91e2',5:'#d3b78b',6:'#c8bd8a',7:'#b4cb72',8:'#ac9de0',9:'#aac1ca',10:'#ff9975',11:'#79cdf4',12:'#9ee5a2',13:'#f5ce52',14:'#f29bb9',15:'#99e2e4',16:'#aea0ed',17:'#ad9a91'};
 const effectMap=new Map(data.matchups.map(([a,b,value])=>[`${a}:${b}`,value]));
 function xpAt(id,level){return data.experience[species.get(id).growth][Math.max(1,Math.min(100,level))-1];}
@@ -23,7 +25,7 @@ function view(id){const p=species.get(id);return {id:p.id,name:p.name,types:p.ty
 const balance={tokensPerAction:250,legendaryPoolChance:0.001,mythicalPoolChance:0.0001,rarePoolChance:0.08,championRareMultiplier:1.5,championUncaughtWeight:2};
 function rarity(p){if(p.mythical)return 'mythical';if(p.legendary)return 'legendary';if(p.catchRate<=75||Object.values(p.stats).reduce((a,b)=>a+b,0)>=480)return 'rare';return p.catchRate>=190?'common':'uncommon';}
 function wildMinimum(p){return Math.max(p.minWildLevel||2,p.legendary||p.mythical?50:2);}
-function wildEligible(p,maxGeneration,partnerLevel){return p.id!==143&&!STARTER_FAMILY.has(p.id)&&p.generation<=maxGeneration&&wildMinimum(p)<=partnerLevel;}
+function wildEligible(p,maxGeneration,partnerLevel){return p.id!==143&&!STARTER_FAMILY.has(p.id)&&!SPECIAL_EVOLUTIONS.has(p.id)&&p.generation<=maxGeneration&&wildMinimum(p)<=partnerLevel;}
 function championBonus(minimumLevel=0){
   const levelMultiplier=minimumLevel>90?5:minimumLevel>80?4:minimumLevel>70?3:1;
   return {levelMultiplier,rareMultiplier:balance.championRareMultiplier*levelMultiplier,uncaughtWeight:balance.championUncaughtWeight*levelMultiplier};

@@ -21,8 +21,8 @@ test('ordinary and evolved species combine their exact current wild probability 
 });
 
 test('level-gated wild encounters show zero now and the actual entry level rather than promising a future percentage',()=>{
-  const g=fixture(),p=entry(g,65);assert.equal(p.acquisition.routes.find(r=>r.kind==='wild').chance,0);assert.match(p.acquisition.routes.find(r=>r.kind==='wild').text,/Lv\.16/);
-  level(g,16);assert.ok(entry(g,65).acquisition.routes.find(r=>r.kind==='wild').chance>0);
+  const g=fixture(),p=entry(g,11);assert.equal(p.acquisition.routes.find(r=>r.kind==='wild').chance,0);assert.match(p.acquisition.routes.find(r=>r.kind==='wild').text,/Lv\.7/);
+  level(g,7);assert.ok(entry(g,11).acquisition.routes.find(r=>r.kind==='wild').chance>0);
 });
 
 test('starter families never get a wild route; starter, level and stone methods remain accurate',()=>{

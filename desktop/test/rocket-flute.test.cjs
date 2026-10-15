@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),training=require('../training-device.cjs'),{data,pickWild,encounterChances,rarity,wildMinimum,xpAt,learnedMoves}=require('../pokemon.cjs'),{captureTiming}=require('../capture-animation.js');
+const {Game}=require('../game.cjs'),training=require('../training-device.cjs'),{data,pickWild,encounterChances,rarity,wildMinimum,wildEligible,xpAt,learnedMoves}=require('../pokemon.cjs'),{captureTiming}=require('../capture-animation.js');
 const now=Date.parse('2026-10-14T10:00:00Z');
 function fixture(){const g=new Game({},now,{random:()=>.73});g.data.badges=['brock','misty','surge','erika'];return g;}
 function advance(g){assert.ok(g.tick(Math.max(now,g.data.switchUntil,g.nextTick)));}
@@ -12,7 +12,7 @@ test('ordinary wild pools exclude Snorlax in both generations, every category, a
     const rates=encounterChances(champion,minimumLevel);let floor=0;
     for(const tier of ['mythical','legendary','rare','uncommon','common']){
       const roll=floor+rates[tier]/2;floor+=rates[tier];
-      const pool=data.pokemon.filter(p=>![1,2,3,4,5,6,7,8,9,25,26,143].includes(p.id)&&p.generation<=gen&&wildMinimum(p)<=100&&rarity(p)===tier),seen=new Set();
+      const pool=data.pokemon.filter(p=>wildEligible(p,gen,100)&&rarity(p)===tier),seen=new Set();
       for(let i=0;i<pool.length;i++){let draw=0;const id=pickWild(gen,()=>draw++===0?roll:(i+.5)/pool.length,100,{champion,minimumLevel});assert.notEqual(id,143);seen.add(id);}
       assert.deepEqual(seen,new Set(pool.map(p=>p.id)));
     }
