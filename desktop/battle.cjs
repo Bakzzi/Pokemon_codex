@@ -22,7 +22,7 @@ function setFor(mon,name){
     moves:mon.moves.map(id=>simMoves.get(id)?.id).filter(Boolean),ivs:{hp:15,atk:15,def:15,spa:15,spd:15,spe:15},evs:{hp:0,atk:0,def:0,spa:0,spd:0,spe:0}};
 }
 function readMon(mon){
-  return {id:mon.baseSpecies.num,level:mon.level,hp:mon.hp,maxHp:mon.maxhp,stats:{1:mon.maxhp,...Object.fromEntries(Object.entries(statKeys).filter(([n])=>n>1&&n<7).map(([n,k])=>[n,mon.storedStats[k]]))},
+  return {id:mon.baseSpecies.num,level:mon.level,hp:mon.fainted?0:mon.hp,maxHp:mon.maxhp,stats:{1:mon.maxhp,...Object.fromEntries(Object.entries(statKeys).filter(([n])=>n>1&&n<7).map(([n,k])=>[n,mon.storedStats[k]]))},
     moves:mon.moveSlots.map(s=>dex.moves.get(s.id).num),pp:Object.fromEntries(mon.moveSlots.map(s=>[dex.moves.get(s.id).num,s.pp])),
     status:statusNames[mon.status]||null,statusTurns:mon.statusState.time||0,stages:Object.fromEntries(Object.entries(statKeys).filter(([n])=>n>1).map(([n,k])=>[n,mon.boosts[k]||0])),
     ability:abilityIds.get(mon.baseAbility),gender:mon.gender==='F'?'female':mon.gender==='M'?'male':'none',happiness:mon.happiness};
@@ -77,7 +77,7 @@ function refreshOwned(game,sim){
   for(const mon of sim.p1.pokemon){
     const p=game.data.owned[Number(mon.name.slice(1))];if(!p)continue;
     mon.happiness=p.happiness;
-    if(mon.level!==p.level){const old=mon.maxhp;mon.level=mon.set.level=p.level;mon.setSpecies(mon.baseSpecies);mon.baseMaxhp=mon.maxhp=statsAt(p.id,p.level)[1];mon.hp=Math.min(mon.maxhp,mon.hp+mon.maxhp-old);}
+    if(mon.level!==p.level){const old=mon.maxhp,alive=mon.hp>0&&!mon.fainted;mon.level=mon.set.level=p.level;mon.setSpecies(mon.baseSpecies);mon.baseMaxhp=mon.maxhp=statsAt(p.id,p.level)[1];mon.hp=alive?Math.min(mon.maxhp,mon.hp+mon.maxhp-old):0;}
     for(const id of p.moves){const m=simMoves.get(id);if(!m||mon.baseMoveSlots.some(s=>s.id===m.id))continue;
       const slot={move:m.name,id:m.id,pp:m.pp,maxpp:m.pp,target:m.target,disabled:false,disabledSource:'',used:false};
       mon.baseMoveSlots.push(slot);if(mon.moveSlots!==mon.baseMoveSlots&&!mon.transformed)mon.moveSlots.push({...slot});mon.set.moves.push(m.id);
@@ -170,7 +170,7 @@ function choose(sim,side,random,preferred){
     return pick?'switch '+(side.pokemon.indexOf(pick)+1):'pass';
   }
   if(side.activeRequest?.wait)return null;
-  if(preferred&&mon.name!=='u'+preferred){const pick=side.pokemon.find(p=>p.name==='u'+preferred&&p.hp>0);if(pick&&!mon.trapped)return 'switch '+(side.pokemon.indexOf(pick)+1);}
+  if(preferred&&mon.name!=='u'+preferred){const pick=side.pokemon.find(p=>p.name==='u'+preferred&&p.hp>0&&!p.fainted);if(pick&&!mon.trapped)return 'switch '+(side.pokemon.indexOf(pick)+1);}
   const available=mon.getMoves().filter(m=>!m.disabled&&m.pp>0);
   if(!available.length)return 'move struggle';
   const target=side.foe.active[0],scores=available.map(m=>scoreMove(sim,mon,target,dex.moves.get(m.id)));
@@ -251,7 +251,7 @@ function protocol(sim,lines){
 }
 function sync(game,b,sim){
   for(const mon of sim.p1.pokemon)b.party[Number(mon.name.slice(1))]=readMon(mon);
-  const current=sim.p1.active[0];if(current.hp>0){game.data.activeId=Number(current.name.slice(1));if(b.pendingSwitch===game.data.activeId)delete b.pendingSwitch;}
+  const current=sim.p1.active[0];if(current.hp>0&&!current.fainted){game.data.activeId=Number(current.name.slice(1));if(b.pendingSwitch===game.data.activeId)delete b.pendingSwitch;}
   const foe=sim.p2.active[0];b.foe=readMon(foe);
   b.field={weather:sim.field.weather,turn:sim.turn};
 }
@@ -274,16 +274,26 @@ function movePresentation(lines){
 }
 function step(game,b){
   const sim=engine(game,b);refreshOwned(game,sim);const start=sim.log.length,heroBefore=sim.p1.active[0].name,foeBefore=sim.p2.active[0].hp,heroHpBefore=sim.p1.active[0].hp;
-  if(b.pendingSwitch&&!sim.requestState){
-    const old=sim.p1.active[0],next=sim.p1.pokemon.find(p=>p.name==='u'+b.pendingSwitch);
-    if(next&&next!==old&&next.hp&&!old.trapped){sim.queue.cancelMove(old);sim.queue.insertChoice({choice:'switch',pokemon:old,target:next});}
-  }
   if(sim.ended){sync(game,b,sim);return {lines:[],ended:true};}
-  if(sim.requestState){
-    const choices=sim.sides.map(s=>choose(sim,s,game.random,s.n===0?b.pendingSwitch:null));
-    for(let i=0;i<choices.length;i++)if(choices[i]&&!sim.sides[i].choose(choices[i]))sim.sides[i].autoChoose();
-    sim.commitChoices();
-  }else sim.turnLoop();
+  for(let acknowledgements=0;acknowledgements<3;acknowledgements++){
+    if(b.pendingSwitch&&!sim.requestState){
+      const old=sim.p1.active[0],next=sim.p1.pokemon.find(p=>p.name==='u'+b.pendingSwitch);
+      if(next&&next!==old&&next.hp&&!next.fainted&&!old.trapped){
+        const queued=sim.queue.willSwitch(old);
+        if(!queued||queued.target!==next){sim.queue.cancelAction(old);sim.queue.insertChoice({choice:old.hp?'switch':'instaswitch',pokemon:old,target:next});}
+      }
+    }
+    const offset=sim.log.length;
+    if(sim.requestState){
+      const choices=sim.sides.map(s=>choose(sim,s,game.random,s.n===0?b.pendingSwitch:null));
+      for(let i=0;i<choices.length;i++)if(choices[i]&&!sim.sides[i].choose(choices[i]))sim.sides[i].autoChoose();
+      sim.commitChoices();
+    }else sim.turnLoop();
+    // nextTrainer already presented this opponent's arrival. Its native switch
+    // acknowledgement must finish before exposing the selected ally's state.
+    const update=sim.log.slice(offset),foeArrival=update.some(l=>l.startsWith('|switch|p2'));
+    if(!b.pendingSwitch||sim.ended||sim.p1.active[0].name==='u'+b.pendingSwitch||!foeArrival||update.some(l=>l.startsWith('|move|')||l.startsWith('|cant|')))break;
+  }
   const lines=protocolLines(sim.log.slice(start)),presentation=movePresentation(lines),actor=presentation.actor||'hero',changed=heroBefore!==sim.p1.active[0].name;
   const messages=protocol(sim,lines);sync(game,b,sim);persist(b,sim);
   const causeName=ref=>{const mon=sim.sides.flatMap(s=>s.pokemon).find(p=>p.name===ref.split(': ')[1]);return species.get(mon?.baseSpecies.num)?.name||'포켓몬';};
@@ -293,6 +303,8 @@ function step(game,b){
 function canSwitch(game,b,uid){
   const sim=cache.get(b)||(b.sim?engine(game,b):null);
   if(!sim)return true;
+  if(sim.ended)return false;
+  const target=sim.p1.pokemon.find(p=>p.name==='u'+uid);if(target&&(!target.hp||target.fainted))return false;
   const current=sim.p1.active[0];return !current.hp||!current.trapped;
 }
 function invalidate(b){if(!b)return;cache.delete(b);delete b.sim;delete b.simBoss;}

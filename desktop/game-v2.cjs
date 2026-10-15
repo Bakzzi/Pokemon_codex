@@ -618,6 +618,9 @@ class Game {
     if(!b.party[this.data.activeId]){const p=this.data.owned[this.data.activeId];b.party[p.uid]=this.memberCombatant(p);battleEngine.invalidate(b);}
     const previousHero=this.data.activeId,fromPokemon=this.snapshot(now).hero,heroBefore=healthView(b.party[previousHero]),foeBefore=healthView(b.foe),action=battleEngine.step(this,b);b.turn++;
     const hero=b.party[this.data.activeId],foe=b.foe,move=action.move&&moves.get(action.move);
+    // Native-only acknowledgements and discarded stale actions have no second
+    // attack or recall animation to present after the ball animation.
+    if((!action.switched||previousHero===this.data.activeId)&&!move&&!action.lines.length&&hero.hp>0&&foe.hp>0){b.turn--;return true;}
     if(action.switched&&previousHero!==this.data.activeId){
       this.animate('switch',{from:this.data.owned[previousHero].id,to:hero.id,fromPokemon,toPokemon:this.snapshot(now).hero,text:species.get(hero.id).name+', 출전!'},now);
       this.log(species.get(hero.id).name+' 출전','switch',hero.id,now);
