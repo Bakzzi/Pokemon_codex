@@ -1,0 +1,86 @@
+{
+  "version": "0.3.51",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "76916da9766eb598d230ab90578be23ed30f4ab1",
+  "sourceTag": "v0.3.51",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.51",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime and current sources copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.50. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "scope": "Widget Pokegear, challenge, bag and journal labels and order; unchanged collection/challenge panel labels, renamed bag tab, four button routes, current registration count and generation denominator, compact layout",
+    "command": "node --check desktop/main.cjs; node --check desktop/renderer.js; isolated Electron fixture using exact packaged runtime; git diff --check",
+    "syntaxChecksPassed": true,
+    "packagedRuntimeFilesMatched": 25,
+    "packagedUiCasesPassed": 3,
+    "uiCases": [
+      "widget-menu-labels-order-and-fit",
+      "all-widget-buttons-open-matching-tab",
+      "live-count-generation-and-compact-preserved"
+    ],
+    "widgetWidths": [
+      370
+    ],
+    "panelWidth": 650,
+    "widgetMenu": [
+      "포켓기어 101/151",
+      "도전하기",
+      "가방보기",
+      "모험 기록"
+    ],
+    "panelTabs": [
+      "포켓몬 도감",
+      "도전하기",
+      "가방",
+      "모험 기록"
+    ],
+    "buttonRoutes": [
+      "collection",
+      "challenge",
+      "daycare",
+      "journal"
+    ],
+    "registrationCountUpdates": true,
+    "legacySelectedPositionsPreserved": true,
+    "partyCapacity": 6,
+    "uiErrors": 0,
+    "archiveFilesVerified": 692,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.51-portable.zip",
+    "bytes": 165959837,
+    "sha256": "8dc60d9b3df6399ce3caf1ef99b311f0501c9964c07252b2b70b5f6b2cbcbff6"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "portraitWidths": [
+      48,
+      40
+    ]
+  }
+}
