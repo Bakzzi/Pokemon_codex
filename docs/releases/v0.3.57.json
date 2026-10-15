@@ -1,0 +1,74 @@
+{
+  "version": "0.3.57",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "a46deedee58e2eb489e6000fe30e31ea3a35b669",
+  "sourceTag": "v0.3.57",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.57",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime, current sources and item assets copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.56. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "scope": "Native private/public HP log normalization; duplicate confusion and residual damage notices; correct self-damage victim; Korean sleep, paralysis, freeze, Perish Song countdown, move failure, ability, weather, volatile and team effects; one complete result sentence with full tooltip/journal detail",
+    "command": "node --test desktop/test/*.test.cjs; node --check desktop/renderer.js; isolated Electron fixture using exact packaged runtime; git diff --check",
+    "testsPassed": 227,
+    "testsFailed": 0,
+    "packagedRuntimeFilesMatched": 25,
+    "packagedDocumentationFilesMatched": 3,
+    "packagedUiCasesPassed": 6,
+    "uiCases": [
+      "duplicate-confusion-notice",
+      "sleep-sentence",
+      "paralysis-sentence",
+      "perish-countdown",
+      "move-failure-and-team-effect",
+      "freeze-sentence"
+    ],
+    "uiErrors": 0,
+    "internalEffectCodesHidden": true,
+    "nativeHpViewsPerEvent": 1,
+    "legacyDuplicateCausesHandled": true,
+    "oneResultSentencePerBubble": true,
+    "additionalResultsInTooltipAndJournal": true,
+    "packagedBubbleBoundsAndClippingChecked": true,
+    "partyCapacity": 6,
+    "archiveFilesVerified": 706,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.57-portable.zip",
+    "bytes": 165973118,
+    "sha256": "29fb1e2f514a3070a4f42cf121eafecefb8a8e8029e4d249e45f23c40ca0fd1d"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "portraitWidths": [
+      48,
+      40
+    ],
+    "itemSources": "desktop/assets/items/sources.json"
+  }
+}
