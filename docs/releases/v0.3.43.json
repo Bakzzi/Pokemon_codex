@@ -1,0 +1,65 @@
+{
+  "version": "0.3.43",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "d9d12339491ea9302216dfaeb654632c7b5d14d3",
+  "sourceTag": "v0.3.43",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.43",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime, changed sources and new artwork copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.42. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "command": "node --test desktop/test/rocket-flute.test.cjs desktop/test/trainer-secrets.test.cjs",
+    "passed": 10,
+    "packagedRuntimeFilesMatched": 25,
+    "packagedUiCasesPassed": 7,
+    "narrowChallengeWidth": 650,
+    "navigationStartedBattle": false,
+    "unrevealedPortraitsAreSilhouettes": true,
+    "stablePortraits": true,
+    "newArtworkHashesMatched": 3,
+    "uiErrors": 0,
+    "archiveFilesVerified": 692,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.43-portable.zip",
+    "bytes": 165956223,
+    "sha256": "ee8541fde6824bd69dca3631cb962ee8f1f3e9244e706ea0c823398fd5b4640a"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "newImages": 3,
+    "portraitWidths": [
+      48,
+      40
+    ],
+    "erikaBadgeWidths": [
+      20,
+      18
+    ]
+  }
+}
