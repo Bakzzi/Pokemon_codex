@@ -14,7 +14,13 @@ function inventoryCard(item){
 const trainerFaces={brock:[196,52,5,104],misty:[228,61,7,112],surge:[156,22,1,110],erika:[198,22,3,114],koga:[217,113,5,103],sabrina:[216,17,13,112],blaine:[273,24,18,112],giovanni:[179,25,5,112]};
 const gymLocations={brock:'회색시티',misty:'블루시티',surge:'갈색시티',erika:'무지개시티',koga:'연분홍시티',sabrina:'노랑시티',blaine:'홍련섬',giovanni:'상록시티'};
 const storyFaces={erika:[['erika.png',trainerFaces.erika]],'rocket-grunt':[['rocket-grunts.png',[433,238,0,112]]],'rocket-duo':[['james.png',[150,16,4,112]],['jessie.png',[197,32,10,112]]],'rocket-giovanni':[['giovanni.png',trainerFaces.giovanni]]};
+const completedDisclosures=new Map();
+function syncDisclosure(id,completed){
+  if(completedDisclosures.get(id)===completed)return;
+  completedDisclosures.set(id,completed);$(id).open=!completed;
+}
 function focusGym(index){
+  $('gym-details').open=true;
   const card=$('gyms').children[index];if(!card)return;
   card.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});
   const button=card.querySelector('[data-challenge]');
@@ -123,6 +129,7 @@ function renderBadgeCase(){
   $('badge-case-note').textContent=earned.size===8?'관동의 여덟 증표 · 포켓몬 리그로':earned.size+'개의 증표 · 다음 도전을 기다리는 자리';
 }
 function renderBosses(){
+  syncDisclosure('gym-details',state.bosses.slice(0,8).every(b=>state.badges.includes(b.id)));
   renderStory();
   renderSpecialEncounters();
   const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.badges,state.bosses.map(b=>b.revealed),state.gymAccess,state.trainingDevice.routeOpen,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
@@ -162,6 +169,8 @@ function renderSpecialEncounters(){
 }
 function renderStory(){
   if(!state)return;const d=state.trainingDevice,busy=state.battle?.kind==='trainer',queued=state.pendingChallenge;
+  syncDisclosure('rocket-hideout',d.rocketCompleted===3);
+  syncDisclosure('snorlax-road',!!d.steps.find(s=>s.id==='road-snorlax').done);
   const signature=JSON.stringify([d.requirements,d.steps,d.rocketUnlocked,busy,state.battle?.storyId,queued?.index,d.fluteObtained,d.snorlaxCaught]);if(signature===storySignature)return;storySignature=signature;
   $('rocket-intro').textContent=d.rocketCompleted===3?'로켓단을 모두 물리쳐 무지개시티에 평화가 돌아왔어요. 민화도 한시름 놓았겠어요.':d.rocketUnlocked?'오렌지배지를 확인한 민화가 도움을 부탁했어요. “게임코너 지하의 로켓단을 물리쳐 주세요. 모두 해결되면 체육관에서 도전을 받을게요.”':'민화는 게임코너 지하에 숨어든 로켓단 때문에 골머리를 앓고 있어요. “오렌지배지가 있다면 당신의 실력을 믿고 아지트 조사를 부탁하고 싶어요.”';
   $('rocket-steps').replaceChildren(...d.requirements.map(r=>{

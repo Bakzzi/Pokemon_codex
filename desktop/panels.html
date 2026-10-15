@@ -22,18 +22,25 @@
     <div class="case-inlay"><div class="case-heading"><span>GYM BADGES</span><b>KANTO</b></div><div id="badge-slots" class="badge-slots"></div></div>
     <div class="case-bottom"><span id="badge-case-note">여덟 번의 도전, 여덟 개의 증표</span><i class="case-clasp" aria-hidden="true"></i></div>
   </section>
-  <div class="gym-grid" id="gyms"></div>
+  <details id="gym-details" class="challenge-disclosure" open>
+    <summary>관장 목록</summary>
+    <div class="gym-grid" id="gyms"></div>
+  </details>
   </section>
-  <section id="rocket-hideout" class="story-board" aria-labelledby="rocket-title">
+  <details id="rocket-hideout" class="story-board" aria-labelledby="rocket-title" open>
+    <summary>
     <div class="rocket-heading"><div><span class="kicker">TEAM ROCKET HIDEOUT</span><h2 id="rocket-title">로켓단의 아지트</h2></div><img class="rocket-logo" src="assets/logos/team-rocket.png" alt="로켓단 R 마크"></div>
     <p id="rocket-intro" class="muted"></p>
+    </summary>
     <ol id="rocket-steps" class="rocket-steps"></ol>
-  </section>
-  <section id="snorlax-road" class="story-board" aria-labelledby="snorlax-title">
+  </details>
+  <details id="snorlax-road" class="story-board" aria-labelledby="snorlax-title" open>
+    <summary>
     <span class="kicker">A BLOCKED ROAD</span><h2 id="snorlax-title">길을 막는 잠만보</h2>
     <p class="muted">연분홍시티로 향하는 길목에 잠만보가 깊이 잠들어 있어요. 아무리 불러도 일어나지 않네요. 깨울 방법을 찾아야겠어요.</p>
+    </summary>
     <div id="snorlax-encounter" class="snorlax-encounter"></div>
-  </section>
+  </details>
   <section id="pokemon-league" aria-labelledby="league-title">
   <div class="league"><div><span class="kicker">POKÉMON LEAGUE</span><h2 id="league-title">사천왕, 그리고 챔피언</h2><p>뱃지 8개를 모으면 도전할 수 있어요. 다섯 경기를 회복 없이 이어서 승리하면 출현 보너스를 얻고, 2세대 해금을 직접 선택할 수 있어요.</p></div><button id="league-start" data-challenge="8">리그 도전</button></div>
   <div id="league-team" class="league-team"></div><p id="league-progress" class="muted"></p>
