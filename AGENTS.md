@@ -1,0 +1,11 @@
+# Verified releases and automatic completion
+
+Follow the standing completion and retention policy in `C:/Users/User/AGENTS.md` for every modification or build. Finish with scoped verification, an explicit source commit/push to the existing authorized remote/branch, and safe cleanup without asking again for routine actions within that policy.
+
+- Repository: `Bakzzi/Pokemon_codex`, normally `origin` / `main`. Inspect current changes and remotes before editing; preserve unrelated work.
+- Run the smallest affected test scope. For desktop layout or window behavior, also verify the exact packaged runtime in an isolated Electron fixture; do not drive tests through the user's live Codex or saved game.
+- Preserve `package-lock.json`, fixed dependency versions, and the documented `npm.cmd run package` workflow. Record the source commit, checks and portable artifact SHA-256 in `docs/releases/v<version>.json`.
+- Reuse `dist/Pokemon-Codex-<version>` for releases. Unchanged immutable runtime/assets may be hardlinked from a verified release, but changed files must be independent copies. Keep active locale packs such as `ko.pak` and `en-US.pak` independent so running widgets do not lock obsolete release links. Never refresh a published hardlinked release in place.
+- After release verification and remote sync, keep the latest and immediately previous known-good release, plus any explicitly pinned or still-used version. Before removal, verify exact paths, hashes/source history, Git tracking, running references and junctions. Verify retained files and actual removed bytes afterward.
+- `%APPDATA%/PokemonCodexBuddy` contains protected game progress, configuration and recovery backups. Do not treat it as disposable cache. Preserve source, keys, user data and active work. Within `desktop/.smoke`, keep useful reports and active fixtures; remove only proven stale cache/output files.
+- Preserve the original credit `모모찡 · momozzing`, upstream MIT license and secret gameplay reward sources.

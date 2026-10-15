@@ -6,10 +6,11 @@ const {combatant}=require('./battle.cjs');
 const nursery=require('./daycare.cjs');
 const {CodexReader}=require('./codex-reader.cjs');
 const {Store}=require('./store.cjs');
+const placement=require('./window-placement.cjs');
 const demo=process.argv.includes('--demo'),smoke=process.argv.includes('--smoke-test');
 const dataDir=smoke?(process.env.POKEMON_SMOKE_DIR||path.join(__dirname,'.smoke')):demo?path.join(__dirname,'.demo'):path.join(app.getPath('appData'),'PokemonCodexBuddy');
 app.setPath('userData',dataDir);app.setName('Pokemon Codex Buddy');app.disableHardwareAcceleration();
-let win,panel,tray,timer,game,store,reader,settings={},busy=false,lastRead=0,previous='',panelPrevious='',notice='';
+let win,panel,tray,timer,game,store,reader,widgetPlacement,settings={},busy=false,lastRead=0,previous='',panelPrevious='',notice='';
 const gotLock=app.requestSingleInstanceLock();
 if(!gotLock)app.quit();
 else{
@@ -48,15 +49,16 @@ async function start(){
     game.animate('encounter',{id:19,text:'야생 꼬렛 Lv.5 등장!'});
   }else if(demo)game.data.workTokens=25000;
   else reader=new CodexReader(path.join(process.env.CODEX_HOME||path.join(os.homedir(),'.codex'),'sessions'),game);
-  const area=screen.getPrimaryDisplay().workArea,width=400,height=settings.compact?276:484;
+  const area=screen.getPrimaryDisplay().workArea,{width,height}=placement.size(settings.compact);
   let x=settings.x??area.x+area.width-width-28,y=settings.y??area.y+area.height-height-32;
   const display=screen.getDisplayMatching({x,y,width,height}).workArea;
-  x=Math.max(display.x,Math.min(x,display.x+display.width-width));y=Math.max(display.y,Math.min(y,display.y+display.height-height));
-  win=new BrowserWindow({width,height,x,y,frame:false,transparent:true,resizable:false,hasShadow:false,
+  ({x,y}=placement.fit({x,y,width,height},display));
+  win=new BrowserWindow({width,height,x,y,frame:false,transparent:true,resizable:false,hasShadow:false,thickFrame:false,maximizable:false,fullscreenable:false,
     alwaysOnTop:settings.pinned!==false,skipTaskbar:true,show:false,title:'Pokemon Codex Buddy',
     backgroundColor:'#00000000',webPreferences:webPreferences()});
   secure(win);win.setAlwaysOnTop(settings.pinned!==false,'floating');
-  win.on('moved',()=>{[settings.x,settings.y]=win.getPosition();});
+  widgetPlacement=placement.attach(win,screen,(x,y)=>{settings.x=x;settings.y=y;});
+  widgetPlacement.place({x,y,width,height});
   win.on('closed',()=>app.quit());
   ipcMain.on('ready',event=>{if(event.sender===win?.webContents||event.sender===panel?.webContents)publish(true);});
   ipcMain.on('action',(event,{action,value}={})=>{
@@ -67,9 +69,7 @@ async function start(){
       if(action==='hide')win.hide();
       if(action==='pin'){settings.pinned=settings.pinned===false;win.setAlwaysOnTop(settings.pinned,'floating');}
       if(action==='compact'){
-        settings.compact=!settings.compact;win.setResizable(true);win.setSize(400,settings.compact?276:484);win.setResizable(false);
-        const b=win.getBounds(),a=screen.getDisplayMatching(b).workArea;
-        win.setPosition(Math.max(a.x,Math.min(b.x,a.x+a.width-b.width)),Math.max(a.y,Math.min(b.y,a.y+a.height-b.height)));
+        settings.compact=!settings.compact;win.setResizable(true);widgetPlacement.resize(settings.compact);win.setResizable(false);
       }
       if(action==='panel'){openPanel(['collection','challenge','journal','daycare'].includes(value)?value:'collection').catch(console.error);}
       if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner'].includes(action))result=game.requestAction(action,value);
