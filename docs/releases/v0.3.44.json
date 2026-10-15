@@ -1,0 +1,68 @@
+{
+  "version": "0.3.44",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "080a86c040f8dd823a0018aa78018fdb47fcbf1c",
+  "sourceTag": "v0.3.44",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.44",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime and current sources copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.43. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "scope": "Erika recognition button completion; no game-engine changes",
+    "syntax": "node --check desktop/panels.js",
+    "packagedRuntimeFilesMatched": 25,
+    "packagedUiCasesPassed": 4,
+    "uiCases": [
+      "before-recognition",
+      "earned-while-open",
+      "saved-and-reopened",
+      "completed-narrow"
+    ],
+    "narrowChallengeWidth": 650,
+    "completionDisablesNavigation": true,
+    "noBattleActionsDispatched": true,
+    "uiErrors": 0,
+    "archiveFilesVerified": 692,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.44-portable.zip",
+    "bytes": 165956263,
+    "sha256": "d916fc991d548961fd70dc903d7451ec02aca05780d68a82f99a5ef86029d1d7"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "portraitWidths": [
+      48,
+      40
+    ],
+    "erikaBadgeWidths": [
+      20,
+      18
+    ]
+  }
+}
