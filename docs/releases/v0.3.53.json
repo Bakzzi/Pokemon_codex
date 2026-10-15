@@ -1,0 +1,71 @@
+{
+  "version": "0.3.53",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "c8d15255b8634fb4dbf3516fac42b3898ee83d94",
+  "sourceTag": "v0.3.53",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.53",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "packaging": "Windows native runtime, current sources and item assets copied independently; unchanged app assets, data and dependencies hardlinked from verified 0.3.52. Every portable ZIP file verified against the package."
+  },
+  "validation": {
+    "scope": "Game item icon cards with names and quantities; empty inventory, all 15 displayed item icons, quantity/removal updates; bordered daycare phone contact, real breeding preview, phone-request start and withdrawal",
+    "command": "node --check desktop/panels.js; isolated Electron fixture using exact packaged runtime; git diff --check; item image byte/hash/dimension and source-tag verification",
+    "syntaxChecksPassed": true,
+    "packagedRuntimeFilesMatched": 25,
+    "packagedUiCasesPassed": 4,
+    "uiCases": [
+      "empty-inventory-and-bordered-phone-contact",
+      "all-item-icons-load-and-fit",
+      "phone-request-preview-start-and-withdraw",
+      "icon-quantity-and-removal-refresh"
+    ],
+    "panelWidth": 650,
+    "inventoryIconsLoaded": 15,
+    "itemAssetsVerified": 16,
+    "phoneContactBorderPx": 1,
+    "daycareStartAndWithdrawViaPhoneButtons": true,
+    "inventoryQuantityUpdates": true,
+    "legacySelectedPositionsPreserved": true,
+    "partyCapacity": 6,
+    "uiErrors": 0,
+    "archiveFilesVerified": 706,
+    "liveCodexConnected": true,
+    "savedProgressAndSettingsPreserved": true,
+    "anonymousDownloadStatus": 200
+  },
+  "widget": {
+    "snapDistance": 20,
+    "visibleMargins": {
+      "top": 25,
+      "left": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "width": 370,
+    "expandedHeight": 491,
+    "compactHeight": 281,
+    "edgesRespectTaskbarWorkArea": true,
+    "snapOn": "drag-end",
+    "freeWhileDragging": true
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.53-portable.zip",
+    "bytes": 165968768,
+    "sha256": "e3b6a2cf655c474cc433a25b709789b34c323bcbf10c7f295271ea1e0a5f8ef8"
+  },
+  "artwork": {
+    "sources": "desktop/assets/trainers/rocket-sources.json",
+    "portraitWidths": [
+      48,
+      40
+    ],
+    "itemSources": "desktop/assets/items/sources.json"
+  }
+}
