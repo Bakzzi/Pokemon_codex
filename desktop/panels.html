@@ -47,7 +47,7 @@
 <section id="daycare" class="page" hidden>
   <section class="device-quest" aria-labelledby="inventory-title">
     <div class="device-heading"><h2 id="inventory-title">보유 물품</h2></div>
-    <div id="inventory" class="inventory"></div>
+    <div id="inventory" class="inventory" role="list" aria-label="보유 물품과 수량"></div>
   </section>
   <section id="learning-device" class="device-quest" aria-labelledby="device-title">
     <div class="device-heading"><div><span class="kicker">EXP. SHARE</span><h2 id="device-title">학습장치</h2></div><img class="device-art" src="assets/items/exp-share.png" alt="학습장치"></div>
@@ -59,11 +59,14 @@
       <div id="device-current" class="device-current"></div><p class="muted">출전 동료의 경험치는 그대로 · 등록한 한 마리에게만 추가 10%. 교환 진화 대상은 그 모습에서 장치로 한 레벨 오르면 자동 진화해요.</p>
     </div>
   </section>
-  <div class="intro"><div><h2>키우미집</h2><p>두 동료를 골라 예상 알을 확인해요. 맡긴 동료들은 잠시 배틀을 쉬어요.</p></div></div>
+  <section id="daycare-contact" class="device-quest daycare-contact" aria-labelledby="daycare-title">
+  <div class="device-heading"><div><span class="kicker">PHONE / DAY CARE</span><h2 id="daycare-title">키우미집에 전화하기</h2></div><img class="device-art" src="assets/items/xtransceiver.png" alt="키우미집에 연락할 전화기"></div>
+  <p>가방 속 전화기로 키우미에게 연락해요. 맡길 두 동료를 골라 부탁하면 키우미집에서 돌봐 줘요. 맡긴 동료들은 잠시 배틀을 쉬어요.</p>
   <div class="nursery-layout"><div><div class="nursery-pair"><label>첫 번째 동료<select id="parent-a"><option value="">동료 선택</option></select></label><span>＋</span><label>두 번째 동료<select id="parent-b"><option value="">동료 선택</option></select></label></div>
-  <div id="egg-preview" class="egg-preview"></div><div class="nursery-actions"><button id="daycare-start">두 마리 맡기기</button><button id="daycare-withdraw" hidden>동료 데려오기</button></div></div>
+  <div id="egg-preview" class="egg-preview"></div><div class="nursery-actions"><button id="daycare-start">전화로 맡기기</button><button id="daycare-withdraw" hidden>전화로 데려오기</button></div></div>
   <div><div id="nursery-progress"></div><div id="hatch-progress"></div>
   <p class="muted">한 번 맡길 때 알 하나를 얻어요. 모험 걸음은 실제 Codex 작업량에 따라 쌓여요.<br><br>코딩하는 동안 알을 발견하고, 부화하면 동료 목록에 자동으로 들어와요.<br><br>부모는 그대로 돌아오고, 부화한 포켓몬은 Lv.5부터 따로 자라요. 키우미집에서는 부모의 경험치가 오르지 않아요.</p></div></div>
+  </section>
 </section>
 <section id="journal" class="page" hidden>
   <div class="intro"><div><h2>네가 코딩하는 동안</h2><p>새로운 만남, 포획, 성장과 도전의 결과를 모아 뒀어.</p></div></div>

@@ -5,6 +5,11 @@ let state=null,selected=25,memberUid=null,nurserySignature='',tab=new URLSearchP
 const img=(id,cls='')=>{const e=node('img',cls);e.src='assets/'+id+'.gif';e.alt='';return e;};
 const levelText=p=>'Lv.'+p.level+' '+(p.level>=100?'MAX':p.expPercent+'%');
 const experienceText=p=>p.level>=100?'최고 레벨에 도달했어요.':'다음 레벨까지 '+(p.expRequired-p.expCurrent).toLocaleString('ko-KR')+' XP · '+p.expCurrent.toLocaleString('ko-KR')+' / '+p.expRequired.toLocaleString('ko-KR')+' XP';
+const itemSprites={'poke-flute':'poke-flute','training-device':'exp-share',4:'poke-ball',80:'sun-stone',81:'moon-stone',82:'fire-stone',83:'thunder-stone',84:'water-stone',85:'leaf-stone',110:'oval-stone',198:'kings-rock',210:'metal-coat',212:'dragon-scale',229:'up-grade',885:'ice-stone'};
+function inventoryCard(item){
+  const card=node('div','inventory-item'),icon=node('img'),body=node('div','inventory-item-body');icon.src='assets/items/'+itemSprites[item.id]+'.png';icon.alt='';
+  card.dataset.item=item.id;card.setAttribute('role','listitem');card.title=item.name+' × '+item.count;body.append(node('b','',item.name),node('small','', '× '+item.count));card.append(icon,body);return card;
+}
 // Original image width, then the square viewport's x/y/size in source pixels.
 const trainerFaces={brock:[196,52,5,104],misty:[228,61,7,112],surge:[156,22,1,110],erika:[198,22,3,114],koga:[217,113,5,103],sabrina:[216,17,13,112],blaine:[273,24,18,112],giovanni:[179,25,5,112]};
 const gymLocations={brock:'회색시티',misty:'블루시티',surge:'갈색시티',erika:'무지개시티',koga:'연분홍시티',sabrina:'노랑시티',blaine:'홍련섬',giovanni:'상록시티'};
@@ -246,7 +251,7 @@ function progressCard(title,current,required,description,pokemon){
   body.append(track,node('p','muted',Math.floor(current/required*100)+'% · '+Math.max(0,required-current).toLocaleString('ko-KR')+' 모험 걸음 남음'));box.append(body);return box;
 }
 function renderNursery(){
-  $('inventory').replaceChildren(...(state.inventory.length?state.inventory.map(i=>node('span','',i.name+' × '+i.count)):[node('p','muted','아직 보유한 물품이 없어요.')]));
+  $('inventory').replaceChildren(...(state.inventory.length?state.inventory.map(inventoryCard):[node('p','muted','아직 보유한 물품이 없어요.')]));
   renderDevice();
   const d=state.daycare,signature=JSON.stringify(state.roster.map(p=>[p.uid,p.id,p.level,p.expPercent,p.gender,p.boarded]));
   if(nurserySignature!==signature){
@@ -264,8 +269,8 @@ function renderNursery(){
   }else root.append(node('p','',preview.reason));
   const waiting=!!d.care&&!d.care.produced,queued=state.pendingActions.some(a=>a.kind==='daycare-start'&&a.parents.every((uid,i)=>uid===d.selection[i])),withdrawQueued=state.pendingActions.some(a=>a.kind==='daycare-withdraw');
   $('daycare-start').disabled=!preview.compatible||queued;
-  $('daycare-start').textContent=queued?'맡기기 예약됨':waiting||d.egg?'다음 알 예약':d.care?.produced?'다음 알 기다리기':'두 마리 맡기기';
-  $('daycare-withdraw').disabled=withdrawQueued;$('daycare-withdraw').textContent=withdrawQueued?'데려오기 예약됨':'동료 데려오기';
+  $('daycare-start').textContent=queued?'맡기기 통화 예약됨':waiting||d.egg||d.care?.produced?'다음 알 부탁하기':'전화로 맡기기';
+  $('daycare-withdraw').disabled=withdrawQueued;$('daycare-withdraw').textContent=withdrawQueued?'데려오기 통화 예약됨':'전화로 데려오기';
   $('daycare-withdraw').hidden=!d.care;
   $('nursery-progress').replaceChildren();
   if(d.care){

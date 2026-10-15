@@ -18,7 +18,7 @@ Original Crystal animated sprites, national numbers 1–251; only 1–151 are av
 Per-file URLs, byte counts and SHA-256 hashes are in desktop/assets/manifest.json.
 The reference directory also preserves original Generation III assets and offline source tables.
 
-The Exp. Share and Poke Flute item sprites are downloaded unchanged from https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/exp-share.png and https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-flute.png. Their URLs, byte counts and SHA-256 hashes are recorded in desktop/assets/items/sources.json. Runtime uses the local copies.
+Item sprites, including Exp. Share, Poke Flute, evolution stones, held evolution items and the Xtransceiver used for the daycare phone contact, are downloaded unchanged from https://github.com/PokeAPI/sprites/tree/master/sprites/items . Their per-file URLs, byte counts and SHA-256 hashes are recorded in desktop/assets/items/sources.json. Runtime uses local copies without network requests. Xtransceiver is used as an in-game contact illustration; phone-based daycare requests are this project's presentation.
 
 Pokémon names, characters and game artwork belong to their respective rights holders, including Nintendo, Creatures, GAME FREAK and The Pokémon Company. They are separate from the MIT-licensed project source. This is an unofficial noncommercial fan project.
 
