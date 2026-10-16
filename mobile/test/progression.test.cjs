@@ -16,17 +16,29 @@ test('browser bundle runs the existing engine without Node globals',()=>{
 });
 test('background time without steps never changes game or XP',()=>{
   const g=new Game({},now),p=new Progression(g);p.resume(now);p.live(now);p.pause(now+1000);
-  const before=JSON.stringify(g.data);assert.equal(p.live(now+3600000),false);assert.equal(p.catchUp(99,now+3600000),0);assert.equal(JSON.stringify(g.data),before);
+  const before=JSON.stringify(g.data);assert.equal(p.live(now+3600000),false);assert.equal(p.catchUp(9,now+3600000),0);assert.equal(JSON.stringify(g.data),before);
 });
 test('recorded steps are paid once across saves, reopening, and update',()=>{
   const g=new Game({},now,{random:()=>.4}),p=new Progression(g);p.resume(now);
-  assert.equal(p.catchUp(1234,now),12);assert.equal(p.consumed,1200);assert.equal(p.catchUp(1234,now),0);
+  assert.equal(p.catchUp(34,now),3);assert.equal(p.consumed,30);assert.equal(p.catchUp(34,now),0);
   const g2=new Game(JSON.parse(JSON.stringify(g.data)),now+1000),p2=new Progression(g2,JSON.parse(JSON.stringify(p.checkpoint())));
-  assert.equal(p2.catchUp(1234,now+1000),0);assert.equal(p2.catchUp(1300,now+1000),1);assert.equal(p2.consumed,1300);
+  assert.equal(p2.catchUp(34,now+1000),0);assert.equal(p2.catchUp(40,now+1000),1);assert.equal(p2.consumed,40);
+});
+test('ten-step threshold keeps the remainder and does not replay paid actions',()=>{
+  const g=new Game({},now,{random:()=>.4}),p=new Progression(g,{},require('../version.json').stepsPerAction);
+  assert.equal(p.catchUp(9,now),0);assert.equal(p.catchUp(10,now),1);assert.equal(p.consumed,10);
+  assert.equal(p.catchUp(19,now),0);assert.equal(p.catchUp(20,now),1);assert.equal(p.consumed,20);
+  assert.equal(p.catchUp(20,now),0);
+});
+test('upgrading the rate preserves the old raw-step cursor without paying past steps again',()=>{
+  const g=new Game({},now,{random:()=>.4}),p=new Progression(g,{consumed:1200,pausedAt:now});
+  assert.equal(p.catchUp(1200,now),0);assert.equal(p.catchUp(1234,now),3);assert.equal(p.consumed,1230);
+  const resumed=new Progression(new Game(JSON.parse(JSON.stringify(g.data)),now),p.checkpoint());
+  assert.equal(resumed.catchUp(1234,now),0);assert.equal(resumed.catchUp(1240,now),1);assert.equal(resumed.consumed,1240);
 });
 test('pause preserves battle pacing without adding hours after offline catchup',()=>{
   const g=new Game({},now,{random:()=>.4}),p=new Progression(g);p.resume(now);p.live(now);p.pause(now+1000);
-  const next=now+3600000;p.resume(next);p.catchUp(1000,next);
+  const next=now+3600000;p.resume(next);p.catchUp(100,next);
   assert.ok(g.nextTick-next<60000);assert.ok(g.data.switchUntil-next<60000);assert.equal(p.pausedAt,0);
 });
 test('trainer battles also stop without foreground play or steps',()=>{

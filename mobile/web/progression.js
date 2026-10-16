@@ -2,7 +2,7 @@
 (function(root){
   // Persist this cursor in the SAME atomic file as game progress.
   class Progression{
-    constructor(core,saved={},stepsPerAction=100){
+    constructor(core,saved={},stepsPerAction=10){
       this.game=core;this.consumed=Number.isSafeInteger(saved.consumed)?saved.consumed:0;
       this.stepsPerAction=stepsPerAction;this.foreground=false;this.pausedAt=Number.isFinite(saved.pausedAt)?saved.pausedAt:0;
       this.game.data.workTokens=0;
