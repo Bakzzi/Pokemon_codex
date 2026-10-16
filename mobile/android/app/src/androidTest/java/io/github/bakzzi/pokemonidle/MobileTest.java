@@ -62,6 +62,11 @@ public final class MobileTest extends Instrumentation {
         Bundle result=new Bundle();
         try{
             if("update-checks".equals(arguments.getString("mode"))){finish(Activity.RESULT_OK,UpdateChecks.run(getTargetContext()));return;}
+            if("update-battle-preserved".equals(arguments.getString("mode"))){
+                JSONObject stored=new JSONObject(readSave());android.content.SharedPreferences p=getTargetContext().getSharedPreferences("verify",0);
+                require(stored.getJSONObject("game").toString().equals(p.getString("immediateGame","")),"Update changed the saved battle or party");require(stored.getJSONObject("mobile").getLong("consumed")==p.getLong("immediateConsumed",-1),"Update changed the walking cursor");require(stored.getJSONObject("mobile").getLong("pausedAt")>0,"Update did not save the pause checkpoint");
+                result.putLong("installed_code",getTargetContext().getPackageManager().getPackageInfo(getTargetContext().getPackageName(),0).getLongVersionCode());result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("update-checkpoint".equals(arguments.getString("mode"))){
                 File file=new File(getTargetContext().getFilesDir(),"adventure.json");require(file.isFile(),"No saved adventure to checkpoint");getTargetContext().getSharedPreferences("verify",0).edit().putString("updateSaveSha",Updater.sha256(file)).commit();result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
@@ -74,6 +79,16 @@ public final class MobileTest extends Instrumentation {
             Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);
             if("inspect".equals(arguments.getString("mode"))){Thread.sleep(5000);result.putString("diagnostic",js("(()=>{try{return JSON.stringify({document:document.readyState,ready:typeof ready,game:typeof game,active:typeof active,phase:typeof active!=='undefined'?active:null,party:document.getElementById('battle')?.contentDocument.querySelectorAll('#party button').length,call:(()=>{try{window.mobileLifecycle(true);return 'ok'}catch(e){return e.stack}})()})}catch(e){return e.stack}})()"));finish(Activity.RESULT_OK,result);return;}
             waitReady();Thread.sleep(1500);
+            if("update-immediate".equals(arguments.getString("mode"))){
+                js("active=false;game=new MobileCore.Game({},Date.now());progression=new MobileProgression(game);progression.resume(Date.now());game.newWild(Date.now());game.nextTick=Date.now()+60000;game.data.switchUntil=game.nextTick;active=true;catchingUp=false;save()");
+                JSONObject before=new JSONObject(readSave());getTargetContext().getSharedPreferences("verify",0).edit().putString("immediateGame",before.getJSONObject("game").toString()).putLong("immediateConsumed",before.getJSONObject("mobile").getLong("consumed")).commit();
+                Updater u=Updater.current;File apk=new File(getTargetContext().getCacheDir(),"verify-update.apk");try(InputStream in=getContext().getAssets().open("update.apk");OutputStream out=new FileOutputStream(apk)){byte[] b=new byte[65536];for(int n;(n=in.read(b))!=-1;)out.write(b,0,n);}
+                android.content.pm.PackageInfo info=getTargetContext().getPackageManager().getPackageArchiveInfo(apk.getAbsolutePath(),0);JSONObject manifest=new JSONObject().put("versionCode",info.getLongVersionCode()).put("bytes",apk.length()).put("sha256",Updater.sha256(apk));u.validate(apk,manifest);
+                Field candidate=Updater.class.getDeclaredField("candidate");candidate.setAccessible(true);candidate.set(u,apk);Field expected=Updater.class.getDeclaredField("expected");expected.setAccessible(true);expected.set(u,manifest);
+                long started=SystemClock.elapsedRealtime();u.ready=true;while(!u.installing&&u.pending==null&&SystemClock.elapsedRealtime()-started<5000)Thread.sleep(25);
+                require(u.installing||u.pending!=null,"App waited for battle completion before installing");result.putLong("installSubmittedMs",SystemClock.elapsedRealtime()-started);require(new JSONObject(readSave()).getJSONObject("game").toString().equals(before.getJSONObject("game").toString()),"An extra battle action ran before update");
+                result.putString("result","submitted during active battle");sendStatus(1,result);UpdateChecks.await(u);Thread.sleep(1500);finish(Activity.RESULT_OK,result);return;
+            }
             if("ui-layout".equals(arguments.getString("mode"))){
                 result.putString("layout",layoutChecks());result.putString("geometry",checkInsets());screenshot("dex-list.png");
                 js("document.getElementById('panel').contentDocument.querySelector('.dex-card[data-id=\"19\"]').click()");Thread.sleep(200);screenshot("dex-detail.png");

@@ -1,0 +1,41 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const root=path.resolve(__dirname,'../..');
+function fixture(){
+  let now=Date.parse('2026-10-17T06:00:00Z'),stored=null,saveOk=true;const calls=[],timers=[],intervals=[],elements=new Map();
+  const status={steps:0,stepsEnabled:false,sensorSupported:false,tracking:false,sensor:'',update:'',updateReady:false,installing:false,pendingInstall:false,canInstall:true};
+  const element=id=>{if(!elements.has(id))elements.set(id,{hidden:false,open:false,style:{},clientWidth:380,contentWindow:{postMessage(){}},setAttribute(){}});return elements.get(id);};
+  const native={load:()=>JSON.stringify({}),save:text=>{calls.push('save');if(saveOk)stored=JSON.parse(text);return saveOk;},foreground:()=>true,status:()=>JSON.stringify(status),ready(){},reportError(){},installUpdate(){calls.push('install');status.updateReady=false;status.installing=true;}};
+  const c=vm.createContext({console,TextEncoder,TextDecoder,structuredClone,Date:class extends Date{static now(){return now;}},Android:native,MobileConfig:{name:'fixture',stepsPerAction:10},document:{getElementById:element},location:{origin:'https://game.pokemon.local'},setInterval:fn=>intervals.push(fn),setTimeout:fn=>timers.push(fn),clearTimeout(){},addEventListener(){}});
+  vm.runInContext('window=globalThis',c);
+  for(const file of ['mobile/android/app/build/generated/gameAssets/web/game.bundle.js','mobile/web/progression.js','mobile/web/app.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),c);
+  const run=code=>vm.runInContext(code,c);
+  return {status,calls,timers,run,tick:()=>intervals[0](),start:()=>run('mobileLifecycle(true)'),snapshot:()=>JSON.parse(run('JSON.stringify({game:game.data,mobile:progression.checkpoint(),active,catchingUp,updatePaused,fatal})')),stored:()=>stored,setSaveOk:value=>{saveOk=value;},advance:ms=>{now+=ms;}};
+}
+for(const kind of ['wild','trainer','capture'])test('save and install immediately during '+kind+' without waiting for the battle or animation',()=>{
+  const f=fixture();f.start();f.run(kind==='trainer'?'game.challenge(0,Date.now())':'game.newWild(Date.now())');
+  if(kind==='capture')f.run('game.data.pendingBattle={kind:"capture",at:Date.now()+60000}');
+  f.run('game.nextTick=Date.now()+60000;game.data.switchUntil=game.nextTick');const before=f.snapshot();
+  f.calls.length=0;f.status.updateReady=true;f.tick();
+  assert.deepEqual(f.calls,['save','install']);assert.deepEqual(f.stored().game,before.game);assert.ok(f.stored().game.battle);assert.ok(f.stored().mobile.pausedAt>0);assert.equal(f.snapshot().active,false);
+});
+test('a ready update takes priority even when the foreground game is not active',()=>{
+  const f=fixture();f.run('active=false');f.status.updateReady=true;f.tick();assert.deepEqual(f.calls,['save','install']);
+});
+test('a ready update stops queued walking catch-up before any more steps are spent',()=>{
+  const f=fixture();f.status.steps=10000;f.start();const consumed=f.snapshot().mobile.consumed;assert.ok(f.timers.length);
+  f.status.updateReady=true;f.timers.shift()();assert.equal(f.snapshot().mobile.consumed,consumed);assert.equal(f.stored().mobile.consumed,consumed);assert.equal(f.calls.at(-1),'install');
+});
+test('failed atomic save prevents installation and further game actions',()=>{
+  const f=fixture();f.start();f.setSaveOk(false);f.status.updateReady=true;f.calls.length=0;f.tick();assert.deepEqual(f.calls,['save']);assert.equal(f.snapshot().fatal,true);f.tick();assert.deepEqual(f.calls,['save']);
+});
+test('missing install permission allows play, then installation starts as soon as permission is granted',()=>{
+  const f=fixture();f.status.updateReady=true;f.status.canInstall=false;f.start();assert.equal(f.calls.includes('install'),false);assert.equal(f.snapshot().active,true);
+  f.status.canInstall=true;f.tick();assert.equal(f.calls.at(-1),'install');
+});
+test('installation and system confirmation pause actions; failure resumes the saved battle without an extra turn',()=>{
+  const f=fixture();f.start();f.run('game.newWild(Date.now())');f.status.updateReady=true;f.tick();const before=f.snapshot();
+  f.advance(30000);f.tick();f.run('action("slot",{slot:0,id:25})');assert.deepEqual(f.snapshot().game,before.game);
+  f.status.installing=false;f.status.pendingInstall=true;f.tick();assert.equal(f.snapshot().active,false);assert.deepEqual(f.snapshot().game,before.game);
+  f.status.pendingInstall=false;f.tick();assert.equal(f.snapshot().active,true);assert.equal(f.snapshot().game.battle.turn,before.game.battle.turn);assert.equal(f.snapshot().game.battle.foe.hp,before.game.battle.foe.hp);assert.equal(f.calls.filter(c=>c==='install').length,1);
+});

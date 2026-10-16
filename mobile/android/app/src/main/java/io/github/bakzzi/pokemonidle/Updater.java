@@ -70,7 +70,7 @@ final class Updater {
                 try(InputStream in=download.getInputStream();OutputStream out=new FileOutputStream(part)){byte[] buffer=new byte[65536];long copied=0;for(int n;(n=in.read(buffer))!=-1;){copied+=n;if(copied>size)throw new IOException("APK exceeds size");out.write(buffer,0,n);}if(copied!=size)throw new IOException("Incomplete APK");}
             }finally{download.disconnect();}
             validate(part,manifest);if(apk.exists()&&!apk.delete())throw new IOException("Old update locked");if(!part.renameTo(apk))throw new IOException("Cannot stage update");
-            candidate=apk;expected=manifest;ready=true;status="v"+name+" 업데이트 준비 완료 · 배틀이 끝나면 적용해요.";
+            candidate=apk;expected=manifest;ready=true;status="v"+name+" 업데이트 준비 완료 · 저장 후 바로 적용해요.";
         }catch(Exception e){checked=false;android.util.Log.w("PokemonUpdate",e.toString());status=available==null?"업데이트 정보를 확인하지 못했어요. ‘지금 확인’으로 다시 시도해 주세요.":"v"+available+" 업데이트가 있어요. 내려받지 못했으니 다시 확인해 주세요.";}
         finally{if(checked)context.getSharedPreferences("update",0).edit().putLong("checked",System.currentTimeMillis()).apply();busy=false;}});
     }
