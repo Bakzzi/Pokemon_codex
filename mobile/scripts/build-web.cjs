@@ -26,7 +26,7 @@ for(const [source,target] of [['index.html','battle.html'],['panels.html','panel
   html=html.replace("style-src 'self'","style-src 'self' 'unsafe-inline'"); // Existing renderers animate inline styles.
   html=html.replace('</head>','<link rel="stylesheet" href="frame.css"><script src="bridge.js"></script></head>');
   html=html.replaceAll('AI Agent 포켓몬 키우기','포켓몬 작은 모험').replace('진행은 이 PC에 자동 저장돼요.','진행은 이 기기에 자동 저장돼요.');
-  html=html.replaceAll('모험 걸음은 실제 에이전트 작업량에 따라 쌓여요.','모험을 이어가면 알을 돌볼 수 있어요.').replaceAll('코딩하는 동안','모험하는 동안').replaceAll('네가 코딩하는 동안','함께한 모험');
+  html=html.replaceAll('모험 걸음은 실제 에이전트 작업량에 따라 쌓여요.','모험을 이어가면 알을 돌볼 수 있어요.').replaceAll('네가 코딩하는 동안','함께한 모험').replaceAll('코딩하는 동안','모험하는 동안');
   if(source==='panels.html')html=html.replace(/<button data-tab="connections">.*?<\/button>/s,'').replace(/<section id="connections"[\s\S]*?<\/section>/,'');
   if(source==='index.html')html=html.replace('<body>','<body class="battle-frame">');
   else html=html.replace('<body>','<body class="panel-frame">');
@@ -35,7 +35,12 @@ for(const [source,target] of [['index.html','battle.html'],['panels.html','panel
 let renderer=fs.readFileSync(path.join(root,'desktop/renderer.js'),'utf8');
 renderer=renderer.replaceAll('에이전트 작업과 함께 모험 중','동료와 함께 모험 중').replaceAll('다음 작업과 함께 배틀을 이어가요','동료와 배틀을 이어가요').replaceAll('작업의 여운으로 모험을 이어가는 중','걸음과 함께 모험 중').replaceAll('다음 코딩을 기다리는 중','동료와 함께 모험 중');
 fs.writeFileSync(path.join(out,'renderer.js'),renderer);
-fs.writeFileSync(path.join(out,'panels.js'),fs.readFileSync(path.join(root,'desktop/panels.js'),'utf8').replaceAll('코딩을 이어가면 부화해요.','모험을 이어가면 부화해요.').replaceAll('모험 걸음','모험 진행'));
+const panels=fs.readFileSync(path.join(root,'desktop/panels.js'),'utf8')
+  .replaceAll('코딩을 이어가면 부화해요.','모험을 이어가면 부화해요.')
+  .replaceAll('첫 모험을 기다리고 있어요. Codex에서 작업하면 기록이 쌓여요.','첫 모험을 기다리고 있어요. 동료와 함께 모험하면 기록이 쌓여요.')
+  .replace("Math.floor(current/required*100)+'% · '+Math.max(0,required-current).toLocaleString('ko-KR')+' 모험 걸음 남음'","Math.floor(current/required*100)+'%'")
+  .replace(/^    root.append\(node\('p','muted','알 발견까지 '[^\n]+\n/m,'');
+fs.writeFileSync(path.join(out,'panels.js'),panels);
 fs.writeFileSync(path.join(out,'connections.js'),'function initConnections(){};function renderConnections(){};');
 fs.cpSync(path.join(root,'mobile/web'),out,{recursive:true});
 const notices=['LICENSE','mobile/third-party/pkmn-sets-LICENSE.txt',...['@pkmn/sim','@pkmn/streams','ts-chacha20'].map(n=>'node_modules/'+n+'/LICENSE')].map(file=>file+'\n'+fs.readFileSync(path.join(root,file),'utf8')).join('\n\n');
