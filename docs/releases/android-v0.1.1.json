@@ -1,0 +1,48 @@
+{
+    "version":  "0.1.1",
+    "versionCode":  3,
+    "platform":  "android",
+    "channel":  "android-preview",
+    "sourceCommit":  "1289fca5cc5e9bf8dd2b37563fc493e4d61abaac",
+    "package":  "io.github.bakzzi.pokemonidle",
+    "minSdk":  31,
+    "targetSdk":  36,
+    "artifact":  "Pokemon-Idle-0.1.1.apk",
+    "bytes":  4716458,
+    "sha256":  "d3b02c108daa6e36115929b6dc711cf65f54ce2f97e0b83193a51b89050492df",
+    "signingCertificateSha256":  "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+    "toolchain":  {
+                      "node":  "22.11.0",
+                      "gradle":  "8.13",
+                      "agp":  "8.13.0",
+                      "compileSdk":  36,
+                      "buildTools":  "36.1.0"
+                  },
+    "validation":  {
+                       "progressionTestsPassed":  9,
+                       "releaseBuild":  "passed",
+                       "apkSignatureVerified":  true,
+                       "apkAssetsMatchTestedSource":  [
+                                                          "game.bundle.js",
+                                                          "config.js",
+                                                          "progression.js",
+                                                          "index.html",
+                                                          "app.js"
+                                                      ],
+                       "stepThresholdAndRemainder":  "passed",
+                       "previousRawStepCursorPreserved":  "passed",
+                       "duplicateRewardsPrevented":  "passed",
+                       "previousReleaseHashPreserved":  true,
+                       "emulatorRerun":  false,
+                       "physicalWalkingVerified":  false,
+                       "silentSelfUpdateCompleted":  false
+                   },
+    "retention":  {
+                      "latestAndroid":  "0.1.1",
+                      "previousAndroid":  "0.1.0",
+                      "windowsPreserved":  [
+                                               "0.3.82",
+                                               "0.3.83"
+                                           ]
+                  }
+}
