@@ -11,6 +11,9 @@
     "test": "node --test desktop/test/*.test.cjs",
     "smoke": "electron . --smoke-test",
     "build:data": "node desktop/scripts/build-data.cjs",
+    "mobile:bundle": "node mobile/scripts/build-web.cjs",
+    "mobile:build": "powershell -NoProfile -ExecutionPolicy Bypass -File mobile/scripts/build-android.ps1",
+    "mobile:test": "powershell -NoProfile -ExecutionPolicy Bypass -File mobile/scripts/verify-android.ps1",
     "package": "node desktop/scripts/package.cjs"
   },
   "devDependencies": {

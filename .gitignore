@@ -14,3 +14,9 @@ dist/
 **/progress*.json
 **/remote-connections.json
 **/remote-secrets.json
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/android/**/build/
+mobile/android/keystore.properties
+*.jks
+*.keystore

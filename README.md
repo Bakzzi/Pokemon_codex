@@ -6,6 +6,8 @@
 
 **[Windows 실행 파일 받기 · 최신 릴리스](https://github.com/Bakzzi/Pokemon_codex/releases/latest)**
 
+Android용 **포켓몬 작은 모험**은 [mobile 브랜치 안내](mobile/README.md)를 참고하세요. 켜 두면 자동 모험하고, 꺼 둔 동안에는 걸음 수로 진행하는 별도 앱입니다.
+
 릴리스의 portable ZIP을 받아 압축을 풀고 **PokemonCodex.exe**를 실행하세요. 폴더 안의 파일을 함께 유지하면 됩니다. 포터블 실행에는 Node.js가 필요 없습니다. GitHub의 Source code ZIP은 실행 파일 배포본과 다릅니다.
 
 <p align="center">

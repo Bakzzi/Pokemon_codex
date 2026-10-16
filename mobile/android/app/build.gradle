@@ -1,0 +1,44 @@
+plugins { id 'com.android.application' }
+def releaseInfo = new groovy.json.JsonSlurper().parse(file('../../version.json'))
+def keyProps = new Properties()
+def keyFile = file('../keystore.properties')
+if (keyFile.exists()) keyFile.withInputStream { keyProps.load(it) }
+android {
+    namespace 'io.github.bakzzi.pokemonidle'
+    compileSdk 36
+    buildToolsVersion '36.1.0'
+    defaultConfig {
+        applicationId releaseInfo['package']
+        minSdk 31
+        targetSdk 36
+        versionCode ((project.findProperty('apkVersionCode') ?: releaseInfo.code).toInteger())
+        versionName (project.findProperty('apkVersionName') ?: releaseInfo.name)
+        testInstrumentationRunner 'io.github.bakzzi.pokemonidle.MobileTest'
+    }
+    signingConfigs {
+        release {
+            if (keyFile.exists()) {
+                storeFile file(keyProps['storeFile'])
+                storePassword keyProps['storePassword']
+                keyAlias keyProps['keyAlias']
+                keyPassword keyProps['keyPassword']
+            }
+        }
+    }
+    buildTypes {
+        release { signingConfig signingConfigs.release; minifyEnabled false }
+        debug { applicationIdSuffix '.test'; debuggable true }
+    }
+    sourceSets.main.assets.srcDir layout.buildDirectory.dir('generated/gameAssets')
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    lint { abortOnError true; checkReleaseBuilds true }
+    testBuildType 'release'
+    sourceSets.androidTest.assets.srcDir layout.buildDirectory.dir('generated/testAssets')
+}
+tasks.register('bundleGame', Exec) {
+    workingDir file('../../..')
+    commandLine 'node', 'mobile/scripts/build-web.cjs'
+    inputs.files(fileTree('../../../desktop') { exclude '.smoke/**', '.demo/**', 'test/**' }, fileTree('../../web'), file('../../version.json'), file('../../scripts/build-web.cjs'), file('../../../package-lock.json'))
+    outputs.dir layout.buildDirectory.dir('generated/gameAssets')
+}
+tasks.named('preBuild').configure { dependsOn 'bundleGame' }
