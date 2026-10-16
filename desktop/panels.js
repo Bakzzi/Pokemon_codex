@@ -183,7 +183,7 @@ function renderBosses(){
   }
 }
 function renderTravel(){
-  const pending=state.pendingActions.find(a=>a.kind==='johto-unlock'),candidates=state.johtoUnlockPreview?.candidates||[],eligible=new Set(candidates.filter(p=>p.eligible).map(p=>p.id));
+  const pending=state.pendingActions.find(a=>a.kind==='johto-unlock'),candidates=(state.johtoUnlockPreview?.candidates||[]).filter(p=>p.eligible),eligible=new Set(candidates.map(p=>p.id));
   if(pending){travelSelection.clear();for(const id of pending.speciesIds||[])travelSelection.add(id);}
   else for(const id of travelSelection)if(!eligible.has(id))travelSelection.delete(id);
   $('travel-picker').hidden=!state.champion||state.johtoUnlocked;
