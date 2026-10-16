@@ -1,4 +1,5 @@
 'use strict';
+const {travelUids}=require('./helpers/region.cjs');
 const test=require('node:test'),assert=require('node:assert/strict');
 const {Game}=require('./helpers/four-party.cjs'),{species,xpAt}=require('../pokemon.cjs'),{combatant}=require('../battle.cjs'),{captureTiming}=require('../capture-animation.js');
 const now=Date.parse('2026-10-14T09:00:00Z');
@@ -25,7 +26,7 @@ test('registration from evolution and hatching counts once; encounters, duplicat
 });
 
 test('Gen II registrations count while locked; invalid, duplicate-ID and false entries do not',()=>{
-  const g=fixture(151);g.data.champion=true;assert.ok(g.unlockJohto(now));g.addPokemon(172,5,'hatch',now);g.addPokemon(161,5,'catch',now);
+  const g=fixture(151);g.data.champion=true;assert.ok(g.unlockJohto(now,travelUids(g)));g.addPokemon(172,5,'hatch',now);g.addPokemon(161,5,'catch',now);
   g.data.champion=false;g.data.johtoUnlocked=false;g.data.caught[999]=now;g.data.caught[-1]=now;g.data.caught["01"]=now;assert.equal(g.experienceBoost().count,153);assert.equal(g.experienceBoost().multiplier,2.53);
   g.data.caught[19]=false;assert.equal(g.experienceBoost().count,152);
 });

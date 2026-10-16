@@ -1,4 +1,5 @@
 'use strict';
+const {travelUids}=require('./helpers/region.cjs');
 const test=require('node:test'),assert=require('node:assert/strict');
 const {Game}=require('./helpers/four-party.cjs'),{species,wildEligible,wildDistribution,pickWild}=require('../pokemon.cjs');
 const trade=[65,68,76,94,186,199,208,212,230,233],other=[26,31,34,36,38,40,45,59,62,71,91,103,121,134,135,136,169,176,182,192,196,197,242];
@@ -19,7 +20,7 @@ test('actual ordinary, champion and special-bonus draws cannot select special ev
 });
 
 test('hints for all legal special forms show evolution instead of wild appearance or hatching',()=>{
-  const g=new Game({},now);g.data.champion=true;g.unlockJohto(now);
+  const g=new Game({},now);g.data.champion=true;g.unlockJohto(now,travelUids(g));
   const markedSpecial=new Set([...trade,26,31,34,36,38,40,45,59,62,71,91,103,121,134,135,136,182,192]);
   const collection=g.panelState(now).collection;
   for(const id of excluded.filter(id=>id!==26)){

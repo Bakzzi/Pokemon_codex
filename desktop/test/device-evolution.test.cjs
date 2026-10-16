@@ -39,7 +39,7 @@ test('earned evolution remains per individual when changing learners; cancellati
 test('held-item trade paths keep the learned level through the Johto gate and wait for the original item',()=>{
   for(const [from,to,item] of [[61,186,198],[79,199,198],[95,208,210],[117,230,212],[123,212,210],[137,233,229]]){
     let {g,uid}=fixture(from,35);boundary(g,uid);g.awardXp(combatant(19,20),false,now);assert.equal(g.data.owned[uid].id,from);assert.equal(g.data.owned[uid].level,36);assert.equal(g.data.pendingActions.length,0);
-    g=new Game(g.data,now);g.data.champion=true;g.unlockJohto(now);assert.ok(advance(g));assert.equal(g.data.pendingActions.length,1);assert.equal(g.evolve(uid,to,now),false);assert.equal(advance(g),false);g.data.inventory[item]=1;assert.ok(advance(g));assert.equal(g.data.owned[uid].id,to);assert.equal(g.data.inventory[item],0);assert.ok(training.has(g));
+    g=new Game(g.data,now);g.data.champion=true;g.data.johtoUnlocked=true;assert.ok(advance(g));assert.equal(g.data.pendingActions.length,1);assert.equal(g.evolve(uid,to,now),false);assert.equal(advance(g),false);g.data.inventory[item]=1;assert.ok(advance(g));assert.equal(g.data.owned[uid].id,to);assert.equal(g.data.inventory[item],0);assert.ok(training.has(g));
   }
 });
 

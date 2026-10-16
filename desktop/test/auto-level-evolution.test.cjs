@@ -42,7 +42,7 @@ test('trainer rounds and boarded companions wait until the battle ends and the c
 
 test('stones, friendship and trade paths retain their own conditions, while a level branch respects its stat condition',()=>{
   const g=fixture();level(g,25,40);g.data.inventory[83]=1;
-  const kadabra=g.addPokemon(64,40,'catch',now),eevee=g.addPokemon(133,40,'catch',now);g.data.champion=true;g.unlockJohto(now);g.data.owned[eevee].happiness=255;
+  const kadabra=g.addPokemon(64,40,'catch',now),eevee=g.addPokemon(133,40,'catch',now);g.data.champion=true;g.data.johtoUnlocked=true;g.data.owned[eevee].happiness=255;
   assert.equal(g.autoLevelEvolution(now),false);assert.equal(g.data.owned[25].id,25);assert.equal(g.data.owned[kadabra].id,64);assert.equal(g.data.owned[eevee].id,133);assert.equal(g.data.inventory[83],1);
   const tyrogue=g.addPokemon(236,20,'hatch',now);assert.ok(g.autoLevelEvolution(now));assert.equal(g.data.owned[tyrogue].id,237);
 });

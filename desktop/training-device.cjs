@@ -68,7 +68,7 @@ function requirements(game){
 function canClaim(game){return !has(game)&&!!game.data.trainingDevice.snorlaxWonAt;}
 function canChallenge(game,id){
   const d=game.data.trainingDevice;if(!battles[id])return false;
-  return id==='road-snorlax'?!!d.fluteObtainedAt&&(!d.snorlaxWonAt||!game.registeredThisSeason(143)):rocketUnlocked(game)&&id===nextRocket(game);
+  return id==='road-snorlax'?!!d.fluteObtainedAt&&(!d.snorlaxWonAt||game.captureRequested(143)):rocketUnlocked(game)&&id===nextRocket(game);
 }
 function win(game,id,now,captured=false){
   const key=Object.hasOwn(progressKeys,id)?progressKeys[id]:null;

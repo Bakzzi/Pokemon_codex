@@ -1,4 +1,5 @@
 'use strict';
+const {travelUids}=require('./helpers/region.cjs');
 const test=require('node:test'),assert=require('node:assert/strict'),{Game}=require('../game.cjs'),{xpAt}=require('../pokemon.cjs'),access=require('../move-access.cjs'),battle=require('../battle.cjs');
 const now=Date.parse('2026-10-16T05:00:00Z');
 function fixture(id,level){const g=new Game({},now,{random:()=>.73}),uid=g.addPokemon(id,level,'fixture',now);return {g,uid,p:g.data.owned[uid]};}
@@ -12,7 +13,7 @@ test('level-up activates the existing catalog entry exactly at its required leve
   assert.equal(p.level,40);assert.ok(p.moves.includes(94));assert.deepEqual(access.catalog(p),before);assert.equal(p.moves.filter(id=>id===94).length,1);
 });
 test('region level reduction and reload relock a known move, then growth reactivates it',()=>{
-  let {g,p,uid}=fixture(151,40);g.data.champion=true;assert.ok(g.unlockJohto(now));assert.equal(p.level,13);assert.ok(!p.moves.includes(94));assert.ok(access.catalog(p).some(m=>m.move===94&&m.level===40));
+  let {g,p,uid}=fixture(151,40);g.data.champion=true;assert.ok(g.unlockJohto(now,travelUids(g)));assert.equal(p.level,15);assert.ok(!p.moves.includes(94));assert.ok(access.catalog(p).some(m=>m.move===94&&m.level===40));
   g=new Game(g.data,now+1);p=g.data.owned[uid];assert.ok(!p.moves.includes(94));g.gainXp(uid,xpAt(151,40)-p.xp,now+2);assert.ok(p.moves.includes(94));
 });
 test('evolution retains accessible pre-evolution techniques but does not grant its future-only ones',()=>{
@@ -20,7 +21,7 @@ test('evolution retains accessible pre-evolution techniques but does not grant i
   assert.equal(p.id,26);assert.ok(p.moves.includes(86));assert.ok(!access.catalog(p).some(m=>m.move===113));assert.ok(access.catalog(p).some(m=>m.move===86&&m.level===8));
 });
 test('previously accessible inherited moves survive a decrease without becoming active early',()=>{
-  let {g,p,uid}=fixture(25,50);g.data.inventory[83]=1;assert.ok(g.evolve(uid,26,now));g.data.champion=true;assert.ok(g.unlockJohto(g.data.switchUntil));assert.ok(!p.moves.includes(113));
+  let {g,p,uid}=fixture(25,50);g.data.inventory[83]=1;assert.ok(g.evolve(uid,26,now));g.data.champion=true;assert.ok(g.unlockJohto(g.data.switchUntil,travelUids(g)));assert.ok(!p.moves.includes(113));
   g=new Game(g.data,now+100000);p=g.data.owned[uid];assert.ok(access.catalog(p).some(m=>m.move===113&&m.level===50));g.gainXp(uid,xpAt(26,50)-p.xp,now+100001);assert.ok(p.moves.includes(113));
 });
 test('new individuals retain their actual form learn level across repeated reloads',()=>{

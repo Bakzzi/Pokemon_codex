@@ -1,6 +1,7 @@
 'use strict';
 const $=id=>document.getElementById(id),node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;};
 let journalTab='summary';
+const travelSelection=new Set(),captureDraft=new Map();
 let state=null,selected=25,memberUid=null,nurserySignature='',tab=new URLSearchParams(location.search).get('tab')||'collection',dexSignature='',detailSignature='',bossSignature='',journalSignature='',storySignature='';
 const img=(id,cls='')=>{const e=node('img',cls);e.src='assets/'+id+'.gif';e.alt='';return e;};
 const levelText=p=>'Lv.'+p.level+' '+(p.level>=100?'MAX':p.expPercent+'%');
@@ -40,13 +41,13 @@ for(const b of document.querySelectorAll('[data-tab]'))b.onclick=()=>switchTab(b
 $('search').oninput=()=>{dexSignature='';render();};$('filter').onchange=()=>{dexSignature='';render();};
 $('league-start').onclick=()=>window.buddy.action('challenge',8);
 $('johto-stay').onclick=()=>window.buddy.action('johto-stay');
-$('johto-unlock').onclick=()=>window.buddy.action('johto-unlock');
+$('johto-unlock').onclick=()=>window.buddy.action('johto-unlock',{uids:[...travelSelection]});
 $('device-register').onclick=()=>window.buddy.action('device-learner',Number($('device-learner').value));
 $('device-withdraw').onclick=()=>window.buddy.action('device-learner',null);
 $('device-learner').onchange=()=>renderDevice();
 window.buddy.onTab(switchTab);
 function renderDex(){
-  const signature=JSON.stringify([state.collection.map(p=>[p.id,p.seen,p.caught,p.owned,p.level,p.expPercent,p.count,p.acquisition.summary]),selected,$('filter').value,$('search').value]);
+  const signature=JSON.stringify([state.collection.map(p=>[p.id,p.seen,p.caught,p.owned,p.level,p.expPercent,p.count,p.captureReserved,p.acquisition.summary]),selected,$('filter').value,$('search').value]);
   if(signature!==dexSignature){
     dexSignature=signature;const filter=$('filter').value,query=$('search').value.trim().toLowerCase();
     const cards=state.collection.filter(p=>(filter==='all'||(filter==='uncaught'?!p.caught:p[filter]))&&(!query||String(p.id)===query||p.name.toLowerCase().includes(query))).map(p=>{
@@ -69,6 +70,13 @@ function renderDex(){
   const labels={wild:'야생',starter:'스타팅',event:'이벤트',evolution:'진화',hatch:'부화'};
   p.acquisition.routes.forEach((r,i)=>{const row=node('p','');row.append(node('b','',(i?'또는 ':'')+(r.kind==='evolution'&&r.special?'특수진화':labels[r.kind])),document.createTextNode(' · '+r.text));hints.append(row);if(r.note)hints.append(node('small','',r.note));});
   hints.append(node('small','',p.acquisition.note));root.append(hints);
+  if(p.canReserveCapture){
+    const box=node('section','capture-reservation'),label=node('label','','추가 포획 예약'),quantity=node('input'),reserve=node('button','',p.captureReserved?'예약 변경':'만나면 포획하기');
+    quantity.type='number';quantity.min=1;quantity.max=99;quantity.step=1;quantity.required=true;quantity.value=captureDraft.get(p.id)??(p.captureReserved||1);quantity.setAttribute('aria-label','추가 포획할 마릿수');quantity.oninput=()=>captureDraft.set(p.id,quantity.value);
+    const amount=node('span','capture-amount');amount.append(quantity,document.createTextNode('마리'));label.append(amount);reserve.dataset.captureReserve=p.id;reserve.onclick=()=>{if(!quantity.reportValidity())return;captureDraft.delete(p.id);window.buddy.action('capture-reserve',{id:p.id,count:Number(quantity.value)});};
+    box.append(label,node('p','muted',p.captureReserved?'남은 '+p.captureReserved+'마리 · 성공할 때만 예약 수가 줄어요.':'다시 만나면 자동으로 포획을 시도해요. 출현 조건은 그대로예요.'),reserve);
+    if(p.captureReserved){const cancel=node('button','','예약 취소');cancel.dataset.captureCancel=p.id;cancel.onclick=()=>{captureDraft.delete(p.id);window.buddy.action('capture-cancel',p.id);};box.append(cancel);}root.append(box);
+  }
   if(!p.owned){
     if(p.caught)root.append(node('p','muted','도감 기록은 남아 있어요. '+(p.seasonCaught?'이번 시즌에 등록한 종이에요.':p.acquisition.wildAllowed?'이번 시즌에는 다시 포획할 수 있어요.':'위 획득 경로로 동료를 다시 얻을 수 있어요.')));
     return;
@@ -129,6 +137,7 @@ function renderBadgeCase(){
   $('badge-case-note').textContent=earned.size===8?'관동의 여덟 증표 · 포켓몬 리그로':earned.size+'개의 증표 · 다음 도전을 기다리는 자리';
 }
 function renderBosses(){
+  renderTravel();
   syncDisclosure('gym-details',state.bosses.slice(0,8).every(b=>state.badges.includes(b.id)));
   renderStory();
   renderSpecialEncounters();
@@ -157,11 +166,27 @@ function renderBosses(){
     $('johto-title').textContent=unlocked?'성도 지방이 열렸어요':stay?'관동에서 도감을 완성하는 중':'다음 모험을 선택하세요';
     $('johto-note').textContent='관동 도감 '+state.kantoCaughtCount+' / 151 · '+(unlocked?'관동 151종과 성도 100종을 함께 만날 수 있어요.':stay?'151종 수집을 계속해요. 원할 때 언제든 2세대를 해금할 수 있어요.':'151종을 모을 때까지 관동에 머물러도 좋아요. 2세대를 해금하면 성도 100종이 추가돼요.');
     $('johto-level-notice').hidden=unlocked;
-    $('johto-level-notice').textContent='해금 시 Lv.15 이상인 보유 포켓몬 '+(state.johtoUnlockPreview?.count??0)+'마리의 레벨이 현재의 1/3로 내려가요. 소수점은 버립니다. 예: Lv.15 → Lv.5 · Lv.90 → Lv.30. 출전·보관·키우미집 동료 모두 포함하며, Lv.14 이하는 그대로예요. 진화 모습·배운 기술·도감과 경험치 부스터는 유지돼요. 배틀 중 누르면 종료 후 한 번만 적용해요.';
+    $('johto-level-notice').textContent='보유 동료 중 최대 10마리를 선택해 모두 Lv.15 · 경험치 0%로 성도에 데려가요. Lv.15에서 가능한 진화 단계만 선택할 수 있어요. 선택하지 않은 개체는 소지 목록에서 사라지고 도감 기록만 남아요. 도감과 경험치 부스터·가방·알은 유지되며, 키우미집 맡김은 종료돼요. 기술은 Lv.15에 맞춰 활성화돼요. 배틀 중에는 종료 후 이동하며, 필요한 동료는 도감에서 추가 포획을 예약할 수 있어요.';
     const bonus=state.encounterBonus,pct=n=>(n*100).toLocaleString('ko-KR',{maximumFractionDigits:3})+'%';
     $('champion-bonus').textContent=bonus?'챔피언 기본 확률 · 희귀 '+pct(bonus.rates.rare)+' · 전설 '+pct(bonus.rates.legendary)+' · 환상 '+pct(bonus.rates.mythical)+'\n배치한 '+bonus.selectedCount+'마리 최저 Lv.'+bonus.minimumLevel+' · 출현 '+bonus.rareMultiplier+'배 · 미등록 종 '+bonus.uncaughtWeight+'배 우대\n챔피언 기본(출현 1.5배 · 미등록 가중치 2) × 레벨 보너스 '+bonus.levelMultiplier+'배\n배치한 동료 모두 Lv.71 이상 3배 · Lv.81 이상 4배 · Lv.91 이상 5배. 빈칸은 제외하며 종별 추가 확률은 특별한 만남에 더해 표시해요.':'';
     $('johto-stay').hidden=unlocked||stay;$('johto-unlock').hidden=unlocked;
   }
+}
+function renderTravel(){
+  const pending=state.pendingActions.find(a=>a.kind==='johto-unlock'),candidates=state.johtoUnlockPreview?.candidates||[],eligible=new Set(candidates.filter(p=>p.eligible).map(p=>p.uid));
+  if(pending){travelSelection.clear();for(const uid of pending.uids||[])travelSelection.add(uid);}
+  else for(const uid of travelSelection)if(!eligible.has(uid))travelSelection.delete(uid);
+  $('travel-picker').hidden=!state.champion||state.johtoUnlocked;
+  $('travel-count').textContent='함께 갈 동료 · '+travelSelection.size+' / 10'+(pending?' · 이동 예약됨':'');
+  $('johto-unlock').disabled=!!pending||travelSelection.size===0;
+  $('johto-unlock').textContent=pending?'성도 이동 예약됨':'선택한 '+travelSelection.size+'마리와 성도로 떠나기';
+  const signature=JSON.stringify([candidates,pending?.id,state.johtoUnlocked]),root=$('travel-candidates');
+  if(root.dataset.signature===signature){for(const check of root.querySelectorAll('input')){const uid=Number(check.dataset.travelUid);check.checked=travelSelection.has(uid);check.disabled=!!pending||!eligible.has(uid)||travelSelection.size>=10&&!check.checked;}return;}
+  root.dataset.signature=signature;
+  root.replaceChildren(...candidates.map(p=>{
+    const label=node('label','travel-candidate'+(p.eligible?'':' unavailable')),check=node('input'),body=node('span');check.type='checkbox';check.dataset.travelUid=p.uid;check.checked=travelSelection.has(p.uid);check.disabled=!!pending||!p.eligible||travelSelection.size>=10&&!check.checked;
+    check.onchange=()=>{if(check.checked)travelSelection.add(p.uid);else travelSelection.delete(p.uid);renderTravel();};body.append(node('b','',p.name+' · Lv.'+p.level),node('small','',p.reason));label.append(check,img(p.id),body);return label;
+  }));
 }
 function renderSpecialEncounters(){
   const bonus=state.specialEncounters,root=$('special-encounters');root.hidden=!bonus;if(!bonus)return;
