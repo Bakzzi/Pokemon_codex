@@ -67,7 +67,7 @@ public final class MobileTest extends Instrumentation {
                     updater.validate(apk,manifest);
                     Field candidate=Updater.class.getDeclaredField("candidate");candidate.setAccessible(true);candidate.set(updater,apk);
                     Field expected=Updater.class.getDeclaredField("expected");expected.setAccessible(true);expected.set(updater,manifest);
-                    updater.ready=true;updater.install();result.putString("update_submitted","true");
+                    updater.ready=true;updater.install();for(int i=0;i<200&&updater.busy;i++)Thread.sleep(50);require(!updater.busy,"Install session timed out");result.putString("update_submitted",updater.status);sendStatus(1,result);
                 }
             }
             result.putString("result","passed");finish(Activity.RESULT_OK,result);

@@ -22,7 +22,7 @@ final class Updater {
     private File candidate;
     private JSONObject expected;
     private int sessionId=-1;
-    Updater(Context context){this.context=context.getApplicationContext();current=this;
+    Updater(Context context){this.context=context.getApplicationContext();current=this;status=context.getSharedPreferences("update",0).getString("notice",status);
         try{String saved=context.getSharedPreferences("update",0).getString("pending",null);if(saved!=null){pending=Intent.parseUri(saved,Intent.URI_INTENT_SCHEME);status="시스템 설치 승인이 필요해요. 설정에서 설치 화면을 열어 주세요.";}}catch(Exception ignored){}
     }
     private static HttpURLConnection connect(String url) throws IOException {
@@ -72,6 +72,8 @@ final class Updater {
         busy=true;installing=true;worker.execute(()->{try{
             validate(candidate,expected);PackageInstaller installer=context.getPackageManager().getPackageInstaller();
             PackageInstaller.SessionParams params=new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);params.setAppPackageName(context.getPackageName());params.setSize(candidate.length());params.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED);
+            if(Build.VERSION.SDK_INT>=33)params.setPackageSource(PackageInstaller.PACKAGE_SOURCE_DOWNLOADED_FILE);
+            String origin=expected.optString("url","");if(origin.startsWith("https://github.com/"))params.setOriginatingUri(android.net.Uri.parse(origin));
             sessionId=installer.createSession(params);context.getSharedPreferences("update",0).edit().putInt("session",sessionId).commit();
             try(PackageInstaller.Session session=installer.openSession(sessionId)){
                 try(InputStream in=new FileInputStream(candidate);OutputStream out=session.openWrite("base.apk",0,candidate.length())){copy(in,out,candidate.length());session.fsync(out);}
@@ -86,6 +88,7 @@ final class Updater {
         int id=intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID,-1);if(id<0||id!=context.getSharedPreferences("update",0).getInt("session",-2))return;
         int result=intent.getIntExtra(PackageInstaller.EXTRA_STATUS,PackageInstaller.STATUS_FAILURE);Updater u=current;
         if(result==PackageInstaller.STATUS_PENDING_USER_ACTION){Intent confirmation=intent.getParcelableExtra(Intent.EXTRA_INTENT);if(confirmation!=null)context.getSharedPreferences("update",0).edit().putString("pending",confirmation.toUri(Intent.URI_INTENT_SCHEME)).apply();if(u!=null){u.pending=confirmation;u.installing=false;u.status="이 기기의 시스템 설치 승인이 필요해요. 설정에서 설치 화면을 열어 주세요.";}return;}
-        context.getSharedPreferences("update",0).edit().remove("session").remove("pending").apply();if(u!=null){u.pending=null;u.installing=false;u.status=result==PackageInstaller.STATUS_SUCCESS?"업데이트를 적용했어요.":"설치하지 못했어요. 기존 앱과 모험은 그대로 보존돼요.";}
+        String notice=result==PackageInstaller.STATUS_SUCCESS?"업데이트를 적용했어요.":"시스템에서 설치를 완료하지 못했어요. 기존 앱과 모험은 그대로 보존돼요.";
+        context.getSharedPreferences("update",0).edit().remove("session").remove("pending").putString("notice",notice).apply();if(u!=null){u.pending=null;u.installing=false;u.status=notice;}
     }
 }
