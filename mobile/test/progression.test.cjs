@@ -41,6 +41,17 @@ test('pause preserves battle pacing without adding hours after offline catchup',
   const next=now+3600000;p.resume(next);p.catchUp(100,next);
   assert.ok(g.nextTick-next<60000);assert.ok(g.data.switchUntil-next<60000);assert.equal(p.pausedAt,0);
 });
+for(const inBattle of [false,true])test('reopening a legacy paused save does not wait through the offline interval again: battle='+inBattle,()=>{
+  const g=new Game({},now,{random:()=>.4}),p=new Progression(g);p.resume(now);if(inBattle)p.live(now);p.pause(now+1000);
+  const reopened=now+3600000,g2=new Game(JSON.parse(JSON.stringify(g.data)),reopened),p2=new Progression(g2,{consumed:0,pausedAt:p.pausedAt});p2.resume(reopened);
+  assert.ok(g2.nextTick<=reopened);assert.ok(g2.data.switchUntil-reopened<10000);
+  assert.equal(p2.live(reopened+10000),true);assert.ok(g2.data.battle);
+});
+test('new paused saves preserve only the remaining action delay after a cold restart',()=>{
+  const g=new Game({},now),p=new Progression(g);p.resume(now);g.nextTick=now+4500;p.pause(now+1000);
+  const reopened=now+3600000,g2=new Game(JSON.parse(JSON.stringify(g.data)),reopened),p2=new Progression(g2,p.checkpoint());p2.resume(reopened);
+  assert.equal(g2.nextTick,reopened+3500);assert.equal(p2.live(reopened),false);assert.equal(p2.live(reopened+3500),true);
+});
 test('trainer battles also stop without foreground play or steps',()=>{
   const g=new Game({},now),p=new Progression(g);g.challenge(0,now);const before=JSON.stringify(g.data);
   assert.equal(p.live(now+50000),false);assert.equal(p.catchUp(0,now+50000),0);assert.equal(JSON.stringify(g.data),before);

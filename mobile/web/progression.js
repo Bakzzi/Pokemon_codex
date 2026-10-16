@@ -5,6 +5,9 @@
     constructor(core,saved={},stepsPerAction=10){
       this.game=core;this.consumed=Number.isSafeInteger(saved.consumed)?saved.consumed:0;
       this.stepsPerAction=stepsPerAction;this.foreground=false;this.pausedAt=Number.isFinite(saved.pausedAt)?saved.pausedAt:0;
+      // Game recreates nextTick at launch. Restore its old clock before shifting
+      // paused presentation waits; otherwise the entire offline interval is added twice.
+      if(this.pausedAt>0)this.game.nextTick=Number.isFinite(saved.nextTick)?saved.nextTick:this.pausedAt;
       this.game.data.workTokens=0;
     }
     pause(now){if(!this.foreground)return;this.foreground=false;this.pausedAt=now;this.game.data.workTokens=0;}
@@ -37,7 +40,7 @@
       }
       return used;
     }
-    checkpoint(){return {consumed:this.consumed,pausedAt:this.pausedAt};}
+    checkpoint(){return {consumed:this.consumed,pausedAt:this.pausedAt,nextTick:this.game.nextTick};}
   }
   root.MobileProgression=Progression;if(typeof module==='object')module.exports=Progression;
 })(globalThis);

@@ -27,6 +27,7 @@ for(const [source,target] of [['index.html','battle.html'],['panels.html','panel
   html=html.replace('</head>','<link rel="stylesheet" href="frame.css"><script src="bridge.js"></script></head>');
   html=html.replaceAll('AI Agent 포켓몬 키우기','포켓몬 작은 모험').replace('진행은 이 PC에 자동 저장돼요.','진행은 이 기기에 자동 저장돼요.');
   html=html.replaceAll('모험 걸음은 실제 에이전트 작업량에 따라 쌓여요.','모험을 이어가면 알을 돌볼 수 있어요.').replaceAll('네가 코딩하는 동안','함께한 모험').replaceAll('코딩하는 동안','모험하는 동안');
+  html=html.replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/g,'');
   if(source==='panels.html')html=html.replace('<script src="panels.js"></script>','<script src="panel-layout.js"></script><script src="panels.js"></script>').replace(/<button data-tab="connections">.*?<\/button>/s,'').replace(/<section id="connections"[\s\S]*?<\/section>/,'');
   if(source==='index.html')html=html.replace('<body>','<body class="battle-frame">');
   else html=html.replace('<body>','<body class="panel-frame">');

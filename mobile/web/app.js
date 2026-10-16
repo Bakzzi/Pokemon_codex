@@ -29,7 +29,9 @@ window.addEventListener('message',e=>{if(e.origin!==location.origin||!['battle',
 function refreshNative(){
   nativeState=JSON.parse(native.status());
   const toggle=$('steps-toggle');toggle.setAttribute('aria-checked',String(!!nativeState.stepsEnabled));toggle.disabled=!nativeState.sensorSupported&&!nativeState.stepsEnabled;$('steps-toggle-state').textContent=nativeState.stepsEnabled?'켜짐':'꺼짐';
-  $('sensor-status').textContent=nativeState.sensor;$('walk-status').textContent=nativeState.tracking?'돌아온 걸음 · '+nativeState.steps.toLocaleString('ko-KR')+'걸음':'화면을 켜 두고 함께 모험 중';
+  $('sensor-status').textContent=nativeState.sensor;$('walk-status').textContent='모험의 발걸음';
+  $('walk-today').textContent=(nativeState.todaySteps||0).toLocaleString('ko-KR')+'걸음';
+  $('walk-total').textContent=(nativeState.lifetimeSteps||0).toLocaleString('ko-KR')+'걸음';
   $('walk-note').textContent=nativeState.tracking?'걸음 기록 중 · 앱을 꺼도 걸은 만큼 모험해요.':'설정에서 걸음 기록을 켜면 꺼 둔 동안에도 걸음이 쌓여요.';
   $('update-status').textContent=nativeState.update;$('update-confirm').hidden=!nativeState.pendingInstall;$('install-permission').hidden=nativeState.canInstall;
   $('update-check').disabled=!!nativeState.updateChecking||!!nativeState.installing;$('version').textContent='Android v'+(nativeState.versionName||MobileConfig.name);

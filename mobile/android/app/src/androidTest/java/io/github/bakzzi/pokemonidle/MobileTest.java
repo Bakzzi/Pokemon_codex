@@ -16,6 +16,10 @@ public final class MobileTest extends Instrumentation {
     private WebView web;
     @Override public void onCreate(Bundle args){arguments=args;super.onCreate(args);start();}
     private void require(boolean condition,String message){if(!condition)throw new AssertionError(message);}
+    private void walkingNotification(NotificationManager manager,String expected)throws Exception{
+        for(int i=0;i<50;i++){if(java.util.Arrays.stream(manager.getActiveNotifications()).anyMatch(n->n.getId()==7&&expected.contentEquals(n.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT,""))))return;Thread.sleep(100);}
+        throw new AssertionError("Walking notification did not become: "+expected);
+    }
     private String js(String code)throws Exception{
         CountDownLatch done=new CountDownLatch(1);String[] value={null};
         runOnMainSync(()->web.evaluateJavascript(code,result->{value[0]=result;done.countDown();}));
@@ -88,6 +92,27 @@ public final class MobileTest extends Instrumentation {
                 long started=SystemClock.elapsedRealtime();u.ready=true;while(!u.installing&&u.pending==null&&SystemClock.elapsedRealtime()-started<5000)Thread.sleep(25);
                 require(u.installing||u.pending!=null,"App waited for battle completion before installing");result.putLong("installSubmittedMs",SystemClock.elapsedRealtime()-started);require(new JSONObject(readSave()).getJSONObject("game").toString().equals(before.getJSONObject("game").toString()),"An extra battle action ran before update");
                 result.putString("result","submitted during active battle");sendStatus(1,result);UpdateChecks.await(u);Thread.sleep(1500);finish(Activity.RESULT_OK,result);return;
+            }
+            if("pending-ui".equals(arguments.getString("mode"))){
+                js("active=false;progression.pause(Date.now());save();back()");
+                android.content.SharedPreferences p=getTargetContext().getSharedPreferences("steps",0);
+                p.edit().putLong("total",730).putLong("walkingTotal",12345).putLong("walkingToday",234).putString("walkingDay",WalkingCounter.dayKey(System.currentTimeMillis(),java.time.ZoneId.systemDefault())).commit();
+                require("true".equals(js("refreshNative();document.getElementById('walk-status').textContent==='모험의 발걸음'&&document.getElementById('walk-today').textContent==='234걸음'&&document.getElementById('walk-total').textContent==='12,345걸음'")),"Walking card is incorrect");
+                require("true".equals(js("['battle','panel'].every(id=>!document.getElementById(id).contentDocument.body.textContent.includes('momozzing'))")),"Credits still appear outside Settings");
+                require("true".equals(js("document.documentElement.scrollWidth<=innerWidth&&document.querySelector('.walk-card').getBoundingClientRect().right<=innerWidth")),"Walking card overflows");screenshot("walking-card.png");
+                js("document.getElementById('settings-open').click()");require("true".equals(js("document.getElementById('settings').querySelector('.credit').checkVisibility()&&document.getElementById('settings').textContent.includes('모모찡 · momozzing')")),"Settings credit missing");js("document.getElementById('settings-close').click()");
+                require("true".equals(js("(()=>{const n=Date.now(),old=n-3600000,g=new MobileCore.Game({},old),reopened=new MobileCore.Game(JSON.parse(JSON.stringify(g.data)),n),p=new MobileProgression(reopened,{consumed:0,pausedAt:old});p.resume(n);return reopened.nextTick<=n&&p.live(n+10000)&&!!reopened.data.battle})()")),"Reopened game waits through offline time again");
+                NotificationManager nm=getTargetContext().getSystemService(NotificationManager.class);nm.createNotificationChannel(new NotificationChannel("walking","걸음 모험",NotificationManager.IMPORTANCE_LOW));
+                nm.notify(7,StepService.notification(getTargetContext(),StepService.today(getTargetContext())));Thread.sleep(200);
+                walkingNotification(nm,"오늘 234걸음");
+                StepService service=new StepService();java.lang.reflect.Method attach=ContextWrapper.class.getDeclaredMethod("attachBaseContext",Context.class);attach.setAccessible(true);attach.invoke(service,getTargetContext());
+                WalkingCounter counter=new WalkingCounter();counter.total=12345;counter.today=234;counter.day="2000-01-01";StepLedger rewards=new StepLedger();rewards.total=730;
+                for(String name:new String[]{"walking","ledger","prefs"}){Field f=StepService.class.getDeclaredField(name);f.setAccessible(true);f.set(service,name.equals("walking")?counter:name.equals("ledger")?rewards:p);}
+                java.lang.reflect.Method rollover=StepService.class.getDeclaredMethod("refreshClock");rollover.setAccessible(true);rollover.invoke(service);Field clock=StepService.class.getDeclaredField("clock");clock.setAccessible(true);((Handler)clock.get(service)).removeCallbacksAndMessages(null);Thread.sleep(200);
+                require(p.getLong("walkingToday",-1)==0&&p.getLong("walkingTotal",0)==12345&&p.getLong("total",0)==730,"Daily rollover changed lifetime or offline rewards");
+                walkingNotification(nm,"오늘 0걸음");
+                require("true".equals(js("refreshNative();document.getElementById('walk-today').textContent==='0걸음'&&document.getElementById('walk-total').textContent==='12,345걸음'")),"Daily rollover is not reflected in the app");
+                nm.cancel(7);result.putInt("pendingChecks",9);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
             if("journal".equals(arguments.getString("mode"))){
                 js("active=false;game=new MobileCore.Game({},Date.now());game.log('꼬렛 포획!','catch',19);game.data.adventure.totals.wins=12;game.data.adventure.totals.xp=620;game.data.adventure.checkpoint={at:Date.now()+1,totals:{...game.data.adventure.totals}};progression=new MobileProgression(game);save();openPanel('journal')");
