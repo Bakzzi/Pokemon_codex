@@ -1,0 +1,41 @@
+{
+  "version": "0.3.69",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "7d8f9acfac6d587e84f1fdd6c20324f336acad32",
+  "sourceTag": "v0.3.69",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.69",
+  "build": {
+    "commands": [
+      "npm.cmd ci --omit=optional",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "sshTransport": "ssh2 1.17.0",
+    "packaging": "Independent portable runtime; every archive entry compared with the verified package."
+  },
+  "validation": {
+    "syntaxCheckPassed": true,
+    "testsPassed": 10,
+    "packagedRuntimeFilesMatched": 37,
+    "packagedDocumentationFilesMatched": 3,
+    "packagedDependenciesMatched": 10,
+    "updateManifestFilesMatched": 907,
+    "packagedUiCasesPassed": 8,
+    "uiErrors": 0,
+    "archiveFilesVerified": 908
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.69-portable.zip",
+    "bytes": 166466284,
+    "sha256": "e1cda8b5872f77324e9e9a36de7dad1833c3701af9e78403a99a5de62ef19c34"
+  },
+  "automaticUpdates": {
+    "supportedFrom": "0.3.65",
+    "defaultEnabled": true,
+    "channel": "stable/latest",
+    "updaterUnchangedFrom": "0.3.65",
+    "previousForwardAndRollbackValidation": "v0.3.65"
+  }
+}
