@@ -20,7 +20,9 @@ public final class MainActivity extends Activity {
     static volatile boolean visible;
     static final String ORIGIN="https://game.pokemon.local/";
     private WebView web;
-    private AtomicFile saveFile;
+    private AdventureStore adventure;
+    private static final Object UNLOADED=new Object();
+    private volatile boolean uiLoaded;
     private boolean jsReady;
     private Updater updater;
     private final Handler updateHandler=new Handler(Looper.getMainLooper());
@@ -29,7 +31,7 @@ public final class MainActivity extends Activity {
         super.onCreate(state);
         getWindow().setDecorFitsSystemWindows(false);
         getWindow().setStatusBarColor(0xff17231e);getWindow().setNavigationBarColor(0xff17231e);
-        saveFile=new AtomicFile(new File(getFilesDir(),"adventure.json"));updater=new Updater(this);
+        adventure=AdventureStore.get(this);adventure.claimUi(this);updater=new Updater(this);
         FrameLayout safeArea=new FrameLayout(this);safeArea.setBackgroundColor(0xff17231e);
         web=new WebView(this);web.setBackgroundColor(0xff17231e);
         safeArea.addView(web,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
@@ -59,29 +61,26 @@ public final class MainActivity extends Activity {
         if(Build.VERSION.SDK_INT>=33)getOnBackInvokedDispatcher().registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,this::handleBack);
     }
     private static WebResourceResponse denied(){return new WebResourceResponse("text/plain","UTF-8",403,"Forbidden",java.util.Map.of(),new ByteArrayInputStream(new byte[0]));}
-    @Override protected void onResume(){super.onResume();visible=true;StepService.visibility(true);if(web!=null){web.onResume();if(jsReady)web.evaluateJavascript("window.mobileLifecycle(true)",null);}StepService.start(this);if(updater!=null)updater.check(false);updateHandler.removeCallbacks(updatePoll);updateHandler.postDelayed(updatePoll,60000);}
-    @Override protected void onPause(){visible=false;updateHandler.removeCallbacks(updatePoll);StepService.visibility(false);if(jsReady)web.evaluateJavascript("window.mobileLifecycle(false)",value->{if(!visible)web.onPause();});else web.onPause();super.onPause();}
-    @Override protected void onDestroy(){updateHandler.removeCallbacks(updatePoll);if(web!=null){web.removeJavascriptInterface("Android");web.destroy();}super.onDestroy();}
+    @Override protected void onResume(){super.onResume();visible=true;uiLoaded=false;adventure.claimUi(this);BackgroundAdventure.get(this).closeWhenIdle();StepService.visibility(true);if(web!=null){web.onResume();if(jsReady)web.evaluateJavascript("window.mobileLifecycle(true,true)",null);}StepService.start(this);if(updater!=null)updater.check(false);updateHandler.removeCallbacks(updatePoll);updateHandler.postDelayed(updatePoll,60000);}
+    private void releaseAdventure(){adventure.releaseUi(this);BackgroundAdventure.get(this).request();}
+    @Override protected void onPause(){visible=false;updateHandler.removeCallbacks(updatePoll);StepService.visibility(false);if(jsReady)web.evaluateJavascript("window.mobileLifecycle(false)",value->{if(!visible){web.onPause();releaseAdventure();}});else{web.onPause();releaseAdventure();}super.onPause();}
+    @Override protected void onDestroy(){updateHandler.removeCallbacks(updatePoll);releaseAdventure();if(web!=null){web.removeJavascriptInterface("Android");web.destroy();}super.onDestroy();}
     private void handleBack(){web.evaluateJavascript("window.mobileBack&&window.mobileBack()",value->{if(!"true".equals(value))moveTaskToBack(true);});}
     // API 31-32 use this fallback. API 33+ registers the platform predictive-back API above.
     @android.annotation.SuppressLint("GestureBackNavigation") @SuppressWarnings("deprecation") @Override public void onBackPressed(){handleBack();}
     @Override public void onRequestPermissionsResult(int request,String[] permissions,int[] results){super.onRequestPermissionsResult(request,permissions,results);if(request==42&&checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION)==PackageManager.PERMISSION_GRANTED){getSharedPreferences("steps",0).edit().putBoolean("enabled",true).putLong("count",-1).putLong("walkingCount",-1).commit();StepService.start(this);}}
     private synchronized String readSave(){
-        if(!saveFile.getBaseFile().exists()&&!new File(saveFile.getBaseFile()+".bak").exists())return "{}";
-        try{String data=new String(saveFile.readFully(),StandardCharsets.UTF_8);new JSONObject(data);return data;}catch(Exception e){return "INVALID_PRESERVED_SAVE";}
+        String raw=adventure.read();uiLoaded=true;return raw;
     }
     private synchronized boolean writeSave(String text){
-        FileOutputStream out=null;
-        try{if(text.length()>20_000_000)return false;JSONObject data=new JSONObject(text);if(data.getInt("format")!=1||!data.has("game")||!data.has("mobile"))return false;
-            out=saveFile.startWrite();out.write(text.getBytes(StandardCharsets.UTF_8));saveFile.finishWrite(out);return true;
-        }catch(Exception e){if(out!=null)saveFile.failWrite(out);return false;}
+        return adventure.saveUi(uiLoaded?this:UNLOADED,text);
     }
     public final class Bridge {
         @JavascriptInterface public String load(){return readSave();}
         @JavascriptInterface public boolean save(String text){return writeSave(text);}
         @JavascriptInterface public boolean foreground(){return visible;}
-        @JavascriptInterface public void ready(){runOnUiThread(()->{jsReady=true;web.evaluateJavascript("window.mobileLifecycle("+visible+")",null);});}
-        @JavascriptInterface public String status(){try{android.content.SharedPreferences p=getSharedPreferences("steps",0);boolean enabled=p.getBoolean("enabled",false);boolean supported=StepService.supported(MainActivity.this);return new JSONObject().put("steps",p.getLong("total",0)).put("todaySteps",StepService.today(MainActivity.this)).put("lifetimeSteps",StepService.lifetime(MainActivity.this)).put("stepsEnabled",enabled).put("sensorSupported",supported).put("tracking",enabled&&StepService.instance!=null).put("sensor",!supported?"걸음 센서가 없는 기기예요. 켜 둔 모험을 이용할 수 있어요.":p.getString("error",enabled?"걸음 기록이 켜져 있어요. 강제 종료·절전 설정에 따라 기록이 멈출 수 있어요.":"권한을 허용하면 걸음 기록 알림이 표시돼요.")).put("versionName",updater.installedName).put("versionCode",updater.installedCode).put("updateChecking",updater.busy).put("update",updater.status).put("updateReady",updater.ready).put("installing",updater.installing).put("pendingInstall",updater.pending!=null).put("canInstall",getPackageManager().canRequestPackageInstalls()).toString();}catch(JSONException e){throw new IllegalStateException(e);}}
+        @JavascriptInterface public void ready(){runOnUiThread(()->{jsReady=true;web.evaluateJavascript("window.mobileLifecycle("+visible+",true)",null);});}
+        @JavascriptInterface public String status(){try{android.content.SharedPreferences p=getSharedPreferences("steps",0);boolean enabled=p.getBoolean("enabled",false);boolean supported=StepService.supported(MainActivity.this);return new JSONObject().put("steps",p.getLong("total",0)).put("backgroundError",p.getString("backgroundError","")) .put("todaySteps",StepService.today(MainActivity.this)).put("lifetimeSteps",StepService.lifetime(MainActivity.this)).put("stepsEnabled",enabled).put("sensorSupported",supported).put("tracking",enabled&&StepService.instance!=null).put("sensor",!supported?"걸음 센서가 없는 기기예요. 켜 둔 모험을 이용할 수 있어요.":p.getString("error",enabled?"걸음 기록이 켜져 있어요. 강제 종료·절전 설정에 따라 기록이 멈출 수 있어요.":"권한을 허용하면 걸음 기록 알림이 표시돼요.")).put("versionName",updater.installedName).put("versionCode",updater.installedCode).put("updateChecking",updater.busy).put("update",updater.status).put("updateReady",updater.ready).put("installing",updater.installing).put("pendingInstall",updater.pending!=null).put("canInstall",getPackageManager().canRequestPackageInstalls()).toString();}catch(JSONException e){throw new IllegalStateException(e);}}
         @JavascriptInterface public void enableSteps(){runOnUiThread(()->{if(!StepService.supported(MainActivity.this))return;requestPermissions(Build.VERSION.SDK_INT>=33?new String[]{Manifest.permission.ACTIVITY_RECOGNITION,Manifest.permission.POST_NOTIFICATIONS}:new String[]{Manifest.permission.ACTIVITY_RECOGNITION},42);});}
         @JavascriptInterface public void disableSteps(){runOnUiThread(()->{getSharedPreferences("steps",0).edit().putBoolean("enabled",false).putLong("count",-1).putLong("walkingCount",-1).commit();stopService(new Intent(MainActivity.this,StepService.class));});}
         @JavascriptInterface public void allowUpdates(){runOnUiThread(()->startActivity(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,Uri.parse("package:"+getPackageName()))));}

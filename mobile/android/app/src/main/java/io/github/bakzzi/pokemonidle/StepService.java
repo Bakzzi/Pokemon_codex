@@ -52,14 +52,15 @@ public final class StepService extends Service implements SensorEventListener {
         prefs.edit().remove("error").apply();instance=this;persist();
         IntentFilter dates=new IntentFilter();dates.addAction(Intent.ACTION_DATE_CHANGED);dates.addAction(Intent.ACTION_TIME_CHANGED);dates.addAction(Intent.ACTION_TIMEZONE_CHANGED);dates.addAction(Intent.ACTION_SCREEN_ON);
         if(Build.VERSION.SDK_INT>=33)registerReceiver(dateChanged,dates,Context.RECEIVER_NOT_EXPORTED);else registerReceiver(dateChanged,dates);
-        clockRegistered=true;scheduleMidnight();
+        clockRegistered=true;scheduleMidnight();BackgroundAdventure.get(this).request();
     }
     synchronized void changeMode(boolean foreground) { ledger.mode(foreground,SystemClock.elapsedRealtimeNanos());refreshClock(); }
     @Override public synchronized void onSensorChanged(SensorEvent event) {
         if(event.sensor.getType()!=Sensor.TYPE_STEP_COUNTER)return;
         long now=System.currentTimeMillis(),eventTime=now-Math.max(0,(SystemClock.elapsedRealtimeNanos()-event.timestamp)/1000000);
-        ledger.sample((long)event.values[0],boot,event.timestamp);walking.sample((long)event.values[0],boot,event.timestamp,eventTime,now,ZoneId.systemDefault());persist();getSystemService(NotificationManager.class).notify(7,notification(this,walking.today));
+        recordSample((long)event.values[0],event.timestamp,eventTime,now);
     }
+    synchronized void recordSample(long count,long elapsed,long eventTime,long now){ledger.sample(count,boot,elapsed);walking.sample(count,boot,elapsed,eventTime,now,ZoneId.systemDefault());persist();getSystemService(NotificationManager.class).notify(7,notification(this,walking.today));BackgroundAdventure.get(this).request();}
     private void scheduleMidnight(){clock.removeCallbacks(midnight);clock.postDelayed(midnight,Math.max(1000,WalkingCounter.nextMidnight(System.currentTimeMillis(),ZoneId.systemDefault())-System.currentTimeMillis()));}
     private synchronized void refreshClock(){walking.rollover(System.currentTimeMillis(),ZoneId.systemDefault());persist();getSystemService(NotificationManager.class).notify(7,notification(this,walking.today));scheduleMidnight();}
     private void persist(){prefs.edit().putLong("total",ledger.total).putLong("count",ledger.lastCount).putLong("boot",ledger.lastBoot).putLong("sample",ledger.lastSample).putLong("transition",ledger.transitionAt).putBoolean("foreground",ledger.foreground).putLong("walkingTotal",walking.total).putLong("walkingToday",walking.today).putString("walkingDay",walking.day).putLong("walkingCount",walking.lastCount).putLong("walkingBoot",walking.lastBoot).putLong("walkingSample",walking.lastSample).commit();}

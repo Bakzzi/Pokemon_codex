@@ -65,6 +65,7 @@ public final class MobileTest extends Instrumentation {
     @Override public void onStart(){
         Bundle result=new Bundle();
         try{
+            if("background".equals(arguments.getString("mode"))){finish(Activity.RESULT_OK,BackgroundChecks.run(getTargetContext()));return;}
             if("update-checks".equals(arguments.getString("mode"))){finish(Activity.RESULT_OK,UpdateChecks.run(getTargetContext()));return;}
             if("update-battle-preserved".equals(arguments.getString("mode"))){
                 JSONObject stored=new JSONObject(readSave());android.content.SharedPreferences p=getTargetContext().getSharedPreferences("verify",0);
@@ -83,6 +84,18 @@ public final class MobileTest extends Instrumentation {
             Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);
             if("inspect".equals(arguments.getString("mode"))){Thread.sleep(5000);result.putString("diagnostic",js("(()=>{try{return JSON.stringify({document:document.readyState,ready:typeof ready,game:typeof game,active:typeof active,phase:typeof active!=='undefined'?active:null,party:document.getElementById('battle')?.contentDocument.querySelectorAll('#party button').length,call:(()=>{try{window.mobileLifecycle(true);return 'ok'}catch(e){return e.stack}})()})}catch(e){return e.stack}})()"));finish(Activity.RESULT_OK,result);return;}
             waitReady();Thread.sleep(1500);
+            if("background-return".equals(arguments.getString("mode"))){
+                require("true".equals(js("active=false;progression.pause(Date.now());save();progression.consumed===40&&game.data.fixtureMarker==='UI retained'")),"UI did not load completed background results");
+                String current=readSave();JSONObject stale=new JSONObject(current);stale.getJSONObject("mobile").put("consumed",0);Field loaded=MainActivity.class.getDeclaredField("uiLoaded");loaded.setAccessible(true);loaded.set(activity,false);
+                require("true".equals(js("Android.save("+JSONObject.quote(stale.toString())+")")),"Unloaded UI save was not ignored");require(current.equals(readSave()),"A timer saved stale UI data before resume reload");js("Android.load()");
+                runOnMainSync(()->activity.startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));Thread.sleep(800);require(!MainActivity.visible,"Activity did not leave foreground");
+                getTargetContext().getSharedPreferences("steps",0).edit().putLong("total",50).commit();BackgroundAdventure runner=BackgroundAdventure.get(getTargetContext());runner.request();runner.barrier().get(45,TimeUnit.SECONDS);
+                require(new JSONObject(readSave()).getJSONObject("mobile").getLong("consumed")==50,"No action completed while Activity was paused");
+                runOnMainSync(()->getTargetContext().startActivity(new Intent(getTargetContext(),MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));Thread.sleep(1000);
+                require("true".equals(js("progression.consumed===50&&game.data.fixtureMarker==='UI retained'")),"Foreground return lost background progress");
+                js("active=false;mobileLifecycle(true,true);active=false");require("true".equals(js("progression.consumed===50")),"Foreground paid walking actions again");
+                result.putInt("returnChecks",5);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("update-immediate".equals(arguments.getString("mode"))){
                 js("active=false;game=new MobileCore.Game({},Date.now());progression=new MobileProgression(game);progression.resume(Date.now());game.newWild(Date.now());game.nextTick=Date.now()+60000;game.data.switchUntil=game.nextTick;active=true;catchingUp=false;save()");
                 JSONObject before=new JSONObject(readSave());getTargetContext().getSharedPreferences("verify",0).edit().putString("immediateGame",before.getJSONObject("game").toString()).putLong("immediateConsumed",before.getJSONObject("mobile").getLong("consumed")).commit();

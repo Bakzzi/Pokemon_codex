@@ -29,16 +29,17 @@ window.addEventListener('message',e=>{if(e.origin!==location.origin||!['battle',
 function refreshNative(){
   nativeState=JSON.parse(native.status());
   const toggle=$('steps-toggle');toggle.setAttribute('aria-checked',String(!!nativeState.stepsEnabled));toggle.disabled=!nativeState.sensorSupported&&!nativeState.stepsEnabled;$('steps-toggle-state').textContent=nativeState.stepsEnabled?'켜짐':'꺼짐';
-  $('sensor-status').textContent=nativeState.sensor;$('walk-status').textContent='모험의 발걸음';
+  $('sensor-status').textContent=nativeState.sensor+(nativeState.backgroundError?' '+nativeState.backgroundError:'');$('walk-status').textContent='모험의 발걸음';
   $('walk-today').textContent=(nativeState.todaySteps||0).toLocaleString('ko-KR')+'걸음';
   $('walk-total').textContent=(nativeState.lifetimeSteps||0).toLocaleString('ko-KR')+'걸음';
   $('walk-note').textContent=nativeState.tracking?'걸음 기록 중 · 앱을 꺼도 걸은 만큼 모험해요.':'설정에서 걸음 기록을 켜면 꺼 둔 동안에도 걸음이 쌓여요.';
   $('update-status').textContent=nativeState.update;$('update-confirm').hidden=!nativeState.pendingInstall;$('install-permission').hidden=nativeState.canInstall;
   $('update-check').disabled=!!nativeState.updateChecking||!!nativeState.installing;$('version').textContent='Android v'+(nativeState.versionName||MobileConfig.name);
 }
-window.mobileLifecycle=function(visible){
+window.mobileLifecycle=function(visible,reload=false){
   if(fatal)return;const now=Date.now();
   if(!visible){active=false;progression.pause(now);save();return;}
+  if(reload){active=false;try{saved=JSON.parse(native.load());game=new MobileCore.Game(saved.game||{},now);progression=new MobileProgression(game,saved.mobile,MobileConfig.stepsPerAction);}catch(e){fatal=true;notice='저장을 읽지 못했어요. 기존 데이터는 보존돼요.';native.reportError(String(e));publish();return;}}
   refreshNative();if(applyReadyUpdate())return;
   updatePaused=false;active=true;progression.resume(now);
   catchingUp=true;let actions=0;

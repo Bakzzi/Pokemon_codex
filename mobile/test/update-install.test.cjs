@@ -5,7 +5,7 @@ function fixture(){
   let now=Date.parse('2026-10-17T06:00:00Z'),stored=null,saveOk=true;const calls=[],timers=[],intervals=[],elements=new Map();
   const status={steps:0,stepsEnabled:false,sensorSupported:false,tracking:false,sensor:'',update:'',updateReady:false,installing:false,pendingInstall:false,canInstall:true};
   const element=id=>{if(!elements.has(id))elements.set(id,{hidden:false,open:false,style:{},clientWidth:380,contentWindow:{postMessage(){}},setAttribute(){}});return elements.get(id);};
-  const native={load:()=>JSON.stringify({}),save:text=>{calls.push('save');if(saveOk)stored=JSON.parse(text);return saveOk;},foreground:()=>true,status:()=>JSON.stringify(status),ready(){},reportError(){},installUpdate(){calls.push('install');status.updateReady=false;status.installing=true;}};
+  const native={load:()=>JSON.stringify(stored||{}),save:text=>{calls.push('save');if(saveOk)stored=JSON.parse(text);return saveOk;},foreground:()=>true,status:()=>JSON.stringify(status),ready(){},reportError(){},installUpdate(){calls.push('install');status.updateReady=false;status.installing=true;}};
   const c=vm.createContext({console,TextEncoder,TextDecoder,structuredClone,Date:class extends Date{static now(){return now;}},Android:native,MobileConfig:{name:'fixture',stepsPerAction:10},document:{getElementById:element},location:{origin:'https://game.pokemon.local'},setInterval:fn=>intervals.push(fn),setTimeout:fn=>timers.push(fn),clearTimeout(){},addEventListener(){}});
   vm.runInContext('window=globalThis',c);
   for(const file of ['mobile/android/app/build/generated/gameAssets/web/game.bundle.js','mobile/web/progression.js','mobile/web/app.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),c);
@@ -38,4 +38,8 @@ test('installation and system confirmation pause actions; failure resumes the sa
   f.advance(30000);f.tick();f.run('action("slot",{slot:0,id:25})');assert.deepEqual(f.snapshot().game,before.game);
   f.status.installing=false;f.status.pendingInstall=true;f.tick();assert.equal(f.snapshot().active,false);assert.deepEqual(f.snapshot().game,before.game);
   f.status.pendingInstall=false;f.tick();assert.equal(f.snapshot().active,true);assert.equal(f.snapshot().game.battle.turn,before.game.battle.turn);assert.equal(f.snapshot().game.battle.foe.hp,before.game.battle.foe.hp);assert.equal(f.calls.filter(c=>c==='install').length,1);
+});
+test('native resume reloads the saved background result before continuing the UI',()=>{
+  const f=fixture();f.start();f.run('game.data.fixtureMarker="background result";progression.consumed=40;save();game.data.fixtureMarker="stale UI";progression.consumed=0;active=false;mobileLifecycle(true,true)');
+  assert.equal(f.snapshot().game.fixtureMarker,'background result');assert.equal(f.snapshot().mobile.consumed,40);
 });
