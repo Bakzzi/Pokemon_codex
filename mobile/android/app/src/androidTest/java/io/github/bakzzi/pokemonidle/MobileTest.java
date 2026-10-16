@@ -48,10 +48,25 @@ public final class MobileTest extends Instrumentation {
     @Override public void onStart(){
         Bundle result=new Bundle();
         try{
+            if("update-checks".equals(arguments.getString("mode"))){finish(Activity.RESULT_OK,UpdateChecks.run(getTargetContext()));return;}
+            if("update-preserved".equals(arguments.getString("mode"))){
+                File file=new File(getTargetContext().getFilesDir(),"adventure.json");String expected=getTargetContext().getSharedPreferences("verify",0).getString("updateSaveSha","");require(!expected.isEmpty()&&expected.equals(Updater.sha256(file)),"Update changed saved adventure");
+                result.putLong("installed_code",getTargetContext().getPackageManager().getPackageInfo(getTargetContext().getPackageName(),0).getLongVersionCode());result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
+            if("update-live".equals(arguments.getString("mode")))getTargetContext().getSharedPreferences("update",0).edit().putLong("checked",System.currentTimeMillis()).commit();
             activity=(MainActivity)startActivitySync(new Intent(getTargetContext(),MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);
             if("inspect".equals(arguments.getString("mode"))){Thread.sleep(5000);result.putString("diagnostic",js("(()=>{try{return JSON.stringify({document:document.readyState,ready:typeof ready,game:typeof game,active:typeof active,phase:typeof active!=='undefined'?active:null,party:document.getElementById('battle')?.contentDocument.querySelectorAll('#party button').length,call:(()=>{try{window.mobileLifecycle(true);return 'ok'}catch(e){return e.stack}})()})}catch(e){return e.stack}})()"));finish(Activity.RESULT_OK,result);return;}
             waitReady();Thread.sleep(1500);
+            if("update-live".equals(arguments.getString("mode"))){
+                js("active=false;progression.pause(Date.now());save();document.getElementById('settings-open').click();document.getElementById('update-check').click()");Updater u=Updater.current;UpdateChecks.await(u);Thread.sleep(400);
+                require(u.ready&&!u.status.contains("최신"),"Live newer release was not downloaded: "+u.status);
+                require("true".equals(js("document.getElementById('version').textContent==='Android v'+JSON.parse(Android.status()).versionName&&document.getElementById('update-status').textContent===JSON.parse(Android.status()).update")),"UI version or update status differs from installed APK");
+                File save=new File(getTargetContext().getFilesDir(),"adventure.json");getTargetContext().getSharedPreferences("verify",0).edit().putString("updateSaveSha",Updater.sha256(save)).commit();
+                result.putString("download",u.status);result.putLong("installed_code",u.installedCode);result.putString("result","passed");sendStatus(1,result);
+                if("true".equals(arguments.getString("install"))){u.install();UpdateChecks.await(u);result.putString("install_session",u.status);}
+                finish(Activity.RESULT_OK,result);return;
+            }
             if("insets".equals(arguments.getString("mode"))){
                 result.putString("geometry",checkInsets());
                 js("document.getElementById('settings-open').click()");
