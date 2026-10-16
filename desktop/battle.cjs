@@ -56,6 +56,11 @@ function attach(game,b,sim){
   const nativeRunAction=sim.runAction;
   Object.defineProperty(sim,'runAction',{value:function(action){
     if(action.buddyItem)consumables.use(game,b,this,action.buddyItem);
+    // A legacy saved turn may already contain a technique that became locked.
+    // Keep its committed action slot, using an available move instead.
+    if(action.choice==='move'&&action.pokemon?.side.n===0&&!action.pokemon.transformed&&action.move.id!=='struggle'&&!action.pokemon.moveSlots.some(slot=>slot.id===action.move.id)){
+      action.move=this.dex.moves.get(action.pokemon.moveSlots.find(slot=>slot.pp>0&&!slot.disabled)?.id||'struggle');
+    }
     return nativeRunAction.call(this,action);
   },configurable:true});
   cache.set(b,sim);return sim;
@@ -82,15 +87,24 @@ function persist(b,sim){
   sim.log=sim.log.slice(-40);sim.sentLogPos=sim.log.length;sim.inputLog=[];b.sim=sim.toJSON();
 }
 function refreshOwned(game,sim){
+  let changed=false;
   for(const mon of sim.p1.pokemon){
     const p=game.data.owned[Number(mon.name.slice(1))];if(!p)continue;
     mon.happiness=p.happiness;
     if(mon.level!==p.level){const old=mon.maxhp,alive=mon.hp>0&&!mon.fainted;mon.level=mon.set.level=p.level;mon.setSpecies(mon.baseSpecies);mon.baseMaxhp=mon.maxhp=statsAt(p.id,p.level)[1];mon.hp=alive?Math.min(mon.maxhp,mon.hp+mon.maxhp-old):0;}
+    const allowed=new Set(p.moves.map(id=>simMoves.get(id)?.id));
+    for(let i=mon.baseMoveSlots.length-1;i>=0;i--)if(!allowed.has(mon.baseMoveSlots[i].id)){
+      if(!mon.transformed&&mon.moveSlots!==mon.baseMoveSlots)mon.moveSlots.splice(i,1);
+      mon.baseMoveSlots.splice(i,1);changed=true;
+    }
+    mon.set.moves=mon.baseMoveSlots.map(slot=>slot.id);
     for(const id of p.moves){const m=simMoves.get(id);if(!m||mon.baseMoveSlots.some(s=>s.id===m.id))continue;
       const slot={move:m.name,id:m.id,pp:m.pp,maxpp:m.pp,target:m.target,disabled:false,disabledSource:'',used:false};
       mon.baseMoveSlots.push(slot);if(mon.moveSlots!==mon.baseMoveSlots&&!mon.transformed)mon.moveSlots.push({...slot});mon.set.moves.push(m.id);
+      changed=true;
     }
   }
+  if(changed&&sim.requestState==='move')sim.makeRequest('move');
 }
 function scoreMove(sim,actor,target,move){
   const copy=ai.model(sim.toJSON()),a=copy.sides[actor.side.n].pokemon.find(p=>p.name===actor.name),b=copy.sides[target.side.n].pokemon.find(p=>p.name===target.name);

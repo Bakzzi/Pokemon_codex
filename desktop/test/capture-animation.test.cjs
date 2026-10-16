@@ -2,7 +2,9 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {Game}=require('./helpers/four-party.cjs'),battle=require('../battle.cjs');
 const {captureTiming,captureFrame}=require('../capture-animation.js');
-const {xpAt}=require('../pokemon.cjs'),pacing=require('../battle-pacing.js');
+const {xpAt,species}=require('../pokemon.cjs'),pacing=require('../battle-pacing.js');
+// A harmless fixed learnset keeps these capture scenarios independent of AI damage.
+species.get(25).learn=[{level:1,move:45}];
 const now=Date.parse('2026-10-13T07:00:00Z');
 function fixture(passes){
   const g=new Game({},now,{random:()=>.73});g.data.owned[25].moves=[45];g.newWild(now);

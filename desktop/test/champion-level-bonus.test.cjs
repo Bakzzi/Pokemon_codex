@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const {Game}=require('./helpers/four-party.cjs'),{data,species,rarity,wildMinimum,wildEligible,pickWild,encounterChances,xpAt}=require('../pokemon.cjs');
 const now=Date.parse('2026-10-14T08:00:00Z');
 function fixture(level){const g=new Game({},now,{random:()=>.73});g.data.champion=true;setLevels(g,level);return g;}
-function setLevels(g,level){for(const uid of g.data.slots.filter(uid=>uid!==null)){const p=g.data.owned[uid];p.level=level;p.xp=xpAt(p.id,level);}}
+function setLevels(g,level){for(const uid of g.data.slots.filter(uid=>uid!==null)){const p=g.data.owned[uid];p.level=level;p.xp=xpAt(p.id,level);require('../move-access.cjs').update(p);}}
 
 test('the four selected Pokemon must all strictly exceed 70, 80 or 90 to multiply both champion bonuses',()=>{
   const g=fixture(5);

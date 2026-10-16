@@ -8,14 +8,15 @@ test('Johto unlock thirds only Lv15+ owned individuals, including reserves and b
   const g=fixture(),uids=[];
   for(const level of [1,14,15,16,44,45,50,90,100]){
     const uid=g.addPokemon(6,level,'fixture',now),p=g.data.owned[uid];uids.push(uid);
-    p.moves=[53,63,76];if(level<100)p.xp+=Math.floor((xpAt(6,level+1)-p.xp)*.42);
+    if(level<100)p.xp+=Math.floor((xpAt(6,level+1)-p.xp)*.42);
   }
   g.data.activeId=uids[7];g.data.slots=[uids[7],uids[2],null,null,null,null];g.data.daycare={parents:[uids[1],uids[6]],progress:123,required:20000,produced:false};g.data.egg={id:4,progress:100,required:1000,parents:[uids[1],uids[6]]};g.data.inventory[82]=3;
   const before=structuredClone(g.data),boost=g.experienceBoost(),preview=g.johtoUnlockPreview();assert.equal(preview.count,7);assert.equal(g.data.johtoLevelReduction,undefined);
   assert.ok(g.unlockJohto(now));assert.equal(g.maxGeneration(),2);
   for(const [uid,old] of Object.entries(before.owned)){
     const p=g.data.owned[uid],expected=old.level>=15?Math.floor(old.level/3):old.level;
-    assert.equal(p.level,expected);assert.equal(levelAt(p.id,p.xp),expected);assert.deepEqual({...p,level:old.level,xp:old.xp},old);
+    assert.equal(p.level,expected);assert.equal(levelAt(p.id,p.xp),expected);assert.deepEqual({...p,level:old.level,xp:old.xp,moves:old.moves},old);
+    assert.deepEqual(p.moves,require('../move-access.cjs').catalog(p).filter(m=>m.level<=expected).map(m=>m.move));
     if(old.level<15)assert.deepEqual(p,old);
     else if(old.level===100)assert.equal(p.xp,xpAt(p.id,33));
     else{

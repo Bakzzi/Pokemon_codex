@@ -7,7 +7,7 @@ function veteran(){
   const g=new FourPartyGame({},before,{random:()=>.73});
   g.data.badges=data.bosses.slice(0,8).map(b=>b.id);g.data.champion=true;g.unlockJohto(before);
   g.addPokemon(172,5,'hatch',before);g.addPokemon(143,30,'catch',before);
-  g.data.owned[4].level=36;g.data.owned[4].xp=xpAt(4,36);g.evolve(4,6,before);
+  g.data.owned[4].level=36;g.data.owned[4].xp=xpAt(4,36);require('../move-access.cjs').update(g.data.owned[4]);g.evolve(4,6,before);
   for(let id=1;id<=251;id++){g.data.caught[id]=before;g.data.seen[id]=before;}
   g.data.inventory[80]=2;g.data.trainingDevice={storyRevision:2,routeRevision:1,legacyRoadAccess:true,gruntWonAt:before,duoWonAt:before,rocketWonAt:before,fluteObtainedAt:before,snorlaxWonAt:before,obtainedAt:before,learnerUid:4};
   g.data.daycare={parents:[1,7],progress:500,offspring:[1]};g.data.egg={id:1,progress:100,required:1000};

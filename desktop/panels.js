@@ -90,7 +90,7 @@ function renderDex(){
   if(assigned>=0){const queued=state.pendingActions.some(a=>a.kind==='slot'&&a.slot===assigned&&a.uid===null),remove=node('button','',queued?'칸 비우기 예약됨':'선택 칸에서 빼기');remove.dataset.removeSlot=assigned;remove.disabled=queued||!state.slots.some((s,i)=>i!==assigned&&!s.empty&&!s.boarded);remove.title=remove.disabled&&!queued?'모험할 동료 한 마리는 남겨 주세요.':'배틀 중에는 종료 후 칸을 비워요.';remove.onclick=()=>window.buddy.action('slot',{slot:assigned,id:null});root.append(remove);}
   root.append(node('p','muted','최대 6마리 · 빈칸이 있어도 모험할 수 있어요.'));
   root.append(node('p','muted','특성 · '+member.ability));
-  root.append(node('h3','','배운 기술 '+member.moves.length+'개 · 자동 사용'));const list=node('ul','move-list');for(const m of member.moves||[])list.append(node('li','',m.name));root.append(list);
+  root.append(node('h3','','기술 '+member.moves.filter(m=>m.active).length+' / '+member.moves.length+'개 활성 · 자동 사용'));const list=node('ul','move-list');for(const m of member.moves||[]){const row=node('li',m.active?'':'locked',m.name);row.dataset.move=m.id;row.append(node('small','',m.active?'Lv.'+m.level:'Lv.'+m.level+' 해금'));list.append(row);}root.append(list);
   for(const e of member.evolutions){
     if(e.automatic){
       const box=node('div','evolution');box.append(node('h3','',e.name+' 자동진화'),node('p','',e.conditions),node('p','',e.ready?'배틀과 결과 연출이 끝나면 자동으로 진화해요.':'조건 레벨에 도달하면 자동으로 진화해요.'));root.append(box);continue;

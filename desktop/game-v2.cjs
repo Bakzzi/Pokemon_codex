@@ -7,6 +7,7 @@ const journal=require('./journal.cjs');
 const {captureTiming,captureText}=require('./capture-animation.js');
 const pacing=require('./battle-pacing.js');
 const consumables=require('./consumables.cjs');
+const moveAccess=require('./move-access.cjs');
 const validCount=n=>typeof n==='number'&&Number.isSafeInteger(n)&&n>=0;
 const STARTERS=[25],PARTY_SIZE=6;
 const STARTER_GIFTS=[{badge:'brock',id:1},{badge:'misty',id:4},{badge:'surge',id:7}];
@@ -74,7 +75,9 @@ class Game {
       if(met)this.data.trainerSeen[boss.id] ||= now;
     }
     journal.init(this.data,now);
+    const changedMoves=new Set();
     for(const [uid,p] of Object.entries(this.data.owned)){
+      const previousMoves=JSON.stringify(p.moves);
       p.uid=Number(uid);p.gender=p.gender||nursery.genderFor(p.id,this.random);
       p.abilitySlot=p.abilitySlot??Math.floor(this.random()*species.get(p.id).abilities.length);p.ability=abilityFor(p.id,p.abilitySlot);
       if(this.data.rulesRevision!==3){
@@ -85,7 +88,9 @@ class Game {
         }
         p.moves=learnedMoves(p.id,p.level,[...recovered,...p.moves]);
       }
+      moveAccess.update(p);if(JSON.stringify(p.moves)!==previousMoves)changedMoves.add(Number(uid));
     }
+    for(const b of [this.data.battle,this.data.suspendedWild].filter(Boolean))for(const [uid,m] of Object.entries(b.party))if(changedMoves.has(Number(uid))){const p=this.data.owned[uid];m.moves=[...p.moves];for(const id of p.moves)if(m.pp[id]===undefined)m.pp[id]=moves.get(id).pp;}
     if(this.data.rulesRevision!==3)for(const b of [this.data.battle,this.data.suspendedWild].filter(Boolean)){
       for(const [uid,m] of Object.entries(b.party)){const p=this.data.owned[uid];m.moves=[...p.moves];m.ability=p.ability;m.gender=p.gender;for(const id of p.moves)if(m.pp[id]===undefined)m.pp[id]=moves.get(id).pp;}
       delete b.round;battleEngine.invalidate(b);
@@ -105,7 +110,7 @@ class Game {
       const forms={electric:[25,25,26],fire:[4,5,6],water:[7,8,9],grass:[1,2,3]};
       const id=(forms[saved.family]||forms.electric)[level>=36?2:level>=16?1:0];
       const uid=Object.values(this.data.owned).find(p=>p.id===id)?.uid||this.addPokemon(id,level,'migration',now);
-      const record=this.data.owned[uid];record.level=level;record.xp=xpAt(id,level);record.moves=learnedMoves(id,level);this.data.activeId=uid;
+      const record=this.data.owned[uid];record.level=level;record.xp=xpAt(id,level);moveAccess.update(record);this.data.activeId=uid;
       if(!this.data.slots.includes(uid)){const slot=this.data.slots.indexOf((forms[saved.family]||forms.electric)[0]);this.data.slots[slot>=0?slot:0]=uid;}
     }
     const selected=new Set(),savedSlots=Array.isArray(this.data.slots)?this.data.slots:[];
@@ -169,6 +174,7 @@ class Game {
       const p=this.data.owned[change.uid],oldFloor=xpAt(p.id,p.level),oldNext=xpAt(p.id,p.level+1);
       const progress=p.level===100?0:Math.max(0,Math.min(1,(p.xp-oldFloor)/Math.max(1,oldNext-oldFloor)));
       p.level=change.to;
+      moveAccess.update(p);
       const floor=xpAt(p.id,p.level),required=xpAt(p.id,p.level+1)-floor;
       p.xp=floor+Math.min(required-1,Math.floor(required*progress));
     }
@@ -307,7 +313,8 @@ class Game {
     if(!species.has(id)||species.get(id).generation>this.maxGeneration())return false;
     let uid=id;if(this.data.owned[uid]){while(this.data.owned[this.data.nextUid])this.data.nextUid++;uid=this.data.nextUid++;}
     const abilitySlot=Math.floor(this.random()*species.get(id).abilities.length);
-    this.data.owned[uid]={uid,id,level,xp:xpAt(id,level),moves:learnedMoves(id,level),abilitySlot,ability:abilityFor(id,abilitySlot),happiness:70,gender:nursery.genderFor(id,this.random),origin,obtainedAt:now};
+    this.data.owned[uid]={uid,id,level,xp:xpAt(id,level),moves:learnedMoves(id,level),moveMemory:[],abilitySlot,ability:abilityFor(id,abilitySlot),happiness:70,gender:nursery.genderFor(id,this.random),origin,obtainedAt:now};
+    moveAccess.update(this.data.owned[uid]);
     this.data.seen[id]=this.data.seen[id]||now;if(register){this.data.caught[id]=this.data.caught[id]||now;this.data.seasonCaught[id]=this.data.seasonCaught[id]||now;}return uid;
   }
   awardStarterGift(badge,now){
@@ -445,7 +452,7 @@ class Game {
     uid=Number(uid);to=Number(to);if(this.data.battle?.kind==='trainer'||this.data.pendingBattle||now<this.data.switchUntil||this.isBoarded(uid))return false;
     const rule=this.evolutions(uid,now).find(e=>e.to===to&&e.ready);if(!rule)return false;
     const p=this.data.owned[uid],from=p.id,fromPokemon=this.snapshot(now).hero;if(rule.item)this.data.inventory[rule.item]--;
-    p.id=to;delete p.deviceLevelUp;p.ability=abilityFor(to,p.abilitySlot);p.moves=learnedMoves(to,p.level,p.moves,p.level-1);p.xp=xpAt(to,p.level)+Math.max(0,p.xp-xpAt(from,p.level));
+    moveAccess.update(p);p.id=to;delete p.deviceLevelUp;p.ability=abilityFor(to,p.abilitySlot);moveAccess.update(p);p.xp=xpAt(to,p.level)+Math.max(0,p.xp-xpAt(from,p.level));
     this.data.seen[to]=this.data.seen[to]||now;this.data.caught[to]=this.data.caught[to]||now;
     this.data.seasonCaught[to]=this.data.seasonCaught[to]||now;
     const old=this.data.battle?.party[uid];
@@ -528,7 +535,7 @@ class Game {
     journal.increment(this.data,'xp',actual);
     p.xp+=actual;p.level=levelAt(p.id,p.xp);p.happiness=Math.min(255,p.happiness+3);
     if(p.level>before){
-      p.moves=learnedMoves(p.id,p.level,p.moves,before);this.log(`${species.get(p.id).name} Lv.${before} → Lv.${p.level}`,'level',p.id,now);
+      moveAccess.update(p);this.log(`${species.get(p.id).name} Lv.${before} → Lv.${p.level}`,'level',p.id,now);
       const mon=this.data.battle?.party[p.uid];if(mon){const fresh=combatant(p.id,p.level,p.moves),diff=fresh.maxHp-mon.maxHp;mon.level=p.level;mon.stats=fresh.stats;mon.maxHp=fresh.maxHp;mon.hp=mon.hp>0?Math.min(mon.maxHp,mon.hp+diff):0;mon.moves=[...p.moves];for(const id of p.moves)if(mon.pp[id]===undefined)mon.pp[id]=moves.get(id).pp;}
     }return actual;
   }
@@ -680,7 +687,7 @@ class Game {
   }
   panelState(now=Date.now()){
     const hints=collectionHints(this);
-    const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,level:p.level,xp:p.xp,...experienceView(p),gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:p.moves.map(id=>({id,name:moves.get(id).name,type:moves.get(id).type})),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
+    const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,level:p.level,xp:p.xp,...experienceView(p),gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:moveAccess.catalog(p).map(entry=>({id:entry.move,name:moves.get(entry.move).name,type:moves.get(entry.move).type,level:entry.level,active:entry.level<=p.level})),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
     return {...this.snapshot(now),roster,daycare:nursery.snapshot(this),johtoUnlocked:this.maxGeneration()===2,johtoDeferred:this.data.johtoDeferred,johtoUnlockPreview:this.johtoUnlockPreview(),
       kantoCaughtCount:this.kantoCaughtCount(),
       encounterBonus:this.encounterBonus(),

@@ -20,7 +20,7 @@ async function main(){
   for(const name of ['main.cjs','preload.cjs','game.cjs','game-v2.cjs','battle.cjs','battle-ai.cjs','training-device.cjs','capture-animation.js','move-effects.js','battle-pacing.js','battle-ui.css','badge-case.css','journal.cjs','daycare.cjs','season.cjs','pokemon.cjs','acquisition.cjs','window-placement.cjs','codex-reader.cjs','store.cjs','index.html','widget.css','renderer.js','panels.html','panels.css','panels.js'])
     await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));
   for(const name of ['assets','data'])await fs.cp(path.join(root,'desktop',name),path.join(appDir,'desktop',name),{recursive:true});
-  for(const name of ['remote-agent.cjs','remote-codex.cjs','known-hosts.cjs','connections.js','connections.css','auto-update.cjs','update-helper.ps1','consumables.cjs','claude-reader.cjs','agent-status.js','window-pinning.cjs'])await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));
+  for(const name of ['remote-agent.cjs','remote-codex.cjs','known-hosts.cjs','connections.js','connections.css','auto-update.cjs','update-helper.ps1','consumables.cjs','claude-reader.cjs','agent-status.js','window-pinning.cjs','move-access.cjs'])await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));
   const lock=JSON.parse(await fs.readFile(path.join(root,'package-lock.json'),'utf8'));
   for(const [location,meta] of Object.entries(lock.packages))if(location.startsWith('node_modules/')&&!meta.dev){
     try{await fs.cp(path.join(root,location),path.join(appDir,location),{recursive:true,filter:file=>!file.endsWith('.map')&&!file.includes(path.sep+'esm'+path.sep)});}

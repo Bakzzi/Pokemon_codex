@@ -120,7 +120,9 @@ test('native trainer simulation awards a badge without capturing, then refuses r
   let steps=0;while(g.data.battle?.kind==='trainer'&&steps<100)g.tick(now+(++steps)*2000);
   assert.deepEqual(g.data.badges,['brock']);assert.ok(!g.data.caught[74]&&!g.data.caught[95]);assert.equal(g.challenge(0,now+999999),false);
 });
-test('saved native queue, HP, PP and statuses resume without repeating the first action',()=>{
+test('saved native queue, HP, PP and statuses resume without repeating the first action',t=>{
+  // Keep the native queue scenario's fixed two-technique moveset after reload.
+  const oldLearn=species.get(143).learn;t.after(()=>{species.get(143).learn=oldLearn;});species.get(143).learn=[{level:1,move:92},{level:1,move:33}];
   const f=fixture(143,113,[92,33],[150],30),g=f.g;g.data.workTokens=50000;g.tick(now);
   assert.ok(g.data.battle.sim);const a=new Game(g.data,now+1,{random:()=>.73}),b=new Game(g.data,now+1,{random:()=>.73});
   for(let i=1;i<=6;i++){const at=Math.max(a.nextTick,a.data.switchUntil);a.tick(at);b.tick(at);}
