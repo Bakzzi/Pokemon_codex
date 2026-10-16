@@ -1,5 +1,5 @@
 'use strict';
-const {app,BrowserWindow,ipcMain,Menu,Tray,nativeImage,screen,dialog,safeStorage}=require('electron');
+const {app,BrowserWindow,ipcMain,Menu,Tray,nativeImage,screen,dialog,safeStorage,powerMonitor}=require('electron');
 const path=require('node:path'),os=require('node:os'),fs=require('node:fs');
 const {Game}=require('./game.cjs');
 const {combatant}=require('./battle.cjs');
@@ -10,11 +10,12 @@ const agents=require('./agent-status.js');
 const {RemoteCodex}=require('./remote-codex.cjs');
 const {Store}=require('./store.cjs');
 const placement=require('./window-placement.cjs');
+const pinning=require('./window-pinning.cjs');
 const {AutoUpdate,canRestart,markHealthy}=require('./auto-update.cjs');
 const demo=process.argv.includes('--demo'),smoke=process.argv.includes('--smoke-test');
 const dataDir=smoke?(process.env.POKEMON_SMOKE_DIR||path.join(__dirname,'.smoke')):demo?path.join(__dirname,'.demo'):path.join(app.getPath('appData'),'PokemonCodexBuddy');
 app.setPath('userData',dataDir);app.setName(agents.name);app.disableHardwareAcceleration();
-let win,panel,tray,timer,game,store,reader,claudeReader,remotes,widgetPlacement,settings={},busy=false,lastRead=0,previous='',panelPrevious='',notice='';
+let win,panel,tray,timer,game,store,reader,claudeReader,remotes,widgetPlacement,widgetPinning,settings={},busy=false,lastRead=0,previous='',panelPrevious='',notice='';
 let updater,updating=false,healthyTicks=0;
 const gotLock=app.requestSingleInstanceLock();
 if(!gotLock)app.quit();
@@ -70,7 +71,7 @@ async function start(){
   win=new BrowserWindow({width,height,x,y,frame:false,transparent:true,resizable:false,hasShadow:false,thickFrame:false,maximizable:false,fullscreenable:false,
     alwaysOnTop:settings.pinned!==false,skipTaskbar:true,show:false,title:agents.name,
     backgroundColor:'#00000000',webPreferences:webPreferences()});
-  secure(win);win.setAlwaysOnTop(settings.pinned!==false,'floating');
+  secure(win);widgetPinning=pinning.attach(win,{pinned:settings.pinned!==false,powerMonitor,screen});
   widgetPlacement=placement.attach(win,screen,(x,y)=>{settings.x=x;settings.y=y;});
   widgetPlacement.place({x,y,width,height});
   win.on('closed',()=>app.quit());
@@ -81,7 +82,7 @@ async function start(){
     try{
       if(action==='close'){app.quit();return;}
       if(action==='hide')win.hide();
-      if(action==='pin'){settings.pinned=settings.pinned===false;win.setAlwaysOnTop(settings.pinned,'floating');}
+      if(action==='pin'){settings.pinned=settings.pinned===false;widgetPinning.setPinned(settings.pinned);}
       if(action==='compact'){
         settings.compact=!settings.compact;win.setResizable(true);widgetPlacement.resize(settings.compact);win.setResizable(false);
       }
@@ -339,5 +340,5 @@ async function smokeTest(){
   const ok=inspection.hero==='피카츄'&&inspection.images&&!inspection.overflow&&inspection.slots===4&&inspection.facing.startsWith('matrix(-1')&&collection.count===151&&collection.caught===4&&collection.unknown.includes('???')&&collection.silhouette&&collection.noPichu&&!collection.overflow&&Object.values(controls).every(Boolean)&&controls.height===276&&!errors.length;
   fs.writeFileSync(path.join(dir,'result.json'),JSON.stringify({ok,inspection,collection,controls,errors},null,2));console.log(JSON.stringify({smoke:ok,inspection,collection,controls,errors}));app.exit(ok?0:1);
 }
-app.on('before-quit',()=>{clearInterval(timer);updater?.close();remotes?.close();try{save();}catch{}tray?.destroy();});
+app.on('before-quit',()=>{clearInterval(timer);widgetPinning?.dispose();updater?.close();remotes?.close();try{save();}catch{}tray?.destroy();});
 app.on('window-all-closed',()=>app.quit());
