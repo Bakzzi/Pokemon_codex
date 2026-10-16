@@ -95,7 +95,10 @@ test('tactical switches persist their cooldown; manual choices stay honored for 
   const state=g.data.battle;delete state.matchupPending;state.foe=battle.combatant(134,50,[57]);
   battle.step(g,state);assert.equal(g.data.activeId,b);assert.ok(Number.isInteger(state.aiLastSwitch));
   const reloaded=new Game(structuredClone(g.data),now,{random:()=>.73});assert.equal(reloaded.data.battle.aiLastSwitch,state.aiLastSwitch);
-  g.data.switchUntil=0;assert.ok(g.select(a,now));assert.equal(state.manualMatchup,true);battle.step(g,state);assert.equal(g.data.activeId,a);
+  g.data.switchUntil=0;assert.ok(g.requestAction('select',a,now));
+  // Finish the committed counterattack before the next turn's manual switch.
+  for(let i=0;i<5&&g.data.activeId!==a;i++)assert.ok(g.tick(Math.max(now,g.nextTick,g.data.switchUntil)));
+  assert.equal(g.data.activeId,a);assert.equal(state.manualMatchup,true);battle.step(g,state);assert.equal(g.data.activeId,a);
   state.foeIndex=0;g.nextTrainer(now);assert.equal(state.manualMatchup,undefined);assert.equal(state.aiLastSwitch,undefined);
 });
 

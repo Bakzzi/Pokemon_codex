@@ -213,13 +213,15 @@ class Game {
       if(!this.data.champion)return invalid('챔피언이 된 뒤 선택할 수 있어요.');
       if(this.data.johtoUnlocked||a.kind==='johto-stay'&&this.data.johtoDeferred)return done;
     }
+    // A persistent blocker should stay visible even while attacks keep playing.
+    if(a.kind==='select'&&this.isBoarded(a.uid))return wait('키우미집에서 데려오면 출전해요.');
     if(this.data.pendingBattle||now<this.data.switchUntil||now<this.nextTick)return wait('진행 중인 동작이 끝나면 실행해요.');
     if(b&&(b.foe.hp<=0||b.party[this.data.activeId]?.hp<=0))return wait('기절과 배틀 결과를 기다려요.');
     if(a.kind==='select'){
       if(this.isBoarded(a.uid))return wait('키우미집에서 데려오면 출전해요.');
       if(a.uid===this.data.activeId)return done;
       if(b&&(b.party[a.uid]?.hp<=0||b.kind==='trainer'&&!b.party[a.uid]))return wait('배틀 종료 후 회복·출전해요.');
-      if(b&&!battleEngine.canSwitch(this,b,a.uid))return wait('교체할 수 있게 되면 출전해요.');
+      if(b){const blocked=battleEngine.switchWait(this,b,a.uid);if(blocked)return wait(blocked==='turn'?'이번 턴이 끝나면 출전해요.':'교체할 수 있게 되면 출전해요.');}
     }else if(a.kind==='daycare-withdraw'||a.kind==='abandon'){
       // These can resolve a waiting request without needing another battle to finish.
     }else{
@@ -406,8 +408,10 @@ class Game {
     if(battle&&(battle.party[id]?.hp<=0||(battle.kind==='trainer'&&!battle.party[id])))return false;
     if(battle&&!battleEngine.canSwitch(this,battle,id))return false;
     if(!this.data.slots.includes(id)){if(battle?.kind==='trainer')return false;const empty=this.data.slots.indexOf(null);this.data.slots[empty>=0?empty:this.data.slots.indexOf(this.data.activeId)]=id;}
-    const from=this.data.activeId,fromPokemon=this.snapshot(now).hero;this.data.activeId=id;
-    if(battle){if(!battle.party[id]){battle.party[id]=this.memberCombatant(this.data.owned[id]);battleEngine.invalidate(battle);}battle.pendingSwitch=id;delete battle.matchupPending;if(battle.kind==='trainer')battle.manualMatchup=true;}
+    const from=this.data.activeId,fromPokemon=this.snapshot(now).hero;
+    if(battle)battleEngine.addPartner(this,battle,id);
+    this.data.activeId=id;
+    if(battle){battle.pendingSwitch=id;delete battle.matchupPending;if(battle.kind==='trainer')battle.manualMatchup=true;}
     this.animate('switch',{from:this.data.owned[from].id,to:this.data.owned[id].id,fromPokemon,toPokemon:this.snapshot(now).hero,text:`${species.get(this.data.owned[id].id).name}, 너로 정했다!`},now);return true;
   }
   setSlot(slot,id,now=Date.now()){
@@ -640,7 +644,7 @@ class Game {
       this.log(species.get(hero.id).name+' 출전','switch',hero.id,now);
     }else{
       const text=move?species.get(action.id||hero.id).name+'의 '+move.name+'!':action.lines[0]||'배틀을 이어가고 있어.';
-      this.animate('attack',{actor:action.actor||'hero',id:action.id||hero.id,move:move?.name,moveId:move?.id,moveType:move?.type,moveTarget:action.moveTarget,outcome:action.outcome,hitCount:action.hitCount,damage:move?.damageClass===1?0:action.damage||0,damageCauses:action.damageCauses,hero:{...view(hero.id),level:hero.level,...healthView(hero)},heroBefore,foeBefore,foe:{...view(foe.id),level:foe.level,...healthView(foe)},text,detail:action.lines.filter(line=>line!==text).join(' · ')},now);
+      this.animate('attack',{actor:action.actor||'hero',id:action.id||hero.id,move:move?.name,moveId:move?.id,moveType:move?.type,moveTarget:action.moveTarget,outcome:action.outcome,hitCount:action.hitCount,damage:move?.damageClass===1?0:action.damage||0,damageCauses:action.damageCauses,beforeMove:action.beforeMove,afterMove:action.afterMove,hero:{...view(hero.id),level:hero.level,...healthView(hero)},heroBefore,foeBefore,foe:{...view(foe.id),level:foe.level,...healthView(foe)},text,detail:action.lines.filter(line=>line!==text&&!action.beforeMove?.some(m=>m.text===line)).join(' · ')},now);
     }
     if(action.lines.length)this.log(action.lines.join(' · '),'battle',action.id||hero.id,now);
     const finishedAt=now+this.data.animation.duration;

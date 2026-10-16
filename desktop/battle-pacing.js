@@ -5,20 +5,25 @@
   const pauses=Object.freeze({encounter:2200,switch:4600,faint:2300,result:2800,champion:4000});
   const switchTiming=Object.freeze({absorbAt:650,absorbEnd:1250,returnAt:1550,returnEnd:2150,sendAt:2500,openAt:3200,revealAt:3400,revealEnd:4050,duration:4600});
   function actionTiming(event){
-    const announceMs=650,effectMs=event.moveId?effects.profileFor(event.moveId).duration:0;
+    const beforeMoveMs=(event.beforeMove?.length||0)*1500;
+    const announceMs=beforeMoveMs+650,effectMs=event.moveId?effects.profileFor(event.moveId).duration:0;
     const impactAt=announceMs+Math.round(effectMs*.58),healthAt=impactAt+180,healthMs=750;
     const resultAt=Math.max(announceMs+effectMs,healthAt+healthMs);
-    return {announceMs,effectMs,impactAt,healthAt,healthMs,resultAt,duration:resultAt+1350};
+    return {beforeMoveMs,announceMs,effectMs,impactAt,healthAt,healthMs,resultAt,duration:resultAt+1350*Math.max(1,event.afterMove?.length||0)};
   }
   function duration(event){return event?.duration??(event?.kind==='attack'?actionTiming(event).duration:pauses[event?.kind]||2400);}
   function healthAt(event,side,now,after){
     const before=event?.[side+'Before'];if(!before)return after;
     const t=actionTiming(event),progress=clamp((now-event.at-t.healthAt)/t.healthMs);
     if(progress===1)return after;
+    let status=Object.hasOwn(before,'status')?before.status:after.status;
+    (event.beforeMove||[]).forEach((message,i)=>{if(message.actor===side&&message.curedStatus===status&&now>=event.at+(i+1)*1500)status=null;});
     return {...after,maxHp:before.maxHp,hp:before.hp+(after.hp-before.hp)*progress,
       currentHp:Math.round(before.currentHp+(after.currentHp-before.currentHp)*progress),
-      status:now<event.at+t.impactAt&&Object.hasOwn(before,'status')?before.status:after.status};
+      status:now<event.at+t.impactAt?status:after.status};
   }
+  function beforeMoveAt(event,now){const i=Math.floor((now-event.at)/1500);return i>=0?event.beforeMove?.[i]||null:null;}
+  function afterMoveAt(event,now){const i=Math.floor((now-event.at-actionTiming(event).resultAt)/1350);return i>=0?event.afterMove?.[i]||null:null;}
   function damageReaction(event,side,now){
     const lost=(event[side+'Before']?.currentHp||0)-(event[side]?.currentHp??event[side+'Before']?.currentHp??0);
     const age=now-event.at-actionTiming(event).impactAt,t=clamp(age/700),active=lost>0&&age>=0&&age<700;
@@ -50,6 +55,6 @@
     }
     return {age,phase,incoming,x,y,angle,ballVisible,ballOpacity,scale,opacity,heroY,glow,done:age>=s.duration};
   }
-  const api={pauses,actionTiming,duration,healthAt,damageReaction,damageMessages,switchTiming,switchFrame};
+  const api={pauses,actionTiming,duration,healthAt,beforeMoveAt,afterMoveAt,damageReaction,damageMessages,switchTiming,switchFrame};
   if(typeof module==='object'&&module.exports)module.exports=api;else globalThis.BattlePacing=api;
 })();

@@ -147,14 +147,17 @@ function renderSpeech(s){
       const result=(event.detail||'').split(' · ').find(line=>line&&!line.includes('기절'));
       if(result)text=result;
     }
-    if(event.kind==='attack')speaker=event.actor==='foe'?'foe':'hero';
+    if(event.kind==='attack'){
+      speaker=event.actor==='foe'?'foe':'hero';
+      const message=BattlePacing.beforeMoveAt(event,now)||BattlePacing.afterMoveAt(event,now);if(message){text=message.text;speaker=message.actor;}
+    }
     else if(event.kind==='switch'){
       speaker='hero';
       if(now-event.at>=650||!event.reason){const incoming=BattlePacing.switchFrame(event,now).incoming;text=incoming?event.toName+', 너로 정했다!':event.fromName+(event.reason==='faint'?', 수고했어!':', 돌아와!');}
     }
     else if(event.kind==='encounter')speaker='foe';
     else if(event.kind==='faint'&&event.sides?.length===1)speaker=event.sides[0];
-    if(event.kind==='attack'&&now-event.at>=BattlePacing.actionTiming(event).healthAt){
+    if(event.kind==='attack'&&!event.afterMove?.length&&now-event.at>=BattlePacing.actionTiming(event).healthAt){
       const causes=BattlePacing.damageMessages(event);
       if(causes.length){text=causes.map(c=>c.text).join(' ');speaker=causes.every(c=>c.side===causes[0].side)?causes[0].side:'scene';}
     }
@@ -175,7 +178,7 @@ function renderPartyStatus(s){
     b.classList.toggle('empty',p.empty);b.firstChild.hidden=!!p.empty;
     if(p.empty){b.dataset.id='';b.disabled=false;b.title=(i+1)+'번 빈칸 · 도감에서 동료 배치';b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed','false');b.classList.remove('queued','fainted');b.firstChild.removeAttribute('src');b.lastChild.textContent='빈칸';return;}
     const fainted=p.fainted&&!(p.selected&&playingMove?.heroBefore&&moveHealth('hero',playingMove.hero||s.hero).currentHp>0);
-    const queued=s.pendingActions.some(a=>a.kind==='select'&&a.uid===p.uid);b.classList.toggle('queued',queued);b.dataset.id=p.uid;b.disabled=queued;b.title=p.name+' '+levelText(p)+(queued?' · 출전 예약됨':p.boarded?' · 키우미집에서 데려온 뒤 출전 예약':fainted?' · 배틀 종료 후 회복·출전 예약':' · 클릭하여 출전');
+    const queued=s.pendingActions.find(a=>a.kind==='select'&&a.uid===p.uid);b.classList.toggle('queued',!!queued);b.dataset.id=p.uid;b.disabled=!!queued;b.title=p.name+' '+levelText(p)+(queued?' · 출전 예약 · '+queued.reason:p.boarded?' · 키우미집에서 데려온 뒤 출전 예약':fainted?' · 배틀 종료 후 회복·출전 예약':' · 클릭하여 출전');
     b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed',String(p.selected));b.classList.toggle('fainted',fainted);
     const img=b.firstChild;if(img.getAttribute('src')!=='assets/'+p.id+'.gif')img.src='assets/'+p.id+'.gif';b.lastChild.textContent=queued?'예약':p.boarded?'맡김':fainted?'기절':levelText(p);
   });
@@ -189,7 +192,7 @@ window.buddy.onState(s=>{
   $('xp-bar').style.width=s.progress*100+'%';$('evolution').textContent=s.evolution.some(e=>e.automatic&&e.ready)?'자동진화 대기 · 배틀 종료 후':s.evolution.some(e=>e.ready)?'진화 가능 · 도감에서 확인':'';
   const boost=s.experienceBoost,pct=boost.percent.toLocaleString('ko-KR',{maximumFractionDigits:2});
   $('xp-boost').textContent='BOOST +'+pct+'%';$('xp-boost').title='누적 도감 '+boost.count+'종 · 1종당 경험치 +1% · 시즌이 바뀌어도 유지';
-  $('status').textContent=s.notice||(s.pendingActions.length?'행동 '+s.pendingActions.length+'개 예약 · '+s.pendingActions[0].name:s.pendingChallenge?s.pendingChallenge.name+' 도전 예약 · 배틀 종료 후 시작':s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.phase==='working'?'Codex 작업과 함께 모험 중':s.workTokens>=250?'작업의 여운으로 모험을 이어가는 중':s.phase==='unknown'?'Codex 작업 상태를 확인하는 중':s.phase==='done'?'작업 끝! 모험 기록을 확인해 봐':'다음 코딩을 기다리는 중');
+  $('status').textContent=s.notice||(s.pendingActions.length?s.pendingActions[0].name+' 예약 · '+s.pendingActions[0].reason:s.pendingChallenge?s.pendingChallenge.name+' 도전 예약 · 배틀 종료 후 시작':s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.phase==='working'?'Codex 작업과 함께 모험 중':s.workTokens>=250?'작업의 여운으로 모험을 이어가는 중':s.phase==='unknown'?'Codex 작업 상태를 확인하는 중':s.phase==='done'?'작업 끝! 모험 기록을 확인해 봐':'다음 코딩을 기다리는 중');
   $('mode-tag').textContent=s.demo?'DEMO':'LIVE';
   $('connection-label').textContent=s.demo?'미리보기':s.source.connected?'Codex 연결됨':'Codex 기다리는 중';
   $('connection-label').parentElement.classList.toggle('live',s.source.connected&&!s.demo);$('connection-label').title=s.demo?'미리보기 · 경험치 별도':s.source.remoteConnected?'원격 PC '+s.source.remoteConnected+'대 연결됨':s.source.error||'로컬 작업 상태를 읽어요 · 원격 연동은 설정에서 추가할 수 있어요';

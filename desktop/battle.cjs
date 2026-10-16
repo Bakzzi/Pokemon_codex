@@ -184,7 +184,7 @@ function damageCause(line,who){
   const text=id==='confusion'?subject+' 혼란에 빠져 자신을 공격했다!':id==='recoil'?subject+' 반동으로 피해를 입었다!':subject+' '+cause+' 때문에 피해를 입었다!';
   return {side:parts[2].startsWith('p2')?'foe':'hero',cause,text};
 }
-function protocol(sim,lines){
+function protocol(sim,lines,records=false){
   lines=protocolLines(lines);
   const who=ref=>{const name=(ref||'').split(': ')[1],mon=sim.sides.flatMap(s=>s.pokemon).find(p=>p.name===name);return (mon&&species.get(mon.baseSpecies.num)?.name)||(ref?.startsWith('p2')?'상대 포켓몬':'우리 포켓몬');};
   const output=[],seen=new Set();let used=null;
@@ -227,9 +227,9 @@ function protocol(sim,lines){
     if(kind==='-damage')text=damageCause(line,who)?.text||'';
     if(parts.includes('[silent]')&&!/^perish[0-3]$/.test(id))text='';
     const via=line.match(/\[from\] ability: ([^|]+)/)?.[1],ability=via&&effectName(via);if(ability&&text)text+=' (특성 '+ability+')';
-    if(text&&!output.includes(text))output.push(text);
+    if(text&&!output.some(message=>message.text===text))output.push({text,actor:a?.startsWith('p2')?'foe':a?.startsWith('p1')?'hero':'scene',kind});
   }
-  return output;
+  return records?output:output.map(message=>message.text);
 }
 function sync(game,b,sim){
   for(const mon of sim.p1.pokemon)b.party[Number(mon.name.slice(1))]=readMon(mon);
@@ -279,17 +279,43 @@ function step(game,b){
   }
   const lines=protocolLines(sim.log.slice(start)),presentation=movePresentation(lines),actor=presentation.actor||'hero',changed=heroBefore!==sim.p1.active[0].name;
   if(changed)b.aiLastSwitch=sim.turn;
+  // Native wake/thaw/confusion recovery precedes the move. Keep these separate
+  // from move results so playback cannot announce the attack before recovery.
+  const firstMove=lines.findIndex(line=>line.startsWith('|move|'));
+  const beforeMove=firstMove<0?[]:lines.slice(0,firstMove).flatMap(line=>protocol(sim,[line]).map(text=>({
+    text,actor:line.split('|')[2]?.startsWith('p2')?'foe':'hero',
+    ...(line.startsWith('|-curestatus|')?{curedStatus:statusNames[line.split('|')[3]]}:{}),
+  })));
+  const afterMove=firstMove<0?[]:protocol(sim,lines.slice(firstMove),true).filter(message=>!['move','faint'].includes(message.kind));
   const messages=protocol(sim,lines);sync(game,b,sim);persist(b,sim);
   const causeName=ref=>{const mon=sim.sides.flatMap(s=>s.pokemon).find(p=>p.name===ref.split(': ')[1]);return species.get(mon?.baseSpecies.num)?.name||'포켓몬';};
   const damageCauses=[...new Map(lines.filter(line=>line.startsWith('|-damage|')).map(line=>damageCause(line,causeName)).filter(Boolean).map(c=>[c.side+':'+c.cause,c])).values()];
-  return {...presentation,actor,id:actor==='hero'?b.party[game.data.activeId].id:b.foe.id,damage:Math.max(0,actor==='hero'?foeBefore-sim.p2.active[0].hp:heroHpBefore-sim.p1.active[0].hp),damageCauses,lines:messages,switched:changed,ended:sim.ended};
+  return {...presentation,actor,id:actor==='hero'?b.party[game.data.activeId].id:b.foe.id,damage:Math.max(0,actor==='hero'?foeBefore-sim.p2.active[0].hp:heroHpBefore-sim.p1.active[0].hp),damageCauses,beforeMove,afterMove,lines:messages,switched:changed,ended:sim.ended};
 }
-function canSwitch(game,b,uid){
+function switchWait(game,b,uid){
   const sim=cache.get(b)||(b.sim?engine(game,b):null);
-  if(!sim)return true;
-  if(sim.ended)return false;
-  const target=sim.p1.pokemon.find(p=>p.name==='u'+uid);if(target&&(!target.hp||target.fainted))return false;
-  const current=sim.p1.active[0];return !current.hp||!current.trapped;
+  if(!sim)return null;
+  if(sim.ended)return 'ended';
+  const target=sim.p1.pokemon.find(p=>p.name==='u'+uid);if(target&&(!target.hp||target.fainted))return 'fainted';
+  const current=sim.p1.active[0];if(!current.hp)return null;
+  if(current.trapped)return 'trapped';
+  // Both choices are committed together. A click between the two attacks is
+  // for the next choice boundary, not an extra switch inserted into this turn.
+  if(!sim.requestState&&!sim.queue.willSwitch(current))return 'turn';
+  return null;
+}
+function canSwitch(game,b,uid){return !switchWait(game,b,uid);}
+function addPartner(game,b,uid){
+  if(b.party[uid])return;
+  const sim=engine(game,b),saved=game.memberCombatant(game.data.owned[uid]);
+  const set=setFor(saved,'u'+uid),mon=sim.p1.addPokemon(set);
+  if(!mon)throw new Error('The native party is full');
+  sim.p1.team.push(set);
+  restoreMon(mon,saved);b.party[uid]=readMon(mon);
+  // Extend a wild team without rebuilding the opponent, weather, RNG, PP or
+  // committed turn. This also covers a partner returning from the nursery.
+  if(sim.requestState)sim.makeRequest(sim.requestState);
+  persist(b,sim);
 }
 function invalidate(b){if(!b)return;cache.delete(b);delete b.sim;delete b.simBoss;}
 function catchValue(catchRate,hp,maxHp,status){
@@ -302,4 +328,4 @@ function tryCatch(rate,hp,maxHp,status,random=Math.random){
   while(checks<4&&Math.floor(random()*65536)<threshold)checks++;
   return {caught:checks===4,shakes:Math.min(checks,3),a};
 }
-module.exports={protocol,protocolLines,bestPartner,matchupScore,combatant,abilityFor,step,canSwitch,invalidate,catchValue,tryCatch,engine,readMon,scoreMove,movePresentation,dex};
+module.exports={protocol,protocolLines,bestPartner,matchupScore,combatant,abilityFor,step,canSwitch,switchWait,addPartner,invalidate,catchValue,tryCatch,engine,readMon,scoreMove,movePresentation,dex};
