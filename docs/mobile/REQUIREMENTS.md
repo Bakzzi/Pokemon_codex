@@ -6,7 +6,7 @@
 
 - 안드로이드 앱만 개발한다. 아이폰 지원은 범위에서 제외한다.
 - 기존 배틀·포획·육성·도감 기능을 모바일에서 사용할 수 있게 한다.
-- 모험 진행에 AI 에이전트의 토큰 사용량을 요구하지 않는다. 대신 사용할 진행 방식은 사용자와 정한다.
+- 모험 진행은 휴대폰 실사용 시간과 걸음 수를 함께 반영한다. AI 에이전트의 토큰 사용량을 요구하지 않는다.
 - 자동 업데이트를 필수 기능으로 포함한다. 안드로이드는 자동 확인·다운로드·설치까지 기본 흐름으로 삼으며, 매번 설치 확인 버튼을 누르는 방식을 기본안으로 잡지 않는다.
 
 ## 업데이트 요구사항
@@ -17,6 +17,17 @@
 - 내려받기나 적용이 실패해도 기존 정상 버전과 저장된 진행을 보존한다.
 - 운영체제가 요구하는 설치 권한과 승인 상태를 존중한다. 모든 안드로이드 버전과 기기에서 무조건 무인 설치가 된다고 가정하지 않는다.
 - 안드로이드는 GitHub의 APK를 앱이 받아 자기 자신을 업데이트하는 경로를 기준으로 설계한다. 스토어 등록을 전제로 하지 않는다.
+
+## 활동으로 모험 진행
+
+- 휴대폰 실사용 시간과 걸음 수를 각각 적립해 모험 진행에 합산한다. 두 조건을 동시에 만족해야 하는 방식이 아니다.
+- 휴대폰 사용 시간은 화면이 켜지고 잠금이 풀린 상태의 실제 사용 구간을 기준으로 한다. 화면을 끈 채 재생되는 음악이나 잠금 화면, AOD 대기 시간은 사용 시간으로 적립하지 않는다.
+- 이 게임 앱 자체를 켜 둔 시간은 사용 시간 적립에서 제외한다. 다른 앱들의 전면 사용 구간이 겹쳐도 같은 시간을 두 번 더하지 않는다.
+- 사용 시간 접근과 걸음 수 관련 권한은 최초 설정에서 안내하고 사용자가 허용한 범위만 읽는다. 한쪽 권한만 허용했거나 걸음 수를 제공하지 않는 기기에서도 읽을 수 있는 활동으로 모험을 진행한다.
+- 앱이 닫혀 있거나 화면이 꺼져 있던 동안의 활동은 운영체제에서 제공하는 기록을 다시 읽어 반영한다. 기록되지 않은 활동을 임의로 추정하지 않는다.
+- 이미 적립한 활동을 재실행·재조회·업데이트 뒤 다시 지급하지 않는다. 걸음 센서의 재부팅 초기화와 여러 걸음 기록 출처의 중복을 처리한다.
+- 게임 진행에는 시간과 걸음 수의 숫자만 사용한다. 다른 앱에서 본 내용이나 입력 내용을 수집하지 않으며 활동 기록을 외부로 전송하지 않는다.
+- 환산 비율은 아직 미정이다. 초기 제안은 폰 실사용 1분 또는 100걸음당 모험 행동 1회이며, 사용자 답변 전에는 확정값으로 구현하지 않는다.
 
 ## 안드로이드 자동 설치
 
@@ -30,6 +41,10 @@
 
 ## 확인한 플랫폼 문서
 
+- [Android 사용 통계](https://developer.android.com/reference/android/app/usage/UsageStatsManager): 사용자 허용을 받아 앱 사용 기록을 읽는 인터페이스다.
+- [Android 사용 이벤트](https://developer.android.com/reference/android/app/usage/UsageEvents.Event): 앱 전면 상태와 화면·잠금 상태 이벤트를 구분할 수 있다.
+- [Android 걸음 센서](https://developer.android.com/develop/sensors-and-location/sensors/sensors_motion#sensors-motion-stepcounter): 누적 걸음 값과 활동 인식 권한을 제공하며 재부팅 등 센서 조건을 고려해야 한다.
+- [Health Connect 걸음 집계](https://developer.android.com/health-and-fitness/health-connect/aggregate-data): 지원 기기에서 여러 출처의 중복을 처리한 걸음 수를 읽을 수 있다. 백그라운드 읽기는 별도 권한과 기능 지원을 확인한다.
 - [Android 인앱 업데이트](https://developer.android.com/guide/playcore/in-app-updates): Google Play의 업데이트 흐름이며 사용자 승인 과정이 있다.
 - [Android 설치 세션의 사용자 동작 요구](https://developer.android.com/reference/android/content/pm/PackageInstaller.SessionParams#setRequireUserAction(int)): Android 12 이상에서 조건을 충족한 자가 업데이트는 사용자 동작 없이 진행할 수 있다. 설치 세션의 승인 대기 결과도 처리해야 한다.
 - [사용자 동작 없는 업데이트 권한](https://developer.android.com/reference/android/Manifest.permission#UPDATE_PACKAGES_WITHOUT_USER_ACTION): API 31부터 제공하는 일반 권한이다.
