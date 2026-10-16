@@ -129,11 +129,14 @@ test('saved native queue, HP, PP and statuses resume without repeating the first
   assert.deepEqual(a.data.battle?.foe,b.data.battle?.foe);assert.deepEqual(a.data.battle?.party,b.data.battle?.party);
   assert.equal(a.data.workTokens,g.data.workTokens-1500);
 });
-test('summary persists beyond the detail retention cap, and only explicit acknowledgement resets it',()=>{
+test('season summary survives detail retention, legacy checkpoints and reopening',()=>{
   let g=new Game({},now);g.log('꼬렛 포획','catch',19,now+1);journal.increment(g.data,'wins',40);journal.increment(g.data,'xp',1000);
   for(let i=0;i<700;i++)g.log('공격 기록','battle',25,now+i+2);
   let s=g.panelState(now+1000);assert.equal(s.summary.counts.catch,1);assert.equal(s.summary.counts.wins,40);assert.equal(s.summary.highlights.length,1);assert.equal(g.data.battleJournal.length,300);
-  g=new Game(g.data,now+1001);assert.equal(g.panelState(now+1002).summary.counts.xp,1000);
-  g.acknowledgeJournal(now+1003);assert.equal(g.panelState(now+1004).summary.counts.wins,0);assert.ok(g.data.journal.length);
+  const startedAt=g.data.adventure.startedAt;
+  g.data.adventure.checkpoint={at:now+1000,totals:{...g.data.adventure.totals}};
+  g=new Game(g.data,now+1001);s=g.panelState(now+1002).summary;
+  assert.equal(s.counts.xp,1000);assert.equal(s.counts.wins,40);assert.equal(s.counts.catch,1);
+  assert.equal(s.since,startedAt);assert.equal(s.highlights.length,1);assert.ok(g.data.journal.length);
   g.log('이브이 부화','hatch',133,now+1005);assert.equal(g.panelState(now+1006).summary.counts.hatch,1);
 });

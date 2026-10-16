@@ -259,19 +259,17 @@ function journalRows(entries){
 for(const b of document.querySelectorAll('[data-journal-tab]'))b.onclick=()=>{
   journalTab=b.dataset.journalTab;journalSignature='';renderJournal();
 };
-$('journal-ack').onclick=()=>window.buddy.action('journal-ack');
 function renderJournal(){
   if(!state)return;
   const signature=JSON.stringify([state.journal,state.summary,journalTab]);if(signature===journalSignature)return;journalSignature=signature;
   for(const b of document.querySelectorAll('[data-journal-tab]'))b.setAttribute('aria-selected',String(b.dataset.journalTab===journalTab));
   $('journal-summary').hidden=journalTab!=='summary';$('journal-detail').hidden=journalTab!=='detail';
   const s=state.summary,c=s.counts;
-  $('summary-since').textContent=(s.first?'기록을 시작한 뒤':'지난 확인 이후')+' · '+new Date(s.since).toLocaleString('ko-KR');
+  $('summary-since').textContent='이번 시즌 · '+new Date(s.since).toLocaleString('ko-KR');
   const stats=[['wins','배틀 승리'],['catch','새로운 포획'],['level','레벨 상승'],['evolution','진화'],['hatch','부화'],['xp','얻은 경험치']];
   $('summary-stats').replaceChildren(...stats.map(([key,label])=>{const box=node('div','summary-stat');box.append(node('b','',(c[key]||0).toLocaleString('ko-KR')),node('span','',label));return box;}));
   $('summary-note').textContent='새로운 발견 '+(c.encounter||0)+' · 알 발견 '+(c.egg||0)+' · 관장·리그 승리 '+(c.badge||0)+' · 스토리 승리 '+(c.story||0)+' · 도구 발견 '+((c.item||0)+(c.device||0))+' · 패배 '+(c.loss||0);
-  $('summary-highlights').replaceChildren(...(s.highlights.length?journalRows(s.highlights):[node('p','muted','새로운 모험을 기다리고 있어요. 확인하기 전까지 결과를 모아 둘게요.')]));
-  $('journal-ack').disabled=!Object.values(c).some(v=>v>0);
+  $('summary-highlights').replaceChildren(...(s.highlights.length?journalRows(s.highlights):[node('p','muted','아직 기억에 남는 모험이 없어요.')]));
   $('journal-list').replaceChildren(...(state.journal.length?journalRows(state.journal):[node('p','muted','첫 모험을 기다리고 있어요. Codex에서 작업하면 기록이 쌓여요.')]));
 }
 
