@@ -66,7 +66,7 @@ class Game {
     // Keep existing Gen II progress available; old champions with no Gen II progress choose now.
     if(typeof this.data.johtoUnlocked!=='boolean')this.data.johtoUnlocked=!!this.data.champion&&hasJohtoProgress(this.data);
     this.data.johtoDeferred=!!this.data.johtoDeferred&&!this.data.johtoUnlocked;
-    this.data.captureReservations=Object.fromEntries(Object.entries(this.data.captureReservations||{}).filter(([id,p])=>species.has(Number(id))&&!!this.data.caught[id]&&Number.isInteger(p?.remaining)&&p.remaining>0&&p.remaining<=99&&validCount(p.revision)));
+    this.data.captureReservations=Object.fromEntries(Object.entries(this.data.captureReservations||{}).filter(([id,p])=>species.has(Number(id))&&!!this.data.caught[id]&&Number.isInteger(p?.remaining)&&p.remaining>0&&p.remaining<=99&&validCount(p.revision)).map(([id,p])=>[id,{remaining:1,revision:p.revision}]));
     this.data.captureReservationSerial=Math.max(validCount(this.data.captureReservationSerial)?this.data.captureReservationSerial:0,...Object.values(this.data.captureReservations).map(p=>p.revision));
     for(const b of [this.data.battle,this.data.suspendedWild])if(b?.kind==='wild')captureCounts(b);
     const queued=this.data.pendingChallenge;
@@ -137,7 +137,7 @@ class Game {
   canReserveCapture(id){const p=species.get(id);return !!p&&!!this.data.caught[id]&&p.generation<=this.maxGeneration()&&(id===143||wildEligible(p,this.maxGeneration(),100));}
   captureRequested(id){return !this.registeredThisSeason(id)||(this.data.captureReservations?.[id]?.remaining||0)>0;}
   reserveCapture(id,count,now=Date.now()){
-    if(!Number.isSafeInteger(id)||!Number.isInteger(count)||count<0||count>99)return false;
+    if(!Number.isSafeInteger(id)||count!==0&&count!==1)return false;
     this.data.captureReservations ||= {};
     if(count===0){if(!this.data.captureReservations[id])return false;delete this.data.captureReservations[id];}
     else{
@@ -145,7 +145,7 @@ class Game {
       this.data.captureReservationSerial=(this.data.captureReservationSerial||0)+1;
       this.data.captureReservations[id]={remaining:count,revision:this.data.captureReservationSerial};
     }
-    this.log(species.get(id).name+(count?' · 추가 포획 예약 '+count+'마리':' · 추가 포획 예약 취소'),'collection',id,now);return true;
+    this.log(species.get(id).name+(count?' · 만나면 포획 예약':' · 포획 예약 취소'),'collection',id,now);return true;
   }
   seasonDue(now){return this.data.season.key<monthOf(now).key;}
   resetSeason(now){

@@ -1,7 +1,7 @@
 'use strict';
 const $=id=>document.getElementById(id),node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;};
 let journalTab='summary';
-const travelSelection=new Set(),captureDraft=new Map();
+const travelSelection=new Set();
 let state=null,selected=25,memberUid=null,nurserySignature='',tab=new URLSearchParams(location.search).get('tab')||'collection',dexSignature='',detailSignature='',bossSignature='',journalSignature='',storySignature='';
 const img=(id,cls='')=>{const e=node('img',cls);e.src='assets/'+id+'.gif';e.alt='';return e;};
 const levelText=p=>'Lv.'+p.level+' '+(p.level>=100?'MAX':p.expPercent+'%');
@@ -81,11 +81,9 @@ function renderDex(){
   p.acquisition.routes.forEach((r,i)=>{const row=node('p','');row.append(node('b','',(i?'또는 ':'')+(r.kind==='evolution'&&r.special?'특수진화':labels[r.kind])),document.createTextNode(' · '+r.text));hints.append(row);if(r.note)hints.append(node(r.kind==='wild'?'p':'small','',r.note));});
   if(p.acquisition.note)hints.append(node('small','',p.acquisition.note));root.append(hints);
   if(p.caught&&p.canReserveCapture){
-    const box=node('section','capture-reservation'),label=node('label','','추가 포획 예약'),quantity=node('input'),reserve=node('button','',p.captureReserved?'예약 변경':'만나면 포획하기');
-    quantity.type='number';quantity.min=1;quantity.max=99;quantity.step=1;quantity.required=true;quantity.value=captureDraft.get(p.id)??(p.captureReserved||1);quantity.setAttribute('aria-label','추가 포획할 마릿수');quantity.oninput=()=>captureDraft.set(p.id,quantity.value);
-    const amount=node('span','capture-amount');amount.append(quantity,document.createTextNode('마리'));label.append(amount);reserve.dataset.captureReserve=p.id;reserve.onclick=()=>{if(!quantity.reportValidity())return;captureDraft.delete(p.id);window.buddy.action('capture-reserve',{id:p.id,count:Number(quantity.value)});};
-    box.append(label,node('p','muted',p.captureReserved?'남은 '+p.captureReserved+'마리 · 성공할 때만 예약 수가 줄어요.':'다시 만나면 자동으로 포획을 시도해요. 출현 조건은 그대로예요.'),reserve);
-    if(p.captureReserved){const cancel=node('button','','예약 취소');cancel.dataset.captureCancel=p.id;cancel.onclick=()=>{captureDraft.delete(p.id);window.buddy.action('capture-cancel',p.id);};box.append(cancel);}root.append(box);
+    const box=node('section','capture-reservation'),reserve=node('button','',p.captureReserved?'포획 예약 취소':'만나면 포획하기');
+    reserve.dataset.captureReserve=p.id;reserve.setAttribute('aria-pressed',String(!!p.captureReserved));reserve.onclick=()=>window.buddy.action(p.captureReserved?'capture-cancel':'capture-reserve',p.id);
+    box.append(reserve,node('p','muted','만나면 자동으로 포획을 시도해요.'));root.append(box);
   }
   if(!p.owned){
     if(p.caught)root.append(node('p','muted','도감 기록은 남아 있어요. '+(p.seasonCaught?'이번 시즌에 등록한 종이에요.':p.acquisition.wildAllowed?'이번 시즌에는 다시 포획할 수 있어요.':'위 획득 경로로 동료를 다시 얻을 수 있어요.')));
