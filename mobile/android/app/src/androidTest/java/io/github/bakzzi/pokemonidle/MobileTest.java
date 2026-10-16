@@ -26,6 +26,25 @@ public final class MobileTest extends Instrumentation {
         throw new AssertionError("Game failed to initialize");
     }
     private String readSave()throws Exception{try(InputStream in=new FileInputStream(new File(getTargetContext().getFilesDir(),"adventure.json"));ByteArrayOutputStream out=new ByteArrayOutputStream()){byte[] b=new byte[4096];for(int n;(n=in.read(b))!=-1;)out.write(b,0,n);return out.toString("UTF-8");}}
+    private String checkInsets()throws Exception{
+        String[] geometry={null};Throwable[] failure={null};
+        runOnMainSync(()->{
+            try{
+            android.view.View parent=(android.view.View)web.getParent();
+            android.view.WindowInsets insets=parent.getRootWindowInsets();
+            require(insets!=null,"Missing window insets");
+            android.graphics.Insets bars=insets.getInsets(android.view.WindowInsets.Type.systemBars()|android.view.WindowInsets.Type.displayCutout()|android.view.WindowInsets.Type.ime());
+            int[] screen=new int[2];parent.getLocationOnScreen(screen);int[] position=new int[2];web.getLocationOnScreen(position);
+            require(web.getTop()>=bars.top&&web.getLeft()>=bars.left,"Web content intersects status bar or cutout");
+            require(web.getRight()<=parent.getWidth()-bars.right&&web.getBottom()<=parent.getHeight()-bars.bottom,"Web content intersects navigation bar or keyboard");
+            require(web.getPaddingTop()==0&&web.getPaddingBottom()==0,"Insets applied twice inside WebView");
+            geometry[0]="insets="+bars+", web="+web.getLeft()+","+web.getTop()+","+web.getRight()+","+web.getBottom()+", parent="+parent.getWidth()+"x"+parent.getHeight()+", screen="+position[0]+","+position[1];
+            }catch(Throwable e){failure[0]=e;}
+        });
+        if(failure[0]!=null)throw new AssertionError(failure[0]);
+        require("true".equals(js("(()=>{const h=document.querySelector('.app-header').getBoundingClientRect(),b=document.getElementById('settings-open').getBoundingClientRect();return h.top>=0&&b.top>=h.top&&b.bottom<=h.bottom&&b.right<=innerWidth&&document.documentElement.scrollWidth<=innerWidth})()")),"Header or settings button is clipped");
+        return geometry[0];
+    }
     @Override public void onStart(){
         Bundle result=new Bundle();
         try{
@@ -33,6 +52,17 @@ public final class MobileTest extends Instrumentation {
             Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);
             if("inspect".equals(arguments.getString("mode"))){Thread.sleep(5000);result.putString("diagnostic",js("(()=>{try{return JSON.stringify({document:document.readyState,ready:typeof ready,game:typeof game,active:typeof active,phase:typeof active!=='undefined'?active:null,party:document.getElementById('battle')?.contentDocument.querySelectorAll('#party button').length,call:(()=>{try{window.mobileLifecycle(true);return 'ok'}catch(e){return e.stack}})()})}catch(e){return e.stack}})()"));finish(Activity.RESULT_OK,result);return;}
             waitReady();Thread.sleep(1500);
+            if("insets".equals(arguments.getString("mode"))){
+                result.putString("geometry",checkInsets());
+                js("document.getElementById('settings-open').click()");
+                require("true".equals(js("(()=>{const d=document.getElementById('settings'),r=d.getBoundingClientRect();return d.open&&r.top>=0&&r.bottom<=innerHeight&&r.left>=0&&r.right<=innerWidth})()")),"Settings dialog intersects system UI");
+                js("document.getElementById('settings-close').click();openPanel('collection')");
+                require("true".equals(js("!document.getElementById('panel-wrap').hidden&&document.getElementById('back').getBoundingClientRect().top>=0")),"Panel back button intersects status bar");
+                js("back()");
+                File screenshot=new File(getTargetContext().getExternalFilesDir(null),"insets.png");
+                try(OutputStream out=new FileOutputStream(screenshot)){getUiAutomation().takeScreenshot().compress(android.graphics.Bitmap.CompressFormat.PNG,100,out);}
+                result.putString("screenshot",screenshot.getAbsolutePath());result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("preserved".equals(arguments.getString("mode"))){
                 JSONObject save=new JSONObject(readSave());require(save.getJSONObject("mobile").getLong("consumed")>=1000,"Consumed step cursor lost");require(getTargetContext().getSharedPreferences("verify",0).getString("marker","").equals("preserved"),"Native data lost");result.putString("preserved","passed");
             }else{

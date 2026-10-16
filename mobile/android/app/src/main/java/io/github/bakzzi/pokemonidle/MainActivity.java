@@ -9,6 +9,9 @@ import android.os.*;
 import android.provider.Settings;
 import android.util.AtomicFile;
 import android.webkit.*;
+import android.view.ViewGroup;
+import android.view.WindowInsets;
+import android.widget.FrameLayout;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import org.json.*;
@@ -22,11 +25,20 @@ public final class MainActivity extends Activity {
     private Updater updater;
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
+        getWindow().setDecorFitsSystemWindows(false);
         getWindow().setStatusBarColor(0xff17231e);getWindow().setNavigationBarColor(0xff17231e);
         saveFile=new AtomicFile(new File(getFilesDir(),"adventure.json"));updater=new Updater(this);
-        web=new WebView(this);web.setBackgroundColor(0xff17231e);setContentView(web);
-        // API 35+ edge-to-edge: keep controls outside both system bars.
-        web.setOnApplyWindowInsetsListener((v,insets)->{android.graphics.Insets bars=insets.getInsets(android.view.WindowInsets.Type.systemBars()|android.view.WindowInsets.Type.displayCutout());v.setPadding(bars.left,bars.top,bars.right,bars.bottom);return insets;});
+        FrameLayout safeArea=new FrameLayout(this);safeArea.setBackgroundColor(0xff17231e);
+        web=new WebView(this);web.setBackgroundColor(0xff17231e);
+        safeArea.addView(web,new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
+        // Inset the WebView's actual bounds. WebView padding does not reliably move HTML.
+        // This is the only inset owner, including the keyboard and rotated camera cutouts.
+        safeArea.setOnApplyWindowInsetsListener((v,insets)->{
+            android.graphics.Insets bars=insets.getInsets(WindowInsets.Type.systemBars()|WindowInsets.Type.displayCutout()|WindowInsets.Type.ime());
+            v.setPadding(bars.left,bars.top,bars.right,bars.bottom);
+            return WindowInsets.CONSUMED;
+        });
+        setContentView(safeArea);safeArea.requestApplyInsets();
         WebSettings settings=web.getSettings();settings.setJavaScriptEnabled(true);settings.setDomStorageEnabled(false);settings.setAllowFileAccess(false);settings.setAllowContentAccess(false);settings.setSupportMultipleWindows(false);settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);settings.setTextZoom(100);
         WebView.setWebContentsDebuggingEnabled((getApplicationInfo().flags&android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE)!=0);
         web.addJavascriptInterface(new Bridge(),"Android");
