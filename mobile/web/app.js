@@ -1,12 +1,12 @@
 'use strict';
 const $=id=>document.getElementById(id),native=window.Android;
-let saved,game,progression,active=false,catchingUp=false,ready=false,notice='',fatal=false,lastSave=0,panelTab='collection',nativeState={steps:0};
+let saved,game,progression,active=false,catchingUp=false,ready=false,notice='',fatal=false,lastSave=0,panelTab='collection',panelDetail=false,nativeState={steps:0};
 try{saved=JSON.parse(native.load());game=new MobileCore.Game(saved.game||{});progression=new MobileProgression(game,saved.mobile,MobileConfig.stepsPerAction);}catch(e){fatal=true;notice='저장을 읽지 못했어요. 기존 데이터는 보존돼요. 앱을 다시 열어 주세요.';$('app-notice').textContent=notice;native.reportError(String(e));}
 function save(){if(fatal)return false;const ok=native.save(JSON.stringify({format:1,game:game.data,mobile:progression.checkpoint(),savedAt:Date.now()}));if(!ok){fatal=true;active=false;notice='진행을 저장하지 못해 모험을 멈췄어요. 저장 공간을 확인해 주세요.';}lastSave=Date.now();return ok;}
 function snapshot(){return {...game.panelState(),phase:'working',source:{connected:true},compact:false,pinned:false,demo:false,notice,remote:{connections:[]}};}
 function publish(){if(fatal){$('app-notice').textContent=notice;return;}const s=snapshot();for(const id of ['battle','panel'])$(id).contentWindow.postMessage({type:'state',state:s},location.origin);$('app-notice').textContent=notice;}
-function openPanel(tab){panelTab=tab;$('adventure').hidden=true;$('panel-wrap').hidden=false;$('panel').contentWindow.postMessage({type:'tab',tab},location.origin);publish();}
-function back(){if($('settings').open){$('settings').close();return true;}if(!$('panel-wrap').hidden){$('adventure').hidden=false;$('panel-wrap').hidden=true;return true;}return false;}
+function openPanel(tab){panelTab=tab;panelDetail=false;$('back').textContent='‹ 모험으로';$('adventure').hidden=true;$('panel-wrap').hidden=false;$('panel').contentWindow.postMessage({type:'tab',tab},location.origin);publish();}
+function back(){if($('settings').open){$('settings').close();return true;}if(!$('panel-wrap').hidden){if(panelDetail){panelDetail=false;$('back').textContent='‹ 모험으로';$('panel').contentWindow.postMessage({type:'dex-back'},location.origin);return true;}$('adventure').hidden=false;$('panel-wrap').hidden=true;return true;}return false;}
 window.mobileBack=back;
 function action(action,value){
   if(fatal)return;
@@ -26,8 +26,15 @@ function action(action,value){
     save();publish();
   }catch(e){native.reportError(String(e));notice='이 행동을 처리하지 못했어요. 다시 선택해 주세요.';publish();}
 }
-window.addEventListener('message',e=>{if(e.origin!==location.origin||!['battle','panel'].some(id=>$(id).contentWindow===e.source))return;if(e.data.type==='ready'){publish();if(e.source===$('panel').contentWindow)e.source.postMessage({type:'tab',tab:panelTab},location.origin);}else if(e.data.type==='action')action(e.data.action,e.data.value);});
-function refreshNative(){nativeState=JSON.parse(native.status());$('sensor-status').textContent=nativeState.sensor;$('walk-status').textContent=nativeState.tracking?'돌아온 걸음 · '+nativeState.steps.toLocaleString('ko-KR')+'걸음':'화면을 켜 두고 함께 모험 중';$('walk-note').textContent=nativeState.tracking?'걸음 기록 중 · 앱을 꺼도 걸은 만큼 모험해요.':'설정에서 걸음 기록을 켜면 꺼 둔 동안에도 걸음이 쌓여요.';$('update-status').textContent=nativeState.update;$('update-confirm').hidden=!nativeState.pendingInstall;$('install-permission').hidden=nativeState.canInstall;$('update-check').disabled=!!nativeState.updateChecking||!!nativeState.installing;$('version').textContent='Android v'+(nativeState.versionName||MobileConfig.name);}
+window.addEventListener('message',e=>{if(e.origin!==location.origin||!['battle','panel'].some(id=>$(id).contentWindow===e.source))return;if(e.data.type==='ready'){publish();if(e.source===$('panel').contentWindow)e.source.postMessage({type:'tab',tab:panelTab},location.origin);}else if(e.data.type==='dex-view'&&e.source===$('panel').contentWindow){panelDetail=!!e.data.detail;$('back').textContent=panelDetail?'‹ 도감 목록':'‹ 모험으로';}else if(e.data.type==='action')action(e.data.action,e.data.value);});
+function refreshNative(){
+  nativeState=JSON.parse(native.status());
+  const toggle=$('steps-toggle');toggle.setAttribute('aria-checked',String(!!nativeState.stepsEnabled));toggle.disabled=!nativeState.sensorSupported&&!nativeState.stepsEnabled;$('steps-toggle-state').textContent=nativeState.stepsEnabled?'켜짐':'꺼짐';
+  $('sensor-status').textContent=nativeState.sensor;$('walk-status').textContent=nativeState.tracking?'돌아온 걸음 · '+nativeState.steps.toLocaleString('ko-KR')+'걸음':'화면을 켜 두고 함께 모험 중';
+  $('walk-note').textContent=nativeState.tracking?'걸음 기록 중 · 앱을 꺼도 걸은 만큼 모험해요.':'설정에서 걸음 기록을 켜면 꺼 둔 동안에도 걸음이 쌓여요.';
+  $('update-status').textContent=nativeState.update;$('update-confirm').hidden=!nativeState.pendingInstall;$('install-permission').hidden=nativeState.canInstall;
+  $('update-check').disabled=!!nativeState.updateChecking||!!nativeState.installing;$('version').textContent='Android v'+(nativeState.versionName||MobileConfig.name);
+}
 window.mobileLifecycle=function(visible){
   if(fatal)return;const now=Date.now();
   if(!visible){active=false;progression.pause(now);save();return;}
@@ -47,6 +54,6 @@ setInterval(()=>{
   try{refreshNative();if(!active||catchingUp||nativeState.installing)return;if(nativeState.updateReady&&nativeState.canInstall&&safeForUpdate()){if(save())native.installUpdate();return;}const changed=progression.live(Date.now());if(changed){save();publish();}else if(Date.now()-lastSave>15000)save();}catch(e){active=false;native.reportError(String(e));notice='모험을 잠시 멈췄어요. 앱을 다시 열어 주세요.';publish();}
 },250);
 $('back').onclick=back;$('settings-open').onclick=()=>{refreshNative();$('settings').showModal();};$('settings-close').onclick=()=>$('settings').close();
-$('steps-enable').onclick=()=>native.enableSteps();$('steps-disable').onclick=()=>{native.disableSteps();refreshNative();};$('install-permission').onclick=()=>native.allowUpdates();$('update-check').onclick=()=>{native.checkUpdate();refreshNative();};$('update-confirm').onclick=()=>{save();native.confirmUpdate();};$('version').textContent='Android v'+MobileConfig.name;
+$('steps-toggle').onclick=()=>{refreshNative();if(nativeState.stepsEnabled)native.disableSteps();else native.enableSteps();};$('install-permission').onclick=()=>native.allowUpdates();$('update-check').onclick=()=>{native.checkUpdate();refreshNative();};$('update-confirm').onclick=()=>{save();native.confirmUpdate();};$('version').textContent='Android v'+MobileConfig.name;
 function resize(){const w=$('battle-wrap').clientWidth,scale=w/380;$('battle').style.transform='scale('+scale+')';$('battle-wrap').style.height=500*scale+'px';}window.addEventListener('resize',resize);resize();
 if(!fatal){ready=true;native.ready();}

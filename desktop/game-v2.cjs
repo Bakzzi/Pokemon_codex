@@ -457,8 +457,13 @@ class Game {
     }
     if(!this.data.owned[id]||species.get(this.data.owned[id].id).generation>this.maxGeneration()||this.isBoarded(id))return false;
     const old=this.data.slots[slot],other=this.data.slots.indexOf(id);if(old===id)return true;
-    if(old===this.data.activeId){if(!this.select(id,now))return false;this.data.slots[slot]=id;if(other>=0)this.data.slots[other]=old;}
-    else {this.data.slots[slot]=id;if(other>=0)this.data.slots[other]=old;}return true;
+    if(old===this.data.activeId){
+      const positions=[...this.data.slots];
+      if(!this.select(id,now))return false;
+      // select() may fill an empty slot; placement owns the final positions.
+      this.data.slots=positions;
+    }
+    this.data.slots[slot]=id;if(other>=0)this.data.slots[other]=old;return true;
   }
   evolutions(id,now=Date.now()){
     const p=this.data.owned[id];if(!p)return [];

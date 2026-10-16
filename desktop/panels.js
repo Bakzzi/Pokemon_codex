@@ -2,7 +2,8 @@
 const $=id=>document.getElementById(id),node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;};
 let journalTab='summary';
 const travelSelection=new Set();
-let state=null,selected=25,memberUid=null,nurserySignature='',tab=new URLSearchParams(location.search).get('tab')||'collection',dexSignature='',detailSignature='',bossSignature='',journalSignature='',storySignature='';
+const mobilePanel=document.body.classList.contains('panel-frame');
+let state=null,selected=mobilePanel?null:25,memberUid=null,dexListScroll=0,nurserySignature='',tab=new URLSearchParams(location.search).get('tab')||'collection',dexSignature='',detailSignature='',bossSignature='',journalSignature='',storySignature='';
 const img=(id,cls='')=>{const e=node('img',cls);e.src='assets/'+id+'.gif';e.alt='';return e;};
 const levelText=p=>'Lv.'+p.level+' '+(p.level>=100?'MAX':p.expPercent+'%');
 const experienceText=p=>p.level>=100?'최고 레벨에 도달했어요.':'다음 레벨까지 '+(p.expRequired-p.expCurrent).toLocaleString('ko-KR')+' XP · '+p.expCurrent.toLocaleString('ko-KR')+' / '+p.expRequired.toLocaleString('ko-KR')+' XP';
@@ -17,6 +18,7 @@ const gymLocations={brock:'회색시티',misty:'블루시티',surge:'갈색시�
 const storyFaces={erika:[['erika.png',trainerFaces.erika]],'rocket-grunt':[['rocket-grunts.png',[433,238,0,112]]],'rocket-duo':[['james.png',[150,16,4,112]],['jessie.png',[197,32,10,112]]],'rocket-giovanni':[['giovanni.png',trainerFaces.giovanni]]};
 const completedDisclosures=new Map();
 function syncDisclosure(id,completed){
+  if(mobilePanel)return;
   if(completedDisclosures.get(id)===completed)return;
   completedDisclosures.set(id,completed);$(id).open=!completed;
 }
@@ -36,7 +38,16 @@ function storyArtwork(requirement){
   if(requirement.id==='erika')art.append(badgeImage(state.bosses[3],'rocket-badge'+(requirement.done?' earned':'')));
   return art;
 }
-function switchTab(value){tab=['collection','challenge','journal','daycare','connections'].includes(value)?value:'collection';for(const e of document.querySelectorAll('.page'))e.hidden=e.id!==tab;for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-selected',String(b.dataset.tab===tab));render();}
+function dexList(){selected=null;memberUid=null;detailSignature='';render();document.querySelector('.dex-layout').scrollTop=dexListScroll;}
+function switchTab(value){
+  tab=['collection','challenge','journal','daycare','connections'].includes(value)?value:'collection';
+  if(mobilePanel){
+    selected=null;memberUid=null;detailSignature='';dexListScroll=0;window.buddy.dexView(false);
+    if(tab==='challenge')for(const card of document.querySelectorAll('.mobile-challenge-card'))card.open=false;
+  }
+  for(const e of document.querySelectorAll('.page'))e.hidden=e.id!==tab;for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-selected',String(b.dataset.tab===tab));render();if(mobilePanel)$(tab).scrollTop=0;
+}
+if(mobilePanel)window.buddy.onDexBack(()=>{if(tab==='collection')dexList();});
 for(const b of document.querySelectorAll('[data-tab]'))b.onclick=()=>switchTab(b.dataset.tab);
 $('search').oninput=()=>{dexSignature='';render();};$('filter').onchange=()=>{dexSignature='';render();};
 $('league-start').onclick=()=>window.buddy.action('challenge',8);
@@ -47,6 +58,7 @@ $('device-withdraw').onclick=()=>window.buddy.action('device-learner',null);
 $('device-learner').onchange=()=>renderDevice();
 window.buddy.onTab(switchTab);
 function renderDex(){
+  if(mobilePanel){$('collection').classList.toggle('detail-open',selected!==null);window.buddy.dexView(selected!==null);}
   const signature=JSON.stringify([state.collection.map(p=>[p.id,p.seen,p.caught,p.owned,p.level,p.expPercent,p.count,p.captureReserved,p.acquisition.summary]),selected,$('filter').value,$('search').value]);
   if(signature!==dexSignature){
     dexSignature=signature;const filter=$('filter').value,query=$('search').value.trim().toLowerCase();
@@ -56,7 +68,7 @@ function renderDex(){
       const label=node('span','label');if(p.caught){const ball=node('i','ball');ball.title='포획 완료';label.append(ball);}label.append(document.createTextNode('No.'+p.id+' '+p.name));b.append(label,node('small','',p.owned?levelText(p)+(p.count>1?' · '+p.count+'마리':''):p.caught?'도감 등록 완료':p.seen?'발견':'미발견'));
       if(p.owned)b.querySelector('small').title=levelText(p)+(p.count>1?' · 가장 높은 레벨·경험치의 개체':'');
       if(!p.owned&&!p.caught){const hint=b.querySelector('small');hint.textContent=p.acquisition.summary;hint.title=p.acquisition.summary;}
-      b.onclick=()=>{selected=p.id;detailSignature='';render();};return b;
+      b.onclick=()=>{if(mobilePanel)dexListScroll=document.querySelector('.dex-layout').scrollTop;selected=p.id;detailSignature='';render();if(mobilePanel){document.querySelector('.dex-layout').scrollTop=0;const heading=$('detail').querySelector('h2');heading.tabIndex=-1;heading.focus({preventScroll:true});}};return b;
     });$('dex-grid').replaceChildren(...cards);
   }
   const p=state.collection.find(p=>p.id===selected);if(!p)return;

@@ -3,6 +3,8 @@
 window.buddy={
   onState(fn){window.addEventListener('message',e=>{if(e.origin===location.origin&&e.source===parent&&e.data.type==='state')fn(e.data.state);});parent.postMessage({type:'ready'},location.origin);},
   onTab(fn){window.addEventListener('message',e=>{if(e.origin===location.origin&&e.source===parent&&e.data.type==='tab')fn(e.data.tab);});},
+  onDexBack(fn){window.addEventListener('message',e=>{if(e.origin===location.origin&&e.source===parent&&e.data.type==='dex-back')fn();});},
+  dexView(detail){parent.postMessage({type:'dex-view',detail},location.origin);},
   onKeyFile(){},
   action(action,value){parent.postMessage({type:'action',action,value},location.origin);}
 };

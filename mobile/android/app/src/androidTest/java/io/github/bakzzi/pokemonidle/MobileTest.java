@@ -26,6 +26,19 @@ public final class MobileTest extends Instrumentation {
         throw new AssertionError("Game failed to initialize");
     }
     private String readSave()throws Exception{try(InputStream in=new FileInputStream(new File(getTargetContext().getFilesDir(),"adventure.json"));ByteArrayOutputStream out=new ByteArrayOutputStream()){byte[] b=new byte[4096];for(int n;(n=in.read(b))!=-1;)out.write(b,0,n);return out.toString("UTF-8");}}
+    private void screenshot(String name)throws Exception{
+        try(OutputStream out=new FileOutputStream(new File(getTargetContext().getExternalFilesDir(null),name))){getUiAutomation().takeScreenshot().compress(android.graphics.Bitmap.CompressFormat.PNG,100,out);}
+    }
+    private String layoutChecks()throws Exception{
+        try(InputStream in=getContext().getAssets().open("ui-layout.js");ByteArrayOutputStream out=new ByteArrayOutputStream()){
+            byte[] bytes=new byte[4096];for(int n;(n=in.read(bytes))!=-1;)out.write(bytes,0,n);js(out.toString("UTF-8"));
+        }
+        for(int i=0;i<200;i++){
+            String error=js("globalThis.layoutError||''");require("\"\"".equals(error),"Layout check: "+error);
+            if("true".equals(js("!!globalThis.layoutResult")))return js("JSON.stringify(globalThis.layoutResult)");
+            Thread.sleep(100);
+        }throw new AssertionError("Layout check timed out");
+    }
     private String checkInsets()throws Exception{
         String[] geometry={null};Throwable[] failure={null};
         runOnMainSync(()->{
@@ -49,6 +62,9 @@ public final class MobileTest extends Instrumentation {
         Bundle result=new Bundle();
         try{
             if("update-checks".equals(arguments.getString("mode"))){finish(Activity.RESULT_OK,UpdateChecks.run(getTargetContext()));return;}
+            if("update-checkpoint".equals(arguments.getString("mode"))){
+                File file=new File(getTargetContext().getFilesDir(),"adventure.json");require(file.isFile(),"No saved adventure to checkpoint");getTargetContext().getSharedPreferences("verify",0).edit().putString("updateSaveSha",Updater.sha256(file)).commit();result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("update-preserved".equals(arguments.getString("mode"))){
                 File file=new File(getTargetContext().getFilesDir(),"adventure.json");String expected=getTargetContext().getSharedPreferences("verify",0).getString("updateSaveSha","");require(!expected.isEmpty()&&expected.equals(Updater.sha256(file)),"Update changed saved adventure");
                 result.putLong("installed_code",getTargetContext().getPackageManager().getPackageInfo(getTargetContext().getPackageName(),0).getLongVersionCode());result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
@@ -58,6 +74,19 @@ public final class MobileTest extends Instrumentation {
             Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);
             if("inspect".equals(arguments.getString("mode"))){Thread.sleep(5000);result.putString("diagnostic",js("(()=>{try{return JSON.stringify({document:document.readyState,ready:typeof ready,game:typeof game,active:typeof active,phase:typeof active!=='undefined'?active:null,party:document.getElementById('battle')?.contentDocument.querySelectorAll('#party button').length,call:(()=>{try{window.mobileLifecycle(true);return 'ok'}catch(e){return e.stack}})()})}catch(e){return e.stack}})()"));finish(Activity.RESULT_OK,result);return;}
             waitReady();Thread.sleep(1500);
+            if("ui-layout".equals(arguments.getString("mode"))){
+                result.putString("layout",layoutChecks());result.putString("geometry",checkInsets());screenshot("dex-list.png");
+                js("document.getElementById('panel').contentDocument.querySelector('.dex-card[data-id=\"19\"]').click()");Thread.sleep(200);screenshot("dex-detail.png");
+                js("openPanel('challenge')");Thread.sleep(200);screenshot("challenge-collapsed.png");
+                js("back();document.getElementById('settings-open').click()");
+                require("true".equals(js("document.querySelectorAll('[role=switch]').length===1&&!document.getElementById('steps-enable')&&!document.getElementById('steps-disable')")),"Walking controls are not one switch");
+                getTargetContext().getSharedPreferences("steps",0).edit().putBoolean("enabled",true).commit();
+                require("true".equals(js("refreshNative();document.getElementById('steps-toggle').getAttribute('aria-checked')==='true'")),"Enabled walking state missing");
+                js("document.getElementById('steps-toggle').click()");Thread.sleep(400);
+                require(!getTargetContext().getSharedPreferences("steps",0).getBoolean("enabled",true),"Walking switch did not disable native setting");
+                require("true".equals(js("refreshNative();document.getElementById('steps-toggle').getAttribute('aria-checked')==='false'")),"Disabled walking state missing");screenshot("settings-toggle.png");
+                result.putInt("walkingSwitchChecks",4);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("update-live".equals(arguments.getString("mode"))){
                 js("active=false;progression.pause(Date.now());save();document.getElementById('settings-open').click();document.getElementById('update-check').click()");Updater u=Updater.current;UpdateChecks.await(u);Thread.sleep(400);
                 require(u.ready&&!u.status.contains("최신"),"Live newer release was not downloaded: "+u.status);
