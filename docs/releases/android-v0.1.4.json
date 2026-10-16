@@ -1,0 +1,55 @@
+{
+    "version":  "0.1.4",
+    "versionCode":  6,
+    "platform":  "android",
+    "channel":  "android-preview",
+    "sourceCommit":  "c858dabb9e15c352a7d6add834b84eeabf8041f3",
+    "package":  "io.github.bakzzi.pokemonidle",
+    "minSdk":  31,
+    "targetSdk":  36,
+    "artifact":  "Pokemon-Idle-0.1.4.apk",
+    "bytes":  4721810,
+    "sha256":  "b9ee412eae92f13d0956d340e97832ecbc4ac7eabee2000693bda67a00f30182",
+    "signingCertificateSha256":  "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+    "toolchain":  {
+                      "node":  "22.11.0",
+                      "gradle":  "8.13",
+                      "agp":  "8.13.0",
+                      "compileSdk":  36,
+                      "buildTools":  "36.1.0"
+                  },
+    "validation":  {
+                       "releaseBuild":  "passed",
+                       "androidLintErrors":  0,
+                       "androidLintWarnings":  14,
+                       "apkSignatureVerified":  true,
+                       "relatedCoreTests":  32,
+                       "slotRegressionTests":  5,
+                       "mobileProgressionTests":  9,
+                       "stepLedgerScenarios":  6,
+                       "emulator":  "Android 16 API 36",
+                       "uiWidthsCssPx":  [
+                                             320,
+                                             360
+                                         ],
+                       "layoutChecksPerWidth":  28,
+                       "walkingSwitchChecksPerWidth":  4,
+                       "headerSettingsDialogAndPanelBounds":  "passed",
+                       "upgradeFrom":  "0.1.3",
+                       "upgradeSaveHashPreserved":  true,
+                       "physicalDeviceVerified":  false
+                   },
+    "retention":  {
+                      "latestAndroid":  "0.1.4",
+                      "previousAndroid":  "0.1.3",
+                      "additionalRetained":  [
+                                                 "0.1.0",
+                                                 "0.1.1",
+                                                 "0.1.2"
+                                             ],
+                      "windowsPreserved":  [
+                                               "0.3.82",
+                                               "0.3.83"
+                                           ]
+                  }
+}
