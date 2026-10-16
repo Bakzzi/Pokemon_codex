@@ -49,7 +49,7 @@ function renderDex(){
   const signature=JSON.stringify([state.collection.map(p=>[p.id,p.seen,p.caught,p.owned,p.level,p.expPercent,p.count,p.acquisition.summary]),selected,$('filter').value,$('search').value]);
   if(signature!==dexSignature){
     dexSignature=signature;const filter=$('filter').value,query=$('search').value.trim().toLowerCase();
-    const cards=state.collection.filter(p=>(filter==='all'||p[filter])&&(!query||String(p.id)===query||p.name.toLowerCase().includes(query))).map(p=>{
+    const cards=state.collection.filter(p=>(filter==='all'||(filter==='uncaught'?!p.caught:p[filter]))&&(!query||String(p.id)===query||p.name.toLowerCase().includes(query))).map(p=>{
       const b=node('button','dex-card'+(p.seen?'':' unseen')+(p.caught?' caught':'')+(p.id===selected?' selected':''));b.dataset.id=p.id;
       b.setAttribute('aria-label','No.'+p.id+' '+p.name+(p.caught?' · 포획 완료':''));b.append(img(p.id));
       const label=node('span','label');if(p.caught){const ball=node('i','ball');ball.title='포획 완료';label.append(ball);}label.append(document.createTextNode('No.'+p.id+' '+p.name));b.append(label,node('small','',p.owned?levelText(p)+(p.count>1?' · '+p.count+'마리':''):p.caught?'도감 등록 완료':p.seen?'발견':'미발견'));
