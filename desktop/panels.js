@@ -78,8 +78,8 @@ function renderDex(){
   }
   const hints=node('section','acquisition-hints');hints.setAttribute('aria-label','획득 힌트');hints.append(node('h3','','획득 힌트'));
   const labels={wild:'야생',starter:'스타팅',event:'이벤트',evolution:'진화',hatch:'부화'};
-  p.acquisition.routes.forEach((r,i)=>{const row=node('p','');row.append(node('b','',(i?'또는 ':'')+(r.kind==='evolution'&&r.special?'특수진화':labels[r.kind])),document.createTextNode(' · '+r.text));hints.append(row);if(r.note)hints.append(node('small','',r.note));});
-  hints.append(node('small','',p.acquisition.note));root.append(hints);
+  p.acquisition.routes.forEach((r,i)=>{const row=node('p','');row.append(node('b','',(i?'또는 ':'')+(r.kind==='evolution'&&r.special?'특수진화':labels[r.kind])),document.createTextNode(' · '+r.text));hints.append(row);if(r.note)hints.append(node(r.kind==='wild'?'p':'small','',r.note));});
+  if(p.acquisition.note)hints.append(node('small','',p.acquisition.note));root.append(hints);
   if(p.caught&&p.canReserveCapture){
     const box=node('section','capture-reservation'),label=node('label','','추가 포획 예약'),quantity=node('input'),reserve=node('button','',p.captureReserved?'예약 변경':'만나면 포획하기');
     quantity.type='number';quantity.min=1;quantity.max=99;quantity.step=1;quantity.required=true;quantity.value=captureDraft.get(p.id)??(p.captureReserved||1);quantity.setAttribute('aria-label','추가 포획할 마릿수');quantity.oninput=()=>captureDraft.set(p.id,quantity.value);

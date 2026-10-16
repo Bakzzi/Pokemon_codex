@@ -7,6 +7,7 @@ for(const p of data.pokemon)for(const rule of p.evolutions){
   parents.get(rule.to).push({from:p.id,...rule});
 }
 const percent=n=>(n*100).toLocaleString('ko-KR',{maximumFractionDigits:5})+'%';
+const wildPercent=n=>n>0&&n<.0001?'0.01% 미만':(n*100).toLocaleString('ko-KR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';
 function breedingRoutes(generation){
   if(breedingCache.has(generation))return breedingCache.get(generation);
   const routes=new Map();
@@ -29,14 +30,14 @@ function collectionHints(game){
   for(const p of data.pokemon.filter(p=>p.generation<=generation)){
     const routes=[],wildAllowed=wildEligible(p,generation,100),minimum=wildMinimum(p),chance=chances.get(p.id)||0;
     if(wildAllowed){
-      let text=activeLevel<minimum?'현재 0% · 출전 동료 Lv.'+minimum+'부터 야생에서 출현 가능':'현재 '+percent(chance)+' 확률로 야생에서 출현';
+      const text=activeLevel<minimum?'출전 동료 Lv.'+minimum+'부터 야생에서 출현.':'현재 '+wildPercent(chance)+' 확률로 야생에서 출현.';
       const bonus=[];
       const badge={145:6,144:7,146:8}[p.id];
-      if(badge)bonus.push(badge+'번째 뱃지');
+      if(badge)bonus.push(badge+'번째 뱃지 획득');
       if([144,145,146,150].includes(p.id))bonus.push('챔피언 달성');
-      if(bonus.length)text+=' · 미등록 상태에서는 '+bonus.join('·')+'으로 추가 출현 보너스';
-      if(p.id===151)text+=' · No.1~150을 모두 등록하면 추가 출현 보너스';
-      routes.push({kind:'wild',text,chance,minimumLevel:minimum});
+      let note=bonus.length?(game.data.caught[p.id]?'포획을 마쳐 추가 출현 보너스가 종료됐어요.':bonus.join(' 또는 ')+' 시 포획에 성공할 때까지 출현 확률이 올라요.'):'';
+      if(p.id===151)note='No.1~150을 모두 등록하면 출현 확률이 올라요.';
+      routes.push({kind:'wild',text,chance,minimumLevel:minimum,...(note?{note}:{})});
     }
     if(p.id===25)routes.push({kind:'starter',text:'매 시즌 시작할 때 Lv.5 동료로 지급'});
     if([1,4,7].includes(p.id))routes.push({kind:'event',text:game.data.starterGifts[p.id]?'이번 시즌 모험에서 동료로 받은 포켓몬이에요.':'모험 중 특별한 만남으로 동료가 될 수 있어요.'});
@@ -62,7 +63,7 @@ function collectionHints(game){
     }
     const labels={wild:activeLevel<minimum?'Lv.'+minimum+'부터 야생':'야생',starter:'스타팅',event:'이벤트',evolution:'진화',hatch:'부화'};
     const evolutionOnly=routes.length>0&&routes.every(r=>r.kind==='evolution');
-    result.set(p.id,{wildAllowed,routes,summary:[...new Set(routes.map(r=>r.kind==='evolution'&&r.special?'특수진화':labels[r.kind]))].join(' · '),note:wildAllowed?'야생 확률은 현재 출전 동료와 진행 상태에서 다음 야생 1회에 만날 확률이에요. 포획 성공률과는 달라요.':evolutionOnly?'진화로만 얻을 수 있어요.':'일반 야생에서는 출현하지 않아요.'});
+    result.set(p.id,{wildAllowed,routes,summary:[...new Set(routes.map(r=>r.kind==='evolution'&&r.special?'특수진화':labels[r.kind]))].join(' · '),note:wildAllowed?'야생 확률은 플레이 중 야생 1회에 만날 확률이에요. 포획 성공률과는 달라요.':evolutionOnly?'진화로만 얻을 수 있어요.':'일반 야생에서는 출현하지 않아요.'});
   }
   return result;
 }

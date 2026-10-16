@@ -21,7 +21,7 @@ test('ordinary and evolved species combine their exact current wild probability 
   assert.equal(p.name,'???');assert.equal(p.description,'');
 });
 
-test('level-gated wild encounters show zero now and the actual entry level rather than promising a future percentage',()=>{
+test('level-gated wild encounters show the actual entry level rather than promising a future percentage',()=>{
   const g=fixture(),p=entry(g,11);assert.equal(p.acquisition.routes.find(r=>r.kind==='wild').chance,0);assert.match(p.acquisition.routes.find(r=>r.kind==='wild').text,/Lv\.7/);
   level(g,7);assert.ok(entry(g,11).acquisition.routes.find(r=>r.kind==='wild').chance>0);
 });
