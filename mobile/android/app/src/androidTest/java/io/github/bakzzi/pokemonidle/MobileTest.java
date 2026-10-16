@@ -89,6 +89,17 @@ public final class MobileTest extends Instrumentation {
                 require(u.installing||u.pending!=null,"App waited for battle completion before installing");result.putLong("installSubmittedMs",SystemClock.elapsedRealtime()-started);require(new JSONObject(readSave()).getJSONObject("game").toString().equals(before.getJSONObject("game").toString()),"An extra battle action ran before update");
                 result.putString("result","submitted during active battle");sendStatus(1,result);UpdateChecks.await(u);Thread.sleep(1500);finish(Activity.RESULT_OK,result);return;
             }
+            if("journal".equals(arguments.getString("mode"))){
+                js("active=false;game=new MobileCore.Game({},Date.now());game.log('꼬렛 포획!','catch',19);game.data.adventure.totals.wins=12;game.data.adventure.totals.xp=620;game.data.adventure.checkpoint={at:Date.now()+1,totals:{...game.data.adventure.totals}};progression=new MobileProgression(game);save();openPanel('journal')");
+                Thread.sleep(400);
+                require("true".equals(js("(()=>{const d=document.getElementById('panel').contentDocument;return !d.getElementById('journal').hidden&&!d.getElementById('journal-ack')&&d.getElementById('summary-since').textContent.includes('이번 시즌')&&d.getElementById('summary-stats').textContent.includes('620')&&d.getElementById('summary-highlights').textContent.includes('꼬렛 포획!')})()")),"Season summary or removed button is incorrect");
+                screenshot("journal-summary.png");
+                js("document.getElementById('panel').contentDocument.querySelector('[data-journal-tab=detail]').click()");
+                require("true".equals(js("(()=>{const d=document.getElementById('panel').contentDocument;return !d.getElementById('journal-detail').hidden&&d.getElementById('journal-list').textContent.includes('꼬렛 포획!')})()")),"Detail records lost");
+                js("game=new MobileCore.Game(JSON.parse(Android.load()).game,Date.now());progression=new MobileProgression(game);publish()");
+                require("true".equals(js("game.panelState().summary.counts.wins===12&&game.panelState().summary.counts.xp===620&&game.panelState().summary.highlights.some(e=>e.text==='꼬렛 포획!')")),"Legacy checkpoint affected reloaded summary");
+                result.putInt("journalChecks",3);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("ui-layout".equals(arguments.getString("mode"))){
                 result.putString("layout",layoutChecks());result.putString("geometry",checkInsets());screenshot("dex-list.png");
                 js("document.getElementById('panel').contentDocument.querySelector('.dex-card[data-id=\"19\"]').click()");Thread.sleep(200);screenshot("dex-detail.png");

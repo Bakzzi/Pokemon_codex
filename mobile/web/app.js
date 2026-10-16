@@ -19,7 +19,6 @@ function action(action,value){
     else if(action==='capture-cancel')ok=game.reserveCapture(value,0);
     else if(action==='challenge')ok=game.challenge(value);
     else if(action==='challenge-cancel')ok=game.cancelChallenge();
-    else if(action==='journal-ack')ok=game.acknowledgeJournal();
     else if(action==='daycare-preview')game.daycareSelection=Array.isArray(value)?value.slice(0,2).map(Number):[];
     else return;
     notice=ok===false?'지금은 예약할 수 없어요. 동료와 도전 조건을 확인해 주세요.':'';
