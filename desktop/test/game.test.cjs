@@ -1,5 +1,5 @@
 'use strict';
-const {travelUids}=require('./helpers/region.cjs');
+const {travelSpecies}=require('./helpers/region.cjs');
 const test=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os');
 const {Game}=require('./helpers/four-party.cjs');
@@ -102,7 +102,7 @@ test('level, stone, trade and cross-generation evolution conditions remain enfor
   assert.equal(g.data.owned[1].id,2);assert.ok(g.data.caught[1]&&g.data.caught[2]);
   const kadabra=g.addPokemon(64,20,'catch',now);assert.equal(g.evolve(kadabra,65,now),false);g.data.trainingDevice.obtainedAt=now;g.data.trainingDevice.learnerUid=kadabra;assert.equal(g.evolve(kadabra,65,now),false);g.data.owned[kadabra].xp=xpAt(64,21)-1;g.awardXp(combatant(19,20),false,now);assert.equal(g.data.owned[kadabra].id,65);
   const onix=g.addPokemon(95,20,'catch',now);g.data.trainingDevice.learnerUid=onix;g.data.owned[onix].xp=xpAt(95,21)-1;g.awardXp(combatant(19,20),false,now);g.data.inventory[210]=1;assert.equal(g.evolve(onix,208,now),false);
-  g.data.champion=true;assert.equal(g.evolve(onix,208,now),false);assert.ok(g.unlockJohto(now,travelUids(g)));assert.ok(g.evolve(onix,208,now));assert.equal(g.data.inventory[210],0);
+  g.data.champion=true;assert.equal(g.evolve(onix,208,now),false);assert.ok(g.unlockJohto(now,travelSpecies(g)));assert.ok(g.evolve(onix,208,now));assert.equal(g.data.inventory[210],0);
 });
 test('gyms and champion victory grant the choice of unlocking the next generation',()=>{
   const g=new Game({},now);for(let id=1;id<=151;id++)g.data.caught[id]=now;
@@ -119,7 +119,7 @@ test('gyms and champion victory grant the choice of unlocking the next generatio
     g.defeatOpponent(now);assert.ok(++count<40);
   }
   assert.equal(g.data.champion,true);assert.equal(g.panelState(now).collection.length,151);assert.equal(g.addPokemon(172,5,'catch',now),false);
-  assert.ok(g.unlockJohto(Math.max(now,g.data.switchUntil),travelUids(g)));assert.equal(g.panelState(now).collection.length,251);assert.ok(g.addPokemon(172,5,'catch',now));
+  assert.ok(g.unlockJohto(Math.max(now,g.data.switchUntil),travelSpecies(g)));assert.equal(g.panelState(now).collection.length,251);assert.ok(g.addPokemon(172,5,'catch',now));
 });
 test('trainer Pokemon cannot be caught; older suspended-wild saves still restore capture progress',()=>{
   const g=new Game({},now);const b=wild(g,150,50);b.captureAttempts=6;b.foe.hp=b.foe.maxHp*.04;
@@ -149,7 +149,7 @@ test('breeding rejects incompatible genders, groups, babies, legendaries and loc
   const ditto=g.addPokemon(132,5,'catch',now),legend=g.addPokemon(150,50,'catch',now),ditto2=g.addPokemon(132,5,'hatch',now);
   assert.equal(nursery.predict(g,[ditto,ditto2]).compatible,false);assert.equal(nursery.predict(g,[legend,ditto]).compatible,false);
   assert.equal(nursery.predict(g,[25,ditto]).compatible,false);
-  g.data.champion=true;assert.equal(nursery.predict(g,[25,ditto]).compatible,false);assert.ok(g.unlockJohto(now,travelUids(g)));assert.deepEqual(nursery.predict(g,[25,ditto]).offspring.map(p=>p.id),[172]);
+  g.data.champion=true;assert.equal(nursery.predict(g,[25,ditto]).compatible,false);assert.ok(g.unlockJohto(now,travelSpecies(g)));assert.deepEqual(nursery.predict(g,[25,ditto]).offspring.map(p=>p.id),[172]);
   const baby=g.addPokemon(172,5,'hatch',now);assert.equal(nursery.predict(g,[baby,ditto]).compatible,false);
 });
 test('nursery advances only on new coding work, survives restart and creates a separate Lv5 individual',()=>{

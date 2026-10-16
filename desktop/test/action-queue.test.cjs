@@ -74,5 +74,5 @@ test('invalid, stale and malformed requests are rejected or removed without cons
 
 test('ending a challenge and region selection wait for current presentation, and Gen II is never unlocked early',()=>{
   const g=fixture();g.challenge(0,now);const before=structuredClone(g.data.animation);assert.ok(g.requestAction('abandon',undefined,now));assert.deepEqual(g.data.animation,before);assert.equal(g.data.battle.kind,'trainer');assert.ok(advance(g));assert.equal(g.data.battle,null);
-  g.data.champion=true;wild(g);assert.ok(g.requestAction('johto-unlock',{uids:[25]},now));assert.equal(g.maxGeneration(),1);const end=finish(g);assert.equal(g.tick(end-1),false);assert.ok(g.tick(end));assert.equal(g.maxGeneration(),2);assert.equal(g.data.pendingActions.length,0);
+  g.data.champion=true;wild(g);assert.ok(g.requestAction('johto-unlock',{speciesIds:[25]},now));assert.equal(g.maxGeneration(),1);const end=finish(g);assert.equal(g.tick(end-1),false);assert.ok(g.tick(end));assert.equal(g.maxGeneration(),2);assert.equal(g.data.pendingActions.length,0);
 });

@@ -1,5 +1,5 @@
 'use strict';
-const {travelUids}=require('./helpers/region.cjs');
+const {travelSpecies}=require('./helpers/region.cjs');
 const test=require('node:test'),assert=require('node:assert/strict');
 const {Game}=require('./helpers/four-party.cjs'),{species,wildDistribution}=require('../pokemon.cjs');
 const now=Date.parse('2026-10-15T05:00:00Z'),fixture=()=>new Game({},now,{random:()=>.73});
@@ -8,7 +8,7 @@ function level(g,n){for(const uid of g.data.slots.filter(uid=>uid!==null))g.data
 
 test('every allowed species has an acquisition route, while unknown identities and descriptions stay hidden',()=>{
   for(const generation of [1,2]){
-    const g=fixture();if(generation===2){g.data.champion=true;g.unlockJohto(now,travelUids(g));}
+    const g=fixture();if(generation===2){g.data.champion=true;g.unlockJohto(now,travelSpecies(g));}
     const collection=g.panelState(now).collection;assert.equal(collection.length,generation===1?151:251);
     for(const p of collection){assert.ok(p.acquisition.routes.length,p.id);assert.ok(p.acquisition.summary);if(!p.seen){assert.equal(p.name,'???');assert.equal(p.description,'');}}
   }
@@ -37,7 +37,7 @@ test('starter families never get a wild route; starter, level and stone methods 
 test('trade alternatives show device learning and held items without revealing the device reward chain',()=>{
   const g=fixture();g.data.seen[64]=now;
   const route=entry(g,65).acquisition.routes.find(r=>r.kind==='evolution'),text=route.text;assert.equal(text,'No.64 윤겔라 · 학습장치로 1레벨 상승 시 자동진화');assert.equal(route.special,true);assert.equal(entry(g,65).acquisition.summary,'특수진화');assert.ok(!/40|로켓|잠만보|독수/.test(text));
-  g.data.champion=true;g.unlockJohto(now,travelUids(g));const steelix=entry(g,208).acquisition.routes.find(r=>r.kind==='evolution');assert.ok(steelix.text.includes('금속코트'));assert.ok(steelix.text.includes('학습장치'));
+  g.data.champion=true;g.unlockJohto(now,travelSpecies(g));const steelix=entry(g,208).acquisition.routes.find(r=>r.kind==='evolution');assert.ok(steelix.text.includes('금속코트'));assert.ok(steelix.text.includes('학습장치'));
 });
 
 test('the sleeping road event hides its required item until the player actually owns it',()=>{
@@ -52,7 +52,7 @@ test('breeding hints use real nursery outcomes and generation gates, including s
   const eevee=entry(g,133).acquisition.routes.find(r=>r.kind==='hatch');assert.ok(eevee);assert.equal(eevee.from,134);assert.match(eevee.text,/샤미드.*메타몽/);
   for(const id of [132,144,145,146,150,151])assert.ok(!entry(g,id).acquisition.routes.some(r=>r.kind==='hatch'));
   assert.ok(entry(g,29).acquisition.routes.find(r=>r.kind==='hatch').text.includes('50%'));
-  g.data.champion=true;g.unlockJohto(now,travelUids(g));assert.ok(entry(g,172).acquisition.routes.find(r=>r.kind==='hatch').text.includes('피카츄'));
+  g.data.champion=true;g.unlockJohto(now,travelSpecies(g));assert.ok(entry(g,172).acquisition.routes.find(r=>r.kind==='hatch').text.includes('피카츄'));
   const espeon=entry(g,196).acquisition.routes.find(r=>r.kind==='evolution');assert.match(espeon.text,/친밀도 220.*04~18시/);
 });
 
@@ -65,7 +65,7 @@ test('hints refresh with active level, generation, registration and champion bon
 
 test('hatch acquisition hints never require owning the target itself, including Lapras and Tauros',()=>{
   for(const generation of [1,2]){
-    const g=fixture();if(generation===2){g.data.champion=true;g.unlockJohto(now,travelUids(g));}
+    const g=fixture();if(generation===2){g.data.champion=true;g.unlockJohto(now,travelSpecies(g));}
     for(const id of [128,131]){const p=entry(g,id);assert.ok(!p.acquisition.routes.some(r=>r.kind==='hatch'));assert.ok(!p.acquisition.summary.includes('부화'));}
     for(const p of g.panelState(now).collection)for(const r of p.acquisition.routes.filter(r=>r.kind==='hatch'))assert.notEqual(r.from,p.id);
     g.addPokemon(128,20,'catch',now);g.addPokemon(131,20,'catch',now);

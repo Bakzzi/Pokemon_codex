@@ -1,5 +1,5 @@
 'use strict';
-const {travelUids}=require('./helpers/region.cjs');
+const {travelSpecies}=require('./helpers/region.cjs');
 const test=require('node:test'),assert=require('node:assert/strict');
 const {Game}=require('./helpers/four-party.cjs'),{data,species,rarity,wildMinimum,pickWild,encounterChances,xpAt}=require('../pokemon.cjs'),nursery=require('../daycare.cjs');
 const now=Date.parse('2026-10-14T07:00:00Z');
@@ -18,7 +18,7 @@ test('champion grants a persistent stay-or-unlock choice even with an incomplete
   const owned=structuredClone(g.data.owned),caught=structuredClone(g.data.caught);assert.ok(g.stayInKanto(now+1));assert.equal(g.stayInKanto(now+2),false);
   g=new Game(g.data,now+10,{random:()=>.73});assert.ok(g.data.johtoDeferred);assert.equal(g.maxGeneration(),1);
   assert.deepEqual(g.data.owned,owned);assert.deepEqual(g.data.caught,caught);
-  assert.ok(g.unlockJohto(Math.max(now+11,g.data.switchUntil),travelUids(g)));const unlockedOwned=structuredClone(g.data.owned);assert.equal(g.unlockJohto(now+12),false);assert.equal(g.stayInKanto(now+12),false);
+  assert.ok(g.unlockJohto(Math.max(now+11,g.data.switchUntil),travelSpecies(g)));const unlockedOwned=structuredClone(g.data.owned);assert.equal(g.unlockJohto(now+12),false);assert.equal(g.stayInKanto(now+12),false);
   assert.equal(g.maxGeneration(),2);assert.equal(g.panelState(now+12).collection.length,251);assert.equal(g.panelState(now+12).kantoCaughtCount,4);
   assert.equal(g.data.journal.filter(e=>e.kind==='unlock').length,1);assert.ok(g.panelState(now+12).summary.highlights.some(e=>e.kind==='unlock'));
   const loaded=new Game(g.data,now+20);assert.equal(loaded.maxGeneration(),2);assert.ok(!loaded.data.johtoDeferred);
@@ -27,14 +27,14 @@ test('champion grants a persistent stay-or-unlock choice even with an incomplete
 
 test('championship and explicit selection gate Gen II wild Pokemon, evolution and breeding together',()=>{
   const g=new Game({},now,{random:rng(23)});for(let id=1;id<=151;id++)g.data.caught[id]=now;
-  assert.equal(g.unlockJohto(now,travelUids(g)),false);assert.equal(g.stayInKanto(now),false);assert.equal(g.maxGeneration(),1);
+  assert.equal(g.unlockJohto(now,travelSpecies(g)),false);assert.equal(g.stayInKanto(now),false);assert.equal(g.maxGeneration(),1);
   g.data.champion=true;assert.ok(g.stayInKanto(now));const onix=g.addPokemon(95,30,'fixture',now),ditto=g.addPokemon(132,30,'fixture',now);
   g.data.inventory[210]=1;assert.equal(g.evolve(onix,208,now),false);assert.equal(nursery.predict(g,[25,ditto]).compatible,false);assert.equal(g.addPokemon(172,5,'catch',now),false);
   g.data.trainingDevice.obtainedAt=now;g.data.trainingDevice.learnerUid=onix;
   g.data.owned[25].level=100;g.data.owned[25].xp=xpAt(25,100);
   for(let i=0;i<500;i++){g.newWild(now);assert.ok(g.data.battle.foe.id<=151);}
   g.data.owned[onix].xp=xpAt(95,31)-1;g.awardXp({id:19,level:30},false,now);assert.equal(g.data.owned[onix].level,31);
-  assert.equal(g.maxGeneration(),1);assert.equal(g.unlockJohto(now,travelUids(g)),false);g.defeatOpponent(g.data.switchUntil);assert.ok(g.unlockJohto(g.data.switchUntil,travelUids(g)));assert.ok(g.evolve(onix,208,Math.max(now,g.data.switchUntil)));
+  assert.equal(g.maxGeneration(),1);assert.equal(g.unlockJohto(now,travelSpecies(g)),false);g.defeatOpponent(g.data.switchUntil);assert.ok(g.unlockJohto(g.data.switchUntil,travelSpecies(g)));assert.ok(g.evolve(onix,208,Math.max(now,g.data.switchUntil)));
   assert.equal(nursery.predict(g,[25,ditto]).offspring[0].id,172);
   const encountered=new Set();for(let i=0;i<1000;i++){g.newWild(now);encountered.add(g.data.battle.foe.id);}
   assert.ok([...encountered].some(id=>id>151));assert.ok([...encountered].some(id=>id<=151));
@@ -49,7 +49,7 @@ test('a league rematch preserves the decision to stay and never auto-unlocks Gen
 test('old champions without Gen II progress choose anew, while existing Gen II Pokemon, slots and eggs remain available',()=>{
   const fresh=champion();delete fresh.data.johtoUnlocked;delete fresh.data.johtoDeferred;
   const waiting=new Game(fresh.data,now);assert.equal(waiting.maxGeneration(),1);assert.ok(waiting.stayInKanto(now));
-  const old=champion();assert.ok(old.unlockJohto(now,travelUids(old)));const baby=old.addPokemon(172,5,'hatch',now);assert.ok(old.setSlot(0,baby,now));
+  const old=champion();assert.ok(old.unlockJohto(now,travelSpecies(old)));const baby=old.addPokemon(172,5,'hatch',now);assert.ok(old.setSlot(0,baby,now));
   const before=structuredClone(old.data);delete before.johtoUnlocked;delete before.johtoDeferred;
   const preserved=new Game(before,now+1);assert.equal(preserved.maxGeneration(),2);assert.deepEqual(preserved.data.slots,old.data.slots);assert.deepEqual(preserved.data.owned,old.data.owned);
   const seen=champion();seen.data.seen[161]=now;delete seen.data.johtoUnlocked;assert.equal(new Game(seen.data,now).maxGeneration(),2);

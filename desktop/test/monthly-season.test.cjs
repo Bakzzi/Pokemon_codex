@@ -1,12 +1,12 @@
 'use strict';
-const {travelUids}=require('./helpers/region.cjs');
+const {travelSpecies}=require('./helpers/region.cjs');
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),os=require('node:os');
 const {Game,STARTERS}=require('../game.cjs'),{monthOf}=require('../season.cjs'),{data,xpAt}=require('../pokemon.cjs'),{combatant}=require('../battle.cjs'),{Store}=require('../store.cjs');
 const {Game:FourPartyGame}=require('./helpers/four-party.cjs');
 const before=Date.parse('2026-10-31T14:59:59Z'),boundary=before+1000;
 function veteran(){
   const g=new FourPartyGame({},before,{random:()=>.73});
-  g.data.badges=data.bosses.slice(0,8).map(b=>b.id);g.data.champion=true;g.unlockJohto(before,travelUids(g));
+  g.data.badges=data.bosses.slice(0,8).map(b=>b.id);g.data.champion=true;g.unlockJohto(before,travelSpecies(g));
   g.addPokemon(172,5,'hatch',before);g.addPokemon(143,30,'catch',before);
   g.data.owned[4].level=36;g.data.owned[4].xp=xpAt(4,36);require('../move-access.cjs').update(g.data.owned[4]);g.evolve(4,6,before);
   for(let id=1;id<=251;id++){g.data.caught[id]=before;g.data.seen[id]=before;}

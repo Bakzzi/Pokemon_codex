@@ -25,12 +25,12 @@ function actionPayload(kind,value){
   if(kind==='slot')return Number.isInteger(value?.slot)&&value.slot>=0&&value.slot<PARTY_SIZE&&(value.id===null||Number.isSafeInteger(value.id)&&value.id>0)?{slot:value.slot,uid:value.id}:null;
   if(kind==='evolve')return Number.isSafeInteger(value?.id)&&value.id>0&&Number.isInteger(value.to)&&species.has(value.to)?{uid:value.id,to:value.to}:null;
   if(kind==='daycare-start')return Array.isArray(value)&&value.length===2&&value.every(uid=>Number.isSafeInteger(uid)&&uid>0)&&value[0]!==value[1]?{parents:[...value]}:null;
-  if(kind==='johto-unlock')return Array.isArray(value?.uids)&&value.uids.length>=1&&value.uids.length<=10&&value.uids.every(uid=>Number.isSafeInteger(uid)&&uid>0)&&new Set(value.uids).size===value.uids.length?{uids:[...value.uids]}:null;
+  if(kind==='johto-unlock')return Array.isArray(value?.speciesIds)&&value.speciesIds.length>=1&&value.speciesIds.length<=10&&value.speciesIds.every(id=>Number.isSafeInteger(id)&&id>0)&&new Set(value.speciesIds).size===value.speciesIds.length?{speciesIds:[...value.speciesIds]}:null;
   return {};
 }
 function restoreAction(a){
   if(!a||!Number.isSafeInteger(a.id)||a.id<1||!validCount(a.queuedAt))return null;
-  const value=['select','device-learner'].includes(a.kind)?a.uid:a.kind==='slot'?{slot:a.slot,id:a.uid}:a.kind==='evolve'?{id:a.uid,to:a.to}:a.kind==='johto-unlock'?{uids:a.uids}:a.parents;
+  const value=['select','device-learner'].includes(a.kind)?a.uid:a.kind==='slot'?{slot:a.slot,id:a.uid}:a.kind==='evolve'?{id:a.uid,to:a.to}:a.kind==='johto-unlock'?{speciesIds:a.speciesIds}:a.parents;
   const payload=actionPayload(a.kind,value);if(!payload)return null;
   if(a.kind==='evolve'&&!species.has(a.from))return null;
   return {id:a.id,kind:a.kind,queuedAt:a.queuedAt,...payload,...(a.kind==='evolve'?{from:a.from}:{})};
@@ -66,7 +66,7 @@ class Game {
     // Keep existing Gen II progress available; old champions with no Gen II progress choose now.
     if(typeof this.data.johtoUnlocked!=='boolean')this.data.johtoUnlocked=!!this.data.champion&&hasJohtoProgress(this.data);
     this.data.johtoDeferred=!!this.data.johtoDeferred&&!this.data.johtoUnlocked;
-    this.data.captureReservations=Object.fromEntries(Object.entries(this.data.captureReservations||{}).filter(([id,p])=>species.has(Number(id))&&Number.isInteger(p?.remaining)&&p.remaining>0&&p.remaining<=99&&validCount(p.revision)));
+    this.data.captureReservations=Object.fromEntries(Object.entries(this.data.captureReservations||{}).filter(([id,p])=>species.has(Number(id))&&!!this.data.caught[id]&&Number.isInteger(p?.remaining)&&p.remaining>0&&p.remaining<=99&&validCount(p.revision)));
     this.data.captureReservationSerial=Math.max(validCount(this.data.captureReservationSerial)?this.data.captureReservationSerial:0,...Object.values(this.data.captureReservations).map(p=>p.revision));
     for(const b of [this.data.battle,this.data.suspendedWild])if(b?.kind==='wild')captureCounts(b);
     const queued=this.data.pendingChallenge;
@@ -134,7 +134,7 @@ class Game {
   }
   maxGeneration(){return this.data.champion&&this.data.johtoUnlocked?2:1;}
   registeredThisSeason(id){return !!this.data.caught[id]&&(!this.data.season.resetAt||!!this.data.seasonCaught[id]);}
-  canReserveCapture(id){const p=species.get(id);return !!p&&!!this.data.seen[id]&&p.generation<=this.maxGeneration()&&(id===143||wildEligible(p,this.maxGeneration(),100));}
+  canReserveCapture(id){const p=species.get(id);return !!p&&!!this.data.caught[id]&&p.generation<=this.maxGeneration()&&(id===143||wildEligible(p,this.maxGeneration(),100));}
   captureRequested(id){return !this.registeredThisSeason(id)||(this.data.captureReservations?.[id]?.remaining||0)>0;}
   reserveCapture(id,count,now=Date.now()){
     if(!Number.isSafeInteger(id)||!Number.isInteger(count)||count<0||count>99)return false;
@@ -180,12 +180,17 @@ class Game {
     if(!this.data.champion||this.data.johtoUnlocked||this.data.johtoDeferred)return false;
     this.data.johtoDeferred=true;this.log('관동에 머물며 151종 도감 수집을 계속하기로 했다.','region',null,now);return true;
   }
-  johtoUnlockPreview(){return regionTransfer.preview(this.data.owned);}
-  unlockJohto(now=Date.now(),uids){
+  johtoUnlockPreview(){return regionTransfer.preview(this.data.caught);}
+  unlockJohto(now=Date.now(),speciesIds){
     if(!this.data.champion||this.data.johtoUnlocked||this.data.battle||this.data.pendingBattle||now<this.data.switchUntil)return false;
-    if(regionTransfer.validate(this.data.owned,uids))return false;
-    const selected=new Set(uids),changes=uids.map(uid=>{const p=this.data.owned[uid];return {uid,id:p.id,from:p.level,to:15};});
-    const retiredCount=Object.keys(this.data.owned).length-uids.length;
+    if(regionTransfer.validate(this.data.caught,speciesIds))return false;
+    const original=Object.values(this.data.owned),changes=[],uids=[];
+    for(const id of speciesIds){
+      const matches=original.filter(p=>p.id===id),existing=matches.find(p=>p.uid===this.data.activeId)||matches.find(p=>this.data.slots.includes(p.uid))||matches[0];
+      const uid=existing?.uid||this.addPokemon(id,15,'region',now);uids.push(uid);
+      changes.push({uid,id,from:existing?.level??15,to:15});
+    }
+    const selected=new Set(uids),retiredCount=original.filter(p=>!selected.has(p.uid)).length;
     for(const [uid,p] of Object.entries(this.data.owned)){
       if(!selected.has(Number(uid))){delete this.data.owned[uid];continue;}
       p.level=15;p.xp=xpAt(p.id,15);moveAccess.update(p);
@@ -196,7 +201,7 @@ class Game {
     if(!this.data.slots.some(Boolean))this.data.slots[0]=uids[0];
     if(!this.data.slots.includes(this.data.activeId))this.data.activeId=this.data.slots.find(Boolean);
     this.data.suspendedWild=null;this.data.manualSelection=false;
-    this.data.johtoLevelReduction={at:now,revision:2,targetLevel:15,selectedUids:[...uids],retiredCount,changes};
+    this.data.johtoLevelReduction={at:now,revision:3,targetLevel:15,selectedSpecies:[...speciesIds],selectedUids:[...uids],retiredCount,changes};
     this.data.johtoUnlocked=true;this.data.johtoDeferred=false;
     this.log('성도로 출발! 선택한 '+uids.length+'마리와 Lv.15로 새 모험을 시작한다. 나머지 동료는 도감 기록으로 남겼다.','unlock',null,now);return true;
   }
@@ -237,7 +242,7 @@ class Game {
     if(a.kind.startsWith('johto-')){
       if(!this.data.champion)return invalid('챔피언이 된 뒤 선택할 수 있어요.');
       if(this.data.johtoUnlocked||a.kind==='johto-stay'&&this.data.johtoDeferred)return done;
-      if(a.kind==='johto-unlock'){const reason=regionTransfer.validate(this.data.owned,a.uids);if(reason)return invalid(reason);}
+      if(a.kind==='johto-unlock'){const reason=regionTransfer.validate(this.data.caught,a.speciesIds);if(reason)return invalid(reason);}
     }
     // A persistent blocker should stay visible even while attacks keep playing.
     if(a.kind==='select'&&this.isBoarded(a.uid))return wait('키우미집에서 데려오면 출전해요.');
@@ -276,7 +281,7 @@ class Game {
     if(a.kind==='daycare-withdraw')result=nursery.withdraw(this,now);
     if(a.kind==='abandon')result=this.abandon(now);
     if(a.kind==='johto-stay')result=this.stayInKanto(now);
-    if(a.kind==='johto-unlock')result=this.unlockJohto(now,a.uids);
+    if(a.kind==='johto-unlock')result=this.unlockJohto(now,a.speciesIds);
     if(a.kind==='device-claim')result=training.claim(this,now);
     if(a.kind==='device-learner'){
       this.data.trainingDevice.learnerUid=a.uid;result=true;
@@ -292,7 +297,7 @@ class Game {
     const status=this.actionStatus(a,now);if(status.state==='invalid')return false;
     const sameIntent=q=>q.kind===kind&&(kind==='evolve'?q.uid===a.uid:kind==='slot'?q.slot===a.slot:true)||kind.startsWith('johto-')&&q.kind.startsWith('johto-');
     const existing=this.data.pendingActions.find(sameIntent);
-    if(existing&&existing.uid===a.uid&&existing.to===a.to&&existing.from===a.from&&existing.slot===a.slot&&JSON.stringify(existing.parents)===JSON.stringify(a.parents)&&JSON.stringify(existing.uids)===JSON.stringify(a.uids))return true;
+    if(existing&&existing.uid===a.uid&&existing.to===a.to&&existing.from===a.from&&existing.slot===a.slot&&JSON.stringify(existing.parents)===JSON.stringify(a.parents)&&JSON.stringify(existing.speciesIds)===JSON.stringify(a.speciesIds))return true;
     if(!existing&&this.data.pendingActions.length>=32&&status.state!=='done')return false;
     if(existing)this.cancelAction(existing.id,now,'새 선택으로 변경');
     if(status.state==='done')return true;

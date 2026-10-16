@@ -1,5 +1,5 @@
 'use strict';
-const {travelUids}=require('./helpers/region.cjs');
+const {travelSpecies}=require('./helpers/region.cjs');
 const test=require('node:test'),assert=require('node:assert/strict');
 const {Game}=require('./helpers/four-party.cjs'),training=require('../training-device.cjs'),{combatant}=require('../battle.cjs'),{data,species,xpAt,learnedMoves}=require('../pokemon.cjs');
 const now=Date.parse('2026-10-14T10:00:00Z'),rng=seed=>()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
@@ -98,7 +98,7 @@ test('trade evolutions require a device level-up in the exact prior form; other 
   unlock(g);g.data.manualSelection=true;assert.ok(g.requestAction('device-learner',first,g.data.switchUntil));assert.ok(advance(g));assert.equal(g.data.trainingDevice.learnerUid,first);assert.equal(advance(g),false);assert.equal(g.evolve(first,65,g.data.switchUntil),false);
   g.data.owned[first].xp=xpAt(64,21)-1;g.awardXp(combatant(19,20),false,g.data.switchUntil);assert.ok(advance(g));assert.equal(g.data.owned[first].id,65);assert.equal(g.data.owned[sibling].id,64);assert.ok(g.data.caught[64]&&g.data.caught[65]);assert.ok(training.has(g));assert.equal(g.evolve(machoke,68,g.data.switchUntil),false);
   assert.ok(g.requestAction('device-learner',machoke,g.data.switchUntil));g.data.owned[machoke].xp=xpAt(67,29)-1;g.awardXp(combatant(19,20),false,g.data.switchUntil);assert.equal(g.data.owned[machoke].id,68);
-  const onix=g.addPokemon(95,30,'fixture',now);assert.ok(g.requestAction('device-learner',onix,g.data.switchUntil));g.data.owned[onix].xp=xpAt(95,31)-1;g.awardXp(combatant(19,20),false,g.data.switchUntil);assert.equal(g.data.owned[onix].id,95);g.data.champion=true;g.unlockJohto(g.data.switchUntil,travelUids(g));assert.equal(g.evolve(onix,208,g.data.switchUntil),false);g.data.inventory[210]=1;assert.ok(advance(g));assert.equal(g.data.owned[onix].id,208);assert.equal(g.data.inventory[210],0);assert.ok(training.has(g));
+  const onix=g.addPokemon(95,30,'fixture',now);assert.ok(g.requestAction('device-learner',onix,g.data.switchUntil));g.data.owned[onix].xp=xpAt(95,31)-1;g.awardXp(combatant(19,20),false,g.data.switchUntil);assert.equal(g.data.owned[onix].id,95);g.data.champion=true;g.unlockJohto(g.data.switchUntil,travelSpecies(g));assert.equal(g.evolve(onix,208,g.data.switchUntil),false);g.data.inventory[210]=1;assert.ok(advance(g));assert.equal(g.data.owned[onix].id,208);assert.equal(g.data.inventory[210],0);assert.ok(training.has(g));
 });
 
 test('learner changes wait for battle completion and reload preserves exact learning and evolution progress without retroactive XP',()=>{

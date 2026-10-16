@@ -41,7 +41,7 @@ for(const b of document.querySelectorAll('[data-tab]'))b.onclick=()=>switchTab(b
 $('search').oninput=()=>{dexSignature='';render();};$('filter').onchange=()=>{dexSignature='';render();};
 $('league-start').onclick=()=>window.buddy.action('challenge',8);
 $('johto-stay').onclick=()=>window.buddy.action('johto-stay');
-$('johto-unlock').onclick=()=>window.buddy.action('johto-unlock',{uids:[...travelSelection]});
+$('johto-unlock').onclick=()=>window.buddy.action('johto-unlock',{speciesIds:[...travelSelection]});
 $('device-register').onclick=()=>window.buddy.action('device-learner',Number($('device-learner').value));
 $('device-withdraw').onclick=()=>window.buddy.action('device-learner',null);
 $('device-learner').onchange=()=>renderDevice();
@@ -80,7 +80,7 @@ function renderDex(){
   const labels={wild:'야생',starter:'스타팅',event:'이벤트',evolution:'진화',hatch:'부화'};
   p.acquisition.routes.forEach((r,i)=>{const row=node('p','');row.append(node('b','',(i?'또는 ':'')+(r.kind==='evolution'&&r.special?'특수진화':labels[r.kind])),document.createTextNode(' · '+r.text));hints.append(row);if(r.note)hints.append(node('small','',r.note));});
   hints.append(node('small','',p.acquisition.note));root.append(hints);
-  if(p.canReserveCapture){
+  if(p.caught&&p.canReserveCapture){
     const box=node('section','capture-reservation'),label=node('label','','추가 포획 예약'),quantity=node('input'),reserve=node('button','',p.captureReserved?'예약 변경':'만나면 포획하기');
     quantity.type='number';quantity.min=1;quantity.max=99;quantity.step=1;quantity.required=true;quantity.value=captureDraft.get(p.id)??(p.captureReserved||1);quantity.setAttribute('aria-label','추가 포획할 마릿수');quantity.oninput=()=>captureDraft.set(p.id,quantity.value);
     const amount=node('span','capture-amount');amount.append(quantity,document.createTextNode('마리'));label.append(amount);reserve.dataset.captureReserve=p.id;reserve.onclick=()=>{if(!quantity.reportValidity())return;captureDraft.delete(p.id);window.buddy.action('capture-reserve',{id:p.id,count:Number(quantity.value)});};
@@ -176,26 +176,26 @@ function renderBosses(){
     $('johto-title').textContent=unlocked?'성도 지방이 열렸어요':stay?'관동에서 도감을 완성하는 중':'다음 모험을 선택하세요';
     $('johto-note').textContent='관동 도감 '+state.kantoCaughtCount+' / 151 · '+(unlocked?'관동 151종과 성도 100종을 함께 만날 수 있어요.':stay?'151종 수집을 계속해요. 원할 때 언제든 2세대를 해금할 수 있어요.':'151종을 모을 때까지 관동에 머물러도 좋아요. 2세대를 해금하면 성도 100종이 추가돼요.');
     $('johto-level-notice').hidden=unlocked;
-    $('johto-level-notice').textContent='보유 동료 중 최대 10마리를 선택해 모두 Lv.15 · 경험치 0%로 성도에 데려가요. Lv.15에서 가능한 진화 단계만 선택할 수 있어요. 선택하지 않은 개체는 소지 목록에서 사라지고 도감 기록만 남아요. 도감과 경험치 부스터·가방·알은 유지되며, 키우미집 맡김은 종료돼요. 기술은 Lv.15에 맞춰 활성화돼요. 배틀 중에는 종료 후 이동하며, 필요한 동료는 도감에서 추가 포획을 예약할 수 있어요.';
+    $('johto-level-notice').textContent='한 번이라도 도감에 등록한 종 중 최대 10종을 선택해 각각 한 마리씩 Lv.15 · 경험치 0%로 성도에서 시작해요. 지금 소지하지 않거나 진화해서 이전 모습이 없어도 선택할 수 있어요. Lv.15에서 가능한 진화 단계만 선택할 수 있으며, 선택하지 않은 개체는 도감 기록만 남아요. 도감과 경험치 부스터·가방·알은 유지되고 키우미집 맡김은 종료돼요. 기술은 Lv.15에 맞춰 활성화돼요. 배틀 중에는 종료 후 이동해요.';
     const bonus=state.encounterBonus,pct=n=>(n*100).toLocaleString('ko-KR',{maximumFractionDigits:3})+'%';
     $('champion-bonus').textContent=bonus?'챔피언 기본 확률 · 희귀 '+pct(bonus.rates.rare)+' · 전설 '+pct(bonus.rates.legendary)+' · 환상 '+pct(bonus.rates.mythical)+'\n배치한 '+bonus.selectedCount+'마리 최저 Lv.'+bonus.minimumLevel+' · 출현 '+bonus.rareMultiplier+'배 · 미등록 종 '+bonus.uncaughtWeight+'배 우대\n챔피언 기본(출현 1.5배 · 미등록 가중치 2) × 레벨 보너스 '+bonus.levelMultiplier+'배\n배치한 동료 모두 Lv.71 이상 3배 · Lv.81 이상 4배 · Lv.91 이상 5배. 빈칸은 제외하며 종별 추가 확률은 특별한 만남에 더해 표시해요.':'';
     $('johto-stay').hidden=unlocked||stay;$('johto-unlock').hidden=unlocked;
   }
 }
 function renderTravel(){
-  const pending=state.pendingActions.find(a=>a.kind==='johto-unlock'),candidates=state.johtoUnlockPreview?.candidates||[],eligible=new Set(candidates.filter(p=>p.eligible).map(p=>p.uid));
-  if(pending){travelSelection.clear();for(const uid of pending.uids||[])travelSelection.add(uid);}
-  else for(const uid of travelSelection)if(!eligible.has(uid))travelSelection.delete(uid);
+  const pending=state.pendingActions.find(a=>a.kind==='johto-unlock'),candidates=state.johtoUnlockPreview?.candidates||[],eligible=new Set(candidates.filter(p=>p.eligible).map(p=>p.id));
+  if(pending){travelSelection.clear();for(const id of pending.speciesIds||[])travelSelection.add(id);}
+  else for(const id of travelSelection)if(!eligible.has(id))travelSelection.delete(id);
   $('travel-picker').hidden=!state.champion||state.johtoUnlocked;
   $('travel-count').textContent='함께 갈 동료 · '+travelSelection.size+' / 10'+(pending?' · 이동 예약됨':'');
   $('johto-unlock').disabled=!!pending||travelSelection.size===0;
   $('johto-unlock').textContent=pending?'성도 이동 예약됨':'선택한 '+travelSelection.size+'마리와 성도로 떠나기';
   const signature=JSON.stringify([candidates,pending?.id,state.johtoUnlocked]),root=$('travel-candidates');
-  if(root.dataset.signature===signature){for(const check of root.querySelectorAll('input')){const uid=Number(check.dataset.travelUid);check.checked=travelSelection.has(uid);check.disabled=!!pending||!eligible.has(uid)||travelSelection.size>=10&&!check.checked;}return;}
+  if(root.dataset.signature===signature){for(const check of root.querySelectorAll('input')){const id=Number(check.dataset.travelSpecies);check.checked=travelSelection.has(id);check.disabled=!!pending||!eligible.has(id)||travelSelection.size>=10&&!check.checked;}return;}
   root.dataset.signature=signature;
   root.replaceChildren(...candidates.map(p=>{
-    const label=node('label','travel-candidate'+(p.eligible?'':' unavailable')),check=node('input'),body=node('span');check.type='checkbox';check.dataset.travelUid=p.uid;check.checked=travelSelection.has(p.uid);check.disabled=!!pending||!p.eligible||travelSelection.size>=10&&!check.checked;
-    check.onchange=()=>{if(check.checked)travelSelection.add(p.uid);else travelSelection.delete(p.uid);renderTravel();};body.append(node('b','',p.name+' · Lv.'+p.level),node('small','',p.reason));label.append(check,img(p.id),body);return label;
+    const label=node('label','travel-candidate'+(p.eligible?'':' unavailable')),check=node('input'),body=node('span');check.type='checkbox';check.dataset.travelSpecies=p.id;check.checked=travelSelection.has(p.id);check.disabled=!!pending||!p.eligible||travelSelection.size>=10&&!check.checked;
+    check.onchange=()=>{if(check.checked)travelSelection.add(p.id);else travelSelection.delete(p.id);renderTravel();};body.append(node('b','', 'No.'+p.id+' '+p.name+' · Lv.15'),node('small','',p.reason));label.append(check,img(p.id),body);return label;
   }));
 }
 function renderSpecialEncounters(){

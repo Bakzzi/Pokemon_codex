@@ -22,3 +22,8 @@ test('registered event encounters can be requested again without changing comple
   const g=fixture();g.data.battle=null;g.addPokemon(143,30,'fixture',now);g.data.trainingDevice.fluteObtainedAt=now;g.data.trainingDevice.snorlaxWonAt=now;
   assert.equal(g.canChallenge('road-snorlax'),false);assert.ok(g.reserveCapture(143,1,now));assert.equal(g.canChallenge('road-snorlax'),true);assert.ok(g.challenge('road-snorlax',g.data.switchUntil));assert.equal(g.data.battle.kind,'wild');assert.equal(g.data.battle.foe.id,143);assert.ok(g.data.trainingDevice.snorlaxWonAt);
 });
+test('seen-only species never offer extra capture reservations and still receive normal first-catch attempts',()=>{
+  let g=fixture();g.data.seen[19]=now;g.data.battle.foe=combatant(19,5);g.data.battle.foe.hp=1;
+  assert.equal(g.canReserveCapture(19),false);assert.equal(g.reserveCapture(19,2,now),false);assert.equal(g.panelState(now).collection.find(p=>p.id===19).canReserveCapture,false);assert.ok(g.captureOpportunity());
+  g.data.captureReservations[19]={remaining:2,revision:20};g=new Game(g.data,now+1);assert.equal(g.data.captureReservations[19],undefined);assert.ok(g.captureOpportunity());g.random=()=>0;assert.ok(g.capture(now+1));const c=g.data.captureAnimation;assert.ok(g.tick(c.at+captureTiming(c).duration));assert.equal(g.canReserveCapture(19),true);
+});
