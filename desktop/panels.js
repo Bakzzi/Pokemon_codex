@@ -96,7 +96,7 @@ function renderDex(){
     for(const [i,m] of members.entries()){const o=node('option','',(i+1)+'번째 동료 · '+levelText(m)+gender(m.gender)+(m.origin==='hatch'?' · 부화':''));o.value=m.uid;select.append(o);}select.value=memberUid;
     select.onchange=()=>{memberUid=Number(select.value);detailSignature='';render();};root.append(select);
   }
-  root.append(node('p','muted',levelText(member)+gender(member.gender)+' · 누적 경험치 '+member.xp.toLocaleString('ko-KR')+(member.boarded?' · 키우미집에 맡긴 동료':'')),node('p','muted',experienceText(member)));
+  root.append(node('p','muted',levelText(member)+gender(member.gender)));
   const queuedSelect=state.pendingActions.some(a=>a.kind==='select'&&a.uid===member.uid);
   const deploy=node('button','deploy',queuedSelect?'출전 예약됨':state.hero.uid===member.uid?'현재 출전 중':member.boarded?'데려온 뒤 출전 예약':'이 포켓몬 출전');deploy.disabled=queuedSelect||state.hero.uid===member.uid;deploy.onclick=()=>window.buddy.action('select',member.uid);root.append(deploy);
   if(state.trainingDevice.obtained){
@@ -106,7 +106,6 @@ function renderDex(){
   const assign=node('div','assign');state.slots.forEach((s,i)=>{const queued=state.pendingActions.some(a=>a.kind==='slot'&&a.slot===i&&a.uid===member.uid),b=node('button');b.dataset.assign=i;b.title=(i+1)+'번 칸 · '+s.name+(queued?' · 배치 예약됨':' · 배틀 중에는 종료 후 배치');b.disabled=queued||s.uid===member.uid;b.append(s.empty?node('span','empty-slot','—'):img(s.id),document.createTextNode((i+1)+'번'+(queued?' · 예약':'')));b.onclick=()=>window.buddy.action('slot',{slot:i,id:member.uid});assign.append(b);});root.append(assign);
   const assigned=state.slots.findIndex(s=>s.uid===member.uid);
   if(assigned>=0){const queued=state.pendingActions.some(a=>a.kind==='slot'&&a.slot===assigned&&a.uid===null),remove=node('button','',queued?'칸 비우기 예약됨':'선택 칸에서 빼기');remove.dataset.removeSlot=assigned;remove.disabled=queued||!state.slots.some((s,i)=>i!==assigned&&!s.empty&&!s.boarded);remove.title=remove.disabled&&!queued?'모험할 동료 한 마리는 남겨 주세요.':'배틀 중에는 종료 후 칸을 비워요.';remove.onclick=()=>window.buddy.action('slot',{slot:assigned,id:null});root.append(remove);}
-  root.append(node('p','muted','최대 6마리 · 빈칸이 있어도 모험할 수 있어요.'));
   root.append(node('p','muted','특성 · '+member.ability));
   root.append(node('h3','','기술 '+member.moves.filter(m=>m.active).length+' / '+member.moves.length+'개 활성 · 자동 사용'));const list=node('ul','move-list');for(const m of member.moves||[]){const row=node('li',m.active?'':'locked',m.name);row.dataset.move=m.id;row.append(node('small','',m.active?'Lv.'+m.level:'Lv.'+m.level+' 해금'));list.append(row);}root.append(list);
   for(const e of member.evolutions){
