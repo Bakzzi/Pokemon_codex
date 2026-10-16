@@ -22,7 +22,7 @@ async function fixture(t,{acceptPassword=true,publicKey=null}={}){
     });
     client.on('ready',()=>client.on('session',accept=>accept().on('exec',(accept,reject,info)=>{
       if(info.command!=='"node" -'){reject();return;}executions++;
-      const stream=accept(),child=spawn(process.execPath,['-'],{env:{...process.env,CODEX_HOME:home},windowsHide:true,stdio:['pipe','pipe','pipe']});children.add(child);
+      const stream=accept(),child=spawn(process.execPath,['-'],{env:{...process.env,CODEX_HOME:home,CLAUDE_CONFIG_DIR:path.join(home,'claude')},windowsHide:true,stdio:['pipe','pipe','pipe']});children.add(child);
       child.on('error',()=>{});child.stdin.on('error',()=>{});stream.on('error',()=>{});
       stream.pipe(child.stdin);child.stdout.on('data',data=>{if(!stream.destroyed)stream.write(data);});child.stderr.on('data',()=>{});
       child.on('close',code=>{children.delete(child);if(!stream.destroyed){stream.exit(code||0);stream.end();}});
@@ -33,8 +33,16 @@ async function fixture(t,{acceptPassword=true,publicKey=null}={}){
   const game=new Game(),manager=new RemoteCodex(game,path.join(dir,'local'),{knownHosts:()=>({records:[],unreadable:false})});
   const config={host:'127.0.0.1',port:server.address().port,username:'fixture',name:'Fixture PC',auth:'password'};
   t.after(async()=>{manager.close();for(const c of clients)c.end();for(const c of children)c.kill();await new Promise(r=>server.close(r));await fsp.rm(dir,{recursive:true,force:true});});
-  return {manager,game,config,dir,file,sessions,children,clients,authentications:()=>authentications,executions:()=>executions};
+  return {manager,game,config,dir,file,sessions,claudeRoot:path.join(home,'claude','projects'),children,clients,authentications:()=>authentications,executions:()=>executions};
 }
+test('Claude-only SSH sources count new usage, reconnect growth and local mirrors once without conversation data',async t=>{
+  const f=await fixture(t),{ClaudeReader}=require('../claude-reader.cjs');await fsp.unlink(f.file);const project=path.join(f.claudeRoot,'fixture');await fsp.mkdir(project,{recursive:true});const file=path.join(project,'claude-session.jsonl');
+  const line=(id,count)=>JSON.stringify({type:'assistant',timestamp:new Date().toISOString(),message:{id,usage:{output_tokens:count,input_tokens:10},stop_reason:'end_turn',content:'PRIVATE-CLAUDE'}})+'\n';
+  await fsp.writeFile(file,line('grow',100));const {id,entry}=await connected(f);assert.deepEqual(entry.agents,{codex:false,claude:true});assert.equal(f.game.data.outputTokens,0);assert.match(entry.message,/Claude Code/);
+  await fsp.appendFile(file,line('fresh',500)+line('grow',300));await until(()=>f.game.data.outputTokens===700);assert.equal(f.game.snapshot().phase,'done');
+  f.manager.stop(id);await fsp.appendFile(file,line('grow',400));f.manager.connect(id);await until(()=>entry.connected&&f.game.data.outputTokens===800);
+  const local=new ClaudeReader(f.claudeRoot,f.game);await local.poll();await fsp.appendFile(file,line('next',90));await local.poll();await until(()=>f.game.data.outputTokens===890);await delay(1700);assert.equal(f.game.data.outputTokens,890);assert(!JSON.stringify(f.game.data).includes('PRIVATE-CLAUDE'));
+});
 async function connected(f){
   const id=f.manager.add(f.config,'fixture-secret');await until(()=>f.manager.entries.get(id).state==='trust');
   const entry=f.manager.entries.get(id);assert.equal(f.authentications(),0,'No credential sent before trust');

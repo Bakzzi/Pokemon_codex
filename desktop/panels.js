@@ -233,7 +233,9 @@ function renderJournal(){
 }
 
 function render(){
-  if(!state)return;$('totals').textContent=state.caughtCount+' / '+state.collection.length;$('region').textContent=state.generation===1?'관동 지방 · 1세대':'관동 + 성도 지방 · 2세대 해금';
+  if(!state)return;
+  $('panel-agent-label').textContent='POKÉMON / '+AgentStatus.presentation(state.source).label;
+  $('totals').textContent=state.caughtCount+' / '+state.collection.length;$('region').textContent=state.generation===1?'관동 지방 · 1세대':'관동 + 성도 지방 · 2세대 해금';
   const boost=state.experienceBoost;$('xp-boost').textContent='경험치 +'+boost.percent.toLocaleString('ko-KR',{maximumFractionDigits:2})+'%';$('xp-boost').title='누적 도감 '+boost.count+'종 · 1종당 경험치 +1% · 시즌이 바뀌어도 유지';
   $('season-note').textContent=state.season.key.replace('-','.')+' 시즌 · '+(state.season.pending?'현재 배틀 종료 후 새 시즌 시작':'매월 1일 새 모험 · 누적 도감과 부스터 유지');
   $('season-note').title='한국시간 매월 1일 00:00 · 스타팅 Lv.5부터 다시 시작 · 뱃지·지방 해금·스토리·도구 초기화';

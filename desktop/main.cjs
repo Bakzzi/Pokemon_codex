@@ -5,20 +5,22 @@ const {Game}=require('./game.cjs');
 const {combatant}=require('./battle.cjs');
 const nursery=require('./daycare.cjs');
 const {CodexReader}=require('./codex-reader.cjs');
+const {ClaudeReader}=require('./claude-reader.cjs');
+const agents=require('./agent-status.js');
 const {RemoteCodex}=require('./remote-codex.cjs');
 const {Store}=require('./store.cjs');
 const placement=require('./window-placement.cjs');
 const {AutoUpdate,canRestart,markHealthy}=require('./auto-update.cjs');
 const demo=process.argv.includes('--demo'),smoke=process.argv.includes('--smoke-test');
 const dataDir=smoke?(process.env.POKEMON_SMOKE_DIR||path.join(__dirname,'.smoke')):demo?path.join(__dirname,'.demo'):path.join(app.getPath('appData'),'PokemonCodexBuddy');
-app.setPath('userData',dataDir);app.setName('Pokemon Codex Buddy');app.disableHardwareAcceleration();
-let win,panel,tray,timer,game,store,reader,remotes,widgetPlacement,settings={},busy=false,lastRead=0,previous='',panelPrevious='',notice='';
+app.setPath('userData',dataDir);app.setName(agents.name);app.disableHardwareAcceleration();
+let win,panel,tray,timer,game,store,reader,claudeReader,remotes,widgetPlacement,settings={},busy=false,lastRead=0,previous='',panelPrevious='',notice='';
 let updater,updating=false,healthyTicks=0;
 const gotLock=app.requestSingleInstanceLock();
 if(!gotLock)app.quit();
 else{
   app.on('second-instance',()=>win?.showInactive());
-  app.whenReady().then(start).catch(error=>{console.error(error);if(!smoke)dialog.showErrorBox('Pokémon Codex Buddy',error.message);app.exit(1);});
+  app.whenReady().then(start).catch(error=>{console.error(error);if(!smoke)dialog.showErrorBox(agents.name,error.message);app.exit(1);});
 }
 const webPreferences=()=>({preload:path.join(__dirname,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true,backgroundThrottling:false});
 function secure(window){
@@ -26,15 +28,16 @@ function secure(window){
   window.webContents.on('will-navigate',e=>e.preventDefault());
 }
 function snapshot(){
-  const local=reader?.status||{connected:false,files:0},remote=remotes?.snapshot().connections||[],connected=remote.filter(e=>e.connected).length;
+  const source=agents.combine(reader?.status,claudeReader?.status,remotes?.snapshot().connections||[]);
   const update=updater?.snapshot();
-  return {...game.snapshot(),source:{...local,connected:local.connected||connected>0,remoteConnected:connected,localConnected:local.connected},compact:!!settings.compact,pinned:settings.pinned!==false,demo:demo||smoke,update,notice:notice||update?.notice||''};
+  const state=game.snapshot();if(!source.limitsProvider&&source.agents.claude.connected)state.limits=state.limits.map(limit=>({...limit,left:null,resetsAt:null}));
+  return {...state,source,compact:!!settings.compact,pinned:settings.pinned!==false,demo:demo||smoke,update,notice:notice||update?.notice||''};
 }
 function publish(force=false){
   const state=snapshot(),encoded=JSON.stringify(state);
   if(win&&!win.isDestroyed()&&(force||encoded!==previous)){win.webContents.send('state',state);previous=encoded;}
   if(panel&&!panel.isDestroyed()){
-    const state={...game.panelState(),remote:remotes?.snapshot()||{connections:[],canRemember:false},update:updater?.snapshot(),notice:notice||updater?.snapshot().notice||'',demo:demo||smoke},encoded=JSON.stringify(state);
+    const state={...game.panelState(),source:snapshot().source,remote:remotes?.snapshot()||{connections:[],canRemember:false},update:updater?.snapshot(),notice:notice||updater?.snapshot().notice||'',demo:demo||smoke},encoded=JSON.stringify(state);
     if(force||encoded!==panelPrevious){panel.webContents.send('state',state);panelPrevious=encoded;}
   }
 }
@@ -43,7 +46,7 @@ async function openPanel(tab='collection'){
   if(panel&&!panel.isDestroyed()){panel.webContents.send('tab',tab);panel.show();return;}
   const area=screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).workArea;
   panel=new BrowserWindow({width:Math.min(920,area.width),height:Math.min(750,area.height),minWidth:650,minHeight:480,
-    show:false,title:'포켓몬 도감 · Codex Buddy',backgroundColor:'#17231e',autoHideMenuBar:true,webPreferences:webPreferences()});
+    show:false,title:'포켓몬 도감 · '+agents.name,backgroundColor:'#17231e',autoHideMenuBar:true,webPreferences:webPreferences()});
   secure(panel);panel.on('closed',()=>{panel=null;panelPrevious='';});
   await panel.loadFile(path.join(__dirname,'panels.html'),{query:{tab}});
   if(smoke)panel.setOpacity(0);
@@ -57,6 +60,7 @@ async function start(){
   }else if(demo)game.data.workTokens=25000;
   else {
     reader=new CodexReader(path.join(process.env.CODEX_HOME||path.join(os.homedir(),'.codex'),'sessions'),game);
+    claudeReader=new ClaudeReader(path.join(process.env.CLAUDE_CONFIG_DIR||path.join(os.homedir(),'.claude'),'projects'),game);
     remotes=new RemoteCodex(game,dataDir,{vault:{available:()=>safeStorage.isEncryptionAvailable(),encrypt:value=>safeStorage.encryptString(value).toString('base64'),decrypt:value=>safeStorage.decryptString(Buffer.from(value,'base64'))},onChange:()=>publish()});
   }
   const area=screen.getPrimaryDisplay().workArea,{width,height}=placement.size(settings.compact);
@@ -64,7 +68,7 @@ async function start(){
   const display=screen.getDisplayMatching({x,y,width,height}).workArea;
   ({x,y}=placement.fit({x,y,width,height},display));
   win=new BrowserWindow({width,height,x,y,frame:false,transparent:true,resizable:false,hasShadow:false,thickFrame:false,maximizable:false,fullscreenable:false,
-    alwaysOnTop:settings.pinned!==false,skipTaskbar:true,show:false,title:'Pokemon Codex Buddy',
+    alwaysOnTop:settings.pinned!==false,skipTaskbar:true,show:false,title:agents.name,
     backgroundColor:'#00000000',webPreferences:webPreferences()});
   secure(win);win.setAlwaysOnTop(settings.pinned!==false,'floating');
   widgetPlacement=placement.attach(win,screen,(x,y)=>{settings.x=x;settings.y=y;});
@@ -103,7 +107,7 @@ async function start(){
   await win.loadFile(path.join(__dirname,'index.html'));
   if(smoke)win.setOpacity(0);else createTray();
   win.showInactive();
-  if(reader)await reader.poll();remotes?.start();save();publish(true);
+  if(reader)await Promise.all([reader.poll(),claudeReader.poll()]);remotes?.start();save();publish(true);
   if(!smoke&&!demo&&process.platform==='win32'&&app.isPackaged&&path.basename(process.execPath).toLowerCase()==='pokemoncodex.exe'){
     try{
       updater=new AutoUpdate({installRoot:path.dirname(process.execPath),dataDir,version:app.getVersion(),enabled:settings.autoUpdate!==false,
@@ -119,7 +123,7 @@ async function start(){
     if(updater&&await updater.maybeApply())return;
     if(busy||updating)return;busy=true;
     try{
-      if(reader&&Date.now()-lastRead>=1500){await reader.poll();lastRead=Date.now();}
+      if(reader&&Date.now()-lastRead>=1500){await Promise.all([reader.poll(),claudeReader.poll()]);lastRead=Date.now();}
       remotes?.poll();game.tick();save();publish();
       if(++healthyTicks===3){const token=process.argv.find(a=>a.startsWith('--update-transaction='))?.split('=')[1];if(token)try{markHealthy(path.dirname(process.execPath),app.getVersion(),token);}catch(error){console.error('Update startup confirmation failed:',error.message);}}
     }catch(error){console.error(error);notice='진행 저장 오류 · 저장 폴더를 확인해 주세요.';clearInterval(timer);publish(true);}
@@ -143,7 +147,7 @@ function createTray(){
     pixels[i]=rgb[2];pixels[i+1]=rgb[1];pixels[i+2]=rgb[0];pixels[i+3]=255;
   }
   tray=new Tray(nativeImage.createFromBitmap(pixels,{width:16,height:16}));
-  tray.setToolTip('Pokémon Codex Buddy');
+  tray.setToolTip(agents.name);
   updateTray();tray.on('click',()=>win.isVisible()?win.hide():win.showInactive());
 }
 function updateTray(){
@@ -152,7 +156,7 @@ function updateTray(){
   tray.setContextMenu(Menu.buildFromTemplate([
     {label:'포켓몬 보기',click:()=>win.showInactive()},{label:'포켓기어',click:()=>openPanel('collection')},
     {label:'도전하기',click:()=>openPanel('challenge')},{label:'가방보기',click:()=>openPanel('daycare')},{label:'모험 기록',click:()=>openPanel('journal')},
-    {label:'Codex 원격 연동 설정',click:()=>openPanel('connections')},
+    {label:'AI Agent 연동 설정',click:()=>openPanel('connections')},
     {type:'separator'},{label:'v'+app.getVersion()+(update?' · '+update.label:''),enabled:false},
     {label:'자동 업데이트',type:'checkbox',checked:settings.autoUpdate!==false,enabled:!!updater,click:item=>{settings.autoUpdate=item.checked;save();updater.setEnabled(item.checked);}},
     {label:'업데이트 확인',enabled:!!updater&&!['downloading','staging','applying'].includes(update?.phase),click:()=>updater?.check(true)},
@@ -165,10 +169,10 @@ async function smokeTest(){
   const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const finishPresentation=()=>wait(Math.max(0,game.data.switchUntil-Date.now())+30);
   await wait(800);
-  const inspection=await win.webContents.executeJavaScript("({hero:document.querySelector('#hero-name').textContent,images:[...document.images].every(i=>i.complete&&i.naturalWidth>0),overflow:document.documentElement.scrollWidth>innerWidth,slots:document.querySelectorAll('[data-slot]').length,facing:getComputedStyle(document.querySelector('#hero-image')).transform})");
+  const inspection=await win.webContents.executeJavaScript("({hero:document.querySelector('#hero-name').textContent,images:[...document.images].every(i=>i.hidden||i.complete&&i.naturalWidth>0),overflow:document.documentElement.scrollWidth>innerWidth,slots:document.querySelectorAll('[data-slot]').length,facing:getComputedStyle(document.querySelector('#hero-image')).transform})");
   const headerLayout=await win.webContents.executeJavaScript(`(()=>{
     const label=document.querySelector('#connection-label'),original=label.textContent,pin=document.querySelector('#pin').getBoundingClientRect(),brand=document.querySelector('.brand').getBoundingClientRect();
-    const fits=['Codex 연결됨','Codex 기다리는 중','미리보기'].every(text=>{label.textContent=text;const r=label.parentElement.getBoundingClientRect();return r.left>=brand.right&&r.right<=pin.left&&pin.left-r.right<=8&&Math.abs((r.top+r.bottom-pin.top-pin.bottom)/2)<2;});
+    const fits=['연결됨','연결 대기','미리보기'].every(text=>{label.textContent=text;const r=label.parentElement.getBoundingClientRect();return r.left>=brand.right&&r.right<=pin.left&&pin.left-r.right<=8&&Math.abs((r.top+r.bottom-pin.top-pin.bottom)/2)<2;});
     label.textContent=original;return fits&&label.closest('.toolbar')!==null;
   })()`);
   fs.writeFileSync(path.join(dir,'widget.png'),(await win.webContents.capturePage()).toPNG());

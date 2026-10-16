@@ -3,11 +3,11 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; font-src 'self'">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pokémon Codex Buddy</title><link rel="stylesheet" href="widget.css"><link rel="stylesheet" href="battle-ui.css">
+<title>AI Agent 포켓몬 키우기</title><link rel="stylesheet" href="widget.css"><link rel="stylesheet" href="battle-ui.css">
 </head><body>
 <main class="widget">
   <header class="toolbar">
-    <div class="brand"><span class="pokeball"></span>POKÉMON <span>/</span> <b>CODEX</b></div>
+    <div class="brand"><span class="pokeball"></span>POKÉMON <span>/</span> <b id="agent-label">AI AGENT</b></div>
     <div class="toolbar-right"><div class="connection"><i></i><span id="connection-label">연결 준비 중</span></div><nav aria-label="위젯 조작">
       <button id="pin" title="항상 위에" aria-label="항상 위에" aria-pressed="true">⌖</button>
       <button id="compact" title="작게 보기" aria-label="작게 보기">▱</button>
@@ -32,8 +32,8 @@
     <div class="xp-heading"><span>EXP <b id="exp"></b> <b id="xp-boost" class="xp-boost"></b></span><span id="evolution"></span></div>
     <div class="xp-track"><i id="xp-bar"></i></div>
     <div class="limits">
-      <div><span>5시간 남음</span><b id="limit-a-value">—</b><div class="limit-track"><i id="limit-a-bar"></i></div></div>
-      <div><span>주간 남음</span><b id="limit-b-value">—</b><div class="limit-track"><i id="limit-b-bar"></i></div></div>
+      <div><span id="limit-a-label">5시간 남음</span><b id="limit-a-value">—</b><div class="limit-track"><i id="limit-a-bar"></i></div></div>
+      <div><span id="limit-b-label">주간 남음</span><b id="limit-b-value">—</b><div class="limit-track"><i id="limit-b-bar"></i></div></div>
     </div>
     <div class="party" id="party" aria-label="출전 포켓몬 선택"></div>
   </section>
@@ -44,4 +44,4 @@
     <button data-panel="journal">모험 기록</button>
   </div>
   <footer class="credit">원작 모모찡 · momozzing</footer>
-</main><script src="capture-animation.js"></script><script src="move-effects.js"></script><script src="battle-pacing.js"></script><script src="renderer.js"></script></body></html>
+</main><script src="capture-animation.js"></script><script src="move-effects.js"></script><script src="battle-pacing.js"></script><script src="agent-status.js"></script><script src="renderer.js"></script></body></html>

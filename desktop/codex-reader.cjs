@@ -53,15 +53,19 @@ function selectEvent(line) {
 }
 class CodexReader {
   constructor(root,game) {this.root=root;this.game=game;this.files=new Map();this.inventory=new Map();this.lastScan=0;this.busy=false;this.status={connected:false,files:0,error:null};}
+  directoryAllowed(name){return /^\d{2,4}$/.test(name);}
+  fileAllowed(name){return name.startsWith('rollout-')&&name.endsWith('.jsonl');}
+  identity(full){return crypto.createHash('sha256').update(path.basename(full)).digest('hex').slice(0,24);}
+  deliver(line,cursor,baseline,now){const event=selectEvent(line);if(event)this.game.observe(cursor.id,event,{baseline,now});}
   async discover(now) {
-    const found=[],inventory=this.inventory;
+    const found=[],inventory=this.inventory,reader=this;
     async function walk(dir,depth) {
       if(depth>3)return;
       const entries=await fs.readdir(dir,{withFileTypes:true});
       for(const entry of entries) {
         const full=path.join(dir,entry.name);
-        if(entry.isDirectory()&&/^\d{2,4}$/.test(entry.name)) await walk(full,depth+1);
-        else if(entry.isFile()&&entry.name.startsWith('rollout-')&&entry.name.endsWith('.jsonl')) {
+        if(entry.isDirectory()&&reader.directoryAllowed(entry.name,depth)) await walk(full,depth+1);
+        else if(entry.isFile()&&reader.fileAllowed(entry.name)) {
           try {
             const stat=await fs.stat(full),previous=inventory.get(full);
             const changed=!previous||stat.size!==previous.size||stat.mtimeMs!==previous.mtime;
@@ -81,7 +85,7 @@ class CodexReader {
     const keep=new Set(found.slice(0,64).map(x=>x.full));
     for(const filename of this.files.keys()) if(!keep.has(filename)) this.files.delete(filename);
     for(const {full,baselineEnd} of found.slice(0,64)) if(!this.files.has(full)) {
-      const id=crypto.createHash('sha256').update(path.basename(full)).digest('hex').slice(0,24);
+      const id=this.identity(full);
       this.files.set(full,{id,offset:0,carry:'',decoder:new StringDecoder('utf8'),initial:true,baselineEnd});
     }
     this.lastScan=now; this.status.files=this.files.size;
@@ -104,9 +108,9 @@ class CodexReader {
             const decoded=cursor.decoder.write(bytes.subarray(0,bytesRead));
             const parts=decoded.split('\n');
             if(start>0)parts.shift();
-            cursor.carry=parts.pop()||'';
+            cursor.carry=parts.pop()||'';cursor.carryBaseline=!!cursor.carry;
             // Baseline the latest observed cumulative counter: no historical backfill or inferred usage.
-            for(const line of parts) {const e=selectEvent(line);if(e)this.game.observe(cursor.id,e,{baseline:true,now});}
+            for(const line of parts)this.deliver(line,cursor,true,now);
             cursor.offset=start+bytesRead; cursor.initial=false;
           }
           if(stat.size>cursor.offset) {
@@ -116,7 +120,8 @@ class CodexReader {
             cursor.offset+=bytesRead;
             const parts=(cursor.carry+cursor.decoder.write(bytes.subarray(0,bytesRead))).split('\n');
             cursor.carry=parts.pop()||'';
-            for(const line of parts) {const e=selectEvent(line);if(e)this.game.observe(cursor.id,e,{now});}
+            for(let i=0;i<parts.length;i++)this.deliver(parts[i],cursor,!!cursor.carryBaseline&&i===0,now);
+            if(parts.length)cursor.carryBaseline=false;
             if(cursor.carry.length>MAX_LINE) cursor.carry='';
           }
           readable++;

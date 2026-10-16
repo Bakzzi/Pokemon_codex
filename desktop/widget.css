@@ -19,3 +19,5 @@ footer.credit{line-height:12px}
 #party{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}#party button{min-width:0;flex-direction:column;justify-content:center;gap:0;padding:0;height:35px}#party img{width:24px;height:24px}#party small{font-size:8px;line-height:10px}#party button.empty{border:1px dashed #60765366;opacity:.65}#party button.empty:before{content:'+';display:grid;place-items:center;height:22px;font-size:18px;font-weight:300;color:#92a585}
 
 .compact #party{display:none}
+.brand{gap:4px;letter-spacing:.5px;white-space:nowrap;flex-shrink:0}
+.toolbar-right{flex-shrink:0}

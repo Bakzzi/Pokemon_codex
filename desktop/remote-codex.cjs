@@ -33,7 +33,7 @@ class RemoteCodex {
   }
   write(file,data){fs.mkdirSync(this.dir,{recursive:true});fs.writeFileSync(file+'.tmp',JSON.stringify(data,null,2)+'\n',{mode:0o600});fs.renameSync(file+'.tmp',file);}
   save(){if(this.error)throw new Error(this.error);this.write(this.file,{version:1,connections:[...this.entries.values()].map(e=>e.config)});}
-  snapshot(){return {error:this.error,canRemember:!!this.vault?.available(),connections:[...this.entries.values()].map(e=>({...e.config,state:e.state,connected:e.connected,files:e.files,message:e.message||'',candidate:e.candidate||null,trustSource:e.trustSource||null,hasSavedSecret:!!this.encrypted[e.config.id]}))};}
+  snapshot(){return {error:this.error,canRemember:!!this.vault?.available(),connections:[...this.entries.values()].map(e=>({...e.config,state:e.state,connected:e.connected,agents:e.connected?e.agents||{codex:true,claude:false}:{codex:false,claude:false},files:e.files,message:e.message||'',candidate:e.candidate||null,trustSource:e.trustSource||null,hasSavedSecret:!!this.encrypted[e.config.id]}))};}
   changed(){this.onChange();}
   add(input,secret='',remember=false){
     if(this.entries.size>=8)throw new Error('원격 PC는 최대 8대까지 연결할 수 있어요.');
@@ -108,17 +108,21 @@ class RemoteCodex {
   receive(e,line){
     let value;try{value=JSON.parse(line);}catch{return;}
     if(value.v!==1)return;
-    if(value.kind==='status'&&typeof value.connected==='boolean'&&Number.isInteger(value.files)&&value.files>=0&&value.files<=64){
+    if(value.kind==='status'&&typeof value.connected==='boolean'&&Number.isInteger(value.files)&&value.files>=0&&value.files<=128){
+      if(value.agents&&(typeof value.agents.codex!=='boolean'||typeof value.agents.claude!=='boolean'||value.connected!==(value.agents.codex||value.agents.claude)))return;
+      e.agents=value.agents?{codex:value.agents.codex,claude:value.agents.claude}:{codex:value.connected,claude:false};
       e.lastMessage=Date.now();e.ready=true;e.attempts=0;e.connected=value.connected;e.files=value.files;e.state=value.connected?'connected':'waiting';
-      e.message=value.connected?'원격 Codex 연결됨':'원격 PC의 첫 Codex 작업을 기다려요.';this.changed();return;
+      e.message=value.connected?['codex','claude'].filter(id=>e.agents[id]).map(id=>id==='codex'?'Codex':'Claude Code').join(' + ')+' 원격 연결됨':'원격 PC의 첫 에이전트 작업을 기다려요.';this.changed();return;
     }
     if(value.kind!=='event'||!/^[a-f0-9]{24}$/.test(value.id)||typeof value.baseline!=='boolean')return;
+    const agent=value.agent||'codex',activityId=value.activityId||value.id;
+    if(!['codex','claude'].includes(agent)||!/^[a-f0-9]{24}$/.test(activityId))return;
     const event=selectEvent(JSON.stringify(value.event));if(!event)return;
     const previous=this.game.data.baselines[value.id],counter=event.payload.info?.total_token_usage;
     // One global rollout identity also deduplicates a log mirrored on two PCs.
     if(previous&&counter&&(counter.output_tokens<previous.output||counter.total_tokens<previous.total))delete event.payload.info;
-    this.game.observe(value.id,event,{baseline:value.baseline&&(event.payload.type!=='token_count'||!previous)});
-    e.ids.add(value.id);e.lastMessage=Date.now();
+    this.game.observe(value.id,event,{baseline:value.baseline&&(event.payload.type!=='token_count'||!previous),agent,activityId});
+    e.ids.add(value.id);e.ids.add(activityId);e.lastMessage=Date.now();
   }
   poll(){for(const e of this.entries.values())if(e.client&&e.ready&&Date.now()-e.lastMessage>20000)e.client.destroy();}
   stop(id,persist=true){const e=this.entries.get(id);if(!e)return false;clearTimeout(e.retry);e.retry=null;const client=e.client;e.client=null;e.ready=false;client?.destroy();for(const session of e.ids){const s=this.game.sessions.get(session);if(s?.phase==='working')s.at=Math.min(s.at,Date.now()-600001);}e.stream=null;e.connected=false;e.files=0;e.state='stopped';e.message='연결 중지';if(persist){e.config.enabled=false;this.save();}this.changed();return true;}

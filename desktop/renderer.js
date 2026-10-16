@@ -187,6 +187,7 @@ function renderPartyStatus(s){
 }
 window.buddy.onState(s=>{
   current=s;document.body.classList.toggle('compact',s.compact);document.documentElement.style.setProperty('--accent',s.accent);
+  const agent=AgentStatus.presentation(s.source);$('agent-label').textContent=agent.label;$('agent-label').title=AgentStatus.name+'\n'+agent.detail;
   $('pin').setAttribute('aria-pressed',String(s.pinned));$('compact').title=s.compact?'상태창 펼치기':'작게 보기';
   if(!switching)sprite('hero-image',s.hero);
   $('hero-name').textContent=s.hero.name;$('level').textContent=s.level;renderHeroHealth(s);
@@ -194,11 +195,11 @@ window.buddy.onState(s=>{
   $('xp-bar').style.width=s.progress*100+'%';$('evolution').textContent=s.evolution.some(e=>e.automatic&&e.ready)?'자동진화 대기 · 배틀 종료 후':s.evolution.some(e=>e.ready)?'진화 가능 · 도감에서 확인':'';
   const boost=s.experienceBoost,pct=boost.percent.toLocaleString('ko-KR',{maximumFractionDigits:2});
   $('xp-boost').textContent='BOOST +'+pct+'%';$('xp-boost').title='누적 도감 '+boost.count+'종 · 1종당 경험치 +1% · 시즌이 바뀌어도 유지';
-  $('status').textContent=s.notice||(s.pendingActions.length?s.pendingActions[0].name+' 예약 · '+s.pendingActions[0].reason:s.pendingChallenge?s.pendingChallenge.name+' 도전 예약 · 배틀 종료 후 시작':s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.phase==='working'?'Codex 작업과 함께 모험 중':s.workTokens>=250?'작업의 여운으로 모험을 이어가는 중':s.phase==='unknown'?'Codex 작업 상태를 확인하는 중':s.phase==='done'?'작업 끝! 모험 기록을 확인해 봐':'다음 코딩을 기다리는 중');
+  $('status').textContent=s.notice||(s.pendingActions.length?s.pendingActions[0].name+' 예약 · '+s.pendingActions[0].reason:s.pendingChallenge?s.pendingChallenge.name+' 도전 예약 · 배틀 종료 후 시작':s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.phase==='working'?'에이전트 작업과 함께 모험 중':s.workTokens>=250?'작업의 여운으로 모험을 이어가는 중':s.phase==='unknown'?'에이전트 작업 상태를 확인하는 중':s.phase==='done'?'작업 끝! 모험 기록을 확인해 봐':'다음 코딩을 기다리는 중');
   $('mode-tag').textContent=s.demo?'DEMO':'LIVE';
-  $('connection-label').textContent=s.demo?'미리보기':s.source.connected?'Codex 연결됨':'Codex 기다리는 중';
-  $('connection-label').parentElement.classList.toggle('live',s.source.connected&&!s.demo);$('connection-label').title=s.demo?'미리보기 · 경험치 별도':s.source.remoteConnected?'원격 PC '+s.source.remoteConnected+'대 연결됨':s.source.error||'로컬 작업 상태를 읽어요 · 원격 연동은 설정에서 추가할 수 있어요';
-  s.limits.forEach((limit,i)=>{const prefix=i===0?'limit-a':'limit-b';$(prefix+'-value').textContent=limit.left===null?'미제공':limit.left+'%';$(prefix+'-bar').style.width=(limit.left??0)+'%';});
+  $('connection-label').textContent=s.demo?'미리보기':agent.connection;
+  $('connection-label').parentElement.classList.toggle('live',agent.connected&&!s.demo);$('connection-label').title=s.demo?'미리보기 · 경험치 별도':agent.detail;
+  s.limits.forEach((limit,i)=>{const prefix=i===0?'limit-a':'limit-b',left=agent.claudeOnly?null:limit.left;$(prefix+'-label').textContent=(agent.both?'Codex ':agent.claudeOnly?'Claude ':'')+(i===0?'5시간 남음':'주간 남음');$(prefix+'-value').textContent=left===null?'미제공':left+'%';$(prefix+'-bar').style.width=(left??0)+'%';$(prefix+'-value').title=agent.claudeOnly?'Claude Code 기록에서 남은 사용 한도를 제공하지 않아요.':agent.both?'Codex 기록에서 제공한 한도예요.':'';});
   if($('party').dataset.ids!==s.slots.map(p=>p.uid).join(',')){
     $('party').replaceChildren(...s.slots.map((p,i)=>{const b=document.createElement('button');b.dataset.slot=i;b.onclick=()=>b.dataset.id?window.buddy.action('select',Number(b.dataset.id)):window.buddy.action('panel','collection');const img=document.createElement('img');img.alt='';b.append(img,document.createElement('small'));return b;}));$('party').dataset.ids=s.slots.map(p=>p.uid).join(',');
   }

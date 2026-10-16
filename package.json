@@ -1,8 +1,8 @@
 {
   "name": "pokemon-codex-buddy",
-  "version": "0.3.67",
+  "version": "0.3.68",
   "private": true,
-  "description": "A local Pokemon desktop companion for Codex, inspired by momozzing/Digimon_mod",
+  "description": "A local Pokemon desktop companion for AI agents, inspired by momozzing/Digimon_mod",
   "main": "desktop/main.cjs",
   "license": "MIT",
   "scripts": {

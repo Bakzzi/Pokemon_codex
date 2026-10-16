@@ -655,20 +655,20 @@ class Game {
     else if(b.turn>=300)this.deferBattle('draw',finishedAt);
     return true;
   }
-  observe(id,event,{baseline=false,now=Date.now()}={}){
+  observe(id,event,{baseline=false,now=Date.now(),agent='codex',activityId=id}={}){
     const at=Date.parse(event.timestamp);if(!Number.isFinite(at)||at>now+60000||event.type!=='event_msg')return;const p=event.payload||{};
     if(p.type==='token_count'){
       const counters=p.info?.total_token_usage;
       if(counters&&validCount(counters.output_tokens)&&validCount(counters.total_tokens)){
-        const prev=this.data.baselines[id];if(!baseline&&prev&&at>=prev.at){const delta=Math.max(0,counters.output_tokens-prev.output);this.data.outputTokens+=delta;this.data.workTokens+=delta;nursery.advance(this,delta,now);this.data.totalTokens+=Math.max(0,counters.total_tokens-prev.total);}
+        const prev=this.data.baselines[id];if(!baseline&&(prev||agent==='claude')&&(!prev||at>=prev.at)){const delta=Math.max(0,counters.output_tokens-(prev?.output||0));this.data.outputTokens+=delta;this.data.workTokens+=delta;nursery.advance(this,delta,now);this.data.totalTokens+=Math.max(0,counters.total_tokens-(prev?.total||0));}
         if(!prev||at>=prev.at)this.data.baselines[id]={output:counters.output_tokens,total:counters.total_tokens,at};
       }
-      if(p.rate_limits&&at>=(this.limits.at||0)){this.limits={at};for(const key of ['primary','secondary']){const l=p.rate_limits[key];if(l&&typeof l.used_percent==='number'&&Number.isFinite(l.used_percent))this.limits[key]={used:Math.max(0,Math.min(100,l.used_percent)),minutes:l.window_minutes,resetsAt:l.resets_at};}}
+      if(agent==='codex'&&p.rate_limits&&at>=(this.limits.at||0)){this.limits={at};for(const key of ['primary','secondary']){const l=p.rate_limits[key];if(l&&typeof l.used_percent==='number'&&Number.isFinite(l.used_percent))this.limits[key]={used:Math.max(0,Math.min(100,l.used_percent)),minutes:l.window_minutes,resetsAt:l.resets_at};}}
     }
-    this.lastEvent=Math.max(this.lastEvent,at);const s=this.sessions.get(id)||{phase:'idle',at:0};if(at<s.at)return;
+    this.lastEvent=Math.max(this.lastEvent,at);const s=this.sessions.get(activityId)||{phase:'idle',at:0};if(at<s.at)return;
     const phases={task_started:'working',task_complete:'done',task_completed:'done',turn_aborted:'idle',error:'error'};
     const phase=phases[p.type]||(p.type==='token_count'?'working':null);
-    if(phase){s.phase=baseline&&(phase==='done'||phase==='working'&&now-at>=600000)?'idle':phase;s.at=at;this.sessions.set(id,s);}
+    if(phase){s.phase=baseline&&(phase==='done'||phase==='working'&&now-at>=600000)?'idle':phase;s.at=at;s.agent=agent;this.sessions.set(activityId,s);}
   }
   snapshot(now=Date.now()){
     const p=this.data.owned[this.data.activeId],b=this.data.battle,hero=b?.party[p.uid],next=xpAt(p.id,Math.min(100,p.level+1)),floor=xpAt(p.id,p.level),maxHp=hero?.maxHp||statsAt(p.id,p.level)[1];

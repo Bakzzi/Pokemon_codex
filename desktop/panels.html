@@ -2,9 +2,9 @@
 <html lang="ko"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; font-src 'self'">
-<title>포켓몬 도감 · Codex Buddy</title><link rel="stylesheet" href="panels.css"><link rel="stylesheet" href="badge-case.css"><link rel="stylesheet" href="connections.css">
+<title>포켓몬 도감 · AI Agent 포켓몬 키우기</title><link rel="stylesheet" href="panels.css"><link rel="stylesheet" href="badge-case.css"><link rel="stylesheet" href="connections.css">
 </head><body>
-<header class="top"><div><span class="kicker">POKÉMON / CODEX</span><h1>작은 모험의 기록</h1></div><div class="totals"><b id="totals">4 / 151</b><span id="region">관동 지방</span><span id="xp-boost"></span></div></header>
+<header class="top"><div><span class="kicker" id="panel-agent-label">POKÉMON / AI AGENT</span><h1>작은 모험의 기록</h1></div><div class="totals"><b id="totals">4 / 151</b><span id="region">관동 지방</span><span id="xp-boost"></span></div></header>
 <nav class="tabs" aria-label="모험 메뉴"><button data-tab="collection" aria-selected="true">포켓몬 도감</button><button data-tab="challenge">도전하기</button><button data-tab="daycare">가방</button><button data-tab="journal">모험 기록</button><button data-tab="connections">연동 설정</button></nav>
 <p id="season-note" class="season-note"></p>
 <div id="notice" role="status"></div>
@@ -78,7 +78,7 @@
   <div class="nursery-layout"><div><div class="nursery-pair"><label>첫 번째 동료<select id="parent-a"><option value="">동료 선택</option></select></label><span>＋</span><label>두 번째 동료<select id="parent-b"><option value="">동료 선택</option></select></label></div>
   <div id="egg-preview" class="egg-preview"></div><div class="nursery-actions"><button id="daycare-start">전화로 맡기기</button><button id="daycare-withdraw" hidden>전화로 데려오기</button></div></div>
   <div><div id="nursery-progress"></div><div id="hatch-progress"></div>
-  <p class="muted">한 번 맡길 때 알 하나를 얻어요. 모험 걸음은 실제 Codex 작업량에 따라 쌓여요.<br><br>코딩하는 동안 알을 발견하고, 부화하면 동료 목록에 자동으로 들어와요.<br><br>부모는 그대로 돌아오고, 부화한 포켓몬은 Lv.5부터 따로 자라요. 키우미집에서는 부모의 경험치가 오르지 않아요.</p></div></div>
+  <p class="muted">한 번 맡길 때 알 하나를 얻어요. 모험 걸음은 실제 에이전트 작업량에 따라 쌓여요.<br><br>코딩하는 동안 알을 발견하고, 부화하면 동료 목록에 자동으로 들어와요.<br><br>부모는 그대로 돌아오고, 부화한 포켓몬은 Lv.5부터 따로 자라요. 키우미집에서는 부모의 경험치가 오르지 않아요.</p></div></div>
   </section>
 </section>
 <section id="journal" class="page" hidden>
@@ -88,7 +88,7 @@
   <div id="journal-detail" hidden><p class="muted">최근 모험과 배틀의 기술·특성·상태이상 기록이에요. 오래된 상세 기록이 지나가도 요약 수치는 남아요.</p><div id="journal-list"></div></div>
 </section>
 <section id="connections" class="page" hidden>
-  <div class="intro"><div><h2>Codex 원격 연동</h2><p>다른 PC에서 코딩해도 이 PC의 동료들이 함께 모험해요. 로컬 사용량은 계속 자동으로 반영돼요.</p></div></div>
+  <div class="intro"><div><h2>AI Agent 원격 연동</h2><p>다른 PC의 Codex·Claude Code 작업도 함께 반영해요. 이 PC의 작업 기록도 계속 자동으로 읽어요.</p></div></div>
   <div id="remote-list" aria-live="polite"></div>
   <form id="remote-form" class="remote-form">
     <h3>원격 PC 추가</h3>
@@ -106,8 +106,8 @@
     <details><summary>원격 실행 환경</summary><label>Node.js 실행 파일<input id="remote-node" value="node" placeholder="node 또는 실행 파일의 전체 경로"></label><p class="muted">원격 PC에서 Node.js 18 이상을 실행할 수 있어야 해요. 별도 위젯 설치 없이 수집기를 메모리에서 실행해요.</p></details>
     <button type="submit">추가하고 연결</button>
   </form>
-  <p class="muted">작업 시작·종료, 숫자 사용량·한도만 SSH로 받아요. 대화 본문·명령 내용·Codex 인증정보는 전송하지 않아요. 처음 연결하기 전 기록은 경험치로 가져오지 않으며, 재연결 시 확인한 기록의 증가분만 한 번 반영해요.</p>
+  <p class="muted">작업 상태와 숫자 사용량·한도만 SSH로 받아요. 대화 본문·명령 내용·인증정보는 전송하지 않아요. 처음 연결하기 전 기록은 경험치로 가져오지 않으며, 재연결 시 확인한 기록의 증가분만 한 번 반영해요. Claude Code 기록에서 남은 사용 한도를 제공하지 않으면 미제공으로 표시해요.</p>
 </section>
 </main>
 <footer>원작 모모찡 · momozzing <span>진행은 이 PC에 자동 저장돼요.</span></footer>
-<script src="connections.js"></script><script src="panels.js"></script></body></html>
+<script src="agent-status.js"></script><script src="connections.js"></script><script src="panels.js"></script></body></html>
