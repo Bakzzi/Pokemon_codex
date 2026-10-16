@@ -1,6 +1,6 @@
 'use strict';
 const {monthOf,levelOf}=require('./season.cjs');
-const {data:db,species,moves,xpAt,levelAt,learnedMoves,view,pickWild,rarity,balance,wildMinimum,wildEligible,statsAt,encounterChances,championBonus,milestoneBonuses,wildDistribution}=require('./pokemon.cjs');
+const {data:db,species,moves,xpAt,levelAt,learnedMoves,view,pickWild,rarity,balance,wildMinimum,wildEligible,statsAt,encounterChances,championBonus,milestoneBonuses,captureBonus,wildDistribution}=require('./pokemon.cjs');
 const battleEngine=require('./battle.cjs');
 const {combatant,tryCatch,abilityFor}=battleEngine;
 const journal=require('./journal.cjs');
@@ -620,7 +620,7 @@ class Game {
   capture(now){
     const b=this.data.battle,opportunity=this.captureOpportunity(b),playing=this.data.captureAnimation;
     if(!opportunity||this.data.pendingBattle?.kind==='capture-result'||playing&&now<playing.at+captureTiming(playing).duration)return false;
-    const outcome=tryCatch(species.get(b.foe.id).catchRate,b.foe.hp,b.foe.maxHp,b.foe.status,this.random);b.captureAttempts++;
+    const outcome=tryCatch(species.get(b.foe.id).catchRate,b.foe.hp,b.foe.maxHp,b.foe.status,this.random,captureBonus(b.foe.id,this.data.caught));b.captureAttempts++;
     const bandAttempt=++captureCounts(b)[opportunity.band],quota={band:opportunity.band,bandAttempt,bandLimit:opportunity.limit};
     const previous=this.data.animation,leadIn=previous?.kind==='attack'&&previous.moveId&&previous.at===now?previous:null;
     const startsAt=now+(leadIn?pacing.duration(leadIn):0);

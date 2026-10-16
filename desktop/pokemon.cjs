@@ -40,6 +40,15 @@ function milestoneBonuses({badges=[],champion=false,caught={}}={}){
   const gymBonuses={144:'blaine',145:'sabrina',146:'giovanni'},completed=data.pokemon.filter(p=>p.generation===1&&p.id!==151).every(p=>!!caught[p.id]);
   return [144,145,146,150,151].map(id=>({id,extra:id===151?(completed ? .01 : 0):caught[id]?0:(badges.includes(gymBonuses[id]) ? .001 : 0)+(champion ? .003 : 0)})).filter(b=>b.extra>0);
 }
+const captureMilestones=[
+  {targets:[144,145,146],excluded:[144,145,146,150,151],extra:.04},
+  {targets:[150],excluded:[150,151],extra:.03},
+  {targets:[151],excluded:[151],extra:.02},
+];
+function captureBonus(id,caught={}){
+  const rule=captureMilestones.find(rule=>rule.targets.includes(id));
+  return rule&&data.pokemon.every(p=>p.generation!==1||rule.excluded.includes(p.id)||!!caught[p.id])?rule.extra:0;
+}
 function wildDistribution(maxGeneration,partnerLevel,{champion=false,caught={},minimumLevel=0,additions=[]}={}){
   const all=data.pokemon.filter(p=>wildEligible(p,maxGeneration,partnerLevel)),baseRates=encounterChances(champion,minimumLevel),common=all.filter(p=>rarity(p)==='common');
   const pokemon=all.map(p=>({id:p.id,tier:rarity(p),base:0,chance:0})),byId=new Map(pokemon.map(p=>[p.id,p])),missingWeight=champion?championBonus(minimumLevel).uncaughtWeight:1;
@@ -73,4 +82,4 @@ function pickWild(maxGeneration,random=Math.random,partnerLevel=100,{champion=fa
   for(let i=0;i<pool.length;i++){pick-=weights[i];if(pick<0)return pool[i].id;}
   return pool.at(-1).id;
 }
-module.exports={data,species,moves,xpAt,levelAt,learnedMoves,effective,statsAt,view,pickWild,rarity,balance,wildMinimum,wildEligible,encounterChances,championBonus,milestoneBonuses,wildDistribution};
+module.exports={data,species,moves,xpAt,levelAt,learnedMoves,effective,statsAt,view,pickWild,rarity,balance,wildMinimum,wildEligible,encounterChances,championBonus,milestoneBonuses,captureBonus,wildDistribution};

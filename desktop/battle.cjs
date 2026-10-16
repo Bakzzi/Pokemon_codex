@@ -351,9 +351,10 @@ function catchValue(catchRate,hp,maxHp,status){
   const bonus=['sleep','freeze'].includes(status)?2.5:['poison','toxic','burn','paralysis'].includes(status)?1.5:1;
   return Math.max(0,(3*maxHp-2*hp)*catchRate/(3*maxHp)*bonus);
 }
-function tryCatch(rate,hp,maxHp,status,random=Math.random){
-  const a=catchValue(rate,hp,maxHp,status);if(a>=255)return {caught:true,shakes:3,a};
-  const threshold=Math.round(65535*Math.pow(a/255,.25));let checks=0;
+function tryCatch(rate,hp,maxHp,status,random=Math.random,bonus=0){
+  // Add percentage points after the ordinary HP/status calculation, once per ball.
+  const a=catchValue(rate,hp,maxHp,status),chance=Math.min(1,a/255+bonus);if(chance>=1)return {caught:true,shakes:3,a};
+  const threshold=Math.round(65535*Math.pow(chance,.25));let checks=0;
   while(checks<4&&Math.floor(random()*65536)<threshold)checks++;
   return {caught:checks===4,shakes:Math.min(checks,3),a};
 }
