@@ -18,6 +18,18 @@ function drop(random){
   for(const item of items){draw-=item.weight;if(draw<0)return item;}
   return items.at(-1);
 }
+function pickEvolutionItem(candidates,inventory,random){
+  // Balance current stock, so using a stone makes it more likely again.
+  // Three held copies have 1/16 the weight of an unowned kind; no kind is banned.
+  const weighted=candidates.map(id=>{
+    const count=Number.isSafeInteger(inventory[id])&&inventory[id]>0?inventory[id]:0;
+    return {id,weight:1/(count+1)**2};
+  });
+  if(!weighted.length)return null;
+  let draw=random()*weighted.reduce((sum,item)=>sum+item.weight,0);
+  for(const item of weighted){draw-=item.weight;if(draw<0)return item.id;}
+  return weighted.at(-1).id;
+}
 function choose(game,b,sim){
   if(b.kind!=='trainer'||b.pendingSwitch||sim.requestState!=='move'||sim.p1.activeRequest?.wait)return null;
   const actor=sim.p1.active[0];if(!actor.hp||actor.fainted)return null;
@@ -60,4 +72,4 @@ function use(game,b,sim,choice){
   if(item.id===38){slot.pp=Math.min(slot.maxpp,slot.pp+10);const base=target.baseMoveSlots.find(s=>s.id===slot.id);if(base&&base!==slot)base.pp=slot.pp;sim.add('buddypp',target,sim.dex.moves.get(slot.id).name);}
   return true;
 }
-module.exports={items,byId,economy,dropChance,drop,choose,use};
+module.exports={items,byId,economy,dropChance,drop,pickEvolutionItem,choose,use};
