@@ -60,12 +60,22 @@ function renderDex(){
     });$('dex-grid').replaceChildren(...cards);
   }
   const p=state.collection.find(p=>p.id===selected);if(!p)return;
+  const previousForms=[...new Set(p.acquisition.routes.filter(r=>r.kind==='evolution').map(r=>r.from))].map(id=>state.collection.find(p=>p.id===id)).filter(Boolean);
   const members=state.roster.filter(m=>m.id===p.id);
   if(!members.some(m=>m.uid===memberUid))memberUid=members[0]?.uid;
   const member=members.find(m=>m.uid===memberUid);
-  const detailKey=JSON.stringify([p,members,memberUid,state.slots,state.battle?.kind,state.hero.uid,state.pendingActions,state.trainingDevice]);
+  const detailKey=JSON.stringify([p,previousForms.map(p=>[p.id,p.seen,p.name]),members,memberUid,state.slots,state.battle?.kind,state.hero.uid,state.pendingActions,state.trainingDevice]);
   if(detailKey===detailSignature)return;detailSignature=detailKey;
   const root=$('detail');root.replaceChildren(img(p.id,'portrait'+(p.seen?'':' unseen')),node('div','number','No.'+p.id+' · '+(p.caught?'포획 완료':p.seen?'발견':'미발견')),node('h2','',p.name),node('div','types',p.types.join(' / ')),node('p','description',p.description));
+  if(previousForms.length){
+    const nav=node('nav','previous-evolutions');nav.setAttribute('aria-label','이전 진화체 선택');
+    for(const previous of previousForms){
+      const button=node('button','previous-evolution');button.dataset.previousPokemon=previous.id;button.title='이전 진화체 · No.'+previous.id+' '+previous.name;button.setAttribute('aria-label',button.title);
+      button.append(node('span','','←'),img(previous.id,previous.seen?'':'unseen'),node('span','','No.'+previous.id+' '+previous.name));
+      button.onclick=()=>{selected=previous.id;memberUid=null;detailSignature='';render();root.scrollTop=0;const heading=root.querySelector('h2');heading.tabIndex=-1;heading.focus({preventScroll:true});};nav.append(button);
+    }
+    root.prepend(nav);
+  }
   const hints=node('section','acquisition-hints');hints.setAttribute('aria-label','획득 힌트');hints.append(node('h3','','획득 힌트'));
   const labels={wild:'야생',starter:'스타팅',event:'이벤트',evolution:'진화',hatch:'부화'};
   p.acquisition.routes.forEach((r,i)=>{const row=node('p','');row.append(node('b','',(i?'또는 ':'')+(r.kind==='evolution'&&r.special?'특수진화':labels[r.kind])),document.createTextNode(' · '+r.text));hints.append(row);if(r.note)hints.append(node('small','',r.note));});
