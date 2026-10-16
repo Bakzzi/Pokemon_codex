@@ -22,7 +22,7 @@ public final class MobileTest extends Instrumentation {
         require(done.await(20,TimeUnit.SECONDS),"JS timeout");return value[0];
     }
     private void waitReady()throws Exception{
-        for(int i=0;i<100;i++){if("true".equals(js("typeof game!=='undefined' && !!game && !fatal")))return;Thread.sleep(200);}
+        for(int i=0;i<100;i++){if("true".equals(js("typeof game!=='undefined' && !!game && !fatal && document.getElementById('battle').contentDocument.querySelectorAll('#party button').length===6 && document.getElementById('panel').contentDocument.querySelectorAll('.dex-card').length===151")))return;Thread.sleep(200);}
         throw new AssertionError("Game failed to initialize");
     }
     private String readSave()throws Exception{try(InputStream in=new FileInputStream(new File(getTargetContext().getFilesDir(),"adventure.json"));ByteArrayOutputStream out=new ByteArrayOutputStream()){byte[] b=new byte[4096];for(int n;(n=in.read(b))!=-1;)out.write(b,0,n);return out.toString("UTF-8");}}
@@ -30,7 +30,9 @@ public final class MobileTest extends Instrumentation {
         Bundle result=new Bundle();
         try{
             activity=(MainActivity)startActivitySync(new Intent(getTargetContext(),MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);waitReady();Thread.sleep(1500);
+            Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);
+            if("inspect".equals(arguments.getString("mode"))){Thread.sleep(5000);result.putString("diagnostic",js("(()=>{try{return JSON.stringify({document:document.readyState,ready:typeof ready,game:typeof game,active:typeof active,phase:typeof active!=='undefined'?active:null,party:document.getElementById('battle')?.contentDocument.querySelectorAll('#party button').length,call:(()=>{try{window.mobileLifecycle(true);return 'ok'}catch(e){return e.stack}})()})}catch(e){return e.stack}})()"));finish(Activity.RESULT_OK,result);return;}
+            waitReady();Thread.sleep(1500);
             if("preserved".equals(arguments.getString("mode"))){
                 JSONObject save=new JSONObject(readSave());require(save.getJSONObject("mobile").getLong("consumed")>=1000,"Consumed step cursor lost");require(getTargetContext().getSharedPreferences("verify",0).getString("marker","").equals("preserved"),"Native data lost");result.putString("preserved","passed");
             }else{
