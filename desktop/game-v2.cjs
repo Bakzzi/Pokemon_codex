@@ -350,7 +350,6 @@ class Game {
     this.log(`${db.bosses.find(b=>b.id===badge).name}에게 ${species.get(gift.id).name} Lv.10을 받았다!`,'gift',gift.id,now);return uid;
   }
   log(text,kind='info',id=null,now=Date.now()){journal.record(this.data,{at:now,text,kind,id});}
-  acknowledgeJournal(now=Date.now()){journal.acknowledge(this.data,now);return true;}
   memberCombatant(p){return combatant(p.id,p.level,p.moves,p);}
   animate(kind,details={},now=Date.now()){
     if(kind!=='capture'&&this.data.captureAnimation&&!this.data.captureAnimation.caught)this.data.captureAnimation=null;

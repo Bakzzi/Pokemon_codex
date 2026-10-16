@@ -101,7 +101,6 @@ async function start(){
       if(action==='capture-cancel')result=game.reserveCapture(value,0);
       if(action==='challenge')result=game.challenge(value);
       if(action==='challenge-cancel')result=game.cancelChallenge();
-      if(action==='journal-ack')result=game.acknowledgeJournal();
       if(action==='daycare-preview')game.daycareSelection=Array.isArray(value)?value.slice(0,2).map(Number):[];
       if(!result)notice='이 선택은 예약할 수 없어요. 동료·진화 경로·도전 조건을 확인해 주세요.';
       save();publish(true);
@@ -234,8 +233,8 @@ async function smokeTest(){
   await panel.webContents.executeJavaScript("document.querySelector('[data-journal-tab=\"detail\"]').click()");await wait(100);
   const detail=await panel.webContents.executeJavaScript("!document.querySelector('#journal-detail').hidden&&document.querySelector('#journal-list').textContent.includes('포획!')");
   fs.writeFileSync(path.join(dir,'journal-detail.png'),(await panel.webContents.capturePage()).toPNG());
-  await panel.webContents.executeJavaScript("document.querySelector('[data-journal-tab=\"summary\"]').click();document.querySelector('#journal-ack').click()");await wait(100);
-  const acknowledged=game.panelState().summary.counts.wins===0&&game.data.journal.length>0;
+  await panel.webContents.executeJavaScript("document.querySelector('[data-journal-tab=\"summary\"]').click()");await wait(100);
+  const summaryRetained=game.panelState().summary.counts.wins===12&&game.data.journal.length>0&&await panel.webContents.executeJavaScript("!document.querySelector('#journal-ack')");
   game.data.badges=['brock'];publish(true);await panel.webContents.executeJavaScript("document.querySelector('[data-tab=\"challenge\"]').click()");await wait(100);
   const earnedGymLocked=await panel.webContents.executeJavaScript("document.querySelector('[data-challenge=\"0\"]').disabled&&document.querySelector('[data-challenge=\"0\"]').textContent==='뱃지 획득 완료'");
   const earnedBadgeCase=await panel.webContents.executeJavaScript("document.querySelectorAll('.badge-slot.earned').length===1&&document.querySelector('.badge-slot[data-badge=\"brock\"] .badge-art').complete&&document.querySelectorAll('.badge-slot.empty').length===7");
@@ -338,7 +337,7 @@ async function smokeTest(){
     return !h.hidden&&!f.hidden&&getComputedStyle(h).display!=='none'&&n.textContent===${JSON.stringify(game.snapshot().hero.name)}&&number.textContent===${JSON.stringify(game.snapshot().hero.currentHp+' / '+game.snapshot().hero.maxHp)}&&n.getBoundingClientRect().top<bar.getBoundingClientRect().top&&bar.getBoundingClientRect().top<number.getBoundingClientRect().top&&getComputedStyle(document.querySelector('#speech')).display==='none'&&getComputedStyle(document.querySelector('.connection')).display==='none';
   })()`);
   fs.writeFileSync(path.join(dir,'compact.png'),(await win.webContents.capturePage()).toPNG());
-  const controls={switched,recallBall,recallAbsorb,recallReturn,sendBall,sendRelease,assigned,challengeQueued,challengeCancelled,challenge,preview:preview.name&&preview.image&&!preview.overflow,boarded,eggVisible,hatched,summary,detail,acknowledged,earnedGymLocked,allMoves,nativeBattle,autoRotation,autoSprite,attackBeforeFaint,hitBeforeFaint,faintAfterAttack,faintRotation,headerLayout,actorMessages,actionMessageExpires,hpBeforeImpact,hpDraining,hpResultPause,emptyBadgeCase,earnedBadgeCase,fullBadgeCase,moveCatalog:moveCatalog.count===354&&!moveCatalog.empty.length&&moveCatalog.distinctFire===3,movePlayback,battleHud,captureThreeShakes,captureSparkle,caughtBallOnly,captureBreakouts,compact:settings.compact===true,height:win.getSize()[1],pin:settings.pinned===false};
+  const controls={switched,recallBall,recallAbsorb,recallReturn,sendBall,sendRelease,assigned,challengeQueued,challengeCancelled,challenge,preview:preview.name&&preview.image&&!preview.overflow,boarded,eggVisible,hatched,summary,detail,summaryRetained,earnedGymLocked,allMoves,nativeBattle,autoRotation,autoSprite,attackBeforeFaint,hitBeforeFaint,faintAfterAttack,faintRotation,headerLayout,actorMessages,actionMessageExpires,hpBeforeImpact,hpDraining,hpResultPause,emptyBadgeCase,earnedBadgeCase,fullBadgeCase,moveCatalog:moveCatalog.count===354&&!moveCatalog.empty.length&&moveCatalog.distinctFire===3,movePlayback,battleHud,captureThreeShakes,captureSparkle,caughtBallOnly,captureBreakouts,compact:settings.compact===true,height:win.getSize()[1],pin:settings.pinned===false};
   const ok=inspection.hero==='피카츄'&&inspection.images&&!inspection.overflow&&inspection.slots===4&&inspection.facing.startsWith('matrix(-1')&&collection.count===151&&collection.caught===4&&collection.unknown.includes('???')&&collection.silhouette&&collection.noPichu&&!collection.overflow&&Object.values(controls).every(Boolean)&&controls.height===276&&!errors.length;
   fs.writeFileSync(path.join(dir,'result.json'),JSON.stringify({ok,inspection,collection,controls,errors},null,2));console.log(JSON.stringify({smoke:ok,inspection,collection,controls,errors}));app.exit(ok?0:1);
 }
