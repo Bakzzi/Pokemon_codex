@@ -6,6 +6,7 @@ const {combatant,tryCatch,abilityFor}=battleEngine;
 const journal=require('./journal.cjs');
 const {captureTiming,captureText}=require('./capture-animation.js');
 const pacing=require('./battle-pacing.js');
+const consumables=require('./consumables.cjs');
 const validCount=n=>typeof n==='number'&&Number.isSafeInteger(n)&&n>=0;
 const STARTERS=[25],PARTY_SIZE=6;
 const STARTER_GIFTS=[{badge:'brock',id:1},{badge:'misty',id:4},{badge:'surge',id:7}];
@@ -552,6 +553,7 @@ class Game {
         const candidates=[...new Set(db.pokemon.filter(p=>p.generation<=this.maxGeneration()).flatMap(p=>p.evolutions.filter(e=>species.get(e.to)?.generation<=this.maxGeneration()).map(e=>e.item)).filter(Boolean))];
         const id=candidates[Math.floor(this.random()*candidates.length)];if(id){this.data.inventory[id]=(this.data.inventory[id]||0)+1;this.log(`${db.items.find(i=>i.id===id)?.name||'진화 도구'} 발견`,'item',null,now);}
       }
+      const found=consumables.drop(this.random);if(found){this.data.inventory[found.id]=(this.data.inventory[found.id]||0)+1;this.log(found.name+' 발견','item',null,now);}
       this.data.battle=null;if(roadCleared)this.animate('result',{text:'학습장치 획득! 5번째 관장 독수에게 도전할 수 있어요.'},now);else if(!captured)this.animate('result',{text:species.get(foe.id).name+'와의 배틀 승리!'},now);return;
     }
     b.foeIndex++;
@@ -634,7 +636,7 @@ class Game {
       if(!b){this.newWild(now);return true;}
     }
     if(!b.party[this.data.activeId]){const p=this.data.owned[this.data.activeId];b.party[p.uid]=this.memberCombatant(p);battleEngine.invalidate(b);}
-    const previousHero=this.data.activeId,fromPokemon=this.snapshot(now).hero,heroBefore=healthView(b.party[previousHero]),foeBefore=healthView(b.foe),action=battleEngine.step(this,b);b.turn++;
+    const previousHero=this.data.activeId,fromPokemon=this.snapshot(now).hero,partyBefore=Object.fromEntries(Object.entries(b.party).map(([uid,p])=>[uid,healthView(p)])),heroBefore=partyBefore[previousHero],foeBefore=healthView(b.foe),action=battleEngine.step(this,b);b.turn++;
     const hero=b.party[this.data.activeId],foe=b.foe,move=action.move&&moves.get(action.move);
     // Native-only acknowledgements and discarded stale actions have no second
     // attack or recall animation to present after the ball animation.
@@ -644,7 +646,7 @@ class Game {
       this.log(species.get(hero.id).name+' 출전','switch',hero.id,now);
     }else{
       const text=move?species.get(action.id||hero.id).name+'의 '+move.name+'!':action.lines[0]||'배틀을 이어가고 있어.';
-      this.animate('attack',{actor:action.actor||'hero',id:action.id||hero.id,move:move?.name,moveId:move?.id,moveType:move?.type,moveTarget:action.moveTarget,outcome:action.outcome,hitCount:action.hitCount,damage:move?.damageClass===1?0:action.damage||0,damageCauses:action.damageCauses,beforeMove:action.beforeMove,afterMove:action.afterMove,hero:{...view(hero.id),level:hero.level,...healthView(hero)},heroBefore,foeBefore,foe:{...view(foe.id),level:foe.level,...healthView(foe)},text,detail:action.lines.filter(line=>line!==text&&!action.beforeMove?.some(m=>m.text===line)).join(' · ')},now);
+      this.animate(action.item?'item':'attack',{item:action.item,itemTargetBefore:partyBefore[action.item?.target],actor:action.actor||'hero',id:action.id||hero.id,move:move?.name,moveId:move?.id,moveType:move?.type,moveTarget:action.moveTarget,outcome:action.outcome,hitCount:action.hitCount,damage:move?.damageClass===1?0:action.damage||0,damageCauses:action.damageCauses,beforeMove:action.beforeMove,afterMove:action.afterMove,hero:{...view(hero.id),level:hero.level,...healthView(hero)},heroBefore,foeBefore,foe:{...view(foe.id),level:foe.level,...healthView(foe)},text,detail:action.lines.filter(line=>line!==text&&!action.beforeMove?.some(m=>m.text===line)).join(' · ')},now);
     }
     if(action.lines.length)this.log(action.lines.join(' · '),'battle',action.id||hero.id,now);
     const finishedAt=now+this.data.animation.duration;
@@ -684,7 +686,7 @@ class Game {
       encounterBonus:this.encounterBonus(),
       specialEncounters:this.specialEncounters(),
       collection:db.pokemon.filter(p=>p.generation<=this.maxGeneration()).map(p=>{const owned=roster.filter(m=>m.id===p.id),best=owned.reduce((best,m)=>!best||m.level>best.level||m.level===best.level&&m.xp>best.xp?m:best,null);return {id:p.id,seen:!!this.data.seen[p.id],caught:!!this.data.caught[p.id],seasonCaught:this.registeredThisSeason(p.id),name:this.data.seen[p.id]?p.name:'???',owned:owned.length>0,count:owned.length,level:best?.level??null,expPercent:best?.expPercent??null,types:this.data.seen[p.id]?view(p.id).types:[],description:this.data.seen[p.id]?p.description:'',acquisition:hints.get(p.id),rarity:rarity(p)};}),
-      bosses:db.bosses.map(b=>{const revealed=this.trainerRevealed(b);return {...b,revealed,name:revealed?b.name:'???',team:revealed?b.team:[]};}),gymAccess:db.bosses.slice(0,8).map((_,i)=>this.canChallenge(i)),leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].map(e=>!this.trainerRevealed(db.bosses[7])&&e.kind==='challenge'&&e.text.startsWith(db.bosses[7].name+' 체육관 도전 예약')?{...e,text:e.text.replace(db.bosses[7].name,'???')}:e).sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:[...(this.data.trainingDevice.fluteObtainedAt?[{id:'poke-flute',name:'포켓몬피리',count:1}]:[]),...(training.has(this)?[{id:'training-device',name:'학습장치',count:1}]:[]),...Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name,count}))]};
+      bosses:db.bosses.map(b=>{const revealed=this.trainerRevealed(b);return {...b,revealed,name:revealed?b.name:'???',team:revealed?b.team:[]};}),gymAccess:db.bosses.slice(0,8).map((_,i)=>this.canChallenge(i)),leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].map(e=>!this.trainerRevealed(db.bosses[7])&&e.kind==='challenge'&&e.text.startsWith(db.bosses[7].name+' 체육관 도전 예약')?{...e,text:e.text.replace(db.bosses[7].name,'???')}:e).sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:[...(this.data.trainingDevice.fluteObtainedAt?[{id:'poke-flute',name:'포켓몬피리',count:1}]:[]),...(training.has(this)?[{id:'training-device',name:'학습장치',count:1}]:[]),...Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name||consumables.byId.get(Number(id))?.name,count,...(consumables.byId.has(Number(id))?{description:consumables.byId.get(Number(id)).description,automatic:true}:{})}))]};
   }
 }
 module.exports={Game,STARTERS,PARTY_SIZE,STARTER_GIFTS};

@@ -1,0 +1,50 @@
+[
+  {
+    "id": 25,
+    "name": "고급상처약",
+    "file": "hyper-potion.png",
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/ba403973fdf9d0ac59175813861e6a1f8ed5020c/sprites/items/hyper-potion.png",
+    "bytes": 300,
+    "sha256": "0aa7cad60ab3be1181b4a7dcb1b3718542676d281423370c557e78c4d88fe6b0",
+    "width": 30,
+    "height": 30,
+    "effectSource": "https://github.com/PokeAPI/pokeapi/blob/master/data/v2/csv/item_prose.csv",
+    "ruleset": "Generation III"
+  },
+  {
+    "id": 27,
+    "name": "만병통치제",
+    "file": "full-heal.png",
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/ba403973fdf9d0ac59175813861e6a1f8ed5020c/sprites/items/full-heal.png",
+    "bytes": 271,
+    "sha256": "fc471f27e944e7ce3dc5894981c09faccf9371940e6c2f1355a62a72b9a88466",
+    "width": 30,
+    "height": 30,
+    "effectSource": "https://github.com/PokeAPI/pokeapi/blob/master/data/v2/csv/item_prose.csv",
+    "ruleset": "Generation III"
+  },
+  {
+    "id": 28,
+    "name": "기력의조각",
+    "file": "revive.png",
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/ba403973fdf9d0ac59175813861e6a1f8ed5020c/sprites/items/revive.png",
+    "bytes": 177,
+    "sha256": "8ed02f56fcd0a8d2525811fbc33d82aebbe7af902ec6752b4857de821505a224",
+    "width": 30,
+    "height": 30,
+    "effectSource": "https://github.com/PokeAPI/pokeapi/blob/master/data/v2/csv/item_prose.csv",
+    "ruleset": "Generation III"
+  },
+  {
+    "id": 38,
+    "name": "PP에이드",
+    "file": "ether.png",
+    "url": "https://raw.githubusercontent.com/PokeAPI/sprites/ba403973fdf9d0ac59175813861e6a1f8ed5020c/sprites/items/ether.png",
+    "bytes": 294,
+    "sha256": "43bce9d5150562a80bd5cbddb1e11135d70c1338f964f1cf5abef78a038e86de",
+    "width": 30,
+    "height": 30,
+    "effectSource": "https://github.com/PokeAPI/pokeapi/blob/master/data/v2/csv/item_prose.csv",
+    "ruleset": "Generation III"
+  }
+]

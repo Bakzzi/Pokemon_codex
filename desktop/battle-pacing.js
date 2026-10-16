@@ -11,7 +11,7 @@
     const resultAt=Math.max(announceMs+effectMs,healthAt+healthMs);
     return {beforeMoveMs,announceMs,effectMs,impactAt,healthAt,healthMs,resultAt,duration:resultAt+1350*Math.max(1,event.afterMove?.length||0)};
   }
-  function duration(event){return event?.duration??(event?.kind==='attack'?actionTiming(event).duration:pauses[event?.kind]||2400);}
+  function duration(event){return event?.duration??(['attack','item'].includes(event?.kind)?actionTiming(event).duration:pauses[event?.kind]||2400);}
   function healthAt(event,side,now,after){
     const before=event?.[side+'Before'];if(!before)return after;
     const t=actionTiming(event),progress=clamp((now-event.at-t.healthAt)/t.healthMs);

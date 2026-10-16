@@ -5,10 +5,10 @@ let state=null,selected=25,memberUid=null,nurserySignature='',tab=new URLSearchP
 const img=(id,cls='')=>{const e=node('img',cls);e.src='assets/'+id+'.gif';e.alt='';return e;};
 const levelText=p=>'Lv.'+p.level+' '+(p.level>=100?'MAX':p.expPercent+'%');
 const experienceText=p=>p.level>=100?'최고 레벨에 도달했어요.':'다음 레벨까지 '+(p.expRequired-p.expCurrent).toLocaleString('ko-KR')+' XP · '+p.expCurrent.toLocaleString('ko-KR')+' / '+p.expRequired.toLocaleString('ko-KR')+' XP';
-const itemSprites={'poke-flute':'poke-flute','training-device':'exp-share',4:'poke-ball',80:'sun-stone',81:'moon-stone',82:'fire-stone',83:'thunder-stone',84:'water-stone',85:'leaf-stone',110:'oval-stone',198:'kings-rock',210:'metal-coat',212:'dragon-scale',229:'up-grade',885:'ice-stone'};
+const itemSprites={'poke-flute':'poke-flute','training-device':'exp-share',4:'poke-ball',25:'hyper-potion',27:'full-heal',28:'revive',38:'ether',80:'sun-stone',81:'moon-stone',82:'fire-stone',83:'thunder-stone',84:'water-stone',85:'leaf-stone',110:'oval-stone',198:'kings-rock',210:'metal-coat',212:'dragon-scale',229:'up-grade',885:'ice-stone'};
 function inventoryCard(item){
   const card=node('div','inventory-item'),icon=node('img'),body=node('div','inventory-item-body');icon.src='assets/items/'+itemSprites[item.id]+'.png';icon.alt='';
-  card.dataset.item=item.id;card.setAttribute('role','listitem');card.title=item.name+' × '+item.count;body.append(node('b','',item.name),node('small','', '× '+item.count));card.append(icon,body);return card;
+  card.dataset.item=item.id;card.setAttribute('role','listitem');card.title=[item.name+' × '+item.count,item.description,item.automatic&&'도전 배틀에서 필요할 때 자동 사용 · 사용한 턴에는 공격하지 않아요.'].filter(Boolean).join(' · ');body.append(node('b','',item.name),node('small','', '× '+item.count));if(item.description)body.append(node('small','',item.description));card.append(icon,body);return card;
 }
 // Original image width, then the square viewport's x/y/size in source pixels.
 const trainerFaces={brock:[196,52,5,104],misty:[228,61,7,112],surge:[156,22,1,110],erika:[198,22,3,114],koga:[217,113,5,103],sabrina:[216,17,13,112],blaine:[273,24,18,112],giovanni:[179,25,5,112]};

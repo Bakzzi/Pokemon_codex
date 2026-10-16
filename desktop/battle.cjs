@@ -2,6 +2,7 @@
 // Pinned simulator: @pkmn/sim 0.10.11, Gen III rules, entirely offline.
 const {Battle,Dex}=require('@pkmn/sim');
 const ai=require('./battle-ai.cjs');
+const consumables=require('./consumables.cjs');
 const {data,species,moves,statsAt,learnedMoves}=require('./pokemon.cjs');
 const dex=Dex.forGen(3);
 const simMoves=new Map(data.moves.map(m=>[m.id,dex.moves.get(m.identifier)]));
@@ -43,22 +44,27 @@ function pump(){
   if(!this.midTurn){this.queue.insertChoice({choice:'beforeTurn'});this.queue.addChoice({choice:'residual'});this.midTurn=true;}
   let acted=false;
   while(this.queue.list.length){
-    const action=this.queue.peek(),visible=['move','switch','instaswitch'].includes(action.choice);
+    const action=this.queue.peek(),visible=['move','switch','instaswitch'].includes(action.choice)||action.buddyItem;
     if(acted&&visible)return;
     this.queue.shift();this.runAction(action);if(visible)acted=true;
     if(this.requestState||this.ended)return;
   }
   this.endTurn();this.midTurn=false;this.queue.clear();
 }
-function attach(b,sim){
+function attach(game,b,sim){
   Object.defineProperty(sim,'turnLoop',{value:pump,configurable:true});
+  const nativeRunAction=sim.runAction;
+  Object.defineProperty(sim,'runAction',{value:function(action){
+    if(action.buddyItem)consumables.use(game,b,this,action.buddyItem);
+    return nativeRunAction.call(this,action);
+  },configurable:true});
   cache.set(b,sim);return sim;
 }
 function engine(game,b){
   let sim=cache.get(b);
   const boss=b.storyId||(b.kind==='trainer'?b.bossIndex:null);
   if(sim&&b.simBoss===boss)return sim;
-  if(b.sim&&b.simBoss===boss)return attach(b,Battle.fromJSON(b.sim));
+  if(b.sim&&b.simBoss===boss)return attach(game,b,Battle.fromJSON(b.sim));
   const active=game.data.activeId,keys=Object.keys(b.party).map(Number).sort((a,c)=>Number(c===active)-Number(a===active));
   const bossData=b.kind==='trainer'?game.battleBoss(b):null;
   const foes=bossData?bossData.team.map((p,i)=>({p,i})).slice(b.foeIndex):[{p:b.foe,i:0}];
@@ -69,7 +75,7 @@ function engine(game,b){
   for(const mon of sim.p1.pokemon)restoreMon(mon,b.party[Number(mon.name.slice(1))]);
   restoreMon(sim.p2.active[0],b.foe);
   sim.makeRequest('move');sim.log=[];sim.sentLogPos=0;sim.inputLog=[];
-  b.simBoss=boss;return attach(b,sim);
+  b.simBoss=boss;return attach(game,b,sim);
 }
 function persist(b,sim){
   // Protocol is rendered into our bounded Korean journal; don't grow the save indefinitely.
@@ -191,6 +197,9 @@ function protocol(sim,lines,records=false){
   for(const line of lines){
     if(seen.has(line))continue;seen.add(line);const parts=line.split('|'),[,kind,a,b,c]=parts,name=who(a),subject=particle(name,'은','는'),effect=effectName(b||''),id=effectId(b||'');let text='';
     if(kind==='move'){used={name,move:effect};text=name+'의 '+(effect||'기술')+'!';}
+    if(kind==='buddyitem')text=who('p1: '+c)+'에게 '+particle(consumables.byId.get(Number(b))?.name||'도구','을','를')+' 사용했다!';
+    if(kind==='buddyrevive')text=particle(name,'이','가')+' 기운을 되찾았다!';
+    if(kind==='buddypp')text=name+'의 '+(effect||'기술')+' PP가 회복되었다!';
     if(kind==='-supereffective')text=name+'에게 효과가 굉장했다!';
     if(kind==='-resisted')text=name+'에게 효과가 별로인 듯하다.';
     if(kind==='-immune')text=name+'에게는 효과가 없었다!';
@@ -267,9 +276,14 @@ function step(game,b){
     }
     const offset=sim.log.length;
     if(sim.requestState){
+      const item=consumables.choose(game,b,sim);
       const eligible=game.availablePartners().map(uid=>'u'+uid);
-      const choices=sim.sides.map(s=>choose(sim,s,s.n===0?b.pendingSwitch:null,s.n===0&&b.kind==='trainer'&&!b.manualMatchup&&!b.pendingSwitch&&sim.turn-(b.aiLastSwitch??-10)>=3,s.n===0?eligible:null));
+      const choices=sim.sides.map(s=>s.n===0&&item?'default':choose(sim,s,s.n===0?b.pendingSwitch:null,s.n===0&&b.kind==='trainer'&&!b.manualMatchup&&!b.pendingSwitch&&sim.turn-(b.aiLastSwitch??-10)>=3,s.n===0?eligible:null));
       for(let i=0;i<choices.length;i++)if(choices[i]&&!sim.sides[i].choose(choices[i]))sim.sides[i].autoChoose();
+      // The pinned simulator models held items, not a trainer's Bag. Reserve
+      // exactly one ordinary action for a Bag event ahead of moves, while
+      // retaining native choice commits, Speed order, residuals and saving.
+      if(item)sim.p1.choice.actions=[{choice:'event',event:'BuddyItem',pokemon:sim.p1.active[0],order:100,buddyItem:item}];
       sim.commitChoices();
     }else sim.turnLoop();
     // nextTrainer already presented this opponent's arrival. Its native switch
@@ -286,11 +300,12 @@ function step(game,b){
     text,actor:line.split('|')[2]?.startsWith('p2')?'foe':'hero',
     ...(line.startsWith('|-curestatus|')?{curedStatus:statusNames[line.split('|')[3]]}:{}),
   })));
-  const afterMove=firstMove<0?[]:protocol(sim,lines.slice(firstMove),true).filter(message=>!['move','faint'].includes(message.kind));
+  const itemLine=lines.find(line=>line.startsWith('|buddyitem|')),item=itemLine&&{...consumables.byId.get(Number(itemLine.split('|')[3])),target:Number(itemLine.split('|')[4].slice(1))};
+  const afterMove=item?protocol(sim,lines,true).filter(message=>!['buddyitem','faint'].includes(message.kind)):firstMove<0?[]:protocol(sim,lines.slice(firstMove),true).filter(message=>!['move','faint'].includes(message.kind));
   const messages=protocol(sim,lines);sync(game,b,sim);persist(b,sim);
   const causeName=ref=>{const mon=sim.sides.flatMap(s=>s.pokemon).find(p=>p.name===ref.split(': ')[1]);return species.get(mon?.baseSpecies.num)?.name||'포켓몬';};
   const damageCauses=[...new Map(lines.filter(line=>line.startsWith('|-damage|')).map(line=>damageCause(line,causeName)).filter(Boolean).map(c=>[c.side+':'+c.cause,c])).values()];
-  return {...presentation,actor,id:actor==='hero'?b.party[game.data.activeId].id:b.foe.id,damage:Math.max(0,actor==='hero'?foeBefore-sim.p2.active[0].hp:heroHpBefore-sim.p1.active[0].hp),damageCauses,beforeMove,afterMove,lines:messages,switched:changed,ended:sim.ended};
+  return {...presentation,item,actor,id:actor==='hero'?b.party[game.data.activeId].id:b.foe.id,damage:Math.max(0,actor==='hero'?foeBefore-sim.p2.active[0].hp:heroHpBefore-sim.p1.active[0].hp),damageCauses,beforeMove,afterMove,lines:messages,switched:changed,ended:sim.ended};
 }
 function switchWait(game,b,uid){
   const sim=cache.get(b)||(b.sim?engine(game,b):null);

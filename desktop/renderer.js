@@ -87,7 +87,7 @@ function eventFx(e){
     return;
   }
   if(e.kind==='switch')playSwitch(e);
-  else if(e.kind==='attack')playMove(e);
+  else if(['attack','item'].includes(e.kind))playMove(e);
   else if(e.kind==='faint')playFaint(e);
   else if(e.kind==='capture'&&e.leadIn&&Date.now()<e.at)playMove(e.leadIn);
 }
@@ -143,11 +143,11 @@ function renderSpeech(s){
   else if(capture&&now>=capture.at&&(f.locked||s.animation?.kind==='capture'))text=f.text;
   else if(actionActive){
     text=event.text;expires=event.at+BattlePacing.duration(event);
-    if(event.kind==='attack'&&now-event.at>=BattlePacing.actionTiming(event).resultAt){
+    if(['attack','item'].includes(event.kind)&&now-event.at>=BattlePacing.actionTiming(event).resultAt){
       const result=(event.detail||'').split(' · ').find(line=>line&&!line.includes('기절'));
       if(result)text=result;
     }
-    if(event.kind==='attack'){
+    if(['attack','item'].includes(event.kind)){
       speaker=event.actor==='foe'?'foe':'hero';
       const message=BattlePacing.beforeMoveAt(event,now)||BattlePacing.afterMoveAt(event,now);if(message){text=message.text;speaker=message.actor;}
     }
@@ -162,6 +162,7 @@ function renderSpeech(s){
       if(causes.length){text=causes.map(c=>c.text).join(' ');speaker=causes.every(c=>c.side===causes[0].side)?causes[0].side:'scene';}
     }
   }else text=s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.battle?'다음 작업과 함께 배틀을 이어가요':'오늘은 어떤 포켓몬을 만날까?';
+  const itemIcon=$('speech-item');itemIcon.hidden=!(actionActive&&event.kind==='item');if(!itemIcon.hidden)itemIcon.src='assets/items/'+event.item.identifier+'.png';
   const bubble=$('speech');bubble.dataset.speaker=speaker;bubble.classList.toggle('waiting',waiting||checking);$('speech-text').textContent=text;
   bubble.title=!waiting&&!checking&&event?.detail?[...new Set([text,...event.detail.split(' · ').filter(line=>!text.includes(line))])].join(' '):text;
   // Clear an expired action even when no new state arrives from an idle Codex session.
@@ -177,7 +178,8 @@ function renderPartyStatus(s){
     const b=$('party').children[i];if(!b)return;
     b.classList.toggle('empty',p.empty);b.firstChild.hidden=!!p.empty;
     if(p.empty){b.dataset.id='';b.disabled=false;b.title=(i+1)+'번 빈칸 · 도감에서 동료 배치';b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed','false');b.classList.remove('queued','fainted');b.firstChild.removeAttribute('src');b.lastChild.textContent='빈칸';return;}
-    const fainted=p.fainted&&!(p.selected&&playingMove?.heroBefore&&moveHealth('hero',playingMove.hero||s.hero).currentHp>0);
+    const reviving=playingMove?.item?.target===p.uid&&playingMove.itemTargetBefore?.currentHp===0&&Date.now()<playingMove.at+BattlePacing.actionTiming(playingMove).healthAt;
+    const fainted=reviving||p.fainted&&!(p.selected&&playingMove?.heroBefore&&moveHealth('hero',playingMove.hero||s.hero).currentHp>0);
     const queued=s.pendingActions.find(a=>a.kind==='select'&&a.uid===p.uid);b.classList.toggle('queued',!!queued);b.dataset.id=p.uid;b.disabled=!!queued;b.title=p.name+' '+levelText(p)+(queued?' · 출전 예약 · '+queued.reason:p.boarded?' · 키우미집에서 데려온 뒤 출전 예약':fainted?' · 배틀 종료 후 회복·출전 예약':' · 클릭하여 출전');
     b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed',String(p.selected));b.classList.toggle('fainted',fainted);
     const img=b.firstChild;if(img.getAttribute('src')!=='assets/'+p.id+'.gif')img.src='assets/'+p.id+'.gif';b.lastChild.textContent=queued?'예약':p.boarded?'맡김':fainted?'기절':levelText(p);

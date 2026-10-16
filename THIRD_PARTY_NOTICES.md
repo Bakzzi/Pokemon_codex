@@ -72,6 +72,8 @@ The Team Rocket R logo is downloaded unchanged from https://archives.bulbagarden
 
 Additional trainer illustrations use original game and animation artwork. Images are unchanged Bulbagarden Archives thumbnails displayed through small CSS face viewports; their pages, URLs, dimensions, byte counts and SHA-256 hashes are recorded in desktop/assets/trainers/rocket-sources.json. These images retain the original Pokemon rights holders' copyright and are not MIT-licensed code.
 
+Recovery-tool icons also use unchanged PokeAPI sprite images. Pinned source URLs, item identities, sizes and SHA-256 hashes are recorded in `desktop/assets/items/consumable-sources.json`. Their artwork remains with the original Pokemon rights holders. Item descriptions were checked against PokeAPI item data; effect values use this project's Gen III ruleset.
+
 ## SSH transport
 
 ssh2 1.17.0: https://github.com/mscdex/ssh2/tree/v1.17.0 . MIT License. The package and dependency licenses are retained in the portable runtime under resources/app/node_modules. Exact versions and integrity hashes are pinned in package-lock.json. Only explicitly configured SSH endpoints are contacted; no third-party relay service is used.
