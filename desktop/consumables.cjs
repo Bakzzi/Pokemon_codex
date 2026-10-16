@@ -1,15 +1,20 @@
 'use strict';
 // PokeAPI item identities; restoration values follow the Gen III ruleset.
+// Fixed Kanto reference: five stones share the existing 1.5% drop chance.
+// Use FRLG purchase prices, not the modern prices in the PokeAPI snapshot.
+const economy=Object.freeze({stonePrice:2100,stonePoolSize:5,evolutionDropChance:.015});
 const items=[
-  {id:25,identifier:'hyper-potion',name:'고급상처약',weight:50,description:'체력 200 회복'},
-  {id:27,identifier:'full-heal',name:'만병통치제',weight:25,description:'상태이상과 혼란 치료'},
-  {id:28,identifier:'revive',name:'기력의조각',weight:15,description:'기절한 동료를 체력 절반으로 회복'},
-  {id:38,identifier:'ether',name:'PP에이드',weight:10,description:'기술 하나의 PP 10 회복'},
-];
-const byId=new Map(items.map(item=>[item.id,item])),dropChance=.005;
+  {id:25,identifier:'hyper-potion',name:'고급상처약',referencePrice:1200,description:'체력 200 회복'},
+  {id:27,identifier:'full-heal',name:'만병통치제',referencePrice:600,description:'상태이상과 혼란 치료'},
+  {id:28,identifier:'revive',name:'기력의조각',referencePrice:1500,description:'기절한 동료를 체력 절반으로 회복'},
+  // Ether is not sold in FRLG: value it at twice its 600 sell price.
+  {id:38,identifier:'ether',name:'PP에이드',referencePrice:1200,priceEstimated:true,description:'기술 하나의 PP 10 회복'},
+].map(item=>({...item,weight:economy.stonePrice/item.referencePrice}));
+const byId=new Map(items.map(item=>[item.id,item])),totalWeight=items.reduce((sum,item)=>sum+item.weight,0);
+const dropChance=economy.evolutionDropChance/economy.stonePoolSize*totalWeight;
 function drop(random){
   if(random()>=dropChance)return null;
-  let draw=random()*100;
+  let draw=random()*totalWeight;
   for(const item of items){draw-=item.weight;if(draw<0)return item;}
   return items.at(-1);
 }
@@ -55,4 +60,4 @@ function use(game,b,sim,choice){
   if(item.id===38){slot.pp=Math.min(slot.maxpp,slot.pp+10);const base=target.baseMoveSlots.find(s=>s.id===slot.id);if(base&&base!==slot)base.pp=slot.pp;sim.add('buddypp',target,sim.dex.moves.get(slot.id).name);}
   return true;
 }
-module.exports={items,byId,dropChance,drop,choose,use};
+module.exports={items,byId,economy,dropChance,drop,choose,use};

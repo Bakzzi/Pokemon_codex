@@ -9,10 +9,14 @@ function fixture(kind='trainer'){
 }
 function advance(g){const at=Math.max(now,g.data.switchUntil,g.nextTick);assert.ok(g.tick(at));return at;}
 
-test('rare consumable drops use one combined chance with weighted distinct items',()=>{
-  assert.equal(items.dropChance,.005);assert.equal(items.drop(()=>.005),null);assert.equal(items.drop(()=>1),null);
-  for(const [draw,id] of [[0,25],[.49999,25],[.5,27],[.74999,27],[.75,28],[.89999,28],[.9,38],[.99999,38]]){const draws=[.004999,draw];assert.equal(items.drop(()=>draws.shift()).id,id);}
-  let hits=0;for(let i=0;i<10000;i++){let calls=0;if(items.drop(()=>calls++?0:(i+.5)/10000))hits++;}assert.equal(hits,50);
+test('consumable rates follow inverse FRLG prices relative to one Kanto stone',()=>{
+  assert.equal(items.economy.evolutionDropChance,.015);assert.ok(Math.abs(items.dropChance-.0252)<1e-12);
+  assert.equal(items.drop(()=>items.dropChance),null);assert.equal(items.drop(()=>1),null);
+  for(const [draw,id] of [[0,25],[5/24-1e-7,25],[5/24+1e-7,27],[15/24-1e-7,27],[15/24+1e-7,28],[19/24-1e-7,28],[19/24+1e-7,38],[.99999,38]]){const draws=[.025199,draw];assert.equal(items.drop(()=>draws.shift()).id,id);}
+  const counts={25:0,27:0,28:0,38:0};
+  for(let i=0;i<100000;i++){let calls=0;const found=items.drop(()=>calls++?(i%24+.5)/24:(i+.5)/100000);if(found)counts[found.id]++;}
+  assert.deepEqual(counts,{25:525,27:1050,28:420,38:525});
+  assert.equal(items.byId.get(38).priceEstimated,true);
 });
 test('wild victory awards a saved inventory item once; trainer victory has no consumable roll',()=>{
   const {g,b}=fixture('wild');g.random=()=>.001;g.defeatOpponent(now);assert.equal(g.data.inventory[25],1);assert.equal(g.data.journal.filter(e=>e.kind==='item'&&e.text==='고급상처약 발견').length,1);
