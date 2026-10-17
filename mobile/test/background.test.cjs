@@ -40,3 +40,11 @@ test('background actions never claim an elder reward before the player advances 
   const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika'];const g=new c.MobileCore.Adventure(old.data,now);g.data.mobileStory.rescue.wins=[now,now,now];g.data.mobileStory.rescue.rewardPending=true;g.dialogue('elder','보라타운 촌장','mr-fuji',['fixture'],'rescue-reward',now);
   const saved={format:1,game:g.data,mobile:{consumed:0}};assert.equal(run(saved,1000).used,0);const reopened=new c.MobileCore.Adventure(g.data,now+1000);assert.equal(reopened.data.trainingDevice.fluteObtainedAt,null);assert.equal(reopened.presentation().next,'rescue-reward');
 });
+test('headless company queue triggers its hidden rival after the grunt, without advancing dialogue',()=>{
+  const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika','koga'];const g=new c.MobileCore.Adventure(old.data,now);g.data.mobileStory.silph.wins[0]=now;g.data.pendingChallenge={index:'silph-duo',queuedAt:now};
+  const r=run({format:1,game:g.data,mobile:{consumed:0}},1000);assert.equal(r.used,1);assert.equal(r.save.game.battle.storyId,'rival-silph');assert.equal(r.save.game.mobileStory.silph.wins[1],0);assert.equal(run(r.save,1000,now+3600000).used,0);
+});
+test('headless eligibility opens the aide dialogue and preserves the reward until foreground input',()=>{
+  const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika'];const g=new c.MobileCore.Adventure(old.data,now);for(let id=1;id<=50;id++)g.data.caught[id]=now;
+  const r=run({format:1,game:g.data,mobile:{consumed:0}},1000);assert.equal(r.used,1);assert.equal(r.save.game.mobileStory.scene.next,'device-reward');assert.equal(r.save.game.trainingDevice.obtainedAt,null);assert.equal(run(r.save,1000,now+3600000).used,0);
+});

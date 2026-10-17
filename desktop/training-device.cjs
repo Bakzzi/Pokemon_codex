@@ -65,7 +65,7 @@ function requirements(game){
     return {id,name:revealed?['조무래기','로이·로사','비주기'][i]+'에게 승리':'???에게 승리',done,revealed};
   });
 }
-function canClaim(game){return !has(game)&&!!game.data.trainingDevice.snorlaxWonAt;}
+function canClaim(game){return !has(game)&&(game.canReceiveTrainingDevice?game.canReceiveTrainingDevice():!!game.data.trainingDevice.snorlaxWonAt);}
 function canChallenge(game,id){
   const d=game.data.trainingDevice;if(!battles[id])return false;
   return id==='road-snorlax'?!!d.fluteObtainedAt&&(!d.snorlaxWonAt||game.captureRequested(143)):rocketUnlocked(game)&&id===nextRocket(game);
@@ -85,7 +85,7 @@ function awardFlute(game,now){
 function claim(game,now,present=true){
   if(!canClaim(game))return false;
   game.data.trainingDevice.obtainedAt=now;
-  game.log('길을 막던 잠만보를 해결하고 학습장치를 받았다!','device',null,now);
+  game.log(game.trainingDeviceRewardText?.()||'길을 막던 잠만보를 해결하고 학습장치를 받았다!','device',null,now);
   if(present)game.animate('result',{text:'학습장치 획득! 5번째 체육관에 도전할 수 있어요.'},now);return true;
 }
 function snapshot(game){

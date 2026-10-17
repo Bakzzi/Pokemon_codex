@@ -5,6 +5,7 @@ const {Game:Engine}=require('../desktop/game.cjs');
 const journal=require('../desktop/journal.cjs');
 const training=require('../desktop/training-device.cjs');
 const rescue=require('./rescue.cjs');
+const silph=require('./silph.cjs');
 const {encounters,byId:rivals}=require('./rivals.cjs');
 const rival=encounters[0];
 const oakIntro=[
@@ -14,7 +15,13 @@ const oakIntro=[
   '포켓기어에서 동료를 살펴보고, 도전하기에서 실력을 시험해 보렴. 물건은 가방에 있단다.'
 ];
 const oakClose=['첫 배틀은 어땠니? 이기든 지든 동료와 함께 배우면 된단다. 피카츄는 회복해 두었단다.','이제 너희의 모험이 시작이다! 새로 만난 동료와 모험 기록도 가끔 살펴보렴.'];
-function portrait(boss){return rivals.get(boss.id)?.sprite||rescue.byId.get(boss.id)?.sprite||(boss.id==='rocket-giovanni'?'giovanni':boss.id);}
+function storyEncounter(id){return rescue.byId.get(id)||silph.byId.get(id);}
+function portrait(boss){return boss.sprite||rivals.get(boss.id)?.sprite||storyEncounter(boss.id)?.sprite||(boss.id==='rocket-giovanni'?'giovanni':boss.id);}
+const victoryPages={
+  erika:['멋진 배틀이었어요. 무지개시티를 위해 힘써 준 것도 고마워요.','보라타운에서도 포켓몬들이 사라진다는 소식이 있어요. 조사하러 간 노인이 걱정이네요.'],
+  koga:['우리 체육관을 이겨 내다니, 훌륭하군!','노랑시티의 실프주식회사와 연락이 끊겼다는군. 그곳에 무슨 일이 생긴 모양이야.'],
+  blaine:['훌륭한 배틀이었네!','상록시티의 체육관이 다시 문을 열었다더군. 마지막 뱃지에 도전해 보게.']
+};
 class Adventure extends Engine{
   constructor(saved={},now=Date.now(),options={}){
     super(saved,now,options);
@@ -24,23 +31,24 @@ class Adventure extends Engine{
       this.data.mobileStory={revision:1,onboarding:existing?'done':'oak',serial:0,giftReceived:existing};
       if(!existing)this.dialogue('oak','오박사','oak',oakIntro,'rival',now);
     }
-    rescue.init(this,now);this.initRivals(now);
+    rescue.init(this,now);silph.init(this,now);this.initRivals(now);
     const pending=saved.pendingChallenge;
-    if((rivals.has(pending?.index)&&this.rivalProgress(pending.index)?.state==='retry')||rescue.byId.has(pending?.index)&&this.canChallenge(pending.index))this.data.pendingChallenge={...pending};
+    if((rivals.has(pending?.index)&&this.rivalProgress(pending.index)?.state==='retry')||storyEncounter(pending?.index)&&this.canChallenge(pending.index))this.data.pendingChallenge={...pending};
   }
   resetSeason(now){
     const story=this.data.mobileStory;
     super.resetSeason(now);
-    if(story){this.data.mobileStory={...story,onboarding:'done',scene:null,rivals:null,rescue:null};rescue.init(this,now);this.initRivals(now);}
+    if(story){this.data.mobileStory={...story,onboarding:'done',scene:null,rivals:null,rescue:null,silph:null};rescue.init(this,now);silph.init(this,now);this.initRivals(now);}
   }
   initRivals(now){
     const story=this.data.mobileStory;if(!story)return;
-    if(!story.rivals){
-      story.rivals={};
+    {
+      story.rivals ||= {};
       for(const e of encounters){
+        if(story.rivals[e.id])continue;
         const progressed=e.stage===0?story.onboarding==='done'||story.onboarding==='closing':
           e.target===8?this.data.champion||this.data.leagueBest>0||this.data.battle?.kind==='trainer'&&Number.isInteger(this.data.battle.bossIndex)&&this.data.battle.bossIndex>=8:
-          typeof e.target==='string'?!!story.rescue?.completedAt:
+          typeof e.target==='string'?!!(silph.byId.has(e.target)?story.silph?.completedAt:story.rescue?.completedAt):
           e.target!==null&&this.data.badges.includes(['brock','misty','surge','erika','koga'][e.target]);
         story.rivals[e.id]={state:progressed?'completed':'unseen',...(progressed?{migratedAt:now}:{})};
       }
@@ -53,6 +61,13 @@ class Adventure extends Engine{
   rivalProgress(id){return this.data.mobileStory?.rivals?.[id];}
   canReceiveFlute(){const r=this.data.mobileStory?.rescue;return !!(r?.completedAt&&r.wins.every(Boolean));}
   fluteRewardText(){return '보라타운 촌장에게 포켓몬피리를 받았다!';}
+  deviceReady(){return this.data.badges.includes('erika')&&this.kantoCaughtCount()>=50;}
+  canReceiveTrainingDevice(){return this.acceptingDevice===true&&this.deviceReady();}
+  trainingDeviceRewardText(){return '오박사의 조수에게 학습장치를 받았다!';}
+  offerDevice(now){
+    if(this.data.mobileStory?.onboarding!=='done'||this.seasonDue(now)||training.has(this)||!this.deviceReady()||this.data.battle||this.data.pendingBattle||now<this.data.switchUntil||now<this.nextTick)return false;
+    this.dialogue('aide','오박사의 조수','scientist',['오박사님께 네 모험 이야기를 들었어. 벌써 다양한 포켓몬을 기록했구나!','연구를 도와준 답례로 학습장치를 줄게. 동료를 키우는 데 도움이 될 거야.'],'device-reward',now);return true;
+  }
   rivalGate(index){return encounters.find(e=>e.target!==null&&e.target===index);}
   rivalState(){
     return encounters.map(e=>{
@@ -93,6 +108,11 @@ class Adventure extends Engine{
       r.completedAt=now;r.rewardPending=false;training.awardFlute(this,now);
       this.animate('result',{text:'보라타운 촌장을 구하고 포켓몬피리를 받았다!'},now);return true;
     }
+    if(s.next==='device-reward'){
+      this.acceptingDevice=true;let received;
+      try{received=training.claim(this,now,false);}finally{this.acceptingDevice=false;}
+      if(received)this.animate('result',{text:'오박사의 조수에게 학습장치를 받았다!'},now);return received;
+    }
     if(s.next==='win'){this.finishTrainerWin(now);return true;}
     if(s.next==='loss'){super.endChallenge(false,now);return true;}
     return false;
@@ -105,10 +125,14 @@ class Adventure extends Engine{
     this.rivalProgress(rival.id).state='active';
     this.nextTrainer(now);
   }
-  battleBoss(b=this.data.battle){return rivals.get(b?.storyId)||rescue.byId.get(b?.storyId)||super.battleBoss(b);}
-  challengeName(index){return rivals.has(index)?'그린 재도전':rescue.byId.get(index)?.name||super.challengeName(index);}
+  battleBoss(b=this.data.battle){
+    if(!b?.mobileStoryRevision&&b?.storyId==='tower-grunt-3')return rescue.legacyThird;
+    if(!b?.mobileStoryRevision&&b?.storyId==='rival-middle')return {...rivals.get('rival-silph'),id:'rival-middle'};
+    return rivals.get(b?.storyId)||storyEncounter(b?.storyId)||super.battleBoss(b);
+  }
+  challengeName(index){return rivals.has(index)?'그린 재도전':storyEncounter(index)?.name||super.challengeName(index);}
   challenge(index,now=Date.now()){
-    if(!rivals.has(index)&&!rescue.byId.has(index))return super.challenge(index,now);
+    if(!rivals.has(index)&&!storyEncounter(index))return super.challenge(index,now);
     if(!this.canChallenge(index)||this.data.battle?.kind==='trainer')return false;
     if(this.data.pendingChallenge)return this.data.pendingChallenge.index===index;
     if(this.data.battle||this.data.pendingBattle||now<this.data.switchUntil||now<this.nextTick){
@@ -117,13 +141,13 @@ class Adventure extends Engine{
     return this.startChallenge(index,now);
   }
   startChallenge(index,now){
-    const gate=this.rivalGate(index),encounter=gate&&this.rivalProgress(gate.id)?.state==='unseen'?gate:rivals.get(index)||rescue.byId.get(index);
+    const gate=this.rivalGate(index),encounter=gate&&this.rivalProgress(gate.id)?.state==='unseen'?gate:rivals.get(index)||storyEncounter(index);
     if(!encounter)return super.startChallenge(index,now);
     if(!this.canChallenge(index)||this.data.battle||this.data.pendingBattle||now<this.data.switchUntil)return false;
     const e=encounter;
     this.data.pendingChallenge=null;this.data.captureAnimation=null;this.data.suspendedWild=null;this.data.manualSelection=false;
     const party=Object.fromEntries(this.data.slots.filter(uid=>uid!==null&&!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
-    this.data.battle={kind:'trainer',bossIndex:e.id,storyId:e.id,foeIndex:0,party,turn:0,startedAt:now};
+    this.data.battle={kind:'trainer',mobileStoryRevision:2,bossIndex:e.id,storyId:e.id,foeIndex:0,party,turn:0,startedAt:now};
     if(rivals.has(e.id)){const p=this.rivalProgress(e.id);p.state='active';p.metAt ||= now;}
     this.log(rivals.has(e.id)?'그린이 나타났다!':e.name+'에게 도전!','challenge',null,now);this.nextTrainer(now);return true;
   }
@@ -149,7 +173,7 @@ class Adventure extends Engine{
     const b=this.data.battle,boss=this.battleBoss(b),first=b.foeIndex===0;
     super.nextTrainer(now);
     if(b.kind==='trainer'&&first){
-      const pages=rivals.get(boss.id)?.intro||[boss.name+'의 도전!','좋아, 포켓몬 배틀을 시작하자!'];
+      const pages=boss.intro||rivals.get(boss.id)?.intro||[boss.name+'의 도전!','좋아, 포켓몬 배틀을 시작하자!'];
       this.dialogue('trainer',boss.name,portrait(boss),pages,'sendout',now);
     }
   }
@@ -159,20 +183,24 @@ class Adventure extends Engine{
       const boss=this.battleBoss(b);
       this.data.pendingBattle=null;
       if(rivals.has(b.storyId))this.resolveRival(true,now);
-      else this.dialogue('trainer',boss.name,portrait(boss),['멋진 배틀이었어! 내 패배를 인정할게.'],'win',now);
+      else this.dialogue('trainer',boss.name,portrait(boss),victoryPages[boss.id]||['멋진 배틀이었어! 내 패배를 인정할게.'],'win',now);
       return;
     }
     super.defeatOpponent(now,captured);
+    if(b?.storyId==='road-snorlax'&&!this.data.battle)this.data.animation.text=captured?'잠만보를 깨워 함께 모험하기로 했어요. 독수에게 도전할 수 있어요.':'잠만보를 물리쳐 길이 열렸어요. 독수에게 도전할 수 있어요.';
   }
   finishTrainerWin(now){
-    const b=this.data.battle,e=rescue.byId.get(b?.storyId);
+    const b=this.data.battle,e=storyEncounter(b?.storyId);
     if(!e){super.defeatOpponent(now);return;}
-    const r=this.data.mobileStory.rescue;
+    const isSilph=silph.byId.has(e.id),r=this.data.mobileStory[isSilph?'silph':'rescue'];
     if(!r.wins[e.stage]){this.awardXp(b.foe,true,now);this.data.battles++;journal.increment(this.data,'wins');r.wins[e.stage]=now;this.log(e.name+'에게 승리!','story',null,now);}
     this.data.battle=null;this.data.pendingBattle=null;this.data.pendingChallenge=null;this.data.suspendedWild=null;
-    if(r.wins.every(Boolean)){
+    if(isSilph){
+      if(r.wins.every(Boolean))r.completedAt=now;
+      this.animate('result',{text:r.completedAt?'실프주식회사를 구했다! 초련에게 도전할 수 있어요.':e.name+'에게 승리했다!'},now);
+    }else if(r.wins.every(Boolean)){
       r.rewardPending=true;this.dialogue('elder','보라타운 촌장','mr-fuji',['구해 줘서 정말 고맙구나. 이 피리를 받아 주렴.'],'rescue-reward',now);
-    }else this.animate('result',{text:e.name+'에게 승리했다! 다음 조무래기에게 도전하자.'},now);
+    }else this.animate('result',{text:e.name+'에게 승리했다! 다음 상대에게 도전하자.'},now);
   }
   endChallenge(won,now){
     const b=this.data.battle;
@@ -189,7 +217,7 @@ class Adventure extends Engine{
     this.data.mobileStory.scene=null;this.data.animation=null;
     this.holdUntil(now+650);return true;
   }
-  tick(now=Date.now()){return this.presentation()?false:super.tick(now);}
+  tick(now=Date.now()){return this.presentation()?false:this.offerDevice(now)||super.tick(now);}
   actionStatus(a,now=Date.now()){
     if(this.presentation())return {state:'waiting',reason:'대화가 끝나면 실행해요.'};
     return super.actionStatus(a,now);
@@ -199,11 +227,13 @@ class Adventure extends Engine{
     if(rivals.has(index))return rivals.get(index).stage>0&&this.rivalProgress(index)?.state==='retry';
     const gate=this.rivalGate(index);if(gate&&this.rivalProgress(gate.id)?.state==='retry')return false;
     if(rescue.byId.has(index))return rescue.ready(this,index);
+    if(silph.byId.has(index))return silph.ready(this,index);
+    if(index===5&&!this.data.mobileStory?.silph?.completedAt)return false;
     return super.canChallenge(index);
   }
   panelState(now=Date.now()){
     const s=super.panelState(now),locks={};for(const e of encounters)if(e.target!==null&&this.rivalProgress(e.id)?.state==='retry')locks[e.target]='그린에게 승리해야 도전할 수 있어요.';
-    return {...s,scene:this.presentation(),onboarding:this.data.mobileStory?.onboarding!=='done',rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this)};
+    return {...s,scene:this.presentation(),onboarding:this.data.mobileStory?.onboarding!=='done',rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this),silph:silph.snapshot(this),mobileGymHints:!this.data.mobileStory.silph.completedAt&&this.data.badges.includes('koga')?{5:'실프주식회사 사건 해결 시 해금'}:{}};
   }
 }
 module.exports={Adventure};

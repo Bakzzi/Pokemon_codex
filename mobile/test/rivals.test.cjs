@@ -2,8 +2,8 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const {Adventure}=require('../adventure.cjs'),{Game}=require('../../desktop/game.cjs'),{encounters}=require('../rivals.cjs');
 const now=Date.parse('2026-10-17T10:00:00Z'),badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'];
-const count=e=>typeof e.target==='number'?e.target:4;
-function ready(e){const old=new Game({},now);old.data.badges=badges.slice(0,count(e));return new Adventure(old.data,now,{random:()=>.5});}
+const count=e=>typeof e.target==='number'?e.target:e.target==='silph-duo'?5:4;
+function ready(e){const old=new Game({},now);old.data.badges=badges.slice(0,count(e));const g=new Adventure(old.data,now,{random:()=>.5});if(e.target==='silph-duo')g.data.mobileStory.silph.wins[0]=now;return g;}
 function pages(g,t=now){const s=g.presentation();for(let i=0;i<8&&g.presentation()?.id===s?.id&&g.presentation()?.mode==='dialogue';i++){const p=g.presentation();assert.ok(g.advanceScene(p.id+':'+p.index,t));}}
 function begin(g){pages(g);g.sceneTick(now+3000);g.data.switchUntil=0;g.nextTick=0;}
 function won(g){const b=g.data.battle;b.foeIndex=g.battleBoss().team.length-1;b.foe.hp=0;g.defeatOpponent(now+10000);pages(g,now+11000);g.data.switchUntil=0;g.nextTick=0;}

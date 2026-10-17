@@ -49,7 +49,7 @@ test('legacy flutes and already opened routes are preserved, while new seasons r
   g.data.caught[150]=now;g.resetSeason(Date.parse('2026-11-01T01:00:00Z'));assert.deepEqual(g.data.mobileStory.rescue.wins,[0,0,0]);assert.equal(g.data.trainingDevice.fluteObtainedAt,null);assert.equal(g.data.caught[150],now);assert.equal(g.rivalProgress('rival-middle').state,'unseen');
 });
 test('after rescue and resolving Snorlax, Koga starts normally without a second rival ambush',()=>{
-  const g=ready();throughGrunts(g);pages(g,now+30000);settle(g);g.challenge('road-snorlax',now+40000);g.defeatOpponent(now+50000);settle(g);assert.ok(g.data.trainingDevice.snorlaxWonAt);assert.ok(g.data.trainingDevice.obtainedAt);assert.ok(g.canChallenge(4));assert.ok(g.challenge(4,now+60000));assert.equal(g.data.battle.bossIndex,4);assert.equal(g.data.battle.storyId,null);
+  const g=ready();throughGrunts(g);pages(g,now+30000);settle(g);g.challenge('road-snorlax',now+40000);g.defeatOpponent(now+50000);settle(g);assert.ok(g.data.trainingDevice.snorlaxWonAt);assert.equal(g.data.trainingDevice.obtainedAt,null);assert.ok(!g.data.animation.text.includes('학습장치'));assert.ok(g.canChallenge(4));assert.ok(g.challenge(4,now+60000));assert.equal(g.data.battle.bossIndex,4);assert.equal(g.data.battle.storyId,null);
 });
 test('queued rescue challenges are retained through a native-style reload',()=>{
   let g=ready();beatRival(g);g.newWild(now+10000);assert.ok(g.challenge('tower-grunt-1',now+11000));assert.equal(g.data.pendingChallenge.index,'tower-grunt-1');

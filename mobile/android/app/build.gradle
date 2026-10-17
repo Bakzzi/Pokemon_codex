@@ -41,7 +41,7 @@ android {
 tasks.register('bundleGame', Exec) {
     workingDir file('../../..')
     commandLine 'node', 'mobile/scripts/build-web.cjs'
-    inputs.files(fileTree('../../../desktop') { exclude '.smoke/**', '.demo/**', 'test/**' }, fileTree('../../web'), file('../../adventure.cjs'), file('../../rivals.cjs'), file('../../rescue.cjs'), fileTree('../../assets/trainers'), file('../../version.json'), file('../../scripts/build-web.cjs'), file('../../../package-lock.json'))
+    inputs.files(fileTree('../../../desktop') { exclude '.smoke/**', '.demo/**', 'test/**' }, fileTree('../../web'), file('../../adventure.cjs'), file('../../rivals.cjs'), file('../../rescue.cjs'), file('../../silph.cjs'), fileTree('../../assets/trainers'), file('../../version.json'), file('../../scripts/build-web.cjs'), file('../../../package-lock.json'))
     outputs.dir layout.buildDirectory.dir('generated/gameAssets')
 }
 tasks.named('preBuild').configure { dependsOn 'bundleGame' }
