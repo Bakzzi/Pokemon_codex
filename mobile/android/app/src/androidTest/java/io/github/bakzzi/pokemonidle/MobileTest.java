@@ -97,6 +97,7 @@ public final class MobileTest extends Instrumentation {
                 result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
             if("rivals".equals(arguments.getString("mode"))){
+                getTargetContext().getSharedPreferences("steps",0).edit().putLong("total",0).commit();js("refreshNative()");
                 result.putString("rivals",layoutChecks("rivals.js"));Thread.sleep(400);screenshot("rival-challenges.png");
                 result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
