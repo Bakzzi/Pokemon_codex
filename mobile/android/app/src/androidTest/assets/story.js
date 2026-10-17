@@ -19,11 +19,17 @@
   check($('story-portrait').src.endsWith('/green.png'),'early rival battle sprite loaded');
   while(game.presentation().mode==='dialogue')$('story-next').click();
   check($('story-next').disabled&&game.data.battle.turn===0,'send-out starts before any turn');
-  await wait(200);
+  // Sample the real CSS animations at exact timeline positions. A busy emulator
+  // can resume a 200 ms timeout after the first send-out has already completed.
+  clearInterval(sceneTimer);sceneTimer=0;
+  const sendoutAnimations=$('story-scene').getAnimations({subtree:true});
+  const sampleSendout=at=>{for(const animation of sendoutAnimations){animation.pause();animation.currentTime=at;}};
+  sampleSendout(200);
   check(getComputedStyle($('story-foe')).visibility==='hidden'&&getComputedStyle($('story-hero')).visibility==='hidden','both partners wait inside their balls');
-  await wait(700);check(getComputedStyle($('story-foe')).visibility==='visible'&&getComputedStyle($('story-hero')).visibility==='hidden','opponent emerges first');
-  await wait(1200);check(getComputedStyle($('story-hero')).visibility==='visible','player partner emerges second without trainer backsprite');
+  sampleSendout(900);check(getComputedStyle($('story-foe')).visibility==='visible'&&getComputedStyle($('story-hero')).visibility==='hidden','opponent emerges first');
+  sampleSendout(2100);check(getComputedStyle($('story-hero')).visibility==='visible','player partner emerges second without trainer backsprite');
   check(getComputedStyle($('story-hero')).scale==='-1 1','player partner faces its opponent');
+  game.presentation().at=Date.now()-2100;for(const animation of sendoutAnimations)animation.play();
   active=true;catchingUp=false;progression.resume(Date.now());await until(()=>!game.presentation());active=false;
   check(game.data.battle.turn===0&&$('story-scene').hidden,'automatic battle waits for send-out to finish');
   // Let the actual battle engine resolve the tutorial, rather than forcing a result.
