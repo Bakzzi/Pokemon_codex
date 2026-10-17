@@ -6,7 +6,7 @@ Push-Location $projectRoot
 try{
     & node mobile/scripts/build-web.cjs
     if($LASTEXITCODE -ne 0){throw 'Web bundle failed.'}
-    & node --test mobile/test/progression.test.cjs mobile/test/update-install.test.cjs mobile/test/background.test.cjs
+    & node --test mobile/test/progression.test.cjs mobile/test/update-install.test.cjs mobile/test/background.test.cjs mobile/test/adventure.test.cjs
     if($LASTEXITCODE -ne 0){throw 'Progression checks failed.'}
     $testOutput=Join-Path $projectRoot 'desktop/.smoke/mobile-tests'
     [IO.Directory]::CreateDirectory($testOutput)|Out-Null

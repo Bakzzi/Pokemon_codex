@@ -1,14 +1,15 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const root=path.resolve(__dirname,'../..');
+const {Game}=require('../../desktop/game.cjs');
 function fixture(){
-  let now=Date.parse('2026-10-17T06:00:00Z'),stored=null,saveOk=true;const calls=[],timers=[],intervals=[],elements=new Map();
+  let now=Date.parse('2026-10-17T06:00:00Z'),stored={format:1,game:new Game({},Date.parse('2026-10-17T06:00:00Z')).data,mobile:{consumed:0}},saveOk=true;const calls=[],timers=[],intervals=[],elements=new Map();
   const status={steps:0,stepsEnabled:false,sensorSupported:false,tracking:false,sensor:'',update:'',updateReady:false,installing:false,pendingInstall:false,canInstall:true};
-  const element=id=>{if(!elements.has(id))elements.set(id,{hidden:false,open:false,style:{},clientWidth:380,contentWindow:{postMessage(){}},setAttribute(){}});return elements.get(id);};
+  const element=id=>{if(!elements.has(id))elements.set(id,{hidden:false,open:false,style:{},dataset:{},clientWidth:380,contentWindow:{postMessage(){}},setAttribute(){},showModal(){this.open=true;},close(){this.open=false;}});return elements.get(id);};
   const native={load:()=>JSON.stringify(stored||{}),save:text=>{calls.push('save');if(saveOk)stored=JSON.parse(text);return saveOk;},foreground:()=>true,status:()=>JSON.stringify(status),ready(){},reportError(){},installUpdate(){calls.push('install');status.updateReady=false;status.installing=true;}};
-  const c=vm.createContext({console,TextEncoder,TextDecoder,structuredClone,Date:class extends Date{static now(){return now;}},Android:native,MobileConfig:{name:'fixture',stepsPerAction:10},document:{getElementById:element},location:{origin:'https://game.pokemon.local'},setInterval:fn=>intervals.push(fn),setTimeout:fn=>timers.push(fn),clearTimeout(){},addEventListener(){}});
+  const c=vm.createContext({console,TextEncoder,TextDecoder,structuredClone,Date:class extends Date{static now(){return now;}},Android:native,MobileConfig:{name:'fixture',stepsPerAction:10},document:{getElementById:element},location:{origin:'https://game.pokemon.local'},setInterval:fn=>intervals.push(fn),setTimeout:fn=>timers.push(fn),clearTimeout(){},clearInterval(){},addEventListener(){}});
   vm.runInContext('window=globalThis',c);
-  for(const file of ['mobile/android/app/build/generated/gameAssets/web/game.bundle.js','mobile/web/progression.js','mobile/web/app.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),c);
+  for(const file of ['mobile/android/app/build/generated/gameAssets/web/game.bundle.js','mobile/web/progression.js','mobile/web/story-ui.js','mobile/web/app.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),c);
   const run=code=>vm.runInContext(code,c);
   return {status,calls,timers,run,tick:()=>intervals[0](),start:()=>run('mobileLifecycle(true)'),snapshot:()=>JSON.parse(run('JSON.stringify({game:game.data,mobile:progression.checkpoint(),active,catchingUp,updatePaused,fatal})')),stored:()=>stored,setSaveOk:value=>{saveOk=value;},advance:ms=>{now+=ms;}};
 }
@@ -42,4 +43,12 @@ test('installation and system confirmation pause actions; failure resumes the sa
 test('native resume reloads the saved background result before continuing the UI',()=>{
   const f=fixture();f.start();f.run('game.data.fixtureMarker="background result";progression.consumed=40;save();game.data.fixtureMarker="stale UI";progression.consumed=0;active=false;mobileLifecycle(true,true)');
   assert.equal(f.snapshot().game.fixtureMarker,'background result');assert.equal(f.snapshot().mobile.consumed,40);
+});
+test('reset requires a separate confirmation, discards progress and old walking rewards, then persists Oak',()=>{
+  const f=fixture();f.status.steps=3210;f.run('game.addPokemon(150,80,"fixture",Date.now());game.data.badges=["brock"];game.data.inventory[83]=4;save();');const before=f.stored();
+  f.run('$("reset-open").onclick()');assert.equal(f.run('$("reset-confirm").open'),true);assert.deepEqual(f.stored(),before);
+  f.run('$("reset-cancel").onclick()');assert.deepEqual(f.stored(),before);
+  f.run('$("reset-open").onclick();$("reset-accept").onclick()');const s=f.stored();
+  assert.equal(Object.keys(s.game.owned).length,1);assert.deepEqual(Object.keys(s.game.caught),['25']);assert.deepEqual(s.game.badges,[]);assert.deepEqual(s.game.inventory,{});assert.equal(s.mobile.consumed,3210);assert.equal(s.game.mobileStory.scene.sprite,'oak');assert.equal(f.run('$("reset-confirm").open'),false);
+  f.run('mobileLifecycle(true,true)');assert.equal(f.snapshot().game.mobileStory.scene.sprite,'oak');assert.equal(f.snapshot().mobile.consumed,3210);
 });

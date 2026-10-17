@@ -14,11 +14,13 @@
     resume(now){if(this.foreground)return;this.shift(Math.max(0,now-(this.pausedAt||now)));this.foreground=true;this.pausedAt=0;}
     shift(delta){
       const g=this.game,d=g.data;g.nextTick+=delta;if(d.switchUntil)d.switchUntil+=delta;
+      if(g.presentation?.())g.presentation().at+=delta;
       if(d.pendingBattle)d.pendingBattle.at+=delta;
       for(const e of [d.animation,d.captureAnimation])if(e){e.at+=delta;if(e.leadIn)e.leadIn.at+=delta;}
     }
     step(now){
-      const g=this.game;g.data.workTokens=250;
+      const g=this.game;if(g.presentation?.())return g.sceneTick(now);
+      g.data.workTokens=250;
       const changed=g.tick(now);g.data.workTokens=0;
       if(changed)root.MobileCore.nursery.advance(g,250,now);
       return changed;
@@ -30,6 +32,8 @@
       if(!count)return 0;
       const g=this.game;let used=0;
       for(;used<count;used++){
+        // Manual dialogue must preserve every unspent walking action.
+        if(g.presentation?.())break;
         // Consume recorded activity immediately, never simulate a future calendar.
         // Only presentation waits are skipped; every game transition still uses tick().
         g.nextTick=Math.min(g.nextTick,now);g.data.switchUntil=Math.min(g.data.switchUntil||0,now);

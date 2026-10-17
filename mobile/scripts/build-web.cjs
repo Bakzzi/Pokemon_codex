@@ -15,12 +15,13 @@ function visit(file){
   modules[id]=`[function(require,module,exports){\n${file.endsWith('.json')?'module.exports='+source:source}\n},${JSON.stringify(deps)}]`;
   return id;
 }
-const game=visit(path.join(root,'desktop/game.cjs')),nursery=visit(path.join(root,'desktop/daycare.cjs'));
+const game=visit(path.join(root,'desktop/game.cjs')),nursery=visit(path.join(root,'desktop/daycare.cjs')),adventure=visit(path.join(root,'mobile/adventure.cjs'));
 fs.mkdirSync(out,{recursive:true});
-const bundle=`'use strict';globalThis.MobileCore=(()=>{const m=[${modules.join(',\n')}],cache={};function load(id){if(cache[id])return cache[id].exports;const mod=cache[id]={exports:{}};m[id][0](name=>{if(!(name in m[id][1]))throw Error('Unbundled module: '+name);return load(m[id][1][name]);},mod,mod.exports);return mod.exports;}return {...load(${game}),nursery:load(${nursery})};})();\n`;
+const bundle=`'use strict';globalThis.MobileCore=(()=>{const m=[${modules.join(',\n')}],cache={};function load(id){if(cache[id])return cache[id].exports;const mod=cache[id]={exports:{}};m[id][0](name=>{if(!(name in m[id][1]))throw Error('Unbundled module: '+name);return load(m[id][1][name]);},mod,mod.exports);return mod.exports;}return {...load(${game}),...load(${adventure}),nursery:load(${nursery})};})();\n`;
 fs.writeFileSync(path.join(out,'game.bundle.js'),bundle);
 for(const name of ['widget.css','battle-ui.css','panels.css','badge-case.css','capture-animation.js','move-effects.js','battle-pacing.js','connections.css'])fs.copyFileSync(path.join(root,'desktop',name),path.join(out,name));
 fs.cpSync(path.join(root,'desktop/assets'),path.join(out,'assets'),{recursive:true});
+fs.cpSync(path.join(root,'mobile/assets/trainers'),path.join(out,'assets/trainers/battle'),{recursive:true});
 for(const [source,target] of [['index.html','battle.html'],['panels.html','panels.html']]){
   let html=fs.readFileSync(path.join(root,'desktop',source),'utf8');
   html=html.replace("style-src 'self'","style-src 'self' 'unsafe-inline'"); // Existing renderers animate inline styles.
@@ -44,7 +45,7 @@ const panels=fs.readFileSync(path.join(root,'desktop/panels.js'),'utf8')
 fs.writeFileSync(path.join(out,'panels.js'),panels);
 fs.writeFileSync(path.join(out,'connections.js'),'function initConnections(){};function renderConnections(){};');
 fs.cpSync(path.join(root,'mobile/web'),out,{recursive:true});
-const notices=['LICENSE','mobile/third-party/pkmn-sets-LICENSE.txt','mobile/third-party/android-background-NOTICES.txt',...['@pkmn/sim','@pkmn/streams','ts-chacha20'].map(n=>'node_modules/'+n+'/LICENSE')].map(file=>file+'\n'+fs.readFileSync(path.join(root,file),'utf8')).join('\n\n');
+const notices=['LICENSE','mobile/third-party/pkmn-sets-LICENSE.txt','mobile/third-party/android-background-NOTICES.txt','mobile/assets/trainers/NOTICE.txt',...['@pkmn/sim','@pkmn/streams','ts-chacha20'].map(n=>'node_modules/'+n+'/LICENSE')].map(file=>file+'\n'+fs.readFileSync(path.join(root,file),'utf8')).join('\n\n');
 fs.writeFileSync(path.join(out,'THIRD-PARTY-NOTICES.txt'),notices);
 fs.writeFileSync(path.join(out,'config.js'),'globalThis.MobileConfig='+fs.readFileSync(path.join(root,'mobile/version.json'),'utf8')+';');
 const report={modules:modules.length,bundleBytes:Buffer.byteLength(bundle),sha256:crypto.createHash('sha256').update(bundle).digest('hex')};

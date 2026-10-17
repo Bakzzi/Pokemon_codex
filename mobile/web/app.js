@@ -1,12 +1,12 @@
 'use strict';
 const $=id=>document.getElementById(id),native=window.Android;
 let saved,game,progression,active=false,catchingUp=false,updatePaused=false,ready=false,notice='',fatal=false,lastSave=0,panelTab='collection',panelDetail=false,nativeState={steps:0};
-try{saved=JSON.parse(native.load());game=new MobileCore.Game(saved.game||{});progression=new MobileProgression(game,saved.mobile,MobileConfig.stepsPerAction);}catch(e){fatal=true;notice='저장을 읽지 못했어요. 기존 데이터는 보존돼요. 앱을 다시 열어 주세요.';$('app-notice').textContent=notice;native.reportError(String(e));}
+try{saved=JSON.parse(native.load());game=new MobileCore.Adventure(saved.game||{});progression=new MobileProgression(game,saved.mobile,MobileConfig.stepsPerAction);}catch(e){fatal=true;notice='저장을 읽지 못했어요. 기존 데이터는 보존돼요. 앱을 다시 열어 주세요.';$('app-notice').textContent=notice;native.reportError(String(e));}
 function save(){if(fatal)return false;const ok=native.save(JSON.stringify({format:1,game:game.data,mobile:progression.checkpoint(),savedAt:Date.now()}));if(!ok){fatal=true;active=false;notice='진행을 저장하지 못해 모험을 멈췄어요. 저장 공간을 확인해 주세요.';}lastSave=Date.now();return ok;}
 function snapshot(){return {...game.panelState(),phase:'working',source:{connected:true},compact:false,pinned:false,demo:false,notice,remote:{connections:[]}};}
-function publish(){if(fatal){$('app-notice').textContent=notice;return;}const s=snapshot();for(const id of ['battle','panel'])$(id).contentWindow.postMessage({type:'state',state:s},location.origin);$('app-notice').textContent=notice;}
+function publish(){if(fatal){$('app-notice').textContent=notice;return;}const s=snapshot();for(const id of ['battle','panel'])$(id).contentWindow.postMessage({type:'state',state:s},location.origin);renderScene(s);$('app-notice').textContent=notice;}
 function openPanel(tab){panelTab=tab;panelDetail=false;$('back').textContent='‹ 모험으로';$('adventure').hidden=true;$('panel-wrap').hidden=false;$('panel').contentWindow.postMessage({type:'tab',tab},location.origin);publish();}
-function back(){if($('settings').open){$('settings').close();return true;}if(!$('panel-wrap').hidden){if(panelDetail){panelDetail=false;$('back').textContent='‹ 모험으로';$('panel').contentWindow.postMessage({type:'dex-back'},location.origin);return true;}$('adventure').hidden=false;$('panel-wrap').hidden=true;return true;}return false;}
+function back(){if($('reset-confirm').open){$('reset-confirm').close();return true;}if($('settings').open){$('settings').close();return true;}if(!$('panel-wrap').hidden){if(panelDetail){panelDetail=false;$('back').textContent='‹ 모험으로';$('panel').contentWindow.postMessage({type:'dex-back'},location.origin);return true;}$('adventure').hidden=false;$('panel-wrap').hidden=true;return true;}return false;}
 window.mobileBack=back;
 function action(action,value){
   if(fatal||updatePaused)return;
@@ -17,7 +17,8 @@ function action(action,value){
     else if(action==='action-cancel')ok=game.cancelAction(value);
     else if(action==='capture-reserve')ok=game.reserveCapture(value,1);
     else if(action==='capture-cancel')ok=game.reserveCapture(value,0);
-    else if(action==='challenge')ok=game.challenge(value);
+    else if(action==='challenge'){ok=game.challenge(value);if(ok){$('adventure').hidden=false;$('panel-wrap').hidden=true;}}
+    else if(action==='scene-next')ok=game.advanceScene(value);
     else if(action==='challenge-cancel')ok=game.cancelChallenge();
     else if(action==='daycare-preview')game.daycareSelection=Array.isArray(value)?value.slice(0,2).map(Number):[];
     else return;
@@ -39,7 +40,7 @@ function refreshNative(){
 window.mobileLifecycle=function(visible,reload=false){
   if(fatal)return;const now=Date.now();
   if(!visible){active=false;progression.pause(now);save();return;}
-  if(reload){active=false;try{saved=JSON.parse(native.load());game=new MobileCore.Game(saved.game||{},now);progression=new MobileProgression(game,saved.mobile,MobileConfig.stepsPerAction);}catch(e){fatal=true;notice='저장을 읽지 못했어요. 기존 데이터는 보존돼요.';native.reportError(String(e));publish();return;}}
+  if(reload){active=false;try{saved=JSON.parse(native.load());game=new MobileCore.Adventure(saved.game||{},now);progression=new MobileProgression(game,saved.mobile,MobileConfig.stepsPerAction);}catch(e){fatal=true;notice='저장을 읽지 못했어요. 기존 데이터는 보존돼요.';native.reportError(String(e));publish();return;}}
   refreshNative();if(applyReadyUpdate())return;
   updatePaused=false;active=true;progression.resume(now);
   catchingUp=true;let actions=0;
@@ -67,4 +68,5 @@ setInterval(()=>{
 $('back').onclick=back;$('settings-open').onclick=()=>{refreshNative();$('settings').showModal();};$('settings-close').onclick=()=>$('settings').close();
 $('steps-toggle').onclick=()=>{refreshNative();if(nativeState.stepsEnabled)native.disableSteps();else native.enableSteps();};$('install-permission').onclick=()=>native.allowUpdates();$('update-check').onclick=()=>{native.checkUpdate();refreshNative();};$('update-confirm').onclick=()=>{save();native.confirmUpdate();};$('version').textContent='Android v'+MobileConfig.name;
 function resize(){const w=$('battle-wrap').clientWidth,scale=w/380;$('battle').style.transform='scale('+scale+')';$('battle-wrap').style.height=500*scale+'px';}window.addEventListener('resize',resize);resize();
+installStoryUI();
 if(!fatal){ready=true;native.ready();}

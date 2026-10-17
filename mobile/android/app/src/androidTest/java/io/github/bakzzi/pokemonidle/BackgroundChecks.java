@@ -18,7 +18,8 @@ final class BackgroundChecks {
     }
     static Bundle run(Context context)throws Exception{
         AdventureStore store=AdventureStore.get(context);Object owner=new Object();store.claimUi(owner);
-        check(store.saveUi(owner,"{\"format\":1,\"game\":{},\"mobile\":{\"consumed\":0},\"savedAt\":0}"),"Fixture save failed");store.releaseUi(owner);
+        // An existing adventure: a fresh installation now waits for its first dialogue.
+        check(store.saveUi(owner,"{\"format\":1,\"game\":{\"version\":1},\"mobile\":{\"consumed\":0},\"savedAt\":0}"),"Fixture save failed");store.releaseUi(owner);
         android.content.SharedPreferences prefs=context.getSharedPreferences("steps",0);prefs.edit().putLong("total",0).commit();
         StepService service=new StepService();java.lang.reflect.Method attach=ContextWrapper.class.getDeclaredMethod("attachBaseContext",Context.class);attach.setAccessible(true);attach.invoke(service,context);
         StepLedger ledger=new StepLedger();WalkingCounter walking=new WalkingCounter();set(service,"ledger",ledger);set(service,"walking",walking);set(service,"prefs",prefs);set(service,"boot",1L);
