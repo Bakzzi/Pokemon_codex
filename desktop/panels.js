@@ -47,7 +47,7 @@ $('device-withdraw').onclick=()=>window.buddy.action('device-learner',null);
 $('device-learner').onchange=()=>renderDevice();
 window.buddy.onTab(switchTab);
 function renderDex(){
-  const signature=JSON.stringify([state.collection.map(p=>[p.id,p.seen,p.caught,p.owned,p.level,p.expPercent,p.count,p.captureReserved,p.acquisition.summary]),selected,$('filter').value,$('search').value]);
+  const signature=JSON.stringify([state.collection.map(p=>[p.id,p.seen,p.caught,p.owned,p.level,p.expPercent,p.count,p.captureReserved,p.acquisition.summary]),$('filter').value,$('search').value]);
   if(signature!==dexSignature){
     dexSignature=signature;const filter=$('filter').value,query=$('search').value.trim().toLowerCase();
     const cards=state.collection.filter(p=>(filter==='all'||(filter==='uncaught'?!p.caught:p[filter]))&&(!query||String(p.id)===query||p.name.toLowerCase().includes(query))).map(p=>{
@@ -59,6 +59,7 @@ function renderDex(){
       b.onclick=()=>{selected=p.id;detailSignature='';render();};return b;
     });$('dex-grid').replaceChildren(...cards);
   }
+  for(const card of $('dex-grid').children)card.classList.toggle('selected',Number(card.dataset.id)===selected);
   const p=state.collection.find(p=>p.id===selected);if(!p)return;
   const previousForms=[...new Set(p.acquisition.routes.filter(r=>r.kind==='evolution').map(r=>r.from))].map(id=>state.collection.find(p=>p.id===id)).filter(Boolean);
   const members=state.roster.filter(m=>m.id===p.id);
