@@ -32,3 +32,11 @@ test('headless walking starts a queued rival but never skips its dialogue or spe
   const r=run({format:1,game:g.data,mobile:{consumed:0}},1000);assert.equal(r.used,1);assert.equal(r.save.game.battle.storyId,'rival-surge');assert.equal(r.save.game.mobileStory.scene.mode,'dialogue');assert.equal(r.save.mobile.consumed,10);
   assert.equal(run(r.save,1000,now+3600000).used,0);const reopened=new c.MobileCore.Adventure(r.save.game,now+3600000);assert.equal(reopened.presentation().index,0);assert.equal(reopened.data.battle.turn,0);
 });
+test('headless reload preserves the rescue namespace and triggers its rival before the first grunt',()=>{
+  const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika'];const g=new c.MobileCore.Adventure(old.data,now);g.data.pendingChallenge={index:'tower-grunt-1',queuedAt:now};
+  const r=run({format:1,game:g.data,mobile:{consumed:0}},1000);assert.equal(r.used,1);assert.equal(r.save.game.battle.storyId,'rival-middle');assert.equal(r.save.game.trainingDevice.fluteObtainedAt,null);assert.equal(run(r.save,1000,now+3600000).used,0);
+});
+test('background actions never claim an elder reward before the player advances the saved dialogue',()=>{
+  const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika'];const g=new c.MobileCore.Adventure(old.data,now);g.data.mobileStory.rescue.wins=[now,now,now];g.data.mobileStory.rescue.rewardPending=true;g.dialogue('elder','보라타운 촌장','mr-fuji',['fixture'],'rescue-reward',now);
+  const saved={format:1,game:g.data,mobile:{consumed:0}};assert.equal(run(saved,1000).used,0);const reopened=new c.MobileCore.Adventure(g.data,now+1000);assert.equal(reopened.data.trainingDevice.fluteObtainedAt,null);assert.equal(reopened.presentation().next,'rescue-reward');
+});

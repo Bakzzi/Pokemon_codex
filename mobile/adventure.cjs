@@ -3,6 +3,8 @@
 // The underlying battle engine and desktop product are unchanged.
 const {Game:Engine}=require('../desktop/game.cjs');
 const journal=require('../desktop/journal.cjs');
+const training=require('../desktop/training-device.cjs');
+const rescue=require('./rescue.cjs');
 const {encounters,byId:rivals}=require('./rivals.cjs');
 const rival=encounters[0];
 const oakIntro=[
@@ -12,7 +14,7 @@ const oakIntro=[
   '포켓기어에서 동료를 살펴보고, 도전하기에서 실력을 시험해 보렴. 물건은 가방에 있단다.'
 ];
 const oakClose=['첫 배틀은 어땠니? 이기든 지든 동료와 함께 배우면 된단다. 피카츄는 회복해 두었단다.','이제 너희의 모험이 시작이다! 새로 만난 동료와 모험 기록도 가끔 살펴보렴.'];
-function portrait(boss){return rivals.get(boss.id)?.sprite||(boss.id==='rocket-giovanni'?'giovanni':boss.id);}
+function portrait(boss){return rivals.get(boss.id)?.sprite||rescue.byId.get(boss.id)?.sprite||(boss.id==='rocket-giovanni'?'giovanni':boss.id);}
 class Adventure extends Engine{
   constructor(saved={},now=Date.now(),options={}){
     super(saved,now,options);
@@ -22,14 +24,14 @@ class Adventure extends Engine{
       this.data.mobileStory={revision:1,onboarding:existing?'done':'oak',serial:0,giftReceived:existing};
       if(!existing)this.dialogue('oak','오박사','oak',oakIntro,'rival',now);
     }
-    this.initRivals(now);
+    rescue.init(this,now);this.initRivals(now);
     const pending=saved.pendingChallenge;
-    if(rivals.has(pending?.index)&&this.rivalProgress(pending.index)?.state==='retry')this.data.pendingChallenge={...pending};
+    if((rivals.has(pending?.index)&&this.rivalProgress(pending.index)?.state==='retry')||rescue.byId.has(pending?.index)&&this.canChallenge(pending.index))this.data.pendingChallenge={...pending};
   }
   resetSeason(now){
     const story=this.data.mobileStory;
     super.resetSeason(now);
-    if(story){this.data.mobileStory={...story,onboarding:'done',scene:null,rivals:null};this.initRivals(now);}
+    if(story){this.data.mobileStory={...story,onboarding:'done',scene:null,rivals:null,rescue:null};rescue.init(this,now);this.initRivals(now);}
   }
   initRivals(now){
     const story=this.data.mobileStory;if(!story)return;
@@ -38,14 +40,19 @@ class Adventure extends Engine{
       for(const e of encounters){
         const progressed=e.stage===0?story.onboarding==='done'||story.onboarding==='closing':
           e.target===8?this.data.champion||this.data.leagueBest>0||this.data.battle?.kind==='trainer'&&Number.isInteger(this.data.battle.bossIndex)&&this.data.battle.bossIndex>=8:
+          typeof e.target==='string'?!!story.rescue?.completedAt:
           e.target!==null&&this.data.badges.includes(['brock','misty','surge','erika','koga'][e.target]);
         story.rivals[e.id]={state:progressed?'completed':'unseen',...(progressed?{migratedAt:now}:{})};
       }
     }
+    const middle=story.rivals['rival-middle'];
+    if(story.rescue?.legacy&&middle?.state==='unseen'){middle.state='completed';middle.migratedAt=now;}
     const b=this.data.battle;
     if(rivals.has(b?.storyId)&&!b.rivalResolution)this.rivalProgress(b.storyId).state='active';
   }
   rivalProgress(id){return this.data.mobileStory?.rivals?.[id];}
+  canReceiveFlute(){const r=this.data.mobileStory?.rescue;return !!(r?.completedAt&&r.wins.every(Boolean));}
+  fluteRewardText(){return '보라타운 촌장에게 포켓몬피리를 받았다!';}
   rivalGate(index){return encounters.find(e=>e.target!==null&&e.target===index);}
   rivalState(){
     return encounters.map(e=>{
@@ -81,6 +88,11 @@ class Adventure extends Engine{
       this.data.animation=null;this.holdUntil(now+1000);return true;
     }
     if(s.next==='rival-win'||s.next==='rival-loss'){this.completeRival(s.next==='rival-win',now);return true;}
+    if(s.next==='rescue-reward'){
+      const r=story.rescue;if(!r.rewardPending||!r.wins.every(Boolean))return false;
+      r.completedAt=now;r.rewardPending=false;training.awardFlute(this,now);
+      this.animate('result',{text:'보라타운 촌장을 구하고 포켓몬피리를 받았다!'},now);return true;
+    }
     if(s.next==='win'){this.finishTrainerWin(now);return true;}
     if(s.next==='loss'){super.endChallenge(false,now);return true;}
     return false;
@@ -93,27 +105,27 @@ class Adventure extends Engine{
     this.rivalProgress(rival.id).state='active';
     this.nextTrainer(now);
   }
-  battleBoss(b=this.data.battle){return rivals.get(b?.storyId)||super.battleBoss(b);}
-  challengeName(index){return rivals.has(index)?'그린 재도전':super.challengeName(index);}
+  battleBoss(b=this.data.battle){return rivals.get(b?.storyId)||rescue.byId.get(b?.storyId)||super.battleBoss(b);}
+  challengeName(index){return rivals.has(index)?'그린 재도전':rescue.byId.get(index)?.name||super.challengeName(index);}
   challenge(index,now=Date.now()){
-    if(!rivals.has(index))return super.challenge(index,now);
+    if(!rivals.has(index)&&!rescue.byId.has(index))return super.challenge(index,now);
     if(!this.canChallenge(index)||this.data.battle?.kind==='trainer')return false;
     if(this.data.pendingChallenge)return this.data.pendingChallenge.index===index;
     if(this.data.battle||this.data.pendingBattle||now<this.data.switchUntil||now<this.nextTick){
-      this.data.pendingChallenge={index,queuedAt:now};this.log('그린 재도전 예약','challenge',null,now);return true;
+      this.data.pendingChallenge={index,queuedAt:now};this.log(this.challengeName(index)+' 예약','challenge',null,now);return true;
     }
     return this.startChallenge(index,now);
   }
   startChallenge(index,now){
-    const encounter=rivals.get(index),gate=this.rivalGate(index);
-    if(!encounter&&(!gate||this.rivalProgress(gate.id)?.state!=='unseen'))return super.startChallenge(index,now);
+    const gate=this.rivalGate(index),encounter=gate&&this.rivalProgress(gate.id)?.state==='unseen'?gate:rivals.get(index)||rescue.byId.get(index);
+    if(!encounter)return super.startChallenge(index,now);
     if(!this.canChallenge(index)||this.data.battle||this.data.pendingBattle||now<this.data.switchUntil)return false;
-    const e=encounter||gate;
+    const e=encounter;
     this.data.pendingChallenge=null;this.data.captureAnimation=null;this.data.suspendedWild=null;this.data.manualSelection=false;
     const party=Object.fromEntries(this.data.slots.filter(uid=>uid!==null&&!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
     this.data.battle={kind:'trainer',bossIndex:e.id,storyId:e.id,foeIndex:0,party,turn:0,startedAt:now};
-    const p=this.rivalProgress(e.id);p.state='active';p.metAt ||= now;
-    this.log('그린이 나타났다!','challenge',null,now);this.nextTrainer(now);return true;
+    if(rivals.has(e.id)){const p=this.rivalProgress(e.id);p.state='active';p.metAt ||= now;}
+    this.log(rivals.has(e.id)?'그린이 나타났다!':e.name+'에게 도전!','challenge',null,now);this.nextTrainer(now);return true;
   }
   resolveRival(won,now,abandoned=false){
     const b=this.data.battle,e=rivals.get(b?.storyId);if(!e||b.rivalResolution)return;
@@ -152,7 +164,16 @@ class Adventure extends Engine{
     }
     super.defeatOpponent(now,captured);
   }
-  finishTrainerWin(now){super.defeatOpponent(now);}
+  finishTrainerWin(now){
+    const b=this.data.battle,e=rescue.byId.get(b?.storyId);
+    if(!e){super.defeatOpponent(now);return;}
+    const r=this.data.mobileStory.rescue;
+    if(!r.wins[e.stage]){this.awardXp(b.foe,true,now);this.data.battles++;journal.increment(this.data,'wins');r.wins[e.stage]=now;this.log(e.name+'에게 승리!','story',null,now);}
+    this.data.battle=null;this.data.pendingBattle=null;this.data.pendingChallenge=null;this.data.suspendedWild=null;
+    if(r.wins.every(Boolean)){
+      r.rewardPending=true;this.dialogue('elder','보라타운 촌장','mr-fuji',['구해 줘서 정말 고맙구나. 이 피리를 받아 주렴.'],'rescue-reward',now);
+    }else this.animate('result',{text:e.name+'에게 승리했다! 다음 조무래기에게 도전하자.'},now);
+  }
   endChallenge(won,now){
     const b=this.data.battle;
     if(rivals.has(b?.storyId)){this.resolveRival(false,now);return;}
@@ -177,11 +198,12 @@ class Adventure extends Engine{
     if(this.presentation())return false;
     if(rivals.has(index))return rivals.get(index).stage>0&&this.rivalProgress(index)?.state==='retry';
     const gate=this.rivalGate(index);if(gate&&this.rivalProgress(gate.id)?.state==='retry')return false;
+    if(rescue.byId.has(index))return rescue.ready(this,index);
     return super.canChallenge(index);
   }
   panelState(now=Date.now()){
     const s=super.panelState(now),locks={};for(const e of encounters)if(e.target!==null&&this.rivalProgress(e.id)?.state==='retry')locks[e.target]='그린에게 승리해야 도전할 수 있어요.';
-    return {...s,scene:this.presentation(),onboarding:this.data.mobileStory?.onboarding!=='done',rivals:this.rivalState(),rivalLocks:locks};
+    return {...s,scene:this.presentation(),onboarding:this.data.mobileStory?.onboarding!=='done',rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this)};
   }
 }
 module.exports={Adventure};

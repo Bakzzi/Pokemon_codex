@@ -2,7 +2,8 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const {Adventure}=require('../adventure.cjs'),{Game}=require('../../desktop/game.cjs'),{encounters}=require('../rivals.cjs');
 const now=Date.parse('2026-10-17T10:00:00Z'),badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'];
-function ready(e){const old=new Game({},now);old.data.badges=badges.slice(0,e.target);old.data.trainingDevice.snorlaxWonAt=now;return new Adventure(old.data,now,{random:()=>.5});}
+const count=e=>typeof e.target==='number'?e.target:4;
+function ready(e){const old=new Game({},now);old.data.badges=badges.slice(0,count(e));return new Adventure(old.data,now,{random:()=>.5});}
 function pages(g,t=now){const s=g.presentation();for(let i=0;i<8&&g.presentation()?.id===s?.id&&g.presentation()?.mode==='dialogue';i++){const p=g.presentation();assert.ok(g.advanceScene(p.id+':'+p.index,t));}}
 function begin(g){pages(g);g.sceneTick(now+3000);g.data.switchUntil=0;g.nextTick=0;}
 function won(g){const b=g.data.battle;b.foeIndex=g.battleBoss().team.length-1;b.foe.hp=0;g.defeatOpponent(now+10000);pages(g,now+11000);g.data.switchUntil=0;g.nextTick=0;}
@@ -10,8 +11,8 @@ for(const e of encounters.slice(1)){
   test(e.id+': target looks open, click intercepts once, victory unlocks only that target',()=>{
     const g=ready(e);assert.equal(g.rivalProgress(e.id).state,'unseen');assert.equal(g.canChallenge(e.target),true);assert.equal(g.canChallenge(e.id),false);
     assert.ok(g.challenge(e.target,now));assert.equal(g.data.battle.storyId,e.id);assert.equal(g.data.battle.kind,'trainer');assert.equal(g.data.pendingChallenge,null);assert.equal(g.captureOpportunity(),null);
-    begin(g);won(g);assert.equal(g.rivalProgress(e.id).state,'won');assert.equal(g.data.battle,null);assert.equal(g.data.pendingChallenge,null);assert.deepEqual(g.data.badges,badges.slice(0,e.target));
-    assert.equal(g.canChallenge(e.target),true);assert.equal(g.canChallenge(e.id),false);assert.ok(g.challenge(e.target,now+30000));assert.equal(g.data.battle.bossIndex,e.target);assert.equal(g.data.battle.storyId,null);
+    begin(g);won(g);assert.equal(g.rivalProgress(e.id).state,'won');assert.equal(g.data.battle,null);assert.equal(g.data.pendingChallenge,null);assert.deepEqual(g.data.badges,badges.slice(0,count(e)));
+    assert.equal(g.canChallenge(e.target),true);assert.equal(g.canChallenge(e.id),false);assert.ok(g.challenge(e.target,now+30000));assert.equal(g.data.battle.bossIndex,e.target);assert.equal(g.data.battle.storyId,typeof e.target==='string'?e.target:null);
   });
   test(e.id+': loss locks original target, enables only this retry, survives restart, victory restores challenge',()=>{
     let g=ready(e);g.challenge(e.target,now);begin(g);g.data.battle.party[g.data.activeId].hp=0;g.endChallenge(false,now+5000);
@@ -34,7 +35,7 @@ for(const e of encounters.slice(1)){
     let clock=now+30000,actions=0;
     for(;actions<500&&!g.data.battle.rivalResolution;actions++){g.tick(clock);clock+=30000;}
     assert.ok(actions<500);assert.equal(g.data.battle.rivalResolution.won,true);assert.equal(g.data.battle.foeIndex,e.team.length-1);pages(g,clock);
-    assert.equal(g.rivalProgress(e.id).state,'won');assert.equal(g.data.battles,e.team.length);assert.deepEqual(g.data.badges,badges.slice(0,e.target));
+    assert.equal(g.rivalProgress(e.id).state,'won');assert.equal(g.data.battles,e.team.length);assert.deepEqual(g.data.badges,badges.slice(0,count(e)));
   });
 }
 test('retry queued during a wild battle is restored after save/reload, with a valid challenge name',()=>{
@@ -49,7 +50,7 @@ test('active rival result is saved and resolved exactly once after restarting on
 });
 test('existing earned badges and an active league are preserved without retroactive rival blocks',()=>{
   for(const e of encounters.slice(1)){
-    const old=new Game({},now);old.data.badges=badges.slice(0,Math.min(8,e.target+1));if(e.target===8)old.data.leagueBest=1;
+    const old=new Game({},now);old.data.badges=badges.slice(0,Math.min(8,count(e)+1));if(e.target===8)old.data.leagueBest=1;
     const g=new Adventure(old.data,now);assert.equal(g.rivalProgress(e.id).state,'completed');assert.equal(g.presentation(),null);
   }
   const old=new Game({},now);old.data.badges=[...badges];old.challenge(8,now);const g=new Adventure(old.data,now);assert.equal(g.data.battle.bossIndex,8);assert.equal(g.rivalProgress('rival-league').state,'completed');

@@ -4,6 +4,9 @@ Original FireRed/LeafGreen sprites: Pokemon / Nintendo / Creatures / GAME FREAK.
 Source: https://github.com/pret/pokefirered/tree/master/graphics/trainers/front_pics
 File mapping: original-files.json. Images are not covered by the project's MIT license.
 
+Mr. Fuji: original FRLG overworld sprite, first 16x32 front frame without redrawing.
+Source: https://github.com/pret/pokefirered/blob/master/graphics/object_events/pics/people/mr_fuji.png
+
 Jessie and James GBA battle sprite: Monicaccina (formerly Ody-chan).
 Source: https://www.deviantart.com/ody-chan/art/GBA-Jessie-and-James-353030680
 The selected battle pair is cropped without redrawing from the author's 155x66 PNG

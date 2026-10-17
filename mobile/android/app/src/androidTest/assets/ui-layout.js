@@ -29,7 +29,7 @@
   check(!doc.querySelector('.dex-card.selected')&&!visible($('detail')),'reopening dex starts at list');
   await open('challenge');await until(()=>!$('challenge').hidden&&$('badge-slots').children.length===8);
   const disclosures=[...doc.querySelectorAll('.mobile-challenge-card')];
-  check(disclosures.length===6&&disclosures.every(e=>!e.open),'all challenge groups initially collapsed');
+  check(disclosures.length===7&&disclosures.every(e=>!e.open),'all challenge groups initially collapsed');
   check($('gym-details').contains($('badge-slots'))&&$('gym-details').contains($('gyms'))&&$('gym-details').querySelector('#kanto-gyms-title'),'gym heading badges and trainers share one card');
   check(!visible($('badge-slots'))&&!visible($('gyms'))&&!visible($('league-team')),'collapsed groups hide their contents');
   for(const id of ['gym-details','rocket-hideout','snorlax-road','league-details']){

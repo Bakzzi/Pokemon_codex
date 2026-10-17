@@ -11,7 +11,7 @@ const encounters=[
   {id:'rival-surge',stage:1,target:2,sprite:'green',team:[[21,19],[19,16],[27,18],[133,20]],
     intro:['봉주르! 이런 데서 만나다니!','도감은 좀 채웠어? 난 벌써 40종이나 잡았다고!'],
     win:['흥! 포켓몬을 제법 키웠네!'],loss:['왜 그래? 정신 좀 차리라고!']},
-  {id:'rival-middle',stage:2,target:4,sprite:'green-late',team:[[28,38],[38,35],[91,37],[64,35],[135,40]],
+  {id:'rival-middle',stage:2,target:'tower-grunt-1',sprite:'green-late',team:[[28,38],[38,35],[91,37],[64,35],[135,40]],
     intro:['여기서 뭐 하고 있어?','네 포켓몬은 아직 팔팔해 보이네. 내가 기절시켜 주지!'],
     win:['뭐야! 봐줬더니 이러기야?'],loss:['포켓몬들이 너무 약하잖아! 더 단련시키라고!']},
   {id:'rival-league',stage:3,target:8,sprite:'green-late',team:[[28,47],[102,45],[38,45],[91,47],[64,50],[135,53]],

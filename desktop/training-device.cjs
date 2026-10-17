@@ -78,8 +78,9 @@ function win(game,id,now,captured=false){
   game.log(text,'story',id==='road-snorlax'?143:null,now);if(id==='road-snorlax')claim(game,now,false);return true;
 }
 function awardFlute(game,now){
+  if(game.canReceiveFlute&&!game.canReceiveFlute())return false;
   const d=game.data.trainingDevice;if(!game.data.badges.includes('erika')||d.fluteObtainedAt)return false;
-  d.fluteObtainedAt=now;game.log('민화에게 포켓몬피리를 받았다! 잠만보를 깨울 수 있을 것 같다.','item',null,now);return true;
+  d.fluteObtainedAt=now;game.log(game.fluteRewardText?.()||'민화에게 포켓몬피리를 받았다! 잠만보를 깨울 수 있을 것 같다.','item',null,now);return true;
 }
 function claim(game,now,present=true){
   if(!canClaim(game))return false;
