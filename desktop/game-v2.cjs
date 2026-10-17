@@ -18,6 +18,14 @@ const nursery=require('./daycare.cjs');
 const {collectionHints}=require('./acquisition.cjs');
 const training=require('./training-device.cjs');
 const ACTION_KINDS=new Set(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner']);
+function moveDetails(p,entry){
+  const saved=moves.get(entry.move),move=battleEngine.dex.moves.get(saved.identifier);
+  const type=db.types.find(t=>t.identifier===(move.type==='???'?'unknown':move.type.toLowerCase()));
+  // Variable and fixed-damage moves have no single base power to multiply.
+  const basePower=move.category!=='Status'&&!move.damage&&!move.damageCallback&&!move.basePowerCallback&&move.basePower>0?move.basePower:null;
+  const stab=basePower!==null&&battleEngine.dex.species.get(species.get(p.id).identifier).types.includes(move.type);
+  return {id:entry.move,name:saved.name,type:type.id,typeName:type.name,pp:move.pp,power:basePower===null?null:basePower*(stab?1.5:1),stab,level:entry.level,active:entry.level<=p.level};
+}
 function actionPayload(kind,value){
   if(!ACTION_KINDS.has(kind))return null;
   if(kind==='select')return Number.isSafeInteger(Number(value))&&Number(value)>0?{uid:Number(value)}:null;
@@ -718,7 +726,7 @@ class Game {
   }
   panelState(now=Date.now()){
     const hints=collectionHints(this);
-    const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,level:p.level,xp:p.xp,...experienceView(p),gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:moveAccess.catalog(p).map(entry=>({id:entry.move,name:moves.get(entry.move).name,type:moves.get(entry.move).type,level:entry.level,active:entry.level<=p.level})),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
+    const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,level:p.level,xp:p.xp,...experienceView(p),gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:moveAccess.catalog(p).map(entry=>moveDetails(p,entry)),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
     return {...this.snapshot(now),roster,daycare:nursery.snapshot(this),johtoUnlocked:this.maxGeneration()===2,johtoDeferred:this.data.johtoDeferred,johtoUnlockPreview:this.johtoUnlockPreview(),
       kantoCaughtCount:this.kantoCaughtCount(),
       encounterBonus:this.encounterBonus(),

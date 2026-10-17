@@ -33,8 +33,9 @@ public final class MobileTest extends Instrumentation {
     private void screenshot(String name)throws Exception{
         try(OutputStream out=new FileOutputStream(new File(getTargetContext().getExternalFilesDir(null),name))){getUiAutomation().takeScreenshot().compress(android.graphics.Bitmap.CompressFormat.PNG,100,out);}
     }
-    private String layoutChecks()throws Exception{
-        try(InputStream in=getContext().getAssets().open("ui-layout.js");ByteArrayOutputStream out=new ByteArrayOutputStream()){
+    private String layoutChecks()throws Exception{return layoutChecks("ui-layout.js");}
+    private String layoutChecks(String asset)throws Exception{
+        try(InputStream in=getContext().getAssets().open(asset);ByteArrayOutputStream out=new ByteArrayOutputStream()){
             byte[] bytes=new byte[4096];for(int n;(n=in.read(bytes))!=-1;)out.write(bytes,0,n);js(out.toString("UTF-8"));
         }
         for(int i=0;i<200;i++){
@@ -84,6 +85,9 @@ public final class MobileTest extends Instrumentation {
             Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);
             if("inspect".equals(arguments.getString("mode"))){Thread.sleep(5000);result.putString("diagnostic",js("(()=>{try{return JSON.stringify({document:document.readyState,ready:typeof ready,game:typeof game,active:typeof active,phase:typeof active!=='undefined'?active:null,party:document.getElementById('battle')?.contentDocument.querySelectorAll('#party button').length,call:(()=>{try{window.mobileLifecycle(true);return 'ok'}catch(e){return e.stack}})()})}catch(e){return e.stack}})()"));finish(Activity.RESULT_OK,result);return;}
             waitReady();Thread.sleep(1500);
+            if("move-details".equals(arguments.getString("mode"))){
+                result.putString("moves",layoutChecks("move-details.js"));screenshot("move-details.png");result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("background-return".equals(arguments.getString("mode"))){
                 require("true".equals(js("active=false;progression.pause(Date.now());save();progression.consumed===40&&game.data.fixtureMarker==='UI retained'")),"UI did not load completed background results");
                 String current=readSave();JSONObject stale=new JSONObject(current);stale.getJSONObject("mobile").put("consumed",0);Field loaded=MainActivity.class.getDeclaredField("uiLoaded");loaded.setAccessible(true);loaded.set(activity,false);
