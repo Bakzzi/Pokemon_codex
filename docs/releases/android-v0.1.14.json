@@ -1,0 +1,73 @@
+{
+  "version": "0.1.14",
+  "versionCode": 16,
+  "platform": "android",
+  "channel": "android-preview",
+  "sourceCommit": "2eaaca7cf0675c074a374f06ba71e9a2978e662f",
+  "sourceTag": "android-v0.1.14",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/android-v0.1.14",
+  "package": "io.github.bakzzi.pokemonidle",
+  "minSdk": 31,
+  "targetSdk": 36,
+  "artifact": "Pokemon-Idle-0.1.14.apk",
+  "bytes": 9474905,
+  "sha256": "ea1751a196f8fb94cafe7d69dbfb81809d9d657f0a50398696628f9d9ebe8399",
+  "signingCertificateSha256": "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+  "toolchain": {
+    "node": "22.11.0",
+    "gradle": "8.13",
+    "agp": "8.13.0",
+    "compileSdk": 36,
+    "buildTools": "36.1.0",
+    "javaScriptEngine": "androidx.javascriptengine:javascriptengine:1.1.1",
+    "dependencyLockfile": "mobile/android/app/gradle.lockfile"
+  },
+  "validation": {
+    "releaseBuild": "passed",
+    "androidLintErrors": 0,
+    "androidLintWarnings": 14,
+    "apkSignatureVerified": true,
+    "mobileRegressionChecks": 91,
+    "offlineStepLedgerScenarios": 6,
+    "walkingCounterScenarios": 10,
+    "emulator": "Android 16 API 36",
+    "nativeRivalUiChecks": 50,
+    "nativeStoryUiChecks": 28,
+    "nativeLayoutChecks": 28,
+    "walkingSwitchChecks": 4,
+    "backgroundChecks": 10,
+    "actualInstalledVersionCode": 16,
+    "installedApkHashMatched": true,
+    "runtimeErrors": 0,
+    "physicalDeviceVerified": false,
+    "desktopCompatibilityChecks": 15,
+    "nativeEventUiChecks": 31,
+    "nativeProgressionUiChecks": 28,
+    "upgradeFrom": "0.1.13",
+    "upgradeSavedDataHashMatched": true
+  },
+  "retention": {
+    "latestAndroid": "0.1.14",
+    "previousAndroid": "0.1.13",
+    "additionalRetained": [
+      "0.1.0",
+      "0.1.1",
+      "0.1.2",
+      "0.1.3",
+      "0.1.4",
+      "0.1.5",
+      "0.1.6",
+      "0.1.7",
+      "0.1.8",
+      "0.1.9",
+      "0.1.10",
+      "0.1.11",
+      "0.1.12"
+    ],
+    "windowsPreserved": [
+      "0.3.83",
+      "0.3.84",
+      "0.3.85"
+    ]
+  }
+}
