@@ -43,7 +43,7 @@ test('trainer intro occurs once per trainer, and badge rewards wait for victory 
   finishDialogue(g,now+11000);assert.deepEqual(g.data.badges,['brock']);assert.equal(g.data.battle,null);
 });
 test('league moves from one trainer outro into next trainer intro, not straight into attacks',()=>{
-  const g=playable();g.data.badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'];assert.ok(g.challenge(8,now));finishDialogue(g);g.sceneTick(now+3000);
+  const g=playable();g.data.badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'];g.rivalProgress('rival-league').state='won';assert.ok(g.challenge(8,now));finishDialogue(g);g.sceneTick(now+3000);
   const b=g.data.battle;b.foeIndex=g.battleBoss().team.length-1;b.foe.hp=0;g.defeatOpponent(now+5000);assert.equal(g.presentation().sprite,'lorelei');finishDialogue(g,now+6000);
   assert.equal(g.presentation().sprite,'bruno');assert.equal(b.foeIndex,0);assert.equal(b.turn,0);
 });

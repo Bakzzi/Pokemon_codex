@@ -27,3 +27,8 @@ test('all six cleared positions survive headless actions and another background 
     result=run(result.save,80,now+1000);assert.equal(result.used,4);assert.deepEqual(result.save.game.slots,expected);assert.equal(result.save.mobile.consumed,80);
   }
 });
+test('headless walking starts a queued rival but never skips its dialogue or spends the remaining steps',()=>{
+  const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty'];const g=new c.MobileCore.Adventure(old.data,now);g.data.pendingChallenge={index:2,queuedAt:now};
+  const r=run({format:1,game:g.data,mobile:{consumed:0}},1000);assert.equal(r.used,1);assert.equal(r.save.game.battle.storyId,'rival-surge');assert.equal(r.save.game.mobileStory.scene.mode,'dialogue');assert.equal(r.save.mobile.consumed,10);
+  assert.equal(run(r.save,1000,now+3600000).used,0);const reopened=new c.MobileCore.Adventure(r.save.game,now+3600000);assert.equal(reopened.presentation().index,0);assert.equal(reopened.data.battle.turn,0);
+});

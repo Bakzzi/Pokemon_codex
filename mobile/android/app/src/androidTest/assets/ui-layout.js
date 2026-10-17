@@ -8,7 +8,8 @@
     const applied=new Promise(resolve=>{const onTab=e=>{if(e.source===window&&e.origin===location.origin&&e.data.type==='tab'&&e.data.tab===tab){frame.removeEventListener('message',onTab);resolve();}};frame.addEventListener('message',onTab);});
     openPanel(tab);await applied;
   }
-  active=false;progression.pause(Date.now());save();await open('collection');
+  // Layout checks start in a playable save, independently of a prior dialogue.
+  active=false;game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);progression=new MobileProgression(game);publish();save();await open('collection');
   await until(()=>!$('collection').hidden&&!$('collection').classList.contains('detail-open'));
   check(!doc.querySelector('.dex-card.selected')&&!visible($('detail')),'dex starts with no selection or detail');
   const cards=[...doc.querySelectorAll('.dex-card')],rects=cards.slice(0,5).map(e=>e.getBoundingClientRect());
@@ -28,7 +29,7 @@
   check(!doc.querySelector('.dex-card.selected')&&!visible($('detail')),'reopening dex starts at list');
   await open('challenge');await until(()=>!$('challenge').hidden&&$('badge-slots').children.length===8);
   const disclosures=[...doc.querySelectorAll('.mobile-challenge-card')];
-  check(disclosures.length===5&&disclosures.every(e=>!e.open),'all challenge groups initially collapsed');
+  check(disclosures.length===6&&disclosures.every(e=>!e.open),'all challenge groups initially collapsed');
   check($('gym-details').contains($('badge-slots'))&&$('gym-details').contains($('gyms'))&&$('gym-details').querySelector('#kanto-gyms-title'),'gym heading badges and trainers share one card');
   check(!visible($('badge-slots'))&&!visible($('gyms'))&&!visible($('league-team')),'collapsed groups hide their contents');
   for(const id of ['gym-details','rocket-hideout','snorlax-road','league-details']){
