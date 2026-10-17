@@ -34,7 +34,7 @@ test('custom company queue survives reload and intercepts only after the precedi
   let g=ready();g.data.mobileStory.silph.wins[0]=now;g.newWild(now);g.challenge('silph-duo',now+1000);g=new Adventure(structuredClone(g.data),now+2000);assert.equal(g.data.pendingChallenge.index,'silph-duo');g.data.battle=null;g.data.pendingBattle=null;settle(g);g.tick(now+3000);assert.equal(g.data.battle.storyId,'rival-silph');
 });
 test('old Sabrina and active later gym progress stay open, but Koga alone does not skip the new event',()=>{
-  const old=ready(6);delete old.data.mobileStory.silph;delete old.data.mobileStory.rivals['rival-silph'];const loaded=new Adventure(old.data,now+1000);assert.ok(loaded.data.mobileStory.silph.completedAt);assert.equal(loaded.rivalProgress('rival-silph').state,'completed');assert.ok(loaded.canChallenge(6));
+  const old=ready(6);delete old.data.mobileStory.silph;delete old.data.mobileStory.rivals['rival-silph'];const loaded=new Adventure(old.data,now+1000);assert.ok(loaded.data.mobileStory.silph.completedAt);assert.equal(loaded.rivalProgress('rival-silph').state,'completed');assert.ok(!loaded.canChallenge(6));assert.ok(loaded.canChallenge('mansion-investigate'));
   assert.equal(ready(5).rivalProgress('rival-silph').state,'unseen');
 });
 test('monthly reset clears company and its rival while preserving the lifetime collection',()=>{

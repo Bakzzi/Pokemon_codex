@@ -11,7 +11,8 @@ function renderScene(state){
   root.dataset.gift=String(scene.kind==='oak'&&scene.next==='rival'&&scene.index>=2);
   if(root.dataset.gift==='true')$('story-hero').src='assets/'+state.hero.id+'.gif';
   $('story-name').textContent=scene.name;
-  $('story-portrait').src='assets/trainers/battle/'+scene.sprite+'.png';
+  $('story-portrait').src=scene.sprite.startsWith('pokemon:')?'assets/'+scene.sprite.slice(8)+'.gif':scene.sprite.startsWith('item:')?'assets/items/'+scene.sprite.slice(5)+'.png':'assets/trainers/battle/'+scene.sprite+'.png';
+  root.dataset.revealed=String(scene.kind!=='ghost'||scene.index>0||scene.next==='win'||scene.next==='loss');
   $('story-portrait').alt=scene.name;
   button.disabled=sendout;
   $('story-hint').textContent=sendout?'':'터치해서 계속 ▼';
@@ -28,7 +29,7 @@ function renderScene(state){
       if(!current||current.id!==scene.id){clearInterval(sceneTimer);sceneTimer=0;return;}
       const elapsed=Math.max(0,Date.now()-current.at);
       for(const animation of root.getAnimations({subtree:true}))animation.currentTime=elapsed;
-      $('story-text').textContent=elapsed<1350?scene.name+'의 '+state.foe.name+'!':state.hero.name+', 너로 정했다!';
+      $('story-text').textContent=elapsed<1350?(scene.kind==='ghost-sendout'?'텅구리의 유령이 길을 막았다!':scene.name+'의 '+state.foe.name+'!'):state.hero.name+', 너로 정했다!';
     };
     draw();sceneTimer=setInterval(draw,120);
   }

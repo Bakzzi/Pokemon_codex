@@ -52,7 +52,7 @@
   const after=JSON.parse(Android.status());check(after.todaySteps===counts.todaySteps&&after.lifetimeSteps===counts.lifetimeSteps&&after.stepsEnabled===counts.stepsEnabled,'pedometer and settings survive game reset');
   save();mobileLifecycle(true,true);active=false;check(game.presentation()?.name==='오박사','reset is persisted through native storage');
   // A migrated game gets regular trainer presentation without onboarding.
-  game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);progression=new MobileProgression(game);game.nextTick=0;game.data.switchUntil=0;publish();action('challenge',0);active=false;
+  game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);if(game.rivalProgress('rival-brock'))game.rivalProgress('rival-brock').state='won';progression=new MobileProgression(game);game.nextTick=0;game.data.switchUntil=0;publish();action('challenge',0);active=false;
   check(game.presentation()?.sprite==='brock'&&$('panel-wrap').hidden,'challenge opens trainer scene immediately');
   await until(()=>$('story-portrait').complete&&$('story-portrait').naturalWidth===64);
   const r=$('story-scene').getBoundingClientRect(),b=$('story-next').getBoundingClientRect();

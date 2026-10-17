@@ -37,7 +37,7 @@
     check(!game.data.trainingDevice.fluteObtainedAt,'no early reward after grunt '+n);
     if(n<3){save();mobileLifecycle(true,true);active=false;settle();check(!!game.data.mobileStory.rescue.wins[n-1],'grunt progress survives reload '+n);}
   }
-  check(game.presentation()?.name==='보라타운 촌장'&&game.presentation().next==='rescue-reward','elder speaks after all three victories');
+  check(game.presentation()?.name==='등나무노인'&&game.presentation().next==='rescue-reward','elder speaks after all three victories');
   const elder=doc.getElementById('rescue-details').querySelector('.rescue-heading img');await until(()=>elder.complete&&elder.naturalWidth===16);check(elder.naturalHeight===32,'discovered elder sprite is loaded');
   await until(()=>$('story-portrait').complete&&$('story-portrait').naturalWidth===16);
   save();mobileLifecycle(true,true);active=false;check(game.presentation().next==='rescue-reward'&&!game.data.trainingDevice.fluteObtainedAt,'pending elder reward survives reload');
@@ -47,7 +47,7 @@
   save();mobileLifecycle(true,true);active=false;settle();await view();
   check(!doc.getElementById('rescue-details').open,'completed rescue reopens collapsed');
   doc.getElementById('rescue-details').open=true;await until(()=>[1,2,3].every(n=>step(n).disabled));
-  check(game.data.journal.filter(j=>j.text==='보라타운 촌장에게 포켓몬피리를 받았다!').length===1,'reload never duplicates the reward');
+  check(game.data.journal.filter(j=>j.text==='등나무노인에게 포켓몬피리를 받았다!').length===1,'reload never duplicates the reward');
   const r=doc.getElementById('rescue-details').getBoundingClientRect();check(r.left>=0&&r.right<=document.getElementById('panel').clientWidth,'rescue card fits phone width');
   doc.getElementById('rescue-details').scrollIntoView({block:'start'});save();globalThis.layoutResult={checks:checks.length,passed:checks};
 })().catch(e=>{globalThis.layoutError=String(e.stack||e);});

@@ -37,7 +37,7 @@ for(const won of [true,false])test('first battle '+(won?'victory':'loss')+' cont
   g.data.workTokens=250;assert.ok(g.tick(now+50000));assert.equal(g.data.battle.kind,'wild');
 });
 test('trainer intro occurs once per trainer, and badge rewards wait for victory dialogue',()=>{
-  const g=playable();assert.ok(g.challenge(0,now));assert.equal(g.presentation().sprite,'brock');finishDialogue(g);g.sceneTick(now+3000);
+  const g=playable();g.rivalProgress('rival-brock').state='won';assert.ok(g.challenge(0,now));assert.equal(g.presentation().sprite,'brock');finishDialogue(g);g.sceneTick(now+3000);
   g.data.battle.foe.hp=0;g.defeatOpponent(now+5000);assert.equal(g.data.battle.foeIndex,1);assert.equal(g.presentation(),null);
   g.data.battle.foe.hp=0;g.defeatOpponent(now+10000);assert.ok(g.presentation());assert.deepEqual(g.data.badges,[]);
   finishDialogue(g,now+11000);assert.deepEqual(g.data.badges,['brock']);assert.equal(g.data.battle,null);

@@ -1,0 +1,4 @@
+Original Pokemon item sprites: Pokemon / Nintendo / Creatures / GAME FREAK.
+Source: https://github.com/PokeAPI/sprites/tree/master/sprites/items
+Files: silph-scope.png, secret-key.png, journal.png. Kept unchanged.
+These images are not licensed under the project's MIT license.

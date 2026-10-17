@@ -14,6 +14,7 @@ public final class MobileTest extends Instrumentation {
     private Bundle arguments;
     private MainActivity activity;
     private WebView web;
+    private volatile MainActivity resumedActivity;
     @Override public void onCreate(Bundle args){arguments=args;super.onCreate(args);start();}
     private void require(boolean condition,String message){if(!condition)throw new AssertionError(message);}
     private void walkingNotification(NotificationManager manager,String expected)throws Exception{
@@ -85,6 +86,32 @@ public final class MobileTest extends Instrumentation {
             Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);
             if("inspect".equals(arguments.getString("mode"))){Thread.sleep(5000);result.putString("diagnostic",js("(()=>{try{return JSON.stringify({document:document.readyState,ready:typeof ready,game:typeof game,active:typeof active,phase:typeof active!=='undefined'?active:null,party:document.getElementById('battle')?.contentDocument.querySelectorAll('#party button').length,call:(()=>{try{window.mobileLifecycle(true);return 'ok'}catch(e){return e.stack}})()})}catch(e){return e.stack}})()"));finish(Activity.RESULT_OK,result);return;}
             waitReady();Thread.sleep(1500);
+            if("story-expansion".equals(arguments.getString("mode"))){
+                getTargetContext().getSharedPreferences("steps",0).edit().putLong("total",0).commit();js("refreshNative()");
+                result.putString("expandedStory",layoutChecks("story-expansion.js"));Thread.sleep(400);screenshot("safari-report.png");
+                js("previewExpansion('mansion')");Thread.sleep(700);screenshot("mansion-records.png");
+                js("previewExpansion('ghost')");Thread.sleep(500);screenshot("tower-ghost.png");
+                js("prepareSafariBackground()");
+                Application.ActivityLifecycleCallbacks lifecycle=new Application.ActivityLifecycleCallbacks(){
+                    public void onActivityResumed(Activity a){if(a instanceof MainActivity)resumedActivity=(MainActivity)a;}
+                    public void onActivityCreated(Activity a,Bundle b){} public void onActivityStarted(Activity a){}
+                    public void onActivityPaused(Activity a){} public void onActivityStopped(Activity a){}
+                    public void onActivitySaveInstanceState(Activity a,Bundle b){} public void onActivityDestroyed(Activity a){}
+                };
+                activity.getApplication().registerActivityLifecycleCallbacks(lifecycle);
+                runOnMainSync(()->activity.startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));Thread.sleep(800);require(!MainActivity.visible,"Activity did not pause for Safari");
+                AdventureStore safariStore=AdventureStore.get(getTargetContext());for(int i=0;i<100&&safariStore.backgroundSnapshot()==null;i++)Thread.sleep(50);require(safariStore.backgroundSnapshot()!=null,"Safari UI save ownership was not released");
+                getTargetContext().getSharedPreferences("steps",0).edit().putLong("total",1500).commit();BackgroundAdventure runner=BackgroundAdventure.get(getTargetContext());runner.request();
+                long deadline=SystemClock.elapsedRealtime()+45000;JSONObject safariSave;
+                do{runner.barrier().get(45,TimeUnit.SECONDS);safariSave=new JSONObject(readSave());if(safariSave.getJSONObject("mobile").getLong("consumed")==1500)break;Thread.sleep(50);}while(SystemClock.elapsedRealtime()<deadline);
+                require(safariSave.getJSONObject("mobile").getLong("consumed")==1500,"Safari did not consume recorded steps");
+                JSONObject safari=safariSave.getJSONObject("game").getJSONObject("mobileStory").getJSONObject("safari");require(safari.isNull("trip"),"Safari did not return in the headless engine");require(safari.getJSONObject("last").getJSONArray("encounters").length()==30,"Safari headless encounters were not persisted");
+                try(InputStream launch=new ParcelFileDescriptor.AutoCloseInputStream(getUiAutomation().executeShellCommand("am start -W -n io.github.bakzzi.pokemonidle/.MainActivity"))){String output=new String(launch.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8);require(output.contains("Status: ok"),"Safari return launch failed");}
+                for(int i=0;i<100&&resumedActivity==null;i++)Thread.sleep(50);require(resumedActivity!=null,"Safari activity did not resume");
+                activity=resumedActivity;activity.getApplication().unregisterActivityLifecycleCallbacks(lifecycle);web=(WebView)field.get(activity);waitReady();Thread.sleep(500);
+                require("true".equals(js("active=false;progression.consumed===1500&&!game.data.mobileStory.safari.trip&&game.data.mobileStory.safari.last.encounters.length===30")),"UI did not reload Safari results");
+                result.putInt("backgroundSafariChecks",5);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("discovery".equals(arguments.getString("mode"))){
                 getTargetContext().getSharedPreferences("steps",0).edit().putLong("total",0).commit();js("refreshNative()");
                 result.putString("discovery",layoutChecks("discovery.js"));Thread.sleep(400);screenshot("story-discovery.png");

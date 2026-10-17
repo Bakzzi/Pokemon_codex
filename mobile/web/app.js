@@ -20,6 +20,7 @@ function action(action,value){
     else if(action==='challenge'){ok=game.challenge(value);if(ok){$('adventure').hidden=false;$('panel-wrap').hidden=true;}}
     else if(action==='scene-next')ok=game.advanceScene(value);
     else if(action==='challenge-cancel')ok=game.cancelChallenge();
+    else if(action==='safari-return')ok=game.returnSafari();
     else if(action==='daycare-preview')game.daycareSelection=Array.isArray(value)?value.slice(0,2).map(Number):[];
     else return;
     notice=ok===false?'지금은 예약할 수 없어요. 동료와 도전 조건을 확인해 주세요.':'';
@@ -33,7 +34,7 @@ function refreshNative(){
   $('sensor-status').textContent=nativeState.sensor+(nativeState.backgroundError?' '+nativeState.backgroundError:'');$('walk-status').textContent='모험의 발걸음';
   $('walk-today').textContent=(nativeState.todaySteps||0).toLocaleString('ko-KR')+'걸음';
   $('walk-total').textContent=(nativeState.lifetimeSteps||0).toLocaleString('ko-KR')+'걸음';
-  $('walk-note').textContent=nativeState.tracking?'걸음 기록 중 · 앱을 꺼도 걸은 만큼 모험해요.':'설정에서 걸음 기록을 켜면 꺼 둔 동안에도 걸음이 쌓여요.';
+  $('walk-note').textContent=game?.data.mobileStory?.safari?.trip?'사파리 탐험 중 · 꺼 둔 동안 걸으면 포획을 시도해요. 도전하기에서 결과를 확인하세요.':nativeState.tracking?'걸음 기록 중 · 앱을 꺼도 걸은 만큼 모험해요.':'설정에서 걸음 기록을 켜면 꺼 둔 동안에도 걸음이 쌓여요.';
   $('update-status').textContent=nativeState.update;$('update-confirm').hidden=!nativeState.pendingInstall;$('install-permission').hidden=nativeState.canInstall;
   $('update-check').disabled=!!nativeState.updateChecking||!!nativeState.installing;$('version').textContent='Android v'+(nativeState.versionName||MobileConfig.name);
 }

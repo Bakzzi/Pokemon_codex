@@ -8,6 +8,9 @@ const encounters=[
   {id:'tutorial-green',stage:0,target:null,sprite:'green',team:[[133,5]],
     intro:['내 포켓몬이 더 강해 보이는데?','잠깐! 네 포켓몬이 얼마나 강한지 보자!'],
     win:['뭐야! 말도 안 돼! 처음부터 잘못 골랐나?'],loss:['그래! 역시 내 포켓몬이 최고야!']},
+  {id:'rival-brock',stage:1,target:0,sprite:'green',team:[[21,9],[133,8]],
+    intro:['벌써 체육관에 도전하려고? 너답네!','웅을 만나기 전에 나랑 한판 하자. 피카츄는 얼마나 강해졌어?'],
+    win:['흥, 제법이네! 웅한테도 그 실력 보여 봐.'],loss:['아직 준비가 덜 됐잖아! 동료들이랑 좀 더 연습하고 와.']},
   {id:'rival-surge',stage:1,target:2,sprite:'green',team:[[21,19],[19,16],[27,18],[133,20]],
     intro:['봉주르! 이런 데서 만나다니!','도감은 좀 채웠어? 난 벌써 40종이나 잡았다고!'],
     win:['흥! 포켓몬을 제법 키웠네!'],loss:['왜 그래? 정신 좀 차리라고!']},
@@ -22,4 +25,5 @@ const encounters=[
     win:['뭐라고! 잠깐 방심했을 뿐이야!'],loss:['그게 네 실력이야? 더 연습하고 오라고!']}
 ].map(e=>({...e,name:'그린',team:e.team.map(([id,level])=>({id,level,moves:learnedMoves(id,level).slice(-4)}))}));
 const byId=new Map(encounters.map(e=>[e.id,e]));
-module.exports={encounters,byId};
+const champion={id:'champion',name:'그린',kind:'champion',badge:null,team:[[28,61],[65,59],[103,61],[91,61],[38,63],[135,65]].map(([id,level])=>({id,level,moves:learnedMoves(id,level).slice(-4)}))};
+module.exports={encounters,byId,champion};

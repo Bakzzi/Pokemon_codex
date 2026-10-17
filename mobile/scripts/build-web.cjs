@@ -22,6 +22,7 @@ fs.writeFileSync(path.join(out,'game.bundle.js'),bundle);
 for(const name of ['widget.css','battle-ui.css','panels.css','badge-case.css','capture-animation.js','move-effects.js','battle-pacing.js','connections.css'])fs.copyFileSync(path.join(root,'desktop',name),path.join(out,name));
 fs.cpSync(path.join(root,'desktop/assets'),path.join(out,'assets'),{recursive:true});
 fs.cpSync(path.join(root,'mobile/assets/trainers'),path.join(out,'assets/trainers/battle'),{recursive:true});
+fs.cpSync(path.join(root,'mobile/assets/items'),path.join(out,'assets/items'),{recursive:true});
 for(const [source,target] of [['index.html','battle.html'],['panels.html','panels.html']]){
   let html=fs.readFileSync(path.join(root,'desktop',source),'utf8');
   html=html.replace("style-src 'self'","style-src 'self' 'unsafe-inline'"); // Existing renderers animate inline styles.
@@ -29,7 +30,7 @@ for(const [source,target] of [['index.html','battle.html'],['panels.html','panel
   html=html.replaceAll('AI Agent 포켓몬 키우기','포켓몬 작은 모험').replace('진행은 이 PC에 자동 저장돼요.','진행은 이 기기에 자동 저장돼요.');
   html=html.replaceAll('모험 걸음은 실제 에이전트 작업량에 따라 쌓여요.','모험을 이어가면 알을 돌볼 수 있어요.').replaceAll('네가 코딩하는 동안','함께한 모험').replaceAll('코딩하는 동안','모험하는 동안');
   html=html.replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/g,'');
-  if(source==='panels.html')html=html.replace('<script src="panels.js"></script>','<script src="panel-layout.js"></script><script src="panels.js"></script><script src="rescue-panel.js"></script><script src="rival-panel.js"></script>').replace(/<button data-tab="connections">.*?<\/button>/s,'').replace(/<section id="connections"[\s\S]*?<\/section>/,'');
+  if(source==='panels.html')html=html.replace('<script src="panels.js"></script>','<script src="panel-layout.js"></script><script src="panels.js"></script><script src="rescue-panel.js"></script><script src="rival-panel.js"></script><script src="exploration-panel.js"></script>').replace(/<button data-tab="connections">.*?<\/button>/s,'').replace(/<section id="connections"[\s\S]*?<\/section>/,'');
   if(source==='index.html')html=html.replace('<body>','<body class="battle-frame">');
   else html=html.replace('<body>','<body class="panel-frame">');
   fs.writeFileSync(path.join(out,target),html);
@@ -45,7 +46,7 @@ const panels=fs.readFileSync(path.join(root,'desktop/panels.js'),'utf8')
 fs.writeFileSync(path.join(out,'panels.js'),panels);
 fs.writeFileSync(path.join(out,'connections.js'),'function initConnections(){};function renderConnections(){};');
 fs.cpSync(path.join(root,'mobile/web'),out,{recursive:true});
-const notices=['LICENSE','mobile/third-party/pkmn-sets-LICENSE.txt','mobile/third-party/android-background-NOTICES.txt','mobile/assets/trainers/NOTICE.txt',...['@pkmn/sim','@pkmn/streams','ts-chacha20'].map(n=>'node_modules/'+n+'/LICENSE')].map(file=>file+'\n'+fs.readFileSync(path.join(root,file),'utf8')).join('\n\n');
+const notices=['LICENSE','mobile/third-party/pkmn-sets-LICENSE.txt','mobile/third-party/android-background-NOTICES.txt','mobile/assets/trainers/NOTICE.txt','mobile/assets/items/NOTICE.txt',...['@pkmn/sim','@pkmn/streams','ts-chacha20'].map(n=>'node_modules/'+n+'/LICENSE')].map(file=>file+'\n'+fs.readFileSync(path.join(root,file),'utf8')).join('\n\n');
 fs.writeFileSync(path.join(out,'THIRD-PARTY-NOTICES.txt'),notices);
 fs.writeFileSync(path.join(out,'config.js'),'globalThis.MobileConfig='+fs.readFileSync(path.join(root,'mobile/version.json'),'utf8')+';');
 const report={modules:modules.length,bundleBytes:Buffer.byteLength(bundle),sha256:crypto.createHash('sha256').update(bundle).digest('hex')};

@@ -30,10 +30,10 @@ test('all three separate trainer victories are required, and the reward waits fo
     assert.ok(g.challenge(e.id,now+10000));assert.equal(g.data.battle.storyId,e.id);assert.equal(g.data.battle.kind,'trainer');assert.equal(g.captureOpportunity(),null);begin(g);win(g,now+15000);
     assert.equal(g.canChallenge(e.id),false);assert.equal(g.data.trainingDevice.fluteObtainedAt,null);assert.equal(g.canChallenge('road-snorlax'),false);
   }
-  assert.equal(g.presentation().name,'보라타운 촌장');assert.equal(g.presentation().sprite,'mr-fuji');assert.equal(g.data.mobileStory.rescue.rewardPending,true);assert.equal(g.data.mobileStory.rescue.completedAt,0);
+  assert.equal(g.presentation().name,'등나무노인');assert.equal(g.presentation().sprite,'mr-fuji');assert.equal(g.data.mobileStory.rescue.rewardPending,true);assert.equal(g.data.mobileStory.rescue.completedAt,0);
   const key=g.presentation().id+':'+g.presentation().index;assert.ok(g.advanceScene(key,now+30000));assert.equal(g.advanceScene(key,now+31000),false);
-  assert.equal(g.data.trainingDevice.fluteObtainedAt,now+30000);assert.equal(g.data.mobileStory.rescue.rewardPending,false);assert.equal(g.canChallenge('road-snorlax'),true);assert.equal(g.panelState().inventory.filter(i=>i.id==='poke-flute').length,1);
-  assert.equal(g.data.journal.filter(j=>j.text==='보라타운 촌장에게 포켓몬피리를 받았다!').length,1);
+  pages(g,now+30000);assert.equal(g.data.trainingDevice.fluteObtainedAt,now+30000);assert.equal(g.data.mobileStory.rescue.rewardPending,false);assert.equal(g.canChallenge('road-snorlax'),true);assert.equal(g.panelState().inventory.filter(i=>i.id==='poke-flute').length,1);
+  assert.equal(g.data.journal.filter(j=>j.text==='등나무노인에게 포켓몬피리를 받았다!').length,1);
 });
 test('losing or abandoning a grunt cannot complete that stage or grant the reward',()=>{
   for(const abandon of [false,true]){const g=ready();beatRival(g);g.challenge('tower-grunt-1',now+10000);begin(g);if(abandon)g.abandon(now+15000);else{g.endChallenge(false,now+15000);pages(g,now+16000);}settle(g);assert.deepEqual(g.data.mobileStory.rescue.wins,[0,0,0]);assert.equal(g.canChallenge('tower-grunt-1'),true);assert.equal(g.data.trainingDevice.fluteObtainedAt,null);}
@@ -41,7 +41,7 @@ test('losing or abandoning a grunt cannot complete that stage or grant the rewar
 test('a saved pending elder reward survives reload and is granted once without replaying the fights',()=>{
   let g=ready();throughGrunts(g);const state=structuredClone(g.data),xp=g.data.owned[g.data.activeId].xp;g=new Adventure(state,now+20000);
   assert.equal(g.data.trainingDevice.fluteObtainedAt,null);assert.equal(g.presentation().next,'rescue-reward');pages(g,now+25000);assert.equal(g.data.owned[g.data.activeId].xp,xp);assert.ok(g.data.trainingDevice.fluteObtainedAt);
-  g=new Adventure(structuredClone(g.data),now+30000);assert.equal(g.data.journal.filter(j=>j.text==='보라타운 촌장에게 포켓몬피리를 받았다!').length,1);assert.equal(g.canChallenge('tower-grunt-3'),false);
+  g=new Adventure(structuredClone(g.data),now+30000);assert.equal(g.data.journal.filter(j=>j.text==='등나무노인에게 포켓몬피리를 받았다!').length,1);assert.equal(g.canChallenge('tower-grunt-3'),false);
 });
 test('legacy flutes and already opened routes are preserved, while new seasons restart rescue',()=>{
   const old=new Game({},now);old.data.badges=['brock','misty','surge','erika'];assert.equal(training.awardFlute(old,now),true);

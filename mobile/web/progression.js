@@ -34,6 +34,9 @@
       for(;used<count;used++){
         // Manual dialogue must preserve every unspent walking action.
         if(g.presentation?.())break;
+        // Safari replaces walking actions only. Foreground play keeps its
+        // ordinary battles, and a saved dialogue never spends unseen steps.
+        if(g.walkingStep?.(this.stepsPerAction,now)){this.consumed+=this.stepsPerAction;continue;}
         // Consume recorded activity immediately, never simulate a future calendar.
         // Only presentation waits are skipped; every game transition still uses tick().
         g.nextTick=Math.min(g.nextTick,now);g.data.switchUntil=Math.min(g.data.switchUntil||0,now);

@@ -3,7 +3,7 @@
   const checks=[],check=(ok,name)=>{if(!ok)throw Error(name);checks.push(name);},wait=ms=>new Promise(r=>setTimeout(r,ms));
   async function until(fn){for(let i=0;i<100;i++){if(fn())return;await wait(50);}throw Error('Rival UI timed out');}
   const doc=document.getElementById('panel').contentDocument,badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'];
-  const stages=[{id:'rival-surge',target:2},{id:'rival-middle',target:'tower-grunt-1'},{id:'rival-silph',target:'silph-duo'},{id:'rival-league',target:8}];
+  const stages=[{id:'rival-brock',target:0},{id:'rival-surge',target:2},{id:'rival-middle',target:'tower-grunt-1'},{id:'rival-silph',target:'silph-duo'},{id:'rival-league',target:8}];
   const target=e=>e.target===8?doc.getElementById('league-start'):doc.querySelector('[data-challenge="'+e.target+'"]');
   const retry=()=>doc.getElementById('rival-retry');
   function settle(){game.data.switchUntil=0;game.nextTick=0;}
