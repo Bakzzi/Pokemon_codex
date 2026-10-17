@@ -13,10 +13,10 @@ test('a fresh adventure owns only Pikachu, starts with five empty slots and can 
 test('Brock, Misty and Surge each give one level-ten starter after the victory, with no duplicate on reload or retries',()=>{
   let g=fixture();for(const [index,id] of [[0,1],[1,4],[2,7]]){
     assert.equal(g.data.owned[id],undefined);assert.equal(g.awardStarterGift(data.bosses[index].id,now),false);boss(g,index);
-    const p=g.data.owned[id];assert.equal(p.level,10);assert.equal(p.origin,'gift');assert.ok(g.data.caught[id]);assert.ok(g.data.seasonCaught[id]);assert.ok(g.data.slots.includes(id));assert.ok(g.data.starterGifts[id]);
+    const p=g.data.owned[id];assert.equal(p.level,10);assert.equal(p.origin,'gift');assert.ok(g.data.caught[id]);assert.ok(g.data.seasonCaught[id]);assert.ok(!g.data.slots.includes(id));assert.ok(g.data.starterGifts[id]);
     const before=structuredClone(g.data.owned);g=new Game(g.data,g.data.switchUntil);assert.deepEqual(g.data.owned,before);assert.equal(g.awardStarterGift(data.bosses[index].id,g.data.switchUntil),false);assert.equal(g.canChallenge(index),false);
   }
-  assert.deepEqual(g.data.slots,[25,1,4,7,null,null]);assert.equal(Object.keys(g.data.owned).length,4);
+  assert.deepEqual(g.data.slots,[25,null,null,null,null,null]);assert.equal(Object.keys(g.data.owned).length,4);
 });
 
 test('a lost or abandoned gym never gives a starter; a full six-member party sends a gift to the collection',()=>{
@@ -26,12 +26,12 @@ test('a lost or abandoned gym never gives a starter; a full six-member party sen
 });
 
 test('cleared positions survive reload, catches do not fill them, and slot six supports assignment and removal',()=>{
-  let g=fixture();boss(g,0);const at=g.data.switchUntil;assert.ok(g.requestAction('slot',{slot:1,id:null},at));assert.equal(g.data.slots[1],null);const p=g.addPokemon(19,5,'catch',at);
+  let g=fixture();boss(g,0);const at=g.data.switchUntil;assert.ok(g.setSlot(1,1,at));assert.ok(g.requestAction('slot',{slot:1,id:null},at));assert.equal(g.data.slots[1],null);const p=g.addPokemon(19,5,'catch',at);
   g=new Game(g.data,at);assert.deepEqual(g.data.slots,[25,null,null,null,null,null]);assert.ok(g.setSlot(5,p,at));assert.equal(g.data.slots[5],p);assert.ok(g.setSlot(5,null,at));assert.equal(g.setSlot(6,p,at),false);assert.equal(g.requestAction('slot',{slot:0,id:null},at),false);
 });
 
 test('removing the active Pokemon waits through a wild battle and result, survives reload, and selects another placed companion',()=>{
-  let g=fixture();boss(g,0);g.newWild(g.data.switchUntil);const at=g.data.switchUntil;assert.ok(g.requestAction('slot',{slot:0,id:null},at));assert.equal(g.data.activeId,25);assert.equal(g.data.slots[0],25);
+  let g=fixture();boss(g,0);assert.ok(g.setSlot(1,1,g.data.switchUntil));g.newWild(g.data.switchUntil);const at=g.data.switchUntil;assert.ok(g.requestAction('slot',{slot:0,id:null},at));assert.equal(g.data.activeId,25);assert.equal(g.data.slots[0],25);
   g=new Game(g.data,at);assert.equal(g.data.pendingActions[0].uid,null);g.defeatOpponent(at);assert.ok(g.tick(g.data.switchUntil));assert.equal(g.data.slots[0],null);assert.equal(g.data.activeId,1);assert.equal(g.data.animation.kind,'switch');assert.equal(g.data.pendingActions.length,0);
 });
 

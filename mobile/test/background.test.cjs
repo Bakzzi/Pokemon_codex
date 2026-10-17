@@ -16,3 +16,12 @@ test('background batches use current timestamps, preserve a UI change and never 
   let r=run({},10000);assert.equal(r.used,32);assert.equal(r.save.mobile.consumed,320);r.save.game.fixtureMarker='latest UI';
   r=run(r.save,10000);assert.equal(r.save.game.fixtureMarker,'latest UI');assert.equal(r.save.mobile.consumed,640);assert.ok(r.save.game.journal.every(e=>e.at<=now));
 });
+test('all six cleared positions survive headless actions and another background reload',()=>{
+  for(let slot=0;slot<6;slot++){
+    const g=new c.MobileCore.Game({},now),bulba=g.addPokemon(1,10,'fixture',now),ditto=g.addPokemon(132,10,'fixture',now),others=[25,...[19,16,21,23].map(id=>g.addPokemon(id,10,'fixture',now))];
+    g.data.slots=Array.from({length:6},(_,i)=>i===slot?bulba:others.shift());g.data.activeId=25;const expected=Array.from(g.data.slots);expected[slot]=null;
+    assert.ok(g.requestAction('daycare-start',[bulba,ditto],now));assert.ok(g.requestAction('select',bulba,now));assert.ok(g.requestAction('slot',{slot,id:null},now));assert.ok(g.requestAction('daycare-withdraw',undefined,now));
+    let result=run({format:1,game:g.data,mobile:{consumed:0}},40);assert.equal(result.used,4);assert.deepEqual(result.save.game.slots,expected);assert.ok(result.save.game.owned[bulba]);
+    result=run(result.save,80,now+1000);assert.equal(result.used,4);assert.deepEqual(result.save.game.slots,expected);assert.equal(result.save.mobile.consumed,80);
+  }
+});

@@ -282,7 +282,11 @@ class Game {
   executeAction(a,now){
     let result=false;const previousActive=this.data.activeId;
     if(a.kind==='select'){result=this.select(a.uid,now);if(result)this.data.manualSelection=true;}
-    if(a.kind==='slot')result=this.setSlot(a.slot,a.uid,now);
+    if(a.kind==='slot'){
+      const removed=a.uid===null?this.data.slots[a.slot]:null;
+      result=this.setSlot(a.slot,a.uid,now);
+      if(result&&removed!==null)this.cancelPlacementRequests(removed,now,a.id);
+    }
     if(result&&a.kind==='slot'&&previousActive!==this.data.activeId)this.data.manualSelection=true;
     if(a.kind==='evolve')result=this.evolve(a.uid,a.to,now);
     if(a.kind==='daycare-start')result=nursery.start(this,a.parents,now);
@@ -303,6 +307,7 @@ class Game {
     const a={kind,...payload,queuedAt:now};
     if(kind==='evolve')a.from=this.data.owned[a.uid]?.id;
     const status=this.actionStatus(a,now);if(status.state==='invalid')return false;
+    if(kind==='slot'&&a.uid===null)this.cancelPlacementRequests(this.data.slots[a.slot],now);
     const sameIntent=q=>q.kind===kind&&(kind==='evolve'?q.uid===a.uid:kind==='slot'?q.slot===a.slot:true)||kind.startsWith('johto-')&&q.kind.startsWith('johto-');
     const existing=this.data.pendingActions.find(sameIntent);
     if(existing&&existing.uid===a.uid&&existing.to===a.to&&existing.from===a.from&&existing.slot===a.slot&&JSON.stringify(existing.parents)===JSON.stringify(a.parents)&&JSON.stringify(existing.speciesIds)===JSON.stringify(a.speciesIds))return true;
@@ -317,6 +322,10 @@ class Game {
   cancelAction(id,now=Date.now(),reason='예약 취소'){
     const i=this.data.pendingActions.findIndex(a=>a.id===Number(id));if(i<0)return false;
     const [a]=this.data.pendingActions.splice(i,1);this.log(this.actionName(a)+' · '+reason,'info',null,now);return true;
+  }
+  cancelPlacementRequests(uid,now,beforeId=Infinity){
+    if(uid===null)return;
+    for(const a of [...this.data.pendingActions])if(a.id<beforeId&&a.uid===uid&&['select','slot'].includes(a.kind))this.cancelAction(a.id,now,'선택 칸에서 빼기로 취소');
   }
   processActions(now){
     for(const a of [...this.data.pendingActions]){
@@ -354,7 +363,6 @@ class Game {
     if(!gift||!this.data.badges.includes(badge)||this.data.starterGifts[gift.id])return false;
     const uid=this.addPokemon(gift.id,10,'gift',now);if(!uid)return false;
     this.data.starterGifts[gift.id]=now;
-    const slot=this.data.slots.indexOf(null);if(slot>=0)this.data.slots[slot]=uid;
     this.log(`${db.bosses.find(b=>b.id===badge).name}에게 ${species.get(gift.id).name} Lv.10을 받았다!`,'gift',gift.id,now);return uid;
   }
   log(text,kind='info',id=null,now=Date.now()){journal.record(this.data,{at:now,text,kind,id});}

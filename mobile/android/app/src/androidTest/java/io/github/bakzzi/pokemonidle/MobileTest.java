@@ -85,6 +85,24 @@ public final class MobileTest extends Instrumentation {
             Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);
             if("inspect".equals(arguments.getString("mode"))){Thread.sleep(5000);result.putString("diagnostic",js("(()=>{try{return JSON.stringify({document:document.readyState,ready:typeof ready,game:typeof game,active:typeof active,phase:typeof active!=='undefined'?active:null,party:document.getElementById('battle')?.contentDocument.querySelectorAll('#party button').length,call:(()=>{try{window.mobileLifecycle(true);return 'ok'}catch(e){return e.stack}})()})}catch(e){return e.stack}})()"));finish(Activity.RESULT_OK,result);return;}
             waitReady();Thread.sleep(1500);
+            if("slot-retention".equals(arguments.getString("mode"))){
+                getTargetContext().getSharedPreferences("steps",0).edit().putLong("total",0).commit();
+                result.putString("slots",layoutChecks("slot-retention.js"));screenshot("slot-retention.png");
+                runOnMainSync(()->activity.startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));Thread.sleep(800);require(!MainActivity.visible,"Activity did not pause");
+                AdventureStore slotStore=AdventureStore.get(getTargetContext());for(int i=0;i<100&&slotStore.backgroundSnapshot()==null;i++)Thread.sleep(50);require(slotStore.backgroundSnapshot()!=null,"UI save ownership was not released");
+                long target=new JSONObject(readSave()).getJSONObject("mobile").getLong("consumed")+40;
+                getTargetContext().getSharedPreferences("steps",0).edit().putLong("total",target).commit();BackgroundAdventure runner=BackgroundAdventure.get(getTargetContext());runner.request();
+                long deadline=SystemClock.elapsedRealtime()+45000;JSONObject savedSlots;
+                do{runner.barrier().get(45,TimeUnit.SECONDS);savedSlots=new JSONObject(readSave());if(savedSlots.getJSONObject("mobile").getLong("consumed")==target)break;Thread.sleep(50);}while(SystemClock.elapsedRealtime()<deadline);
+                require(savedSlots.getJSONObject("mobile").getLong("consumed")==target,"Background fixture did not finish: "+savedSlots.getJSONObject("mobile")+" target="+target);
+                require(savedSlots.getJSONObject("game").getJSONArray("slots").isNull(2),"Background refilled slot three");require(savedSlots.getJSONObject("game").getJSONObject("owned").has("1"),"Removed companion was lost");
+                // Return through the system launcher identity, like a user opening
+                // the app; an app starting itself from the background can be denied.
+                try(InputStream launch=new ParcelFileDescriptor.AutoCloseInputStream(getUiAutomation().executeShellCommand("am start -W -n io.github.bakzzi.pokemonidle/.MainActivity"))){String output=new String(launch.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8);require(output.contains("Status: ok"),"Fixture launch failed: "+output);}
+                for(int i=0;i<100&&!MainActivity.visible;i++)Thread.sleep(50);require(MainActivity.visible,"Fixture did not return to foreground");Thread.sleep(500);
+                require("true".equals(js("active=false;game.data.slots[2]===null&&game.data.owned[1]&&document.getElementById('battle').contentDocument.querySelector('#party button[data-slot=\"2\"]').classList.contains('empty')")),"Return restored the removed companion to a slot");
+                result.putInt("backgroundAndReturnChecks",4);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("move-details".equals(arguments.getString("mode"))){
                 result.putString("moves",layoutChecks("move-details.js"));screenshot("move-details.png");result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
