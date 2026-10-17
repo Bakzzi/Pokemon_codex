@@ -15,9 +15,9 @@
     await until(()=>!!retry(e)&&!target(e).disabled);const details=doc.getElementById('rival-details');
     check(!details.open,'rival card defaults collapsed '+e.id);details.open=true;
     check(details.querySelectorAll('.rival-match').length===1&&details.querySelectorAll('.rival-entry').length===0,'one fixed rival match without numbered history '+e.id);
-    check(details.querySelector('summary p').textContent.includes('패배하면 여기서 다시 도전'),'collapsed card explains rematches '+e.id);
+    check(details.querySelector('summary p').textContent.includes('함께 자란 친구이자 라이벌, 그린'),'collapsed card introduces the childhood friend '+e.id);
     check(retry().disabled&&!retry().dataset.rivalChallenge,'waiting button cannot challenge a future rival '+e.id);
-    check(!details.querySelector('.team')&&details.querySelector('.rival-heading').hidden,'waiting card hides all rival teams '+e.id);
+    check(!details.querySelector('.team')&&!details.querySelector('.rival-heading').hidden&&details.querySelector('.rival-heading h3').textContent==='그린','waiting card knows Green but hides future teams '+e.id);
     const fixedBlock=details.querySelector('.rival-match');
     target(e).click();await until(()=>game.data.battle?.storyId===e.id);
     check(document.getElementById('panel-wrap').hidden&&game.presentation()?.name==='그린','original challenge is intercepted '+e.id);

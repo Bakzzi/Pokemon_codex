@@ -32,6 +32,7 @@
   check(disclosures.length===8&&disclosures.every(e=>!e.open),'all challenge groups initially collapsed');
   check($('gym-details').contains($('badge-slots'))&&$('gym-details').contains($('gyms'))&&$('gym-details').querySelector('#kanto-gyms-title'),'gym heading badges and trainers share one card');
   check(!visible($('badge-slots'))&&!visible($('gyms'))&&!visible($('league-team')),'collapsed groups hide their contents');
+  game.data.badges=['brock','misty','surge','erika'];publish();await until(()=>!$('rocket-hideout').hidden&&!$('snorlax-road').hidden);
   for(const id of ['gym-details','rocket-hideout','snorlax-road','league-details']){
     const card=$(id);card.querySelector('summary').click();check(card.open,id+' expands');publish();await wait(100);check(card.open,id+' stays expanded after state refresh');
     card.querySelector('summary').click();check(!card.open,id+' collapses');

@@ -10,16 +10,16 @@
   function win(){const b=game.data.battle;b.foeIndex=game.battleBoss().team.length-1;b.foe.hp=0;game.defeatOpponent(Date.now());publish();pages();settle();}
   async function view(){openPanel('challenge');await until(()=>!doc.getElementById('challenge').hidden);publish();await wait(120);}
   active=false;const now=Date.now(),old=new MobileCore.Game({},now);old.data.badges=['brock','misty','surge'];old.data.trainingDevice.rocketWonAt=now;
-  game=new MobileCore.Adventure(old.data,now);progression=new MobileProgression(game);settle();publish();await view();await until(()=>!!step(1));
+  game=new MobileCore.Adventure(old.data,now);progression=new MobileProgression(game);settle();publish();await view();await until(()=>!!doc.getElementById('rescue-details'));
   check(!doc.getElementById('rescue-details').open,'rescue defaults collapsed');
-  check([1,2,3].every(n=>step(n).disabled),'all rescue fights locked before Erika');
+  check(doc.getElementById('rescue-details').hidden&&!step(1),'unknown rescue is absent before Erika');
   check(!doc.getElementById('rescue-details').textContent.includes('피리'),'reward not disclosed before rescue');
-  const elder=doc.querySelector('.rescue-heading img');await until(()=>elder.complete&&elder.naturalWidth===16);check(elder.naturalHeight===32,'original elder sprite is loaded');
+  check(doc.getElementById('rescue-details').querySelector('.rescue-heading img').hidden,'elder portrait not disclosed before investigation');
   doc.querySelector('[data-challenge="3"]').click();await until(()=>game.data.battle?.bossIndex===3);begin();win();
   check(game.data.badges.includes('erika')&&!game.data.trainingDevice.fluteObtainedAt,'Erika awards badge without flute');
   check(!game.data.animation.text.includes('피리'),'Erika result does not claim old reward');
   await view();doc.getElementById('rescue-details').open=true;await until(()=>!step(1).disabled);
-  check(step(1).checkVisibility()&&step(2).disabled&&step(3).disabled,'only first grunt is visibly available');
+  check(step(1).checkVisibility()&&!step(2)&&!step(3),'only investigation is visibly available');
   step(1).click();await until(()=>game.data.battle?.storyId==='rival-middle');
   check($('panel-wrap').hidden&&game.presentation().name==='그린','first grunt challenge triggers rival instead');begin();
   game.endChallenge(false,Date.now());publish();pages();settle();await view();
@@ -38,6 +38,7 @@
     if(n<3){save();mobileLifecycle(true,true);active=false;settle();check(!!game.data.mobileStory.rescue.wins[n-1],'grunt progress survives reload '+n);}
   }
   check(game.presentation()?.name==='보라타운 촌장'&&game.presentation().next==='rescue-reward','elder speaks after all three victories');
+  const elder=doc.getElementById('rescue-details').querySelector('.rescue-heading img');await until(()=>elder.complete&&elder.naturalWidth===16);check(elder.naturalHeight===32,'discovered elder sprite is loaded');
   await until(()=>$('story-portrait').complete&&$('story-portrait').naturalWidth===16);
   save();mobileLifecycle(true,true);active=false;check(game.presentation().next==='rescue-reward'&&!game.data.trainingDevice.fluteObtainedAt,'pending elder reward survives reload');
   pages();settle();check(!!game.data.trainingDevice.fluteObtainedAt&&game.data.mobileStory.rescue.completedAt,'reward granted after elder dialogue');

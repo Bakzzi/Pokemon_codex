@@ -12,6 +12,6 @@
   league.replaceChildren(card('league-details',heading.firstElementChild,[$('league-start'),$('league-team'),$('league-progress'),$('johto-choice')]));
   const special=$('special-encounters');
   special.replaceChildren(card('special-details',$('special-encounters-title'),[$('special-encounters-note'),special.querySelector('table')]));
-  for(const id of ['rocket-hideout','snorlax-road'])$(id).classList.add('mobile-challenge-card');
+  for(const id of ['rocket-hideout','snorlax-road']){$(id).classList.add('mobile-challenge-card');$(id).hidden=true;}
   for(const details of document.querySelectorAll('.mobile-challenge-card'))details.open=false;
 })();

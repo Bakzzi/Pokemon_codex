@@ -8,11 +8,11 @@
   function begin(){pages();game.sceneTick(Date.now()+3000);settle();publish();}
   function win(){const b=game.data.battle;b.foeIndex=game.battleBoss().team.length-1;b.foe.hp=0;game.defeatOpponent(Date.now());publish();pages();settle();}
   async function view(){openPanel('challenge');await until(()=>!doc.getElementById('challenge').hidden);publish();await wait(120);}
-  const now=Date.now(),old=new MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika'];active=false;game=new MobileCore.Adventure(old.data,now);progression=new MobileProgression(game);settle();publish();await view();await until(()=>!!step(0));
-  const card=doc.getElementById('silph-details');check(!card.open,'company defaults collapsed');check([0,1,2].every(n=>step(n).disabled),'company locked before Koga');
-  game.data.badges.push('koga');publish();await until(()=>!step(0).disabled);card.open=true;
-  check(card.querySelectorAll('[data-challenge]').length===3,'company lists exactly three regular opponents');check(!card.textContent.includes('그린'),'company never lists the hidden rival');
-  check([...card.querySelectorAll('h3')].map(e=>e.textContent).join('|')==='1. 로켓단 조무래기|2. ???|3. ???','future identities hidden');
+  const now=Date.now(),old=new MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika'];active=false;game=new MobileCore.Adventure(old.data,now);progression=new MobileProgression(game);settle();publish();await view();await until(()=>!!doc.getElementById('silph-details'));
+  const card=doc.getElementById('silph-details');check(!card.open,'company defaults collapsed');check(card.hidden&&!step(0),'unknown company is absent before Koga');
+  game.data.badges.push('koga');publish();await until(()=>step(0)&&!step(0).disabled);card.open=true;
+  check(card.querySelectorAll('[data-challenge]').length===1,'company offers investigation before discovery');check(!card.textContent.includes('그린'),'company never lists the hidden rival');
+  check(!card.textContent.includes('로켓단')&&card.querySelector('.rescue-heading img').hidden,'company culprit is hidden before entering');
   const sabrina=()=>doc.querySelector('[data-challenge="5"]');check(sabrina().disabled&&sabrina().textContent.includes('실프주식회사'),'Sabrina explains the unresolved event');
   step(0).click();await until(()=>game.data.battle?.storyId==='silph-grunt');begin();win();
   check(!!game.data.mobileStory.silph.wins[0],'grunt win registered');save();mobileLifecycle(true,true);active=false;settle();await view();await until(()=>!step(1).disabled);

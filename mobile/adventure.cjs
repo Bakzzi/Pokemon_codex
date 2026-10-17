@@ -18,7 +18,8 @@ const oakClose=['첫 배틀은 어땠니? 이기든 지든 동료와 함께 배�
 function storyEncounter(id){return rescue.byId.get(id)||silph.byId.get(id);}
 function portrait(boss){return boss.sprite||rivals.get(boss.id)?.sprite||storyEncounter(boss.id)?.sprite||(boss.id==='rocket-giovanni'?'giovanni':boss.id);}
 const victoryPages={
-  erika:['멋진 배틀이었어요. 무지개시티를 위해 힘써 준 것도 고마워요.','보라타운에서도 포켓몬들이 사라진다는 소식이 있어요. 조사하러 간 노인이 걱정이네요.'],
+  surge:['훌륭한 승부였다! 오렌지배지를 받을 자격이 있어!','무지개시티의 민화에게 부탁이 왔어. 게임코너 지하의 로켓단 때문에 곤란하다더군.','오렌지배지를 딴 네 실력이라면 믿고 조사를 부탁하고 싶대. 한번 찾아가 봐!'],
+  erika:['멋진 배틀이었어요. 무지개시티를 위해 힘써 준 것도 고마워요.','보라타운에서도 포켓몬들이 사라진다는 소식이 있어요. 조사하러 간 노인이 걱정이네요.','연분홍시티로 가는 길에는 잠만보가 잠들어 있대요. 아무리 불러도 일어나지 않는다니, 깨울 방법을 찾아야겠어요.'],
   koga:['우리 체육관을 이겨 내다니, 훌륭하군!','노랑시티의 실프주식회사와 연락이 끊겼다는군. 그곳에 무슨 일이 생긴 모양이야.'],
   blaine:['훌륭한 배틀이었네!','상록시티의 체육관이 다시 문을 열었다더군. 마지막 뱃지에 도전해 보게.']
 };
@@ -145,6 +146,7 @@ class Adventure extends Engine{
     if(!encounter)return super.startChallenge(index,now);
     if(!this.canChallenge(index)||this.data.battle||this.data.pendingBattle||now<this.data.switchUntil)return false;
     const e=encounter;
+    if(storyEncounter(e.id))this.data.mobileStory[silph.byId.has(e.id)?'silph':'rescue'].investigatedAt ||= now;
     this.data.pendingChallenge=null;this.data.captureAnimation=null;this.data.suspendedWild=null;this.data.manualSelection=false;
     const party=Object.fromEntries(this.data.slots.filter(uid=>uid!==null&&!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
     this.data.battle={kind:'trainer',mobileStoryRevision:2,bossIndex:e.id,storyId:e.id,foeIndex:0,party,turn:0,startedAt:now};
@@ -233,7 +235,9 @@ class Adventure extends Engine{
   }
   panelState(now=Date.now()){
     const s=super.panelState(now),locks={};for(const e of encounters)if(e.target!==null&&this.rivalProgress(e.id)?.state==='retry')locks[e.target]='그린에게 승리해야 도전할 수 있어요.';
-    return {...s,scene:this.presentation(),onboarding:this.data.mobileStory?.onboarding!=='done',rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this),silph:silph.snapshot(this),mobileGymHints:!this.data.mobileStory.silph.completedAt&&this.data.badges.includes('koga')?{5:'실프주식회사 사건 해결 시 해금'}:{}};
+    const d=this.data.trainingDevice,story=this.data.mobileStory;
+    const discovery={rocket:this.data.badges.includes('surge')||!!(d.gruntWonAt||d.duoWonAt||d.rocketWonAt),road:this.data.badges.includes('erika')||!!(d.fluteObtainedAt||d.snorlaxWonAt||d.legacyRoadAccess)||this.data.battle?.storyId==='road-snorlax'};
+    return {...s,scene:this.presentation(),onboarding:story?.onboarding!=='done',discovery,rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this),silph:silph.snapshot(this),mobileGymHints:!story.silph.completedAt&&this.data.badges.includes('koga')?{5:'실프주식회사 사건 해결 시 해금'}:{}};
   }
 }
 module.exports={Adventure};
