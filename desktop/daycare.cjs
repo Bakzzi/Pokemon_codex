@@ -11,13 +11,13 @@ function predict(game,parents=[]){
   if(parents.length!==2||!parents.every(uid=>game.data.owned[uid]))return fail('맡길 동료 두 마리를 골라 주세요.');
   if(parents[0]===parents[1])return fail('서로 다른 두 마리를 골라 주세요.');
   const [a,b]=parents.map(uid=>game.data.owned[uid]),[sa,sb]=[species.get(a.id),species.get(b.id)];
-  if([sa,sb].some(s=>s.legendary||s.mythical||s.eggGroups.includes(15)))return fail('이 조합에는 알을 얻을 수 없는 포켓몬이 있어요.');
+  if([sa,sb].some(s=>s.legendary||s.mythical||s.eggGroups.includes(15)))return fail('알을 얻을 수 없는 포켓몬이 포함되어 있어요.');
   if(a.id===132&&b.id===132)return fail('메타몽끼리는 알을 얻을 수 없어요.');
   let mother;
   if(a.id===132||b.id===132)mother=a.id===132?b:a;
   else{
     if(a.gender==='none'||b.gender==='none'||a.gender===b.gender)return fail('암컷과 수컷을 고르거나, 메타몽과 함께 맡겨 주세요.');
-    if(!sa.eggGroups.some(group=>sb.eggGroups.includes(group)))return fail('알 그룹이 달라서 함께 알을 얻을 수 없어요.');
+    if(!sa.eggGroups.some(group=>sb.eggGroups.includes(group)))return fail('이 둘을 함께 맡겨도 알을 얻을 수 없어요.');
     mother=a.gender==='female'?a:b;
   }
   let id=mother.id;
@@ -64,7 +64,7 @@ function advance(game,delta,now){
     egg.progress=Math.min(egg.required,egg.progress+remaining);
     if(egg.progress>=egg.required){
       const uid=game.addPokemon(egg.id,5,'hatch',now);
-      if(uid){game.log(species.get(egg.id).name+' Lv.5 부화! 새로운 동료가 되었다.','hatch',egg.id,now);game.data.egg=null;}
+      if(uid){game.log(species.get(egg.id).name+'의 알이 부화했다! Lv.5의 새로운 동료가 되었다.','hatch',egg.id,now);game.data.egg=null;}
     }
   }
 }

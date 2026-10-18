@@ -7,6 +7,7 @@ const rescue=require('./rescue.cjs');
 const silph=require('./silph.cjs');
 const safari=require('./safari.cjs');
 const mansion=require('./mansion.cjs');
+const trainerDialogue=require('./trainer-dialogue.cjs');
 const {encounters,byId:rivals,champion}=require('./rivals.cjs');
 const rival=encounters[0];
 const wildExclusions=[131,...safari.pool.map(([id])=>id)];
@@ -19,13 +20,6 @@ const oakIntro=[
 const oakClose=['첫 배틀은 어땠니? 이기든 지든 동료와 함께 배우면 된단다. 피카츄는 회복해 두었단다.','이제 너희의 모험이 시작이다! 새로 만난 동료와 모험 기록도 가끔 살펴보렴.'];
 function storyEncounter(id){return rescue.byId.get(id)||silph.byId.get(id);}
 function portrait(boss){return boss.sprite||rivals.get(boss.id)?.sprite||storyEncounter(boss.id)?.sprite||(boss.id==='rocket-giovanni'?'giovanni':boss.id);}
-const victoryPages={
-  surge:['훌륭한 승부였다! 오렌지배지를 받을 자격이 있어!','무지개시티의 민화에게 부탁이 왔어. 게임코너 지하의 로켓단 때문에 곤란하다더군.','오렌지배지를 딴 네 실력이라면 믿고 조사를 부탁하고 싶대. 한번 찾아가 봐!'],
-  erika:['멋진 배틀이었어요. 무지개시티를 위해 힘써 준 것도 고마워요.','보라타운에서도 포켓몬들이 사라진다는 소식이 있어요. 조사하러 간 노인이 걱정이네요.','연분홍시티로 가는 길에는 잠만보가 잠들어 있대요. 아무리 불러도 일어나지 않는다니, 깨울 방법을 찾아야겠어요.'],
-  koga:['우리 체육관을 이겨 내다니, 훌륭하군!','노랑시티의 실프주식회사와 연락이 끊겼다는군. 그곳에 무슨 일이 생긴 모양이야.'],
-  sabrina:['당신과 동료들의 마음이 하나로 이어져 있네요.','홍련섬 체육관은 문이 잠겨 있다고 해요. 섬의 오래된 저택부터 살펴보는 건 어떨까요?'],
-  blaine:['훌륭한 배틀이었네!','상록시티의 체육관이 다시 문을 열었다더군. 마지막 뱃지에 도전해 보게.']
-};
 class Adventure extends Engine{
   constructor(saved={},now=Date.now(),options={}){
     super(saved,now,options);
@@ -47,6 +41,13 @@ class Adventure extends Engine{
     delete this.data.captureReservations[131];
     const pending=saved.pendingChallenge;
     if((rivals.has(pending?.index)&&this.rivalProgress(pending.index)?.state==='retry')||(storyEncounter(pending?.index)||['safari-start','mansion-investigate'].includes(pending?.index)||pending?.index===6)&&this.canChallenge(pending.index))this.data.pendingChallenge={...pending};
+    const scene=story.scene,b=this.data.battle;
+    if(b?.kind==='trainer'&&scene?.mode==='dialogue'){
+      const boss=this.battleBoss(b);
+      if(scene.next==='sendout'&&scene.pages?.[0]===boss.name+'의 도전!')scene.pages=trainerDialogue.intro(boss,this.data.champion);
+      if(scene.next==='win'&&scene.pages?.[0]==='멋진 배틀이었어! 내 패배를 인정할게.')scene.pages=trainerDialogue.victory(boss,this.data.champion);
+      if(scene.next==='loss'&&scene.pages?.[0]==='동료들과 더 성장해서 다시 만나자!')scene.pages=trainerDialogue.defeat(boss);
+    }
   }
   resetSeason(now){
     const story=this.data.mobileStory;
@@ -229,7 +230,7 @@ class Adventure extends Engine{
     const b=this.data.battle,boss=this.battleBoss(b),first=b.foeIndex===0;
     super.nextTrainer(now);
     if(b.kind==='trainer'&&first){
-      const pages=boss.intro||rivals.get(boss.id)?.intro||[boss.name+'의 도전!','좋아, 포켓몬 배틀을 시작하자!'];
+      const pages=boss.intro||rivals.get(boss.id)?.intro||trainerDialogue.intro(boss,this.data.champion);
       this.dialogue(boss.ghost?'ghost':'trainer',boss.name,portrait(boss),pages,'sendout',now);
     }
   }
@@ -239,7 +240,7 @@ class Adventure extends Engine{
       const boss=this.battleBoss(b);
       this.data.pendingBattle=null;
       if(rivals.has(b.storyId))this.resolveRival(true,now);
-      else this.dialogue(boss.ghost?'ghost':'trainer',boss.name,portrait(boss),boss.ghost?['텅구리의 유령은 잠시 이쪽을 바라보았다. 새끼를 향한 걱정이 조금씩 누그러지는 듯했다.','어미의 영혼이 안식을 찾고, 위층으로 향하는 길이 열렸다.']:victoryPages[boss.id]||['멋진 배틀이었어! 내 패배를 인정할게.'],'win',now);
+      else this.dialogue(boss.ghost?'ghost':'trainer',boss.name,portrait(boss),boss.ghost?['텅구리의 유령은 잠시 이쪽을 바라보았다. 새끼를 향한 걱정이 조금씩 누그러지는 듯했다.','어미의 영혼이 안식을 찾고, 위층으로 향하는 길이 열렸다.']:trainerDialogue.victory(boss,this.data.champion),'win',now);
       return;
     }
     super.defeatOpponent(now,captured);
@@ -269,7 +270,7 @@ class Adventure extends Engine{
     if(rivals.has(b?.storyId)){this.resolveRival(false,now);return;}
     if(!won&&b?.kind==='trainer'){
       const boss=this.battleBoss(b);this.data.pendingBattle=null;
-      this.dialogue(boss.ghost?'ghost':'trainer',boss.name,portrait(boss),boss.ghost?['차가운 기운에 더는 다가갈 수 없었다. 동료들을 회복하고 다시 돌아오자.']:['동료들과 더 성장해서 다시 만나자!'],'loss',now);return;
+      this.dialogue(boss.ghost?'ghost':'trainer',boss.name,portrait(boss),boss.ghost?['차가운 기운에 더는 다가갈 수 없었다. 동료들을 회복하고 다시 돌아오자.']:trainerDialogue.defeat(boss),'loss',now);return;
     }
     super.endChallenge(won,now);
   }

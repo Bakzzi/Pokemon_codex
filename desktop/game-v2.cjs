@@ -604,13 +604,13 @@ class Game {
     const b=this.data.battle,foe=b.foe;this.awardXp(foe,b.kind==='trainer'&&this.battleBoss(b)?.xpTrainer!==false,now);this.data.battles++;journal.increment(this.data,'wins');
     if(b.kind==='wild'){
       const roadCleared=b.storyId==='road-snorlax'&&training.win(this,b.storyId,now,captured);
-      if(!captured)this.log(`${species.get(foe.id).name}와의 배틀 승리`,'win',foe.id,now);
+      if(!captured)this.log(`야생 ${species.get(foe.id).name}에게 승리했다!`,'win',foe.id,now);
       if(this.random()<consumables.economy.evolutionDropChance){
         const candidates=[...new Set(db.pokemon.filter(p=>p.generation<=this.maxGeneration()).flatMap(p=>p.evolutions.filter(e=>species.get(e.to)?.generation<=this.maxGeneration()).map(e=>e.item)).filter(Boolean))];
         const id=consumables.pickEvolutionItem(candidates,this.data.inventory,this.random);if(id){this.data.inventory[id]=(this.data.inventory[id]||0)+1;this.log(`${db.items.find(i=>i.id===id)?.name||'진화 도구'} 발견`,'item',null,now);}
       }
       const found=consumables.drop(this.random);if(found){this.data.inventory[found.id]=(this.data.inventory[found.id]||0)+1;this.log(found.name+' 발견','item',null,now);}
-      this.data.battle=null;if(roadCleared)this.animate('result',{text:'학습장치 획득! 5번째 관장 독수에게 도전할 수 있어요.'},now);else if(!captured)this.animate('result',{text:species.get(foe.id).name+'와의 배틀 승리!'},now);return;
+      this.data.battle=null;if(roadCleared)this.animate('result',{text:'학습장치를 받았다! 독수에게 도전할 수 있어요.'},now);else if(!captured)this.animate('result',{text:'야생 '+species.get(foe.id).name+'에게 승리했다!'},now);return;
     }
     b.foeIndex++;
     if(b.foeIndex<this.battleBoss(b).team.length){this.nextTrainer(now);return;}

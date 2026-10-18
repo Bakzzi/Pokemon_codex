@@ -15,7 +15,7 @@ function start(game,now){
 function finish(game,now,returned=false){
   const s=game.data.mobileStory.safari;if(!s.trip)return false;
   s.last={...s.trip,finishedAt:now,returned};s.trip=null;
-  game.log('사파리존에서 돌아왔다. '+s.last.caught.length+'마리가 새 동료가 되었다.','info',null,now);return true;
+  game.log(s.last.caught.length?'사파리존에서 새 동료 '+s.last.caught.length+'마리와 함께 돌아왔다.':'사파리존에서 돌아왔다. 이번 탐험에서는 포획에 성공하지 못했다.','info',null,now);return true;
 }
 function walk(game,steps,now){
   const s=game.data.mobileStory.safari,t=s.trip;if(!t||game.seasonDue(now)||!Number.isSafeInteger(steps)||steps<=0)return false;

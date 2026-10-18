@@ -74,7 +74,7 @@ function win(game,id,now,captured=false){
   const key=Object.hasOwn(progressKeys,id)?progressKeys[id]:null;
   if(!key||game.data.trainingDevice[key])return false;
   game.data.trainingDevice[key]=now;
-  const text=id==='rocket-giovanni'?'로켓단 비주기에게 승리! 로켓단 3단계를 모두 물리쳤다.':id==='road-snorlax'?(captured?'피리로 깨운 잠만보를 포획했다!':'피리로 깨운 잠만보를 기절시켰다!')+' 길이 열리고 5번째 체육관에 도전할 수 있게 되었다.':battles[id].name+'에게 승리! 로켓단 '+battles[id].stage+'단계를 돌파했다.';
+  const text=id==='rocket-giovanni'?'로켓단 비주기에게 승리했다! 로켓단이 아지트에서 물러났다.':id==='road-snorlax'?(captured?'피리로 깨운 잠만보를 포획했다!':'피리로 깨운 잠만보를 기절시켰다!')+' 연분홍시티로 가는 길이 열렸다.':battles[id].name+'에게 승리했다!';
   game.log(text,'story',id==='road-snorlax'?143:null,now);if(id==='road-snorlax')claim(game,now,false);return true;
 }
 function awardFlute(game,now){
@@ -86,7 +86,7 @@ function claim(game,now,present=true){
   if(!canClaim(game))return false;
   game.data.trainingDevice.obtainedAt=now;
   game.log(game.trainingDeviceRewardText?.()||'길을 막던 잠만보를 해결하고 학습장치를 받았다!','device',null,now);
-  if(present)game.animate('result',{text:'학습장치 획득! 5번째 체육관에 도전할 수 있어요.'},now);return true;
+  if(present)game.animate('result',{text:'학습장치를 받았다! 함께 모험할 동료에게 등록해 보자.'},now);return true;
 }
 function snapshot(game){
   const d=game.data.trainingDevice,p=game.data.owned[d.learnerUid],rows=requirements(game);
