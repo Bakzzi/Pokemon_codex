@@ -57,7 +57,7 @@ test('old champions without Gen II progress choose anew, while existing Gen II P
   const restored=new Game(egg.data,now);assert.equal(restored.maxGeneration(),2);assert.deepEqual(restored.data.egg,egg.data.egg);
 });
 
-test('actual sampling gives the approved 1.5x rare, legendary and mythical categories without changing ordinary rates before champion',()=>{
+test('championship never boosts categories made entirely of registered species',()=>{
   const allCaught=Object.fromEntries(data.pokemon.map(p=>[p.id,now]));
   for(const champion of [false,true]){
     const counts={common:0,uncommon:0,rare:0,legendary:0,mythical:0},samples=10000;
@@ -66,7 +66,7 @@ test('actual sampling gives the approved 1.5x rare, legendary and mythical categ
     assert.ok(Math.abs(Object.values(rates).reduce((a,b)=>a+b,0)-1)<1e-12);
   }
   const base=encounterChances(false),bonus=encounterChances(true);
-  for(const tier of ['rare','legendary','mythical'])assert.equal(bonus[tier],base[tier]*1.5);
+  assert.deepEqual(bonus,base);
 });
 
 test('unregistered species receive twice the selection weight within a category, including species already evolved away',()=>{
@@ -87,7 +87,7 @@ test('champion sampling still enforces generation and level eligibility, and all
       const id=pickWild(generation,random,level,{champion:true,caught:allCaught}),p=species.get(id);assert.ok(p.generation<=generation&&wildMinimum(p)<=level);
     }
   }
-  let draw=0;assert.equal(rarity(species.get(pickWild(1,()=>draw++===0?0:.5,5,{champion:true,caught:allCaught}))),'common');
+  let draw=0;assert.ok(wildMinimum(species.get(pickWild(1,()=>draw++===0?0:.5,5,{champion:true,caught:allCaught})))<=5);
 });
 
 test('Game applies champion bonuses to encounters before choosing to unlock Johto',()=>{

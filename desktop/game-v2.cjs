@@ -178,7 +178,7 @@ class Game {
   encounterBonus(){
     if(!this.data.champion)return null;
     const selected=this.data.slots.map(uid=>this.data.owned[uid]).filter(Boolean),minimumLevel=selected.length?Math.min(...selected.map(p=>p.level)):0;
-    return {...championBonus(minimumLevel),minimumLevel,selectedCount:selected.length,rates:encounterChances(true,minimumLevel)};
+    return {...championBonus(minimumLevel),minimumLevel,selectedCount:selected.length,onlyUncaught:true};
   }
   wildOptions(){return {champion:this.data.champion,caught:this.data.caught,minimumLevel:this.encounterBonus()?.minimumLevel||0,additions:milestoneBonuses(this.data)};}
   specialEncounters(){

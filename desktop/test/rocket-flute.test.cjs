@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('./helpers/four-party.cjs'),training=require('../training-device.cjs'),{data,pickWild,encounterChances,rarity,wildMinimum,wildEligible,xpAt,learnedMoves}=require('../pokemon.cjs'),{captureTiming}=require('../capture-animation.js');
+const {Game}=require('./helpers/four-party.cjs'),training=require('../training-device.cjs'),{data,pickWild,wildDistribution,rarity,wildMinimum,wildEligible,xpAt,learnedMoves}=require('../pokemon.cjs'),{captureTiming}=require('../capture-animation.js');
 const now=Date.parse('2026-10-14T10:00:00Z');
 function fixture(){const g=new Game({},now,{random:()=>.73});g.data.badges=['brock','misty','surge'];return g;}
 function advance(g){assert.ok(g.tick(Math.max(now,g.data.switchUntil,g.nextTick)));}
@@ -35,7 +35,7 @@ test('revision two upgrades preserve victories, active battles and old flutes, a
 
 test('ordinary wild pools exclude Snorlax in both generations, every category, and all champion bonus tiers',()=>{
   for(const gen of [1,2])for(const champion of [false,true])for(const minimumLevel of [0,71,81,91]){
-    const rates=encounterChances(champion,minimumLevel);let floor=0;
+    const rates=wildDistribution(gen,100,{champion,minimumLevel}).rates;let floor=0;
     for(const tier of ['mythical','legendary','rare','uncommon','common']){
       const roll=floor+rates[tier]/2;floor+=rates[tier];
       const pool=data.pokemon.filter(p=>wildEligible(p,gen,100)&&rarity(p)===tier),seen=new Set();

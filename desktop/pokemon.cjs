@@ -30,9 +30,10 @@ function championBonus(minimumLevel=0){
   const levelMultiplier=minimumLevel>90?5:minimumLevel>80?4:minimumLevel>70?3:1;
   return {levelMultiplier,rareMultiplier:balance.championRareMultiplier*levelMultiplier,uncaughtWeight:balance.championUncaughtWeight*levelMultiplier};
 }
-function encounterChances(champion=false,minimumLevel=0){
-  const multiplier=champion?championBonus(minimumLevel).rareMultiplier:1;
-  const mythical=balance.mythicalPoolChance*multiplier,legendary=balance.legendaryPoolChance*multiplier,rare=balance.rarePoolChance*multiplier;
+function encounterChances(){
+  // Rarity is the baseline. Champion and party-level bonuses belong to an
+  // unregistered species, never to an entire tier containing caught Pokemon.
+  const mythical=balance.mythicalPoolChance,legendary=balance.legendaryPoolChance,rare=balance.rarePoolChance;
   const uncommon=.36-balance.mythicalPoolChance-balance.legendaryPoolChance-balance.rarePoolChance;
   return {mythical,legendary,rare,uncommon,common:1-mythical-legendary-rare-uncommon};
 }
@@ -50,12 +51,23 @@ function captureBonus(id,caught={}){
   return rule&&data.pokemon.every(p=>p.generation!==1||rule.excluded.includes(p.id)||!!caught[p.id])?rule.extra:0;
 }
 function wildDistribution(maxGeneration,partnerLevel,{champion=false,caught={},minimumLevel=0,additions=[],excluded=[]}={}){
-  const all=data.pokemon.filter(p=>!excluded.includes(p.id)&&wildEligible(p,maxGeneration,partnerLevel)),baseRates=encounterChances(champion,minimumLevel),common=all.filter(p=>rarity(p)==='common');
-  const pokemon=all.map(p=>({id:p.id,tier:rarity(p),base:0,chance:0})),byId=new Map(pokemon.map(p=>[p.id,p])),missingWeight=champion?championBonus(minimumLevel).uncaughtWeight:1;
+  const all=data.pokemon.filter(p=>!excluded.includes(p.id)&&wildEligible(p,maxGeneration,partnerLevel)),baseRates=encounterChances(),common=all.filter(p=>rarity(p)==='common');
+  const pokemon=all.map(p=>({id:p.id,tier:rarity(p),base:0,chance:0})),byId=new Map(pokemon.map(p=>[p.id,p])),bonus=championBonus(minimumLevel);
   for(const [tier,rate] of Object.entries(baseRates)){
-    const preferred=all.filter(p=>rarity(p)===tier),pool=preferred.length?preferred:common,total=pool.reduce((n,p)=>n+(caught[p.id]?1:missingWeight),0);
-    for(const p of pool)byId.get(p.id).base+=rate*(caught[p.id]?1:missingWeight)/total;
+    const preferred=all.filter(p=>rarity(p)===tier),pool=preferred.length?preferred:common;
+    for(const p of pool)byId.get(p.id).base+=rate/pool.length;
   }
+  let total=0;
+  for(const p of pokemon){
+    const missing=champion&&!caught[p.id],rare=['rare','legendary','mythical'].includes(p.tier);
+    // Apply the party-level multiplier once. Multiplying both level-adjusted
+    // fields would square it and make missing legends excessively common.
+    p.weight=missing?bonus.uncaughtWeight*(rare?balance.championRareMultiplier:1):1;
+    p.base*=p.weight;total+=p.base;
+  }
+  // Normalize across the whole eligible population. A tier with no missing
+  // species keeps its original weights instead of consuming a raised quota.
+  for(const p of pokemon)p.base/=total;
   const eligible=additions.filter(b=>byId.has(b.id)),extraTotal=eligible.reduce((n,b)=>n+b.extra,0),ordinary=pokemon.filter(p=>p.tier==='common'||p.tier==='uncommon').reduce((n,p)=>n+p.base,0);
   if(extraTotal>ordinary)throw new Error('Special encounter bonuses exceed ordinary encounter probability');
   const scale=ordinary?(ordinary-extraTotal)/ordinary:1;
@@ -64,22 +76,10 @@ function wildDistribution(maxGeneration,partnerLevel,{champion=false,caught={},m
   const rates={mythical:0,legendary:0,rare:0,uncommon:0,common:0};for(const p of pokemon)rates[p.tier]+=p.chance;
   return {pokemon,rates,baseRates,extraTotal,additions:additions.map(b=>({...b,eligible:byId.has(b.id),base:byId.get(b.id)?.base||0,chance:byId.get(b.id)?.chance||0}))};
 }
-function pickWild(maxGeneration,random=Math.random,partnerLevel=100,{champion=false,caught={},minimumLevel=0,additions=[],excluded=[]}={}){
-  if(additions.length){
-    const distribution=wildDistribution(maxGeneration,partnerLevel,{champion,caught,minimumLevel,additions,excluded});
-    if(distribution.extraTotal){
-      let category=random(),tier='common';for(const [name,rate] of Object.entries(distribution.rates)){category-=rate;if(category<0){tier=name;break;}}
-      const pool=distribution.pokemon.filter(p=>p.tier===tier&&p.chance>0);let draw=random()*distribution.rates[tier];
-      for(const p of pool){draw-=p.chance;if(draw<0)return p.id;}return pool.at(-1).id;
-    }
-  }
-  const all=data.pokemon.filter(p=>!excluded.includes(p.id)&&wildEligible(p,maxGeneration,partnerLevel));
-  const rates=encounterChances(champion,minimumLevel),roll=random();
-  const tier=roll<rates.mythical?'mythical':roll<rates.mythical+rates.legendary?'legendary':roll<rates.mythical+rates.legendary+rates.rare?'rare':roll<rates.mythical+rates.legendary+rates.rare+rates.uncommon?'uncommon':'common';
-  const preferred=all.filter(p=>rarity(p)===tier),pool=preferred.length?preferred:all.filter(p=>rarity(p)==='common');
-  if(!champion)return pool[Math.min(pool.length-1,Math.floor(random()*pool.length))].id;
-  const uncaughtWeight=championBonus(minimumLevel).uncaughtWeight,weights=pool.map(p=>caught[p.id]?1:uncaughtWeight);let pick=random()*weights.reduce((sum,w)=>sum+w,0);
-  for(let i=0;i<pool.length;i++){pick-=weights[i];if(pick<0)return pool[i].id;}
-  return pool.at(-1).id;
+function pickWild(maxGeneration,random=Math.random,partnerLevel=100,options={}){
+  const {pokemon,rates}=wildDistribution(maxGeneration,partnerLevel,options);
+  let category=random(),tier='common';for(const [name,rate] of Object.entries(rates)){category-=rate;if(category<0){tier=name;break;}}
+  const pool=pokemon.filter(p=>p.tier===tier&&p.chance>0);let draw=random()*rates[tier];
+  for(const p of pool){draw-=p.chance;if(draw<0)return p.id;}return pool.at(-1).id;
 }
 module.exports={data,species,moves,xpAt,levelAt,learnedMoves,effective,statsAt,view,pickWild,rarity,balance,wildMinimum,wildEligible,encounterChances,championBonus,milestoneBonuses,captureBonus,wildDistribution};

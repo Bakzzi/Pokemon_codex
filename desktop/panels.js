@@ -197,7 +197,7 @@ function renderBosses(){
     $('johto-note').textContent='관동 도감 '+state.kantoCaughtCount+' / 151 · '+(unlocked?'관동 151종과 성도 100종을 함께 만날 수 있어요.':stay?'151종 수집을 계속해요. 원할 때 언제든 2세대를 해금할 수 있어요.':'151종을 모을 때까지 관동에 머물러도 좋아요. 2세대를 해금하면 성도 100종이 추가돼요.');
     $('johto-level-notice').hidden=unlocked;
     $('johto-level-notice').textContent='한 번이라도 도감에 등록된 10마리를 선택해 각각 Lv.15 · 경험치 0%로 성도에서 시작해요. Lv.15에서 가능한 진화 단계만 선택할 수 있어요. 기술은 Lv.15에 맞춰 활성화돼요. 배틀 종료 후 성도로 이동합니다.';
-    $('champion-bonus').textContent=state.encounterBonus?'챔피언이 되면 희귀·전설·환상 포켓몬과 도감 미등록 종을 더 자주 만나요.\n배치한 동료 모두 Lv.71·81·91 이상이 될 때마다 효과가 더 강해져요.':'';
+    $('champion-bonus').textContent=state.encounterBonus?'챔피언·레벨 보너스는 미포획 포켓몬에만 적용돼요.\n배치한 동료 모두 Lv.71·81·91 이상일수록 효과가 더 강해져요.':'';
     $('johto-stay').hidden=unlocked||stay;$('johto-unlock').hidden=unlocked;
   }
 }

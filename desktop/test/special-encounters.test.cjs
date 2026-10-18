@@ -36,18 +36,18 @@ test('all five species require an active level of at least 50 even after every m
   const random=()=>0;g.random=random;g.newWild(now);assert.ok(!species.get(g.data.battle.foe.id).legendary&&!species.get(g.data.battle.foe.id).mythical);
 });
 
-test('species additions stay flat after level multiplication, preserve base rare probabilities, and fund exactly from ordinary encounters',()=>{
-  for(const [minimumLevel,legendary,mythical] of [[71,.0045,.00045],[81,.006,.0006],[91,.0075,.00075]]){
+test('species additions stay flat and caught categories never inherit the level bonus',()=>{
+  for(const minimumLevel of [71,81,91]){
     const options={champion:true,caught:dex(),minimumLevel,badges:badges(8)};options.additions=milestoneBonuses(options);
     const d=wildDistribution(1,100,options),base=encounterChances(true,minimumLevel);
     for(const p of d.additions)close(p.chance,p.base+p.extra);
     assert.deepEqual(d.additions.map(p=>p.id),[151]);
-    close(d.additions.find(p=>p.id===151).chance,.01+mythical);
-    close(d.rates.legendary,legendary);close(d.rates.mythical,mythical+.01);close(d.rates.rare,base.rare);
+    assert.ok(d.rates.legendary<base.legendary);assert.ok(d.rates.rare<base.rare);
     close(d.rates.common/d.rates.uncommon,base.common/base.uncommon);close(Object.values(d.rates).reduce((a,b)=>a+b,0),1);assert.ok(d.pokemon.every(p=>p.chance>=0));
     options.caught={};options.additions=milestoneBonuses(options);const missing=wildDistribution(1,100,options);
-    for(const id of [144,145,146])close(missing.additions.find(p=>p.id===id).chance,.004+legendary/4);
-    close(missing.additions.find(p=>p.id===150).chance,.003+legendary/4);close(missing.rates.legendary,legendary+.015);
+    for(const id of [144,145,146]){const entry=missing.additions.find(p=>p.id===id);close(entry.chance,.004+entry.base);}
+    const last=missing.additions.find(p=>p.id===150);close(last.chance,.003+last.base);
+    close(missing.rates.legendary,missing.pokemon.filter(p=>p.tier==='legendary').reduce((n,p)=>n+p.base,0)+.015);
   }
 });
 
