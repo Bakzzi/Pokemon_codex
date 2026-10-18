@@ -32,6 +32,8 @@ The reference directory also preserves original Generation III assets and offlin
 
 Item sprites are downloaded unchanged from https://github.com/PokeAPI/sprites/tree/master/sprites/items . Their per-file URLs, byte counts and SHA-256 hashes are recorded in desktop/assets/items/sources.json. Runtime uses local copies without network requests.
 
+The unchanged FireRed/LeafGreen Red walking and tall-grass sheets are credited in desktop/assets/trainers/overworld-NOTICE.txt. CSS selects original frames without redrawing. Artwork rights remain with the Pokemon rights holders.
+
 Pokémon names, characters and game artwork belong to their respective rights holders, including Nintendo, Creatures, GAME FREAK and The Pokémon Company. They are separate from the MIT-licensed project source. This is an unofficial noncommercial fan project.
 
 ## Game rule references

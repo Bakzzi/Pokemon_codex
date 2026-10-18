@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; font-src 'self'">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI Agent 포켓몬 키우기</title><link rel="stylesheet" href="widget.css"><link rel="stylesheet" href="battle-ui.css"><link rel="stylesheet" href="story.css">
+<title>AI Agent 포켓몬 키우기</title><link rel="stylesheet" href="widget.css"><link rel="stylesheet" href="battle-ui.css"><link rel="stylesheet" href="story.css"><link rel="stylesheet" href="safari-scene.css">
 </head><body>
 <main class="widget">
   <header class="toolbar">
@@ -18,6 +18,7 @@
   <section class="scene" aria-label="포켓몬 배틀">
     <section id="story-scene" aria-label="트레이너 대화" hidden><div id="story-stage"><img id="story-portrait" alt=""><img id="story-hero" alt=""><img id="story-foe" alt=""><img id="story-hero-ball" src="assets/items/poke-ball.png" alt=""><img id="story-foe-ball" src="assets/items/poke-ball.png" alt=""></div><button id="story-next"><b id="story-name"></b><span id="story-text" aria-live="polite"></span><small id="story-hint"></small></button></section>
     <div class="speech" id="speech" data-speaker="scene" role="status"><img id="speech-item" alt="" hidden><span id="speech-text">오늘도 함께 모험하자!</span><span class="pokeball waiting-ball" aria-hidden="true"></span></div>
+    <section id="safari-scene" aria-label="사파리 탐험" hidden><b id="safari-title">SAFARI ZONE</b><div class="safari-ground"></div><div id="safari-red" role="img" aria-label="사파리를 걷는 레드"></div><span id="safari-name">레드</span><div id="safari-grass" aria-hidden="true"><i></i><i></i><i></i></div><span id="safari-text" role="status">풀숲을 살펴보는 중</span><img id="safari-ball" src="assets/items/poke-ball.png" alt="몬스터볼" hidden><span id="safari-sparkle" aria-hidden="true" hidden>✦</span><div class="safari-footer"><div><i id="safari-progress"></i></div><span id="safari-supplies"></span></div></section>
     <div class="ground hero-ground"></div><div class="ground foe-ground" id="foe-ground"></div>
     <div class="hero sprite" id="hero"><img id="hero-image" src="assets/25.gif" alt="피카츄" draggable="false"></div>
     <div class="foe sprite" id="foe"><img id="foe-image" src="assets/19.gif" alt="" draggable="false"></div>
@@ -44,4 +45,4 @@
     <button data-panel="daycare">가방보기</button>
     <button data-panel="journal">모험 기록</button>
   </div>
-</main><script src="capture-animation.js"></script><script src="move-effects.js"></script><script src="battle-pacing.js"></script><script src="agent-status.js"></script><script src="story-presentation.js"></script><script src="renderer.js"></script></body></html>
+</main><script src="capture-animation.js"></script><script src="move-effects.js"></script><script src="battle-pacing.js"></script><script src="agent-status.js"></script><script src="story-presentation.js"></script><script src="safari-presentation.js"></script><script src="renderer.js"></script></body></html>

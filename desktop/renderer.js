@@ -3,6 +3,7 @@ const $=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('ko-
 const levelText=p=>'Lv.'+p.level;
 let serial=0,current=null,switching=false,captureRaf=0,moveRaf=0,faintRaf=0,switchRaf=0,playingMove=null,playingSwitch=null,speechTimer=0;
 const storyPresentation=StoryPresentation.create({advance:key=>window.buddy.action('scene-next',key)});
+const safariPresentation=SafariPresentation.create({});
 for(const action of ['pin','compact','hide','close'])$(action).onclick=()=>window.buddy.action(action);
 for(const b of document.querySelectorAll('[data-panel]'))b.onclick=()=>window.buddy.action('panel',b.dataset.panel);
 function sprite(element,p){
@@ -215,5 +216,5 @@ window.buddy.onState(s=>{
   }
   renderPartyStatus(s);
   document.querySelector('[data-panel="challenge"]').title='획득한 뱃지 '+s.badges.length+' / 8';
-  eventFx(s.animation);refreshScene();
+  eventFx(s.animation);refreshScene();safariPresentation.render(s);
 });

@@ -1,0 +1,7 @@
+Original FireRed/LeafGreen overworld sprites: Pokemon / Nintendo / Creatures / GAME FREAK.
+red-walk.png: unchanged 144x32 sheet from
+https://github.com/pret/pokefirered/blob/master/graphics/object_events/pics/people/red_normal.png
+safari-grass.png: unchanged 16x80 field effect sheet from
+https://github.com/pret/pokefirered/blob/master/graphics/field_effects/pics/tall_grass.png
+Frames are selected and animated in CSS without redrawing or modifying the source images.
+These images are not covered by the project's MIT license.

@@ -22,7 +22,7 @@ async function main(){
     await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));
   for(const name of ['assets','data'])await fs.cp(path.join(root,'desktop',name),path.join(appDir,'desktop',name),{recursive:true});
   await fs.cp(path.join(root,'shared'),path.join(appDir,'shared'),{recursive:true});
-  for(const name of ['adventure.cjs','story-presentation.js','story.css','story-panels.css','panel-layout.js','rival-panel.js','rescue-panel.js','exploration-panel.js','league-portraits.js'])await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));
+  for(const name of ['adventure.cjs','story-presentation.js','story.css','story-panels.css','panel-layout.js','rival-panel.js','rescue-panel.js','exploration-panel.js','league-portraits.js','safari-presentation.js','safari-scene.css'])await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));
   for(const name of ['remote-agent.cjs','remote-codex.cjs','known-hosts.cjs','connections.js','connections.css','auto-update.cjs','update-helper.ps1','consumables.cjs','claude-reader.cjs','agent-status.js','window-pinning.cjs','move-access.cjs','region-transfer.cjs'])await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));
   const lock=JSON.parse(await fs.readFile(path.join(root,'package-lock.json'),'utf8'));
   for(const [location,meta] of Object.entries(lock.packages))if(location.startsWith('node_modules/')&&!meta.dev){

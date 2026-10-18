@@ -20,7 +20,7 @@ const game=visit(path.join(root,'desktop/game.cjs')),nursery=visit(path.join(roo
 fs.mkdirSync(out,{recursive:true});
 const bundle=`'use strict';globalThis.MobileCore=(()=>{const m=[${modules.join(',\n')}],cache={};function load(id){if(cache[id])return cache[id].exports;const mod=cache[id]={exports:{}};m[id][0](name=>{if(!(name in m[id][1]))throw Error('Unbundled module: '+name);return load(m[id][1][name]);},mod,mod.exports);return mod.exports;}return {...load(${game}),...load(${adventure}),nursery:load(${nursery})};})();\n`;
 fs.writeFileSync(path.join(out,'game.bundle.js'),bundle);
-for(const name of ['widget.css','battle-ui.css','panels.css','badge-case.css','capture-animation.js','move-effects.js','battle-pacing.js','connections.css','story-panels.css','story-presentation.js','panel-layout.js','rival-panel.js','rescue-panel.js','exploration-panel.js','league-portraits.js'])fs.copyFileSync(path.join(root,'desktop',name),path.join(out,name));
+for(const name of ['widget.css','battle-ui.css','panels.css','badge-case.css','capture-animation.js','move-effects.js','battle-pacing.js','connections.css','story-panels.css','story-presentation.js','panel-layout.js','rival-panel.js','rescue-panel.js','exploration-panel.js','league-portraits.js','safari-presentation.js','safari-scene.css'])fs.copyFileSync(path.join(root,'desktop',name),path.join(out,name));
 fs.cpSync(path.join(root,'desktop/assets'),path.join(out,'assets'),{recursive:true});
 for(const [source,target] of [['index.html','battle.html'],['panels.html','panels.html']]){
   let html=fs.readFileSync(path.join(root,'desktop',source),'utf8');
@@ -46,7 +46,7 @@ fs.writeFileSync(path.join(out,'panels.js'),panels);
 fs.writeFileSync(path.join(out,'connections.js'),'function initConnections(){};function renderConnections(){};');
 fs.cpSync(path.join(root,'mobile/web'),out,{recursive:true});
 fs.copyFileSync(path.join(root,'desktop/story.css'),path.join(out,'story.css'));
-const notices=['LICENSE','THIRD_PARTY_NOTICES.md','mobile/third-party/pkmn-sets-LICENSE.txt','mobile/third-party/android-background-NOTICES.txt','desktop/assets/trainers/battle/NOTICE.txt','desktop/assets/items/story-NOTICE.txt','desktop/assets/trainers/portraits/NOTICE.txt',...['@pkmn/sim','@pkmn/streams','ts-chacha20'].map(n=>'node_modules/'+n+'/LICENSE')].map(file=>file+'\n'+fs.readFileSync(path.join(root,file),'utf8')).join('\n\n');
+const notices=['LICENSE','THIRD_PARTY_NOTICES.md','mobile/third-party/pkmn-sets-LICENSE.txt','mobile/third-party/android-background-NOTICES.txt','desktop/assets/trainers/battle/NOTICE.txt','desktop/assets/items/story-NOTICE.txt','desktop/assets/trainers/portraits/NOTICE.txt','desktop/assets/trainers/overworld-NOTICE.txt',...['@pkmn/sim','@pkmn/streams','ts-chacha20'].map(n=>'node_modules/'+n+'/LICENSE')].map(file=>file+'\n'+fs.readFileSync(path.join(root,file),'utf8')).join('\n\n');
 fs.writeFileSync(path.join(out,'THIRD-PARTY-NOTICES.txt'),notices);
 fs.writeFileSync(path.join(out,'config.js'),'globalThis.MobileConfig='+fs.readFileSync(path.join(root,'mobile/version.json'),'utf8')+';');
 const report={modules:modules.length,bundleBytes:Buffer.byteLength(bundle),sha256:crypto.createHash('sha256').update(bundle).digest('hex')};
