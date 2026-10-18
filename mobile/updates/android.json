@@ -1,8 +1,8 @@
 {
   "package": "io.github.bakzzi.pokemonidle",
-  "versionCode": 22,
-  "versionName": "0.1.20",
-  "url": "https://github.com/Bakzzi/Pokemon_codex/releases/download/android-v0.1.20/Pokemon-Idle-0.1.20.apk",
-  "bytes": 13002218,
-  "sha256": "8098c99d80c2a38612882d64fcf1b3c1212b58d28423d9ce491c10c2c91a4b91"
+  "versionCode": 23,
+  "versionName": "0.1.21",
+  "url": "https://github.com/Bakzzi/Pokemon_codex/releases/download/android-v0.1.21/Pokemon-Idle-0.1.21.apk",
+  "bytes": 13006856,
+  "sha256": "36162f5577cc9efbc312b7f17d9997cb5eaaeea00b12d07c4804d269d4f7b5ee"
 }
