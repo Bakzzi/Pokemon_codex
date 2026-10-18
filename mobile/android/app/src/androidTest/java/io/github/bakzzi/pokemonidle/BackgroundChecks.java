@@ -30,10 +30,10 @@ final class BackgroundChecks {
         service.recordSample(25,400,now,now);await(runner,store,20);service.recordSample(25,400,now,now);await(runner,store,20);
         runner.closeWhenIdle();runner.barrier().get(10,TimeUnit.SECONDS);service.recordSample(35,500,now,now);await(runner,store,30);
         AdventureStore.Snapshot stale=store.backgroundSnapshot();store.claimUi(owner);JSONObject latest=new JSONObject(store.read());latest.getJSONObject("game").put("fixtureMarker","UI retained");check(store.saveUi(owner,latest.toString()),"UI save failed");check(!store.commitBackground(stale,stale.raw),"Background overwrote foreground");
-        ledger.mode(true,550);service.recordSample(55,600,now,now);await(runner,store,30);check(prefs.getLong("total",-1)==35&&prefs.getLong("walkingTotal",-1)==55,"Foreground walking paid twice");
+        ledger.mode(true,550);service.recordSample(55,600,now,now);await(runner,store,30);check(prefs.getLong("total",-1)==55&&prefs.getLong("walkingTotal",-1)==55,"Unlocked steps were excluded or paid while UI owned the save");
         String valid=store.read();check(!store.saveUi(owner,"not-json"),"Invalid save accepted");check(valid.equals(store.read()),"Rejected save damaged progress");
         store.releaseUi(owner);check(!store.commitBackground(stale,stale.raw),"Old generation accepted after return");
-        ledger.mode(false,650);service.recordSample(65,700,now,now);await(runner,store,30);service.recordSample(75,800,now,now);await(runner,store,40);
+        ledger.mode(false,650);service.recordSample(65,700,now,now);await(runner,store,60);service.recordSample(75,800,now,now);await(runner,store,70);
         check("UI retained".equals(new JSONObject(store.read()).getJSONObject("game").getString("fixtureMarker")),"UI change lost after handoff");
         Bundle result=new Bundle();result.putString("result","passed");result.putInt("backgroundChecks",10);result.putLong("consumed",consumed(store));result.putBoolean("noActivityCreated",!MainActivity.visible);context.getSystemService(NotificationManager.class).cancel(7);runner.closeWhenIdle();runner.barrier().get(10,TimeUnit.SECONDS);return result;
     }

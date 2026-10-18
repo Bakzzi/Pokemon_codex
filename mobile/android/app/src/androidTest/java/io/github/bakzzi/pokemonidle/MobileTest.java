@@ -87,6 +87,27 @@ public final class MobileTest extends Instrumentation {
             Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);
             if("inspect".equals(arguments.getString("mode"))){Thread.sleep(5000);result.putString("diagnostic",js("(()=>{try{return JSON.stringify({document:document.readyState,ready:typeof ready,game:typeof game,active:typeof active,phase:typeof active!=='undefined'?active:null,party:document.getElementById('battle')?.contentDocument.querySelectorAll('#party button').length,call:(()=>{try{window.mobileLifecycle(true);return 'ok'}catch(e){return e.stack}})()})}catch(e){return e.stack}})()"));finish(Activity.RESULT_OK,result);return;}
             waitReady();Thread.sleep(1500);
+            if("walking-live".equals(arguments.getString("mode"))){
+                StepService service=StepService.instance;require(service!=null,"Step service missing");
+                require(!getTargetContext().getSharedPreferences("steps",0).getBoolean("enabled",false),"Expected sensor-free walking fixture");
+                js("game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);refreshNative();progression=new MobileProgression(game,{consumed:nativeState.steps,lockConsumed:nativeState.lockMillis});progression.resume(Date.now());active=true;catchingUp=false;save();publish()");
+                long initial=getTargetContext().getSharedPreferences("steps",0).getLong("total",0),base=SystemClock.elapsedRealtimeNanos(),time=System.currentTimeMillis();
+                runOnMainSync(()->{service.recordSample(100,base,time,time);service.recordSample(109,base+1,time,time);});
+                Thread.sleep(750);require("true".equals(js("game.data.battle===null&&progression.consumed==="+initial)),"Nine steps generated an action");
+                runOnMainSync(()->service.recordSample(110,base+2,time,time));
+                long end=SystemClock.elapsedRealtime()+10000;
+                while(!"true".equals(js("!!game.data.battle&&progression.consumed==="+(initial+10)))&&SystemClock.elapsedRealtime()<end)Thread.sleep(100);
+                require("true".equals(js("!!game.data.battle&&progression.consumed==="+(initial+10))),"Foreground ten-step action never appeared");
+                require(MainActivity.visible&&!StepService.locked(getTargetContext()),"Walking fixture was not unlocked and visible");
+                require("true".equals(js("document.getElementById('battle').contentWindow.document.getElementById('foe-image').complete&&document.getElementById('battle').contentWindow.document.getElementById('foe-image').naturalWidth>0")),"Battle opponent was not rendered");
+                String gameBefore=js("JSON.stringify(game.data)");Thread.sleep(11000);require(gameBefore.equals(js("JSON.stringify(game.data)")),"Standing still awarded an idle action");
+                runOnMainSync(()->service.recordSample(120,base+3,time,time));end=SystemClock.elapsedRealtime()+10000;
+                while(!"true".equals(js("progression.consumed==="+(initial+20)))&&SystemClock.elapsedRealtime()<end)Thread.sleep(100);
+                require("true".equals(js("progression.consumed==="+(initial+20))),"Second walking action did not progress the battle");
+                runOnMainSync(()->service.recordSample(120,base+3,time,time));Thread.sleep(500);
+                require("true".equals(js("progression.consumed==="+(initial+20)+"&&progression.lockConsumed===0")),"Walking replayed or spent lock time");
+                screenshot("walking-live.png");result.putInt("foregroundWalkingChecks",7);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("lock-adventure".equals(arguments.getString("mode"))){
                 Application.ActivityLifecycleCallbacks lockLifecycle=new Application.ActivityLifecycleCallbacks(){
                     public void onActivityResumed(Activity a){if(a instanceof MainActivity)resumedActivity=(MainActivity)a;}

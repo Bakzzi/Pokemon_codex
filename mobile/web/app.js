@@ -35,7 +35,7 @@ function refreshNative(){
   $('sensor-status').textContent=nativeState.sensor+(nativeState.monitorError?' '+nativeState.monitorError:'')+(nativeState.backgroundError?' '+nativeState.backgroundError:'');$('walk-status').textContent='모험의 발걸음';
   $('walk-today').textContent=(nativeState.todaySteps||0).toLocaleString('ko-KR')+'걸음';
   $('walk-total').textContent=(nativeState.lifetimeSteps||0).toLocaleString('ko-KR')+'걸음';
-  $('walk-note').textContent=game?.data.mobileStory?.safari?.trip?'사파리 탐험 중 · 폰을 잠그고 걸으면 포획을 시도해요.':nativeState.tracking?'폰을 잠그면 10초마다 모험해요. 잠금 중 10걸음마다 한 번 더!':'폰을 잠그면 10초마다 모험해요. 걸음 기록을 켜면 걸은 만큼 더 모험해요.';
+  $('walk-note').textContent=game?.data.mobileStory?.safari?.trip?'사파리 탐험 중 · 10걸음마다 탐험을 이어가요.':nativeState.tracking?'10걸음마다 모험해요. 폰을 잠그면 10초마다 한 번 더!':'폰을 잠그면 10초마다 모험해요. 걸음 기록을 켜면 걸은 만큼 더 모험해요.';
   $('update-status').textContent=nativeState.update;$('update-confirm').hidden=!nativeState.pendingInstall;$('install-permission').hidden=nativeState.canInstall;
   $('update-check').disabled=!!nativeState.updateChecking||!!nativeState.installing;$('version').textContent='Android v'+(nativeState.versionName||MobileConfig.name);
 }
@@ -65,7 +65,7 @@ function applyReadyUpdate(){
 }
 setInterval(()=>{
   if(fatal||!native.foreground())return;
-  try{refreshNative();if(applyReadyUpdate())return;if(updatePaused){updatePaused=false;window.mobileLifecycle(true);return;}if(!active||catchingUp)return;const changed=progression.live(Date.now());if(changed){save();publish();}else if(Date.now()-lastSave>15000)save();}catch(e){active=false;native.reportError(String(e));notice='모험을 잠시 멈췄어요. 앱을 다시 열어 주세요.';publish();}
+  try{refreshNative();if(applyReadyUpdate())return;if(updatePaused){updatePaused=false;window.mobileLifecycle(true);return;}if(!active||catchingUp)return;const changed=progression.live(Date.now(),nativeState);if(changed){save();publish();}else if(Date.now()-lastSave>15000)save();}catch(e){active=false;native.reportError(String(e));notice='모험을 잠시 멈췄어요. 앱을 다시 열어 주세요.';publish();}
 },250);
 $('back').onclick=back;$('settings-open').onclick=()=>{refreshNative();$('settings').showModal();};$('settings-close').onclick=()=>$('settings').close();
 $('steps-toggle').onclick=()=>{refreshNative();if(nativeState.stepsEnabled)native.disableSteps();else native.enableSteps();};$('install-permission').onclick=()=>native.allowUpdates();$('update-check').onclick=()=>{native.checkUpdate();refreshNative();};$('update-confirm').onclick=()=>{save();native.confirmUpdate();};$('version').textContent='Android v'+MobileConfig.name;

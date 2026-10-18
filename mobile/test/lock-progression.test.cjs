@@ -6,7 +6,7 @@ const now=Date.parse('2026-10-18T06:00:00Z');
 function fixture(){const g=new Adventure(new Game({},now).data,now,{random:()=>.7}),p=new Progression(g);p.resume(now);return {g,p};}
 test('an old saved tutorial updates the activity explanation without skipping a page',()=>{
   const old=new Adventure({},now);old.presentation().pages[2]='앱을 켜 두면 자동으로 모험한단다. 꺼 둔 동안에는 10걸음마다 모험이 이어지지.';old.presentation().index=2;
-  const next=new Adventure(structuredClone(old.data),now+1000);assert.equal(next.presentation().index,2);assert.match(next.presentation().pages[2],/폰을 잠그면 10초/);
+  const next=new Adventure(structuredClone(old.data),now+1000);assert.equal(next.presentation().index,2);assert.match(next.presentation().pages[2],/앱을 켜고 걸어도/);
 });
 test('ordinary adventure stays frozen while unlocked, with the app open or closed',()=>{
   const {g,p}=fixture();g.newWild(now);const before=JSON.stringify(g.data);
@@ -34,14 +34,42 @@ test('a challenge runs in foreground without consuming either activity balance a
   const before=JSON.stringify(g.data);assert.equal(p.live(now+50000),false);
   assert.equal(p.catchUp({steps:1000,lockMillis:1000000},now+50000),0);assert.equal(JSON.stringify(g.data),before);
 });
-test('challenge return preserves a wild foe and cannot resume on old credits before another lock',()=>{
+test('challenge return preserves a wild foe until recorded walking or another lock',()=>{
   const {g,p}=fixture();g.data.mobileStory.rivals['rival-brock'].state='won';p.observe({lockEpoch:4});g.newWild(now-10000);const wild=g.data.battle,foe=structuredClone(wild.foe);
   assert.ok(g.challenge(0,now));assert.equal(p.live(now),true);assert.equal(g.data.suspendedWild,wild);
   g.data.mobileStory.scene=null;g.endChallenge(true,now+10000);
   assert.equal(g.data.battle,wild);assert.deepEqual(wild.foe,foe);assert.equal(wild.resumeAfterLock,4);
-  assert.equal(p.live(now+100000),false);assert.equal(p.catchUp({steps:100,lockMillis:100000,lockEpoch:4},now+100000),0);
+  assert.equal(p.live(now+100000),false);assert.equal(p.catchUp({steps:0,lockMillis:100000,lockEpoch:4},now+100000),0);
   const next=new Progression(new Adventure(structuredClone(g.data),now+110000),p.checkpoint());
   assert.equal(next.catchUp({steps:0,lockMillis:10000,lockEpoch:5},now+110000),1);assert.equal(next.lockConsumed,10000);
+});
+
+test('foreground walking pays ten steps once and keeps live animation delays',()=>{
+  const {g,p}=fixture();assert.equal(p.live(now,{steps:9}),false);
+  assert.equal(p.live(now,{steps:20}),true);assert.equal(p.consumed,10);assert.ok(g.data.battle);
+  const before=JSON.stringify(g.data);assert.equal(p.live(now+1,{steps:20}),false);assert.equal(p.consumed,10);assert.equal(JSON.stringify(g.data),before);
+  const ready=Math.max(g.nextTick,g.data.switchUntil);assert.equal(p.live(ready,{steps:20}),true);assert.equal(p.consumed,20);
+  assert.equal(p.live(ready+60000,{steps:20}),false);assert.equal(p.lockConsumed,0);
+});
+
+test('foreground walking survives handoff without replaying steps or inventing idle actions',()=>{
+  const {g,p}=fixture();assert.equal(p.live(now,{steps:19}),true);p.pause(now+1000);
+  const q=new Progression(new Adventure(structuredClone(g.data),now+60000),p.checkpoint());q.resume(now+60000);
+  assert.equal(q.live(now+120000,{steps:19}),false);assert.equal(q.catchUp({steps:19,lockMillis:0},now+120000),0);
+  assert.equal(q.live(now+120000,{steps:20}),true);assert.equal(q.consumed,20);
+});
+
+test('walking after a challenge can resume the same wild opponent without locking again',()=>{
+  const {g,p}=fixture();g.data.mobileStory.rivals['rival-brock'].state='won';p.observe({lockEpoch:4});g.newWild(now-10000);
+  const wild=g.data.battle;assert.ok(g.challenge(0,now));assert.ok(p.live(now));g.data.mobileStory.scene=null;g.endChallenge(true,now+10000);
+  assert.equal(g.data.battle,wild);assert.equal(p.live(now+100000,{steps:9}),false);
+  assert.ok(p.live(now+100000,{steps:10}));assert.equal(p.consumed,10);assert.equal(wild.resumeAfterLock,undefined);
+});
+
+test('dialogue and challenge turns preserve foreground walking credits',()=>{
+  const {g,p}=fixture();g.dialogue('trainer','그린','green',['fixture'],'adventure',now);
+  assert.equal(p.live(now+10000,{steps:100}),false);assert.equal(p.consumed,0);
+  g.data.mobileStory.scene=null;assert.ok(g.challenge(0,now+10000));p.live(now+20000,{steps:100});assert.equal(p.consumed,0);
 });
 test('clock credits do not fabricate walking progress for Safari',()=>{
   const {g,p}=fixture();let walked=0;g.walkingStep=()=>{walked++;return true;};

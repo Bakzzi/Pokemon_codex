@@ -27,12 +27,19 @@
       return changed;
     }
     observe(totals){this.game.lockEpoch=Number.isSafeInteger(totals.lockEpoch)?totals.lockEpoch:0;}
-    live(now){
+    walkingReady(steps){return Number.isSafeInteger(steps)&&steps>=this.consumed+this.stepsPerAction;}
+    live(now,totals={}){
       if(!this.foreground)return false;
       const g=this.game,b=g.data.battle;
       if(g.presentation?.())return g.sceneTick(now);
       if(b?.kind==='trainer'||b?.storyId)return this.step(now);
-      return g.controlTick(now);
+      if(g.controlTick(now))return true;
+      // New foreground steps use ordinary animation waits, one paid action at a
+      // time. The offline fast-forward path must not hide these live actions.
+      if(!this.walkingReady(totals.steps)||now<g.nextTick||now<g.data.switchUntil)return false;
+      if(b)delete b.resumeAfterLock;
+      if(!g.walkingStep?.(this.stepsPerAction,now)&&!this.step(now))return false;
+      this.consumed+=this.stepsPerAction;return true;
     }
     catchUp(total,now,maxActions=100){
       const steps=typeof total==='object'?total.steps:total,locked=typeof total==='object'?total.lockMillis:0;
@@ -45,7 +52,7 @@
         // Manual dialogue must preserve every unspent walking action.
         if(g.presentation?.()||g.data.battle?.kind==='trainer'||g.data.battle?.storyId)break;
         if(g.data.battle?.resumeAfterLock!==undefined){
-          if(g.lockEpoch<=g.data.battle.resumeAfterLock)break;
+          if(!walking&&g.lockEpoch<=g.data.battle.resumeAfterLock)break;
           delete g.data.battle.resumeAfterLock;
         }
         // Safari replaces walking actions only. Foreground play keeps its

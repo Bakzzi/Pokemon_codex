@@ -8,8 +8,8 @@ public class WalkingCounterTest {
         ZoneId zone=ZoneId.of("Asia/Seoul");long before=Instant.parse("2026-10-16T14:59:00Z").toEpochMilli(),after=before+61000;
         WalkingCounter c=new WalkingCounter();c.sample(100,1,100,before,before,zone);c.sample(110,1,200,before,before,zone);equal(10,c.total);equal(10,c.today);
         c.sample(110,1,200,before,before,zone);c.sample(105,1,150,before,before,zone);c.sample(115,1,300,before,before,zone);equal(15,c.total);equal(15,c.today); // duplicate and stale samples
-        StepLedger rewards=new StepLedger();rewards.mode(true,0);rewards.sample(115,1,300);rewards.sample(125,1,400);c.sample(125,1,400,before,before,zone);equal(0,rewards.total);equal(25,c.total); // foreground walking is display-only
-        c.rollover(after,zone);equal(0,c.today);equal(25,c.total);equal(0,rewards.total);
+        StepLedger rewards=new StepLedger();rewards.mode(true,0);rewards.sample(115,1,300);rewards.sample(125,1,400);c.sample(125,1,400,before,before,zone);equal(10,rewards.total);equal(25,c.total); // foreground walking earns one recorded action
+        c.rollover(after,zone);equal(0,c.today);equal(25,c.total);equal(10,rewards.total);
         c.sample(130,1,500,before,after,zone);equal(30,c.total);equal(0,c.today); // delayed yesterday samples do not enter today
         c.sample(140,1,600,after,after,zone);equal(40,c.total);equal(10,c.today);
         c.sample(3,2,10,after,after,zone);c.sample(8,2,20,after,after,zone);equal(45,c.total);equal(15,c.today);

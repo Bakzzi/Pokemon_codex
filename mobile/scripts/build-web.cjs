@@ -35,7 +35,7 @@ for(const [source,target] of [['index.html','battle.html'],['panels.html','panel
   fs.writeFileSync(path.join(out,target),html);
 }
 let renderer=fs.readFileSync(path.join(root,'desktop/renderer.js'),'utf8');
-renderer=renderer.replaceAll('에이전트 작업과 함께 모험 중','폰을 잠그면 모험을 이어가요').replaceAll('다음 작업과 함께 배틀을 이어가요','동료와 배틀을 이어가요').replaceAll('작업의 여운으로 모험을 이어가는 중','걸음과 함께 모험 중').replaceAll('다음 코딩을 기다리는 중','동료와 함께 모험 중');
+renderer=renderer.replaceAll('에이전트 작업과 함께 모험 중','걸음과 잠금 시간으로 모험해요').replaceAll('다음 작업과 함께 배틀을 이어가요','동료와 배틀을 이어가요').replaceAll('작업의 여운으로 모험을 이어가는 중','걸음과 함께 모험 중').replaceAll('다음 코딩을 기다리는 중','동료와 함께 모험 중');
 fs.writeFileSync(path.join(out,'renderer.js'),renderer);
 const panels=fs.readFileSync(path.join(root,'desktop/panels.js'),'utf8')
   .replaceAll('코딩을 이어가면 부화해요.','모험을 이어가면 부화해요.')
