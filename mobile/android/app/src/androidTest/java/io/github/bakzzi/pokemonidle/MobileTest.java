@@ -69,6 +69,7 @@ public final class MobileTest extends Instrumentation {
         try{
             if("background".equals(arguments.getString("mode"))){finish(Activity.RESULT_OK,BackgroundChecks.run(getTargetContext()));return;}
             if("update-checks".equals(arguments.getString("mode"))){finish(Activity.RESULT_OK,UpdateChecks.run(getTargetContext()));return;}
+            if("update-lifecycle".equals(arguments.getString("mode"))){finish(Activity.RESULT_OK,UpdateLifecycleChecks.run(getTargetContext()));return;}
             if("update-battle-preserved".equals(arguments.getString("mode"))){
                 JSONObject stored=new JSONObject(readSave());android.content.SharedPreferences p=getTargetContext().getSharedPreferences("verify",0);
                 require(stored.getJSONObject("game").toString().equals(p.getString("immediateGame","")),"Update changed the saved battle or party");require(stored.getJSONObject("mobile").getLong("consumed")==p.getLong("immediateConsumed",-1),"Update changed the walking cursor");require(stored.getJSONObject("mobile").getLong("pausedAt")>0,"Update did not save the pause checkpoint");
@@ -181,7 +182,7 @@ public final class MobileTest extends Instrumentation {
                 result.putInt("returnChecks",5);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
             if("update-immediate".equals(arguments.getString("mode"))){
-                js("active=false;game=new MobileCore.Game({},Date.now());progression=new MobileProgression(game);progression.resume(Date.now());game.newWild(Date.now());game.nextTick=Date.now()+60000;game.data.switchUntil=game.nextTick;active=true;catchingUp=false;save()");
+                js("active=false;game=new MobileCore.Adventure({},Date.now());game.data.mobileStory.onboarding='done';game.data.mobileStory.scene=null;progression=new MobileProgression(game);progression.resume(Date.now());game.newWild(Date.now());game.nextTick=Date.now()+60000;game.data.switchUntil=game.nextTick;active=true;catchingUp=false;save()");
                 JSONObject before=new JSONObject(readSave());getTargetContext().getSharedPreferences("verify",0).edit().putString("immediateGame",before.getJSONObject("game").toString()).putLong("immediateConsumed",before.getJSONObject("mobile").getLong("consumed")).commit();
                 Updater u=Updater.current;File apk=new File(getTargetContext().getCacheDir(),"verify-update.apk");try(InputStream in=getContext().getAssets().open("update.apk");OutputStream out=new FileOutputStream(apk)){byte[] b=new byte[65536];for(int n;(n=in.read(b))!=-1;)out.write(b,0,n);}
                 android.content.pm.PackageInfo info=getTargetContext().getPackageManager().getPackageArchiveInfo(apk.getAbsolutePath(),0);JSONObject manifest=new JSONObject().put("versionCode",info.getLongVersionCode()).put("bytes",apk.length()).put("sha256",Updater.sha256(apk));u.validate(apk,manifest);

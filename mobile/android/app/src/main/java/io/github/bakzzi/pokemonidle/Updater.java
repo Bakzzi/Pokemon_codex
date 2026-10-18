@@ -100,11 +100,13 @@ final class Updater {
         }catch(Exception e){android.util.Log.w("PokemonUpdate",e.toString());ready=false;installing=false;status="설치하지 못했어요. 기존 앱과 모험은 그대로 보존돼요.";if(sessionId>=0)try{context.getPackageManager().getPackageInstaller().abandonSession(sessionId);}catch(RuntimeException ignored){}}
         finally{busy=false;}});
     }
-    static void result(Context context,Intent intent){
-        int id=intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID,-1);if(id<0||id!=context.getSharedPreferences("update",0).getInt("session",-2))return;
+    static boolean result(Context context,Intent intent){
+        int id=intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID,-1);if(id<0||id!=context.getSharedPreferences("update",0).getInt("session",-2))return false;
         int result=intent.getIntExtra(PackageInstaller.EXTRA_STATUS,PackageInstaller.STATUS_FAILURE);Updater u=current;
-        if(result==PackageInstaller.STATUS_PENDING_USER_ACTION){Intent confirmation=intent.getParcelableExtra(Intent.EXTRA_INTENT);if(confirmation!=null)context.getSharedPreferences("update",0).edit().putString("pending",confirmation.toUri(Intent.URI_INTENT_SCHEME)).apply();if(u!=null){u.pending=confirmation;u.installing=false;u.status="이 기기의 시스템 설치 승인이 필요해요. 설정에서 설치 화면을 열어 주세요.";}return;}
+        if(result==PackageInstaller.STATUS_PENDING_USER_ACTION){Intent confirmation=intent.getParcelableExtra(Intent.EXTRA_INTENT);if(confirmation!=null)context.getSharedPreferences("update",0).edit().putString("pending",confirmation.toUri(Intent.URI_INTENT_SCHEME)).apply();if(u!=null){u.pending=confirmation;u.installing=false;u.status="이 기기의 시스템 설치 승인이 필요해요. 설정에서 설치 화면을 열어 주세요.";}return false;}
         String notice=result==PackageInstaller.STATUS_SUCCESS?"업데이트를 적용했어요.":"시스템에서 설치를 완료하지 못했어요. 기존 앱과 모험은 그대로 보존돼요.";
-        context.getSharedPreferences("update",0).edit().remove("session").remove("pending").putString("notice",notice).apply();if(u!=null){u.pending=null;u.installing=false;u.status=notice;}
+        // Persist before reopening: installation can replace the entire app process.
+        context.getSharedPreferences("update",0).edit().remove("session").remove("pending").putString("notice",notice).commit();if(u!=null){u.pending=null;u.installing=false;u.status=notice;}
+        return result==PackageInstaller.STATUS_SUCCESS;
     }
 }
