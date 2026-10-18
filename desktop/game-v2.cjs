@@ -237,6 +237,7 @@ class Game {
       if(a.uid===this.data.trainingDevice.learnerUid)return done;
     }
     if(['select','slot','evolve'].includes(a.kind)&&!(a.kind==='slot'&&a.uid===null)&&(!p||species.get(p.id)?.generation>this.maxGeneration()))return invalid('해당 동료를 사용할 수 없어요.');
+    if(a.kind==='select'&&a.uid===this.data.activeId)return done;
     if(a.kind==='slot'&&a.uid===null){
       if(this.data.slots[a.slot]===null)return done;
       if(!this.data.slots.some((uid,i)=>i!==a.slot&&uid!==null&&!this.isBoarded(uid)))return invalid('모험할 동료 한 마리는 남겨 주세요.');
@@ -260,7 +261,6 @@ class Game {
     if(b&&(b.foe.hp<=0||b.party[this.data.activeId]?.hp<=0))return wait('기절과 배틀 결과를 기다려요.');
     if(a.kind==='select'){
       if(this.isBoarded(a.uid))return wait('키우미집에서 데려오면 출전해요.');
-      if(a.uid===this.data.activeId)return done;
       if(b&&(b.party[a.uid]?.hp<=0||b.kind==='trainer'&&!b.party[a.uid]))return wait('배틀 종료 후 회복·출전해요.');
       if(b){const blocked=battleEngine.switchWait(this,b,a.uid);if(blocked)return wait(blocked==='turn'?'이번 턴이 끝나면 출전해요.':'교체할 수 있게 되면 출전해요.');}
     }else if(a.kind==='daycare-withdraw'||a.kind==='abandon'){
@@ -309,6 +309,7 @@ class Game {
     const a={kind,...payload,queuedAt:now};
     if(kind==='evolve')a.from=this.data.owned[a.uid]?.id;
     const status=this.actionStatus(a,now);if(status.state==='invalid')return false;
+    if(kind==='select'&&status.state==='done')return true;
     if(kind==='slot'&&a.uid===null)this.cancelPlacementRequests(this.data.slots[a.slot],now);
     const sameIntent=q=>q.kind===kind&&(kind==='evolve'?q.uid===a.uid:kind==='slot'?q.slot===a.slot:true)||kind.startsWith('johto-')&&q.kind.startsWith('johto-');
     const existing=this.data.pendingActions.find(sameIntent);

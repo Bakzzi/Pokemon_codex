@@ -190,7 +190,7 @@ function renderPartyStatus(s){
     if(p.empty){b.dataset.id='';b.disabled=false;b.title=(i+1)+'번 빈칸 · 도감에서 동료 배치';b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed','false');b.classList.remove('queued','fainted');b.firstChild.removeAttribute('src');b.lastChild.textContent='빈칸';return;}
     const reviving=playingMove?.item?.target===p.uid&&playingMove.itemTargetBefore?.currentHp===0&&Date.now()<playingMove.at+BattlePacing.actionTiming(playingMove).healthAt;
     const fainted=reviving||p.fainted&&!(p.selected&&playingMove?.heroBefore&&moveHealth('hero',playingMove.hero||s.hero).currentHp>0);
-    const queued=s.pendingActions.find(a=>a.kind==='select'&&a.uid===p.uid);b.classList.toggle('queued',!!queued);b.dataset.id=p.uid;b.disabled=!!queued;b.title=p.name+' '+levelText(p)+(queued?' · 출전 예약 · '+queued.reason:p.boarded?' · 키우미집에서 데려온 뒤 출전 예약':fainted?' · 배틀 종료 후 회복·출전 예약':' · 클릭하여 출전');
+    const queued=!p.selected&&s.pendingActions.find(a=>a.kind==='select'&&a.uid===p.uid);b.classList.toggle('queued',!!queued);b.dataset.id=p.uid;b.disabled=p.selected||!!queued;b.title=p.name+' '+levelText(p)+(p.selected?' · 현재 출전 중':queued?' · 출전 예약 · '+queued.reason:p.boarded?' · 키우미집에서 데려온 뒤 출전 예약':fainted?' · 배틀 종료 후 회복·출전 예약':' · 클릭하여 출전');
     b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed',String(p.selected));b.classList.toggle('fainted',fainted);
     const img=b.firstChild;if(img.getAttribute('src')!=='assets/'+p.id+'.gif')img.src='assets/'+p.id+'.gif';b.lastChild.textContent=queued?'예약':p.boarded?'맡김':fainted?'기절':levelText(p);
   });

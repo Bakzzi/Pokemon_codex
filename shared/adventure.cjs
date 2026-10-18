@@ -281,6 +281,7 @@ class Adventure extends Engine{
   }
   tick(now=Date.now()){return this.presentation()?false:this.offerLapras(now)||this.offerMansion(now)||this.offerDevice(now)||super.tick(now);}
   actionStatus(a,now=Date.now()){
+    if(a.kind==='select'&&a.uid===this.data.activeId)return super.actionStatus(a,now);
     if(this.presentation())return {state:'waiting',reason:'대화가 끝나면 실행해요.'};
     return super.actionStatus(a,now);
   }
