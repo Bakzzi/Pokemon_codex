@@ -49,6 +49,11 @@ The runtime uses extracted species, level and move identifiers. Battle mechanics
 
 ## Pokemon Showdown simulator
 
+The unchanged Generation III Substitute sprite is stored at desktop/assets/substitute.png.
+Source: https://play.pokemonshowdown.com/sprites/gen3/substitute.png
+SHA-256: 060cfd5e6e78d448a1de361c6c2b3991bb6d6803f28dac1e2c377afa220ceb91
+Original Pokemon game artwork; the artwork rights remain with the Pokemon rights holders.
+
 @pkmn/sim 0.10.11: https://github.com/pkmn/ps/tree/main/sim
 Derived from Pokemon Showdown: https://github.com/smogon/pokemon-showdown
 MIT License. Copyright notices and full licenses are preserved in resources/app/node_modules/@pkmn/sim/LICENSE and the dependency package folders.

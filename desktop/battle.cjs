@@ -24,8 +24,13 @@ function setFor(mon,name){
     gender:mon.gender==='female'?'F':['genderless','none'].includes(mon.gender)?'N':'M',nature:'Serious',happiness:mon.happiness??70,
     moves:mon.moves.map(id=>simMoves.get(id)?.id).filter(Boolean),ivs:{hp:15,atk:15,def:15,spa:15,spd:15,spe:15},evs:{hp:0,atk:0,def:0,spa:0,spd:0,spe:0}};
 }
+function appearance(mon){
+  return {speciesId:mon.species.num,transformed:!!mon.transformed,substitute:!!mon.volatiles.substitute,
+    hidden:['fly','dig','dive','bounce'].find(id=>mon.volatiles[id])||null};
+}
 function readMon(mon){
   return {id:mon.baseSpecies.num,level:mon.level,hp:mon.fainted?0:mon.hp,maxHp:mon.maxhp,stats:{1:mon.maxhp,...Object.fromEntries(Object.entries(statKeys).filter(([n])=>n>1&&n<7).map(([n,k])=>[n,mon.storedStats[k]]))},
+    appearance:appearance(mon),
     moves:mon.moveSlots.map(s=>dex.moves.get(s.id).num),pp:Object.fromEntries(mon.moveSlots.map(s=>[dex.moves.get(s.id).num,s.pp])),
     status:statusNames[mon.status]||null,statusTurns:mon.statusState.time||0,stages:Object.fromEntries(Object.entries(statKeys).filter(([n])=>n>1).map(([n,k])=>[n,mon.boosts[k]||0])),
     ability:abilityIds.get(mon.baseAbility),gender:mon.gender==='F'?'female':mon.gender==='M'?'male':'none',happiness:mon.happiness};
@@ -85,6 +90,12 @@ function engine(game,b){
 function persist(b,sim){
   // Protocol is rendered into our bounded Korean journal; don't grow the save indefinitely.
   sim.log=sim.log.slice(-40);sim.sentLogPos=sim.log.length;sim.inputLog=[];b.sim=sim.toJSON();
+}
+function restoreAppearance(b){
+  if(!b?.sim||b.foe.appearance&&Object.values(b.party).every(p=>p.appearance))return;
+  const sim=Battle.fromJSON(clone(b.sim));
+  for(const mon of sim.p1.pokemon){const p=b.party[Number(mon.name.slice(1))];if(p)p.appearance=appearance(mon);}
+  b.foe.appearance=appearance(sim.p2.active[0]);
 }
 function refreshOwned(game,sim){
   let changed=false;
@@ -231,7 +242,7 @@ function protocol(sim,lines,records=false){
       else if(id==='typechange'){const types=(c||'').split('/').map(t=>data.types.find(x=>x.identifier===t.toLowerCase())?.name).filter(Boolean);if(types.length)text=name+'의 타입이 '+types.join('/')+' 타입으로 바뀌었다!';}
       else if(id==='trapped')text=subject+' 도망치거나 교체할 수 없다!';
       else if(id==='protect'||id==='detect')text=subject+' 공격을 막았다!';
-      else if(id==='substitute')text=ending?name+'의 대타가 사라졌다!':subject+' 대타를 내보냈다!';
+      else if(id==='substitute')text=ending?name+'의 대타가 사라졌다!':kind==='-activate'&&parts.includes('[damage]')?name+'의 대타가 공격을 대신 받았다!':subject+' 대타를 내보냈다!';
       else if(effect)text=ending?name+'에게 걸린 '+effect+' 효과가 풀렸다!':name+'에게 '+effect+' 효과가 적용되었다!';
     }
     if((kind==='-sidestart'||kind==='-sideend')&&effect)text=(a?.startsWith('p1')?'우리 편':'상대 편')+'의 '+particle(effect,'이','가')+(kind==='-sideend'?' 사라졌다!':' 펼쳐졌다!');
@@ -274,8 +285,9 @@ function movePresentation(lines){
     actionLines.some(l=>l.startsWith('|-activate|')&&/move: (Protect|Detect)/.test(l))?'protected':
     actionLines.some(l=>l.startsWith('|-immune|'))?'immune':actionLines.some(l=>l.startsWith('|-fail|'))?'failed':'success';
   const hit=actionLines.find(l=>l.startsWith('|-hitcount|'));
+  const hitSubstitute=m.category!=='Status'&&actionLines.some(l=>l.startsWith('|-activate|')&&l.includes('|Substitute|[damage]')||l.startsWith('|-end|')&&l.split('|')[3]==='Substitute');
   const moveTarget=['all','allAdjacent','foeSide'].includes(m.target)?'field':parts[4]===parts[2]||['self','allySide','allies'].includes(m.target)?'self':'opponent';
-  return {actor,move:m.num,moveTarget,outcome,hitCount:hit?Number(hit.split('|')[3])||1:1};
+  return {actor,move:m.num,moveTarget,outcome,hitCount:hit?Number(hit.split('|')[3])||1:1,...(hitSubstitute?{hitSubstitute:true}:{})};
 }
 function step(game,b){
   const sim=engine(game,b);refreshOwned(game,sim);const start=sim.log.length,heroBefore=sim.p1.active[0].name,foeBefore=sim.p2.active[0].hp,heroHpBefore=sim.p1.active[0].hp;
@@ -358,4 +370,4 @@ function tryCatch(rate,hp,maxHp,status,random=Math.random,bonus=0){
   while(checks<4&&Math.floor(random()*65536)<threshold)checks++;
   return {caught:checks===4,shakes:Math.min(checks,3),a};
 }
-module.exports={protocol,protocolLines,bestPartner,matchupScore,combatant,abilityFor,step,canSwitch,switchWait,addPartner,invalidate,catchValue,tryCatch,engine,readMon,scoreMove,movePresentation,dex};
+module.exports={protocol,protocolLines,bestPartner,matchupScore,combatant,abilityFor,step,canSwitch,switchWait,addPartner,invalidate,catchValue,tryCatch,engine,readMon,restoreAppearance,scoreMove,movePresentation,dex};

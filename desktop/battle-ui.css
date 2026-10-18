@@ -24,6 +24,7 @@
 #switch-flash[data-mode=release]{background:radial-gradient(circle,#fff 0 18%,#fff5bdcc 30%,transparent 68%)}
 #switch-beam{position:absolute;left:83px;top:69px;width:4px;height:29px;background:#ffadc2;box-shadow:0 0 10px 4px #ff4b8699;z-index:7;pointer-events:none}
 .sprite{bottom:45px}
+.sprite img.substitute{position:relative;top:20px}
 .ground{bottom:50px}
 #capture-fx{bottom:50px}
 #attack-fx{display:block;position:absolute;inset:0 auto auto 0;width:370px;height:158px;z-index:5;pointer-events:none;image-rendering:pixelated}

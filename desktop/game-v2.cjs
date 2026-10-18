@@ -43,7 +43,8 @@ function restoreAction(a){
   if(a.kind==='evolve'&&!species.has(a.from))return null;
   return {id:a.id,kind:a.kind,queuedAt:a.queuedAt,...payload,...(a.kind==='evolve'?{from:a.from}:{})};
 }
-function healthView(p){return {hp:p.hp/p.maxHp,currentHp:Math.max(0,Math.ceil(p.hp)),maxHp:p.maxHp,status:p.status||null};}
+function healthView(p){return {hp:p.hp/p.maxHp,currentHp:Math.max(0,Math.ceil(p.hp)),maxHp:p.maxHp,status:p.status||null,
+  ...(p.id?{appearance:p.appearance||{speciesId:p.id,transformed:false,substitute:false,hidden:null}}:{})};}
 function experienceView(p){
   const expRequired=p.level>=100?0:xpAt(p.id,p.level+1)-xpAt(p.id,p.level),expCurrent=expRequired?Math.max(0,Math.min(expRequired,p.xp-xpAt(p.id,p.level))):0;
   return {expCurrent,expRequired,expPercent:p.level>=100?100:Math.min(99,Math.floor(expCurrent*100/expRequired))};
@@ -129,6 +130,7 @@ class Game {
     this.data.slots=Array.from({length:PARTY_SIZE},(_,i)=>{const uid=savedSlots[i],p=this.data.owned[uid];if(!p||selected.has(uid)||species.get(p.id)?.generation>this.maxGeneration())return null;selected.add(uid);return uid;});
     if(!selected.size){const uid=this.data.owned[this.data.activeId]?this.data.activeId:Object.keys(this.data.owned).map(Number)[0];this.data.slots[0]=uid;}
     if(!this.data.slots.includes(this.data.activeId))this.data.activeId=this.data.slots.find(uid=>uid!==null&&!this.isBoarded(uid))||this.data.slots.find(uid=>uid!==null);
+    for(const b of [this.data.battle,this.data.suspendedWild])battleEngine.restoreAppearance(b);
     training.init(this,now);
     if(this.data.battle?.kind==='trainer'&&this.data.battle.matchupRevision!==1){this.data.battle.matchupRevision=1;this.data.battle.matchupPending=true;}
     const actionIds=new Set();
@@ -700,7 +702,7 @@ class Game {
       this.log(species.get(hero.id).name+' 출전','switch',hero.id,now);
     }else{
       const text=move?species.get(action.id||hero.id).name+'의 '+move.name+'!':action.lines[0]||'배틀을 이어가고 있어.';
-      this.animate(action.item?'item':'attack',{item:action.item,itemTargetBefore:partyBefore[action.item?.target],actor:action.actor||'hero',id:action.id||hero.id,move:move?.name,moveId:move?.id,moveType:move?.type,moveTarget:action.moveTarget,outcome:action.outcome,hitCount:action.hitCount,damage:move?.damageClass===1?0:action.damage||0,damageCauses:action.damageCauses,beforeMove:action.beforeMove,afterMove:action.afterMove,hero:{...view(hero.id),level:hero.level,...healthView(hero)},heroBefore,foeBefore,foe:{...view(foe.id),level:foe.level,...healthView(foe)},text,detail:action.lines.filter(line=>line!==text&&!action.beforeMove?.some(m=>m.text===line)).join(' · ')},now);
+      this.animate(action.item?'item':'attack',{item:action.item,itemTargetBefore:partyBefore[action.item?.target],actor:action.actor||'hero',id:action.id||hero.id,move:move?.name,moveId:move?.id,moveType:move?.type,moveTarget:action.moveTarget,outcome:action.outcome,hitCount:action.hitCount,...(action.hitSubstitute?{hitSubstitute:true}:{}),damage:move?.damageClass===1?0:action.damage||0,damageCauses:action.damageCauses,beforeMove:action.beforeMove,afterMove:action.afterMove,hero:{...view(hero.id),level:hero.level,...healthView(hero)},heroBefore,foeBefore,foe:{...view(foe.id),level:foe.level,...healthView(foe)},text,detail:action.lines.filter(line=>line!==text&&!action.beforeMove?.some(m=>m.text===line)).join(' · ')},now);
     }
     if(action.lines.length)this.log(action.lines.join(' · '),'battle',action.id||hero.id,now);
     const finishedAt=now+this.data.animation.duration;

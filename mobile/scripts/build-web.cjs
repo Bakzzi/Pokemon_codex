@@ -47,7 +47,7 @@ const panels=fs.readFileSync(path.join(root,'desktop/panels.js'),'utf8')
 fs.writeFileSync(path.join(out,'panels.js'),panels);
 fs.writeFileSync(path.join(out,'connections.js'),'function initConnections(){};function renderConnections(){};');
 fs.cpSync(path.join(root,'mobile/web'),out,{recursive:true});
-const notices=['LICENSE','mobile/third-party/pkmn-sets-LICENSE.txt','mobile/third-party/android-background-NOTICES.txt','mobile/assets/trainers/NOTICE.txt','mobile/assets/items/NOTICE.txt','mobile/assets/portraits/NOTICE.txt',...['@pkmn/sim','@pkmn/streams','ts-chacha20'].map(n=>'node_modules/'+n+'/LICENSE')].map(file=>file+'\n'+fs.readFileSync(path.join(root,file),'utf8')).join('\n\n');
+const notices=['LICENSE','THIRD_PARTY_NOTICES.md','mobile/third-party/pkmn-sets-LICENSE.txt','mobile/third-party/android-background-NOTICES.txt','mobile/assets/trainers/NOTICE.txt','mobile/assets/items/NOTICE.txt','mobile/assets/portraits/NOTICE.txt',...['@pkmn/sim','@pkmn/streams','ts-chacha20'].map(n=>'node_modules/'+n+'/LICENSE')].map(file=>file+'\n'+fs.readFileSync(path.join(root,file),'utf8')).join('\n\n');
 fs.writeFileSync(path.join(out,'THIRD-PARTY-NOTICES.txt'),notices);
 fs.writeFileSync(path.join(out,'config.js'),'globalThis.MobileConfig='+fs.readFileSync(path.join(root,'mobile/version.json'),'utf8')+';');
 const report={modules:modules.length,bundleBytes:Buffer.byteLength(bundle),sha256:crypto.createHash('sha256').update(bundle).digest('hex')};

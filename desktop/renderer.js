@@ -4,7 +4,16 @@ const levelText=p=>'Lv.'+p.level;
 let serial=0,current=null,switching=false,captureRaf=0,moveRaf=0,faintRaf=0,switchRaf=0,playingMove=null,playingSwitch=null,speechTimer=0;
 for(const action of ['pin','compact','hide','close'])$(action).onclick=()=>window.buddy.action(action);
 for(const b of document.querySelectorAll('[data-panel]'))b.onclick=()=>window.buddy.action('panel',b.dataset.panel);
-function sprite(element,p){const img=$(element),src='assets/'+p.id+'.gif';if(img.getAttribute('src')!==src)img.src=src;img.alt=p.name;}
+function sprite(element,p){
+  const img=$(element),a=p.appearance,src=a?.substitute?'assets/substitute.png':'assets/'+(a?.speciesId||p.id)+'.gif';
+  if(img.getAttribute('src')!==src)img.src=src;img.alt=p.name+(a?.transformed?' · 변신 중':'')+(a?.substitute?' · 대타출동':'');
+  img.classList.toggle('substitute',!!a?.substitute);
+  img.style.visibility=a?.hidden?'hidden':'';
+}
+function renderAppearance(side,p){
+  const appearance=playingMove?BattlePacing.appearanceAt(playingMove,side,Date.now(),p):p.appearance;
+  sprite(side+'-image',{...p,appearance});
+}
 function clearMove(){
   if(moveRaf)cancelAnimationFrame(moveRaf);moveRaf=0;playingMove=null;
   const canvas=$('attack-fx');canvas.hidden=true;canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
@@ -28,8 +37,8 @@ function playMove(event){
     MoveEffects.drawFrame(ctx,effect,frame);canvas.dataset.phase=now<effect.at?'announce':now>=event.at+timing.resultAt?'result':frame.phase;canvas.dataset.outcome=frame.outcome;
     for(const [id,m] of [[event.actor==='foe'?'foe':'hero',frame.actor],[event.actor==='foe'?'hero':'foe',frame.target]]){
       const hit=BattlePacing.damageReaction(event,id,now);
-      $(id).style.transform=`translate(${m.x+hit.x}px,${m.y}px) rotate(${m.rotate}deg) scale(${m.scale})`;$(id).style.opacity=String(m.opacity*hit.opacity);
-      $(id).style.filter=hit.active?'brightness(2)':'';
+      $(id).style.transform=`translate(${m.x+hit.x}px,${m.y}px) rotate(${m.rotate}deg) scale(${m.scaleX??m.scale},${m.scaleY??m.scale})`;$(id).style.opacity=String(m.opacity*hit.opacity);
+      $(id).style.filter=hit.active?'brightness(2)':m.filter||'';
     }
     renderHeroHealth(current);renderFoe(current);renderPartyStatus(current);renderSpeech(current);moveRaf=requestAnimationFrame(draw);
   };draw();
@@ -47,7 +56,7 @@ function playSwitch(event){
     if(playingSwitch!==event)return;
     const f=BattlePacing.switchFrame(event,Date.now()),ball=$('ball-fx'),hero=$('hero-image'),flash=$('switch-flash');
     if(f.done){clearFx();sprite('hero-image',current.hero);renderHeroHealth(current);renderSpeech(current);return;}
-    sprite('hero-image',{id:f.incoming?event.to:event.from,name:f.incoming?event.toName:event.fromName});
+    sprite('hero-image',(f.incoming?event.toPokemon:event.fromPokemon)||{id:f.incoming?event.to:event.from,name:f.incoming?event.toName:event.fromName});
     hero.style.transform=`translateY(${f.heroY}px) scaleX(-1) scale(${f.scale})`;hero.style.opacity=String(f.opacity);
     hero.style.filter=f.phase==='absorb'?'brightness(2.8) sepia(1) saturate(5) hue-rotate(290deg)':f.phase==='release'?`brightness(${1+2*f.glow})`:'';
     ball.style.display=f.ballVisible?'block':'none';ball.dataset.phase=f.phase;ball.style.opacity=String(f.ballOpacity);
@@ -78,7 +87,7 @@ function renderHeroHealth(s){
     $('hero-hud').hidden=f.opacity===0;renderHealth('hero',p);return;
   }
   $('hero-hud').hidden=false;
-  const p=playingMove?.hero?.id===s.hero.id?{...s.hero,...playingMove.hero}:s.hero;renderHealth('hero',moveHealth('hero',p));
+  const p=playingMove?.hero?.id===s.hero.id?{...s.hero,...playingMove.hero}:s.hero;renderAppearance('hero',p);renderHealth('hero',moveHealth('hero',p));
 }
 function eventFx(e){
   if(!e||e.serial===serial)return;serial=e.serial;
@@ -96,7 +105,7 @@ function renderFoe(s){
   foe.hidden=!shown;$('foe-ground').hidden=!shown;$('empty-foe').hidden=!!shown;
   img.style.opacity='1';img.style.transform='';img.style.filter='';
   $('foe-hud').hidden=!shown;fx.hidden=!capture;
-  if(shown){sprite('foe-image',shown);renderHealth('foe',capture?shown:moveHealth('foe',shown));}
+  if(shown){if(capture)sprite('foe-image',shown);else renderAppearance('foe',shown);renderHealth('foe',capture?shown:moveHealth('foe',shown));}
   if(!capture)return;
   const f=CaptureAnimation.captureFrame(capture,Date.now()),ball=$('capture-ball'),flash=$('capture-flash'),stars=$('capture-sparkles');
   fx.dataset.phase=f.phase;fx.dataset.shake=String(f.shake);
@@ -189,7 +198,6 @@ window.buddy.onState(s=>{
   current=s;document.body.classList.toggle('compact',s.compact);document.documentElement.style.setProperty('--accent',s.accent);
   const agent=AgentStatus.presentation(s.source);$('agent-label').textContent=agent.label;$('agent-label').title=AgentStatus.name+'\n'+agent.detail;
   $('pin').setAttribute('aria-pressed',String(s.pinned));$('compact').title=s.compact?'상태창 펼치기':'작게 보기';
-  if(!switching)sprite('hero-image',s.hero);
   $('hero-name').textContent=s.hero.name;$('level').textContent=s.level;renderHeroHealth(s);
   $('region').textContent=s.generation===1?'KANTO ADVENTURE':'KANTO + JOHTO';$('exp').textContent=s.level===100?'MAX LEVEL':fmt(s.expCurrent)+' / '+fmt(s.expRequired);
   $('xp-bar').style.width=s.progress*100+'%';$('evolution').textContent=s.evolution.some(e=>e.automatic&&e.ready)?'자동진화 대기 · 배틀 종료 후':s.evolution.some(e=>e.ready)?'진화 가능 · 도감에서 확인':'';
