@@ -27,7 +27,7 @@ test('previously accessible inherited moves survive a decrease without becoming 
 test('new individuals retain their actual form learn level across repeated reloads',()=>{
   let {g,uid,p}=fixture(5,40);assert.equal(access.catalog(p).find(m=>m.move===53).level,34);
   for(let i=0;i<3;i++){g=new Game(g.data,now+i);p=g.data.owned[uid];assert.equal(access.catalog(p).find(m=>m.move===53).level,34);}
-  const late=fixture(4,32);assert.ok(late.g.evolve(late.uid,5,now));assert.equal(access.catalog(late.p).find(m=>m.move===53).level,31);
+  const late=fixture(4,31);late.g.gainXp(late.uid,xpAt(4,32)-late.p.xp,now);assert.ok(late.g.evolve(late.uid,5,now));assert.equal(access.catalog(late.p).find(m=>m.move===53).level,31);
 });
 test('legacy high-level known techniques are cataloged but locked after loading a lowered individual',()=>{
   const {g,p,uid}=fixture(151,15);delete p.moveMemory;p.moves=[1,144,94];const loaded=new Game(g.data,now+1),mon=loaded.data.owned[uid];

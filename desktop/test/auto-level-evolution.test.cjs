@@ -26,11 +26,11 @@ test('battle, final result and evolution playback finish in order before a reser
   assert.equal(g.tick(g.data.switchUntil-1),false);assert.ok(advance(g));assert.equal(g.data.battle.kind,'trainer');
 });
 
-test('older saves and high-level captures catch up through consecutive level evolutions after each animation',()=>{
+test('each level evolution requires a new level-up in that form, including after reload',()=>{
   let g=fixture();g.data.activeId=4;level(g,4,40);const uid=4;g=new Game(g.data,now);
   assert.equal(g.data.owned[uid].id,4);assert.ok(advance(g));assert.equal(g.data.owned[uid].id,5);
   g=new Game(g.data,g.data.switchUntil-1);assert.equal(g.tick(g.data.switchUntil-1),false);assert.equal(g.data.owned[uid].id,5);
-  assert.ok(advance(g));assert.equal(g.data.owned[uid].id,6);assert.equal(g.data.owned[uid].level,40);assert.ok(g.data.caught[4]&&g.data.caught[5]&&g.data.caught[6]);
+  advance(g);assert.equal(g.data.owned[uid].id,5);g.gainXp(uid,xpAt(5,41)-g.data.owned[uid].xp,now);assert.ok(advance(g));assert.equal(g.data.owned[uid].id,6);assert.equal(g.data.owned[uid].level,41);assert.ok(g.data.caught[4]&&g.data.caught[5]&&g.data.caught[6]);
   advance(g);assert.equal(g.data.journal.filter(e=>e.kind==='evolution').length,2);
 });
 
@@ -44,7 +44,7 @@ test('stones, friendship and trade paths retain their own conditions, while a le
   const g=fixture();level(g,25,40);g.data.inventory[83]=1;
   const kadabra=g.addPokemon(64,40,'catch',now),eevee=g.addPokemon(133,40,'catch',now);g.data.champion=true;g.data.johtoUnlocked=true;g.data.owned[eevee].happiness=255;
   assert.equal(g.autoLevelEvolution(now),false);assert.equal(g.data.owned[25].id,25);assert.equal(g.data.owned[kadabra].id,64);assert.equal(g.data.owned[eevee].id,133);assert.equal(g.data.inventory[83],1);
-  const tyrogue=g.addPokemon(236,20,'hatch',now);assert.ok(g.autoLevelEvolution(now));assert.equal(g.data.owned[tyrogue].id,237);
+  const tyrogue=g.addPokemon(236,20,'hatch',now);assert.equal(g.autoLevelEvolution(now),false);g.gainXp(tyrogue,xpAt(236,21)-g.data.owned[tyrogue].xp,now);assert.ok(g.autoLevelEvolution(now));assert.equal(g.data.owned[tyrogue].id,237);
 });
 
 test('manual requests still run once, and a season reset clears old high-level evolution eligibility',()=>{

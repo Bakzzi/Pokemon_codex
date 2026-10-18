@@ -131,7 +131,7 @@ function renderDex(){
   root.append(list);if(member.moves.some(m=>m.stab))root.append(node('p','muted move-stab-note','* 자속보정'));
   for(const e of member.evolutions){
     if(e.automatic){
-      const box=node('div','evolution');box.append(node('h3','',e.name+' 자동진화'),node('p','',e.conditions),node('p','',e.ready?'배틀과 결과 연출이 끝나면 자동으로 진화해요.':'조건 레벨에 도달하면 자동으로 진화해요.'));root.append(box);continue;
+      const box=node('div','evolution');box.append(node('h3','',e.name+' 자동진화'),node('p','',e.conditions),node('p','',e.ready?'배틀과 결과 연출이 끝나면 자동으로 진화해요.':member.level>=e.level&&e.waitingForLevelUp?'다음 레벨업 시 자동으로 진화해요.':'조건 레벨 이상에서 레벨업하면 자동으로 진화해요.'));root.append(box);continue;
     }
     const queued=state.pendingActions.some(a=>a.kind==='evolve'&&a.uid===member.uid&&a.to===e.to);
     const box=node('div','evolution'),b=node('button','',(e.trigger===2?'학습장치 · ':'')+e.name+(queued?' 진화 예약됨':e.ready?'로 진화':' 진화 예약'));

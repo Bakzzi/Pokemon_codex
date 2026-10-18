@@ -92,6 +92,7 @@ class Game {
     for(const [uid,p] of Object.entries(this.data.owned)){
       const previousMoves=JSON.stringify(p.moves);
       p.uid=Number(uid);p.gender=p.gender||nursery.genderFor(p.id,this.random);
+      if(!Number.isInteger(p.formEntryLevel)||p.formEntryLevel<1||p.formEntryLevel>p.level)p.formEntryLevel=p.level;
       p.abilitySlot=p.abilitySlot??Math.floor(this.random()*species.get(p.id).abilities.length);p.ability=abilityFor(p.id,p.abilitySlot);
       if(this.data.rulesRevision!==3){
         let recovered=[];
@@ -203,7 +204,7 @@ class Game {
     const selected=new Set(uids),retiredCount=original.filter(p=>!selected.has(p.uid)).length;
     for(const [uid,p] of Object.entries(this.data.owned)){
       if(!selected.has(Number(uid))){delete this.data.owned[uid];continue;}
-      p.level=15;p.xp=xpAt(p.id,15);moveAccess.update(p);
+      p.level=15;p.formEntryLevel=15;p.xp=xpAt(p.id,15);moveAccess.update(p);
     }
     this.data.daycare=null;this.daycareSelection=null;
     if(!selected.has(this.data.trainingDevice.learnerUid))this.data.trainingDevice.learnerUid=null;
@@ -357,7 +358,7 @@ class Game {
     if(!species.has(id)||species.get(id).generation>this.maxGeneration())return false;
     let uid=id;if(this.data.owned[uid]){while(this.data.owned[this.data.nextUid])this.data.nextUid++;uid=this.data.nextUid++;}
     const abilitySlot=Math.floor(this.random()*species.get(id).abilities.length);
-    this.data.owned[uid]={uid,id,level,xp:xpAt(id,level),moves:learnedMoves(id,level),moveMemory:[],abilitySlot,ability:abilityFor(id,abilitySlot),happiness:70,gender:nursery.genderFor(id,this.random),origin,obtainedAt:now};
+    this.data.owned[uid]={uid,id,level,formEntryLevel:level,xp:xpAt(id,level),moves:learnedMoves(id,level),moveMemory:[],abilitySlot,ability:abilityFor(id,abilitySlot),happiness:70,gender:nursery.genderFor(id,this.random),origin,obtainedAt:now};
     moveAccess.update(this.data.owned[uid]);
     this.data.seen[id]=this.data.seen[id]||now;if(register){this.data.caught[id]=this.data.caught[id]||now;this.data.seasonCaught[id]=this.data.seasonCaught[id]||now;}return uid;
   }
@@ -492,14 +493,15 @@ class Game {
       const item=db.items.find(i=>i.id===e.item);
       if(e.trigger===2)ready=ready&&training.hasLearnedLevel(this,p);
       const conditions=[e.level&&`Lv.${e.level}`,e.happiness&&`친밀도 ${p.happiness}/${e.happiness}`,e.time==='day'&&'낮',e.time==='night'&&'밤',item&&`${item.name} ${(this.data.inventory[e.item]||0)}개`,e.trigger===2&&(!training.has(this)?'학습장치 획득 필요':training.hasLearnedLevel(this,p)?'학습장치로 1레벨 상승 완료':'이 모습에서 학습장치로 1레벨 상승 필요')].filter(Boolean).join(' · ');
-      return {...e,name:species.get(e.to).name,automatic:e.trigger===1&&e.level>0,ready:ready&&!this.isBoarded(id),conditions};
+      const automatic=e.trigger===1&&e.level>0,waitingForLevelUp=automatic&&p.level<=p.formEntryLevel;
+      return {...e,name:species.get(e.to).name,automatic,waitingForLevelUp,ready:ready&&!waitingForLevelUp&&!this.isBoarded(id),conditions};
     });
   }
   evolve(uid,to,now=Date.now()){
     uid=Number(uid);to=Number(to);if(this.data.battle?.kind==='trainer'||this.data.pendingBattle||now<this.data.switchUntil||this.isBoarded(uid))return false;
     const rule=this.evolutions(uid,now).find(e=>e.to===to&&e.ready);if(!rule)return false;
     const p=this.data.owned[uid],from=p.id,fromPokemon=this.snapshot(now).hero;if(rule.item)this.data.inventory[rule.item]--;
-    moveAccess.update(p);p.id=to;delete p.deviceLevelUp;p.ability=abilityFor(to,p.abilitySlot);moveAccess.update(p);p.xp=xpAt(to,p.level)+Math.max(0,p.xp-xpAt(from,p.level));
+    moveAccess.update(p);p.id=to;p.formEntryLevel=p.level;delete p.deviceLevelUp;p.ability=abilityFor(to,p.abilitySlot);moveAccess.update(p);p.xp=xpAt(to,p.level)+Math.max(0,p.xp-xpAt(from,p.level));
     this.data.seen[to]=this.data.seen[to]||now;this.data.caught[to]=this.data.caught[to]||now;
     this.data.seasonCaught[to]=this.data.seasonCaught[to]||now;
     const old=this.data.battle?.party[uid];
