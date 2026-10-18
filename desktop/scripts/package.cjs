@@ -34,5 +34,7 @@ async function main(){
   await fs.copyFile(path.join(root,'LICENSE'),path.join(target,'LICENSE-Digimon-mod.txt'));
   require('./release-manifest.cjs').releaseManifest(target,pkg.version);
   console.log('Portable release: '+target);
+  const archive=require('node:child_process').execFileSync('powershell.exe',['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',path.join(__dirname,'archive.ps1'),'-ReleaseRoot',target],{encoding:'utf8',windowsHide:true});
+  console.log(archive.trim());
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

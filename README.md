@@ -74,6 +74,8 @@ npm.cmd run smoke
 npm.cmd run package
 ~~~
 
+`npm.cmd run package`는 배포 폴더와 자동 업데이트용 ZIP·SHA-256 파일을 함께 만듭니다. ZIP에는 버전 폴더와 `/` 경로를 사용하며, 모든 파일을 배포 매니페스트와 대조합니다.
+
 검증에는 실제 Codex 세션이나 사용자 진행 기록을 사용하지 않습니다. 배포 식별자·소스 커밋·검증 결과·파일 해시는 docs/releases/에 기록합니다.
 
 ## 출처
