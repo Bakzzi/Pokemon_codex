@@ -591,9 +591,10 @@ class Game {
   }
   nextTrainer(now){
     const b=this.data.battle,boss=this.battleBoss(b),enemy=boss.team[b.foeIndex];
+    if(b.kind==='trainer'&&b.foeIndex===0&&b.simBoss!==(b.storyId||b.bossIndex))battleEngine.invalidate(b);
     if(!b.storyId&&SECRET_TRAINERS.has(boss.id))this.data.trainerSeen[boss.id] ||= now;
     b.foe=combatant(enemy.id,enemy.level,enemy.moves);b.turn=0;
-    if(b.kind==='trainer'){b.matchupRevision=1;b.matchupPending=true;delete b.manualMatchup;delete b.aiLastSwitch;}
+    if(b.kind==='trainer'){b.matchupRevision=1;b.matchupPending=true;delete b.manualMatchup;delete b.aiLastSwitch;delete b.shiftUsed;}
     this.data.seen[enemy.id]=this.data.seen[enemy.id]||now;this.animate('encounter',{id:enemy.id,text:b.storyId==='road-snorlax'?'포켓몬피리를 불었다! 잠만보 Lv.30이 깨어났다!':`${boss.name}의 ${species.get(enemy.id).name}!`},now);
   }
   abandon(now=Date.now()){

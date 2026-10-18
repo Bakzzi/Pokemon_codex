@@ -92,10 +92,12 @@ function persist(b,sim){
   sim.log=sim.log.slice(-40);sim.sentLogPos=sim.log.length;sim.inputLog=[];b.sim=sim.toJSON();
 }
 function restoreAppearance(b){
-  if(!b?.sim||b.foe.appearance&&Object.values(b.party).every(p=>p.appearance))return;
+  if(!b?.sim)return;
   const sim=Battle.fromJSON(clone(b.sim));
   for(const mon of sim.p1.pokemon){const p=b.party[Number(mon.name.slice(1))];if(p)p.appearance=appearance(mon);}
-  b.foe.appearance=appearance(sim.p2.active[0]);
+  const foe=sim.p2.active[0];
+  if(foe.fainted&&b.kind==='trainer'&&foe.name!=='f'+b.foeIndex&&b.foe.hp>0)delete b.foe.appearance;
+  else b.foe.appearance=appearance(foe);
 }
 function refreshOwned(game,sim){
   let changed=false;
@@ -289,10 +291,25 @@ function movePresentation(lines){
   const moveTarget=['all','allAdjacent','foeSide'].includes(m.target)?'field':parts[4]===parts[2]||['self','allySide','allies'].includes(m.target)?'self':'opponent';
   return {actor,move:m.num,moveTarget,outcome,hitCount:hit?Number(hit.split('|')[3])||1:1,...(hitSubstitute?{hitSubstitute:true}:{})};
 }
+function commitShift(game,b,sim){
+  const old=sim.p1.active[0],foe=sim.p2.active[0];
+  if(b.kind!=='trainer'||b.shiftUsed||!b.pendingSwitch||!old.hp||old.fainted||old.trapped||!foe.fainted||foe.name==='f'+b.foeIndex||!sim.p2.activeRequest?.forceSwitch)return false;
+  const next=sim.p1.pokemon.find(p=>p.name==='u'+b.pendingSwitch);
+  if(!next||next===old||!next.hp||next.fainted)return false;
+  // FRLG Shift happens before the opponent sends its replacement. Use native
+  // switch-out/entry effects, without choosing a move, spending PP, or starting
+  // a new turn. In particular, never convert this into an ordinary switch choice.
+  if(!sim.actions.switchIn(next,0))return false;
+  const entry=sim.queue.list.findIndex(a=>a.choice==='runSwitch'&&a.pokemon===next);
+  if(entry>=0)sim.runAction(sim.queue.list.splice(entry,1)[0]);
+  sim.makeRequest('switch');
+  b.shiftUsed=true;delete b.pendingSwitch;return true;
+}
 function step(game,b){
   const sim=engine(game,b);refreshOwned(game,sim);const start=sim.log.length,heroBefore=sim.p1.active[0].name,foeBefore=sim.p2.active[0].hp,heroHpBefore=sim.p1.active[0].hp;
   if(sim.ended){sync(game,b,sim);return {lines:[],ended:true};}
-  for(let acknowledgements=0;acknowledgements<3;acknowledgements++){
+  const announcedFoe=b.foe,shifted=commitShift(game,b,sim);
+  for(let acknowledgements=0;!shifted&&acknowledgements<3;acknowledgements++){
     if(b.pendingSwitch&&!sim.requestState){
       const old=sim.p1.active[0],next=sim.p1.pokemon.find(p=>p.name==='u'+b.pendingSwitch);
       if(next&&next!==old&&next.hp&&!next.fainted&&!old.trapped){
@@ -328,7 +345,11 @@ function step(game,b){
   })));
   const itemLine=lines.find(line=>line.startsWith('|buddyitem|')),item=itemLine&&{...consumables.byId.get(Number(itemLine.split('|')[3])),target:Number(itemLine.split('|')[4].slice(1))};
   const afterMove=item?protocol(sim,lines,true).filter(message=>!['buddyitem','faint'].includes(message.kind)):firstMove<0?[]:protocol(sim,lines.slice(firstMove),true).filter(message=>!['move','faint'].includes(message.kind));
-  const messages=protocol(sim,lines);sync(game,b,sim);persist(b,sim);
+  const messages=protocol(sim,lines);sync(game,b,sim);
+  // nextTrainer has already announced the next foe. Its old fainted native
+  // combatant stays in place until the mandatory opponent switch is committed.
+  if(b.kind==='trainer'&&sim.p2.active[0].fainted&&sim.p2.active[0].name!=='f'+b.foeIndex&&announcedFoe.hp>0)b.foe=announcedFoe;
+  persist(b,sim);
   const causeName=ref=>{const mon=sim.sides.flatMap(s=>s.pokemon).find(p=>p.name===ref.split(': ')[1]);return species.get(mon?.baseSpecies.num)?.name||'포켓몬';};
   const damageCauses=[...new Map(lines.filter(line=>line.startsWith('|-damage|')).map(line=>damageCause(line,causeName)).filter(Boolean).map(c=>[c.side+':'+c.cause,c])).values()];
   return {...presentation,item,actor,id:actor==='hero'?b.party[game.data.activeId].id:b.foe.id,damage:Math.max(0,actor==='hero'?foeBefore-sim.p2.active[0].hp:heroHpBefore-sim.p1.active[0].hp),damageCauses,beforeMove,afterMove,lines:messages,switched:changed,ended:sim.ended};

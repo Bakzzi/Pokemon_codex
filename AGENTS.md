@@ -2,6 +2,7 @@
 
 ## Shared game parity
 
+- User instruction (2026-10-19): battle mechanics and turn flow follow FireRed/LeafGreen (Gen III), with Shift battle style. AI chooses among legal actions; it must not invent turn costs or effects. Faint replacements are mandatory and free on either side; the player's optional switch after an opponent faints is also free. Ordinary voluntary switching uses the player's action. Preserve native priority, Speed, PP, abilities, status and entry effects. Keep this contract common to PC and Android and test actual native turns, rather than animation state alone.
 - User instruction (2026-10-18): carry common game features, story, balance, bug fixes and presentation changes across PC and Android without waiting for another request. Update the shared implementation and validate both consumers. Keep agent-work activity and desktop controls on PC, and foreground/walking activity and touch navigation on Android.
 - Shared story rules live in `shared/`; shared game renderers, challenge cards and artwork live in `desktop/`. Android bundles those sources. Keep `mobile/*.cjs` compatibility entry points thin; do not fork story rules or maintain a second copy of shared UI/artwork.
 - PC keeps its simultaneous dex list/detail and widget sizes. Android keeps its list-to-detail navigation and mobile frame layout. Intentional viewport differences do not require matching pixel dimensions.
