@@ -8,6 +8,12 @@
   async function view(id){openPanel('challenge');publish();await until(()=>!$('challenge').hidden);await wait(180);if(id){$(id).open=true;$(id).scrollIntoView({block:'start'});await wait(100);}}
   function seed(n,random=()=>.5){active=false;const old=new MobileCore.Game({},Date.now());old.data.badges=badges.slice(0,n);game=new MobileCore.Adventure(old.data,Date.now(),{random});progression=new MobileProgression(game);settle();publish();}
   seed(0);await view();check($('safari-details').hidden&&$('mansion-details').hidden,'new places are undisclosed at the start');
+  const exclusive=[29,30,32,33,46,47,102,104,111,113,114,115,123,128,131],collection=game.panelState().collection;
+  check(collection.filter(p=>exclusive.includes(p.id)).every(p=>!p.acquisition.wildAllowed&&!p.acquisition.routes.some(r=>r.kind==='wild')),'exclusive encounters have no ordinary wild route');
+  openPanel('collection');publish();await until(()=>!$('collection').hidden);await wait(150);
+  check(doc.querySelector('.dex-card[data-id="128"] small').textContent==='사파리존','Safari acquisition label appears in the dex list');
+  doc.querySelector('.dex-card[data-id="131"]').click();await until(()=>$('collection').classList.contains('detail-open'));
+  check($('detail').querySelector('.acquisition-hints').textContent.includes('이벤트')&&!$('detail').querySelector('.acquisition-hints').textContent.includes('확률로 야생'),'Lapras detail shows an event without a false wild chance');
   seed(3);game.data.trainingDevice.gruntWonAt=Date.now();game.data.trainingDevice.duoWonAt=Date.now();game.challenge('rocket-giovanni',Date.now());publish();pages();game.sceneTick(Date.now()+3000);settle();
   game.data.battle.foeIndex=game.battleBoss().team.length-1;game.data.battle.foe.hp=0;game.defeatOpponent(Date.now());publish();pages();
   check(game.presentation()?.next==='scope-reward'&&!game.data.mobileStory.scopeObtainedAt,'scope discovery precedes the item award');
@@ -25,6 +31,7 @@
   seed(5);game.data.mobileStory.silph.wins[0]=Date.now();game.rivalProgress('rival-silph').state='won';const slots=[...game.data.slots];check(game.offerLapras(Date.now()),'employee appears after the company rival');publish();check(!game.registeredThisSeason(131),'Lapras is not granted before speaking');
   save();mobileLifecycle(true,true);active=false;check(game.presentation()?.next==='lapras-gift'&&!game.registeredThisSeason(131),'pending gift survives reload');pages();settle();
   check(game.data.owned[game.data.mobileStory.laprasUid]?.level===15,'employee gives a level fifteen Lapras');check(JSON.stringify(game.data.slots)===JSON.stringify(slots),'gift never fills an empty party slot');check(!game.offerLapras(Date.now()),'employee cannot duplicate the gift');
+  check(!game.canReserveCapture(131),'event-only Lapras does not offer an impossible wild capture reservation');
   seed(6);await view('mansion-details');check(!$('mansion-details').hidden&&!$('mansion-start').disabled,'mansion can be investigated after Sabrina');check(!game.canChallenge(6),'locked gym waits for the investigation');
   check(!$('mansion-details').textContent.includes('뮤츠')&&!$('mansion-details').textContent.includes('비밀열쇠'),'unread findings and reward stay secret');
   $('mansion-start').click();await until(()=>game.presentation()?.next==='mansion-begin');pages();settle();

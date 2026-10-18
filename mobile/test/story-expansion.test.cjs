@@ -2,6 +2,8 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const {Adventure}=require('../adventure.cjs'),{Game}=require('../../desktop/game.cjs'),safari=require('../safari.cjs'),{champion}=require('../rivals.cjs');
 const Progression=require('../web/progression.js');
+const {wildDistribution,pickWild,xpAt}=require('../../desktop/pokemon.cjs');
+const {combatant}=require('../../desktop/battle.cjs');
 globalThis.MobileCore={nursery:require('../../desktop/daycare.cjs')};
 const now=Date.parse('2026-10-18T06:00:00Z'),badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'];
 function ready(n=0,random=()=>.5){const old=new Game({},now);old.data.badges=badges.slice(0,n);return new Adventure(old.data,now,{random});}
@@ -9,6 +11,29 @@ function settle(g){g.nextTick=0;g.data.switchUntil=0;}
 function pages(g,t=now){const id=g.presentation()?.id;while(g.presentation()?.mode==='dialogue'&&g.presentation().id===id){const s=g.presentation();assert.ok(g.advanceScene(s.id+':'+s.index,t));}}
 function begin(g){pages(g);g.sceneTick(now+3000);settle(g);}
 function win(g,t=now+5000){const b=g.data.battle;b.foeIndex=g.battleBoss().team.length-1;b.foe.hp=0;g.defeatOpponent(t);pages(g,t);settle(g);}
+
+test('event and Safari species never enter ordinary mobile wild draws, including champion bonuses and Johto',()=>{
+  const excluded=[29,30,32,33,46,47,102,104,111,113,114,115,123,128,131],g=ready(8);
+  for(const champion of [false,true])for(const level of [5,15,50,71,100]){
+    g.data.champion=champion;g.data.johtoUnlocked=champion;const hero=g.data.owned[g.data.activeId];hero.level=level;hero.xp=xpAt(hero.id,level);
+    const options=g.wildOptions(),generation=g.maxGeneration(),distribution=wildDistribution(generation,level,options);
+    assert.ok(distribution.pokemon.every(p=>!excluded.includes(p.id)));assert.ok(Math.abs(distribution.pokemon.reduce((n,p)=>n+p.chance,0)-1)<1e-10);
+    let seed=12345;const random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
+    for(let i=0;i<300;i++)assert.ok(!excluded.includes(pickWild(generation,random,level,options)));
+  }
+  const desktop=new Game({},now);assert.ok(wildDistribution(1,100,desktop.wildOptions()).pokemon.some(p=>p.id===131));
+});
+test('mobile acquisition hints show the actual event or Safari routes and preserve evolution and breeding alternatives',()=>{
+  const g=ready(),collection=g.panelState(now).collection,entry=id=>collection.find(p=>p.id===id);
+  for(const id of [131,...safari.pool.map(([id])=>id)]){const p=entry(id);assert.equal(p.acquisition.wildAllowed,false);assert.ok(!p.acquisition.routes.some(r=>r.kind==='wild'));assert.ok(p.acquisition.routes.some(r=>r.kind==='event'));assert.ok(!/0\.00%|야생 확률/.test(JSON.stringify(p.acquisition)));}
+  assert.equal(entry(131).acquisition.summary,'이벤트');assert.ok(!/실프|직원|그린/.test(JSON.stringify(entry(131).acquisition)));assert.equal(entry(128).acquisition.summary,'사파리존');
+  assert.ok(entry(47).acquisition.routes.some(r=>r.kind==='evolution'&&r.from===46));assert.ok(entry(29).acquisition.routes.some(r=>r.kind==='hatch'));assert.ok(entry(16).acquisition.wildAllowed);
+});
+test('upgrading keeps caught Pokemon and an already started wild battle while retiring only the impossible Lapras reservation',()=>{
+  const g=ready(5);g.addPokemon(131,25,'catch',now);g.addPokemon(128,20,'catch',now);g.data.captureReservations={131:{remaining:1,revision:1},128:{remaining:1,revision:2}};g.data.captureReservationSerial=2;
+  g.newWild(now);g.data.battle.foe=combatant(131,25);const owned=structuredClone(g.data.owned),slots=[...g.data.slots],battle=structuredClone(g.data.battle),loaded=new Adventure(structuredClone(g.data),now+1000);
+  assert.deepEqual(loaded.data.owned,owned);assert.deepEqual(loaded.data.slots,slots);assert.deepEqual(loaded.data.battle,battle);assert.equal(loaded.data.captureReservations[131],undefined);assert.equal(loaded.data.captureReservations[128].remaining,1);assert.equal(loaded.reserveCapture(131,1,now+1000),false);assert.ok(loaded.canReserveCapture(128));
+});
 
 test('Brock entrance surprises the player once and loss requires a persistent rival rematch',()=>{
   const g=ready();assert.ok(g.canChallenge(0));assert.ok(g.challenge(0,now));assert.equal(g.data.battle.storyId,'rival-brock');assert.deepEqual(g.battleBoss().team.map(p=>[p.id,p.level]),[[21,9],[133,8]]);begin(g);g.endChallenge(false,now+4000);pages(g);settle(g);

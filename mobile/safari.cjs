@@ -2,7 +2,7 @@
 const {species,captureBonus,wildMinimum}=require('../desktop/pokemon.cjs');
 const {tryCatch}=require('../desktop/battle.cjs');
 // Yellow encounter tables, condensed into one walking expedition. Rare entries
-// keep small weights; this never changes ordinary wild encounter probabilities.
+// keep small weights. Adventure excludes these species from ordinary wilds.
 const pool=[[32,20],[29,20],[102,20],[111,10],[33,8],[30,8],[46,5],[47,4],[104,2],[114,1],[128,1],[115,.5],[113,.3],[123,.2]];
 const DISTANCE=1500,INTERVAL=50,BALLS=30;
 function init(game){game.data.mobileStory.safari ||= {visitedAt:0,trip:null,last:null,serial:0};}

@@ -10,6 +10,7 @@ const safari=require('./safari.cjs');
 const mansion=require('./mansion.cjs');
 const {encounters,byId:rivals,champion}=require('./rivals.cjs');
 const rival=encounters[0];
+const wildExclusions=[131,...safari.pool.map(([id])=>id)];
 const oakIntro=[
   '반갑다! 나는 포켓몬을 연구하는 오박사란다. 작은 모험에 온 걸 환영한다!',
   '이 피카츄가 네 첫 동료란다. 함께 포켓몬을 만나고, 잡고, 키워 보렴.',
@@ -42,6 +43,8 @@ class Adventure extends Engine{
     // Never re-award a newly introduced gift to a save that passed that scene.
     if(story.laprasResolved===undefined)story.laprasResolved=!!(story.silph.completedAt||story.silph.wins[1]||this.data.badges.includes('sabrina'));
     if(story.scene?.next==='rescue-reward')story.scene.name='등나무노인';
+    // An event gift cannot fulfill an old ordinary-wild capture reservation.
+    delete this.data.captureReservations[131];
     const pending=saved.pendingChallenge;
     if((rivals.has(pending?.index)&&this.rivalProgress(pending.index)?.state==='retry')||(storyEncounter(pending?.index)||['safari-start','mansion-investigate'].includes(pending?.index)||pending?.index===6)&&this.canChallenge(pending.index))this.data.pendingChallenge={...pending};
   }
@@ -69,6 +72,8 @@ class Adventure extends Engine{
     if(rivals.has(b?.storyId)&&!b.rivalResolution)this.rivalProgress(b.storyId).state='active';
   }
   rivalProgress(id){return this.data.mobileStory?.rivals?.[id];}
+  wildOptions(){return {...super.wildOptions(),excluded:wildExclusions};}
+  canReserveCapture(id){return id!==131&&super.canReserveCapture(id);}
   canReceiveFlute(){const r=this.data.mobileStory?.rescue;return !!(r?.completedAt&&r.wins.every(Boolean));}
   fluteRewardText(){return '등나무노인에게 포켓몬피리를 받았다!';}
   walkingStep(steps,now){return !this.presentation()&&safari.walk(this,steps,now);}
@@ -298,7 +303,13 @@ class Adventure extends Engine{
     const hints={};if(!story.silph.completedAt&&this.data.badges.includes('koga'))hints[5]='실프주식회사 사건 해결 시 해금';if(!story.mansion.completedAt&&this.data.badges.includes('sabrina'))hints[6]='홍련체육관의 문이 잠겨 있어요.';
     if(s.bosses[12].revealed&&!(this.data.battle?.bossIndex>=8&&!this.data.battle.mobileLeagueRevision))s.bosses[12]={...s.bosses[12],team:champion.team};
     const items=[];if(story.scopeObtainedAt)items.push({id:'silph-scope',name:'실프스코프',count:1});if(story.mansion.keyObtainedAt)items.push({id:'secret-key',name:'비밀열쇠',count:1});
-    const lapras=s.collection.find(p=>p.id===131);if(lapras&&!lapras.acquisition.routes.some(r=>r.kind==='event')){lapras.acquisition.routes.push({kind:'event',text:'모험 중 특별한 만남으로 동료가 될 수 있어요.'});lapras.acquisition.summary+=' · 이벤트';}
+    for(const p of s.collection.filter(p=>wildExclusions.includes(p.id))){
+      const routes=p.acquisition.routes.filter(r=>r.kind!=='wild'),event=p.id===131;
+      const labels={starter:'스타팅',event:'이벤트',hatch:'부화',evolution:'진화'};
+      const summary=[event?'이벤트':'사파리존',...routes.map(r=>r.kind==='evolution'&&r.special?'특수진화':labels[r.kind])];
+      routes.unshift({kind:'event',text:event?'모험 중 특별한 만남으로 동료가 될 수 있어요.':'사파리존에서 만날 수 있어요.'});
+      p.acquisition={...p.acquisition,wildAllowed:false,routes,summary:[...new Set(summary)].join(' · '),note:'일반 야생에서는 출현하지 않아요.'};
+    }
     return {...s,inventory:[...s.inventory,...items],scene:this.presentation(),onboarding:story?.onboarding!=='done',discovery,rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this),silph:silph.snapshot(this),safari:{...safari.snapshot(this),canStart:this.canChallenge('safari-start')},mansion:{...mansion.snapshot(this),canStart:this.canChallenge('mansion-investigate')},mobileGymHints:hints};
   }
 }
