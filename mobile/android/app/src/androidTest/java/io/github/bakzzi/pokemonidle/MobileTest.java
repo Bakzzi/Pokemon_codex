@@ -86,6 +86,14 @@ public final class MobileTest extends Instrumentation {
             Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);
             if("inspect".equals(arguments.getString("mode"))){Thread.sleep(5000);result.putString("diagnostic",js("(()=>{try{return JSON.stringify({document:document.readyState,ready:typeof ready,game:typeof game,active:typeof active,phase:typeof active!=='undefined'?active:null,party:document.getElementById('battle')?.contentDocument.querySelectorAll('#party button').length,call:(()=>{try{window.mobileLifecycle(true);return 'ok'}catch(e){return e.stack}})()})}catch(e){return e.stack}})()"));finish(Activity.RESULT_OK,result);return;}
             waitReady();Thread.sleep(1500);
+            if("league-portraits".equals(arguments.getString("mode"))){
+                getTargetContext().getSharedPreferences("steps",0).edit().putLong("total",0).commit();js("refreshNative()");
+                result.putString("portraits",layoutChecks("league-portraits.js"));Thread.sleep(300);screenshot("league-portraits.png");
+                js("revealLeaguePortrait().then(()=>globalThis.portraitRevealed=true).catch(e=>globalThis.layoutError=String(e))");
+                for(int i=0;i<100&&!"true".equals(js("!!globalThis.portraitRevealed"));i++){require("\"\"".equals(js("globalThis.layoutError||''")),"Champion reveal failed");Thread.sleep(100);}
+                require("true".equals(js("!!globalThis.portraitRevealed")),"Champion reveal did not finish");Thread.sleep(1000);screenshot("league-portrait-revealed.png");
+                result.putInt("portraitRevealChecks",1);result.putString("geometry",checkInsets());result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("story-expansion".equals(arguments.getString("mode"))){
                 getTargetContext().getSharedPreferences("steps",0).edit().putLong("total",0).commit();js("refreshNative()");
                 result.putString("expandedStory",layoutChecks("story-expansion.js"));Thread.sleep(400);screenshot("safari-report.png");

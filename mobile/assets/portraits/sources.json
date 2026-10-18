@@ -1,0 +1,55 @@
+{
+  "source": "Original FireRed and LeafGreen character artwork via Bulbagarden Archives; unchanged PNGs, original copyright retained.",
+  "images": [
+    {
+      "id": "lorelei",
+      "file": "lorelei.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:FireRed_LeafGreen_Lorelei.png",
+      "source": "https://archives.bulbagarden.net/media/upload/8/89/FireRed_LeafGreen_Lorelei.png",
+      "width": 334,
+      "height": 751,
+      "bytes": 266247,
+      "sha256": "a1fc9dfd59403453986b1d28fdbb3a2c46ff647c8b43a9f1b579192e9b7582a5"
+    },
+    {
+      "id": "bruno",
+      "file": "bruno.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:FireRed_LeafGreen_Bruno.png",
+      "source": "https://archives.bulbagarden.net/media/upload/c/c1/FireRed_LeafGreen_Bruno.png",
+      "width": 382,
+      "height": 566,
+      "bytes": 376855,
+      "sha256": "b5a26262c459f22bd6eefa5d7d43397fd36886ca2db1a15ea73576931db4a2eb"
+    },
+    {
+      "id": "agatha",
+      "file": "agatha.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:FireRed_LeafGreen_Agatha.png",
+      "source": "https://archives.bulbagarden.net/media/upload/d/d1/FireRed_LeafGreen_Agatha.png",
+      "width": 352,
+      "height": 719,
+      "bytes": 340202,
+      "sha256": "541f6f29e56626605ff3443fe1af0e9ff47e54df8bcb75efd0f0f49584ef681f"
+    },
+    {
+      "id": "lance",
+      "file": "lance.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:FireRed_LeafGreen_Lance.png",
+      "source": "https://archives.bulbagarden.net/media/upload/e/e9/FireRed_LeafGreen_Lance.png",
+      "width": 415,
+      "height": 820,
+      "bytes": 467612,
+      "sha256": "31764fd01b65d212cbc53f9062aad78e95a0f13df840c43ae063ca2cb0ca51c0"
+    },
+    {
+      "id": "champion",
+      "file": "champion.png",
+      "page": "https://archives.bulbagarden.net/wiki/File:FireRed_LeafGreen_Blue.png",
+      "source": "https://archives.bulbagarden.net/media/upload/d/db/FireRed_LeafGreen_Blue.png",
+      "width": 1680,
+      "height": 2764,
+      "bytes": 2061020,
+      "sha256": "7f6ac3a8da7da7fbe0112eeac2fee5b2c65631de20f925182d4bb1a1f8954a06"
+    }
+  ]
+}
