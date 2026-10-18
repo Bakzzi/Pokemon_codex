@@ -20,9 +20,9 @@ final class BackgroundChecks {
         AdventureStore store=AdventureStore.get(context);Object owner=new Object();store.claimUi(owner);
         // An existing adventure: a fresh installation now waits for its first dialogue.
         check(store.saveUi(owner,"{\"format\":1,\"game\":{\"version\":1},\"mobile\":{\"consumed\":0},\"savedAt\":0}"),"Fixture save failed");store.releaseUi(owner);
-        android.content.SharedPreferences prefs=context.getSharedPreferences("steps",0);prefs.edit().putLong("total",0).commit();
+        android.content.SharedPreferences prefs=context.getSharedPreferences("steps",0);prefs.edit().putLong("total",0).putLong("lockMillis",0).putLong("lockEpoch",0).commit();
         StepService service=new StepService();java.lang.reflect.Method attach=ContextWrapper.class.getDeclaredMethod("attachBaseContext",Context.class);attach.setAccessible(true);attach.invoke(service,context);
-        StepLedger ledger=new StepLedger();WalkingCounter walking=new WalkingCounter();set(service,"ledger",ledger);set(service,"walking",walking);set(service,"prefs",prefs);set(service,"boot",1L);
+        StepLedger ledger=new StepLedger();WalkingCounter walking=new WalkingCounter();set(service,"ledger",ledger);set(service,"walking",walking);set(service,"locks",new LockLedger());set(service,"prefs",prefs);set(service,"boot",1L);
         context.getSystemService(NotificationManager.class).createNotificationChannel(new NotificationChannel("walking","걸음 모험",NotificationManager.IMPORTANCE_LOW));
         BackgroundAdventure runner=BackgroundAdventure.get(context);long now=System.currentTimeMillis();
         service.recordSample(0,100,now,now);service.recordSample(9,200,now,now);await(runner,store,0);

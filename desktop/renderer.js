@@ -205,7 +205,7 @@ window.buddy.onState(s=>{
   $('xp-bar').style.width=s.progress*100+'%';$('evolution').textContent=s.evolution.some(e=>e.automatic&&e.ready)?'자동진화 대기 · 배틀 종료 후':s.evolution.some(e=>e.ready)?'진화 가능 · 도감에서 확인':'';
   const boost=s.experienceBoost,pct=boost.percent.toLocaleString('ko-KR',{maximumFractionDigits:2});
   $('xp-boost').textContent='BOOST +'+pct+'%';$('xp-boost').title='누적 도감 '+boost.count+'종 · 1종당 경험치 +1% · 시즌이 바뀌어도 유지';
-  $('status').textContent=s.notice||(s.pendingActions.length?s.pendingActions[0].name+' 예약 · '+s.pendingActions[0].reason:s.pendingChallenge?s.pendingChallenge.name+' 도전 예약 · 배틀 종료 후 시작':s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.phase==='working'?'에이전트 작업과 함께 모험 중':s.workTokens>=250?'작업의 여운으로 모험을 이어가는 중':s.phase==='unknown'?'에이전트 작업 상태를 확인하는 중':s.phase==='done'?'작업 끝! 모험 기록을 확인해 봐':'다음 코딩을 기다리는 중');
+  $('status').textContent=s.notice||(s.pendingActions.length?s.pendingActions[0].name+' 예약 · '+s.pendingActions[0].reason:s.pendingChallenge?s.pendingChallenge.name+' 도전 예약 · 진행 중인 동작 후 시작':s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.phase==='working'?'에이전트 작업과 함께 모험 중':s.workTokens>=250?'작업의 여운으로 모험을 이어가는 중':s.phase==='unknown'?'에이전트 작업 상태를 확인하는 중':s.phase==='done'?'작업 끝! 모험 기록을 확인해 봐':'다음 코딩을 기다리는 중');
   $('mode-tag').textContent=s.demo?'DEMO':'LIVE';
   $('connection-label').textContent=s.demo?'미리보기':agent.connection;
   $('connection-label').parentElement.classList.toggle('live',agent.connected&&!s.demo);$('connection-label').title=s.demo?'미리보기 · 경험치 별도':agent.detail;

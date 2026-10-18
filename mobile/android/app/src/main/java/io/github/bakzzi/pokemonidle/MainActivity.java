@@ -49,6 +49,15 @@ public final class MainActivity extends Activity {
         WebView.setWebContentsDebuggingEnabled((getApplicationInfo().flags&android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE)!=0);
         web.addJavascriptInterface(new Bridge(),"Android");
         web.setWebViewClient(new WebViewClient(){
+            @Override public boolean onRenderProcessGone(WebView view,RenderProcessGoneDetail detail){
+                // Background renderers may be reclaimed. The atomic native save
+                // remains authoritative; never call the dead JS bridge again.
+                if(view==web){web=null;jsReady=false;uiLoaded=false;releaseAdventure();}
+                if(view.getParent() instanceof ViewGroup)((ViewGroup)view.getParent()).removeView(view);
+                view.destroy();
+                updateHandler.post(()->{if(!isFinishing()&&!isDestroyed())recreate();});
+                return true;
+            }
             @Override public WebResourceResponse shouldInterceptRequest(WebView v,WebResourceRequest r){
                 Uri u=r.getUrl();String p=u.getPath();
                 if(!"https".equals(u.getScheme())||!"game.pokemon.local".equals(u.getHost())||p==null||p.contains("..")||!r.getMethod().equals("GET"))return denied();
@@ -63,9 +72,9 @@ public final class MainActivity extends Activity {
     private static WebResourceResponse denied(){return new WebResourceResponse("text/plain","UTF-8",403,"Forbidden",java.util.Map.of(),new ByteArrayInputStream(new byte[0]));}
     @Override protected void onResume(){super.onResume();visible=true;UpdateCompletion.dismissNotice(this);uiLoaded=false;adventure.claimUi(this);BackgroundAdventure.get(this).closeWhenIdle();StepService.visibility(true);if(web!=null){web.onResume();if(jsReady)web.evaluateJavascript("window.mobileLifecycle(true,true)",null);}StepService.start(this);if(updater!=null)updater.check(false);updateHandler.removeCallbacks(updatePoll);updateHandler.postDelayed(updatePoll,60000);}
     private void releaseAdventure(){adventure.releaseUi(this);BackgroundAdventure.get(this).request();}
-    @Override protected void onPause(){visible=false;updateHandler.removeCallbacks(updatePoll);StepService.visibility(false);if(jsReady)web.evaluateJavascript("window.mobileLifecycle(false)",value->{if(!visible){web.onPause();releaseAdventure();}});else{web.onPause();releaseAdventure();}super.onPause();}
+    @Override protected void onPause(){visible=false;updateHandler.removeCallbacks(updatePoll);StepService.visibility(false);WebView paused=web;if(jsReady&&paused!=null)paused.evaluateJavascript("window.mobileLifecycle(false)",value->{if(!visible){if(web==paused)paused.onPause();releaseAdventure();}});else{if(paused!=null)paused.onPause();releaseAdventure();}super.onPause();}
     @Override protected void onDestroy(){updateHandler.removeCallbacks(updatePoll);releaseAdventure();if(web!=null){web.removeJavascriptInterface("Android");web.destroy();}super.onDestroy();}
-    private void handleBack(){web.evaluateJavascript("window.mobileBack&&window.mobileBack()",value->{if(!"true".equals(value))moveTaskToBack(true);});}
+    private void handleBack(){if(web!=null)web.evaluateJavascript("window.mobileBack&&window.mobileBack()",value->{if(!"true".equals(value))moveTaskToBack(true);});}
     // API 31-32 use this fallback. API 33+ registers the platform predictive-back API above.
     @android.annotation.SuppressLint("GestureBackNavigation") @SuppressWarnings("deprecation") @Override public void onBackPressed(){handleBack();}
     @Override public void onRequestPermissionsResult(int request,String[] permissions,int[] results){super.onRequestPermissionsResult(request,permissions,results);if(request==42&&checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION)==PackageManager.PERMISSION_GRANTED){getSharedPreferences("steps",0).edit().putBoolean("enabled",true).putLong("count",-1).putLong("walkingCount",-1).commit();StepService.start(this);}}
@@ -79,10 +88,10 @@ public final class MainActivity extends Activity {
         @JavascriptInterface public String load(){return readSave();}
         @JavascriptInterface public boolean save(String text){return writeSave(text);}
         @JavascriptInterface public boolean foreground(){return visible;}
-        @JavascriptInterface public void ready(){runOnUiThread(()->{jsReady=true;web.evaluateJavascript("window.mobileLifecycle("+visible+",true)",null);});}
-        @JavascriptInterface public String status(){try{android.content.SharedPreferences p=getSharedPreferences("steps",0);boolean enabled=p.getBoolean("enabled",false);boolean supported=StepService.supported(MainActivity.this);return new JSONObject().put("steps",p.getLong("total",0)).put("backgroundError",p.getString("backgroundError","")) .put("todaySteps",StepService.today(MainActivity.this)).put("lifetimeSteps",StepService.lifetime(MainActivity.this)).put("stepsEnabled",enabled).put("sensorSupported",supported).put("tracking",enabled&&StepService.instance!=null).put("sensor",!supported?"걸음 센서가 없는 기기예요. 켜 둔 모험을 이용할 수 있어요.":p.getString("error",enabled?"걸음 기록이 켜져 있어요. 강제 종료·절전 설정에 따라 기록이 멈출 수 있어요.":"권한을 허용하면 걸음 기록 알림이 표시돼요.")).put("versionName",updater.installedName).put("versionCode",updater.installedCode).put("updateChecking",updater.busy).put("update",updater.status).put("updateReady",updater.ready).put("installing",updater.installing).put("pendingInstall",updater.pending!=null).put("canInstall",getPackageManager().canRequestPackageInstalls()).toString();}catch(JSONException e){throw new IllegalStateException(e);}}
+        @JavascriptInterface public void ready(){runOnUiThread(()->{if(web!=null){jsReady=true;web.evaluateJavascript("window.mobileLifecycle("+visible+",true)",null);}});}
+        @JavascriptInterface public String status(){try{android.content.SharedPreferences p=getSharedPreferences("steps",0);boolean enabled=p.getBoolean("enabled",false);boolean supported=StepService.supported(MainActivity.this);return new JSONObject().put("steps",p.getLong("total",0)).put("lockMillis",p.getLong("lockMillis",0)).put("lockEpoch",p.getLong("lockEpoch",0)).put("monitorError",p.getString("monitorError","")).put("backgroundError",p.getString("backgroundError","")) .put("todaySteps",StepService.today(MainActivity.this)).put("lifetimeSteps",StepService.lifetime(MainActivity.this)).put("stepsEnabled",enabled).put("sensorSupported",supported).put("tracking",enabled&&StepService.instance!=null).put("sensor",!supported?"걸음 센서가 없는 기기예요. 잠금 시간으로 모험할 수 있어요.":p.getString("error",enabled?"걸음 기록이 켜져 있어요. 강제 종료·절전 설정에 따라 기록이 멈출 수 있어요.":"권한을 허용하면 걸음 기록 알림이 표시돼요.")).put("versionName",updater.installedName).put("versionCode",updater.installedCode).put("updateChecking",updater.busy).put("update",updater.status).put("updateReady",updater.ready).put("installing",updater.installing).put("pendingInstall",updater.pending!=null).put("canInstall",getPackageManager().canRequestPackageInstalls()).toString();}catch(JSONException e){throw new IllegalStateException(e);}}
         @JavascriptInterface public void enableSteps(){runOnUiThread(()->{if(!StepService.supported(MainActivity.this))return;requestPermissions(Build.VERSION.SDK_INT>=33?new String[]{Manifest.permission.ACTIVITY_RECOGNITION,Manifest.permission.POST_NOTIFICATIONS}:new String[]{Manifest.permission.ACTIVITY_RECOGNITION},42);});}
-        @JavascriptInterface public void disableSteps(){runOnUiThread(()->{getSharedPreferences("steps",0).edit().putBoolean("enabled",false).putLong("count",-1).putLong("walkingCount",-1).commit();stopService(new Intent(MainActivity.this,StepService.class));});}
+        @JavascriptInterface public void disableSteps(){runOnUiThread(()->{getSharedPreferences("steps",0).edit().putBoolean("enabled",false).putLong("count",-1).putLong("walkingCount",-1).commit();StepService.start(MainActivity.this);});}
         @JavascriptInterface public void allowUpdates(){runOnUiThread(()->startActivity(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,Uri.parse("package:"+getPackageName()))));}
         @JavascriptInterface public void checkUpdate(){updater.check(true);}
         @JavascriptInterface public void installUpdate(){updater.install();}

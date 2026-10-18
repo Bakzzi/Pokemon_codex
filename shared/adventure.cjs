@@ -14,7 +14,7 @@ const wildExclusions=[131,...safari.pool.map(([id])=>id)];
 const oakIntro=[
   '반갑다! 나는 포켓몬을 연구하는 오박사란다. 작은 모험에 온 걸 환영한다!',
   '이 피카츄가 네 첫 동료란다. 함께 포켓몬을 만나고, 잡고, 키워 보렴.',
-  '앱을 켜 두면 자동으로 모험한단다. 꺼 둔 동안에는 10걸음마다 모험이 이어지지.',
+  '폰을 잠그면 10초마다 모험한단다. 잠근 동안 10걸음을 걸으면 한 번 더 모험하지. 도전 배틀은 직접 지켜볼 수 있어.',
   '포켓기어에서 동료를 살펴보고, 도전하기에서 실력을 시험해 보렴. 물건은 가방에 있단다.'
 ];
 const oakClose=['첫 배틀은 어땠니? 이기든 지든 동료와 함께 배우면 된단다. 피카츄는 회복해 두었단다.','이제 너희의 모험이 시작이다! 새로 만난 동료와 모험 기록도 가끔 살펴보렴.'];
@@ -42,6 +42,7 @@ class Adventure extends Engine{
     const pending=saved.pendingChallenge;
     if((rivals.has(pending?.index)&&this.rivalProgress(pending.index)?.state==='retry')||(storyEncounter(pending?.index)||['safari-start','mansion-investigate'].includes(pending?.index)||pending?.index===6)&&this.canChallenge(pending.index))this.data.pendingChallenge={...pending};
     const scene=story.scene,b=this.data.battle;
+    if(this.platform==='mobile'&&scene?.kind==='oak'&&scene.pages)scene.pages=scene.pages.map(text=>text==='앱을 켜 두면 자동으로 모험한단다. 꺼 둔 동안에는 10걸음마다 모험이 이어지지.'?oakIntro[2]:text);
     if(b?.kind==='trainer'&&scene?.mode==='dialogue'){
       const boss=this.battleBoss(b);
       if(scene.next==='sendout'&&scene.pages?.[0]===boss.name+'의 도전!')scene.pages=trainerDialogue.intro(boss,this.data.champion);
@@ -179,7 +180,7 @@ class Adventure extends Engine{
   challengeName(index){return index==='safari-start'?'사파리존 출발':index==='mansion-investigate'?'폐저택 조사':rivals.has(index)?'그린 재도전':storyEncounter(index)?.name||super.challengeName(index);}
   challenge(index,now=Date.now()){
     if(!rivals.has(index)&&!storyEncounter(index)&&!['safari-start','mansion-investigate'].includes(index))return super.challenge(index,now);
-    if(!this.canChallenge(index)||this.data.battle?.kind==='trainer')return false;
+    if(!this.canChallenge(index)||this.data.battle&&(this.data.battle.kind==='trainer'||this.data.battle.storyId))return false;
     if(this.data.pendingChallenge)return this.data.pendingChallenge.index===index;
     if(this.data.battle||this.data.pendingBattle||now<this.data.switchUntil||now<this.nextTick){
       this.data.pendingChallenge={index,queuedAt:now};this.log(this.challengeName(index)+' 예약','challenge',null,now);return true;
@@ -202,7 +203,7 @@ class Adventure extends Engine{
     if(!this.canChallenge(index)||this.data.battle||this.data.pendingBattle||now<this.data.switchUntil)return false;
     const e=encounter;
     if(storyEncounter(e.id))this.data.mobileStory[silph.byId.has(e.id)?'silph':'rescue'].investigatedAt ||= now;
-    this.data.pendingChallenge=null;this.data.captureAnimation=null;this.data.suspendedWild=null;this.data.manualSelection=false;
+    this.data.pendingChallenge=null;this.data.captureAnimation=null;this.data.manualSelection=false;
     const party=Object.fromEntries(this.data.slots.filter(uid=>uid!==null&&!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
     this.data.battle={kind:'trainer',mobileStoryRevision:3,bossIndex:e.id,storyId:e.id,foeIndex:0,party,turn:0,startedAt:now};
     if(rivals.has(e.id)){const p=this.rivalProgress(e.id);p.state='active';p.metAt ||= now;}
@@ -218,7 +219,7 @@ class Adventure extends Engine{
   completeRival(won,now){
     const b=this.data.battle,e=rivals.get(b?.storyId);if(!e||!b.rivalResolution)return;
     const p=this.rivalProgress(e.id);p.state=e.stage===0?'completed':won?'won':'retry';p.outcome=won?'win':'loss';if(won)p.wonAt=now;
-    this.data.pendingBattle=null;this.data.pendingChallenge=null;this.data.battle=null;this.data.suspendedWild=null;
+    this.data.pendingChallenge=null;this.restoreWild(now);
     if(e.stage===0){this.data.mobileStory.onboarding='closing';this.dialogue('oak','오박사','oak',oakClose,'adventure',now);}
     else this.animate('result',{text:won?'그린에게 승리했다! 모험을 계속하자.':'동료들을 회복했어요. 도전하기에서 그린에게 다시 도전하세요.'},now);
   }
@@ -245,7 +246,7 @@ class Adventure extends Engine{
     }
     super.defeatOpponent(now,captured);
     if(b?.kind==='wild'&&!b.storyId&&this.data.mobileStory.mansion.startedAt&&!this.data.mobileStory.mansion.completedAt)this.data.mobileStory.mansion.wins++;
-    if(b?.storyId==='road-snorlax'&&!this.data.battle)this.data.animation.text=captured?'잠만보를 깨워 함께 모험하기로 했어요. 독수에게 도전할 수 있어요.':'잠만보를 물리쳐 길이 열렸어요. 독수에게 도전할 수 있어요.';
+    if(b?.storyId==='road-snorlax'&&this.data.battle!==b)this.data.animation.text=captured?'잠만보를 깨워 함께 모험하기로 했어요. 독수에게 도전할 수 있어요.':'잠만보를 물리쳐 길이 열렸어요. 독수에게 도전할 수 있어요.';
   }
   finishTrainerWin(now){
     const b=this.data.battle,e=storyEncounter(b?.storyId);
@@ -257,7 +258,7 @@ class Adventure extends Engine{
     }
     const isSilph=silph.byId.has(e.id),r=this.data.mobileStory[isSilph?'silph':'rescue'];
     if(!r.wins[e.stage]){this.awardXp(b.foe,e.xpTrainer!==false,now);this.data.battles++;journal.increment(this.data,'wins');r.wins[e.stage]=now;this.log(e.ghost?'어미 텅구리의 영혼이 안식을 찾았다.':e.name+'에게 승리!','story',null,now);}
-    this.data.battle=null;this.data.pendingBattle=null;this.data.pendingChallenge=null;this.data.suspendedWild=null;
+    this.data.pendingChallenge=null;this.restoreWild(now);
     if(isSilph){
       if(r.wins.every(Boolean))r.completedAt=now;
       this.animate('result',{text:r.completedAt?'실프주식회사를 구했다! 초련에게 도전할 수 있어요.':e.name+'에게 승리했다!'},now);

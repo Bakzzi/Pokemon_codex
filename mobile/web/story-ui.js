@@ -11,7 +11,7 @@ function installStoryUI(){
     const now=Date.now();active=false;catchingUp=false;refreshNative();
     game=new MobileCore.Adventure({},now);
     // Preserve the pedometer but discard old, unpaid game activity too.
-    progression=new MobileProgression(game,{consumed:nativeState.steps,pausedAt:now},MobileConfig.stepsPerAction);
+    progression=new MobileProgression(game,{consumed:nativeState.steps,lockConsumed:nativeState.lockMillis||0,pausedAt:now},MobileConfig.stepsPerAction);
     fatal=false;notice='';
     if(!save()){publish();return;}
     $('reset-confirm').close();$('settings').close();

@@ -12,12 +12,14 @@ try{
     if($LASTEXITCODE -ne 0){throw 'Battle presentation checks failed.'}
     $testOutput=Join-Path $projectRoot 'desktop/.smoke/mobile-tests'
     [IO.Directory]::CreateDirectory($testOutput)|Out-Null
-    & "$jbr/bin/javac.exe" -d $testOutput mobile/android/app/src/main/java/io/github/bakzzi/pokemonidle/StepLedger.java mobile/android/app/src/main/java/io/github/bakzzi/pokemonidle/WalkingCounter.java mobile/test/StepLedgerTest.java mobile/test/WalkingCounterTest.java
+    & "$jbr/bin/javac.exe" -d $testOutput mobile/android/app/src/main/java/io/github/bakzzi/pokemonidle/StepLedger.java mobile/android/app/src/main/java/io/github/bakzzi/pokemonidle/WalkingCounter.java mobile/android/app/src/main/java/io/github/bakzzi/pokemonidle/LockLedger.java mobile/test/StepLedgerTest.java mobile/test/WalkingCounterTest.java mobile/test/LockLedgerTest.java
     if($LASTEXITCODE -ne 0){throw 'Step ledger compilation failed.'}
     & "$jbr/bin/java.exe" -cp $testOutput StepLedgerTest
     if($LASTEXITCODE -ne 0){throw 'Step ledger checks failed.'}
     & "$jbr/bin/java.exe" -cp $testOutput WalkingCounterTest
     if($LASTEXITCODE -ne 0){throw 'Walking counter checks failed.'}
+    & "$jbr/bin/java.exe" -cp $testOutput LockLedgerTest
+    if($LASTEXITCODE -ne 0){throw 'Lock ledger checks failed.'}
     if($WithBuild){
         & ./mobile/scripts/build-android.ps1
         if($LASTEXITCODE -ne 0){throw 'APK build failed.'}

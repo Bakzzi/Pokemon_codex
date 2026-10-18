@@ -45,10 +45,10 @@ test('native resume reloads the saved background result before continuing the UI
   assert.equal(f.snapshot().game.fixtureMarker,'background result');assert.equal(f.snapshot().mobile.consumed,40);
 });
 test('reset requires a separate confirmation, discards progress and old walking rewards, then persists Oak',()=>{
-  const f=fixture();f.status.steps=3210;f.run('game.addPokemon(150,80,"fixture",Date.now());game.data.badges=["brock"];game.data.inventory[83]=4;save();');const before=f.stored();
+  const f=fixture();f.status.steps=3210;f.status.lockMillis=654321;f.run('game.addPokemon(150,80,"fixture",Date.now());game.data.badges=["brock"];game.data.inventory[83]=4;save();');const before=f.stored();
   f.run('$("reset-open").onclick()');assert.equal(f.run('$("reset-confirm").open'),true);assert.deepEqual(f.stored(),before);
   f.run('$("reset-cancel").onclick()');assert.deepEqual(f.stored(),before);
   f.run('$("reset-open").onclick();$("reset-accept").onclick()');const s=f.stored();
-  assert.equal(Object.keys(s.game.owned).length,1);assert.deepEqual(Object.keys(s.game.caught),['25']);assert.deepEqual(s.game.badges,[]);assert.deepEqual(s.game.inventory,{});assert.equal(s.mobile.consumed,3210);assert.equal(s.game.mobileStory.scene.sprite,'oak');assert.equal(f.run('$("reset-confirm").open'),false);
+  assert.equal(Object.keys(s.game.owned).length,1);assert.deepEqual(Object.keys(s.game.caught),['25']);assert.deepEqual(s.game.badges,[]);assert.deepEqual(s.game.inventory,{});assert.equal(s.mobile.consumed,3210);assert.equal(s.mobile.lockConsumed,654321);assert.equal(s.game.mobileStory.scene.sprite,'oak');assert.equal(f.run('$("reset-confirm").open'),false);
   f.run('mobileLifecycle(true,true)');assert.equal(f.snapshot().game.mobileStory.scene.sprite,'oak');assert.equal(f.snapshot().mobile.consumed,3210);
 });

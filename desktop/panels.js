@@ -185,7 +185,7 @@ function renderBosses(){
     const b=node('button','',done?'뱃지 획득 완료':queued?.index===i?'도전 예약됨':rocketLocked?'로켓단 아지트 격파 시 해금':roadLocked?'길을 막는 잠만보 해결 시 해금':i>state.badges.length?'앞선 체육관 뱃지가 필요해요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||!!queued||!state.gymAccess[i];b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;
   }));
   $('ongoing').hidden=!busy&&!queued;
-  if(queued){$('ongoing').replaceChildren(node('span','',queued.name+' 도전 예약 · '+(state.battle?'현재 배틀이 끝나면 시작해요.':'마지막 연출이 끝나면 시작해요.')));const b=node('button','','예약 취소');b.dataset.cancelChallenge='';b.onclick=()=>window.buddy.action('challenge-cancel');$('ongoing').append(b);}
+  if(queued){$('ongoing').replaceChildren(node('span','',queued.name+' 도전 예약 · '+(state.battle?'진행 중인 동작이 끝나면 시작해요.':'마지막 연출이 끝나면 시작해요.')));const b=node('button','','예약 취소');b.dataset.cancelChallenge='';b.onclick=()=>window.buddy.action('challenge-cancel');$('ongoing').append(b);}
   else if(busy){$('ongoing').replaceChildren(node('span','',state.battle.boss+' · '+(state.battle.foeIndex+1)+' / '+state.battle.teamSize+'마리와 배틀 중'));const b=node('button','','도전 그만두기');b.onclick=()=>window.buddy.action('abandon');$('ongoing').append(b);}
   $('league-start').disabled=state.badges.length<8||busy||!!queued;$('league-start').textContent=queued?.index===8?'리그 도전 예약됨':state.champion?'리그 재도전':'리그 도전';
   $('league-team').replaceChildren(...state.bosses.slice(8).map((b,i)=>{const e=node('article','league-member');e.append(node('h3','',(i===4?'챔피언 ':'')+b.name),trainerTeam(b));return e;}));

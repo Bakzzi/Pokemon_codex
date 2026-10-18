@@ -37,7 +37,7 @@ test('native healing clears the status badge at impact, with the previous status
   assert.equal(pacing.healthAt(event,'hero',now+t.impactAt,event.hero).status,null);
 });
 
-test('a counterattack waits for the previous action even when more work arrives',()=>{
+test('more work cannot interrupt an attack; a queued challenge hands off before another counterattack',()=>{
   const g=fixture();g.tick(now);const action=structuredClone(g.data.animation),end=g.data.switchUntil;
   assert.equal(action.actor,'hero');assert.equal(g.data.workTokens,9750);
   const token=(output,t)=>({type:'event_msg',timestamp:new Date(t).toISOString(),payload:{type:'token_count',info:{total_token_usage:{output_tokens:output,total_tokens:output}}}});
@@ -45,7 +45,7 @@ test('a counterattack waits for the previous action even when more work arrives'
   const queued=g.data.workTokens;assert.equal(g.tick(end-1),false);assert.equal(g.data.workTokens,queued);assert.deepEqual(g.data.animation,action);
   assert.equal(g.select(7,end-1),false);assert.ok(g.challenge(0,end-1));assert.equal(g.data.pendingChallenge.index,0);assert.deepEqual(g.data.animation,action);
   const loaded=new Game(g.data,now+100,{random:()=>0});assert.equal(loaded.tick(end-1),false);
-  assert.ok(loaded.tick(end));assert.equal(loaded.data.animation.actor,'foe');assert.equal(loaded.data.workTokens,queued-250);
+  assert.ok(loaded.tick(end));assert.equal(loaded.data.battle.kind,'trainer');assert.ok(loaded.data.suspendedWild);assert.equal(loaded.data.workTokens,queued);
 });
 
 test('capture starts only after the triggering attack and its result, across a reload',()=>{

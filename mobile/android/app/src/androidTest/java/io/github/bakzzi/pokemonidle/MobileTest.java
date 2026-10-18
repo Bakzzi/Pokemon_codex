@@ -87,6 +87,49 @@ public final class MobileTest extends Instrumentation {
             Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);
             if("inspect".equals(arguments.getString("mode"))){Thread.sleep(5000);result.putString("diagnostic",js("(()=>{try{return JSON.stringify({document:document.readyState,ready:typeof ready,game:typeof game,active:typeof active,phase:typeof active!=='undefined'?active:null,party:document.getElementById('battle')?.contentDocument.querySelectorAll('#party button').length,call:(()=>{try{window.mobileLifecycle(true);return 'ok'}catch(e){return e.stack}})()})}catch(e){return e.stack}})()"));finish(Activity.RESULT_OK,result);return;}
             waitReady();Thread.sleep(1500);
+            if("lock-adventure".equals(arguments.getString("mode"))){
+                Application.ActivityLifecycleCallbacks lockLifecycle=new Application.ActivityLifecycleCallbacks(){
+                    public void onActivityResumed(Activity a){if(a instanceof MainActivity)resumedActivity=(MainActivity)a;}
+                    public void onActivityCreated(Activity a,Bundle b){} public void onActivityStarted(Activity a){}
+                    public void onActivityPaused(Activity a){} public void onActivityStopped(Activity a){}
+                    public void onActivitySaveInstanceState(Activity a,Bundle b){} public void onActivityDestroyed(Activity a){}
+                };
+                activity.getApplication().registerActivityLifecycleCallbacks(lockLifecycle);
+                require(StepService.instance!=null,"Lock monitor did not start without step permission");
+                require(!getTargetContext().getSharedPreferences("steps",0).getBoolean("enabled",false),"Expected sensor-free fixture");
+                js("game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);refreshNative();progression=new MobileProgression(game,{consumed:nativeState.steps,lockConsumed:nativeState.lockMillis});progression.resume(Date.now());active=true;save();publish()");
+                String unchanged=js("JSON.stringify(game.data)");Thread.sleep(11000);require(unchanged.equals(js("JSON.stringify(game.data)")),"Unlocked foreground generated adventure actions");
+                runOnMainSync(()->activity.startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));
+                for(int i=0;i<100&&AdventureStore.get(getTargetContext()).backgroundSnapshot()==null;i++)Thread.sleep(50);
+                require(!MainActivity.visible,"App did not leave foreground");long baseline=getTargetContext().getSharedPreferences("steps",0).getLong("lockMillis",0);
+                String homeGame=new JSONObject(readSave()).getJSONObject("game").toString();Thread.sleep(11000);
+                require(homeGame.equals(new JSONObject(readSave()).getJSONObject("game").toString()),"Using another app generated adventure actions");
+                require(baseline==getTargetContext().getSharedPreferences("steps",0).getLong("lockMillis",0),"Unlocked home time was counted");
+                try(InputStream cmd=new ParcelFileDescriptor.AutoCloseInputStream(getUiAutomation().executeShellCommand("input keyevent KEYCODE_SLEEP"))){cmd.readAllBytes();}
+                BackgroundAdventure runner=BackgroundAdventure.get(getTargetContext());JSONObject lockedSave=null;long end=SystemClock.elapsedRealtime()+45000;
+                do{Thread.sleep(500);runner.barrier().get(35,TimeUnit.SECONDS);lockedSave=new JSONObject(readSave());}while(lockedSave.getJSONObject("mobile").optLong("lockConsumed",0)<baseline+10000&&SystemClock.elapsedRealtime()<end);
+                require(lockedSave.getJSONObject("mobile").getLong("lockConsumed")>=baseline+10000,"Lock time did not produce a background action");
+                require(!lockedSave.getJSONObject("game").isNull("battle"),"Headless lock action did not create an encounter");
+                require(lockedSave.getJSONObject("mobile").getLong("consumed")==0,"Time action spent steps");
+                try(InputStream cmd=new ParcelFileDescriptor.AutoCloseInputStream(getUiAutomation().executeShellCommand("input keyevent KEYCODE_WAKEUP"))){cmd.readAllBytes();}
+                try(InputStream cmd=new ParcelFileDescriptor.AutoCloseInputStream(getUiAutomation().executeShellCommand("wm dismiss-keyguard"))){cmd.readAllBytes();}
+                try(InputStream cmd=new ParcelFileDescriptor.AutoCloseInputStream(getUiAutomation().executeShellCommand("am start -W -n io.github.bakzzi.pokemonidle/.MainActivity"))){cmd.readAllBytes();}
+                for(int i=0;i<100&&resumedActivity==null;i++)Thread.sleep(50);require(resumedActivity!=null&&MainActivity.visible,"App did not resume after unlock");
+                activity=resumedActivity;activity.getApplication().unregisterActivityLifecycleCallbacks(lockLifecycle);web=(WebView)field.get(activity);Thread.sleep(1000);waitReady();
+                require("true".equals(js("progression.lockConsumed>=10000&&!catchingUp")),"UI did not reload background lock cursor");
+                String afterUnlock=js("JSON.stringify(game.data)");Thread.sleep(11000);require(afterUnlock.equals(js("JSON.stringify(game.data)")),"Wild battle continued while unlocked");
+                require("true".equals(js("game.data.mobileStory.rivals['rival-brock'].state='won';game.data.pendingBattle=null;game.data.battle=null;game.newWild(Date.now()-10000);game.nextTick=Date.now();game.data.switchUntil=Date.now();globalThis.pausedFoe=JSON.stringify(game.data.battle.foe);action('challenge',0);true")),"Challenge request failed");
+                Thread.sleep(1500);require("true".equals(js("game.data.battle.kind==='trainer'&&JSON.stringify(game.data.suspendedWild.foe)===pausedFoe&&!!game.presentation()")),"Foreground challenge did not suspend wild encounter");
+                runOnMainSync(()->activity.new Bridge().disableSteps());Thread.sleep(500);require(StepService.instance!=null,"Disabling steps stopped lock monitoring");
+                String beforeRenderer=js("save();JSON.stringify(game.data)");MainActivity oldActivity=activity;resumedActivity=null;
+                activity.getApplication().registerActivityLifecycleCallbacks(lockLifecycle);
+                runOnMainSync(()->require(web.getWebViewRenderProcess()!=null&&web.getWebViewRenderProcess().terminate(),"Renderer termination fixture failed"));
+                for(int i=0;i<200&&(resumedActivity==null||resumedActivity==oldActivity);i++)Thread.sleep(50);
+                require(resumedActivity!=null&&resumedActivity!=oldActivity,"Terminated renderer did not recreate the screen");activity=resumedActivity;web=(WebView)field.get(activity);waitReady();
+                activity.getApplication().unregisterActivityLifecycleCallbacks(lockLifecycle);
+                require(beforeRenderer.equals(js("JSON.stringify(game.data)")),"Renderer recovery lost the saved battle");
+                screenshot("lock-adventure.png");result.putInt("lockAdventureChecks",12);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("encounter-bonus".equals(arguments.getString("mode"))){
                 result.putString("encounterBonus",layoutChecks("encounter-bonus.js"));result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }

@@ -403,7 +403,7 @@ class Game {
     if(pending.kind==='after-action'){this.showFaint(now);return true;}
     if(pending.kind==='draw'){
       this.log('긴 배틀을 마치고 회복했다','draw',null,now);
-      if(b.kind==='trainer')this.endChallenge(false,now);else{this.data.battle=null;this.animate('result',{text:'긴 배틀을 마치고 잠시 쉬어가요.'},now);}
+      if(b.kind==='trainer'||b.storyId)this.endChallenge(false,now);else{this.data.battle=null;this.animate('result',{text:'긴 배틀을 마치고 잠시 쉬어가요.'},now);}
       return true;
     }
     const hero=b.party[this.data.activeId];
@@ -449,7 +449,7 @@ class Game {
   handleFaint(now){
     if(this.data.battle.kind==='trainer'?this.switchToMatchup('faint',now):this.switchToLowest('faint',now))return;
     const b=this.data.battle;
-    if(b.kind==='trainer')this.endChallenge(false,now);
+    if(b.kind==='trainer'||b.storyId)this.endChallenge(false,now);
     else{const text=`${species.get(b.foe.id).name}에게 패배 · 동료들을 회복했다`;this.log(text,'loss',null,now);this.data.battle=null;this.animate('result',{text},now);}
   }
   select(id,now=Date.now()){
@@ -534,11 +534,11 @@ class Game {
   challengeName(index){return training.battles[index]?.name||(index===8?'포켓몬 리그':(this.trainerRevealed(db.bosses[index])?db.bosses[index].name:'???')+' 체육관');}
   challenge(index,now=Date.now()){
     index=training.battles[index]?index:Number(index);
-    if(!this.canChallenge(index)||this.data.battle?.kind==='trainer'&&index!=='road-snorlax'||this.data.battle?.storyId===index)return false;
+    if(!this.canChallenge(index)||this.data.battle?.kind==='trainer'&&index!=='road-snorlax'||this.data.battle?.kind==='wild'&&!!this.data.battle.storyId||this.data.battle?.storyId===index)return false;
     if(this.data.pendingChallenge)return this.data.pendingChallenge.index===index;
     if(this.data.battle||this.data.pendingBattle||now<this.data.switchUntil||now<this.nextTick){
       this.data.pendingChallenge={index,queuedAt:now};
-      this.log(this.challengeName(index)+' 도전 예약 · 현재 배틀 종료 후 시작','challenge',null,now);return true;
+      this.log(this.challengeName(index)+' 도전 예약 · 진행 중인 동작 후 시작','challenge',null,now);return true;
     }
     return this.startChallenge(index,now);
   }
@@ -547,12 +547,42 @@ class Game {
     this.log(this.challengeName(this.data.pendingChallenge.index)+' 도전 예약 취소','challenge',null,now);
     this.data.pendingChallenge=null;return true;
   }
+  handoffChallenge(now){
+    const d=this.data,b=d.battle,q=d.pendingChallenge;
+    if(!q||now<this.nextTick||now<d.switchUntil)return false;
+    // A rolled capture, knockout and its rewards must resolve exactly once.
+    // A future throw has not started yet and travels with the paused battle.
+    if(!b||b.kind!=='wild'||d.suspendedWild||b.party[d.activeId]?.hp<=0||b.foe.hp<=0||d.pendingBattle&&d.pendingBattle.kind!=='capture')return false;
+    if(!this.canChallenge(q.index)){this.cancelChallenge(now);return true;}
+    b.suspension={activeId:d.activeId,manualSelection:d.manualSelection,pendingBattle:d.pendingBattle};
+    d.suspendedWild=b;d.battle=null;d.pendingBattle=null;d.captureAnimation=null;
+    if(!this.startChallenge(q.index,now)){this.restoreWild(now);this.cancelChallenge(now);}
+    // Exploration opens a dialogue rather than a second battle.
+    else if(!d.battle)this.restoreWild(now);
+    return true;
+  }
+  restoreWild(now){
+    const d=this.data,b=d.suspendedWild;d.pendingBattle=null;d.battle=b;d.suspendedWild=null;
+    if(!b)return;
+    d.captureAnimation=null;
+    const paused=b.suspension;delete b.suspension;
+    if(paused&&d.owned[paused.activeId]&&d.slots.includes(paused.activeId)&&!this.isBoarded(paused.activeId))d.activeId=paused.activeId;
+    d.manualSelection=paused?.manualSelection||false;
+    if(this.platform==='mobile')b.resumeAfterLock=this.lockEpoch||0;
+    if(paused?.pendingBattle)d.pendingBattle={...paused.pendingBattle,at:now};
+    if(!b.party[d.activeId])battleEngine.addPartner(this,b,d.activeId);
+  }
+  controlTick(now=Date.now()){
+    if(this.presentation?.()||now<this.nextTick||now<this.data.switchUntil)return false;
+    // Finish only the pending handoff/result, without buying another wild attack.
+    if(this.data.pendingChallenge)return this.tick(now);
+    return this.processActions(now)||this.autoLevelEvolution(now);
+  }
   startChallenge(index,now){
     if(!this.canChallenge(index)||this.data.battle||this.data.pendingBattle||now<this.data.switchUntil)return false;
     this.data.pendingChallenge=null;
     this.data.manualSelection=false;
     this.data.captureAnimation=null;
-    this.data.suspendedWild=null;
     const party=Object.fromEntries(this.data.slots.filter(id=>id!==null&&!this.isBoarded(id)).map(id=>{const p=this.data.owned[id];return [id,this.memberCombatant(p)];}));
     const snorlax=index==='road-snorlax';
     this.data.battle={kind:snorlax?'wild':'trainer',bossIndex:index,storyId:training.battles[index]?index:null,rocketChain:training.rocketOrder.includes(index),foeIndex:0,party,turn:0,captureAttempts:0,...(snorlax?{captureByHealth:{yellow:0,red:0}}:{}),startedAt:now};
@@ -574,8 +604,7 @@ class Game {
   endChallenge(won,now){
     const b=this.data.battle,boss=this.battleBoss(b);if(!won)this.log(`${boss.name}에게 패배 · 포켓몬들이 회복했다`,'loss',null,now);
     this.data.pendingBattle=null;
-    this.data.battle=this.data.suspendedWild;this.data.suspendedWild=null;
-    if(this.data.battle&&!this.data.battle.party[this.data.activeId]){const p=this.data.owned[this.data.activeId];this.data.battle.party[p.uid]=this.memberCombatant(p);battleEngine.invalidate(this.data.battle);}
+    this.restoreWild(now);
     if(this.data.animation?.kind!=='champion')this.animate('result',{text:won?(b.storyId&&(b.storyId==='rocket-giovanni'?this.data.trainingDevice.rocketWonAt:this.data.trainingDevice.snorlaxWonAt)?boss.name+'에게 승리!':this.data.badges.includes(boss.id)?boss.badge+' 획득!':'모험으로 돌아왔어!'):'포켓몬들이 기절했다. 잠시 쉬고 다시 도전하자!'},now);
   }
   gainXp(uid,gained,now){
@@ -610,7 +639,7 @@ class Game {
         const id=consumables.pickEvolutionItem(candidates,this.data.inventory,this.random);if(id){this.data.inventory[id]=(this.data.inventory[id]||0)+1;this.log(`${db.items.find(i=>i.id===id)?.name||'진화 도구'} 발견`,'item',null,now);}
       }
       const found=consumables.drop(this.random);if(found){this.data.inventory[found.id]=(this.data.inventory[found.id]||0)+1;this.log(found.name+' 발견','item',null,now);}
-      this.data.battle=null;if(roadCleared)this.animate('result',{text:'학습장치를 받았다! 독수에게 도전할 수 있어요.'},now);else if(!captured)this.animate('result',{text:'야생 '+species.get(foe.id).name+'에게 승리했다!'},now);return;
+      this.data.battle=null;if(b.storyId)this.restoreWild(now);if(roadCleared)this.animate('result',{text:'학습장치를 받았다! 독수에게 도전할 수 있어요.'},now);else if(!captured||b.storyId)this.animate('result',{text:'야생 '+species.get(foe.id).name+(captured?' 포획!':'에게 승리했다!')},now);return;
     }
     b.foeIndex++;
     if(b.foeIndex<this.battleBoss(b).team.length){this.nextTrainer(now);return;}
@@ -673,6 +702,7 @@ class Game {
   }
   tick(now=Date.now()){
     if(now<this.nextTick||now<this.data.switchUntil)return false;let b=this.data.battle;
+    if(this.handoffChallenge(now))return true;
     if(this.data.pendingBattle){
       if(now<this.data.pendingBattle.at)return false;
       if(this.data.pendingBattle.kind==='replace'){this.data.pendingBattle=null;this.handleFaint(now);return true;}
