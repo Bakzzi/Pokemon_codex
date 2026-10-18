@@ -17,16 +17,17 @@
 @keyframes waiting-ball-turn{0%,50%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 .scene{height:185px}
 .compact .scene{height:182px}
-#ball-fx{left:73px;top:58px;width:24px;height:24px;box-shadow:0 2px 5px #122217aa;transform-origin:50% 50%}
+#ball-fx{left:73px;top:45px;width:24px;height:24px;box-shadow:0 2px 5px #122217aa;transform-origin:50% 50%}
 #ball-fx:after{width:8px;height:8px;left:6px;top:6px}
 #ball-fx.opening{box-shadow:0 0 12px 6px #fff5b4}
-#switch-flash{position:absolute;left:49px;top:34px;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle,#fffbd9 0 12%,#ffafcbab 24%,transparent 68%);z-index:7;pointer-events:none}
+#switch-flash{position:absolute;left:49px;top:21px;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle,#fffbd9 0 12%,#ffafcbab 24%,transparent 68%);z-index:7;pointer-events:none}
 #switch-flash[data-mode=release]{background:radial-gradient(circle,#fff 0 18%,#fff5bdcc 30%,transparent 68%)}
-#switch-beam{position:absolute;left:83px;top:69px;width:4px;height:29px;background:#ffadc2;box-shadow:0 0 10px 4px #ff4b8699;z-index:7;pointer-events:none}
-.sprite{bottom:45px}
+#switch-beam{position:absolute;left:83px;top:56px;width:4px;height:29px;background:#ffadc2;box-shadow:0 0 10px 4px #ff4b8699;z-index:7;pointer-events:none}
+.sprite{bottom:58px}
+.sprite img.substitute{position:relative;top:33px}
 .ground{bottom:50px}
 #capture-fx{bottom:50px}
-#attack-fx{display:block;position:absolute;inset:0 auto auto 0;width:370px;height:158px;z-index:5;pointer-events:none;image-rendering:pixelated}
+#attack-fx{display:block;position:absolute;inset:-13px auto auto 0;width:370px;height:158px;z-index:5;pointer-events:none;image-rendering:pixelated}
 .battle-hud{position:absolute;bottom:3px;width:133px;height:41px;padding:4px 7px 3px;background:#f0efdc;border:2px solid #586751;border-radius:7px 2px 7px 2px;box-shadow:2px 2px 0 #26362bdd;color:#29372c;z-index:6;font-variant-numeric:tabular-nums;line-height:1}
 .hero-hud{left:20px}.foe-hud{right:11px}
 .battle-name{display:flex;justify-content:space-between;align-items:center;font-size:10px;line-height:11px;gap:3px;white-space:nowrap}

@@ -1,0 +1,5 @@
+Original Pokemon FireRed and LeafGreen character artwork by Ken Sugimori.
+Pokemon / Nintendo / Creatures / GAME FREAK. Artwork rights are retained by their owners.
+Source: Bulbagarden Archives. Exact source URLs and unchanged PNG hashes: sources.json.
+The UI displays a face crop using CSS; the image files are unchanged.
+These images are not covered by the project's MIT license.

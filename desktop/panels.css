@@ -25,3 +25,4 @@
 
 .move-list li small{display:block;margin-top:4px;font-size:9px;color:var(--muted)}.move-list li.locked{opacity:.45;border-style:dashed}
 .dex-grid{overflow-anchor:none}
+.move-list{grid-template-columns:repeat(2,minmax(0,1fr))}.move-list .move-name{display:block;overflow-wrap:anywhere;font-weight:600}.move-list .move-type{display:block;margin-top:4px;color:var(--accent);font-size:10px}.move-list .move-stats{display:block;margin-top:4px;font-size:10px;line-height:1.5}.move-stab-note{margin:4px 0 0}

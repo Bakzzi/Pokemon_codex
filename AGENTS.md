@@ -1,5 +1,12 @@
 # Verified releases and automatic completion
 
+## Shared game parity
+
+- User instruction (2026-10-18): carry common game features, story, balance, bug fixes and presentation changes across PC and Android without waiting for another request. Update the shared implementation and validate both consumers. Keep agent-work activity and desktop controls on PC, and foreground/walking activity and touch navigation on Android.
+- Shared story rules live in `shared/`; shared game renderers, challenge cards and artwork live in `desktop/`. Android bundles those sources. Keep `mobile/*.cjs` compatibility entry points thin; do not fork story rules or maintain a second copy of shared UI/artwork.
+- PC keeps its simultaneous dex list/detail and widget sizes. Android keeps its list-to-detail navigation and mobile frame layout. Intentional viewport differences do not require matching pixel dimensions.
+- Run `npm.cmd test` for common game changes, `npm.cmd run mobile:bundle` for Android source integration, and affected packaged runtime checks before release. Release each affected product through its own stable/preview channel and preserve existing saves and platform settings.
+
 Follow the standing completion and retention policy in `C:/Users/User/AGENTS.md` for every modification or build. Finish with scoped verification, an explicit source commit/push to the existing authorized remote/branch, and safe cleanup without asking again for routine actions within that policy.
 
 - Repository: `Bakzzi/Pokemon_codex`, normally `origin` / `main`. Inspect current changes and remotes before editing; preserve unrelated work.

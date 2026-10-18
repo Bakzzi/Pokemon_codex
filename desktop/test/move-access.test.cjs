@@ -6,7 +6,7 @@ function fixture(id,level){const g=new Game({},now,{random:()=>.73}),uid=g.addPo
 test('every Mew technique is listed from creation, with only level-appropriate techniques active',()=>{
   const {g,p,uid}=fixture(151,15),list=g.panelState(now).roster.find(p=>p.uid===uid).moves;
   assert.equal(list.length,6);assert.deepEqual(list.filter(m=>m.active).map(m=>m.id),[1,144]);
-  assert.deepEqual(list.find(m=>m.id===94),{id:94,name:'사이코키네시스',type:14,level:40,active:false});assert.ok(!p.moves.includes(94));assert.ok(!g.memberCombatant(p).moves.includes(94));
+  assert.deepEqual(list.find(m=>m.id===94),{id:94,name:'사이코키네시스',type:14,typeName:'에스퍼',pp:10,power:135,stab:true,level:40,active:false});assert.ok(!p.moves.includes(94));assert.ok(!g.memberCombatant(p).moves.includes(94));
 });
 test('level-up activates the existing catalog entry exactly at its required level',()=>{
   const {g,p}=fixture(151,39);const before=access.catalog(p);g.gainXp(p.uid,xpAt(151,40)-p.xp,now);

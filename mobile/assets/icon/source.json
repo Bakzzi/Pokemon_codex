@@ -1,0 +1,59 @@
+{
+    "source":  "desktop/assets/items/poke-ball.png",
+    "sourceUrl":  "https://raw.githubusercontent.com/PokeAPI/sprites/ba403973fdf9d0ac59175813861e6a1f8ed5020c/sprites/items/poke-ball.png",
+    "sourceSha256":  "a4c7b9e8ff5727d10e6f679bcf16a963a95b2a36480d3bd9156d9808bdf54dff",
+    "attribution":  "Pokemon sprite via PokeAPI; see THIRD_PARTY_NOTICES.md. Not an original or AI-generated illustration.",
+    "background":  "#17231E",
+    "viewport":  108,
+    "launcherViewport":  {
+                             "left":  18,
+                             "width":  72,
+                             "top":  18,
+                             "height":  72
+                         },
+    "spriteBounds":  {
+                         "left":  27,
+                         "right":  81,
+                         "bottom":  81,
+                         "top":  27
+                     },
+    "originalPixelScale":  3,
+    "rasters":  [
+                    {
+                        "sha256":  "78a33dae50d5f2bc5815e0d73591d7e87b1afa84622a1f4a14b2d34e1d43881c",
+                        "width":  48,
+                        "file":  "mobile/android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+                        "height":  48
+                    },
+                    {
+                        "sha256":  "d4b4c65b640b7edc65f0e1f57f7cbe35ec1311c8ebb04c8db6b7c881c1806da4",
+                        "width":  72,
+                        "file":  "mobile/android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+                        "height":  72
+                    },
+                    {
+                        "sha256":  "695dbcafd6d487e8a3fb040c9987458d4f0280bf39ef7db9b313886ba07ee096",
+                        "width":  96,
+                        "file":  "mobile/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+                        "height":  96
+                    },
+                    {
+                        "sha256":  "19a05d2e4b430e2fdf1ee0f0a6c7967b58581e2f16350fa7b7b6289c605d8d6d",
+                        "width":  144,
+                        "file":  "mobile/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+                        "height":  144
+                    },
+                    {
+                        "sha256":  "6794bc71482cc3c4cf2a6b8b845ddd119d4838d7035c02a8399f012a3211d509",
+                        "width":  192,
+                        "file":  "mobile/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+                        "height":  192
+                    },
+                    {
+                        "sha256":  "e6165892460e64084e806e9f2cefbcf56d35220d6c17326dbe003b31dd2e05b6",
+                        "width":  512,
+                        "file":  "mobile/assets/icon/ic_launcher_preview.png",
+                        "height":  512
+                    }
+                ]
+}

@@ -1,7 +1,7 @@
 'use strict';
 const {app,BrowserWindow,ipcMain,Menu,Tray,nativeImage,screen,dialog,safeStorage,powerMonitor}=require('electron');
 const path=require('node:path'),os=require('node:os'),fs=require('node:fs');
-const {Game}=require('./game.cjs');
+const {Adventure:Game}=require('./adventure.cjs');
 const {combatant}=require('./battle.cjs');
 const nursery=require('./daycare.cjs');
 const {CodexReader}=require('./codex-reader.cjs');
@@ -16,7 +16,7 @@ const demo=process.argv.includes('--demo'),smoke=process.argv.includes('--smoke-
 const dataDir=smoke?(process.env.POKEMON_SMOKE_DIR||path.join(__dirname,'.smoke')):demo?path.join(__dirname,'.demo'):path.join(app.getPath('appData'),'PokemonCodexBuddy');
 app.setPath('userData',dataDir);app.setName(agents.name);app.disableHardwareAcceleration();
 let win,panel,tray,timer,game,store,reader,claudeReader,remotes,widgetPlacement,widgetPinning,settings={},busy=false,lastRead=0,previous='',panelPrevious='',notice='';
-let updater,updating=false,healthyTicks=0;
+let updater,updating=false,resetting=false,healthyTicks=0;
 const gotLock=app.requestSingleInstanceLock();
 if(!gotLock)app.quit();
 else{
@@ -43,6 +43,16 @@ function publish(force=false){
   }
 }
 function save(){if(game&&!smoke&&!demo)store.save({version:2,game:game.data,settings});}
+async function resetProgress(){
+  if(resetting||updating)return;resetting=true;
+  try{
+    const result=await dialog.showMessageBox(panel||win,{type:'warning',title:'처음부터 다시 시작할까요?',message:'도감·동료·아이템·모든 게임 진행을 초기화해요.',detail:'에이전트 연동과 위젯 설정은 유지돼요.',buttons:['취소','모두 지우고 시작'],defaultId:0,cancelId:0,noLink:true});
+    if(result.response!==1)return;
+    for(let i=0;busy&&i<100;i++)await new Promise(r=>setTimeout(r,50));
+    if(busy||updating){notice='작업 기록을 확인하고 있어요. 잠시 후 다시 시도해 주세요.';return;}
+    save();game.resetProgress();notice='새 모험을 시작해요.';save();win.showInactive();
+  }finally{resetting=false;publish(true);}
+}
 async function openPanel(tab='collection'){
   if(panel&&!panel.isDestroyed()){panel.webContents.send('tab',tab);panel.show();return;}
   const area=screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).workArea;
@@ -78,6 +88,8 @@ async function start(){
   ipcMain.on('ready',event=>{if(event.sender===win?.webContents||event.sender===panel?.webContents)publish(true);});
   ipcMain.on('action',(event,{action,value}={})=>{
     if(event.sender!==win?.webContents&&event.sender!==panel?.webContents)return;
+    if(action==='reset-game'){resetProgress().catch(error=>{console.error(error);notice='초기화를 완료하지 못했어요.';publish(true);});return;}
+    if(resetting)return;
     let result=true;notice='';
     try{
       if(action==='close'){app.quit();return;}
@@ -87,6 +99,7 @@ async function start(){
         settings.compact=!settings.compact;win.setResizable(true);widgetPlacement.resize(settings.compact);win.setResizable(false);
       }
       if(action==='panel'){openPanel(['collection','challenge','journal','daycare','connections'].includes(value)?value:'collection').catch(console.error);}
+      if(action==='story-open')win.showInactive();
       if(action==='remote-add'&&remotes)result=!!remotes.add(value?.config,value?.secret||'',!!value?.remember);
       if(action==='remote-connect'&&remotes)result=remotes.connect(value?.id,value?.credentials);
       if(action==='remote-stop'&&remotes)result=remotes.stop(value);
@@ -99,8 +112,10 @@ async function start(){
       if(action==='action-cancel')result=game.cancelAction(value);
       if(action==='capture-reserve')result=game.reserveCapture(value,1);
       if(action==='capture-cancel')result=game.reserveCapture(value,0);
-      if(action==='challenge')result=game.challenge(value);
+      if(action==='challenge'){result=game.challenge(value);if(result&&game.presentation())win.showInactive();}
       if(action==='challenge-cancel')result=game.cancelChallenge();
+      if(action==='scene-next'&&!game.advanceScene(value))return;
+      if(action==='safari-return')result=game.returnSafari();
       if(action==='daycare-preview')game.daycareSelection=Array.isArray(value)?value.slice(0,2).map(Number):[];
       if(!result)notice='이 선택은 예약할 수 없어요. 동료·진화 경로·도전 조건을 확인해 주세요.';
       save();publish(true);
@@ -119,11 +134,11 @@ async function start(){
     }catch(error){console.error('Automatic updates unavailable:',error.message);}
   }
   if(!smoke)timer=setInterval(async()=>{
-    if(busy||updating)return;
+    if(busy||updating||resetting)return;
     // Claim the gap before creating the next action; continuous adventures
     // otherwise start another animation before an updater ever sees a gap.
     if(updater&&await updater.maybeApply())return;
-    if(busy||updating)return;busy=true;
+    if(busy||updating||resetting)return;busy=true;
     try{
       if(reader&&Date.now()-lastRead>=1500){await Promise.all([reader.poll(),claudeReader.poll()]);lastRead=Date.now();}
       remotes?.poll();game.tick();save();publish();

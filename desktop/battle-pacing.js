@@ -23,10 +23,22 @@
       status:now<event.at+t.impactAt?status:after.status};
   }
   function beforeMoveAt(event,now){const i=Math.floor((now-event.at)/1500);return i>=0?event.beforeMove?.[i]||null:null;}
+  function appearanceAt(event,side,now,after){
+    const next=after.appearance||{speciesId:after.id,transformed:false,substitute:false,hidden:null};
+    const before=event?.[side+'Before']?.appearance;if(!before)return next;
+    const timing=actionTiming(event);
+    // Return from Fly/Dig before striking; change form or create/break a decoy at impact.
+    const changeAt=event.actor===side&&before.hidden&&!next.hidden?timing.announceMs:timing.impactAt;
+    let shown=now<event.at+changeAt?before:next;
+    // A Pokemon peeks out of its decoy to act, then returns after the move.
+    if(shown.substitute&&event.actor===side&&event.moveId&&event.moveId!==164&&now>=event.at+timing.announceMs&&now<event.at+timing.resultAt)shown={...shown,substitute:false};
+    return shown;
+  }
   function afterMoveAt(event,now){const i=Math.floor((now-event.at-actionTiming(event).resultAt)/1350);return i>=0?event.afterMove?.[i]||null:null;}
   function damageReaction(event,side,now){
     const lost=(event[side+'Before']?.currentHp||0)-(event[side]?.currentHp??event[side+'Before']?.currentHp??0);
-    const age=now-event.at-actionTiming(event).impactAt,t=clamp(age/700),active=lost>0&&age>=0&&age<700;
+    const decoy=event.hitSubstitute&&event.outcome==='success'&&side!==(event.actor||'hero');
+    const age=now-event.at-actionTiming(event).impactAt,t=clamp(age/700),active=(lost>0||decoy)&&age>=0&&age<700;
     return {active,x:active?6*Math.sin(t*Math.PI*8)*(1-t):0,opacity:active?.3+.7*Math.abs(Math.cos(t*Math.PI*3)):1};
   }
   function damageMessages(event){
@@ -55,6 +67,6 @@
     }
     return {age,phase,incoming,x,y,angle,ballVisible,ballOpacity,scale,opacity,heroY,glow,done:age>=s.duration};
   }
-  const api={pauses,actionTiming,duration,healthAt,beforeMoveAt,afterMoveAt,damageReaction,damageMessages,switchTiming,switchFrame};
+  const api={pauses,actionTiming,duration,healthAt,appearanceAt,beforeMoveAt,afterMoveAt,damageReaction,damageMessages,switchTiming,switchFrame};
   if(typeof module==='object'&&module.exports)module.exports=api;else globalThis.BattlePacing=api;
 })();

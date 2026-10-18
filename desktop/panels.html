@@ -2,12 +2,13 @@
 <html lang="ko"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; font-src 'self'">
-<title>포켓몬 도감 · AI Agent 포켓몬 키우기</title><link rel="stylesheet" href="panels.css"><link rel="stylesheet" href="badge-case.css"><link rel="stylesheet" href="connections.css">
+<title>포켓몬 도감 · AI Agent 포켓몬 키우기</title><link rel="stylesheet" href="panels.css"><link rel="stylesheet" href="badge-case.css"><link rel="stylesheet" href="connections.css"><link rel="stylesheet" href="story-panels.css">
 </head><body>
 <header class="top"><div><span class="kicker" id="panel-agent-label">POKÉMON / AI AGENT</span><h1>작은 모험의 기록</h1></div><div class="totals"><b id="totals">4 / 151</b><span id="region">관동 지방</span><span id="xp-boost"></span></div></header>
 <nav class="tabs" aria-label="모험 메뉴"><button data-tab="collection" aria-selected="true">포켓몬 도감</button><button data-tab="challenge">도전하기</button><button data-tab="daycare">가방</button><button data-tab="journal">모험 기록</button><button data-tab="connections">연동 설정</button></nav>
 <p id="season-note" class="season-note"></p>
 <div id="notice" role="status"></div>
+<section id="story-pending" class="ongoing" hidden><span>위젯에서 대화를 이어가세요.</span><button id="story-open">대화 보기</button></section>
 <section id="action-queue" class="action-queue" aria-label="예약한 행동" hidden><b id="action-queue-title"></b><div id="action-queue-list"></div></section>
 <main>
 <section id="collection" class="page">
@@ -108,7 +109,8 @@
     <button type="submit">추가하고 연결</button>
   </form>
   <p class="muted">작업 상태와 숫자 사용량·한도만 SSH로 받아요. 대화 본문·명령 내용·인증정보는 전송하지 않아요. 처음 연결하기 전 기록은 경험치로 가져오지 않으며, 재연결 시 확인한 기록의 증가분만 한 번 반영해요. Claude Code 기록에서 남은 사용 한도를 제공하지 않으면 미제공으로 표시해요.</p>
+  <p class="settings-credit">원작 모모찡 · momozzing<br>Pokémon © Nintendo / Creatures / GAME FREAK<br>비공식 비영리 팬 프로젝트 · MIT<br>전투 엔진 Pokémon Showdown / @pkmn (MIT)<br>로이·로사 도트 Monicaccina (Ody-chan)</p>
+  <button id="reset-game" class="reset-game">완전 초기화</button>
 </section>
 </main>
-<footer>원작 모모찡 · momozzing <span>진행은 이 PC에 자동 저장돼요.</span></footer>
-<script src="agent-status.js"></script><script src="connections.js"></script><script src="panels.js"></script></body></html>
+<script src="agent-status.js"></script><script src="connections.js"></script><script src="panel-layout.js"></script><script src="panels.js"></script><script src="rescue-panel.js"></script><script src="rival-panel.js"></script><script src="exploration-panel.js"></script><script src="league-portraits.js"></script></body></html>

@@ -45,7 +45,8 @@
   group('poison',[92],{color:'poison'});
   group('mind',[93,94,95,109,149,248,295,326,354],{color:'psychic'});
   group('dash',[97,98,104,245],{motion:'dash',duration:860});
-  group('vanish',[100,107,144,160,166,176,226,272,278,285,289,293],{color:'psychic',motion:'fade'});
+  group('vanish',[100,107,160,166,176,226,272,278,285,289,293],{color:'psychic',motion:'fade'});
+  group('transform',[144],{color:'psychic',motion:'morph',duration:1240});
   group('ghost',[101,171,174,180,194,262,288],{color:'dark'});
   group('copy',[102,118,119,133,134,244,267,271,274],{color:'psychic'});
   group('heal',[105,135,156,208,234,235,236,256,273,287,303],{color:'leaf'});
@@ -93,11 +94,16 @@
     const p=profileFor(event.moveId),age=Math.max(0,now-event.at),u=clamp(age/p.duration),outcome=event.outcome||'success';
     const active=now>=event.at&&age<p.duration,charging=outcome==='charging';
     const hits=p.repeat?Math.max(1,Math.min(5,event.hitCount||1)):1;
-    const impactAt=.58,attack=clamp((u-.18)/.40),impact=active&&!charging&&outcome==='success'&&event.damage>0&&u>=impactAt&&u<.88;
+    const impactAt=.58,attack=clamp((u-.18)/.40),impact=active&&!charging&&outcome==='success'&&(event.damage>0||event.hitSubstitute)&&u>=impactAt&&u<.88;
     const actor={x:0,y:0,scale:1,rotate:0,opacity:1},target={x:0,y:0,scale:1,rotate:0,opacity:1};
     if(active){
       const beat=pulse((u-.13)/.65),reach=pulse((u-.2)/.64);
-      if(charging){actor.scale=1-.05*pulse(u);actor.y=-3*pulse(u);}
+      if(charging){
+        const leave=clamp((u-.15)/.43);
+        if([19,340].includes(p.id)){actor.y=-65*leave;actor.opacity=1-leave;}
+        else if([91,291].includes(p.id)){actor.y=25*leave;actor.scale=1-.9*leave;actor.opacity=1-leave;}
+        else {actor.scale=1-.05*pulse(u);actor.y=-3*pulse(u);}
+      }
       else if(p.motion==='lunge'||p.motion==='jab'||p.motion==='jump'){
         actor.x=(p.motion==='lunge'?132:98)*reach;
         actor.y=-(p.motion==='jump'?31:p.id===34?23:5)*beat;
@@ -109,6 +115,9 @@
       else if(p.motion==='hop'){actor.y=-24*Math.abs(Math.sin(u*Math.PI*3));}
       else if(p.motion==='curl'){actor.scale=1-.22*beat;actor.y=10*beat;}
       else if(p.motion==='fade'){actor.opacity=1-.8*beat;actor.scale=p.id===107?1-.4*beat:1;}
+      else if(p.motion==='morph'&&outcome==='success'){
+        const change=pulse((u-.28)/.6);actor.scaleX=1-.72*change;actor.scaleY=1+.24*change;actor.filter=`brightness(${1+3*change})`;
+      }
       else actor.x=-3*pulse(u/.35);
       if(impact){const t=(u-impactAt)/.3;target.x=5*Math.sin(t*Math.PI*6);target.opacity=.65+.35*Math.abs(Math.cos(t*Math.PI*4));}
       if(outcome==='miss'&&u>.42&&u<.9){target.y=-9*pulse((u-.42)/.48);target.x=9*pulse((u-.42)/.48);}
@@ -145,6 +154,11 @@
       else if(id===19||id===340){for(let i=0;i<3;i++)line([[sx-10+i*10,55],[sx-10+i*10,35-15*u]],light,1);}
       else for(let i=0;i<9;i++){const a=i*2.4,r=26*(1-(u*1.5+i*.1)%1);star(sx+Math.cos(a)*r,sy+Math.sin(a)*r,2);}
       ring(sx,sy,9+3*pulse(u*2),dark,1);ctx.restore();return;
+    }
+    // A failed status move must not look like healing, a decoy or a successful transformation.
+    if(['failed','immune','protected'].includes(frame.outcome)){
+      if(u>.45){ring(tx,ty,19,'#b4c4bd',1);line([[tx-11,ty+12],[tx+11,ty-12]],'#b4c4bd',2);}
+      ctx.restore();return;
     }
     switch(p.family){
       case 'ram':
@@ -252,6 +266,9 @@
         if(id===248)star(tx,ty-14,10);break;
       case 'dash':for(let i=0;i<5;i++)line([[sx-14+i*8+68*t,sy-14+i*7],[sx+10+i*8+68*t,sy-14+i*7]],i%2?light:dark,1);if(!self&&hit)burst(tx,ty,14);break;
       case 'vanish':for(let i=0;i<5;i++)ring(sx,sy,4+i*5, i%2?light:dark,1);sparks(sx,sy,27);break;
+      case 'transform':
+        for(let i=0;i<8;i++){const a=i*Math.PI/4+u*5,r=24*(1-pulse((u-.2)/.7)*.7);star(sx+Math.cos(a)*r,sy+Math.sin(a)*r,3);}
+        ring(sx,sy,12+12*pulse((u-.2)/.7),light,2);break;
       case 'ghost':
         for(let i=0;i<3;i++){const x=tx-16+i*16,y=ty+Math.sin(u*7+i)*10;poly([[x-6,y+7],[x-6,y-4],[x-2,y-8],[x+3,y-8],[x+7,y-3],[x+7,y+7],[x+3,y+3],[x,y+7],[x-3,y+3]],dark);dot(x-2,y-2,1,light);dot(x+3,y-2,1,light);}break;
       case 'copy':for(let i=0;i<3;i++){const q=(u+i/3)%1;star(mix(sx,tx,q),sy-17*Math.sin(q*Math.PI),4);ring(sx,sy,11+q*8,dark,1);}break;

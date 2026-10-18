@@ -18,6 +18,14 @@ const nursery=require('./daycare.cjs');
 const {collectionHints}=require('./acquisition.cjs');
 const training=require('./training-device.cjs');
 const ACTION_KINDS=new Set(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner']);
+function moveDetails(p,entry){
+  const saved=moves.get(entry.move),move=battleEngine.dex.moves.get(saved.identifier);
+  const type=db.types.find(t=>t.identifier===(move.type==='???'?'unknown':move.type.toLowerCase()));
+  // Variable and fixed-damage moves have no single base power to multiply.
+  const basePower=move.category!=='Status'&&!move.damage&&!move.damageCallback&&!move.basePowerCallback&&move.basePower>0?move.basePower:null;
+  const stab=basePower!==null&&battleEngine.dex.species.get(species.get(p.id).identifier).types.includes(move.type);
+  return {id:entry.move,name:saved.name,type:type.id,typeName:type.name,pp:move.pp,power:basePower===null?null:basePower*(stab?1.5:1),stab,level:entry.level,active:entry.level<=p.level};
+}
 function actionPayload(kind,value){
   if(!ACTION_KINDS.has(kind))return null;
   if(kind==='select')return Number.isSafeInteger(Number(value))&&Number(value)>0?{uid:Number(value)}:null;
@@ -35,7 +43,8 @@ function restoreAction(a){
   if(a.kind==='evolve'&&!species.has(a.from))return null;
   return {id:a.id,kind:a.kind,queuedAt:a.queuedAt,...payload,...(a.kind==='evolve'?{from:a.from}:{})};
 }
-function healthView(p){return {hp:p.hp/p.maxHp,currentHp:Math.max(0,Math.ceil(p.hp)),maxHp:p.maxHp,status:p.status||null};}
+function healthView(p){return {hp:p.hp/p.maxHp,currentHp:Math.max(0,Math.ceil(p.hp)),maxHp:p.maxHp,status:p.status||null,
+  ...(p.id?{appearance:p.appearance||{speciesId:p.id,transformed:false,substitute:false,hidden:null}}:{})};}
 function experienceView(p){
   const expRequired=p.level>=100?0:xpAt(p.id,p.level+1)-xpAt(p.id,p.level),expCurrent=expRequired?Math.max(0,Math.min(expRequired,p.xp-xpAt(p.id,p.level))):0;
   return {expCurrent,expRequired,expPercent:p.level>=100?100:Math.min(99,Math.floor(expCurrent*100/expRequired))};
@@ -121,6 +130,7 @@ class Game {
     this.data.slots=Array.from({length:PARTY_SIZE},(_,i)=>{const uid=savedSlots[i],p=this.data.owned[uid];if(!p||selected.has(uid)||species.get(p.id)?.generation>this.maxGeneration())return null;selected.add(uid);return uid;});
     if(!selected.size){const uid=this.data.owned[this.data.activeId]?this.data.activeId:Object.keys(this.data.owned).map(Number)[0];this.data.slots[0]=uid;}
     if(!this.data.slots.includes(this.data.activeId))this.data.activeId=this.data.slots.find(uid=>uid!==null&&!this.isBoarded(uid))||this.data.slots.find(uid=>uid!==null);
+    for(const b of [this.data.battle,this.data.suspendedWild])battleEngine.restoreAppearance(b);
     training.init(this,now);
     if(this.data.battle?.kind==='trainer'&&this.data.battle.matchupRevision!==1){this.data.battle.matchupRevision=1;this.data.battle.matchupPending=true;}
     const actionIds=new Set();
@@ -274,7 +284,11 @@ class Game {
   executeAction(a,now){
     let result=false;const previousActive=this.data.activeId;
     if(a.kind==='select'){result=this.select(a.uid,now);if(result)this.data.manualSelection=true;}
-    if(a.kind==='slot')result=this.setSlot(a.slot,a.uid,now);
+    if(a.kind==='slot'){
+      const removed=a.uid===null?this.data.slots[a.slot]:null;
+      result=this.setSlot(a.slot,a.uid,now);
+      if(result&&removed!==null)this.cancelPlacementRequests(removed,now,a.id);
+    }
     if(result&&a.kind==='slot'&&previousActive!==this.data.activeId)this.data.manualSelection=true;
     if(a.kind==='evolve')result=this.evolve(a.uid,a.to,now);
     if(a.kind==='daycare-start')result=nursery.start(this,a.parents,now);
@@ -295,6 +309,7 @@ class Game {
     const a={kind,...payload,queuedAt:now};
     if(kind==='evolve')a.from=this.data.owned[a.uid]?.id;
     const status=this.actionStatus(a,now);if(status.state==='invalid')return false;
+    if(kind==='slot'&&a.uid===null)this.cancelPlacementRequests(this.data.slots[a.slot],now);
     const sameIntent=q=>q.kind===kind&&(kind==='evolve'?q.uid===a.uid:kind==='slot'?q.slot===a.slot:true)||kind.startsWith('johto-')&&q.kind.startsWith('johto-');
     const existing=this.data.pendingActions.find(sameIntent);
     if(existing&&existing.uid===a.uid&&existing.to===a.to&&existing.from===a.from&&existing.slot===a.slot&&JSON.stringify(existing.parents)===JSON.stringify(a.parents)&&JSON.stringify(existing.speciesIds)===JSON.stringify(a.speciesIds))return true;
@@ -309,6 +324,10 @@ class Game {
   cancelAction(id,now=Date.now(),reason='예약 취소'){
     const i=this.data.pendingActions.findIndex(a=>a.id===Number(id));if(i<0)return false;
     const [a]=this.data.pendingActions.splice(i,1);this.log(this.actionName(a)+' · '+reason,'info',null,now);return true;
+  }
+  cancelPlacementRequests(uid,now,beforeId=Infinity){
+    if(uid===null)return;
+    for(const a of [...this.data.pendingActions])if(a.id<beforeId&&a.uid===uid&&['select','slot'].includes(a.kind))this.cancelAction(a.id,now,'선택 칸에서 빼기로 취소');
   }
   processActions(now){
     for(const a of [...this.data.pendingActions]){
@@ -346,7 +365,6 @@ class Game {
     if(!gift||!this.data.badges.includes(badge)||this.data.starterGifts[gift.id])return false;
     const uid=this.addPokemon(gift.id,10,'gift',now);if(!uid)return false;
     this.data.starterGifts[gift.id]=now;
-    const slot=this.data.slots.indexOf(null);if(slot>=0)this.data.slots[slot]=uid;
     this.log(`${db.bosses.find(b=>b.id===badge).name}에게 ${species.get(gift.id).name} Lv.10을 받았다!`,'gift',gift.id,now);return uid;
   }
   log(text,kind='info',id=null,now=Date.now()){journal.record(this.data,{at:now,text,kind,id});}
@@ -456,8 +474,13 @@ class Game {
     }
     if(!this.data.owned[id]||species.get(this.data.owned[id].id).generation>this.maxGeneration()||this.isBoarded(id))return false;
     const old=this.data.slots[slot],other=this.data.slots.indexOf(id);if(old===id)return true;
-    if(old===this.data.activeId){if(!this.select(id,now))return false;this.data.slots[slot]=id;if(other>=0)this.data.slots[other]=old;}
-    else {this.data.slots[slot]=id;if(other>=0)this.data.slots[other]=old;}return true;
+    if(old===this.data.activeId){
+      const positions=[...this.data.slots];
+      if(!this.select(id,now))return false;
+      // select() may fill an empty slot; placement owns the final positions.
+      this.data.slots=positions;
+    }
+    this.data.slots[slot]=id;if(other>=0)this.data.slots[other]=old;return true;
   }
   evolutions(id,now=Date.now()){
     const p=this.data.owned[id];if(!p)return [];
@@ -679,7 +702,7 @@ class Game {
       this.log(species.get(hero.id).name+' 출전','switch',hero.id,now);
     }else{
       const text=move?species.get(action.id||hero.id).name+'의 '+move.name+'!':action.lines[0]||'배틀을 이어가고 있어.';
-      this.animate(action.item?'item':'attack',{item:action.item,itemTargetBefore:partyBefore[action.item?.target],actor:action.actor||'hero',id:action.id||hero.id,move:move?.name,moveId:move?.id,moveType:move?.type,moveTarget:action.moveTarget,outcome:action.outcome,hitCount:action.hitCount,damage:move?.damageClass===1?0:action.damage||0,damageCauses:action.damageCauses,beforeMove:action.beforeMove,afterMove:action.afterMove,hero:{...view(hero.id),level:hero.level,...healthView(hero)},heroBefore,foeBefore,foe:{...view(foe.id),level:foe.level,...healthView(foe)},text,detail:action.lines.filter(line=>line!==text&&!action.beforeMove?.some(m=>m.text===line)).join(' · ')},now);
+      this.animate(action.item?'item':'attack',{item:action.item,itemTargetBefore:partyBefore[action.item?.target],actor:action.actor||'hero',id:action.id||hero.id,move:move?.name,moveId:move?.id,moveType:move?.type,moveTarget:action.moveTarget,outcome:action.outcome,hitCount:action.hitCount,...(action.hitSubstitute?{hitSubstitute:true}:{}),damage:move?.damageClass===1?0:action.damage||0,damageCauses:action.damageCauses,beforeMove:action.beforeMove,afterMove:action.afterMove,hero:{...view(hero.id),level:hero.level,...healthView(hero)},heroBefore,foeBefore,foe:{...view(foe.id),level:foe.level,...healthView(foe)},text,detail:action.lines.filter(line=>line!==text&&!action.beforeMove?.some(m=>m.text===line)).join(' · ')},now);
     }
     if(action.lines.length)this.log(action.lines.join(' · '),'battle',action.id||hero.id,now);
     const finishedAt=now+this.data.animation.duration;
@@ -713,7 +736,7 @@ class Game {
   }
   panelState(now=Date.now()){
     const hints=collectionHints(this);
-    const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,level:p.level,xp:p.xp,...experienceView(p),gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:moveAccess.catalog(p).map(entry=>({id:entry.move,name:moves.get(entry.move).name,type:moves.get(entry.move).type,level:entry.level,active:entry.level<=p.level})),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
+    const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,level:p.level,xp:p.xp,...experienceView(p),gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:moveAccess.catalog(p).map(entry=>moveDetails(p,entry)),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
     return {...this.snapshot(now),roster,daycare:nursery.snapshot(this),johtoUnlocked:this.maxGeneration()===2,johtoDeferred:this.data.johtoDeferred,johtoUnlockPreview:this.johtoUnlockPreview(),
       kantoCaughtCount:this.kantoCaughtCount(),
       encounterBonus:this.encounterBonus(),

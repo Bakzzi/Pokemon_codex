@@ -1,0 +1,49 @@
+{
+    "version":  "0.1.2",
+    "versionCode":  4,
+    "platform":  "android",
+    "channel":  "android-preview",
+    "sourceCommit":  "fbf17c704ecccb7eeb808a894aa314444d2d11b8",
+    "package":  "io.github.bakzzi.pokemonidle",
+    "minSdk":  31,
+    "targetSdk":  36,
+    "artifact":  "Pokemon-Idle-0.1.2.apk",
+    "bytes":  4716878,
+    "sha256":  "0b19eb2cfdd7c25a3c9c005d17430a388e4f65053ee956647891fd4cdf2523e6",
+    "signingCertificateSha256":  "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+    "toolchain":  {
+                      "node":  "22.11.0",
+                      "gradle":  "8.13",
+                      "agp":  "8.13.0",
+                      "compileSdk":  36,
+                      "buildTools":  "36.1.0"
+                  },
+    "validation":  {
+                       "releaseBuild":  "passed",
+                       "androidLintErrors":  0,
+                       "androidLintWarnings":  14,
+                       "apkSignatureVerified":  true,
+                       "oldReleaseOverlapReproduced":  true,
+                       "emulator":  "Android 16 API 36",
+                       "insetScenariosPassed":  [
+                                                    "portrait",
+                                                    "tall display cutout",
+                                                    "landscape with side cutout"
+                                                ],
+                       "headerSettingsDialogAndPanelBounds":  "passed",
+                       "webViewHasNoDuplicatePadding":  true,
+                       "physicalDeviceVerified":  false,
+                       "stepsPerAction":  10
+                   },
+    "retention":  {
+                      "latestAndroid":  "0.1.2",
+                      "previousAndroid":  "0.1.1",
+                      "additionalRetained":  [
+                                                 "0.1.0"
+                                             ],
+                      "windowsPreserved":  [
+                                               "0.3.82",
+                                               "0.3.83"
+                                           ]
+                  }
+}
