@@ -1,0 +1,59 @@
+{
+  "version": "0.3.86",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "634ecf4289ce972deba216c4d276598cd699886d",
+  "sourceTag": "v0.3.86",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.86",
+  "build": {
+    "commands": [
+      "npm.cmd ci --omit=optional",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "pokemonSimulator": "0.10.11",
+    "sshTransport": "ssh2 1.17.0",
+    "packaging": "Independent portable runtime; every archive entry compared with the verified package."
+  },
+  "validation": {
+    "syntaxCheckPassed": true,
+    "sharedAndPlatformNodeTestsPassed": 518,
+    "finalAffectedChecksPassed": 18,
+    "packagedUiChecksPassed": 18,
+    "packagedStartupAndSavedDataChecksPassed": 4,
+    "packagedDexScrollCasesPassed": 31,
+    "mobileBundledBrowserLayoutChecksPassed": 28,
+    "mobileBundledBrowserPortraitChecksPassed": 15,
+    "mobileBundledBrowserBattleChecksPassed": 20,
+    "androidDeviceValidationPerformed": false,
+    "packagedSourceFilesMatched": 54,
+    "packagedArtAndDataFilesMatched": 335,
+    "packagedDependencyFilesMatched": 492,
+    "packagedElectronRuntimeFilesMatched": 73,
+    "packagedDocumentationFilesMatched": 3,
+    "updateManifestFilesMatched": 958,
+    "archiveFilesVerified": 959,
+    "runtimeErrors": 0,
+    "testScope": "Shared adventure rules, platform activity, save migration and reset, dialogue, challenge panels, move details, slots, battle appearance and dex scrolling."
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.86-portable.zip",
+    "bytes": 166667237,
+    "sha256": "913d8864d5a0ef8360895c4135e16b49f1ce78bf9633a7295f3ad3af09cfdf44"
+  },
+  "automaticUpdates": {
+    "supportedFrom": "0.3.65",
+    "defaultEnabled": true,
+    "channel": "stable/latest",
+    "updaterUnchangedFrom": "0.3.65",
+    "previousForwardAndRollbackValidation": "v0.3.65"
+  },
+  "retention": {
+    "latest": "0.3.86",
+    "previous": "0.3.85",
+    "additionalInUse": [
+      "0.3.83"
+    ],
+    "androidLatestPreserved": "0.1.22"
+  }
+}
