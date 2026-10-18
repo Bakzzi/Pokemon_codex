@@ -1,0 +1,49 @@
+{
+  "version": "0.3.87",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "088a4c8575b5a577a78cc476bdac3ebad4e88805",
+  "sourceTag": "v0.3.87",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.87",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0",
+    "archive": "desktop/scripts/archive.ps1",
+    "zipRoot": "Pokemon-Codex-0.3.87/",
+    "zipSeparators": "/"
+  },
+  "validation": {
+    "nodeTestsPassed": 520,
+    "packagedUiChecksPassed": 18,
+    "runtimeErrors": 0,
+    "archiveFilesVerified": 959,
+    "updateManifestFilesMatched": 958,
+    "exactPublishedArchiveStagedByInstalledUpdater": "0.3.84",
+    "forwardUpdateAndRestartPassed": true,
+    "startupFailureRollbackPassed": true,
+    "progressAndSettingsPreserved": true,
+    "gameRuntimeUnchangedFrom": "0.3.86"
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.87-portable.zip",
+    "bytes": 166707423,
+    "sha256": "0098aaf634ecbe2ad23d2fbf1fd12a069c79fd9b18fffd703bbb6d01804f5d02"
+  },
+  "automaticUpdates": {
+    "supportedFrom": "0.3.65",
+    "channel": "stable/latest",
+    "updaterUnchanged": true,
+    "supersedesIncompatibleArchive": "0.3.86"
+  },
+  "retention": {
+    "latest": "0.3.87",
+    "previousKnownGood": "0.3.85",
+    "additionalPinned": [
+      "0.3.83"
+    ],
+    "androidLatestPreserved": "0.1.22"
+  }
+}

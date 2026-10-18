@@ -46,7 +46,12 @@
     "defaultEnabled": true,
     "channel": "stable/latest",
     "updaterUnchangedFrom": "0.3.65",
-    "previousForwardAndRollbackValidation": "v0.3.65"
+    "previousForwardAndRollbackValidation": "v0.3.65",
+    "archiveCompatibility": {
+      "acceptedByInstalledUpdater": false,
+      "reason": "Archive lacked the versioned root and used Windows path separators.",
+      "supersededBy": "0.3.87"
+    }
   },
   "retention": {
     "latest": "0.3.86",
