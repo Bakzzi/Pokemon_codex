@@ -180,7 +180,11 @@ class Game {
     const selected=this.data.slots.map(uid=>this.data.owned[uid]).filter(Boolean),minimumLevel=selected.length?Math.min(...selected.map(p=>p.level)):0;
     return {...championBonus(minimumLevel),minimumLevel,selectedCount:selected.length,onlyUncaught:true};
   }
-  wildLevelCap(){return wildLevelCap(new Set(this.data.badges.filter(id=>db.bosses.slice(0,8).some(b=>b.id===id))).size,this.data.champion);}
+  wildLevelCap(){
+    const count=new Set(this.data.badges.filter(id=>db.bosses.slice(0,8).some(b=>b.id===id))).size;
+    const league=db.bosses.slice(8).map((_,i)=>this.battleBoss({kind:'trainer',bossIndex:8+i,mobileLeagueRevision:1}));
+    return wildLevelCap(count,this.data.champion,{league});
+  }
   wildOptions(){return {maximumLevel:this.wildLevelCap(),champion:this.data.champion,caught:this.data.caught,minimumLevel:this.encounterBonus()?.minimumLevel||0,additions:milestoneBonuses(this.data)};}
   specialEncounters(){
     const options=this.wildOptions();if(!options.additions.length)return null;

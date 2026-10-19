@@ -30,7 +30,7 @@ function collectionHints(game){
   for(const p of data.pokemon.filter(p=>p.generation<=generation)){
     const routes=[],wildAllowed=wildEligible(p,generation,100),minimum=wildMinimum(p),chance=chances.get(p.id)||0;
     if(wildAllowed){
-      const text=options.maximumLevel<minimum?'뱃지를 모아 야생 레벨 상한을 높이면 만날 수 있어요.':activeLevel<minimum?'출전 동료 Lv.'+minimum+'부터 야생에서 출현.':'현재 '+wildPercent(chance)+' 확률로 야생에서 출현.';
+      const text=options.maximumLevel<minimum?'야생 레벨 상한 Lv.'+minimum+' 이상에서 출현.':activeLevel<minimum?'출전 동료 Lv.'+minimum+'부터 야생에서 출현.':'현재 '+wildPercent(chance)+' 확률로 야생에서 출현.';
       const bonus=[];
       const badge={145:6,144:7,146:8}[p.id];
       if(badge)bonus.push(badge+'번째 뱃지 획득');

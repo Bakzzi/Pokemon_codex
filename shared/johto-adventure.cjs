@@ -153,7 +153,9 @@ function withJohto(Base){return class JohtoAdventure extends Base{
  }
  wildLevelCap(){
   if(!J.active(this))return super.wildLevelCap();
-  return wildLevelCap(J.gyms.filter(n=>J.done(this,n.id)&&(n.id!=='j-clair'||J.done(this,'j-dragon-den'))).length,!!this.data.johto?.champion);
+  const count=J.gyms.filter(n=>J.done(this,n.id)&&(n.id!=='j-clair'||J.done(this,'j-dragon-den'))).length;
+  const nextOpponent=J.revisits.find(n=>!J.done(this,n.id))||J.nodes.get('j-red');
+  return wildLevelCap(count,!!this.data.johto?.champion,{region:2,gyms:J.gyms,league:J.league,nextOpponent});
  }
  wildOptions(){
   const previous=super.wildOptions();if(!J.active(this))return previous;

@@ -25,7 +25,18 @@ function view(id){const p=species.get(id);return {id:p.id,name:p.name,types:p.ty
 const balance={tokensPerAction:250,legendaryPoolChance:0.001,mythicalPoolChance:0.0001,rarePoolChance:0.08,championRareMultiplier:1.5,championUncaughtWeight:2};
 function rarity(p){if(p.mythical)return 'mythical';if(p.legendary)return 'legendary';if(p.catchRate<=75||Object.values(p.stats).reduce((a,b)=>a+b,0)>=480)return 'rare';return p.catchRate>=190?'common':'uncommon';}
 function wildMinimum(p){return Math.max(p.minWildLevel||2,p.legendary||p.mythical?50:2);}
-function wildLevelCap(badgeCount=0,champion=false){return champion?65:[15,20,25,30,35,40,45,50,55][Math.max(0,Math.min(8,badgeCount))];}
+function wildLevelCap(badgeCount=0,champion=false,{region=1,gyms=data.bosses.slice(0,8),league=data.bosses.slice(8),nextOpponent=null}={}){
+  const average=team=>team.reduce((sum,p)=>sum+p.level,0)/team.length;
+  const below=(team,gap)=>Math.max(2,Math.min(100,Math.floor(average(team)-gap)));
+  if(champion)return below((nextOpponent||league.at(-1)).team,9);
+  const index=Math.max(0,Math.min(gyms.length,badgeCount));
+  if(index===gyms.length)return below(league.flatMap(n=>n.team),9);
+  // Explicit early/mid-Kanto exceptions. All opponent parties remain original.
+  if(region===1&&index===0)return 10;
+  if(region===1&&index===4)return 34;
+  const gaps=region===1?[3,5,5,6,5,7,8,9]:[5,5,6,6,7,8,9,9];
+  return below(gyms[index].team,gaps[index]);
+}
 function wildEligible(p,maxGeneration,partnerLevel){return p.id!==143&&!STARTER_FAMILY.has(p.id)&&!SPECIAL_EVOLUTIONS.has(p.id)&&p.generation<=maxGeneration&&wildMinimum(p)<=partnerLevel;}
 function championBonus(minimumLevel=0){
   const levelMultiplier=minimumLevel>90?5:minimumLevel>80?4:minimumLevel>70?3:1;
