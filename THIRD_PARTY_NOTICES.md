@@ -81,6 +81,12 @@ Additional trainer illustrations use original game and animation artwork. Images
 
 Recovery-tool icons also use unchanged PokeAPI sprite images. Pinned source URLs, item identities, sizes and SHA-256 hashes are recorded in `desktop/assets/items/consumable-sources.json`. Their artwork remains with the original Pokemon rights holders. Item descriptions were checked against PokeAPI item data; effect values use this project's Gen III ruleset.
 
+## Johto reference data and artwork
+
+Original Crystal trainer parties, level learnsets and map references were checked against pret/pokecrystal at commit `3bc8daa4173e96a7f4011dad3922eb6fa5dad5c6`: https://github.com/pret/pokecrystal/tree/3bc8daa4173e96a7f4011dad3922eb6fa5dad5c6 . Source identity and hashes are recorded in `reference/johto/upstream.json` and `desktop/data/johto-data.json`. Original game content retains the Pokemon rights holders' copyright; this project's MIT license does not relicense it. No ROM is distributed.
+
+Original Generation II trainer sprites are mirrored by Pokemon Showdown. Official trainer illustrations and badges use unchanged Bulbagarden Archives images; item and Pokemon sprites use PokeAPI mirrors. Exact source URLs, dimensions and SHA-256 hashes are recorded in `desktop/assets/johto-sources.json`. Portraits are displayed through CSS face viewports. These assets remain Pokemon / Nintendo / Creatures / GAME FREAK artwork and are not MIT-licensed code.
+
 ## SSH transport
 
 ssh2 1.17.0: https://github.com/mscdex/ssh2/tree/v1.17.0 . MIT License. The package and dependency licenses are retained in the portable runtime under resources/app/node_modules. Exact versions and integrity hashes are pinned in package-lock.json. Only explicitly configured SSH endpoints are contacted; no third-party relay service is used.

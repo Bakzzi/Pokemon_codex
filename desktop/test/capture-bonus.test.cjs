@@ -30,7 +30,7 @@ test('Mew requires every registration numbered 1 through 150, and bonuses persis
   for(const missing of Object.keys(caught)){const incomplete=dex([]);delete incomplete[missing];assert.equal(captureBonus(151,incomplete),0,'missing '+missing);}
   const all=dex([]);for(let id=152;id<=251;id++)all[id]=now;
   for(const [id,bonus]of [[144,.04],[145,.04],[146,.04],[150,.03],[151,.02]])assert.equal(captureBonus(id,all),bonus);
-  for(const p of species.values())if(!special.includes(p.id))assert.equal(captureBonus(p.id,all),0);
+  for(const p of species.values())if(!special.includes(p.id)&&p.generation===1)assert.equal(captureBonus(p.id,all),0);
 });
 
 function probability(status,bonus,hp=10){

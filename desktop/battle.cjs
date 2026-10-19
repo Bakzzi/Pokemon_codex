@@ -17,11 +17,11 @@ const clone=v=>JSON.parse(JSON.stringify(v));
 function abilityFor(id,slot=0){const list=species.get(id).abilities;return list[slot%list.length]||list[0];}
 function combatant(id,level,known,options={}){
   const stats=statsAt(id,level),list=[...new Set(known?.length?known:learnedMoves(id,level))];
-  return {id,level,stats,maxHp:stats[1],hp:stats[1],moves:list,pp:Object.fromEntries(list.map(id=>[id,simMoves.get(id)?.pp||moves.get(id)?.pp||10])),status:null,statusTurns:0,stages:{},ability:options.ability||abilityFor(id,options.abilitySlot),gender:options.gender||'male',happiness:options.happiness??70};
+  return {id,level,stats,maxHp:stats[1],hp:stats[1],moves:list,pp:Object.fromEntries(list.map(id=>[id,simMoves.get(id)?.pp||moves.get(id)?.pp||10])),status:null,statusTurns:0,stages:{},ability:options.ability||abilityFor(id,options.abilitySlot),gender:options.gender||'male',happiness:options.happiness??70,...(options.shiny?{shiny:true}:{})};
 }
 function setFor(mon,name){
   return {name,species:species.get(mon.id).identifier,level:mon.level,ability:abilities.get(mon.ability||abilityFor(mon.id)).identifier,
-    gender:mon.gender==='female'?'F':['genderless','none'].includes(mon.gender)?'N':'M',nature:'Serious',happiness:mon.happiness??70,
+    gender:mon.gender==='female'?'F':['genderless','none'].includes(mon.gender)?'N':'M',nature:'Serious',happiness:mon.happiness??70,shiny:!!mon.shiny,
     moves:mon.moves.map(id=>simMoves.get(id)?.id).filter(Boolean),ivs:{hp:15,atk:15,def:15,spa:15,spd:15,spe:15},evs:{hp:0,atk:0,def:0,spa:0,spd:0,spe:0}};
 }
 function appearance(mon){
@@ -33,7 +33,7 @@ function readMon(mon){
     appearance:appearance(mon),
     moves:mon.moveSlots.map(s=>dex.moves.get(s.id).num),pp:Object.fromEntries(mon.moveSlots.map(s=>[dex.moves.get(s.id).num,s.pp])),
     status:statusNames[mon.status]||null,statusTurns:mon.statusState.time||0,stages:Object.fromEntries(Object.entries(statKeys).filter(([n])=>n>1).map(([n,k])=>[n,mon.boosts[k]||0])),
-    ability:abilityIds.get(mon.baseAbility),gender:mon.gender==='F'?'female':mon.gender==='M'?'male':'none',happiness:mon.happiness};
+    ability:abilityIds.get(mon.baseAbility),gender:mon.gender==='F'?'female':mon.gender==='M'?'male':'none',happiness:mon.happiness,...(mon.shiny?{shiny:true}:{})};
 }
 function restoreMon(mon,saved){
   if(!saved)return;
@@ -350,6 +350,14 @@ function step(game,b){
   })));
   const itemLine=lines.find(line=>line.startsWith('|buddyitem|')),item=itemLine&&{...consumables.byId.get(Number(itemLine.split('|')[3])),target:Number(itemLine.split('|')[4].slice(1))};
   const afterMove=item?protocol(sim,lines,true).filter(message=>!['buddyitem','faint'].includes(message.kind)):firstMove<0?[]:protocol(sim,lines.slice(firstMove),true).filter(message=>!['move','faint'].includes(message.kind));
+  for(const line of lines){
+    const parts=line.split('|');
+    // The pinned Gen III implementation reports successful Sketch as Mimic.
+    if(parts[1]==='-activate'&&parts[2]?.startsWith('p1')&&(parts[3]==='move: Sketch'||parts[3]==='move: Mimic'&&presentation.move===166&&presentation.actor==='hero')){
+      const uid=Number(parts[2].split(': ')[1]?.slice(1)),p=game.data.owned[uid],move=dex.moves.get(parts[4]);
+      if(p)require('./move-access.cjs').recordSketch(p,move.num);
+    }
+  }
   const messages=protocol(sim,lines);sync(game,b,sim);
   // nextTrainer has already announced the next foe. Its old fainted native
   // combatant stays in place until the mandatory opponent switch is committed.
@@ -384,6 +392,17 @@ function addPartner(game,b,uid){
   if(sim.requestState)sim.makeRequest(sim.requestState);
   persist(b,sim);
 }
+function prepareNextTrainer(game,b){
+  const sim=cache.get(b)||(b.sim?engine(game,b):null);
+  for(const [uid,p]of Object.entries(b.party)){
+    const mon=sim?.p1.pokemon.find(m=>m.name==='u'+uid);
+    // HP, PP and major status carry between League battles. Transform's
+    // temporary moves, stat stages and other volatile effects do not.
+    if(mon){p.moves=mon.baseMoveSlots.map(s=>dex.moves.get(s.id).num);p.pp=Object.fromEntries(mon.baseMoveSlots.map(s=>[dex.moves.get(s.id).num,s.pp]));}
+    p.stages={};delete p.appearance;
+  }
+  delete b.field;delete b.pendingSwitch;invalidate(b);
+}
 function invalidate(b){if(!b)return;cache.delete(b);delete b.sim;delete b.simBoss;}
 function catchValue(catchRate,hp,maxHp,status){
   const bonus=['sleep','freeze'].includes(status)?2.5:['poison','toxic','burn','paralysis'].includes(status)?1.5:1;
@@ -396,4 +415,4 @@ function tryCatch(rate,hp,maxHp,status,random=Math.random,bonus=0){
   while(checks<4&&Math.floor(random()*65536)<threshold)checks++;
   return {caught:checks===4,shakes:Math.min(checks,3),a};
 }
-module.exports={protocol,protocolLines,bestPartner,matchupScore,combatant,abilityFor,step,canSwitch,switchWait,addPartner,invalidate,catchValue,tryCatch,engine,readMon,restoreAppearance,scoreMove,movePresentation,dex};
+module.exports={protocol,protocolLines,bestPartner,matchupScore,combatant,abilityFor,step,canSwitch,switchWait,addPartner,invalidate,prepareNextTrainer,catchValue,tryCatch,engine,readMon,restoreAppearance,scoreMove,movePresentation,dex};

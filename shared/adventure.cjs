@@ -327,4 +327,4 @@ class Adventure extends Engine{
     return {...s,inventory:[...s.inventory,...items],scene:this.presentation(),activityMode:this.platform==='desktop'?'tokens':'walking',onboarding:story?.onboarding!=='done',discovery,rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this),silph:silph.snapshot(this),safari:{...safari.snapshot(this),canStart:this.canChallenge('safari-start')},mansion:{...mansion.snapshot(this),canStart:this.canChallenge('mansion-investigate')},mobileGymHints:hints};
   }
 }
-module.exports={Adventure};
+module.exports={Adventure:require('./johto-adventure.cjs').withJohto(Adventure)};

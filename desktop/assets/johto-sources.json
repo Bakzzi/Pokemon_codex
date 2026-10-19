@@ -1,0 +1,678 @@
+{
+  "copyright": "Pokemon / Nintendo / Creatures / GAME FREAK. Original assets and unchanged official artwork. Not covered by this project MIT license.",
+  "assets": [
+    {
+      "file": "trainers/battle/j-falkner.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/falkner-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 484,
+      "sha256": "9a822225d5af24afa6971a625eca06b21d5f88e7dd4133607a663efbcbb690fb"
+    },
+    {
+      "file": "trainers/battle/j-bugsy.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/bugsy-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 463,
+      "sha256": "cd44cea9d8765c8c74d6596323cdf979e392d9b9defd71b93a0018aa7d3d71b2"
+    },
+    {
+      "file": "trainers/battle/j-whitney.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/whitney-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 440,
+      "sha256": "c1628720c79b8d7ac026a7d025fec439053aef28932994f56c93c1f36086758d"
+    },
+    {
+      "file": "trainers/battle/j-morty.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/morty-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 441,
+      "sha256": "09717b0bb113817439c1e1606f365e7f301560dfb25b24083b3e1ea0d64464df"
+    },
+    {
+      "file": "trainers/battle/j-chuck.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/chuck-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 572,
+      "sha256": "aab95462967502c868d38d586bd1479c4942dcd2339276207048e142e4ddeb29"
+    },
+    {
+      "file": "trainers/battle/j-jasmine.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/jasmine-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 429,
+      "sha256": "7402fb611d5f067077d1f99db50cafb2a9648cabeb417396e53f5eb55b76afe6"
+    },
+    {
+      "file": "trainers/battle/j-pryce.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/pryce-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 401,
+      "sha256": "9fb822c03bcdb50c9e38a58e743f9127e4e65f150d2beb4089529d488f763e25"
+    },
+    {
+      "file": "trainers/battle/j-clair.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/clair-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 527,
+      "sha256": "c34fcff881dd3b4e794b4ce3fc4d35317c3947515ba6312fae185fc08edd23ea"
+    },
+    {
+      "file": "trainers/battle/j-will.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/will-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 429,
+      "sha256": "0c48d3d5b73ba62ca6e647cdc4b69a87dad81f9caf6378677b195dabf366a649"
+    },
+    {
+      "file": "trainers/battle/j-koga.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/koga-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 454,
+      "sha256": "edff93b930fac68a62d23e3cef4ba24c2891b8faf60e3c7260588acdf81eae15"
+    },
+    {
+      "file": "trainers/battle/j-bruno.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/bruno-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 616,
+      "sha256": "3260c2473bcea331a5b20d1b81c4b2620a271069a38c609fb0be6a4c773c4598"
+    },
+    {
+      "file": "trainers/battle/j-karen.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/karen-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 460,
+      "sha256": "371b36399be5ae2ba42db1b874522f2a999a4a95bd8664ebbd93577d546007b5"
+    },
+    {
+      "file": "trainers/battle/j-lance.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/lance-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 570,
+      "sha256": "de995af1c203e2deb4770ab37f3a4f963fe94c377f0a01604263d163cafd2654"
+    },
+    {
+      "file": "trainers/battle/j-silver.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/silver-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 465,
+      "sha256": "6f41a8dab91504e573fb575a3868108faee952060e2eb7ba5d7675a2cfd870ef"
+    },
+    {
+      "file": "trainers/battle/j-red.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/red-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 431,
+      "sha256": "bd874ca936417aa13d9aed776d457783fe9caf31553ce6bd9f05ed4c44f76178"
+    },
+    {
+      "file": "trainers/battle/j-blue.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/blue-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 397,
+      "sha256": "793ee993d7e7454130fa9364873498e26a5a72eb3d8e10384e117b3d703a2c4e"
+    },
+    {
+      "file": "trainers/battle/j-janine.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/janine-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 442,
+      "sha256": "1b62dfdc7e85e287e671f6af1adc964bee591493e1c4dc43b6df85190fe2389d"
+    },
+    {
+      "file": "trainers/battle/j-brock.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/brock-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 385,
+      "sha256": "75b47a015fa7c9599cc82e61e9c676e40d94b6c52186d392bc297622eb8964c6"
+    },
+    {
+      "file": "trainers/battle/j-misty.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/misty-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 426,
+      "sha256": "1ac2f2177d29d6e22fe02996269eaa424961c214317a0860156a7301927f5a57"
+    },
+    {
+      "file": "trainers/battle/j-surge.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/ltsurge-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 494,
+      "sha256": "bad771be84156732660f4fa001fd83dfb959db7d6ebbffe6693fc14743d471ae"
+    },
+    {
+      "file": "trainers/battle/j-erika.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/erika-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 423,
+      "sha256": "5ca3a4d7ce537052acf17c7829da349233bf257f6f79fd7169ca907e8e7fbc0e"
+    },
+    {
+      "file": "trainers/battle/j-sabrina.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/sabrina-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 459,
+      "sha256": "d92dc485fd376f744c4f72c7378ceff0af78cbadbfae948030fda67d27747c06"
+    },
+    {
+      "file": "trainers/battle/j-blaine.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/blaine-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 413,
+      "sha256": "7d87e2a98a7227c132c6330ed39ed8f142576de3ba138ba20532075de58406a0"
+    },
+    {
+      "file": "trainers/battle/j-sage.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/sage-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 364,
+      "sha256": "a3f80f9d4b52362e5866c88f0055a10335860eb8aae11ffa31c80692fcff0522"
+    },
+    {
+      "file": "trainers/battle/j-grunt.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/rocketgrunt-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 442,
+      "sha256": "1ba9f1029939c88a69ac86dea17abc7933905c817d0f7bacec765e2893912cf4"
+    },
+    {
+      "file": "trainers/battle/j-executive.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/rocketexecutive-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 394,
+      "sha256": "53035c2c67e0c68ffec9e2ceb52ed336f8017dfdde8a5249b982885033124e5c"
+    },
+    {
+      "file": "trainers/battle/j-executivef.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/rocketexecutivef-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 397,
+      "sha256": "e19c52006e4c42b2c3c40c77a08bbaaa9ff683a18dc3b13035071e2b64d1f598"
+    },
+    {
+      "file": "trainers/battle/j-kimono.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/kimonogirl-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 561,
+      "sha256": "72888f14eaa2c18293fcfedb5948006ef7b58ab31b21a3b00aa2fc4a37373e33"
+    },
+    {
+      "file": "trainers/battle/j-blackbelt.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/blackbelt-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 613,
+      "sha256": "9a1082c426666440ab03a73f6b8e1f1a1d4d07b0072d930651f4ebea9af665b8"
+    },
+    {
+      "file": "trainers/battle/j-eusine.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/eusine-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 473,
+      "sha256": "2fd78fdda9071f8c80184fdd06d64ad3071b787157a5b60d6aa905226ce875f2"
+    },
+    {
+      "file": "trainers/battle/j-sailor.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/sailor-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 490,
+      "sha256": "4201942fbed09189605f192aa5ef1624de6b2d6ce7651c841f54b62a27686d7a"
+    },
+    {
+      "file": "trainers/battle/j-scientist.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/scientist-gen2.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 500,
+      "sha256": "8a1c300a029c15a22e34d2840ce8b16b7e50e5e6346685a56f1f5a8071556739"
+    },
+    {
+      "file": "trainers/portraits/j-falkner.png",
+      "url": "https://archives.bulbagarden.net/media/upload/e/e0/HeartGold_SoulSilver_Falkner.png",
+      "width": 1880,
+      "height": 2951,
+      "bytes": 1388742,
+      "sha256": "1d3e6d2803632aa6d4480d7ce3ce1cdc57e45939abfd4dfd5f98485152409247",
+      "defaultCrop": [
+        1880,
+        517,
+        0,
+        845
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-bugsy.png",
+      "url": "https://archives.bulbagarden.net/media/upload/6/6b/HeartGold_SoulSilver_Bugsy.png",
+      "width": 1453,
+      "height": 2741,
+      "bytes": 1257161,
+      "sha256": "7022bbfe530920ae2356c61711aa1b696bbc65e3264fd64a8fb29b7ad7eb5a33",
+      "defaultCrop": [
+        1453,
+        334,
+        0,
+        785
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-whitney.png",
+      "url": "https://archives.bulbagarden.net/media/upload/e/e1/HeartGold_SoulSilver_Whitney.png",
+      "width": 1928,
+      "height": 2903,
+      "bytes": 1269415,
+      "sha256": "c9fdedd1bb6e3224d5927afdedc4de7eb52f514d4b987ece5ecd824ef6d8d039",
+      "defaultCrop": [
+        1928,
+        548,
+        0,
+        832
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-morty.png",
+      "url": "https://archives.bulbagarden.net/media/upload/1/1c/HeartGold_SoulSilver_Morty.png",
+      "width": 1521,
+      "height": 2983,
+      "bytes": 1200833,
+      "sha256": "86cfd4bb5d816373b315913f2fa13ce139033f6caa64f9814232f8f24fa9f6ed",
+      "defaultCrop": [
+        1521,
+        333,
+        0,
+        855
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-chuck.png",
+      "url": "https://archives.bulbagarden.net/media/upload/b/bd/HeartGold_SoulSilver_Chuck.png",
+      "width": 2634,
+      "height": 3021,
+      "bytes": 2084213,
+      "sha256": "634e2f3f59a3f96bad698dc65919130d3f878d61b59d461c301569f8f4b72c3a",
+      "defaultCrop": [
+        2634,
+        850,
+        280,
+        950
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-jasmine.png",
+      "url": "https://archives.bulbagarden.net/media/upload/b/b3/HeartGold_SoulSilver_Jasmine.png",
+      "width": 1361,
+      "height": 3083,
+      "bytes": 1017627,
+      "sha256": "40fcd184a4afe92efd8d61c1568953c24f914c168331800587a3e06cc240b424",
+      "defaultCrop": [
+        1361,
+        239,
+        0,
+        883
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-pryce.png",
+      "url": "https://archives.bulbagarden.net/media/upload/0/02/HeartGold_SoulSilver_Pryce.png",
+      "width": 539,
+      "height": 1280,
+      "bytes": 553705,
+      "sha256": "b052c8fe378443b30783a44a0142f1b44873a52b560ac5b32094b7fc449a6c47",
+      "defaultCrop": [
+        539,
+        86,
+        0,
+        367
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-clair.png",
+      "url": "https://archives.bulbagarden.net/media/upload/f/fe/HeartGold_SoulSilver_Clair.png",
+      "width": 2248,
+      "height": 3137,
+      "bytes": 1741347,
+      "sha256": "712f5af75629c0be98a813e777a8c8569ad7782812369c98746fd3e62f1cff73",
+      "defaultCrop": [
+        2248,
+        675,
+        0,
+        899
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-will.png",
+      "url": "https://archives.bulbagarden.net/media/upload/8/80/HeartGold_SoulSilver_Will.png",
+      "width": 1704,
+      "height": 2924,
+      "bytes": 1181637,
+      "sha256": "7da0dc05563d81c17d8befe297f7455951776228f6b8ad4ce50db3f6868b82fa",
+      "defaultCrop": [
+        1704,
+        433,
+        0,
+        838
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-koga.png",
+      "url": "https://archives.bulbagarden.net/media/upload/f/fc/HeartGold_SoulSilver_Koga.png",
+      "width": 1832,
+      "height": 2968,
+      "bytes": 1319411,
+      "sha256": "af2187bf1fc3fa5a2fef584e0f7f623ef34d79405aa91316675c29fd2365d994",
+      "defaultCrop": [
+        1832,
+        491,
+        0,
+        850
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-bruno.png",
+      "url": "https://archives.bulbagarden.net/media/upload/1/1b/HeartGold_SoulSilver_Bruno.png",
+      "width": 1169,
+      "height": 1280,
+      "bytes": 959128,
+      "sha256": "ebb9f6b5465ea392fde2f6ef7560ac66c3c08d0d2e6582bba5387828b95b8973",
+      "defaultCrop": [
+        1169,
+        450,
+        0,
+        450
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-karen.png",
+      "url": "https://archives.bulbagarden.net/media/upload/4/4b/HeartGold_SoulSilver_Karen.png",
+      "width": 1360,
+      "height": 3128,
+      "bytes": 1294677,
+      "sha256": "e624258ec335068ff9b76d6c30d93ba9aa45ba17a5f73aa1f6585b377e8aee31",
+      "defaultCrop": [
+        1360,
+        232,
+        0,
+        896
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-lance.png",
+      "url": "https://archives.bulbagarden.net/media/upload/f/f5/HeartGold_SoulSilver_Lance.png",
+      "width": 2064,
+      "height": 3243,
+      "bytes": 1481130,
+      "sha256": "6252f65022dfcb2198df12d68ef1adc8be13a7e57f810803515821dc48cf4935",
+      "defaultCrop": [
+        2064,
+        1000,
+        100,
+        800
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-silver.png",
+      "url": "https://archives.bulbagarden.net/media/upload/a/a6/HeartGold_SoulSilver_Silver.png",
+      "width": 1081,
+      "height": 3107,
+      "bytes": 1872677,
+      "sha256": "eb2f1feec233ef1c77e20a69ea2367af9cb6230215182ebb61b78e3236096f2e",
+      "defaultCrop": [
+        1081,
+        95,
+        0,
+        890
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-red.png",
+      "url": "https://archives.bulbagarden.net/media/upload/8/83/FireRed_LeafGreen_Red.png",
+      "width": 1113,
+      "height": 2417,
+      "bytes": 1912192,
+      "sha256": "cb0cdbdbc4013d4890185d85aaaeb5b615d92ef80cd90f6c7e2ae3aaabc22c97",
+      "defaultCrop": [
+        1113,
+        210,
+        0,
+        692
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-blue.png",
+      "url": "https://archives.bulbagarden.net/media/upload/8/84/HeartGold_SoulSilver_Blue.png",
+      "width": 1516,
+      "height": 3033,
+      "bytes": 1285247,
+      "sha256": "910c904f83abaa0f994bdef3e4c89a5660be676ebf2c64d3d21d5ee9b027f4d7",
+      "defaultCrop": [
+        1516,
+        324,
+        0,
+        869
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-janine.png",
+      "url": "https://archives.bulbagarden.net/media/upload/9/9a/HeartGold_SoulSilver_Janine.png",
+      "width": 1761,
+      "height": 2300,
+      "bytes": 1040470,
+      "sha256": "3b441d3d13d075d628eee0059983ee537f31e1118143ebe54be9187bd4a03ac9",
+      "defaultCrop": [
+        1761,
+        1000,
+        180,
+        800
+      ]
+    },
+    {
+      "file": "trainers/portraits/j-elm.png",
+      "url": "https://archives.bulbagarden.net/media/upload/e/ec/HeartGold_SoulSilver_Professor_Elm.png",
+      "width": 636,
+      "height": 1280,
+      "bytes": 522399,
+      "sha256": "d17690466490f45978d77fff37042b5467a59088eb8e8b3e3ce0c28c0893f6f9",
+      "defaultCrop": [
+        636,
+        135,
+        0,
+        367
+      ]
+    },
+    {
+      "file": "trainers/battle/j-elm.png",
+      "url": "https://archives.bulbagarden.net/media/upload/e/ec/HeartGold_SoulSilver_Professor_Elm.png",
+      "width": 636,
+      "height": 1280,
+      "bytes": 522399,
+      "sha256": "d17690466490f45978d77fff37042b5467a59088eb8e8b3e3ce0c28c0893f6f9"
+    },
+    {
+      "file": "badges/j-falkner.png",
+      "url": "https://archives.bulbagarden.net/media/upload/4/4a/Zephyr_Badge.png",
+      "width": 192,
+      "height": 187,
+      "bytes": 63371,
+      "sha256": "39bcdc81bb3109480243ac837470e790e800c28f2216f9d420d76c27d976f644"
+    },
+    {
+      "file": "badges/j-bugsy.png",
+      "url": "https://archives.bulbagarden.net/media/upload/0/08/Hive_Badge.png",
+      "width": 189,
+      "height": 190,
+      "bytes": 81605,
+      "sha256": "95879f9428608de789f83091462bd9b57547d210156e69985780da468a951cad"
+    },
+    {
+      "file": "badges/j-whitney.png",
+      "url": "https://archives.bulbagarden.net/media/upload/a/a7/Plain_Badge.png",
+      "width": 205,
+      "height": 197,
+      "bytes": 61857,
+      "sha256": "caff3c975c5d042746ed9adcd52033b664f90d1356a6f5e0002d8aa0aee98ab3"
+    },
+    {
+      "file": "badges/j-morty.png",
+      "url": "https://archives.bulbagarden.net/media/upload/4/48/Fog_Badge.png",
+      "width": 190,
+      "height": 168,
+      "bytes": 70463,
+      "sha256": "96c4beb1d851700abf6c8c11c34ef094d27f582f96c51a39161311a32358be7a"
+    },
+    {
+      "file": "badges/j-chuck.png",
+      "url": "https://archives.bulbagarden.net/media/upload/b/b9/Storm_Badge.png",
+      "width": 227,
+      "height": 186,
+      "bytes": 86458,
+      "sha256": "3bbdb6c8f7d7413fa4528b6b19f395488e7f504a60876b6e9ccbdfc66a3cab35"
+    },
+    {
+      "file": "badges/j-jasmine.png",
+      "url": "https://archives.bulbagarden.net/media/upload/7/7b/Mineral_Badge.png",
+      "width": 187,
+      "height": 190,
+      "bytes": 79221,
+      "sha256": "702b347f9f5193bf5f71cf20b134c31a547723b1cb8f8c529a58217d7ef5cbcb"
+    },
+    {
+      "file": "badges/j-pryce.png",
+      "url": "https://archives.bulbagarden.net/media/upload/e/e6/Glacier_Badge.png",
+      "width": 174,
+      "height": 201,
+      "bytes": 77532,
+      "sha256": "3d5136d81caa831e9e7920ceb54420c6750b074e8b73e21d909ad4b1c5ee4393"
+    },
+    {
+      "file": "badges/j-clair.png",
+      "url": "https://archives.bulbagarden.net/media/upload/5/58/Rising_Badge.png",
+      "width": 760,
+      "height": 841,
+      "bytes": 1206698,
+      "sha256": "773c144659e4d250b77111efaf09c752d6701f02397fad2ca4c835b2f84d15cb"
+    },
+    {
+      "file": "items/j-squirt-bottle.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/squirt-bottle.png",
+      "width": 30,
+      "height": 30,
+      "bytes": 316,
+      "sha256": "cacc29723fbf168245a31dd8dc5275cad596b94d33884b2001993ac5930b859d"
+    },
+    {
+      "file": "items/j-secret-potion.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/secret-potion.png",
+      "width": 30,
+      "height": 30,
+      "bytes": 275,
+      "sha256": "4d39a23db9acf1a79d1771bd989d9b574c5d7bf875f3dafed7f26da336349b66"
+    },
+    {
+      "file": "items/j-clear-bell.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/clear-bell.png",
+      "width": 30,
+      "height": 30,
+      "bytes": 297,
+      "sha256": "6e0d2dc5837cb86f478ca0623736f24e963322a1caea909d190c24077d0dbe59"
+    },
+    {
+      "file": "items/j-silver-wing.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/silver-wing.png",
+      "width": 30,
+      "height": 30,
+      "bytes": 239,
+      "sha256": "e8bea3d128bb69e16880b3a78795d56d15fbc1e1b58ba442cdb7cd086706ef9a"
+    },
+    {
+      "file": "items/j-rainbow-wing.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rainbow-wing.png",
+      "width": 30,
+      "height": 30,
+      "bytes": 246,
+      "sha256": "d052c7c91878f20296eb324858c4b2667d9a505923c32f1aae3d4e86982736fb"
+    },
+    {
+      "file": "items/j-ss-ticket.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ss-ticket.png",
+      "width": 30,
+      "height": 30,
+      "bytes": 214,
+      "sha256": "b6d7834d0e22980c6057c6aeb859211795567dba1e4aedb708fe109019945cd9"
+    },
+    {
+      "file": "items/j-machine-part.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/machine-part.png",
+      "width": 30,
+      "height": 30,
+      "bytes": 264,
+      "sha256": "c51fd36a64a58fa81756ac0ec3f5c1b2dfd9ccf7b2715c067d104854c8069c47"
+    },
+    {
+      "file": "items/j-red-scale.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/red-scale.png",
+      "width": 30,
+      "height": 30,
+      "bytes": 203,
+      "sha256": "c45f27ed6c809e5746470513bc968fe8ed3f768e13c890fb297cdc724bcd2ef8"
+    },
+    {
+      "file": "items/j-gs-ball.png",
+      "url": "https://archives.bulbagarden.net/media/upload/4/42/GS_Ball_Crystal.png",
+      "width": 729,
+      "height": 730,
+      "bytes": 382938,
+      "sha256": "f6c278f6604737c871c3ff33970686e9c18ed6c0fcff29ff4875a463a1faecf1"
+    },
+    {
+      "file": "items/j-expansion-card.png",
+      "sourceFile": "items/xtransceiver.png",
+      "usage": "Radio communication feature indicator; existing original item artwork, not a claimed Generation II card sprite",
+      "bytes": 291,
+      "sha256": "00f77aa90254745d326a268ea2972a8075480ddd49c12b814226d4c8fb966020"
+    },
+    {
+      "file": "trainers/battle/j-silver-late.png",
+      "url": "https://play.pokemonshowdown.com/sprites/trainers/silver-gen2kanto.png",
+      "width": 80,
+      "height": 80,
+      "bytes": 395,
+      "sha256": "1b1e01e7d17490326b647a3970f25449b93ed300145af549a7b13450199da4d9"
+    },
+    {
+      "file": "shiny/130.gif",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/animated/shiny/130.gif",
+      "bytes": 3664,
+      "sha256": "0406558d567dcadb625eddc4b8387863a7bf92520ae9c1b4a0180b712eb8fcdb"
+    }
+  ]
+}

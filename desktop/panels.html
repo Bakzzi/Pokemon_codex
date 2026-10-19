@@ -3,7 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; font-src 'self'">
 <title>포켓몬 도감 · AI Agent 포켓몬 키우기</title><link rel="stylesheet" href="panels.css"><link rel="stylesheet" href="badge-case.css"><link rel="stylesheet" href="connections.css"><link rel="stylesheet" href="story-panels.css">
-</head><body>
+<link rel="stylesheet" href="johto-panel.css"></head><body>
 <header class="top"><div><span class="kicker" id="panel-agent-label">POKÉMON / AI AGENT</span><h1>작은 모험의 기록</h1></div><div class="totals"><b id="totals">4 / 151</b><span id="region">관동 지방</span><span id="xp-boost"></span></div></header>
 <nav class="tabs" aria-label="모험 메뉴"><button data-tab="collection" aria-selected="true">포켓몬 도감</button><button data-tab="challenge">도전하기</button><button data-tab="daycare">가방</button><button data-tab="journal">모험 기록</button><button data-tab="connections">연동 설정</button></nav>
 <p id="season-note" class="season-note"></p>
@@ -16,6 +16,7 @@
   <div class="dex-layout"><div class="dex-grid" id="dex-grid"></div><aside id="detail" class="detail"><div class="placeholder">포켓몬을 눌러<br>모험의 동료를 골라 봐.</div></aside></div>
 </section>
 <section id="challenge" class="page" hidden>
+<div id="kanto-challenges">
   <div id="ongoing" class="ongoing" hidden></div>
   <section id="kanto-gyms" aria-labelledby="kanto-gyms-title">
   <div class="intro"><div><h2 id="kanto-gyms-title">관동 체육관</h2><p>배치한 동료로 순서대로 도전해요. 야생 배틀 중 누르면 배틀이 끝난 뒤 시작해요.</p></div><b id="badges"></b></div>
@@ -57,6 +58,8 @@
     <h2 id="special-encounters-title">특별한 만남</h2><p id="special-encounters-note"></p>
     <table><thead><tr><th>포켓몬</th><th>추가 확률</th><th>현재 출현 확률</th></tr></thead><tbody id="special-encounters-list"></tbody></table>
   </section>
+</div>
+<div id="johto-challenges" hidden></div>
 </section>
 <section id="daycare" class="page" hidden>
   <section class="device-quest" aria-labelledby="inventory-title">
@@ -113,4 +116,4 @@
   <button id="reset-game" class="reset-game">완전 초기화</button>
 </section>
 </main>
-<script src="agent-status.js"></script><script src="connections.js"></script><script src="panel-layout.js"></script><script src="panels.js"></script><script src="rescue-panel.js"></script><script src="rival-panel.js"></script><script src="exploration-panel.js"></script><script src="league-portraits.js"></script></body></html>
+<script src="johto-art.js"></script><script src="johto-panel.js"></script><script src="agent-status.js"></script><script src="connections.js"></script><script src="panel-layout.js"></script><script src="panels.js"></script><script src="rescue-panel.js"></script><script src="rival-panel.js"></script><script src="exploration-panel.js"></script><script src="league-portraits.js"></script></body></html>

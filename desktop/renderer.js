@@ -7,7 +7,7 @@ const safariPresentation=SafariPresentation.create({});
 for(const action of ['pin','compact','hide','close'])$(action).onclick=()=>window.buddy.action(action);
 for(const b of document.querySelectorAll('[data-panel]'))b.onclick=()=>window.buddy.action('panel',b.dataset.panel);
 function sprite(element,p){
-  const img=$(element),a=p.appearance,src=a?.substitute?'assets/substitute.png':'assets/'+(a?.speciesId||p.id)+'.gif';
+  const img=$(element),a=p.appearance,id=a?.speciesId||p.id,src=a?.substitute?'assets/substitute.png':'assets/'+(p.shiny&&id===130?'shiny/':'')+id+'.gif';
   if(img.getAttribute('src')!==src)img.src=src;img.alt=p.name+(a?.transformed?' · 변신 중':'')+(a?.substitute?' · 대타출동':'');
   img.classList.toggle('substitute',!!a?.substitute);
   img.style.visibility=a?.hidden?'hidden':'';
@@ -193,7 +193,7 @@ function renderPartyStatus(s){
     const fainted=reviving||p.fainted&&!(p.selected&&playingMove?.heroBefore&&moveHealth('hero',playingMove.hero||s.hero).currentHp>0);
     const queued=!p.selected&&s.pendingActions.find(a=>a.kind==='select'&&a.uid===p.uid);b.classList.toggle('queued',!!queued);b.dataset.id=p.uid;b.disabled=p.selected||!!queued;b.title=p.name+' '+levelText(p)+(p.selected?' · 현재 출전 중':queued?' · 출전 예약 · '+queued.reason:p.boarded?' · 키우미집에서 데려온 뒤 출전 예약':fainted?' · 배틀 종료 후 회복·출전 예약':' · 클릭하여 출전');
     b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed',String(p.selected));b.classList.toggle('fainted',fainted);
-    const img=b.firstChild;if(img.getAttribute('src')!=='assets/'+p.id+'.gif')img.src='assets/'+p.id+'.gif';b.lastChild.textContent=queued?'예약':p.boarded?'맡김':fainted?'기절':levelText(p);
+    const img=b.firstChild,src='assets/'+(p.shiny&&p.id===130?'shiny/':'')+p.id+'.gif';if(img.getAttribute('src')!==src)img.src=src;b.lastChild.textContent=queued?'예약':p.boarded?'맡김':fainted?'기절':levelText(p);
   });
 }
 window.buddy.onState(s=>{

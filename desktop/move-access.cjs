@@ -11,7 +11,21 @@ function legacyLevel(id,move){
   // Preserve non-level techniques in older saves; they have no level gate.
   return levels.length?Math.min(...levels):1;
 }
-function catalog(p){return merge([...species.get(p.id).learn,...(Array.isArray(p.moveMemory)?p.moveMemory:[])]);}
+function catalog(p){
+  const all=merge([...species.get(p.id).learn,...(Array.isArray(p.moveMemory)?p.moveMemory:[])]);
+  if(p.id!==235)return all;
+  // Each successful Sketch consumes one lesson. A copied technique persists,
+  // while Sketch becomes available again at its next original learn level.
+  const lesson=species.get(235).learn.filter(e=>e.move===166)[(p.sketchLessons||[]).length];
+  return merge([...all.filter(e=>e.move!==166),...(lesson?[lesson]:[])]);
+}
+function recordSketch(p,move){
+  if(p.id!==235||!moves.has(move)||move===166||!p.moves.includes(166))return false;
+  const lesson=species.get(235).learn.filter(e=>e.move===166)[(p.sketchLessons||[]).length];
+  if(!lesson||lesson.level>p.level)return false;
+  (p.sketchLessons ||= []).push({move,level:p.level,lesson:lesson.level});
+  p.moveMemory=merge([...(p.moveMemory||[]),{move,level:p.level}]);update(p);return true;
+}
 function update(p){
   const legacy=!Array.isArray(p.moveMemory),memory=merge(legacy?[]:p.moveMemory),remembered=new Set(memory.map(entry=>entry.move)),own=new Map(merge(species.get(p.id).learn).map(entry=>[entry.move,entry.level]));
   p.moveMemory=merge([...memory,...(p.moves||[]).filter(id=>moves.has(id)&&!remembered.has(id)).map(move=>({move,level:legacy?legacyLevel(p.id,move):own.get(move)??legacyLevel(p.id,move)}))]);
@@ -19,4 +33,4 @@ function update(p){
   p.moveMemory=merge([...p.moveMemory,...active]);p.moves=active.map(entry=>entry.move);
   return all;
 }
-module.exports={catalog,update};
+module.exports={catalog,update,recordSketch};

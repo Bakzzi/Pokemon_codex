@@ -2,7 +2,7 @@
 const data=require('./data/game-data.json');
 const species=new Map(data.pokemon.map(p=>[p.id,p]));
 const moves=new Map(data.moves.map(m=>[m.id,m]));
-const STARTER_FAMILY=new Set([1,2,3,4,5,6,7,8,9,25,26]);
+const STARTER_FAMILY=new Set([1,2,3,4,5,6,7,8,9,25,26,152,153,154,155,156,157,158,159,160]);
 // A later-generation baby does not make an original base species evolution-only.
 const SPECIAL_EVOLUTIONS=new Set(data.pokemon.flatMap(parent=>parent.evolutions.filter(e=>species.has(e.to)&&parent.generation<=species.get(e.to).generation&&!(e.trigger===1&&e.level>0)).map(e=>e.to)));
 const colors={1:'#d0c8b4',2:'#e79571',3:'#b5b4ec',4:'#cb91e2',5:'#d3b78b',6:'#c8bd8a',7:'#b4cb72',8:'#ac9de0',9:'#aac1ca',10:'#ff9975',11:'#79cdf4',12:'#9ee5a2',13:'#f5ce52',14:'#f29bb9',15:'#99e2e4',16:'#aea0ed',17:'#ad9a91'};
@@ -45,10 +45,13 @@ const captureMilestones=[
   {targets:[144,145,146],excluded:[144,145,146,150,151],extra:.04},
   {targets:[150],excluded:[150,151],extra:.03},
   {targets:[151],excluded:[151],extra:.02},
+  {generation:2,targets:[243,244,245],excluded:[243,244,245,249,250,251],extra:.04},
+  {generation:2,targets:[249,250],excluded:[249,250,251],extra:.03},
+  {generation:2,targets:[251],excluded:[251],extra:.02},
 ];
 function captureBonus(id,caught={}){
   const rule=captureMilestones.find(rule=>rule.targets.includes(id));
-  return rule&&data.pokemon.every(p=>p.generation!==1||rule.excluded.includes(p.id)||!!caught[p.id])?rule.extra:0;
+  return rule&&data.pokemon.every(p=>p.generation!==(rule.generation||1)||rule.excluded.includes(p.id)||!!caught[p.id])?rule.extra:0;
 }
 function wildDistribution(maxGeneration,partnerLevel,{champion=false,caught={},minimumLevel=0,additions=[],excluded=[]}={}){
   const all=data.pokemon.filter(p=>!excluded.includes(p.id)&&wildEligible(p,maxGeneration,partnerLevel)),baseRates=encounterChances(),common=all.filter(p=>rarity(p)==='common');

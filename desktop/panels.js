@@ -8,6 +8,7 @@ const img=(id,cls='')=>{const e=node('img',cls);e.src='assets/'+id+'.gif';e.alt=
 const levelText=p=>'Lv.'+p.level+' '+(p.level>=100?'MAX':p.expPercent+'%');
 const experienceText=p=>p.level>=100?'최고 레벨에 도달했어요.':'다음 레벨까지 '+(p.expRequired-p.expCurrent).toLocaleString('ko-KR')+' XP · '+p.expCurrent.toLocaleString('ko-KR')+' / '+p.expRequired.toLocaleString('ko-KR')+' XP';
 const itemSprites={'poke-flute':'poke-flute','training-device':'exp-share',4:'poke-ball',25:'hyper-potion',27:'full-heal',28:'revive',38:'ether',80:'sun-stone',81:'moon-stone',82:'fire-stone',83:'thunder-stone',84:'water-stone',85:'leaf-stone',110:'oval-stone',198:'kings-rock',210:'metal-coat',212:'dragon-scale',229:'up-grade',885:'ice-stone'};
+for(const key of ['squirt-bottle','secret-potion','clear-bell','silver-wing','rainbow-wing','ss-ticket','machine-part','expansion-card','gs-ball','red-scale'])itemSprites['j-'+key]='j-'+key;
 function inventoryCard(item){
   const card=node('div','inventory-item'),icon=node('img'),body=node('div','inventory-item-body');icon.src='assets/items/'+itemSprites[item.id]+'.png';icon.alt='';
   card.dataset.item=item.id;card.setAttribute('role','listitem');card.title=[item.name+' × '+item.count,item.description,item.automatic&&'도전 배틀에서 필요할 때 자동 사용 · 사용한 턴에는 공격하지 않아요.'].filter(Boolean).join(' · ');body.append(node('b','',item.name),node('small','', '× '+item.count));if(item.description)body.append(node('small','',item.description));card.append(icon,body);return card;
@@ -167,6 +168,9 @@ function renderBadgeCase(){
   $('badge-case-note').textContent=earned.size===8?'관동의 여덟 증표 · 포켓몬 리그로':earned.size+'개의 증표 · 다음 도전을 기다리는 자리';
 }
 function renderBosses(){
+  $('kanto-challenges').hidden=!!state.johto?.active;
+  if(state.johto?.active){globalThis.JohtoPanel?.render(state);return;}
+  $('johto-challenges').hidden=true;
   renderTravel();
   syncDisclosure('gym-details',state.bosses.slice(0,8).every(b=>state.badges.includes(b.id)));
   renderStory();

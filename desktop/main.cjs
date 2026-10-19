@@ -153,7 +153,45 @@ async function start(){
       fs.writeFileSync(path.join(dataDir,'widget.png'),(await win.webContents.capturePage()).toPNG());
     }catch(error){console.error(error.message);}
   },3000);
-  if(smoke)await (process.argv.includes('--safari-smoke')?safariSmokeTest():smokeTest());
+  if(smoke)await (process.argv.includes('--johto-smoke')?johtoSmokeTest():process.argv.includes('--safari-smoke')?safariSmokeTest():smokeTest());
+}
+async function johtoSmokeTest(){
+  const assert=require('node:assert/strict'),checks=[],errors=[],J=require('../shared/johto.cjs');
+  const wait=ms=>new Promise(r=>setTimeout(r,ms)),check=(ok,label)=>{assert.ok(ok,label);checks.push(label);};
+  const click=code=>win.webContents.executeJavaScript(code),read=code=>panel.webContents.executeJavaScript(code);
+  win.webContents.on('console-message',(_e,d)=>{if(d.level>=3)errors.push(d.message);});
+  try{
+    const at=Date.now(),old=new(require('./game.cjs').Game)({},at);old.data.champion=true;game=new Game(old.data,at,{random:()=>.73});
+    check(game.unlockJohto(at,[25]),'regional transfer initializes a separate Johto story');game.data.animation=null;game.data.switchUntil=0;game.nextTick=at;
+    await openPanel('challenge');panel.webContents.on('console-message',(_e,d)=>{if(d.level>=3)errors.push(d.message);});publish(true);await wait(150);
+    check(await read("document.getElementById('kanto-challenges').hidden&&!document.getElementById('johto-challenges').hidden"),'actual panel publisher selects the Johto challenge renderer');
+    check(await read("document.querySelectorAll('#johto-challenges details[open]').length===0"),'all Johto challenge sections start collapsed');
+    check(await read("document.querySelectorAll('#johto-badge-slots .badge-slot').length===8"),'actual panel contains eight regional badge seats');
+    await read("document.getElementById('j-lab').open=true;document.querySelector('[data-challenge=\"j-arrival\"]').click()");await wait(120);
+    check(game.presentation()?.kind==='johto-event','real panel IPC opens Elm dialogue');
+    check(await click("!document.getElementById('story-scene').hidden&&document.getElementById('story-portrait').getAttribute('src').endsWith('j-elm.png')"),'actual widget receives and renders Elm through snapshot/publish/IPC');
+    const scene=game.presentation().id;for(let i=0;i<5&&game.presentation()?.id===scene;i++){await click("document.getElementById('story-next').click()");await wait(80);}
+    check(J.done(game,'j-arrival'),'real widget taps finish the event exactly once');
+    game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(80);
+    await read("document.querySelector('[data-challenge=\"j-partner-155\"]').click()");await wait(80);await click("document.getElementById('story-next').click()");await wait(80);
+    check(Object.values(game.data.owned).some(p=>p.id===155),'real event tap grants selected partner');
+    check(game.data.slots.filter(Boolean).length===1,'a gift preserves intentionally empty party slots');
+    game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);
+    await read("document.getElementById('j-early').open=true;document.querySelector('[data-challenge=\"j-sprout\"]').click()");await wait(120);
+    check(game.data.battle?.johtoId==='j-rival-0','actual challenge IPC performs the hidden rival intercept');
+    check(await click("document.getElementById('story-portrait').getAttribute('src').endsWith('j-silver.png')"),'actual widget renders the regional rival sprite');
+    for(let i=0;i<5&&game.presentation()?.mode==='dialogue';i++){await click("document.getElementById('story-next').click()");await wait(70);}
+    game.sceneTick(Date.now()+4000);game.data.switchUntil=0;game.nextTick=Date.now();game.tick();publish(true);await wait(150);
+    check(game.data.workTokens===0&&!!game.data.animation,'explicit regional battle advances without token credit');
+    check(snapshot().battle?.johtoId==='j-rival-0','actual widget snapshot preserves regional battle identity');
+    game.data.battle=null;game.data.pendingBattle=null;game.data.mobileStory.scene=null;game.data.animation=null;game.data.switchUntil=0;game.data.johto.cleared['j-falkner']=at;publish(true);await wait(80);
+    check(await read("document.querySelectorAll('#johto-badge-slots .earned .badge-art').length===1"),'actual panel displays the earned regional badge');
+    const uid=game.addPokemon(130,30,'fixture',at);game.data.owned[uid].shiny=true;game.data.activeId=uid;game.data.slots=[uid,null,null,null,null,null];game.animate('result',{text:'검증'},Date.now());publish(true);await wait(120);
+    check(await click("document.getElementById('hero-image').getAttribute('src')==='assets/shiny/130.gif'"),'actual widget retains shiny appearance outside battle');
+    check(await read("Array.from(document.querySelectorAll('#johto-challenges img')).filter(i=>i.complete).every(i=>i.naturalWidth>0)"),'visible regional images resolve from packaged assets');
+    assert.deepEqual(errors,[]);fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'johto-main-widget.png'),(await win.webContents.capturePage()).toPNG());fs.writeFileSync(path.join(dataDir,'johto-main-panel.png'),(await panel.webContents.capturePage()).toPNG());
+    fs.writeFileSync(path.join(dataDir,'johto-main-result.json'),JSON.stringify({ok:true,checks,errors,version:app.getVersion(),statePath:'main snapshot -> publish -> preload -> renderer; panel actions -> actual IPC handler'},null,2));app.exit(0);
+  }catch(error){fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'johto-main-error.txt'),error.stack||String(error));console.error(error);app.exit(1);}
 }
 async function safariSmokeTest(){
   const assert=require('node:assert/strict'),safari=require('../shared/safari.cjs'),checks=[],errors=[];

@@ -13,3 +13,4 @@
 # Raw upstream files must retain their original bytes for SHA-256 verification.
 reference/pokeapi/raw/** -text
 reference/** linguist-vendored
+reference/johto/raw/*.asm text eol=lf
