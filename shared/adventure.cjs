@@ -281,7 +281,18 @@ class Adventure extends Engine{
     this.data.mobileStory.scene=null;this.data.animation=null;
     this.holdUntil(now+650);return true;
   }
-  tick(now=Date.now()){return this.presentation()?false:this.offerLapras(now)||this.offerMansion(now)||this.offerDevice(now)||super.tick(now);}
+  snapshot(now=Date.now()){
+    const s=super.snapshot(now);
+    return this.data.mobileStory?.safari?{...s,safari:safari.snapshot(this)}:s;
+  }
+  tick(now=Date.now()){
+    if(this.presentation())return false;
+    const b=this.data.battle;
+    // Exploring spends its own activity. Keep banked wild work and the paused
+    // opponent intact; explicit challenges and the monthly rollover still run.
+    if(this.data.mobileStory.safari.trip&&!this.data.pendingChallenge&&b?.kind!=='trainer'&&!b?.storyId&&!this.seasonDue(now))return this.controlTick(now);
+    return this.offerLapras(now)||this.offerMansion(now)||this.offerDevice(now)||super.tick(now);
+  }
   actionStatus(a,now=Date.now()){
     if(a.kind==='select'&&a.uid===this.data.activeId)return super.actionStatus(a,now);
     if(this.presentation())return {state:'waiting',reason:'대화가 끝나면 실행해요.'};

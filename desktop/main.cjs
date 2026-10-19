@@ -153,7 +153,39 @@ async function start(){
       fs.writeFileSync(path.join(dataDir,'widget.png'),(await win.webContents.capturePage()).toPNG());
     }catch(error){console.error(error.message);}
   },3000);
-  if(smoke)await smokeTest();
+  if(smoke)await (process.argv.includes('--safari-smoke')?safariSmokeTest():smokeTest());
+}
+async function safariSmokeTest(){
+  const assert=require('node:assert/strict'),safari=require('../shared/safari.cjs'),checks=[],errors=[];
+  const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  const check=(ok,label)=>{assert.ok(ok,label);checks.push(label);};
+  win.webContents.on('console-message',(_e,d)=>{if(d.level>=3)errors.push(d.message);});
+  try{
+    const at=Date.now();game=new Game(new (require('./game.cjs').Game)({},at).data,at,{random:()=>0});
+    game.data.badges=['brock','misty','surge','erika','koga'];game.newWild(at);game.data.animation=null;game.data.switchUntil=0;game.nextTick=at;game.data.workTokens=64624;
+    publish(true);await wait(120);
+    await win.webContents.executeJavaScript("window.buddy.action('challenge','safari-start')");await wait(100);game.tick(Date.now());publish(true);await wait(100);
+    check(game.presentation()?.kind==='safari','actual IPC challenge opens Safari dialogue');
+    for(let n=0;n<8&&game.presentation();n++){await win.webContents.executeJavaScript("document.getElementById('story-next').click()");await wait(100);}
+    check(!!game.data.mobileStory.safari.trip,'actual dialogue click starts expedition');
+    check(!!snapshot().safari?.active,'actual widget publisher includes Safari state');
+    check(await win.webContents.executeJavaScript("!document.getElementById('safari-scene').hidden"),'actual widget shows Safari scene');
+    check(await win.webContents.executeJavaScript("getComputedStyle(document.getElementById('hero')).display==='none'&&getComputedStyle(document.getElementById('foe')).display==='none'"),'actual widget hides both Pokemon');
+    check(await win.webContents.executeJavaScript("document.getElementById('status').textContent==='사파리 탐험 중'"),'actual widget labels expedition');
+    const battle=JSON.stringify(game.data.battle),xp=game.data.owned[game.data.activeId].xp,work=game.data.workTokens,clock=Math.max(Date.now(),game.nextTick,game.data.switchUntil)+1000;
+    for(let n=0;n<30;n++)game.tick(clock+n*350);
+    check(JSON.stringify(game.data.battle)===battle,'thirty real clock pulses preserve paused wild opponent and PP');
+    check(game.data.owned[game.data.activeId].xp===xp&&game.data.workTokens===work,'Safari clock does not spend banked work or grant battle XP');
+    const message=n=>({type:'event_msg',timestamp:new Date(clock).toISOString(),payload:{type:'token_count',info:{total_token_usage:{output_tokens:n,total_tokens:n}}}});
+    game.observe('safari-smoke',message(0),{baseline:true,now:clock});game.observe('safari-smoke',message(1250),{now:clock});publish(true);await wait(100);
+    check(snapshot().safari.encounterCount===1&&JSON.stringify(game.data.battle)===battle,'real agent observation explores while wild remains paused');
+    check(await win.webContents.executeJavaScript("!document.getElementById('safari-ball').hidden"),'actual widget animates the recorded capture');
+    fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'safari-widget.png'),(await win.webContents.capturePage()).toPNG());
+    await win.webContents.executeJavaScript("window.buddy.action('safari-return')");await wait(120);
+    check(!game.data.mobileStory.safari.trip&&await win.webContents.executeJavaScript("document.getElementById('safari-scene').hidden"),'actual IPC return restores ordinary widget');
+    check(game.tick(clock+20000)&&game.data.workTokens<work,'wild battle resumes only after returning');
+    assert.deepEqual(errors,[]);fs.writeFileSync(path.join(dataDir,'safari-main-result.json'),JSON.stringify({ok:true,checks,errors,version:app.getVersion(),statePath:'main snapshot -> publish -> preload -> renderer'},null,2));app.exit(0);
+  }catch(error){fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'safari-main-error.txt'),error.stack||String(error));console.error(error);app.exit(1);}
 }
 function createTray(){
   const pixels=Buffer.alloc(16*16*4);
