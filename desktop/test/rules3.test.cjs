@@ -29,19 +29,20 @@ test('wild evolution floors propagate through level, trade and stone chains',()=
   }
   const seen=new Set(),rng=random(42);for(let i=0;i<4000;i++)seen.add(pickWild(1,rng,36));assert.ok(!seen.has(6));assert.ok(!seen.has(149));assert.ok(seen.has(18));
 });
-test('wild levels cover every integer from partner minus five to plus five, with species floors and level 100 respected',()=>{
+test('wild levels use partner minus five to plus five, preserving species floors and the champion cap of 70',()=>{
   const g=new Game({},now,{random:()=>.73}),p=g.data.owned[25];
-  g.data.champion=true; // Test the uncapped post-championship +/-5 range.
-  for(const level of [5,70,100]){
+  g.data.champion=true;
+  for(const level of [5,60,70,100]){
     p.level=level;p.xp=xpAt(p.id,level);const seen=new Set();
     for(let offset=0;offset<=10;offset++){
       let index=0;const draws=[.9,0,(offset+.5)/11];g.random=()=>draws[index++]??.73;
       g.newWild(now);const foe=g.data.battle.foe;seen.add(foe.level);
-      assert.equal(foe.level,Math.max(wildMinimum(species.get(foe.id)),Math.min(100,level-5+offset)));
+      assert.equal(foe.level,Math.max(wildMinimum(species.get(foe.id)),Math.min(70,level-5+offset)));
     }
-    if(level===70)assert.deepEqual([...seen],Array.from({length:11},(_,i)=>65+i));
+    if(level===60)assert.deepEqual([...seen],Array.from({length:11},(_,i)=>55+i));
+    if(level===70)assert.deepEqual([...seen],Array.from({length:6},(_,i)=>65+i));
     if(level===5){assert.equal(Math.min(...seen),2);assert.equal(Math.max(...seen),10);}
-    if(level===100){assert.equal(Math.min(...seen),95);assert.equal(Math.max(...seen),100);}
+    if(level===100)assert.deepEqual([...seen],[70]);
   }
 });
 

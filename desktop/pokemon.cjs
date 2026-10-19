@@ -25,7 +25,7 @@ function view(id){const p=species.get(id);return {id:p.id,name:p.name,types:p.ty
 const balance={tokensPerAction:250,legendaryPoolChance:0.001,mythicalPoolChance:0.0001,rarePoolChance:0.08,championRareMultiplier:1.5,championUncaughtWeight:2};
 function rarity(p){if(p.mythical)return 'mythical';if(p.legendary)return 'legendary';if(p.catchRate<=75||Object.values(p.stats).reduce((a,b)=>a+b,0)>=480)return 'rare';return p.catchRate>=190?'common':'uncommon';}
 function wildMinimum(p){return Math.max(p.minWildLevel||2,p.legendary||p.mythical?50:2);}
-function wildLevelCap(badgeCount=0,champion=false){return champion?100:[15,20,25,30,35,40,50,60,60][Math.max(0,Math.min(8,badgeCount))];}
+function wildLevelCap(badgeCount=0,champion=false){return champion?70:[15,20,25,30,35,40,50,60,60][Math.max(0,Math.min(8,badgeCount))];}
 function wildEligible(p,maxGeneration,partnerLevel){return p.id!==143&&!STARTER_FAMILY.has(p.id)&&!SPECIAL_EVOLUTIONS.has(p.id)&&p.generation<=maxGeneration&&wildMinimum(p)<=partnerLevel;}
 function championBonus(minimumLevel=0){
   const levelMultiplier=minimumLevel>90?5:minimumLevel>80?4:minimumLevel>70?3:1;

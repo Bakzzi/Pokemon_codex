@@ -6,8 +6,8 @@ const now=Date.parse('2026-10-19T10:00:00Z'),caps=[15,20,25,30,35,40,50,60,60],b
 function fixture(Type=Game,level=100){const g=new Type({},now,{random:()=>.73});if(g.data.mobileStory){g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;}const p=g.data.owned[g.data.activeId];p.level=level;p.xp=xpAt(p.id,level);require('../move-access.cjs').update(p);return g;}
 function johto(Type){const g=fixture(Type);g.data.champion=true;g.data.badges=[...badges];assert.ok(g.unlockJohto(now,[25]));const p=g.data.owned[g.data.activeId];p.level=100;p.xp=xpAt(p.id,100);return g;}
 
-test('each badge unlocks its wild cap and championship alone unlocks 100',()=>{
- for(let count=0;count<=8;count++){assert.equal(wildLevelCap(count),caps[count]);const g=fixture();g.data.badges=badges.slice(0,count);assert.equal(g.wildOptions().maximumLevel,caps[count]);g.data.champion=true;assert.equal(g.wildOptions().maximumLevel,100);}
+test('each badge unlocks its wild cap and championship caps encounters at 70 while ownership stays at 100',()=>{
+ for(let count=0;count<=8;count++){assert.equal(wildLevelCap(count),caps[count]);const g=fixture();g.data.badges=badges.slice(0,count);assert.equal(g.wildOptions().maximumLevel,caps[count]);g.data.champion=true;assert.equal(g.wildOptions().maximumLevel,70);g.newWild(now);assert.equal(g.data.battle.foe.level,70);assert.equal(g.data.owned[g.data.activeId].level,100);}
  const g=fixture();g.data.badges=['brock','brock','not-a-badge'];assert.equal(g.wildLevelCap(),20);
 });
 
@@ -38,7 +38,7 @@ test('the +/-5 roll still operates below the cap and clamps at it rather than li
 test('Johto starts at 15 despite all Kanto badges and title; Clair needs the awarded badge',()=>{
  for(const Type of [PC,Android]){const g=johto(Type);assert.equal(g.wildLevelCap(),15);
   for(let count=0;count<=8;count++){for(const n of J.gyms.slice(0,count))g.data.johto.cleared[n.id]=now;if(count===8){assert.equal(g.wildLevelCap(),60);g.data.johto.cleared['j-dragon-den']=now;}assert.equal(g.wildLevelCap(),caps[count]);g.newWild(now);assert.ok(g.data.battle.foe.level<=caps[count]);}
-  g.data.johto.champion=true;assert.equal(g.wildLevelCap(),100);g.newWild(now);assert.ok(g.data.battle.foe.level>=95);
+  g.data.johto.champion=true;assert.equal(g.wildLevelCap(),70);g.newWild(now);assert.equal(g.data.battle.foe.level,70);assert.equal(g.data.owned[g.data.activeId].level,100);
  }
 });
 
@@ -51,7 +51,7 @@ test('dex probabilities use the same capped pool and distinguish badge gating fr
 });
 
 test('reload preserves existing high-level wilds, suspended wilds, partner XP, and applies caps to the next encounter',()=>{
- for(const Type of [PC,Android]){const g=fixture(Type);g.data.champion=true;g.newWild(now);g.data.suspendedWild=structuredClone(g.data.battle);g.data.champion=false;const before=structuredClone(g.data),loaded=new Type(g.data,now+1);
+ for(const Type of [PC,Android]){const g=fixture(Type);g.data.champion=true;g.newWild(now);g.data.battle.foe=require('../battle.cjs').combatant(g.data.battle.foe.id,100);g.data.suspendedWild=structuredClone(g.data.battle);g.data.champion=false;const before=structuredClone(g.data),loaded=new Type(g.data,now+1);
   assert.deepEqual(loaded.data.battle,before.battle);assert.deepEqual(loaded.data.suspendedWild,before.suspendedWild);assert.equal(loaded.data.owned[25].xp,before.owned[25].xp);assert.equal(loaded.data.owned[25].level,100);loaded.newWild(now+2);assert.equal(loaded.data.battle.foe.level,15);
  }
 });
