@@ -165,15 +165,7 @@ function renderBadgeCase(){
   const earned=new Set(state.badges),signature=JSON.stringify([state.badges,state.bosses.slice(0,8).map(b=>b.revealed)]);
   if($('badge-slots').dataset.signature===signature)return;
   $('badge-slots').dataset.signature=signature;
-  $('badge-slots').replaceChildren(...state.bosses.slice(0,8).map((boss,i)=>{
-    const done=earned.has(boss.id),fresh=done&&shownBadges&&!shownBadges.has(boss.id);
-    const slot=node('button','badge-slot'+(done?' earned':' empty')+(fresh?' just-earned':''));slot.dataset.badge=boss.id;
-    slot.setAttribute('aria-label',boss.badge+' · '+boss.name+' · '+(done?'획득 완료':'미획득'));slot.title=slot.getAttribute('aria-label');
-    const recess=node('span','badge-recess');recess.append(badgeImage(boss,'badge-edge'),badgeImage(boss,'badge-shadow'));
-    if(done)recess.append(badgeImage(boss,'badge-art'),node('i','badge-glint'));
-    const label=node('span','badge-label');label.append(node('b','',boss.badge),node('small','',done?'획득 완료':boss.name+' · 미획득'));
-    slot.append(recess,label);slot.onclick=()=>focusGym(i);return slot;
-  }));
+  $('badge-slots').replaceChildren(ChallengeUI.badgeSlots(state.bosses.slice(0,8).map((b,i)=>({...b,index:i,src:'assets/badges/'+b.id+'.png'})),earned,shownBadges,row=>focusGym(row.index)));
   shownBadges=earned;
   $('badge-case-note').textContent=earned.size===8?'관동의 여덟 증표 · 포켓몬 리그로':earned.size+'개의 증표 · 다음 도전을 기다리는 자리';
 }
@@ -189,11 +181,7 @@ function renderBosses(){
   $('badges').textContent='뱃지 '+state.badges.length+' / 8';
   renderBadgeCase();
   $('gyms').replaceChildren(...state.bosses.slice(0,8).map((boss,i)=>{
-    const done=state.badges.includes(boss.id),card=node('article','gym'+(done?' done':'')),title=node('div','gym-title'),badge=node('span','badge');badge.append(badgeImage(boss,'gym-badge'),document.createTextNode(boss.badge));title.append(node('h3','',(i+1)+'. '+gymLocations[boss.id]+' 체육관 관장 '+boss.name),badge);
-    const body=node('div','gym-body'),info=node('div','gym-info'),face=node('div','gym-portrait');face.dataset.trainer=boss.id;
-    if(boss.revealed===false){face.classList.add('unknown');face.textContent='?';face.setAttribute('aria-label','아직 만나지 않은 관장');}
-    else{const portrait=node('img','gym-trainer'),[width,x,y,size]=trainerFaces[boss.id];portrait.src='assets/trainers/'+boss.id+'.png';portrait.alt=boss.name+' · 원작 얼굴 초상화';portrait.draggable=false;portrait.style.width=width/size*100+'%';portrait.style.left=-x/size*100+'%';portrait.style.top=-y/size*100+'%';face.append(portrait);}
-    info.append(title,trainerTeam(boss));body.append(info,face);card.append(body);
+    const done=state.badges.includes(boss.id),card=ChallengeUI.trainerCard({id:boss.id,done,title:(i+1)+'. '+gymLocations[boss.id]+' 체육관 관장 '+boss.name,badge:{name:boss.badge,src:'assets/badges/'+boss.id+'.png'},team:trainerTeam(boss),portrait:{name:boss.name,src:'assets/trainers/'+boss.id+'.png',crop:trainerFaces[boss.id]},unknown:boss.revealed===false});
     const rocketLocked=i===3&&!state.trainingDevice.rocketWonAt,roadLocked=i===4&&!state.trainingDevice.routeOpen;
     if(i===3&&!done)card.append(node('p','muted',rocketLocked?'민화는 무지개시티에 숨어든 로켓단 때문에 골머리를 앓고 있어요. 아지트의 로켓단을 모두 물리친 뒤 도전해 주세요.':'로켓단 문제가 해결됐어요. 민화가 체육관에서 도전을 기다리고 있어요.'));
     const b=node('button','',done?'뱃지 획득 완료':queued?.index===i?'도전 예약됨':rocketLocked?'로켓단 아지트 격파 시 해금':roadLocked?'길을 막는 잠만보 해결 시 해금':i>state.badges.length?'앞선 체육관 뱃지가 필요해요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||!!queued||!state.gymAccess[i];b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;

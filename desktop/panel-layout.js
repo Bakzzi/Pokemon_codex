@@ -3,12 +3,12 @@
 (()=>{
   const $=id=>document.getElementById(id);
   function card(id,heading,contents){
-    const details=document.createElement('details'),summary=document.createElement('summary');
-    details.id=id;details.className='story-board challenge-card mobile-challenge-card';summary.append(heading);details.append(summary,...contents);return details;
+    return ChallengeUI.section(id,heading,contents);
   }
   const gyms=$('kanto-gyms');
   gyms.replaceChildren(card('gym-details',gyms.querySelector('.intro'),[gyms.querySelector('.badge-case'),$('gyms')]));
   const league=$('pokemon-league'),heading=league.querySelector('.league');
+  $('league-start').classList.add('challenge-start');
   league.replaceChildren(card('league-details',heading.firstElementChild,[$('league-start'),$('league-team'),$('league-progress'),$('johto-choice')]));
   const special=$('special-encounters');
   special.replaceChildren(card('special-details',$('special-encounters-title'),[$('special-encounters-note'),special.querySelector('table')]));
