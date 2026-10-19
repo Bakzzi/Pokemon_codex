@@ -12,7 +12,9 @@ const towerTraining=['j-sprout-sage-1','j-sprout-sage-2'];
 
 test('two tower trainers must be defeated in order before the elder, with original Crystal parties on both platforms',()=>{
  for(const Type of [Adventure,Mobile]){
-  let g=fixture(Type);idle(g);assert.deepEqual(J.snapshot(g).cards.find(c=>c.id==='j-early').steps.map(n=>n.id),[towerTraining[0]]);
+  let g=fixture(Type);idle(g);let rows=J.snapshot(g).cards.find(c=>c.id==='j-early').steps;
+  assert.deepEqual(rows.map(n=>n.id),[...towerTraining,'j-sprout']);assert.deepEqual(rows.map(n=>n.canChallenge),[true,false,false]);
+  assert.ok(rows.every(n=>n.revealed&&n.sprite==='j-sage'&&n.team.length));
   assert.equal(g.challenge(towerTraining[1],now),false);assert.equal(g.challenge('j-sprout',now),false);assert.equal(g.canChallenge('j-falkner'),false);
   assert.deepEqual(J.nodes.get(towerTraining[0]).team.map(p=>[p.id,p.level]),[[69,6]]);
   assert.deepEqual(J.nodes.get(towerTraining[1]).team.map(p=>[p.id,p.level]),[[69,7],[163,7]]);
@@ -21,7 +23,7 @@ test('two tower trainers must be defeated in order before the elder, with origin
   assert.equal(J.done(g,towerTraining[0]),false);assert.equal(g.canChallenge(towerTraining[1]),false);
   assert.ok(g.challenge(towerTraining[0],now));win(g);assert.equal(g.canChallenge(towerTraining[0]),false);
   g=new Type(structuredClone(g.data),now+1);idle(g);assert.ok(g.canChallenge(towerTraining[1]));assert.equal(g.canChallenge('j-sprout'),false);
-  assert.deepEqual(J.snapshot(g).cards.find(c=>c.id==='j-early').steps.map(n=>n.id),towerTraining);
+  rows=J.snapshot(g).cards.find(c=>c.id==='j-early').steps;assert.deepEqual(rows.map(n=>n.id),[...towerTraining,'j-sprout']);assert.deepEqual(rows.map(n=>n.canChallenge),[false,true,false]);
   assert.ok(g.challenge(towerTraining[1],now));win(g);idle(g);assert.ok(g.canChallenge('j-sprout'));assert.equal(g.canChallenge('j-falkner'),false);
   assert.ok(g.challenge('j-sprout',now));assert.equal(g.data.battle.johtoId,'j-rival-0');win(g);
   assert.ok(g.challenge('j-sprout',g.nextTick));win(g);assert.ok(g.canChallenge('j-falkner'));

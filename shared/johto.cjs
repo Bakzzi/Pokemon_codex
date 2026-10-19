@@ -153,7 +153,7 @@ function snapshot(game){
   const g=original.id==='j-rage-lake'?{...original,steps:[...original.steps,...groups.find(g=>g.id==='j-rocket-hq').steps]}:original;
   const entries=g.steps.filter(id=>id!=='j-arrival').map(id=>nodes.get(id));
   const eligible=entries.filter(n=>done(game,n.id)||n.requires.every(r=>done(game,r))),next=eligible.find(n=>!done(game,n.id));
-  const visible=eligible.filter(n=>done(game,n.id)||(g.id==='j-lab'?available(game,n):g.id==='j-side'||n===next));
+  const visible=g.id==='j-early'?entries:eligible.filter(n=>done(game,n.id)||(g.id==='j-lab'?available(game,n):g.id==='j-side'||n===next));
   const completed=g.id==='j-lab'?visible.length>0&&!visible.some(n=>available(game,n)):entries.every(n=>done(game,n.id));
   const expanded=g.id==='j-rage-lake'&&done(game,'j-red-gyarados');
   return {id:g.id,title:expanded?'분노의 호수와 황토마을':g.title,description:completed?caseEndings[g.id]:expanded?'호수에 흘러들던 이상한 전파가 황토마을의 수상한 가게로 이어져요. 전파의 근원을 찾아보세요.':g.description,done:completed,steps:visible.map(n=>row(n))};

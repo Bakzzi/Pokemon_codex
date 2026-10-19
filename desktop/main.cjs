@@ -179,7 +179,7 @@ async function johtoSmokeTest(){
     check(Object.values(game.data.owned).some(p=>p.id===155),'real event tap grants selected partner');
     check(game.data.slots.filter(Boolean).length===1,'a gift preserves intentionally empty party slots');
     game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);
-    check(await read("!!document.querySelector('[data-challenge=\"j-sprout-sage-1\"]')&&!document.querySelector('[data-challenge=\"j-sprout\"]')"),'actual tower panel exposes its first trainer before the elder');
+    check(await read("document.querySelectorAll('#j-early .johto-event-entry').length===3&&!document.querySelector('[data-challenge=\"j-sprout-sage-1\"]').disabled&&document.querySelector('[data-challenge=\"j-sprout-sage-2\"]').disabled&&document.querySelector('[data-challenge=\"j-sprout\"]').disabled"),'actual tower panel keeps all three trainers visible and enables only its first stage');
     const advancePages=async()=>{for(let i=0;i<8&&game.presentation()?.mode==='dialogue';i++){publish(true);await wait(40);await click("document.getElementById('story-next').click()");await wait(50);}if(game.presentation()?.mode==='sendout')game.sceneTick(Date.now()+4000);};
     for(const id of ['j-sprout-sage-1','j-sprout-sage-2']){
       game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);
