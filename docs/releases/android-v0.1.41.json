@@ -1,0 +1,61 @@
+{
+  "version": "0.1.41",
+  "versionCode": 43,
+  "platform": "android",
+  "channel": "android-preview",
+  "sourceCommit": "fc10db71959bf9e70fb511c001cfdc67a2100baa",
+  "sourceTag": "android-v0.1.41",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/android-v0.1.41",
+  "package": "io.github.bakzzi.pokemonidle",
+  "minSdk": 31,
+  "targetSdk": 36,
+  "artifact": "Pokemon-Idle-0.1.41.apk",
+  "bytes": 39109215,
+  "sha256": "f6c0bbd43b227d250fa358b880b1554bda9ae7797c30fbe9c53f10d9a87f2581",
+  "signingCertificateSha256": "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+  "toolchain": {
+    "node": "22.11.0",
+    "gradle": "8.13",
+    "agp": "8.13.0",
+    "compileSdk": 36,
+    "buildTools": "36.1.0",
+    "javaScriptEngine": "androidx.javascriptengine:javascriptengine:1.1.1",
+    "dependencyLockfile": "mobile/android/app/gradle.lockfile"
+  },
+  "validation": {
+    "releaseBuild": "passed",
+    "androidLintErrors": 0,
+    "apkSignatureVerified": true,
+    "embeddedBundleSha256": "d272b1876ab2c1ec3811908b044176f96d7e12e22e434e014fcb3373a34737d4",
+    "embeddedFilesMatched": 449,
+    "nodeTestsPassed": 652,
+    "embeddedApkWebRuntimeChecksPassed": 29,
+    "androidNativeWebViewVerified": false,
+    "physicalDeviceVerified": false,
+    "nativePlatformCodeUnchangedFrom": "0.1.40"
+  },
+  "retention": {
+    "latestAndroid": "0.1.41",
+    "previousAndroid": "0.1.40",
+    "additionalUnconfirmedDeviceVersions": [
+      "0.1.30",
+      "0.1.31",
+      "0.1.32",
+      "0.1.33",
+      "0.1.34",
+      "0.1.35",
+      "0.1.36",
+      "0.1.37",
+      "0.1.38",
+      "0.1.39"
+    ]
+  },
+  "activity": {
+    "lockedMillisecondsPerAction": 10000,
+    "stepsPerAction": 10,
+    "walkingRequiresLock": false,
+    "foregroundWalkingAnimated": true,
+    "unlockedIdleAdventure": false,
+    "foregroundChallenges": true
+  }
+}
