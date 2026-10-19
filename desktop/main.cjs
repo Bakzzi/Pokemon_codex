@@ -181,10 +181,12 @@ async function johtoSmokeTest(){
     game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);
     check(await read("document.querySelectorAll('#j-early .johto-event-entry').length===3&&!document.querySelector('[data-challenge=\"j-sprout-sage-1\"]').disabled&&document.querySelector('[data-challenge=\"j-sprout-sage-2\"]').disabled&&document.querySelector('[data-challenge=\"j-sprout\"]').disabled"),'actual tower panel keeps all three trainers visible and enables only its first stage');
     const advancePages=async()=>{for(let i=0;i<8&&game.presentation()?.mode==='dialogue';i++){publish(true);await wait(40);await click("document.getElementById('story-next').click()");await wait(50);}if(game.presentation()?.mode==='sendout')game.sceneTick(Date.now()+4000);};
+    const wildLead=game.addPokemon(129,5,'fixture',at);game.data.slots[1]=wildLead;
     for(const id of ['j-sprout-sage-1','j-sprout-sage-2']){
-      game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);
+      game.data.activeId=wildLead;game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);
       await read("document.getElementById('j-early').open=true;document.querySelector('[data-challenge=\""+id+"\"]').click()");await wait(80);
       check(game.data.battle?.johtoId===id,'actual challenge IPC enters tower trainer '+id);
+      check(game.data.activeId===25&&!game.data.battle.pendingSwitch&&!game.data.battle.matchupPending&&await click("document.getElementById('hero-image').getAttribute('src')==='assets/25.gif'"),'actual publisher uses the chosen lead before first sendout '+id);
       check(await click("document.getElementById('story-portrait').getAttribute('src').endsWith('j-sage.png')"),'actual widget shows the tower trainer '+id);
       await advancePages();let turns=0;
       while(game.data.battle?.johtoId===id&&turns++<8){game.nextTick=Date.now()+60000;game.data.battle.foe.hp=0;game.defeatOpponent(Date.now());await advancePages();}

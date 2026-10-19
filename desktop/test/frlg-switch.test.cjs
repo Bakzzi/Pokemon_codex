@@ -49,7 +49,7 @@ for(const [label,Story] of consumers){
   test(label+': the next trainer starts with the chosen lead, rather than charging an opening switch turn',()=>{
     const f=setup(Story,143,7),{g,b}=f;f.boss.team=[{id:95,level:70,moves:[33]}];b.bossIndex=1;b.foeIndex=0;
     const hp=b.party[f.reserve].hp,pp=b.party[f.reserve].pp[145];g.nextTrainer(now);g.data.mobileStory.scene=null;assert.equal(b.sim,undefined);
-    advance(g);assert.equal(g.data.activeId,f.reserve);assert.equal(b.party[f.reserve].hp,hp);assert.equal(b.party[f.reserve].pp[145],pp);
+    assert.equal(g.data.activeId,f.reserve);assert.equal(b.matchupPending,undefined);assert.equal(b.pendingSwitch,undefined);assert.equal(b.party[f.reserve].hp,hp);assert.equal(b.party[f.reserve].pp[145],pp);
     const sim=battle.engine(g,b),actions=watch(sim);until(g,()=>actions.length>=2);
     assert.equal(sim.p1.active[0].name,'u'+f.reserve);assert.equal(actions[0].turn,actions[1].turn);assert.deepEqual(new Set(actions.map(a=>a.side)),new Set([0,1]));
   });

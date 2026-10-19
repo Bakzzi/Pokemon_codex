@@ -5,7 +5,7 @@ const now=Date.parse('2026-10-15T07:00:00Z');
 function fixture(){
   const g=new Game({},now,{random:()=>.73}),a=g.addPokemon(143,50,'fixture',now),c=g.addPokemon(131,50,'fixture',now);
   g.data.slots=[a,c,null,null,null,null];g.data.activeId=a;g.data.owned[a].moves=[33];g.data.owned[c].moves=[55];g.challenge(0,now);
-  const b=g.data.battle;delete b.matchupPending;b.party[a].hp=5;b.foe.hp=1;return {g,b,a,c};
+  const b=g.data.battle;g.data.activeId=a;delete b.matchupPending;b.party[a].hp=5;b.foe.hp=1;return {g,b,a,c};
 }
 function advance(g){const at=Math.max(now,g.nextTick,g.data.switchUntil);assert.ok(g.tick(at));return at;}
 function nextOpponent(f){for(let i=0;i<3;i++)advance(f.g);assert.equal(f.b.foeIndex,1);assert.equal(f.g.data.animation.kind,'encounter');}

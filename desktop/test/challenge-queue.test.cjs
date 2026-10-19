@@ -18,11 +18,11 @@ test('a queued challenge preserves an action, then waits for faint and victory b
   assert.equal(g.tick(g.data.switchUntil-1),false);assert.equal(g.data.workTokens,tokens);
   wild.foe.hp=0;advance(g);assert.equal(g.data.animation.kind,'faint');assert.equal(g.data.battle,wild);
   advance(g);assert.equal(g.data.animation.kind,'result');assert.equal(g.data.battle,null);
-  const xp=g.data.owned[g.data.activeId].xp;
+  const xp=Object.fromEntries(Object.entries(g.data.owned).map(([uid,p])=>[uid,p.xp]));
   assert.equal(g.tick(g.data.switchUntil-1),false);advance(g);
   assert.equal(g.data.battle.kind,'trainer');assert.equal(g.data.battle.bossIndex,0);assert.equal(g.data.battle.foe.id,74);
   assert.equal(g.data.pendingChallenge,null);assert.equal(g.data.suspendedWild,null);assert.equal(g.data.workTokens,tokens);
-  assert.equal(g.data.owned[g.data.activeId].xp,xp);assert.deepEqual(g.data.slots,slots);
+  assert.deepEqual(Object.fromEntries(Object.entries(g.data.owned).map(([uid,p])=>[uid,p.xp])),xp);assert.deepEqual(g.data.slots,slots);
   assert.equal(g.data.journal.filter(e=>e.text==='웅 체육관 도전 시작').length,1);
   assert.ok(g.abandon(g.data.switchUntil));assert.equal(g.data.battle,null);
 });

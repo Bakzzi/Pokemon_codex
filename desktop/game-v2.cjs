@@ -438,6 +438,14 @@ class Game {
     this.data.animation.reason=reason;this.data.animation.text=text;
     this.log(text,'switch',to.id,now);return true;
   }
+  prepareTrainerLead(){
+    const b=this.data.battle;
+    // Choose before native entry: no recall, switch turn, or entry ability from
+    // the partner that was adventuring in the wild.
+    if(b?.kind!=='trainer'||b.foeIndex!==0||b.sim||b.simBoss!==undefined||b.pendingSwitch||b.manualMatchup)return false;
+    const next=battleEngine.bestPartner(this,b);if(next===null)return false;
+    this.data.activeId=next;delete b.matchupPending;return true;
+  }
   switchToMatchup(reason,now){
     const b=this.data.battle,next=battleEngine.bestPartner(this,b);
     if(next===null||next===this.data.activeId){delete b.matchupPending;return false;}
@@ -595,7 +603,7 @@ class Game {
     if(b.kind==='trainer'&&b.foeIndex===0&&b.simBoss!==(b.storyId||b.bossIndex))battleEngine.invalidate(b);
     if(!b.storyId&&SECRET_TRAINERS.has(boss.id))this.data.trainerSeen[boss.id] ||= now;
     b.foe=combatant(enemy.id,enemy.level,enemy.moves);b.turn=0;
-    if(b.kind==='trainer'){b.matchupRevision=1;b.matchupPending=true;delete b.manualMatchup;delete b.aiLastSwitch;delete b.shiftUsed;}
+    if(b.kind==='trainer'){b.matchupRevision=1;b.matchupPending=true;delete b.manualMatchup;delete b.aiLastSwitch;delete b.shiftUsed;this.prepareTrainerLead();}
     this.data.seen[enemy.id]=this.data.seen[enemy.id]||now;this.animate('encounter',{id:enemy.id,text:b.storyId==='road-snorlax'?'포켓몬피리를 불었다! 잠만보 Lv.30이 깨어났다!':`${boss.name}의 ${species.get(enemy.id).name}!`},now);
   }
   abandon(now=Date.now()){

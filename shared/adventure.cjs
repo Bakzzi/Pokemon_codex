@@ -49,6 +49,7 @@ class Adventure extends Engine{
       if(scene.next==='win'&&scene.pages?.[0]==='멋진 배틀이었어! 내 패배를 인정할게.')scene.pages=trainerDialogue.victory(boss,this.data.champion);
       if(scene.next==='loss'&&scene.pages?.[0]==='동료들과 더 성장해서 다시 만나자!')scene.pages=trainerDialogue.defeat(boss);
     }
+    if(scene?.next==='sendout'||scene?.mode==='sendout')this.prepareTrainerLead();
   }
   resetSeason(now){
     const story=this.data.mobileStory;
@@ -118,6 +119,7 @@ class Adventure extends Engine{
     story.scene=null;
     if(s.next==='rival'){this.startRival(now);return true;}
     if(s.next==='sendout'){
+      this.prepareTrainerLead();
       story.scene={id:++story.serial,mode:'sendout',kind:s.kind==='ghost'?'ghost-sendout':'sendout',at:now,duration:2700,name:s.name,sprite:s.sprite};
       return true;
     }

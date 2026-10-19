@@ -13,18 +13,17 @@ function fixture(){
 }
 function advance(g){const at=Math.max(now,g.nextTick,g.data.switchUntil);assert.ok(g.tick(at));return at;}
 
-test('trainer opening waits for the encounter then sends a counter from picked slots without work or healing',()=>{
+test('trainer opening selects its lead before the encounter without a recall, switch turn or healing',()=>{
   const g=fixture(),b=g.data.battle,before=structuredClone(b.party),slots=[...g.data.slots];
   assert.equal(battle.bestPartner(g,b),7);assert.equal(g.data.animation.kind,'encounter');
-  assert.equal(g.tick(g.data.switchUntil-1),false);advance(g);
-  assert.equal(g.data.activeId,7);assert.equal(g.data.animation.kind,'switch');assert.equal(g.data.animation.reason,'matchup');
+  assert.equal(g.data.activeId,7);assert.equal(b.matchupPending,undefined);assert.equal(b.pendingSwitch,undefined);
   assert.deepEqual(b.party,before);assert.deepEqual(g.data.slots,slots);assert.equal(g.data.workTokens,0);
   const serial=g.data.eventSerial;assert.equal(g.tick(g.data.switchUntil-1),false);assert.equal(g.data.eventSerial,serial);
-  advance(g);assert.ok(b.sim);assert.equal(b.pendingSwitch,undefined);assert.equal(g.data.activeId,7);
+  assert.equal(b.sim,undefined);advance(g);assert.ok(b.sim);assert.equal(b.pendingSwitch,undefined);assert.equal(g.data.activeId,7);assert.notEqual(g.data.animation.kind,'switch');
 });
 
 test('matchups reevaluate on the next foe and preserve the native party and PP',()=>{
-  const g=fixture(),b=g.data.battle;advance(g);advance(g);
+  const g=fixture(),b=g.data.battle;advance(g);
   g.data.pendingBattle=null;b.foe.hp=0;g.defeatOpponent(g.data.switchUntil); // model completed faint/result playback
   b.foe=battle.combatant(7,30,[55]); // a new water opponent favors Pikachu over Grass/Poison
   b.party[1].pp[202]=0;
@@ -53,7 +52,7 @@ test('PP exhaustion and remaining HP affect the choice, and real type/ability im
 });
 
 test('faint replacement uses matchup, not lowest level, and survives reload without a second evaluation',()=>{
-  const g=fixture(),b=g.data.battle;b.party[4].hp=0;
+  const g=fixture(),b=g.data.battle;g.data.activeId=4;b.party[4].hp=0;
   advance(g);assert.equal(g.data.animation.kind,'faint');advance(g);
   assert.equal(g.data.activeId,7);assert.equal(g.data.animation.reason,'faint');
   const saved=structuredClone(g.data),loaded=new Game(saved,g.data.switchUntil,{random:()=>.73});
@@ -62,15 +61,15 @@ test('faint replacement uses matchup, not lowest level, and survives reload with
 });
 
 test('a voluntary manual selection is honored for the current foe; old trainer saves get one deferred evaluation',()=>{
-  const g=fixture(),at=g.data.switchUntil;assert.ok(g.select(7,at));assert.equal(g.data.battle.matchupPending,undefined);
-  advance(g);assert.equal(g.data.activeId,7);
+  const g=fixture(),at=g.data.switchUntil;assert.ok(g.select(1,at));assert.equal(g.data.battle.matchupPending,undefined);
+  advance(g);assert.equal(g.data.activeId,1);
   const saved=structuredClone(g.data);delete saved.battle.matchupRevision;
   const loaded=new Game(saved,g.data.switchUntil,{random:()=>.73});assert.equal(loaded.data.battle.matchupPending,true);
-  assert.equal(loaded.data.battle.matchupRevision,1);assert.equal(loaded.data.battle.party[7].hp,saved.battle.party[7].hp);
+  assert.equal(loaded.data.battle.matchupRevision,1);assert.equal(loaded.data.battle.party[1].hp,saved.battle.party[1].hp);
 });
 
 test('trapping prevents an illegal automatic switch without stopping turns, then retries after release',()=>{
-  const g=fixture(),b=g.data.battle;delete b.matchupPending;
+  const g=fixture(),b=g.data.battle;g.data.activeId=4;delete b.matchupPending;
   const sim=battle.engine(g,b);sim.p1.active[0].trapped=true;b.matchupPending=true;
   const hp=b.party[4].hp;advance(g);assert.equal(g.data.activeId,4);assert.ok(b.turn>0);assert.equal(b.matchupPending,true);
   assert.ok(b.party[4].hp<=hp);sim.p1.active[0].trapped=false;

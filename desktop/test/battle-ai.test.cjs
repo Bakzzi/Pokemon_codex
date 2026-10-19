@@ -92,7 +92,7 @@ test('all 151 original species can plan from their full earned move pools',()=>{
 test('tactical switches persist their cooldown; manual choices stay honored for the current foe',()=>{
   const now=Date.parse('2026-10-15T09:00:00Z'),g=new Game({},now,{random:()=>.73}),a=g.addPokemon(76,50,'fixture',now),b=g.addPokemon(3,50,'fixture',now);
   g.data.slots=[a,b,null,null,null,null];g.data.activeId=a;g.data.owned[a].moves=[88];g.data.owned[b].moves=[75];g.challenge(0,now);
-  const state=g.data.battle;delete state.matchupPending;state.foe=battle.combatant(134,50,[57]);
+  const state=g.data.battle;g.data.activeId=a;delete state.matchupPending;state.foe=battle.combatant(134,50,[57]);
   battle.step(g,state);assert.equal(g.data.activeId,b);assert.ok(Number.isInteger(state.aiLastSwitch));
   const reloaded=new Game(structuredClone(g.data),now,{random:()=>.73});assert.equal(reloaded.data.battle.aiLastSwitch,state.aiLastSwitch);
   g.data.switchUntil=0;assert.ok(g.requestAction('select',a,now));
