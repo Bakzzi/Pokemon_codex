@@ -2,12 +2,14 @@
 const J=require('./johto.cjs'),{Game:Engine}=require('../desktop/game.cjs'),battle=require('../desktop/battle.cjs');
 const {data,species,championBonus,wildDistribution,wildEligible,wildMinimum}=require('../desktop/pokemon.cjs');
 const journal=require('../desktop/journal.cjs'),nursery=require('../desktop/daycare.cjs');
+const consumables=require('../desktop/consumables.cjs');
 const oddEgg=[172,173,174,236,238,239,240];
 const itemNames={'squirt-bottle':'꼬부기물뿌리개','secret-potion':'비전신약','clear-bell':'크리스탈방울','silver-wing':'은빛날개','rainbow-wing':'무지갯빛날개','ss-ticket':'승선티켓','machine-part':'기계부품','expansion-card':'라디오 확장카드','gs-ball':'GS볼','red-scale':'빨간비늘'};
 function withJohto(Base){return class JohtoAdventure extends Base{
  constructor(saved={},now=Date.now(),options={}){
   super(saved,now,options);
   if(J.active(this)||saved.johto)J.init(this);
+  this.awardCompletionItem(now);
   if(J.active(this)&&J.nodes.has(saved.pendingChallenge?.index))this.data.pendingChallenge={...saved.pendingChallenge};
  }
  unlockJohto(now=Date.now(),ids){const ok=super.unlockJohto(now,ids);if(ok)J.init(this);return ok;}
@@ -79,7 +81,12 @@ function withJohto(Base){return class JohtoAdventure extends Base{
    s.champion=true;s.leagueBest=5;if(first)this.receiveJohtoItem('ss-ticket',now);
   }
   if(first)for(const [id,count]of Object.entries(n.inventory||{})){this.data.inventory[id]=(this.data.inventory[id]||0)+count;this.log((data.items.find(x=>x.id===Number(id))?.name||'도구')+' 발견','item',null,now);}
+  this.awardCompletionItem(now);
   if(first)this.log(n.title+'의 일을 마쳤다.','story',null,now);
+ }
+ awardCompletionItem(now){
+  if(!J.active(this)||!J.done(this,'j-red')||!consumables.grantEvolutionItem(this.data,229))return false;
+  this.log(data.items.find(item=>item.id===229).name+'를 받았다.','item',null,now);return true;
  }
  receiveJohtoItem(key,now){const s=J.init(this);if(s.items[key])return false;s.items[key]=now;this.log(itemNames[key]+'를 받았다.','item',null,now);return true;}
  defeatOpponent(now,captured=false){

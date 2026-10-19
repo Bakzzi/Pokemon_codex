@@ -68,6 +68,7 @@ class Game {
     const month=monthOf(now);
     if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(this.data.season?.key))this.data.season={key:month.key,startedAt:now};
     this.data.seasonCaught ||= {...this.data.caught};
+    consumables.initEvolutionItems(this.data);
     this.data.nextUid=this.data.nextUid||1000;this.data.daycare=this.data.daycare||null;this.data.egg=this.data.egg||null;this.daycareSelection=null;
     this.data.pendingBattle=this.data.pendingBattle||null;
     // Keep existing Gen II progress available; old champions with no Gen II progress choose now.
@@ -500,7 +501,7 @@ class Game {
   evolve(uid,to,now=Date.now()){
     uid=Number(uid);to=Number(to);if(this.data.battle?.kind==='trainer'||this.data.pendingBattle||now<this.data.switchUntil||this.isBoarded(uid))return false;
     const rule=this.evolutions(uid,now).find(e=>e.to===to&&e.ready);if(!rule)return false;
-    const p=this.data.owned[uid],from=p.id,fromPokemon=this.snapshot(now).hero;if(rule.item)this.data.inventory[rule.item]--;
+    const p=this.data.owned[uid],from=p.id,fromPokemon=this.snapshot(now).hero;if(rule.item){consumables.initEvolutionItems(this.data);this.data.inventory[rule.item]--;}
     moveAccess.update(p);p.id=to;p.formEntryLevel=p.level;delete p.deviceLevelUp;p.ability=abilityFor(to,p.abilitySlot);moveAccess.update(p);p.xp=xpAt(to,p.level)+Math.max(0,p.xp-xpAt(from,p.level));
     this.data.seen[to]=this.data.seen[to]||now;this.data.caught[to]=this.data.caught[to]||now;
     this.data.seasonCaught[to]=this.data.seasonCaught[to]||now;
@@ -639,9 +640,10 @@ class Game {
       const roadCleared=b.storyId==='road-snorlax'&&training.win(this,b.storyId,now,captured);
       if(!captured)this.log(`야생 ${species.get(foe.id).name}에게 승리했다!`,'win',foe.id,now);
       if(this.random()<consumables.economy.evolutionDropChance){
-        const candidates=[...new Set(db.pokemon.filter(p=>p.generation<=this.maxGeneration()).flatMap(p=>p.evolutions.filter(e=>species.get(e.to)?.generation<=this.maxGeneration()).map(e=>e.item)).filter(Boolean))];
+        const candidates=[...new Set(db.pokemon.filter(p=>p.generation<=this.maxGeneration()).flatMap(p=>p.evolutions.filter(e=>species.get(e.to)?.generation<=this.maxGeneration()).map(e=>e.item)).filter(id=>id&&!consumables.limitedById.has(id)))];
         const id=consumables.pickEvolutionItem(candidates,this.data.inventory,this.random);if(id){this.data.inventory[id]=(this.data.inventory[id]||0)+1;this.log(`${db.items.find(i=>i.id===id)?.name||'진화 도구'} 발견`,'item',null,now);}
       }
+      const evolutionItem=consumables.dropEvolutionItem(this,b,captured);if(evolutionItem)this.log(db.items.find(i=>i.id===evolutionItem).name+' 발견','item',null,now);
       const found=consumables.drop(this.random);if(found){this.data.inventory[found.id]=(this.data.inventory[found.id]||0)+1;this.log(found.name+' 발견','item',null,now);}
       this.data.battle=null;if(b.storyId)this.restoreWild(now);if(roadCleared)this.animate('result',{text:'학습장치를 받았다! 독수에게 도전할 수 있어요.'},now);else if(!captured||b.storyId)this.animate('result',{text:'야생 '+species.get(foe.id).name+(captured?' 포획!':'에게 승리했다!')},now);return;
     }

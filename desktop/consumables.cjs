@@ -12,6 +12,43 @@ const items=[
 ].map(item=>({...item,weight:economy.stonePrice/item.referencePrice}));
 const byId=new Map(items.map(item=>[item.id,item])),totalWeight=items.reduce((sum,item)=>sum+item.weight,0);
 const dropChance=economy.evolutionDropChance/economy.stonePoolSize*totalWeight;
+// Finite seasonal supplies. These are not part of the general stone pool.
+const limitedEvolutionItems=[
+  {id:198,limit:2,sources:[79,61],evolutions:[186,199]},
+  {id:210,limit:2,sources:[81],evolutions:[208,212]},
+  {id:212,limit:1,sources:[116,117,147,148],evolutions:[230]},
+  {id:229,limit:1,sources:[],evolutions:[233]},
+];
+const limitedById=new Map(limitedEvolutionItems.map(item=>[item.id,item]));
+const count=n=>Number.isSafeInteger(n)&&n>=0?n:0;
+function initEvolutionItems(data){
+  data.evolutionItemTotals ||= {};
+  for(const item of limitedEvolutionItems){
+    const stock=count(data.inventory[item.id]);
+    if(!Object.hasOwn(data.evolutionItemTotals,item.id)){
+      // Older saves have no acquisition ledger. Preserve stock and account for
+      // spent items using the surviving seasonal evolution evidence.
+      const logged=(data.journal||[]).filter(e=>e.kind==='evolution'&&item.evolutions.includes(e.id)).length;
+      const owned=Object.values(data.owned||{}).filter(p=>item.evolutions.includes(p.id)).length;
+      const registered=item.evolutions.filter(id=>data.seasonCaught?.[id]).length;
+      data.evolutionItemTotals[item.id]=stock+Math.max(logged,owned,registered);
+    }
+    data.evolutionItemTotals[item.id]=Math.min(item.limit,Math.max(count(data.evolutionItemTotals[item.id]),stock));
+  }
+}
+function grantEvolutionItem(data,id){
+  const item=limitedById.get(id);if(!item)return false;
+  initEvolutionItems(data);
+  if(data.evolutionItemTotals[id]>=item.limit)return false;
+  data.inventory[id]=count(data.inventory[id])+1;data.evolutionItemTotals[id]++;return true;
+}
+function dropEvolutionItem(game,b,captured){
+  if(game.maxGeneration()<2||b.kind!=='wild'||captured||b.storyId||b.freeChallenge)return null;
+  const item=limitedEvolutionItems.find(item=>item.sources.includes(b.foe.id));if(!item)return null;
+  initEvolutionItems(game.data);
+  if(game.data.evolutionItemTotals[item.id]>=item.limit||game.random()>=.02)return null;
+  return grantEvolutionItem(game.data,item.id)?item.id:null;
+}
 function drop(random){
   if(random()>=dropChance)return null;
   let draw=random()*totalWeight;
@@ -72,4 +109,4 @@ function use(game,b,sim,choice){
   if(item.id===38){slot.pp=Math.min(slot.maxpp,slot.pp+10);const base=target.baseMoveSlots.find(s=>s.id===slot.id);if(base&&base!==slot)base.pp=slot.pp;sim.add('buddypp',target,sim.dex.moves.get(slot.id).name);}
   return true;
 }
-module.exports={items,byId,economy,dropChance,drop,pickEvolutionItem,choose,use};
+module.exports={items,byId,economy,dropChance,drop,pickEvolutionItem,choose,use,limitedById,initEvolutionItems,grantEvolutionItem,dropEvolutionItem};
