@@ -23,14 +23,14 @@ function breedingRoutes(generation){
 }
 function collectionHints(game){
   const generation=game.maxGeneration(),activeLevel=game.data.owned[game.data.activeId].level;
-  const distribution=wildDistribution(generation,activeLevel,game.wildOptions()),chances=new Map(distribution.pokemon.map(p=>[p.id,p.chance]));
+  const options=game.wildOptions(),distribution=wildDistribution(generation,activeLevel,options),chances=new Map(distribution.pokemon.map(p=>[p.id,p.chance]));
   const eggs=breedingRoutes(generation),owned=new Set(Object.values(game.data.owned).map(p=>p.id));
   const ref=id=>'No.'+id+' '+(game.data.seen[id]?species.get(id).name:'???');
   const result=new Map();
   for(const p of data.pokemon.filter(p=>p.generation<=generation)){
     const routes=[],wildAllowed=wildEligible(p,generation,100),minimum=wildMinimum(p),chance=chances.get(p.id)||0;
     if(wildAllowed){
-      const text=activeLevel<minimum?'출전 동료 Lv.'+minimum+'부터 야생에서 출현.':'현재 '+wildPercent(chance)+' 확률로 야생에서 출현.';
+      const text=options.maximumLevel<minimum?'뱃지를 모아 야생 레벨 상한을 높이면 만날 수 있어요.':activeLevel<minimum?'출전 동료 Lv.'+minimum+'부터 야생에서 출현.':'현재 '+wildPercent(chance)+' 확률로 야생에서 출현.';
       const bonus=[];
       const badge={145:6,144:7,146:8}[p.id];
       if(badge)bonus.push(badge+'번째 뱃지 획득');

@@ -1,6 +1,6 @@
 'use strict';
 const {monthOf,levelOf}=require('./season.cjs');
-const {data:db,species,moves,xpAt,levelAt,learnedMoves,view,pickWild,rarity,balance,wildMinimum,wildEligible,statsAt,encounterChances,championBonus,milestoneBonuses,captureBonus,wildDistribution}=require('./pokemon.cjs');
+const {data:db,species,moves,xpAt,levelAt,learnedMoves,view,pickWild,rarity,balance,wildMinimum,wildLevelCap,wildEligible,statsAt,encounterChances,championBonus,milestoneBonuses,captureBonus,wildDistribution}=require('./pokemon.cjs');
 const battleEngine=require('./battle.cjs');
 const {combatant,tryCatch,abilityFor}=battleEngine;
 const journal=require('./journal.cjs');
@@ -59,7 +59,7 @@ function hasJohtoProgress(data){
   return ids.some(id=>species.get(Number(id))?.generation===2);
 }
 function freshData(saved={}){
-  return {version:2,partyRevision:1,starterGifts:{},outputTokens:saved.outputTokens||0,totalTokens:saved.totalTokens||0,baselines:saved.baselines||{},owned:{},seen:saved.seen||{},caught:saved.caught||{},seasonCaught:{},slots:[25,null,null,null,null,null],activeId:25,badges:[],champion:false,johtoUnlocked:false,johtoDeferred:false,leagueBest:0,inventory:{},workTokens:0,battles:0,journal:[],eventSerial:saved.eventSerial||0,animation:null,battle:null,suspendedWild:null,switchUntil:0};
+  return {version:2,partyRevision:1,starterGifts:{},outputTokens:saved.outputTokens||0,totalTokens:saved.totalTokens||0,baselines:saved.baselines||{},owned:{},seen:saved.seen||{},caught:saved.caught||{},seasonCaught:{},captureReservations:{},slots:[25,null,null,null,null,null],activeId:25,badges:[],champion:false,johtoUnlocked:false,johtoDeferred:false,leagueBest:0,inventory:{},workTokens:0,battles:0,journal:[],eventSerial:saved.eventSerial||0,animation:null,battle:null,suspendedWild:null,switchUntil:0};
 }
 class Game {
   constructor(saved={},now=Date.now(),{random=Math.random}={}){
@@ -180,7 +180,8 @@ class Game {
     const selected=this.data.slots.map(uid=>this.data.owned[uid]).filter(Boolean),minimumLevel=selected.length?Math.min(...selected.map(p=>p.level)):0;
     return {...championBonus(minimumLevel),minimumLevel,selectedCount:selected.length,onlyUncaught:true};
   }
-  wildOptions(){return {champion:this.data.champion,caught:this.data.caught,minimumLevel:this.encounterBonus()?.minimumLevel||0,additions:milestoneBonuses(this.data)};}
+  wildLevelCap(){return wildLevelCap(new Set(this.data.badges.filter(id=>db.bosses.slice(0,8).some(b=>b.id===id))).size,this.data.champion);}
+  wildOptions(){return {maximumLevel:this.wildLevelCap(),champion:this.data.champion,caught:this.data.caught,minimumLevel:this.encounterBonus()?.minimumLevel||0,additions:milestoneBonuses(this.data)};}
   specialEncounters(){
     const options=this.wildOptions();if(!options.additions.length)return null;
     const activeLevel=this.data.owned[this.data.activeId].level,distribution=wildDistribution(this.maxGeneration(),activeLevel,options);
@@ -522,8 +523,8 @@ class Game {
     this.data.manualSelection=false;
     this.data.pendingBattle=null;
     this.data.captureAnimation=null;
-    const hero=this.data.owned[this.data.activeId],id=pickWild(this.maxGeneration(),this.random,hero.level,this.wildOptions()),p=species.get(id);
-    const level=Math.max(wildMinimum(p),Math.min(100,hero.level-5+Math.floor(this.random()*11)));
+    const hero=this.data.owned[this.data.activeId],options=this.wildOptions(),id=pickWild(this.maxGeneration(),this.random,hero.level,options),p=species.get(id);
+    const level=Math.max(wildMinimum(p),Math.min(options.maximumLevel,hero.level-5+Math.floor(this.random()*11)));
     const party=Object.fromEntries(this.data.slots.filter(uid=>uid!==null&&!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
     this.data.battle={kind:'wild',foe:combatant(id,level,null,{abilitySlot:Math.floor(this.random()*p.abilities.length),gender:nursery.genderFor(id,this.random)}),party,turn:0,captureAttempts:0,startedAt:now};
     const first=!this.data.seen[id];this.data.seen[id]=this.data.seen[id]||now;

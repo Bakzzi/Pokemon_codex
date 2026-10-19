@@ -31,6 +31,7 @@ test('wild evolution floors propagate through level, trade and stone chains',()=
 });
 test('wild levels cover every integer from partner minus five to plus five, with species floors and level 100 respected',()=>{
   const g=new Game({},now,{random:()=>.73}),p=g.data.owned[25];
+  g.data.champion=true; // Test the uncapped post-championship +/-5 range.
   for(const level of [5,70,100]){
     p.level=level;p.xp=xpAt(p.id,level);const seen=new Set();
     for(let offset=0;offset<=10;offset++){

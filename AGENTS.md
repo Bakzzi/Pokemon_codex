@@ -2,6 +2,8 @@
 
 ## Shared game parity
 
+- User instruction (2026-10-19): ordinary wild encounter levels follow the current region's badge cap: 0..8 badges allow Lv.15/20/25/35/45/55/65/75/85, regional champion allows Lv.100. Filter species above that cap before drawing and cap rolled levels, preserving species minimums. A previous region's badges/title never bypass the new region's cap. Preserve existing battles, owned levels/XP and authored trainer/event/Safari levels. Keep actual dex chances and PC/Android behavior in sync.
+
 - User instruction (2026-10-19): victory dialogue and closing messages must reflect the particular opponent/event and give a concrete next destination or available action. Keep first clears, rematches and completed side events accurate; never reveal future hidden opponents/rewards. Winning text must not advance the story or grant rewards before its existing confirmation boundary. Keep PC and Android dialogue shared.
 - User instruction (2026-10-19): trainer challenges choose the opening partner from the selected slots against the opponent's first Pokemon before the sendout presentation and native battle entry. Never first send the wild-adventure partner and then recall it for an opening matchup switch. Keep the native free Shift and faint-replacement rules for later opponents, and preserve a paused wild encounter's original partner when returning.
 - User correction (2026-10-19): the reached Sprout Tower case shows both trainees and the elder together from the start, including their artwork and lineups. Match Kanto's complete case outline; disable later challenge buttons until their prerequisites are met instead of removing their rows. Do not confuse a hidden future case with a locked stage inside a visible case.

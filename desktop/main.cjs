@@ -218,6 +218,14 @@ async function johtoSmokeTest(){
     const uid=game.addPokemon(130,30,'fixture',at);game.data.owned[uid].shiny=true;game.data.activeId=uid;game.data.slots=[uid,null,null,null,null,null];game.animate('result',{text:'검증'},Date.now());publish(true);await wait(120);
     check(await click("document.getElementById('hero-image').getAttribute('src')==='assets/shiny/130.gif'"),'actual widget retains shiny appearance outside battle');
     check(await read("Array.from(document.querySelectorAll('#johto-challenges img')).filter(i=>i.complete).every(i=>i.naturalWidth>0)"),'visible regional images resolve from packaged assets');
+    const hero=game.data.owned[game.data.activeId];hero.level=100;hero.xp=require('./pokemon.cjs').xpAt(hero.id,100);
+    for(const n of J.gyms)delete game.data.johto.cleared[n.id];game.data.johto.champion=false;
+    game.newWild(Date.now());publish(true);await wait(120);
+    check(game.wildLevelCap()===15&&snapshot().foe.level===15,'actual regional snapshot caps wild levels despite the previous championship');
+    check(await click("document.getElementById('foe-battle-level').textContent==='L15'"),'actual widget renders the capped opening wild level');
+    game.data.johto.cleared['j-falkner']=at;game.newWild(Date.now());publish(true);await wait(120);
+    check(snapshot().foe.level===20,'actual main opens the next wild cap after a regional badge');
+    check(await click("document.getElementById('foe-battle-level').textContent==='L20'"),'actual widget receives the raised cap through publish');
     assert.deepEqual(errors,[]);fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'johto-main-widget.png'),(await win.webContents.capturePage()).toPNG());fs.writeFileSync(path.join(dataDir,'johto-main-panel.png'),(await panel.webContents.capturePage()).toPNG());
     fs.writeFileSync(path.join(dataDir,'johto-main-result.json'),JSON.stringify({ok:true,checks,errors,version:app.getVersion(),statePath:'main snapshot -> publish -> preload -> renderer; panel actions -> actual IPC handler'},null,2));app.exit(0);
   }catch(error){fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'johto-main-error.txt'),error.stack||String(error));console.error(error);app.exit(1);}

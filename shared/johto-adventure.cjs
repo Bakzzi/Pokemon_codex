@@ -1,6 +1,6 @@
 'use strict';
 const J=require('./johto.cjs'),{Game:Engine}=require('../desktop/game.cjs'),battle=require('../desktop/battle.cjs');
-const {data,species,championBonus,wildDistribution,wildEligible,wildMinimum}=require('../desktop/pokemon.cjs');
+const {data,species,championBonus,wildDistribution,wildEligible,wildMinimum,wildLevelCap}=require('../desktop/pokemon.cjs');
 const journal=require('../desktop/journal.cjs'),nursery=require('../desktop/daycare.cjs');
 const consumables=require('../desktop/consumables.cjs');
 const storyText=require('./johto-dialogue.cjs');
@@ -150,6 +150,10 @@ function withJohto(Base){return class JohtoAdventure extends Base{
   if(!J.active(this))return super.encounterBonus();if(!this.data.johto?.champion)return null;
   const selected=this.data.slots.map(uid=>this.data.owned[uid]).filter(Boolean),minimumLevel=selected.length?Math.min(...selected.map(p=>p.level)):0;
   return {...championBonus(minimumLevel),minimumLevel,selectedCount:selected.length,onlyUncaught:true};
+ }
+ wildLevelCap(){
+  if(!J.active(this))return super.wildLevelCap();
+  return wildLevelCap(J.gyms.filter(n=>J.done(this,n.id)&&(n.id!=='j-clair'||J.done(this,'j-dragon-den'))).length,!!this.data.johto?.champion);
  }
  wildOptions(){
   const previous=super.wildOptions();if(!J.active(this))return previous;
