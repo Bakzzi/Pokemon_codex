@@ -25,7 +25,7 @@ function snapshot(game){
   const r=game.data.mobileStory.rescue,unlocked=game.data.badges.includes('erika'),investigated=!!(r.investigatedAt||r.completedAt||r.wins.some(Boolean));
   return {unlocked,visible:unlocked||investigated,investigated,title:investigated?'포켓몬타워':'보라타운의 소문',sprite:investigated?'assets/trainers/battle/mr-fuji.png':null,inquiry:'보라타운 조사',completed:!!r.completedAt,description:r.completedAt?'어미 텅구리의 영혼이 안식을 찾고, 등나무노인도 무사히 돌아왔어요.':investigated?'등나무노인이 로켓단에게 붙잡혀 있어요. 위층으로 향하는 계단에서는 차가운 기운이 느껴져요.':'보라타운에서 포켓몬들이 사라지고 있어요. 조사하러 간 노인도 돌아오지 않는다네요.',steps:encounters.map(e=>{
     const done=!!r.wins[e.stage],revealed=unlocked&&(e.stage===0||!!r.wins[e.stage-1]);
-    return {id:e.id,stage:e.stage,name:revealed?e.name:'???',sprite:e.sprite,done,revealed,team:revealed?e.team:[],canChallenge:game.canChallenge(e.id),reason:done?'승리 완료':!unlocked?'민화에게 승리하면 도전할 수 있어요.':e.stage>0&&!r.wins[e.stage-1]?'앞선 상대에게 승리해 주세요.':'도전하기'};
+    return {id:e.id,stage:e.stage,name:revealed?e.name:'???',sprite:e.sprite,done,revealed,levelsKnown:game.challengeLevelsKnown(e.id,done),team:revealed?e.team:[],canChallenge:game.canChallenge(e.id),reason:done?'승리 완료':!unlocked?'민화에게 승리하면 도전할 수 있어요.':e.stage>0&&!r.wins[e.stage-1]?'앞선 상대에게 승리해 주세요.':'도전하기'};
   })};
 }
 module.exports={encounters,byId,legacyThird,legacySecond,init,ready,snapshot};

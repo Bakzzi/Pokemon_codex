@@ -151,12 +151,12 @@ function renderDex(){
     root.append(box);
   }
 }
-function teamMembers(team,showNames=false){
+function teamMembers(team,showNames=false,levelsKnown=false){
   const row=node('div','team');
-  for(const p of team){const mon=node('span');mon.title='No.'+p.id+' · Lv.'+p.level;mon.append(img(p.id));if(showNames)mon.append(node('small','',p.name||'No.'+p.id));mon.append(document.createTextNode('Lv.'+p.level));row.append(mon);}
+  for(const p of team){const mon=node('span'),level=levelsKnown?p.level:'??';mon.title='No.'+p.id+' · Lv.'+level;mon.append(img(p.id));if(showNames)mon.append(node('small','',p.name||'No.'+p.id));mon.append(document.createTextNode('Lv.'+level));row.append(mon);}
   return row;
 }
-function trainerTeam(boss,showNames=false){return boss.revealed===false?node('p','muted','포켓몬 편성 미공개'):teamMembers(boss.team,showNames);}
+function trainerTeam(boss,showNames=false){return boss.revealed===false?node('p','muted','포켓몬 편성 미공개'):teamMembers(boss.team,showNames,boss.levelsKnown);}
 let shownBadges=null;
 function badgeImage(boss,className=''){
   const image=node('img',className);image.src='assets/badges/'+boss.id+'.png';image.alt='';image.draggable=false;return image;
@@ -177,7 +177,7 @@ function renderBosses(){
   syncDisclosure('gym-details',state.bosses.slice(0,8).every(b=>state.badges.includes(b.id)));
   renderStory();
   renderSpecialEncounters();
-  const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.challengeReadOnly,state.badges,state.bosses.map(b=>b.revealed),state.gymAccess,state.trainingDevice.routeOpen,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.johtoUnlockPreview,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
+  const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.challengeReadOnly,state.badges,state.bosses.map(b=>[b.revealed,b.levelsKnown]),state.gymAccess,state.trainingDevice.routeOpen,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.johtoUnlockPreview,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
   $('badges').textContent='뱃지 '+state.badges.length+' / 8';
   renderBadgeCase();
   $('gyms').replaceChildren(...state.bosses.slice(0,8).map((boss,i)=>{
@@ -242,7 +242,7 @@ function renderStory(){
   }));
   const body=node('div','snorlax-body'),ongoing=state.battle?.storyId===road.id,reserved=queued?.index===road.id;
   const b=node('button','',ongoing?'배틀 중':reserved?'피리 사용 예약됨':road.done&&d.snorlaxCaught?'포획 완료':!d.fluteObtained?'깨울 방법이 필요해요':road.done?'다시 포켓몬피리 사용':'포켓몬피리 사용');b.dataset.story=road.id;b.disabled=ongoing||!!queued||!road.available;b.title=busy&&road.available?'현재 관장 배틀이 끝난 뒤 사용하도록 예약해요.':'';b.onclick=()=>window.buddy.action('challenge',road.id);
-  body.append(node('b','','잠만보 · Lv.'+road.team[0].level),node('p','muted',d.fluteObtained?'포켓몬피리 · 보유 중':'깊이 잠들어 있어 길을 지나갈 수 없어요.'),b);$('snorlax-encounter').replaceChildren(img(143,'snorlax-sprite'),body);
+  body.append(node('b','','잠만보 · Lv.'+(road.levelsKnown?road.team[0].level:'??')),node('p','muted',d.fluteObtained?'포켓몬피리 · 보유 중':'깊이 잠들어 있어 길을 지나갈 수 없어요.'),b);$('snorlax-encounter').replaceChildren(img(143,'snorlax-sprite'),body);
 }
 function renderDevice(){
   if(!state)return;const d=state.trainingDevice;

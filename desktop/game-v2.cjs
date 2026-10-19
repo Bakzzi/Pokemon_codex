@@ -16,6 +16,7 @@ const SECRET_TRAINERS=new Set(['giovanni','champion']);
 const nursery=require('./daycare.cjs');
 const {collectionHints}=require('./acquisition.cjs');
 const training=require('./training-device.cjs');
+const discovery=require('../shared/challenge-discovery.cjs');
 const ACTION_KINDS=new Set(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner']);
 function moveDetails(p,entry){
   const saved=moves.get(entry.move),move=battleEngine.dex.moves.get(saved.identifier);
@@ -59,12 +60,13 @@ function hasJohtoProgress(data){
   return ids.some(id=>species.get(Number(id))?.generation===2);
 }
 function freshData(saved={}){
-  return {version:2,partyRevision:1,starterGifts:{},outputTokens:saved.outputTokens||0,totalTokens:saved.totalTokens||0,baselines:saved.baselines||{},owned:{},seen:saved.seen||{},caught:saved.caught||{},seasonCaught:{},captureReservations:{},slots:[25,null,null,null,null,null],activeId:25,badges:[],champion:false,johtoUnlocked:false,johtoDeferred:false,leagueBest:0,inventory:{},workTokens:0,battles:0,journal:[],eventSerial:saved.eventSerial||0,animation:null,battle:null,suspendedWild:null,switchUntil:0};
+  return {version:2,partyRevision:1,starterGifts:{},outputTokens:saved.outputTokens||0,totalTokens:saved.totalTokens||0,baselines:saved.baselines||{},owned:{},seen:saved.seen||{},caught:saved.caught||{},seasonCaught:{},captureReservations:{},challengeSeen:{},slots:[25,null,null,null,null,null],activeId:25,badges:[],champion:false,johtoUnlocked:false,johtoDeferred:false,leagueBest:0,inventory:{},workTokens:0,battles:0,journal:[],eventSerial:saved.eventSerial||0,animation:null,battle:null,suspendedWild:null,switchUntil:0};
 }
 class Game {
   constructor(saved={},now=Date.now(),{random=Math.random}={}){
     this.random=random;this.sessions=new Map();this.limits={};this.lastEvent=0;this.nextTick=now;
     this.data=saved.version===2?JSON.parse(JSON.stringify(saved)):freshData(saved);
+    discovery.init(this.data);
     const month=monthOf(now);
     if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(this.data.season?.key))this.data.season={key:month.key,startedAt:now};
     this.data.seasonCaught ||= {...this.data.caught};
@@ -132,6 +134,8 @@ class Game {
     if(!this.data.slots.includes(this.data.activeId))this.data.activeId=this.data.slots.find(uid=>uid!==null&&!this.isBoarded(uid))||this.data.slots.find(uid=>uid!==null);
     for(const b of [this.data.battle,this.data.suspendedWild])battleEngine.restoreAppearance(b);
     training.init(this,now);
+    discovery.restore(this,db.bosses.map((b,index)=>({id:b.id,index,completed:index<8?this.data.badges.includes(b.id):this.data.champion||index-8<this.data.leagueBest,starts:[b.name+' 체육관 도전 시작'],loss:b.name+'에게 패배 ·'})),now);
+    discovery.restore(this,training.snapshot(this).steps.map(b=>({id:b.id,completed:b.done,starts:[training.battles[b.id].name+' 도전 시작']})),now);
     if(this.data.battle?.kind==='trainer'&&this.data.battle.matchupRevision!==1){this.data.battle.matchupRevision=1;this.data.battle.matchupPending=true;}
     const actionIds=new Set();
     this.data.pendingActions=(Array.isArray(this.data.pendingActions)?this.data.pendingActions:[]).slice(0,32).map(restoreAction).filter(a=>a&&!actionIds.has(a.id)&&actionIds.add(a.id));
@@ -143,6 +147,7 @@ class Game {
     }
   }
   maxGeneration(){return this.data.champion&&this.data.johtoUnlocked?2:1;}
+  challengeLevelsKnown(id,completed=false){return discovery.known(this,id,completed);}
   registeredThisSeason(id){return !!this.data.caught[id]&&(!this.data.season.resetAt||!!this.data.seasonCaught[id]);}
   canReserveCapture(id){const p=species.get(id);return !!p&&!!this.data.caught[id]&&p.generation<=this.maxGeneration()&&(id===143||wildEligible(p,this.maxGeneration(),100));}
   captureRequested(id){return !this.registeredThisSeason(id)||(this.data.captureReservations?.[id]?.remaining||0)>0;}
@@ -607,6 +612,7 @@ class Game {
     const b=this.data.battle,boss=this.battleBoss(b),enemy=boss.team[b.foeIndex];
     if(b.kind==='trainer'&&b.foeIndex===0&&b.simBoss!==(b.storyId||b.bossIndex))battleEngine.invalidate(b);
     if(!b.storyId&&SECRET_TRAINERS.has(boss.id))this.data.trainerSeen[boss.id] ||= now;
+    discovery.remember(this,boss.id,now);
     b.foe=combatant(enemy.id,enemy.level,enemy.moves);b.turn=0;
     if(b.kind==='trainer'){b.matchupRevision=1;b.matchupPending=true;delete b.manualMatchup;delete b.aiLastSwitch;delete b.shiftUsed;this.prepareTrainerLead();}
     this.data.seen[enemy.id]=this.data.seen[enemy.id]||now;this.animate('encounter',{id:enemy.id,text:b.storyId==='road-snorlax'?'포켓몬피리를 불었다! 잠만보 Lv.30이 깨어났다!':`${boss.name}의 ${species.get(enemy.id).name}!`},now);
@@ -795,7 +801,7 @@ class Game {
       encounterBonus:this.encounterBonus(),
       specialEncounters:this.specialEncounters(),
       collection:db.pokemon.filter(p=>p.generation<=this.maxGeneration()).map(p=>{const owned=roster.filter(m=>m.id===p.id),best=owned.reduce((best,m)=>!best||m.level>best.level||m.level===best.level&&m.xp>best.xp?m:best,null);return {id:p.id,seen:!!this.data.seen[p.id],caught:!!this.data.caught[p.id],seasonCaught:this.registeredThisSeason(p.id),captureReserved:this.data.captureReservations?.[p.id]?.remaining||0,canReserveCapture:this.canReserveCapture(p.id),name:this.data.seen[p.id]?p.name:'???',owned:owned.length>0,count:owned.length,level:best?.level??null,expPercent:best?.expPercent??null,types:this.data.seen[p.id]?view(p.id).types:[],description:this.data.seen[p.id]?p.description:'',acquisition:hints.get(p.id),rarity:rarity(p)};}),
-      bosses:db.bosses.map(b=>{const revealed=this.trainerRevealed(b);return {...b,revealed,name:revealed?b.name:'???',team:revealed?b.team:[]};}),gymAccess:db.bosses.slice(0,8).map((_,i)=>this.canChallenge(i)),leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].map(e=>!this.trainerRevealed(db.bosses[7])&&e.kind==='challenge'&&e.text.startsWith(db.bosses[7].name+' 체육관 도전 예약')?{...e,text:e.text.replace(db.bosses[7].name,'???')}:e).sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:[...(this.data.trainingDevice.fluteObtainedAt?[{id:'poke-flute',name:'포켓몬피리',count:1}]:[]),...(training.has(this)?[{id:'training-device',name:'학습장치',count:1}]:[]),...Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name||consumables.byId.get(Number(id))?.name,count,...(consumables.byId.has(Number(id))?{description:consumables.byId.get(Number(id)).description,automatic:true}:{})}))]};
+      bosses:db.bosses.map((b,i)=>{const revealed=this.trainerRevealed(b);return {...b,revealed,levelsKnown:this.challengeLevelsKnown(b.id,i<8?this.data.badges.includes(b.id):this.data.champion||i-8<this.data.leagueBest),name:revealed?b.name:'???',team:revealed?b.team:[]};}),gymAccess:db.bosses.slice(0,8).map((_,i)=>this.canChallenge(i)),leagueBest:this.data.leagueBest,journal:[...this.data.journal,...(this.data.battleJournal||[])].map(e=>!this.trainerRevealed(db.bosses[7])&&e.kind==='challenge'&&e.text.startsWith(db.bosses[7].name+' 체육관 도전 예약')?{...e,text:e.text.replace(db.bosses[7].name,'???')}:e).sort((a,b)=>b.at-a.at),summary:journal.summary(this.data),inventory:[...(this.data.trainingDevice.fluteObtainedAt?[{id:'poke-flute',name:'포켓몬피리',count:1}]:[]),...(training.has(this)?[{id:'training-device',name:'학습장치',count:1}]:[]),...Object.entries(this.data.inventory).filter(([,n])=>n>0).map(([id,count])=>({id:Number(id),name:db.items.find(i=>i.id===Number(id))?.name||consumables.byId.get(Number(id))?.name,count,...(consumables.byId.has(Number(id))?{description:consumables.byId.get(Number(id)).description,automatic:true}:{})}))]};
   }
 }
 module.exports={Game,STARTERS,PARTY_SIZE,STARTER_GIFTS};

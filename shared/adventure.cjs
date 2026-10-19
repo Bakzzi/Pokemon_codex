@@ -8,6 +8,7 @@ const silph=require('./silph.cjs');
 const safari=require('./safari.cjs');
 const mansion=require('./mansion.cjs');
 const trainerDialogue=require('./trainer-dialogue.cjs');
+const discovery=require('./challenge-discovery.cjs');
 const {species}=require('../desktop/pokemon.cjs');
 const {encounters,byId:rivals,champion}=require('./rivals.cjs');
 const rival=encounters[0];
@@ -32,6 +33,8 @@ class Adventure extends Engine{
       if(!existing)this.dialogue('oak','오박사','oak',this.platform==='desktop'?oakIntro.map((text,i)=>i===2?'AI 에이전트와 작업하는 동안 동료와 함께 모험한단다. 도전 배틀은 작업량과 관계없이 진행할 수 있어.':text):oakIntro,'rival',now);
     }
     rescue.init(this,now);silph.init(this,now);safari.init(this);mansion.init(this,now,saved.pendingChallenge);this.initRivals(now);
+    discovery.restore(this,[...rescue.encounters,...silph.encounters].map(e=>({id:e.id,completed:!!this.data.mobileStory[silph.byId.has(e.id)?'silph':'rescue'].wins[e.stage],starts:[e.name+'에게 도전!']})),now);
+    discovery.restore(this,encounters.map(e=>({id:e.id,completed:!!this.rivalProgress(e.id)?.metAt||['won','completed','retry'].includes(this.rivalProgress(e.id)?.state)})),now);
     const story=this.data.mobileStory;
     if(story.revision<2&&(this.data.trainingDevice.rocketWonAt||this.data.badges.includes('erika')))story.scopeObtainedAt ||= this.data.trainingDevice.rocketWonAt||now;
     story.revision=2;
@@ -103,7 +106,7 @@ class Adventure extends Engine{
   rivalState(){
     return encounters.map(e=>{
       const p=this.rivalProgress(e.id)||{state:'unseen'},met=e.stage===0||p.state!=='unseen';
-      return {id:e.id,stage:e.stage,state:p.state,met,sprite:met?e.sprite:null,name:met?'그린':'???',team:met?e.team:[],canRetry:e.stage>0&&this.canChallenge(e.id)};
+      return {id:e.id,stage:e.stage,state:p.state,met,levelsKnown:this.challengeLevelsKnown(e.id),sprite:met?e.sprite:null,name:met?'그린':'???',team:met?e.team:[],canRetry:e.stage>0&&this.canChallenge(e.id)};
     });
   }
   dialogue(kind,name,sprite,pages,next,now){

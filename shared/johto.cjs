@@ -147,7 +147,7 @@ function snapshot(game){
   const shown=reveal(n),ready=available(game,n),cleared=done(game,n.id);
   const button=cleared&&!n.repeatMissing&&!n.repeatEgg?'완료':n.type==='gift'?'함께하기':['egg','odd-egg'].includes(n.type)?game.data.egg?'돌보는 알이 있어요':'알 맡기기':n.type==='dialogue'?'살펴보기':'도전하기';
   const hint=ready?'':cleared?'완료했어요.':!n.requires.every(id=>done(game,id))?'앞선 모험을 마치면 도전할 수 있어요.':n.needsBeasts?'성도의 전설과 더 깊은 인연이 필요해요.':n.needsDex?'성도의 도감을 더 채워 보세요.':'다음 만남을 기다려 주세요.';
-  return {id:n.id,name:shown?n.name:'???',title:shown?n.title:'???',type:n.type,location:n.location,badge:n.badge,sprite:shown?n.sprite:null,portrait:shown?n.portrait:null,revealed:shown,team:shown?n.team||[]:[],done:cleared,canChallenge:ready,button,hint};
+  return {id:n.id,name:shown?n.name:'???',title:shown?n.title:'???',type:n.type,location:n.location,badge:n.badge,sprite:shown?n.sprite:null,portrait:shown?n.portrait:null,revealed:shown,levelsKnown:game.challengeLevelsKnown(n.id,cleared),team:shown?n.team||[]:[],done:cleared,canChallenge:ready,button,hint};
  };
  const cards=groups.filter(g=>g.id!=='j-rocket-hq'&&g.requires.every(id=>done(game,id))).map(original=>{
   const g=original.id==='j-rage-lake'?{...original,steps:[...original.steps,...groups.find(g=>g.id==='j-rocket-hq').steps]}:original;

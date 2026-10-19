@@ -4,6 +4,7 @@ const {data,species,championBonus,wildDistribution,wildEligible,wildMinimum,wild
 const journal=require('../desktop/journal.cjs'),nursery=require('../desktop/daycare.cjs');
 const consumables=require('../desktop/consumables.cjs');
 const storyText=require('./johto-dialogue.cjs');
+const discovery=require('./challenge-discovery.cjs');
 const oddEgg=[172,173,174,236,238,239,240];
 const itemNames={'squirt-bottle':'꼬부기물뿌리개','secret-potion':'비전신약','clear-bell':'크리스탈방울','silver-wing':'은빛날개','rainbow-wing':'무지갯빛날개','ss-ticket':'승선티켓','machine-part':'기계부품','expansion-card':'라디오 확장카드','gs-ball':'GS볼','red-scale':'빨간비늘'};
 function withJohto(Base){return class JohtoAdventure extends Base{
@@ -11,6 +12,7 @@ function withJohto(Base){return class JohtoAdventure extends Base{
   super(saved,now,options);
   if(J.active(this)||saved.johto)J.init(this,saved.pendingChallenge);
   this.prepareJohtoJourney(now);
+  discovery.restore(this,[...J.nodes.values()].map(n=>({id:n.id,completed:J.done(this,n.id)||!!this.data.johto?.rivals[n.id]?.metAt,starts:[n.title+' 도전 시작'],loss:n.name+'에게 패배했다.'})),now);
   this.awardCompletionItem(now);
   if(J.active(this)&&J.nodes.has(saved.pendingChallenge?.index)&&saved.pendingChallenge.index!=='j-arrival')this.data.pendingChallenge={...saved.pendingChallenge};
   const scene=this.presentation(),boss=this.data.battle?.johtoId&&this.battleBoss();
@@ -53,6 +55,7 @@ function withJohto(Base){return class JohtoAdventure extends Base{
   const party=Object.fromEntries(this.data.slots.filter(uid=>uid!==null&&!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
   const wild=n.type==='wild';this.data.battle={kind:wild?'wild':'trainer',bossIndex:n.id,storyId:n.id,johtoId:n.id,freeChallenge:true,foeIndex:0,party,turn:0,captureAttempts:0,startedAt:now,...extra};
   if(wild){
+   discovery.remember(this,n.id,now);
    if(n.shiny&&!Object.values(this.data.owned).some(p=>p.id===n.pokemon&&p.shiny))this.data.battle.allowDuplicateCapture=true;
    const b=this.data.battle;b.foe=battle.combatant(n.pokemon,n.level,null,{shiny:!!n.shiny});this.data.seen[n.pokemon] ||= now;
    this.animate('encounter',{id:n.pokemon,text:n.intro?.[0]||species.get(n.pokemon).name+' 등장!'},now);

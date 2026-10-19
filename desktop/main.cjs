@@ -180,12 +180,15 @@ async function johtoSmokeTest(){
     check(game.data.slots.filter(Boolean).length===1,'a gift preserves intentionally empty party slots');
     game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);
     check(await read("document.querySelectorAll('#j-early .johto-event-entry').length===3&&!document.querySelector('[data-challenge=\"j-sprout-sage-1\"]').disabled&&document.querySelector('[data-challenge=\"j-sprout-sage-2\"]').disabled&&document.querySelector('[data-challenge=\"j-sprout\"]').disabled"),'actual tower panel keeps all three trainers visible and enables only its first stage');
+    check(await read("[...document.querySelectorAll('#j-early .team > span')].every(p=>p.textContent==='Lv.??'&&p.title.endsWith('Lv.??'))"),'actual publisher masks unchallenged story levels and tooltips');
+    check(await read("[...document.querySelectorAll('#johto-gym-details .team > span, #johto-league .team > span')].every(p=>p.textContent==='Lv.??')"),'actual publisher masks unchallenged gym and league levels');
     const advancePages=async()=>{for(let i=0;i<8&&game.presentation()?.mode==='dialogue';i++){publish(true);await wait(40);await click("document.getElementById('story-next').click()");await wait(50);}if(game.presentation()?.mode==='sendout')game.sceneTick(Date.now()+4000);};
     const wildLead=game.addPokemon(129,5,'fixture',at);game.data.slots[1]=wildLead;
     for(const id of ['j-sprout-sage-1','j-sprout-sage-2']){
       game.data.activeId=wildLead;game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);
       await read("document.getElementById('j-early').open=true;document.querySelector('[data-challenge=\""+id+"\"]').click()");await wait(80);
       check(game.data.battle?.johtoId===id,'actual challenge IPC enters tower trainer '+id);
+      check(await read("[...document.querySelector('[data-challenge=\""+id+"\"]').closest('article').querySelectorAll('.team > span')].every(p=>/^Lv\\.\\d+$/.test(p.textContent))"),'actual challenge IPC reveals the entered trainer levels '+id);
       check(game.data.activeId===25&&!game.data.battle.pendingSwitch&&!game.data.battle.matchupPending&&await click("document.getElementById('hero-image').getAttribute('src')==='assets/25.gif'"),'actual publisher uses the chosen lead before first sendout '+id);
       check(await click("document.getElementById('story-portrait').getAttribute('src').endsWith('j-sage.png')"),'actual widget shows the tower trainer '+id);
       await advancePages();let turns=0;
@@ -203,6 +206,7 @@ async function johtoSmokeTest(){
     game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);
     await read("document.getElementById('j-early').open=true;document.querySelector('[data-challenge=\"j-sprout\"]').click()");await wait(120);
     check(game.data.battle?.johtoId==='j-rival-0','actual challenge IPC performs the hidden rival intercept');
+    check(await read("document.querySelector('[data-challenge=\"j-sprout\"]').closest('article').querySelector('.team').textContent.includes('Lv.??')"),'intercepting rival leaves the requested opponent levels undiscovered');
     check(await click("document.getElementById('story-portrait').getAttribute('src').endsWith('j-silver.png')"),'actual widget renders the regional rival sprite');
     for(let i=0;i<5&&game.presentation()?.mode==='dialogue';i++){await click("document.getElementById('story-next').click()");await wait(70);}
     game.sceneTick(Date.now()+4000);game.data.switchUntil=0;game.nextTick=Date.now();game.tick();publish(true);await wait(150);

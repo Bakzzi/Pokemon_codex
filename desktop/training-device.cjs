@@ -93,7 +93,7 @@ function snapshot(game){
   return {...d,routeOpen:routeOpen(game),rocketUnlocked:rocketUnlocked(game),fluteObtained:!!d.fluteObtainedAt,snorlaxCaught:game.registeredThisSeason(143),rocketCompleted:rocketOrder.filter(id=>d[progressKeys[id]]).length,nextRocket:nextRocket(game),obtained:has(game),canClaim:canClaim(game),requirements:rows,learner:p?{uid:p.uid,id:p.id,level:p.level,boarded:game.isBoarded(p.uid),active:p.uid===game.data.activeId}:null,
     steps:Object.values(battles).map(b=>{
       const revealed=rows.find(r=>r.id===b.id)?.revealed!==false;
-      return {...b,name:revealed?b.name:'???',team:revealed?b.team.map(p=>({...p,name:species.get(p.id).name})):[],revealed,done:!!d[progressKeys[b.id]],available:canChallenge(game,b.id)};
+      return {...b,name:revealed?b.name:'???',team:revealed?b.team.map(p=>({...p,name:species.get(p.id).name})):[],revealed,levelsKnown:game.challengeLevelsKnown(b.id,!!d[progressKeys[b.id]]),done:!!d[progressKeys[b.id]],available:canChallenge(game,b.id)};
     })};
 }
 module.exports={battles,rocketOrder,nextRocket,init,has,routeOpen,hasLearnedLevel,learnedLevel,queueEvolutions,requirements,canClaim,canChallenge,win,awardFlute,claim,snapshot};
