@@ -227,11 +227,11 @@ async function johtoSmokeTest(){
     check(snapshot().foe.level===20,'actual main opens the next wild cap after a regional badge');
     check(await click("document.getElementById('foe-battle-level').textContent==='L20'"),'actual widget receives the raised cap through publish');
     game.data.johto.champion=true;game.newWild(Date.now());publish(true);await wait(120);
-    check(snapshot().foe.level===70&&hero.level===100,'actual regional champion encounter caps at seventy without lowering the partner');
-    check(await click("document.getElementById('foe-battle-level').textContent==='L70'"),'actual widget renders the regional champion cap');
+    check(snapshot().foe.level===65&&hero.level===100,'actual regional champion encounter caps at sixty-five without lowering the partner');
+    check(await click("document.getElementById('foe-battle-level').textContent==='L65'"),'actual widget renders the regional champion cap');
     game.data.johtoUnlocked=false;game.newWild(Date.now());publish(true);await wait(120);
-    check(snapshot().foe.level===70&&game.wildLevelCap()===70,'actual first-region champion encounter also caps at seventy');
-    check(await click("document.getElementById('foe-battle-level').textContent==='L70'"),'actual widget renders the first-region champion cap');
+    check(snapshot().foe.level===65&&game.wildLevelCap()===65,'actual first-region champion encounter also caps at sixty-five');
+    check(await click("document.getElementById('foe-battle-level').textContent==='L65'"),'actual widget renders the first-region champion cap');
     assert.deepEqual(errors,[]);fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'johto-main-widget.png'),(await win.webContents.capturePage()).toPNG());fs.writeFileSync(path.join(dataDir,'johto-main-panel.png'),(await panel.webContents.capturePage()).toPNG());
     fs.writeFileSync(path.join(dataDir,'johto-main-result.json'),JSON.stringify({ok:true,checks,errors,version:app.getVersion(),statePath:'main snapshot -> publish -> preload -> renderer; panel actions -> actual IPC handler'},null,2));app.exit(0);
   }catch(error){fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'johto-main-error.txt'),error.stack||String(error));console.error(error);app.exit(1);}

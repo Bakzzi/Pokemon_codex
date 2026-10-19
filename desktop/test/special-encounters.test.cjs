@@ -65,9 +65,10 @@ test('the actual two-stage draw gives each target its base share plus its fixed 
 });
 
 test('Game applies milestones to wild battles, restores them after reload and never changes trainer encounters',()=>{
-  let g=fixture(50);g.data.badges=badges(6);let draw=0;g.random=()=>draw++===0?.001:.5;g.newWild(now);assert.equal(g.data.battle.foe.id,145);assert.ok(g.data.battle.foe.level>=50);
+  let g=fixture(50);g.data.badges=badges(6);assert.equal(g.wildLevelCap(),45);assert.ok(g.specialEncounters().entries.every(b=>!b.eligible));
+  g.data.badges=badges(7);let draw=0;g.random=()=>draw++===0?.001:.5;g.newWild(now);assert.equal(g.data.battle.foe.id,145);assert.equal(g.data.battle.foe.level,50);
   const before=structuredClone(g.data);g=new Game(g.data,now+1);assert.deepEqual(g.data.owned,before.owned);assert.deepEqual(g.data.badges,before.badges);close(g.specialEncounters().entries[0].extra,.001);
-  g.data.battle=null;g.data.switchUntil=0;g.nextTick=now;assert.ok(g.challenge(6,now));assert.equal(g.data.battle.foe.id,data.bosses[6].team[0].id);assert.equal(g.capture(g.data.switchUntil),false);
+  g.data.battle=null;g.data.switchUntil=0;g.nextTick=now;assert.ok(g.challenge(7,now));assert.equal(g.data.battle.foe.id,data.bosses[7].team[0].id);assert.equal(g.capture(g.data.switchUntil),false);
 });
 
 test('the last missing registration unlocks the Mew bonus only after capture playback commits',()=>{
