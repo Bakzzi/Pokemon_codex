@@ -8,6 +8,7 @@ const silph=require('./silph.cjs');
 const safari=require('./safari.cjs');
 const mansion=require('./mansion.cjs');
 const trainerDialogue=require('./trainer-dialogue.cjs');
+const {species}=require('../desktop/pokemon.cjs');
 const {encounters,byId:rivals,champion}=require('./rivals.cjs');
 const rival=encounters[0];
 const wildExclusions=[131,...safari.pool.map(([id])=>id)];
@@ -46,9 +47,10 @@ class Adventure extends Engine{
     if(b?.kind==='trainer'&&scene?.mode==='dialogue'){
       const boss=this.battleBoss(b);
       if(scene.next==='sendout'&&scene.pages?.[0]===boss.name+'의 도전!')scene.pages=trainerDialogue.intro(boss,this.data.champion);
-      if(scene.next==='win'&&scene.pages?.[0]==='멋진 배틀이었어! 내 패배를 인정할게.')scene.pages=trainerDialogue.victory(boss,this.data.champion);
+      if(scene.next==='win'&&!boss.ghost&&trainerDialogue.hasVictory(boss)){scene.pages=trainerDialogue.victory(boss,this.data.champion);scene.index=Math.min(scene.index,scene.pages.length-1);}
       if(scene.next==='loss'&&scene.pages?.[0]==='동료들과 더 성장해서 다시 만나자!')scene.pages=trainerDialogue.defeat(boss);
     }
+    if(scene?.next==='rival-win'&&rivals.has(b?.storyId)){scene.pages=rivals.get(b.storyId).win;scene.index=Math.min(scene.index,scene.pages.length-1);}
     if(scene?.next==='sendout'||scene?.mode==='sendout')this.prepareTrainerLead();
   }
   resetSeason(now){
@@ -136,7 +138,7 @@ class Adventure extends Engine{
     if(s.next==='rescue-reward'){
       const r=story.rescue;if(!r.rewardPending||!r.wins.every(Boolean))return false;
       r.completedAt=now;r.rewardPending=false;training.awardFlute(this,now);
-      this.animate('result',{text:'등나무노인에게 포켓몬피리를 받았다!'},now);return true;
+      this.animate('result',{text:'포켓몬피리를 받았어요. 연분홍시티로 가는 길목의 잠만보를 깨워 보세요.'},now);return true;
     }
     if(s.next==='lapras-gift'){
       if(story.laprasResolved)return false;story.laprasResolved=true;
@@ -146,7 +148,7 @@ class Adventure extends Engine{
     }
     if(s.next==='scope-reward'){
       if(!story.scopeObtainedAt){story.scopeObtainedAt=now;this.log('실프스코프를 발견했다!','item',null,now);}
-      this.animate('result',{text:'실프스코프를 가방에 넣었다.'},now);return true;
+      this.animate('result',{text:'실프스코프를 가방에 넣었어요. 무지개시티의 민화에게 향해 보세요.'},now);return true;
     }
     if(s.next==='safari-depart'){const ok=safari.start(this,now);this.holdUntil(now+800);return ok;}
     if(s.next==='mansion-begin'){story.mansion.startedAt=now;this.log('홍련섬의 폐저택 조사를 시작했다.','info',null,now);this.holdUntil(now+800);return true;}
@@ -223,7 +225,7 @@ class Adventure extends Engine{
     const p=this.rivalProgress(e.id);p.state=e.stage===0?'completed':won?'won':'retry';p.outcome=won?'win':'loss';if(won)p.wonAt=now;
     this.data.pendingChallenge=null;this.restoreWild(now);
     if(e.stage===0){this.data.mobileStory.onboarding='closing';this.dialogue('oak','오박사','oak',oakClose,'adventure',now);}
-    else this.animate('result',{text:won?'그린에게 승리했다! 모험을 계속하자.':'동료들을 회복했어요. 도전하기에서 그린에게 다시 도전하세요.'},now);
+    else this.animate('result',{text:won?e.result:'동료들을 회복했어요. 도전하기에서 그린에게 다시 도전하세요.'},now);
   }
   abandon(now=Date.now()){
     if(rivals.has(this.data.battle?.storyId)){if(this.presentation())return false;this.resolveRival(false,now,true);return true;}
@@ -248,14 +250,18 @@ class Adventure extends Engine{
     }
     super.defeatOpponent(now,captured);
     if(b?.kind==='wild'&&!b.storyId&&this.data.mobileStory.mansion.startedAt&&!this.data.mobileStory.mansion.completedAt)this.data.mobileStory.mansion.wins++;
-    if(b?.storyId==='road-snorlax'&&this.data.battle!==b)this.data.animation.text=captured?'잠만보를 깨워 함께 모험하기로 했어요. 독수에게 도전할 수 있어요.':'잠만보를 물리쳐 길이 열렸어요. 독수에게 도전할 수 있어요.';
+    if(b?.storyId==='road-snorlax'&&this.data.battle!==b)this.data.animation.text=(captured?'잠만보를 깨워 함께 모험하기로 했어요.':'잠만보를 물리쳐 길이 열렸어요.')+(this.data.badges.includes('koga')?'':' 독수에게 도전할 수 있어요.');
   }
   finishTrainerWin(now){
     const b=this.data.battle,e=storyEncounter(b?.storyId);
     if(!e){
-      const scope=this.battleBoss(b)?.id==='rocket-giovanni'&&!this.data.mobileStory.scopeObtainedAt;
+      const boss=this.battleBoss(b),scope=boss?.id==='rocket-giovanni'&&!this.data.mobileStory.scopeObtainedAt,owned=new Set(Object.keys(this.data.owned));
       super.defeatOpponent(now);
       if(scope&&this.data.trainingDevice.rocketWonAt)this.dialogue('item','아지트의 남겨진 물건','item:silph-scope',['비주기가 떠난 자리에서 낯선 장치를 발견했다. “실프스코프”라고 적혀 있다.','눈에 보이지 않는 존재의 정체를 확인하는 장치인 모양이다. 가방에 넣어 두자.'],'scope-reward',now);
+      if(!this.presentation()&&this.data.animation?.kind==='result'){
+        const joined=Object.entries(this.data.owned).filter(([uid])=>!owned.has(uid)).map(([,p])=>species.get(p.id).name+'가 동료가 됐어요. ').join('');
+        this.animate('result',{text:joined+trainerDialogue.result(boss)},now);
+      }
       return;
     }
     const isSilph=silph.byId.has(e.id),r=this.data.mobileStory[isSilph?'silph':'rescue'];
@@ -263,10 +269,10 @@ class Adventure extends Engine{
     this.data.pendingChallenge=null;this.restoreWild(now);
     if(isSilph){
       if(r.wins.every(Boolean))r.completedAt=now;
-      this.animate('result',{text:r.completedAt?'실프주식회사를 구했다! 초련에게 도전할 수 있어요.':e.name+'에게 승리했다!'},now);
+      this.animate('result',{text:trainerDialogue.result(e)},now);
     }else if(r.wins.every(Boolean)){
       r.rewardPending=true;this.dialogue('elder','등나무노인','mr-fuji',['어미 텅구리의 영혼도 이제 편히 쉴 수 있겠구나. 도와줘서 정말 고맙다.','이 피리를 받아 주렴. 포켓몬의 마음까지 닿는 소리가 난단다.'],'rescue-reward',now);
-    }else this.animate('result',{text:e.name+'에게 승리했다! 다음 상대에게 도전하자.'},now);
+    }else this.animate('result',{text:trainerDialogue.result(e)},now);
   }
   endChallenge(won,now){
     const b=this.data.battle;

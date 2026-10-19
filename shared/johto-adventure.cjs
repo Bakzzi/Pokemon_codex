@@ -3,6 +3,7 @@ const J=require('./johto.cjs'),{Game:Engine}=require('../desktop/game.cjs'),batt
 const {data,species,championBonus,wildDistribution,wildEligible,wildMinimum}=require('../desktop/pokemon.cjs');
 const journal=require('../desktop/journal.cjs'),nursery=require('../desktop/daycare.cjs');
 const consumables=require('../desktop/consumables.cjs');
+const storyText=require('./johto-dialogue.cjs');
 const oddEgg=[172,173,174,236,238,239,240];
 const itemNames={'squirt-bottle':'꼬부기물뿌리개','secret-potion':'비전신약','clear-bell':'크리스탈방울','silver-wing':'은빛날개','rainbow-wing':'무지갯빛날개','ss-ticket':'승선티켓','machine-part':'기계부품','expansion-card':'라디오 확장카드','gs-ball':'GS볼','red-scale':'빨간비늘'};
 function withJohto(Base){return class JohtoAdventure extends Base{
@@ -12,6 +13,8 @@ function withJohto(Base){return class JohtoAdventure extends Base{
   this.prepareJohtoJourney(now);
   this.awardCompletionItem(now);
   if(J.active(this)&&J.nodes.has(saved.pendingChallenge?.index)&&saved.pendingChallenge.index!=='j-arrival')this.data.pendingChallenge={...saved.pendingChallenge};
+  const scene=this.presentation(),boss=this.data.battle?.johtoId&&this.battleBoss();
+  if(boss&&scene?.next==='johto-win'){scene.pages=storyText.victory(this,boss);scene.index=Math.min(scene.index,scene.pages.length-1);}
  }
  prepareJohtoJourney(now){
   if(!J.active(this))return;
@@ -40,7 +43,7 @@ function withJohto(Base){return class JohtoAdventure extends Base{
   if(n.starter){this.completeJohtoNode(n,now);this.animate('result',{text:species.get(n.gift).name+'가 동료가 됐어요.'},now);return true;}
   if(['dialogue','gift','egg','odd-egg'].includes(n.type)){
    for(const seen of n.encounterSeen||[])this.data.seen[seen] ||= now;
-   this.dialogue('johto-event',n.title,n.sprite||'j-sage',n.pages||['주변을 차분히 살펴보았다.'],'johto-reward:'+n.id,now);return true;
+   this.dialogue('johto-event',n.title,n.sprite||'j-sage',storyText.eventPages(n)||['주변을 차분히 살펴보았다.'],'johto-reward:'+n.id,now);return true;
   }
   if(n.type==='league-start')return this.startJohtoBattle(J.league[0],now,{johtoLeague:true,foeStage:0});
   if(n.type==='rival'){s.rivals[n.id] ||= {};s.rivals[n.id].state='active';s.rivals[n.id].metAt ||= now;}
@@ -68,7 +71,7 @@ function withJohto(Base){return class JohtoAdventure extends Base{
   if(scene.index+1<scene.pages.length){scene.index++;return true;}
   this.data.mobileStory.scene=null;
   if(scene.next==='johto-wild'){this.data.animation=null;this.holdUntil(now+650);return true;}
-  if(scene.next.startsWith('johto-reward:')){const n=J.nodes.get(scene.next.slice(13));if(!n)return false;this.completeJohtoNode(n,now);this.animate('result',{text:n.rewardText||n.title+'의 이야기를 마쳤어요.'},now);return true;}
+  if(scene.next.startsWith('johto-reward:')){const n=J.nodes.get(scene.next.slice(13));if(!n)return false;this.completeJohtoNode(n,now);this.animate('result',{text:storyText.outcome(this,n)},now);return true;}
   if(scene.next==='johto-win')return this.finishJohtoWin(now);
   if(scene.next==='johto-loss')return this.finishJohtoLoss(now);
   return false;
@@ -103,14 +106,14 @@ function withJohto(Base){return class JohtoAdventure extends Base{
    this.awardXp(b.foe,false,now);this.data.battles++;journal.increment(this.data,'wins');
    if(!captured)this.log(species.get(b.foe.id).name+'에게 승리했다!','win',b.foe.id,now);
    this.completeJohtoNode(n,now);const result=species.get(b.foe.id).name+(captured?'와 함께 모험하기로 했어요.':'를 진정시켰어요.');
-   this.data.pendingBattle=null;this.restoreWild(now);this.animate('result',{text:result},now);return;
+   this.data.pendingBattle=null;this.restoreWild(now);this.animate('result',{text:result+' '+storyText.outcome(this,n)},now);return;
   }
   if(b.foeIndex<n.team.length-1){
    this.awardXp(b.foe,true,now);this.data.battles++;journal.increment(this.data,'wins');b.foeIndex++;this.nextTrainer(now);return;
   }
   if(b.johtoResolution)return;
   b.johtoResolution='win';this.data.pendingBattle=null;
-  this.dialogue('trainer',n.name,n.sprite,n.win||[n.name+'에게 승리했다!','동료들의 믿음직한 모습이 눈에 들어온다.'],'johto-win',now);
+  this.dialogue('trainer',n.name,n.sprite,storyText.victory(this,n),'johto-win',now);
  }
  finishJohtoWin(now){
   const b=this.data.battle,n=b&&this.battleBoss(b);if(!b?.johtoId||b.johtoResolution!=='win')return false;
@@ -121,7 +124,7 @@ function withJohto(Base){return class JohtoAdventure extends Base{
    this.data.johto.leagueBest=Math.max(this.data.johto.leagueBest,b.foeStage+1);
    if(b.foeStage<4){battle.prepareNextTrainer(this,b);const next=J.league[++b.foeStage];b.foeIndex=0;b.bossIndex=next.id;b.storyId=next.id;b.johtoId=next.id;this.nextTrainer(now);return true;}
   }
-  this.data.pendingBattle=null;this.restoreWild(now);this.animate('result',{text:n.id==='j-clair'?'이향에게 승리! 용의 굴로 향해 보세요.':n.badge?n.badge+' 획득!':n.rewardText||n.name+'에게 승리했어요.'},now);return true;
+  this.data.pendingBattle=null;this.restoreWild(now);this.animate('result',{text:storyText.outcome(this,n)},now);return true;
  }
  endChallenge(won,now){
   const b=this.data.battle;if(!b?.johtoId)return super.endChallenge(won,now);

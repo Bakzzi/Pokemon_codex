@@ -189,8 +189,16 @@ async function johtoSmokeTest(){
       check(game.data.activeId===25&&!game.data.battle.pendingSwitch&&!game.data.battle.matchupPending&&await click("document.getElementById('hero-image').getAttribute('src')==='assets/25.gif'"),'actual publisher uses the chosen lead before first sendout '+id);
       check(await click("document.getElementById('story-portrait').getAttribute('src').endsWith('j-sage.png')"),'actual widget shows the tower trainer '+id);
       await advancePages();let turns=0;
-      while(game.data.battle?.johtoId===id&&turns++<8){game.nextTick=Date.now()+60000;game.data.battle.foe.hp=0;game.defeatOpponent(Date.now());await advancePages();}
-      check(J.done(game,id),'tower trainer victory unlocks the next stage '+id);
+      while(game.data.battle?.johtoId===id&&turns++<8){
+        game.nextTick=Date.now()+60000;game.data.battle.foe.hp=0;game.defeatOpponent(Date.now());
+        if(game.presentation()?.next==='johto-win'){
+          publish(true);await wait(60);await click("document.getElementById('story-next').click()");await wait(60);
+          const next=id==='j-sprout-sage-1'?'수행자':'장로';
+          check(!J.done(game,id)&&await click("document.getElementById('story-text').textContent.includes("+JSON.stringify(next)+")"),'actual victory page explains the next stage before committing progress '+id);
+        }
+        await advancePages();
+      }
+      check(J.done(game,id)&&game.data.animation.text.includes(id==='j-sprout-sage-1'?'다음 수행자':'장로'),'tower victory closes with its next destination '+id);
     }
     game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);
     await read("document.getElementById('j-early').open=true;document.querySelector('[data-challenge=\"j-sprout\"]').click()");await wait(120);
