@@ -13,7 +13,6 @@ const validCount=n=>typeof n==='number'&&Number.isSafeInteger(n)&&n>=0;
 const STARTERS=[25],PARTY_SIZE=6;
 const STARTER_GIFTS=[{badge:'brock',id:1},{badge:'misty',id:4},{badge:'surge',id:7}];
 const SECRET_TRAINERS=new Set(['giovanni','champion']);
-const CAPTURE_LIMITS={yellow:2,red:3};
 const nursery=require('./daycare.cjs');
 const {collectionHints}=require('./acquisition.cjs');
 const training=require('./training-device.cjs');
@@ -49,12 +48,11 @@ function experienceView(p){
   const expRequired=p.level>=100?0:xpAt(p.id,p.level+1)-xpAt(p.id,p.level),expCurrent=expRequired?Math.max(0,Math.min(expRequired,p.xp-xpAt(p.id,p.level))):0;
   return {expCurrent,expRequired,expPercent:p.level>=100?100:Math.min(99,Math.floor(expCurrent*100/expRequired))};
 }
-function captureCounts(b){
-  if(!b.captureByHealth){
-    // Earlier versions only threw below 10% HP, so existing attempts belong to red HP.
-    b.captureByHealth={yellow:0,red:Math.min(3,validCount(b.captureAttempts)?b.captureAttempts:0)};
-  }
-  return b.captureByHealth;
+function restoreCapture(b){
+  b.captureAttempts=validCount(b.captureAttempts)?b.captureAttempts:0;
+  // A battle already throwing balls stays in that phase, including older saves.
+  if(b.captureStarted||b.captureAttempts>0)b.captureStarted=true;
+  delete b.captureByHealth;
 }
 function hasJohtoProgress(data){
   const ids=[...Object.keys(data.seen||{}),...Object.keys(data.caught||{}),...Object.values(data.owned||{}).map(p=>p.id),data.egg?.id,...(data.daycare?.offspring||[])];
@@ -77,7 +75,7 @@ class Game {
     this.data.johtoDeferred=!!this.data.johtoDeferred&&!this.data.johtoUnlocked;
     this.data.captureReservations=Object.fromEntries(Object.entries(this.data.captureReservations||{}).filter(([id,p])=>species.has(Number(id))&&!!this.data.caught[id]&&Number.isInteger(p?.remaining)&&p.remaining>0&&p.remaining<=99&&validCount(p.revision)).map(([id,p])=>[id,{remaining:1,revision:p.revision}]));
     this.data.captureReservationSerial=Math.max(validCount(this.data.captureReservationSerial)?this.data.captureReservationSerial:0,...Object.values(this.data.captureReservations).map(p=>p.revision));
-    for(const b of [this.data.battle,this.data.suspendedWild])if(b?.kind==='wild')captureCounts(b);
+    for(const b of [this.data.battle,this.data.suspendedWild])if(b?.kind==='wild')restoreCapture(b);
     const queued=this.data.pendingChallenge;
     this.data.pendingChallenge=queued&&(training.battles[queued.index]||Number.isInteger(queued.index)&&queued.index>=0&&queued.index<=8)?queued:null;
     this.data.trainerSeen=Object.fromEntries(Object.entries(this.data.trainerSeen||{}).filter(([id,at])=>SECRET_TRAINERS.has(id)&&validCount(at)&&at>0));
@@ -398,7 +396,9 @@ class Game {
       }
       b.bossIndex=next;b.storyId=next;b.foeIndex=0;this.nextTrainer(now);this.log(this.challengeName(next)+' 도전 시작','challenge',null,now);return true;
     }
-    if(pending.kind==='capture'){this.capture(now);return true;}
+    // Old saves scheduled a free throw between attacks. Resume the native turn;
+    // the next legal player action will now spend its turn on a ball.
+    if(pending.kind==='capture')return true;
     if(pending.kind==='capture-result')return this.finishCapture(pending,now);
     if(pending.kind==='after-action'){this.showFaint(now);return true;}
     if(pending.kind==='draw'){
@@ -516,7 +516,7 @@ class Game {
     const hero=this.data.owned[this.data.activeId],id=pickWild(this.maxGeneration(),this.random,hero.level,this.wildOptions()),p=species.get(id);
     const level=Math.max(wildMinimum(p),Math.min(100,hero.level-5+Math.floor(this.random()*11)));
     const party=Object.fromEntries(this.data.slots.filter(uid=>uid!==null&&!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
-    this.data.battle={kind:'wild',foe:combatant(id,level,null,{abilitySlot:Math.floor(this.random()*p.abilities.length),gender:nursery.genderFor(id,this.random)}),party,turn:0,captureAttempts:0,captureByHealth:{yellow:0,red:0},startedAt:now};
+    this.data.battle={kind:'wild',foe:combatant(id,level,null,{abilitySlot:Math.floor(this.random()*p.abilities.length),gender:nursery.genderFor(id,this.random)}),party,turn:0,captureAttempts:0,startedAt:now};
     const first=!this.data.seen[id];this.data.seen[id]=this.data.seen[id]||now;
     this.animate('encounter',{text:`야생 ${p.name} Lv.${level} 등장!`,id},now);
     if(first||p.legendary||p.mythical)this.log(`${p.name} Lv.${level} 발견`,'encounter',id,now);
@@ -585,7 +585,7 @@ class Game {
     this.data.captureAnimation=null;
     const party=Object.fromEntries(this.data.slots.filter(id=>id!==null&&!this.isBoarded(id)).map(id=>{const p=this.data.owned[id];return [id,this.memberCombatant(p)];}));
     const snorlax=index==='road-snorlax';
-    this.data.battle={kind:snorlax?'wild':'trainer',bossIndex:index,storyId:training.battles[index]?index:null,rocketChain:training.rocketOrder.includes(index),foeIndex:0,party,turn:0,captureAttempts:0,...(snorlax?{captureByHealth:{yellow:0,red:0}}:{}),startedAt:now};
+    this.data.battle={kind:snorlax?'wild':'trainer',bossIndex:index,storyId:training.battles[index]?index:null,rocketChain:training.rocketOrder.includes(index),foeIndex:0,party,turn:0,captureAttempts:0,startedAt:now};
     this.nextTrainer(now);
     this.log(this.challengeName(index)+' 도전 시작','challenge',null,now);return true;
   }
@@ -667,16 +667,16 @@ class Game {
   }
   captureOpportunity(b=this.data.battle){
     if(!b||b.kind!=='wild'||b.foe.hp<=0||!this.captureRequested(b.foe.id))return null;
-    const hp=b.foe.hp/b.foe.maxHp,band=hp<=.2?'red':hp<=.5?'yellow':null;
-    if(!band)return null;
-    const used=captureCounts(b)[band],limit=CAPTURE_LIMITS[band];
-    return used<limit?{band,used,limit}:null;
+    if(!b.captureStarted&&b.foe.hp/b.foe.maxHp>.5)return null;
+    const used=b.captureAttempts||0,limit=['rare','legendary','mythical'].includes(rarity(species.get(b.foe.id)))?10:5;
+    return used<limit?{used,limit}:null;
   }
   capture(now){
     const b=this.data.battle,opportunity=this.captureOpportunity(b),playing=this.data.captureAnimation;
     if(!opportunity||this.data.pendingBattle?.kind==='capture-result'||playing&&now<playing.at+captureTiming(playing).duration)return false;
     const outcome=tryCatch(species.get(b.foe.id).catchRate,b.foe.hp,b.foe.maxHp,b.foe.status,this.random,captureBonus(b.foe.id,this.data.caught));b.captureAttempts++;
-    const bandAttempt=++captureCounts(b)[opportunity.band],quota={band:opportunity.band,bandAttempt,bandLimit:opportunity.limit};
+    b.captureStarted=true;
+    const quota={attemptLimit:opportunity.limit};
     const previous=this.data.animation,leadIn=previous?.kind==='attack'&&previous.moveId&&previous.at===now?previous:null;
     const startsAt=now+(leadIn?pacing.duration(leadIn):0);
     const reservationRevision=this.data.captureReservations?.[b.foe.id]?.revision;
@@ -727,6 +727,7 @@ class Game {
     }
     if(!b.party[this.data.activeId]){const p=this.data.owned[this.data.activeId];b.party[p.uid]=this.memberCombatant(p);battleEngine.invalidate(b);}
     const previousHero=this.data.activeId,fromPokemon=this.snapshot(now).hero,partyBefore=Object.fromEntries(Object.entries(b.party).map(([uid,p])=>[uid,healthView(p)])),heroBefore=partyBefore[previousHero],foeBefore=healthView(b.foe),action=battleEngine.step(this,b);b.turn++;
+    if(action.capture){this.capture(now);return true;}
     const hero=b.party[this.data.activeId],foe=b.foe,move=action.move&&moves.get(action.move);
     // Native-only acknowledgements and discarded stale actions have no second
     // attack or recall animation to present after the ball animation.
@@ -741,7 +742,6 @@ class Game {
     if(action.lines.length)this.log(action.lines.join(' · '),'battle',action.id||hero.id,now);
     const finishedAt=now+this.data.animation.duration;
     if(foe.hp<=0||hero.hp<=0)this.deferBattle('after-action',finishedAt);
-    else if(this.captureOpportunity(b))this.deferBattle('capture',finishedAt);
     else if(b.turn>=300)this.deferBattle('draw',finishedAt);
     return true;
   }

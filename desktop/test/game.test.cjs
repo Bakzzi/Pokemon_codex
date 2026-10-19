@@ -45,21 +45,18 @@ test('wild battles require observed work and spend exactly one action credit per
   g.data.workTokens=500;assert.equal(g.tick(now),true);assert.equal(g.data.workTokens,250);
   assert.equal(g.tick(now+100),false);assert.equal(g.tick(g.data.switchUntil),true);assert.equal(g.data.workTokens,0);
 });
-test('yellow and red HP have separate two-ball and three-ball limits across reloads',()=>{
+test('a rare encounter keeps its ten total throws across HP changes and reloads',()=>{
   let g=new Game({},now,{random:()=>.999999});wild(g,150,50);
   let at=now;g.data.battle.foe.hp=g.data.battle.foe.maxHp*.501;assert.equal(g.capture(at),false);assert.equal(g.data.battle.captureAttempts,0);
-  for(const [band,fraction,limit]of [['yellow',.5,2],['red',.2,3]]){
-    g.data.battle.foe.hp=g.data.battle.foe.maxHp*fraction;
-    for(let attempt=1;attempt<=limit;attempt++){
-      assert.equal(g.capture(at),false);assert.equal(g.data.battle.captureByHealth[band],attempt);
-      assert.equal(g.data.captureAnimation.band,band);assert.equal(g.data.captureAnimation.bandAttempt,attempt);assert.equal(g.data.captureAnimation.bandLimit,limit);
-      g.capture(at+1);assert.equal(g.data.battle.captureByHealth[band],attempt);
-      at=g.data.switchUntil;g=new Game(g.data,at,{random:()=>.999999});
-    }
-    const count=g.data.battle.captureAttempts;assert.equal(g.capture(at),false);assert.equal(g.data.battle.captureAttempts,count);
+  for(let attempt=1;attempt<=10;attempt++){
+    g.data.battle.foe.hp=g.data.battle.foe.maxHp*(attempt%2?.5:.2);
+    assert.equal(g.capture(at),false);assert.equal(g.data.battle.captureAttempts,attempt);
+    assert.equal(g.data.captureAnimation.attempt,attempt);assert.equal(g.data.captureAnimation.attemptLimit,10);
+    g.capture(at+1);assert.equal(g.data.battle.captureAttempts,attempt);
+    at=g.data.switchUntil;g=new Game(g.data,at,{random:()=>.999999});
   }
-  assert.equal(g.data.battle.captureAttempts,5);assert.deepEqual(g.data.battle.captureByHealth,{yellow:2,red:3});
-  g.damageFoe(99999);assert.equal(g.data.battle.foe.hp,0);g.capture(at+1);assert.equal(g.data.battle.captureAttempts,5);
+  assert.equal(g.capture(at),false);assert.equal(g.data.battle.captureAttempts,10);
+  g.damageFoe(99999);assert.equal(g.data.battle.foe.hp,0);g.capture(at+1);assert.equal(g.data.battle.captureAttempts,10);
 });
 
 test('large hits can cross capture thresholds and knock out an uncaught wild Pokemon without a ball',()=>{

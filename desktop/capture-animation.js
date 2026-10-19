@@ -2,8 +2,7 @@
   'use strict';
   // Shared by the game clock and renderer, so a battle cannot interrupt a throw.
   function captureText(capture){
-    const band=capture.band==='yellow'?'노란 체력':capture.band==='red'?'빨간 체력':null;
-    return '몬스터볼을 던졌다!'+(band?` (${band} ${capture.bandAttempt}/${capture.bandLimit})`:'');
+    return '몬스터볼을 던졌다!'+(capture.attemptLimit?` (${capture.attempt}/${capture.attemptLimit})`:'');
   }
   function captureTiming(capture){
     const shakes=capture.caught?3:Math.max(0,Math.min(3,Math.trunc(capture.shakes)||0));

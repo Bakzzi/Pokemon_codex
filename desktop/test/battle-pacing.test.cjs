@@ -50,12 +50,13 @@ test('more work cannot interrupt an attack; a queued challenge hands off before 
 
 test('capture starts only after the triggering attack and its result, across a reload',()=>{
   let g=fixture(19,false);g.data.owned[25].moves=[206];g.data.battle.party[25]=g.memberCombatant(g.data.owned[25]);
-  g.data.battle.foe.hp=3;g.tick(now);assert.equal(g.data.pendingBattle.kind,'capture');assert.equal(g.data.battle.foe.hp,1);
+  g.tick(now);assert.equal(g.data.pendingBattle,null);assert.ok(g.data.battle.foe.hp>0&&g.data.battle.foe.hp<=g.data.battle.foe.maxHp*.5);
   assert.equal(g.snapshot(now).capture,null);assert.equal(g.data.battle.captureAttempts,0);assert.ok(!g.data.caught[19]);
-  const end=g.data.switchUntil,tokens=g.data.workTokens;assert.equal(g.select(7,end),false);
-  g=new Game(g.data,now+700,{random:()=>0});assert.equal(g.tick(end-1),false);assert.ok(g.tick(end));
-  const c=g.data.captureAnimation,t=captureTiming(c);assert.equal(c.at,end);assert.equal(c.leadIn,null);assert.equal(c.at>=now+3000,true);
-  assert.ok(c.caught);assert.equal(g.data.workTokens,tokens);assert.equal(g.tick(c.at+t.duration-1),false);
+  const end=g.data.switchUntil,tokens=g.data.workTokens;
+  g=new Game(g.data,now+700,{random:()=>0});assert.equal(g.tick(end-1),false);
+  for(let i=0;!g.data.captureAnimation;i++){assert.ok(i<5);advance(g);}
+  const c=g.data.captureAnimation,t=captureTiming(c);assert.ok(c.at>=end);assert.equal(c.leadIn,null);assert.equal(c.at>=now+3000,true);
+  assert.ok(c.caught);assert.ok(g.data.workTokens<tokens);assert.equal(g.tick(c.at+t.duration-1),false);
   assert.ok(t.duration-t.messageAt>=2800);assert.equal(g.snapshot(c.at+t.duration-1).capture.id,19);
   assert.ok(g.tick(c.at+t.duration));assert.equal(g.data.battle,null);assert.equal(g.data.animation.kind,'capture');assert.deepEqual(g.data.captureAnimation,c);
   assert.equal(Object.values(g.data.owned).filter(p=>p.id===19).length,1);
@@ -63,7 +64,7 @@ test('capture starts only after the triggering attack and its result, across a r
 });
 
 test('an uncaught knockout preserves the victim until HP, fainting and victory finish without capturing',()=>{
-  let g=fixture(19,false);g.data.battle.foe.hp=1;const xp=g.data.owned[25].xp;g.tick(now);
+  let g=fixture(19,false);g.data.battle.foe.hp=1;g.data.battle.captureAttempts=5;const xp=g.data.owned[25].xp;g.tick(now);
   assert.equal(g.data.animation.kind,'attack');assert.equal(g.data.battle.foe.hp,0);assert.equal(g.data.owned[25].xp,xp);
   const attackEnd=g.data.switchUntil;assert.equal(g.tick(attackEnd-1),false);
   g=new Game(g.data,now+800,{random:()=>0});assert.ok(g.tick(attackEnd));assert.equal(g.data.animation.kind,'faint');

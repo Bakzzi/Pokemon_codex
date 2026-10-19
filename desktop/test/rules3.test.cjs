@@ -93,13 +93,12 @@ test('uncaught wild targets take the same super-effective damage as caught speci
   const low=run(false,uncaught.maxHp*.1);assert.equal(low.hp,0);assert.equal(low.damage,uncaught.maxHp*.1);assert.ok(low.log.some(l=>l.startsWith('|faint|p2')));
 });
 
-test('a saved uncaught battle resumes native damage and knockout instead of restoring capture protection',()=>{
+test('a saved uncaught battle resumes native damage and knockout after its capture quota is exhausted',()=>{
   const f=fixture(7,37,[55],[150],15);let g=f.g;delete g.data.caught[37];g.data.workTokens=5000;
-  g.data.battle.foe.hp=1;assert.ok(g.tick(now));assert.equal(g.data.animation.actor,'foe');assert.ok(g.data.battle.sim);
-  g.random=()=>.999999;assert.ok(g.tick(g.data.switchUntil));assert.equal(g.data.captureAnimation.caught,false);assert.equal(g.data.battle.captureAttempts,1);
-  g=new Game(g.data,g.data.captureAnimation.at+1,{random:()=>.73});const at=g.data.switchUntil;assert.ok(g.tick(at));
+  g.data.battle.foe.hp=1;g.data.battle.captureAttempts=5;assert.ok(g.tick(now));assert.equal(g.data.animation.actor,'foe');assert.ok(g.data.battle.sim);
+  g=new Game(g.data,now+1,{random:()=>.73});const at=g.data.switchUntil;assert.ok(g.tick(at));
   assert.equal(g.data.animation.actor,'hero');assert.equal(g.data.animation.moveId,55);assert.equal(g.data.battle.foe.hp,0);
-  assert.equal(g.data.pendingBattle.kind,'after-action');assert.equal(g.data.battle.captureAttempts,1);assert.equal(g.data.captureAnimation,null);
+  assert.equal(g.data.pendingBattle.kind,'after-action');assert.equal(g.data.battle.captureAttempts,5);assert.equal(g.data.captureAnimation||null,null);
   assert.ok(g.tick(g.data.switchUntil));assert.equal(g.data.animation.kind,'faint');assert.ok(g.tick(g.data.switchUntil));
   assert.equal(g.data.battle,null);assert.ok(!g.data.caught[37]);assert.equal(Object.values(g.data.owned).filter(p=>p.id===37).length,0);
 });

@@ -81,7 +81,6 @@ test('a completed collection does not allow trainer capture, green or zero HP th
   b.kind='trainer';assert.equal(g.capture(now),false);assert.equal(b.captureAttempts,0);b.kind='wild';
   for(const hp of [b.foe.maxHp,0]){b.foe.hp=hp;assert.equal(g.capture(now),false);assert.equal(b.captureAttempts,0);}
   b.foe.hp=b.foe.maxHp*.5;let at=now;
-  for(let i=0;i<2;i++){assert.equal(g.capture(at),false);at=g.data.switchUntil;}assert.equal(g.capture(at),false);
-  b.foe.hp=b.foe.maxHp*.1;for(let i=0;i<3;i++){assert.equal(g.capture(at),false);at=g.data.switchUntil;}
-  assert.equal(g.capture(at),false);assert.equal(b.captureAttempts,5);assert.deepEqual(b.captureByHealth,{yellow:2,red:3});
+  for(let i=0;i<10;i++){b.foe.hp=b.foe.maxHp*(i%2?.1:.5);assert.equal(g.capture(at),false);at=g.data.switchUntil;}
+  assert.equal(g.capture(at),false);assert.equal(b.captureAttempts,10);
 });

@@ -14,13 +14,14 @@ for(const [platform,Story] of [['desktop',require('../adventure.cjs').Adventure]
     assert.equal(g.data.battle.foe.hp,saved.foe.hp);assert.deepEqual(g.data.battle.foe.pp,saved.foe.pp);assert.equal(g.data.battle.foe.status,'paralysis');assert.deepEqual(g.data.battle.sim,saved.sim);
     assert.equal(g.data.activeId,pausedActive);assert.deepEqual(g.data.slots,slots);assert.equal(g.data.suspendedWild,null);
   });
-  test(platform+': a future ball stays pending until after the challenge; a failed throw does not repeat',()=>{
+  test(platform+': a legacy future ball resumes as a paid player action after the challenge; a failed throw does not repeat',()=>{
     const g=fixture(),wild=g.data.battle;wild.foe.hp=1;g.data.pendingBattle={kind:'capture',at:now};
     assert.ok(g.challenge(0,now));assert.ok(g.controlTick(now));assert.equal(wild.captureAttempts,0);
     g.data.mobileStory.scene=null;g.endChallenge(true,now+10000);assert.equal(g.data.pendingBattle.kind,'capture');assert.equal(g.data.battle,wild);
     g.data.switchUntil=now+20000;g.nextTick=now+20000;g.random=()=>.999;
-    assert.ok(g.tick(now+20000));assert.equal(wild.captureAttempts,1);assert.equal(g.data.captureAnimation.caught,false);
-    assert.ok(g.challenge(0,now+20001));const end=g.data.switchUntil;
+    assert.ok(g.tick(now+20000));assert.equal(wild.captureAttempts,0);
+    g.data.workTokens=250;const at=Math.max(g.nextTick,g.data.switchUntil);assert.ok(g.tick(at));assert.equal(g.data.workTokens,0);assert.equal(wild.captureAttempts,1);assert.equal(g.data.captureAnimation.caught,false);
+    assert.ok(g.challenge(0,at+1));const end=g.data.switchUntil;
     assert.equal(g.controlTick(end-1),false);assert.ok(g.controlTick(end));assert.equal(g.data.suspendedWild,wild);assert.equal(wild.captureAttempts,1);
   });
   test(platform+': defeat dialogue restores the saved wild battle once after the player dismisses it',()=>{

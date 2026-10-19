@@ -29,7 +29,7 @@ function init(game,now=Date.now()){
   const b=game.data.battle;
   if(b?.storyId==='road-snorlax'&&b.kind==='trainer'){
     // Keep the old pending native turn and animation; only enable normal wild capture.
-    b.kind='wild';b.captureByHealth ||= {yellow:0,red:0};
+    b.kind='wild';
   }
 }
 function nextRocket(game){return rocketOrder.find(id=>!game.data.trainingDevice[progressKeys[id]])||null;}

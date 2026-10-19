@@ -68,8 +68,8 @@ test('a simultaneous final knockout replaces the fainted hero before the next Ro
 
 test('the flute is required and reusable, failed capture or defeat leaves Snorlax available, and a knockout never registers it',()=>{
   const g=fixture();assert.equal(g.challenge('road-snorlax',now),false);rocket(g);assert.equal(g.challenge('road-snorlax',g.data.switchUntil),false);erika(g);const flute=g.data.trainingDevice.fluteObtainedAt;assert.ok(g.challenge('road-snorlax',g.data.switchUntil));assert.equal(g.data.battle.kind,'wild');assert.equal(g.data.battle.foe.id,143);assert.match(g.data.animation.text,/피리/);assert.equal(g.challenge('road-snorlax',g.data.switchUntil),false);
-  g.data.battle.foe.hp=g.data.battle.foe.maxHp*.1;g.random=()=>.9999;assert.equal(g.capture(g.data.switchUntil),false);assert.equal(g.data.battle.captureByHealth.red,1);assert.equal(g.data.trainingDevice.snorlaxWonAt,null);
-  for(const p of Object.values(g.data.battle.party))p.hp=0;advance(g);advance(g);assert.equal(g.data.battle,null);assert.equal(g.data.trainingDevice.snorlaxWonAt,null);assert.ok(g.canChallenge('road-snorlax'));assert.ok(g.challenge('road-snorlax',g.data.switchUntil));assert.equal(g.data.battle.captureByHealth.red,0);
+  g.data.battle.foe.hp=g.data.battle.foe.maxHp*.1;g.random=()=>.9999;assert.equal(g.capture(g.data.switchUntil),false);assert.equal(g.data.battle.captureAttempts,1);assert.equal(g.data.trainingDevice.snorlaxWonAt,null);
+  for(const p of Object.values(g.data.battle.party))p.hp=0;advance(g);advance(g);assert.equal(g.data.battle,null);assert.equal(g.data.trainingDevice.snorlaxWonAt,null);assert.ok(g.canChallenge('road-snorlax'));assert.ok(g.challenge('road-snorlax',g.data.switchUntil));assert.equal(g.data.battle.captureAttempts,0);
   g.data.battle.foe.hp=0;advance(g);advance(g);assert.ok(g.data.trainingDevice.snorlaxWonAt);assert.ok(!g.data.caught[143]);assert.ok(g.canChallenge('road-snorlax'));assert.equal(g.data.trainingDevice.fluteObtainedAt,flute);
 });
 

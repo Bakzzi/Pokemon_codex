@@ -46,12 +46,12 @@ test('capture playback blocks battles and manual changes, survives reload, and p
   assert.ok(g.data.battle);assert.equal(Object.keys(g.data.owned).length,count+1);
 });
 test('a failed throw waits for the breakout before resuming the same battle and capture threshold',()=>{
-  const g=fixture(2),b=g.data.battle,hp=b.foe.hp;g.data.workTokens=500;
-  assert.equal(g.capture(now),false);const c=g.snapshot(now).capture,t=captureTiming(c);
-  assert.equal(g.tick(now+t.duration-1),false);assert.equal(g.data.battle,b);assert.equal(b.foe.hp,hp);
+  const g=fixture(2),b=g.data.battle,hp=b.foe.hp;g.data.workTokens=750;g.random=()=>.999999;
+  const at=g.data.switchUntil;assert.ok(g.tick(at));const c=g.snapshot(at).capture,t=captureTiming(c);
+  assert.equal(g.tick(at+t.duration-1),false);assert.equal(g.data.battle,b);assert.equal(b.foe.hp,hp);
   assert.equal(b.captureAttempts,1);assert.equal(g.data.workTokens,500);assert.ok(!g.data.caught[19]);
-  assert.match(captureFrame(c,now+t.resultAt).text,/아쉽다!/);
-  assert.ok(g.tick(now+t.duration));assert.equal(g.data.battle,b);assert.equal(b.captureAttempts,1);
+  assert.match(captureFrame(c,at+t.resultAt).text,/아쉽다!/);
+  assert.ok(g.tick(at+t.duration));assert.equal(g.data.battle,b);assert.equal(b.captureAttempts,1);
   assert.equal(g.data.workTokens,250);assert.equal(g.snapshot().capture,null);
 });
 

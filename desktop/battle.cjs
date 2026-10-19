@@ -49,9 +49,11 @@ function pump(){
   if(!this.midTurn){this.queue.insertChoice({choice:'beforeTurn'});this.queue.addChoice({choice:'residual'});this.midTurn=true;}
   let acted=false;
   while(this.queue.list.length){
-    const action=this.queue.peek(),visible=['move','switch','instaswitch'].includes(action.choice)||action.buddyItem;
+    const action=this.queue.peek(),visible=['move','switch','instaswitch'].includes(action.choice)||action.buddyItem||action.buddyCapture;
     if(acted&&visible)return;
     this.queue.shift();this.runAction(action);if(visible)acted=true;
+    // Resolve and play the ball before any retaliation or residual damage.
+    if(action.buddyCapture)return;
     if(this.requestState||this.ended)return;
   }
   this.endTurn();this.midTurn=false;this.queue.clear();
@@ -61,6 +63,7 @@ function attach(game,b,sim){
   const nativeRunAction=sim.runAction;
   Object.defineProperty(sim,'runAction',{value:function(action){
     if(action.buddyItem)consumables.use(game,b,this,action.buddyItem);
+    if(action.buddyCapture)this.add('buddycapture',this.p1.active[0]);
     // A legacy saved turn may already contain a technique that became locked.
     // Keep its committed action slot, using an available move instead.
     if(action.choice==='move'&&action.pokemon?.side.n===0&&!action.pokemon.transformed&&action.move.id!=='struggle'&&!action.pokemon.moveSlots.some(slot=>slot.id===action.move.id)){
@@ -320,13 +323,15 @@ function step(game,b){
     const offset=sim.log.length;
     if(sim.requestState){
       const item=consumables.choose(game,b,sim);
+      const capture=!b.pendingSwitch&&!!sim.p1.activeRequest?.active&&!sim.p1.active[0].getLockedMove()&&!!game.captureOpportunity(b);
       const eligible=game.availablePartners().map(uid=>'u'+uid);
-      const choices=sim.sides.map(s=>s.n===0&&item?'default':choose(sim,s,s.n===0?b.pendingSwitch:null,s.n===0&&b.kind==='trainer'&&!b.manualMatchup&&!b.pendingSwitch&&sim.turn-(b.aiLastSwitch??-10)>=3,s.n===0?eligible:null));
+      const choices=sim.sides.map(s=>s.n===0&&(item||capture)?'default':choose(sim,s,s.n===0?b.pendingSwitch:null,s.n===0&&b.kind==='trainer'&&!b.manualMatchup&&!b.pendingSwitch&&sim.turn-(b.aiLastSwitch??-10)>=3,s.n===0?eligible:null));
       for(let i=0;i<choices.length;i++)if(choices[i]&&!sim.sides[i].choose(choices[i]))sim.sides[i].autoChoose();
       // The pinned simulator models held items, not a trainer's Bag. Reserve
       // exactly one ordinary action for a Bag event ahead of moves, while
       // retaining native choice commits, Speed order, residuals and saving.
       if(item)sim.p1.choice.actions=[{choice:'event',event:'BuddyItem',pokemon:sim.p1.active[0],order:100,buddyItem:item}];
+      if(capture)sim.p1.choice.actions=[{choice:'event',event:'BuddyCapture',pokemon:sim.p1.active[0],order:100,buddyCapture:true}];
       sim.commitChoices();
     }else sim.turnLoop();
     // nextTrainer already presented this opponent's arrival. Its native switch
@@ -352,7 +357,7 @@ function step(game,b){
   persist(b,sim);
   const causeName=ref=>{const mon=sim.sides.flatMap(s=>s.pokemon).find(p=>p.name===ref.split(': ')[1]);return species.get(mon?.baseSpecies.num)?.name||'포켓몬';};
   const damageCauses=[...new Map(lines.filter(line=>line.startsWith('|-damage|')).map(line=>damageCause(line,causeName)).filter(Boolean).map(c=>[c.side+':'+c.cause,c])).values()];
-  return {...presentation,item,actor,id:actor==='hero'?b.party[game.data.activeId].id:b.foe.id,damage:Math.max(0,actor==='hero'?foeBefore-sim.p2.active[0].hp:heroHpBefore-sim.p1.active[0].hp),damageCauses,beforeMove,afterMove,lines:messages,switched:changed,ended:sim.ended};
+  return {...presentation,item,...(lines.some(line=>line.startsWith('|buddycapture|'))?{capture:true}:{}),actor,id:actor==='hero'?b.party[game.data.activeId].id:b.foe.id,damage:Math.max(0,actor==='hero'?foeBefore-sim.p2.active[0].hp:heroHpBefore-sim.p1.active[0].hp),damageCauses,beforeMove,afterMove,lines:messages,switched:changed,ended:sim.ended};
 }
 function switchWait(game,b,uid){
   const sim=cache.get(b)||(b.sim?engine(game,b):null);
