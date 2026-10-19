@@ -193,16 +193,16 @@ class Game {
   unlockJohto(now=Date.now(),speciesIds){
     if(!this.data.champion||this.data.johtoUnlocked||this.data.battle||this.data.pendingBattle||now<this.data.switchUntil)return false;
     if(regionTransfer.validate(this.data.caught,speciesIds))return false;
-    const original=Object.values(this.data.owned),changes=[],uids=[];
+    const original=Object.values(this.data.owned),changes=[],uids=[],targetLevel=regionTransfer.TARGET_LEVEL;
     for(const id of speciesIds){
       const matches=original.filter(p=>p.id===id),existing=matches.find(p=>p.uid===this.data.activeId)||matches.find(p=>this.data.slots.includes(p.uid))||matches[0];
-      const uid=existing?.uid||this.addPokemon(id,15,'region',now);uids.push(uid);
-      changes.push({uid,id,from:existing?.level??15,to:15});
+      const uid=existing?.uid||this.addPokemon(id,targetLevel,'region',now);uids.push(uid);
+      changes.push({uid,id,from:existing?.level??targetLevel,to:targetLevel});
     }
     const selected=new Set(uids),retiredCount=original.filter(p=>!selected.has(p.uid)).length;
     for(const [uid,p] of Object.entries(this.data.owned)){
       if(!selected.has(Number(uid))){delete this.data.owned[uid];continue;}
-      p.level=15;p.formEntryLevel=15;p.xp=xpAt(p.id,15);moveAccess.update(p);
+      p.level=targetLevel;p.formEntryLevel=targetLevel;p.xp=xpAt(p.id,targetLevel);moveAccess.update(p);
     }
     this.data.daycare=null;this.daycareSelection=null;
     if(!selected.has(this.data.trainingDevice.learnerUid))this.data.trainingDevice.learnerUid=null;
@@ -210,9 +210,9 @@ class Game {
     if(!this.data.slots.some(Boolean))this.data.slots[0]=uids[0];
     if(!this.data.slots.includes(this.data.activeId))this.data.activeId=this.data.slots.find(Boolean);
     this.data.suspendedWild=null;this.data.manualSelection=false;
-    this.data.johtoLevelReduction={at:now,revision:3,targetLevel:15,selectedSpecies:[...speciesIds],selectedUids:[...uids],retiredCount,changes};
+    this.data.johtoLevelReduction={at:now,revision:4,targetLevel,selectedSpecies:[...speciesIds],selectedUids:[...uids],retiredCount,changes};
     this.data.johtoUnlocked=true;this.data.johtoDeferred=false;
-    this.log('성도로 출발! 선택한 '+uids.length+'마리와 Lv.15로 새 모험을 시작한다. 나머지 동료는 도감 기록으로 남겼다.','unlock',null,now);return true;
+    this.log('성도로 출발! 선택한 '+uids.length+'마리와 Lv.'+targetLevel+'로 새 모험을 시작한다. 나머지 동료는 도감 기록으로 남겼다.','unlock',null,now);return true;
   }
   isBoarded(uid){return this.data.daycare?.parents.includes(Number(uid))||false;}
   battleBoss(b=this.data.battle){return training.battles[b.bossIndex]||db.bosses[b.bossIndex];}

@@ -164,6 +164,8 @@ async function johtoSmokeTest(){
     const at=Date.now(),old=new(require('./game.cjs').Game)({},at);old.data.champion=true;game=new Game(old.data,at,{random:()=>.73});
     check(game.unlockJohto(at,[25]),'regional transfer initializes a separate Johto story');game.data.animation=null;game.data.switchUntil=0;game.nextTick=at;
     await openPanel('challenge');panel.webContents.on('console-message',(_e,d)=>{if(d.level>=3)errors.push(d.message);});publish(true);await wait(150);
+    check(game.data.owned[game.data.activeId].level===5,'regional transfer starts its selected companion at level five');
+    check(await click("document.getElementById('level').textContent==='5'"),'actual widget publisher renders the level-five regional arrival');
     check(await read("document.getElementById('kanto-challenges').hidden&&!document.getElementById('johto-challenges').hidden"),'actual panel publisher selects the Johto challenge renderer');
     check(await read("document.querySelectorAll('#johto-challenges details[open]').length===0"),'all Johto challenge sections start collapsed');
     check(await read("document.querySelectorAll('#johto-badge-slots .badge-slot').length===8"),'actual panel contains eight regional badge seats');

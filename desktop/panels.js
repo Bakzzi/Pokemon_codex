@@ -200,7 +200,8 @@ function renderBosses(){
     $('johto-title').textContent=unlocked?'성도 지방이 열렸어요':stay?'관동에서 도감을 완성하는 중':'다음 모험을 선택하세요';
     $('johto-note').textContent='관동 도감 '+state.kantoCaughtCount+' / 151 · '+(unlocked?'관동 151종과 성도 100종을 함께 만날 수 있어요.':stay?'151종 수집을 계속해요. 원할 때 언제든 2세대를 해금할 수 있어요.':'151종을 모을 때까지 관동에 머물러도 좋아요. 2세대를 해금하면 성도 100종이 추가돼요.');
     $('johto-level-notice').hidden=unlocked;
-    $('johto-level-notice').textContent='한 번이라도 도감에 등록된 10마리를 선택해 각각 Lv.15 · 경험치 0%로 성도에서 시작해요. Lv.15에서 가능한 진화 단계만 선택할 수 있어요. 기술은 Lv.15에 맞춰 활성화돼요. 배틀 종료 후 성도로 이동합니다.';
+    const level=state.johtoUnlockPreview.targetLevel;
+    $('johto-level-notice').textContent='도감에 등록한 동료를 최대 10마리 골라 Lv.'+level+' · 경험치 0%로 시작해요. Lv.'+level+'에서 가능한 진화 단계만 선택할 수 있고, 나머지는 도감 기록으로 남아요.';
     $('champion-bonus').textContent=state.encounterBonus?'챔피언·레벨 보너스는 미포획 포켓몬에만 적용돼요.\n배치한 동료 모두 Lv.71·81·91 이상일수록 효과가 더 강해져요.':'';
     $('johto-stay').hidden=unlocked||stay;$('johto-unlock').hidden=unlocked;
   }
@@ -218,7 +219,7 @@ function renderTravel(){
   root.dataset.signature=signature;
   root.replaceChildren(...candidates.map(p=>{
     const label=node('label','travel-candidate'+(p.eligible?'':' unavailable')),check=node('input'),body=node('span');check.type='checkbox';check.dataset.travelSpecies=p.id;check.checked=travelSelection.has(p.id);check.disabled=!!pending||!p.eligible||travelSelection.size>=10&&!check.checked;
-    check.onchange=()=>{if(check.checked)travelSelection.add(p.id);else travelSelection.delete(p.id);renderTravel();};body.append(node('b','', 'No.'+p.id+' '+p.name+' · Lv.15'),node('small','',p.reason));label.append(check,img(p.id),body);return label;
+    check.onchange=()=>{if(check.checked)travelSelection.add(p.id);else travelSelection.delete(p.id);renderTravel();};body.append(node('b','', 'No.'+p.id+' '+p.name+' · Lv.'+p.level),node('small','',p.reason));label.append(check,img(p.id),body);return label;
   }));
 }
 function renderSpecialEncounters(){

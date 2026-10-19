@@ -1,6 +1,6 @@
 'use strict';
 const {species}=require('./pokemon.cjs');
-const TARGET_LEVEL=15,MAX_COMPANIONS=10;
+const TARGET_LEVEL=5,MAX_COMPANIONS=10;
 // Use the departing region's ancestry: later babies do not change a Kanto base species.
 function minimumEvolutionLevel(id,generation=1,visited=new Set()){
   const p=species.get(id);if(!p||visited.has(id))return Infinity;
@@ -15,13 +15,13 @@ function preview(caught){
   const registered=[...species.values()].filter(p=>p.generation===1&&!!caught[p.id]);
   return {targetLevel:TARGET_LEVEL,maxCompanions:MAX_COMPANIONS,candidates:registered.map(p=>{
     const minimumLevel=minimumEvolutionLevel(p.id),eligible=minimumLevel<=TARGET_LEVEL;
-    return {id:p.id,name:p.name,level:TARGET_LEVEL,minimumLevel,eligible,reason:eligible?'도감 등록 완료 · Lv.15로 출발':'Lv.'+minimumLevel+'부터 가능한 진화 단계'};
+    return {id:p.id,name:p.name,level:TARGET_LEVEL,minimumLevel,eligible,reason:eligible?'도감 등록 완료 · Lv.'+TARGET_LEVEL+'로 출발':'Lv.'+minimumLevel+'부터 가능한 진화 단계'};
   })};
 }
 function validate(caught,ids){
   if(!Array.isArray(ids)||ids.length<1||ids.length>MAX_COMPANIONS||ids.some(id=>!Number.isSafeInteger(id))||new Set(ids).size!==ids.length)return '도감에 등록한 종 중 함께 갈 동료를 최대 10종 선택해 주세요.';
   const candidates=new Map(preview(caught).candidates.map(p=>[p.id,p]));
-  if(ids.some(id=>!candidates.get(id)?.eligible))return '도감에 등록한 종 중 Lv.15에서 가능한 진화 단계로 선택해 주세요.';
+  if(ids.some(id=>!candidates.get(id)?.eligible))return '도감에 등록한 종 중 Lv.'+TARGET_LEVEL+'에서 가능한 진화 단계로 선택해 주세요.';
   return null;
 }
 module.exports={TARGET_LEVEL,MAX_COMPANIONS,minimumEvolutionLevel,preview,validate};

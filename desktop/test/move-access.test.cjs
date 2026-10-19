@@ -13,7 +13,7 @@ test('level-up activates the existing catalog entry exactly at its required leve
   assert.equal(p.level,40);assert.ok(p.moves.includes(94));assert.deepEqual(access.catalog(p),before);assert.equal(p.moves.filter(id=>id===94).length,1);
 });
 test('region level reduction and reload relock a known move, then growth reactivates it',()=>{
-  let {g,p,uid}=fixture(151,40);g.data.champion=true;assert.ok(g.unlockJohto(now,travelSpecies(g)));assert.equal(p.level,15);assert.ok(!p.moves.includes(94));assert.ok(access.catalog(p).some(m=>m.move===94&&m.level===40));
+  let {g,p,uid}=fixture(151,40);g.data.champion=true;assert.ok(g.unlockJohto(now,travelSpecies(g)));assert.equal(p.level,5);assert.ok(!p.moves.includes(94));assert.ok(access.catalog(p).some(m=>m.move===94&&m.level===40));
   g=new Game(g.data,now+1);p=g.data.owned[uid];assert.ok(!p.moves.includes(94));g.gainXp(uid,xpAt(151,40)-p.xp,now+2);assert.ok(p.moves.includes(94));
 });
 test('evolution retains accessible pre-evolution techniques but does not grant its future-only ones',()=>{
