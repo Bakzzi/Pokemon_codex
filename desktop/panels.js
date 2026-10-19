@@ -1,6 +1,16 @@
 'use strict';
 const $=id=>document.getElementById(id),node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;};
 let journalTab='summary';
+let challengeGeneration=null,lastChallengeGeneration=null;
+function challengeView(current){
+  const active=current.johto?.active?2:1;
+  if(challengeGeneration===null||challengeGeneration>active||lastChallengeGeneration!==active&&challengeGeneration===lastChallengeGeneration)challengeGeneration=active;
+  lastChallengeGeneration=active;
+  for(const b of document.querySelectorAll('[data-generation]')){b.disabled=Number(b.dataset.generation)>active;b.setAttribute('aria-selected',String(Number(b.dataset.generation)===challengeGeneration));}
+  const historical=challengeGeneration<active;$('challenge-history-note').hidden=!historical;
+  return historical?{...current,...current.challengeHistory?.[challengeGeneration],viewGeneration:challengeGeneration,challengeReadOnly:true,johto:{...current.johto,active:false},battle:null,pendingChallenge:null,pendingActions:[],scene:null,specialEncounters:null,encounterBonus:null}:{...current,viewGeneration:challengeGeneration,challengeReadOnly:false};
+}
+for(const b of document.querySelectorAll('[data-generation]'))b.onclick=()=>{if(b.disabled)return;challengeGeneration=Number(b.dataset.generation);for(const d of document.querySelectorAll('#challenge details'))d.open=false;globalThis.JohtoPanel?.collapse();render();};
 const travelSelection=new Set();
 const mobilePanel=document.body.classList.contains('panel-frame');
 let state=null,selected=null,memberUid=null,dexListScroll=0,nurserySignature='',tab=new URLSearchParams(location.search).get('tab')||'collection',dexSignature='',detailSignature='',bossSignature='',journalSignature='',storySignature='';
@@ -175,7 +185,7 @@ function renderBosses(){
   syncDisclosure('gym-details',state.bosses.slice(0,8).every(b=>state.badges.includes(b.id)));
   renderStory();
   renderSpecialEncounters();
-  const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.badges,state.bosses.map(b=>b.revealed),state.gymAccess,state.trainingDevice.routeOpen,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.johtoUnlockPreview,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
+  const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.challengeReadOnly,state.badges,state.bosses.map(b=>b.revealed),state.gymAccess,state.trainingDevice.routeOpen,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.johtoUnlockPreview,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
   $('badges').textContent='뱃지 '+state.badges.length+' / 8';
   renderBadgeCase();
   $('gyms').replaceChildren(...state.bosses.slice(0,8).map((boss,i)=>{
@@ -194,7 +204,7 @@ function renderBosses(){
   $('league-start').disabled=state.badges.length<8||busy||!!queued;$('league-start').textContent=queued?.index===8?'리그 도전 예약됨':state.champion?'리그 재도전':'리그 도전';
   $('league-team').replaceChildren(...state.bosses.slice(8).map((b,i)=>{const e=node('article','league-member');e.append(node('h3','',(i===4?'챔피언 ':'')+b.name),trainerTeam(b));return e;}));
   $('league-progress').textContent=state.champion?(state.johtoUnlocked?'관동 챔피언 · 성도 지방 해금 완료':'관동 챔피언 · 151종을 모으며 머물거나 원할 때 2세대를 해금하세요.'):'리그 최고 기록 '+state.leagueBest+' / 5 · 챔피언이 되면 출현 보너스와 2세대 해금 선택권을 얻어요.';
-  $('johto-choice').hidden=!state.champion;
+  $('johto-choice').hidden=!state.champion||state.challengeReadOnly;
   if(state.champion){
     const unlocked=state.johtoUnlocked,stay=state.johtoDeferred;
     $('johto-title').textContent=unlocked?'성도 지방이 열렸어요':stay?'관동에서 도감을 완성하는 중':'다음 모험을 선택하세요';
@@ -298,9 +308,17 @@ function render(){
   $('season-note').title='한국시간 매월 1일 00:00 · 스타팅 Lv.5부터 다시 시작 · 뱃지·지방 해금·스토리·도구 초기화';
   $('seen-count').textContent='발견 '+state.seenCount+' · 동료 '+state.roster.length;$('notice').textContent=state.notice||'';
   renderActions();
-  if(tab==='collection')renderDex();else if(tab==='challenge')renderBosses();else if(tab==='daycare')renderNursery();else if(tab==='connections')renderConnections(state.remote);else renderJournal();
+  if(tab==='challenge'){
+    const current=state;state=challengeView(current);
+    try{
+      renderBosses();document.dispatchEvent(new CustomEvent('panel-rendered',{detail:state}));
+      if(state.challengeReadOnly)for(const b of $('kanto-challenges').querySelectorAll('button:not(.badge-slot)'))b.disabled=true;
+    }finally{state=current;}
+  }else{
+    if(tab==='collection')renderDex();else if(tab==='daycare')renderNursery();else if(tab==='connections')renderConnections(state.remote);else renderJournal();
+    document.dispatchEvent(new CustomEvent('panel-rendered',{detail:state}));
+  }
   $('story-pending').hidden=mobilePanel||!state.scene;
-  document.dispatchEvent(new CustomEvent('panel-rendered',{detail:state}));
 }
 let actionSignature='';
 function renderActions(){

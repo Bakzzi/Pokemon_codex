@@ -14,10 +14,10 @@ const gyms=[
 const revisits=[['surge','마티스','갈색시티','오렌지배지','LtSurge','j-ship'],['sabrina','초련','노랑시티','골드배지','Sabrina','j-k-surge'],['misty','이슬','블루시티','블루배지','Misty','j-power-return'],['erika','민화','무지개시티','무지개배지','Erika','j-k-misty'],['janine','도희','연분홍시티','핑크배지','Janine','j-k-erika'],['brock','웅','회색시티','회색배지','Brock','j-k-snorlax'],['blaine','강연','쌍둥이섬','진홍색배지','Blaine','j-k-brock'],['blue','그린','상록시티','그린배지','Blue','j-k-blaine']].map(([key,name,location,badge,source,gate],i)=>add('j-k-'+key,name,'kanto-gym',[gate,...(i===5?['j-k-janine']:[])],{location,badge,team:team(source),sprite:'j-'+key,portrait:['janine','blue'].includes(key)?'j-'+key:key,index:i,secret:key==='blue'}));
 const league=[['will','일목','Will'],['koga','독수','Koga'],['bruno','시바','Bruno'],['karen','카렌','Karen'],['lance','목호','Champion']].map(([key,name,source],i)=>add('j-league-'+key,name,'league',[],{team:team(source),sprite:'j-'+key,portrait:'j-'+key,index:i,secret:i===4}));
 add('j-league','성도 포켓몬 리그','league-start',['j-dragon-den','j-victory-road'],{sprite:'j-will'});
-const lab=group('j-lab','연두마을의 연구소','새로운 지방의 포켓몬을 연구하는 공박사를 만나 보세요.');
+const lab=group('j-lab','공박사의 소식','공박사가 새로운 동료를 맡아 줄 트레이너를 찾고 있어요.');
 step(lab,'j-arrival','공박사의 연구소','dialogue',[],{sprite:'j-elm',pages:['성도에 온 걸 환영한다! 함께 온 동료들도 믿음직하구나.','이 지방에서도 포켓몬을 만나고, 체육관에 도전하며 너희만의 모험을 이어 가 보렴.'],after:'j-arrival'});
 for(const id of [152,155,158])step(lab,'j-partner-'+id,species.get(id).name,'gift',['j-arrival'],{gift:id,level:5,starter:true,sprite:'pokemon:'+id,pages:['공박사가 맡아 돌보던 포켓몬이다. 함께 새로운 지방을 둘러보기로 했다.']});
-const early=group('j-early','도라지시티로 가는 길','모다피탑의 장로가 동료와 호흡을 맞춰 보자고 해요.',['j-partner']);
+const early=group('j-early','모다피탑의 수행','비상에게 도전하려면 모다피탑에서 장로의 인정을 받아야 해요. 동료와 호흡을 맞춰 실력을 보여 주세요.',['j-partner']);
 step(early,'j-sprout','모다피탑의 장로','trainer',['j-partner'],{team:team('Sage',9),sprite:'j-sage',intro:['탑의 기둥처럼 유연하면서도 흔들리지 않는 마음이 필요하지.','너와 동료가 얼마나 서로를 믿는지 보여 주겠니?']});
 const well=group('j-well','고동마을의 야돈우물','마을에서 야돈이 사라졌어요. 우물 안에서 수상한 사람들이 목격됐대요.',['j-falkner']);
 step(well,'j-well-grunt','로켓단 조무래기','trainer',['j-falkner'],{team:team('GruntM',1),sprite:'j-grunt'});
@@ -49,7 +49,7 @@ step(radio,'j-radio-final','로켓단 간부','trainer',['j-radio-executivef'],{
 add('j-ice-path','얼음샛길','dialogue',['j-radio-final'],{sprite:'pokemon:220',pages:['얼어붙은 바위 사이에서 길을 찾아 앞으로 나아갔다.','멀리 검은먹시티의 불빛이 보이기 시작했다.']});
 add('j-dragon-den','용의 굴','dialogue',['j-clair'],{sprite:'j-sage',pages:['용의 굴 장로가 동료와 함께했던 모험에 대해 물었다.','포켓몬은 함께 걷는 친구라고 대답했다. 장로가 조용히 미소 지었다.'],gift:147,level:15});
 add('j-victory-road','챔피언로드','dialogue',['j-dragon-den'],{sprite:'j-silver',pages:['긴 동굴을 지나 리그로 향하는 출구에 도착했다.','너와 동료들이 걸어온 길을 돌아보며 마지막 준비를 마쳤다.']});
-const extras=group('j-side','성도의 작은 만남','도시와 길목에서 전해 오는 이야기를 살펴보세요.',['j-arrival']);
+const extras=group('j-side','모험 중 전해진 소식','지금 찾아갈 수 있는 사람들과 장소의 소식이에요.',['j-arrival']);
 step(extras,'j-togepi','공박사의 조수','egg',['j-falkner'],{egg:175,sprite:'j-scientist',pages:['공박사가 맡긴 알이야. 네가 동료들과 함께 돌봐 주겠니?']});
 step(extras,'j-odd-egg','34번도로의 키우미집','odd-egg',['j-ilex'],{repeatEgg:true,sprite:'j-sage',pages:['키우미집에서 신기한 알을 맡아 달라는 연락이 왔다.','어떤 포켓몬이 나올지는 부화할 때까지 알 수 없다.']});
 step(extras,'j-ruins','알프의유적','dialogue',['j-falkner'],{sprite:'j-scientist',pages:['흩어진 석판을 맞추자 벽화가 모습을 드러냈다.','유적 안에서 낯선 문자처럼 생긴 포켓몬의 기척이 느껴진다.']});
@@ -103,6 +103,28 @@ function bonuses(game){
  const s=game.data.johto,ordinary=data.pokemon.filter(p=>p.generation===2&&!specialIds.includes(p.id)).every(p=>game.data.caught[p.id]);
  return specialIds.filter(id=>done(game,routeGates.get(id))&&!game.data.caught[id]).map(id=>({id,extra:id===251?.01:.001+(s.champion?.003:0)+(done(game,'j-red')?.0015:0)+(ordinary?.002:0)}));
 }
+const caseEndings={
+ 'j-lab':'공박사가 맡긴 동료와 새로운 모험을 시작했어요.',
+ 'j-early':'장로에게 동료와의 호흡을 인정받았어요. 비상이 체육관에서 기다리고 있어요.',
+ 'j-well':'로켓단을 물리쳐 야돈들이 무사히 돌아왔어요. 고동마을에도 평화가 찾아왔어요.',
+ 'j-tree':'길을 막고 있던 나무의 정체를 알아냈어요. 인주시티로 향하는 길이 열렸어요.',
+ 'j-burned-tower':'불탄탑에서 잠들어 있던 세 포켓몬이 깨어나 성도 곳곳으로 흩어졌어요.',
+ 'j-dance':'다섯 무희와 승부를 마쳤어요. 바다 건너로 모험을 이어 갈 준비가 됐어요.',
+ 'j-coast':'전룡이 기운을 되찾아 등대가 다시 바다를 밝혀요. 규리도 체육관으로 돌아갔어요.',
+ 'j-rage-lake':'이상한 전파를 멈추고 로켓단을 물리쳤어요. 호수와 황토마을이 평온을 되찾았어요.',
+ 'j-radio-tower':'로켓단을 물리치고 국장을 구했어요. 금빛시티에 평소의 방송이 돌아왔어요.',
+ 'j-side':'모험길에서 맺은 인연들이 소중한 추억으로 남았어요.',
+ 'j-bell-tower':'현자들의 시험을 통과했어요. 방울 소리가 탑 안쪽으로 이어져요.',
+ 'j-ship-route':'배에서 만난 아이를 할아버지에게 데려다주었어요. 아쿠아호가 갈색시티에 도착했어요.',
+ 'j-power-plant':'사라진 부품을 되찾아 발전소가 다시 움직여요. 관동의 방송도 정상으로 돌아왔어요.',
+ 'j-kanto-road':'잠든 포켓몬을 깨웠어요. 디그다의굴을 지나 모험을 이어 갈 수 있어요.',
+};
+const preparationNotes={
+ 'j-ilex':'너도밤나무숲에서 길을 잃은 파오리 때문에 금빛시티로 향하는 길을 찾지 못하고 있어요.',
+ 'j-ice-path':'검은먹시티로 가려면 얼어붙은 샛길을 통과해야 해요.',
+ 'j-dragon-den':'이향이 용의 굴에서 장로를 만나 보라고 해요. 인정을 받으면 뱃지를 받을 수 있어요.',
+ 'j-victory-road':'챔피언로드를 지나면 포켓몬 리그에 도착해요.',
+};
 function snapshot(game){
  const s=init(game),reveal=n=>!n.secret||done(game,n.id)||available(game,n)||game.data.battle?.johtoId===n.id;
  const row=n=>{
@@ -111,13 +133,25 @@ function snapshot(game){
   const hint=ready?'':cleared?'완료했어요.':!n.requires.every(id=>done(game,id))?'앞선 모험을 마치면 도전할 수 있어요.':n.needsBeasts?'성도의 전설과 더 깊은 인연이 필요해요.':n.needsDex?'성도의 도감을 더 채워 보세요.':'다음 만남을 기다려 주세요.';
   return {id:n.id,name:shown?n.name:'???',title:shown?n.title:'???',type:n.type,location:n.location,badge:n.badge,sprite:shown?n.sprite:null,portrait:shown?n.portrait:null,revealed:shown,team:shown?n.team||[]:[],done:cleared,canChallenge:ready,button,hint};
  };
- const cards=groups.filter(g=>g.requires.every(id=>done(game,id))).map(g=>{
-  const eligible=g.steps.map(id=>nodes.get(id)).filter(n=>n.requires.every(r=>done(game,r))||done(game,n.id)),next=eligible.find(n=>!done(game,n.id));
-  const completed=g.steps.every(id=>done(game,id));return {id:g.id,title:g.title,description:completed?'이곳의 일을 무사히 마쳤어요. 함께했던 모험은 기록에 남아 있어요.':g.description,done:completed,steps:g.steps.map((id,i)=>{const n=nodes.get(id),shown=done(game,id)||n===next||n.starter&&done(game,'j-arrival');return {...row(n),name:shown?n.name:'???',title:shown?n.title:'???',revealed:shown,team:shown?n.team||[]:[],sprite:n.sprite,canChallenge:shown&&available(game,n)};})};
+ const cards=groups.filter(g=>g.id!=='j-rocket-hq'&&g.requires.every(id=>done(game,id))).map(original=>{
+  const g=original.id==='j-rage-lake'?{...original,steps:[...original.steps,...groups.find(g=>g.id==='j-rocket-hq').steps]}:original;
+  const entries=g.steps.filter(id=>id!=='j-arrival').map(id=>nodes.get(id));
+  const eligible=entries.filter(n=>done(game,n.id)||n.requires.every(r=>done(game,r))),next=eligible.find(n=>!done(game,n.id));
+  const visible=eligible.filter(n=>done(game,n.id)||(g.id==='j-lab'?available(game,n):g.id==='j-side'||n===next));
+  const completed=g.id==='j-lab'?visible.length>0&&!visible.some(n=>available(game,n)):entries.every(n=>done(game,n.id));
+  const expanded=g.id==='j-rage-lake'&&done(game,'j-red-gyarados');
+  return {id:g.id,title:expanded?'분노의 호수와 황토마을':g.title,description:completed?caseEndings[g.id]:expanded?'호수에 흘러들던 이상한 전파가 황토마을의 수상한 가게로 이어져요. 전파의 근원을 찾아보세요.':g.description,done:completed,steps:visible.map(n=>row(n))};
+ }).filter(g=>g.steps.length);
+ const preparation=id=>{const n=nodes.get(id);return !done(game,id)&&n.requires.every(r=>done(game,r))?{...row(n),description:preparationNotes[id]}:null;};
+ const gymRows=gyms.map(n=>{
+  const r=row(n),gate=n.id==='j-whitney'?'j-ilex':n.id==='j-clair'?done(game,n.id)?'j-dragon-den':'j-ice-path':null;
+  if(gate)r.preparation=preparation(gate);
+  if(n.id==='j-falkner'&&!done(game,'j-sprout'))r.hint='모다피탑에서 장로의 인정을 받아 주세요.';
+  return r;
  });
  const latest=[...rivalNodes].reverse().find(n=>s.rivals[n.id]?.state);
- const special=[nodes.get('j-ilex'),nodes.get('j-ice-path'),nodes.get('j-dragon-den'),nodes.get('j-victory-road'),nodes.get('j-rainbow'),nodes.get('j-gs-ball'),nodes.get('j-shrine'),nodes.get('j-red')].filter(n=>n.requires.every(id=>done(game,id))||done(game,n.id)).filter(n=>!n.needsDex||available(game,n)||done(game,n.id)).map(row);
+ const special=['j-rainbow','j-gs-ball','j-shrine','j-red'].map(id=>nodes.get(id)).filter(n=>n.requires.every(id=>done(game,id))||done(game,n.id)).filter(n=>!n.needsDex||available(game,n)||done(game,n.id)).map(row);
  const leagueIndex=game.data.battle?.johtoLeague?game.data.battle.foeStage:0;
- return {active:active(game),region:s.champion&&done(game,'j-ship')?'성도 · 관동 재방문':'성도 지방',badges:gyms.filter(n=>done(game,n.id)&&(n.id!=='j-clair'||done(game,'j-dragon-den'))).map(n=>n.id),kantoBadges:revisits.filter(n=>done(game,n.id)).map(n=>n.id),champion:s.champion,completed:done(game,'j-red'),gyms:gyms.map(row),kantoGyms:done(game,'j-ship')?revisits.map(row):[],league:league.map((n,i)=>{const shown=i<4||s.champion||leagueIndex>=4;return {...row(n),revealed:shown,name:shown?n.name:'???',portrait:shown?n.portrait:null,sprite:shown?n.sprite:null,team:shown?n.team:[]};}),leagueReady:available(game,nodes.get('j-league')),leagueBest:s.leagueBest,cards,special,rival:latest?{...row(latest),name:'실버',team:rivalTeam(game,latest),state:s.rivals[latest.id].state,canChallenge:s.rivals[latest.id].state==='retry'}:null,nativeCaught:nativeDex(game)};
+ return {active:active(game),region:s.champion&&done(game,'j-ship')?'성도 · 관동 재방문':'성도 지방',badges:gyms.filter(n=>done(game,n.id)&&(n.id!=='j-clair'||done(game,'j-dragon-den'))).map(n=>n.id),kantoBadges:revisits.filter(n=>done(game,n.id)).map(n=>n.id),champion:s.champion,completed:done(game,'j-red'),gyms:gymRows,kantoGyms:done(game,'j-ship')?revisits.map(row):[],league:league.map((n,i)=>{const shown=i<4||s.champion||leagueIndex>=4;return {...row(n),revealed:shown,name:shown?n.name:'???',portrait:shown?n.portrait:null,sprite:shown?n.sprite:null,team:shown?n.team:[]};}),leagueReady:available(game,nodes.get('j-league')),leaguePreparation:preparation('j-victory-road'),leagueBest:s.leagueBest,cards,special,rival:latest?{...row(latest),name:'실버',team:rivalTeam(game,latest),state:s.rivals[latest.id].state,canChallenge:s.rivals[latest.id].state==='retry'}:null,nativeCaught:nativeDex(game)};
 }
 module.exports={nodes,groups,gyms,revisits,league,rivalNodes,starterFamilies,eventSpecies,specialIds,routeGates,noWild,team,active,init,done,available,battleBoss,rivalTeam,wildExclusions,bonuses,nativeDex,snapshot};

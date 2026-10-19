@@ -93,10 +93,10 @@ test('every Johto species has an obtainable path, with starter/baby/special evol
  assert.equal(panel.collection.find(p=>p.id===249).acquisition.routes[0].minimumLevel,50);
 });
 
-test('story gifts wait for the last manual page, do not fill slots, and cannot duplicate on stale taps',()=>{
- const g=fixture();idle(g);assert.ok(g.challenge('j-arrival',now));pages(g);idle(g);assert.ok(g.challenge('j-partner-155',now));
- const s=g.presentation(),token=s.id+':'+s.index;assert.ok(!Object.values(g.data.owned).some(p=>p.id===155));assert.ok(g.advanceScene(token,now));
- assert.equal(g.advanceScene(token,now),false);assert.equal(Object.values(g.data.owned).filter(p=>p.id===155).length,1);assert.deepEqual(g.data.slots,[25,null,null,null,null,null]);assert.equal(g.canChallenge('j-partner-152'),false);
+test('regional travel needs no second tutorial or starter selection; optional starter gifts cannot duplicate or fill slots',()=>{
+ const g=fixture();idle(g);assert.equal(g.presentation(),null);assert.equal(g.canChallenge('j-arrival'),false);assert.ok(g.canChallenge('j-sprout'));
+ assert.ok(g.challenge('j-partner-155',now));assert.equal(g.presentation(),null);assert.equal(g.challenge('j-partner-155',now),false);
+ assert.equal(Object.values(g.data.owned).filter(p=>p.id===155).length,1);assert.deepEqual(g.data.slots,[25,null,null,null,null,null]);assert.equal(g.canChallenge('j-partner-152'),false);
  clear(g,['j-bugsy']);assert.equal(g.canChallenge('j-partner-152'),true);
 });
 
@@ -137,10 +137,33 @@ test('Sketch copies persist with original lesson levels, across native turns and
 });
 
 test('queued regional challenge survives reload and hands off only at a safe boundary',()=>{
- let g=fixture();g.newWild(now);g.data.animation=null;g.data.switchUntil=0;g.nextTick=now;assert.ok(g.challenge('j-arrival',now));assert.equal(g.presentation(),null);
- g=new Adventure(structuredClone(g.data),now+1);assert.equal(g.data.pendingChallenge.index,'j-arrival');assert.equal(g.data.battle.kind,'wild');
+ let g=fixture();clear(g,['j-falkner']);g.newWild(now);g.data.animation=null;g.data.switchUntil=0;g.nextTick=now;assert.ok(g.challenge('j-ruins',now));assert.equal(g.presentation(),null);
+ g=new Adventure(structuredClone(g.data),now+1);assert.equal(g.data.pendingChallenge.index,'j-ruins');assert.equal(g.data.battle.kind,'wild');
  const paused=structuredClone(g.data.battle);assert.ok(g.tick(now+20000));assert.equal(g.presentation().kind,'johto-event');assert.equal(g.data.suspendedWild,null);assert.deepEqual(g.data.battle,paused);
- pages(g,now+20000);assert.ok(J.done(g,'j-arrival'));
+ pages(g,now+20000);assert.ok(J.done(g,'j-ruins'));
+});
+
+test('event cards reveal only reached steps and do not fill the optional news list with future placeholders',()=>{
+ const g=fixture();let s=J.snapshot(g);assert.ok(!s.cards.some(c=>c.id==='j-side'));assert.ok(!s.cards.flatMap(c=>c.steps).some(r=>r.title==='???'||r.id==='j-arrival'));
+ assert.match(s.cards.find(c=>c.id==='j-early').description,/비상.*장로의 인정/);
+ clear(g,['j-falkner']);s=J.snapshot(g);const side=s.cards.find(c=>c.id==='j-side');assert.deepEqual(side.steps.map(r=>r.id),['j-togepi','j-ruins']);
+ assert.ok(side.steps.every(r=>r.revealed&&r.title!=='???'));assert.deepEqual(s.cards.find(c=>c.id==='j-well').steps.map(r=>r.id),['j-well-grunt']);
+ clear(g,['j-well-grunt']);assert.deepEqual(J.snapshot(g).cards.find(c=>c.id==='j-well').steps.map(r=>r.id),['j-well-grunt','j-well-boss']);
+ clear(g,['j-well-boss']);assert.match(J.snapshot(g).cards.find(c=>c.id==='j-well').description,/야돈.*돌아/);
+});
+
+test('related lake and town events share one case while minor travel connects through the next gym or league',()=>{
+ const g=fixture();clear(g,['j-jasmine']);let s=J.snapshot(g);assert.ok(!s.cards.some(c=>c.id==='j-rocket-hq'));let c=s.cards.find(c=>c.id==='j-rage-lake');assert.equal(c.title,'분노의 호수');assert.equal(c.steps.length,1);
+ clear(g,['j-red-gyarados']);c=J.snapshot(g).cards.find(c=>c.id==='j-rage-lake');assert.match(c.title,/황토마을/);assert.deepEqual(c.steps.map(r=>r.id),['j-red-gyarados','j-hq-grunt']);
+ clear(g,['j-bugsy']);s=J.snapshot(g);assert.equal(s.gyms[2].preparation.id,'j-ilex');assert.ok(!s.special.some(r=>r.id==='j-ilex'));
+ clear(g,['j-radio-final']);assert.equal(J.snapshot(g).gyms[7].preparation.id,'j-ice-path');clear(g,['j-clair']);assert.equal(J.snapshot(g).gyms[7].preparation.id,'j-dragon-den');
+ clear(g,['j-dragon-den']);assert.equal(J.snapshot(g).leaguePreparation.id,'j-victory-road');
+});
+
+test('previous Kanto records remain separate from current Johto progression and cannot launch previous-generation challenges',()=>{
+ const g=fixture();g.data.badges=data.bosses.slice(0,8).map(b=>b.id);g.data.leagueBest=5;clear(g,['j-falkner']);
+ const before=structuredClone(g.data),s=g.panelState(now);assert.deepEqual(s.badges,['j-falkner']);assert.deepEqual(s.challengeHistory[1].badges,before.badges);assert.equal(s.challengeHistory[1].champion,true);assert.equal(s.challengeHistory[1].leagueBest,5);
+ assert.ok(s.challengeHistory[1].gymAccess.every(v=>!v));assert.equal(g.challenge(8,now),false);assert.equal(g.challenge('rocket-grunt',now),false);assert.deepEqual(g.data,before);
 });
 
 test('explicit story wild battles advance native turns without paid activity and trainers cannot be captured',()=>{

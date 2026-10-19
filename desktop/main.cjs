@@ -161,7 +161,7 @@ async function johtoSmokeTest(){
   const click=code=>win.webContents.executeJavaScript(code),read=code=>panel.webContents.executeJavaScript(code);
   win.webContents.on('console-message',(_e,d)=>{if(d.level>=3)errors.push(d.message);});
   try{
-    const at=Date.now(),old=new(require('./game.cjs').Game)({},at);old.data.champion=true;game=new Game(old.data,at,{random:()=>.73});
+    const at=Date.now(),old=new(require('./game.cjs').Game)({},at);old.data.champion=true;old.data.badges=require('./pokemon.cjs').data.bosses.slice(0,8).map(b=>b.id);game=new Game(old.data,at,{random:()=>.73});
     check(game.unlockJohto(at,[25]),'regional transfer initializes a separate Johto story');game.data.animation=null;game.data.switchUntil=0;game.nextTick=at;
     await openPanel('challenge');panel.webContents.on('console-message',(_e,d)=>{if(d.level>=3)errors.push(d.message);});publish(true);await wait(150);
     check(game.data.owned[game.data.activeId].level===5,'regional transfer starts its selected companion at level five');
@@ -169,13 +169,13 @@ async function johtoSmokeTest(){
     check(await read("document.getElementById('kanto-challenges').hidden&&!document.getElementById('johto-challenges').hidden"),'actual panel publisher selects the Johto challenge renderer');
     check(await read("document.querySelectorAll('#johto-challenges details[open]').length===0"),'all Johto challenge sections start collapsed');
     check(await read("document.querySelectorAll('#johto-badge-slots .badge-slot').length===8"),'actual panel contains eight regional badge seats');
-    await read("document.getElementById('j-lab').open=true;document.querySelector('[data-challenge=\"j-arrival\"]').click()");await wait(120);
-    check(game.presentation()?.kind==='johto-event','real panel IPC opens Elm dialogue');
-    check(await click("!document.getElementById('story-scene').hidden&&document.getElementById('story-portrait').getAttribute('src').endsWith('j-elm.png')"),'actual widget receives and renders Elm through snapshot/publish/IPC');
-    const scene=game.presentation().id;for(let i=0;i<5&&game.presentation()?.id===scene;i++){await click("document.getElementById('story-next').click()");await wait(80);}
-    check(J.done(game,'j-arrival'),'real widget taps finish the event exactly once');
+    check(await read("document.querySelector('[data-generation=\"2\"]').getAttribute('aria-selected')==='true'&&document.querySelector('[data-generation=\"3\"]').disabled"),'generation tabs select the current region and lock unreleased generations');
+    check(await read("!document.querySelector('[data-challenge=\"j-arrival\"]')&&!document.querySelector('#j-side')&&!document.querySelector('#johto-badge-slots').checkVisibility()"),'no repeat tutorial, unknown side quests, or badge case in a collapsed gym');
+    await read("document.querySelector('[data-generation=\"1\"]').click()");await wait(80);
+    check(await read("!document.getElementById('kanto-challenges').hidden&&document.querySelectorAll('#badge-slots .earned').length===8&&document.getElementById('league-start').disabled"),'actual publisher retains the previous region as a read-only eight-badge record');
+    await read("document.querySelector('[data-generation=\"2\"]').click()");await wait(80);
     game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(80);
-    await read("document.querySelector('[data-challenge=\"j-partner-155\"]').click()");await wait(80);await click("document.getElementById('story-next').click()");await wait(80);
+    await read("document.getElementById('j-lab').open=true;document.querySelector('[data-challenge=\"j-partner-155\"]').click()");await wait(100);
     check(Object.values(game.data.owned).some(p=>p.id===155),'real event tap grants selected partner');
     check(game.data.slots.filter(Boolean).length===1,'a gift preserves intentionally empty party slots');
     game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);
@@ -186,8 +186,13 @@ async function johtoSmokeTest(){
     game.sceneTick(Date.now()+4000);game.data.switchUntil=0;game.nextTick=Date.now();game.tick();publish(true);await wait(150);
     check(game.data.workTokens===0&&!!game.data.animation,'explicit regional battle advances without token credit');
     check(snapshot().battle?.johtoId==='j-rival-0','actual widget snapshot preserves regional battle identity');
-    game.data.battle=null;game.data.pendingBattle=null;game.data.mobileStory.scene=null;game.data.animation=null;game.data.switchUntil=0;game.data.johto.cleared['j-falkner']=at;publish(true);await wait(80);
+    game.data.battle=null;game.data.pendingBattle=null;game.data.mobileStory.scene=null;game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();game.data.johto.cleared['j-falkner']=at;publish(true);await wait(80);
     check(await read("document.querySelectorAll('#johto-badge-slots .earned .badge-art').length===1"),'actual panel displays the earned regional badge');
+    await read("document.getElementById('j-side').open=true;document.querySelector('[data-challenge=\"j-ruins\"]').click()");await wait(80);
+    check(game.presentation()?.kind==='johto-event','real panel IPC opens a discovered event');
+    check(await click("!document.getElementById('story-scene').hidden&&document.getElementById('story-portrait').getAttribute('src').endsWith('j-scientist.png')"),'actual widget receives a discovered event through snapshot/publish/IPC');
+    for(let i=0;i<5&&game.presentation()?.mode==='dialogue';i++){await click("document.getElementById('story-next').click()");await wait(60);}
+    check(J.done(game,'j-ruins'),'real widget taps finish the discovered event');
     const uid=game.addPokemon(130,30,'fixture',at);game.data.owned[uid].shiny=true;game.data.activeId=uid;game.data.slots=[uid,null,null,null,null,null];game.animate('result',{text:'검증'},Date.now());publish(true);await wait(120);
     check(await click("document.getElementById('hero-image').getAttribute('src')==='assets/shiny/130.gif'"),'actual widget retains shiny appearance outside battle');
     check(await read("Array.from(document.querySelectorAll('#johto-challenges img')).filter(i=>i.complete).every(i=>i.naturalWidth>0)"),'visible regional images resolve from packaged assets');

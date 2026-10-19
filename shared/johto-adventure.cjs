@@ -9,10 +9,16 @@ function withJohto(Base){return class JohtoAdventure extends Base{
  constructor(saved={},now=Date.now(),options={}){
   super(saved,now,options);
   if(J.active(this)||saved.johto)J.init(this);
+  this.prepareJohtoJourney(now);
   this.awardCompletionItem(now);
-  if(J.active(this)&&J.nodes.has(saved.pendingChallenge?.index))this.data.pendingChallenge={...saved.pendingChallenge};
+  if(J.active(this)&&J.nodes.has(saved.pendingChallenge?.index)&&saved.pendingChallenge.index!=='j-arrival')this.data.pendingChallenge={...saved.pendingChallenge};
  }
- unlockJohto(now=Date.now(),ids){const ok=super.unlockJohto(now,ids);if(ok)J.init(this);return ok;}
+ prepareJohtoJourney(now){
+  if(!J.active(this))return;
+  const s=J.init(this);s.cleared['j-arrival'] ||= now;s.cleared['j-partner'] ||= now;
+  if(this.presentation()?.next==='johto-reward:j-arrival')this.data.mobileStory.scene=null;
+ }
+ unlockJohto(now=Date.now(),ids){const ok=super.unlockJohto(now,ids);if(ok)this.prepareJohtoJourney(now);return ok;}
  battleBoss(b=this.data.battle){return J.battleBoss(this,b?.bossIndex)||super.battleBoss(b);}
  challengeName(id){return J.nodes.get(id)?.title||super.challengeName(id);}
  canChallenge(id){
@@ -31,6 +37,7 @@ function withJohto(Base){return class JohtoAdventure extends Base{
   if(!this.canChallenge(id)||this.data.battle||this.data.pendingBattle||now<this.data.switchUntil)return false;
   const s=J.init(this),gate=J.rivalNodes.find(n=>n.target===id&&!s.rivals[n.id]?.state);
   const n=gate||J.nodes.get(id);this.data.pendingChallenge=null;this.data.captureAnimation=null;this.data.manualSelection=false;
+  if(n.starter){this.completeJohtoNode(n,now);this.animate('result',{text:species.get(n.gift).name+'가 동료가 됐어요.'},now);return true;}
   if(['dialogue','gift','egg','odd-egg'].includes(n.type)){
    for(const seen of n.encounterSeen||[])this.data.seen[seen] ||= now;
    this.dialogue('johto-event',n.title,n.sprite||'j-sage',n.pages||['주변을 차분히 살펴보았다.'],'johto-reward:'+n.id,now);return true;
@@ -171,7 +178,7 @@ function withJohto(Base){return class JohtoAdventure extends Base{
    else if(event)p.acquisition={...original,routes};
   }
   const items=Object.keys(this.data.johto.items).map(key=>({id:'j-'+key,name:itemNames[key],count:1}));
-  return {...s,johto:J.snapshot(this),inventory:[...s.inventory,...items]};
+  return {...s,challengeHistory:{1:{badges:[...this.data.badges],champion:this.data.champion,leagueBest:this.data.leagueBest,gymAccess:Array(8).fill(false)}},johto:J.snapshot(this),inventory:[...s.inventory,...items]};
  }
 };}
 module.exports={withJohto,itemNames,oddEgg};
