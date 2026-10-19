@@ -8,6 +8,46 @@ function idle(g,at=now){g.data.animation=null;g.data.switchUntil=0;g.nextTick=at
 function pages(g,at=now){let limit=50;while(g.presentation()?.mode==='dialogue'&&limit--){const s=g.presentation();assert.ok(g.advanceScene(s.id+':'+s.index,at));}assert.ok(limit>0);if(g.presentation()?.mode==='sendout')g.sceneTick(at+3000);}
 function win(g,at=now){let limit=100;while(g.data.battle?.johtoId&&limit--){pages(g,at);const b=g.data.battle;b.foe.hp=0;g.defeatOpponent(at);pages(g,at);at+=10000;}assert.ok(limit>0);idle(g,at);return at;}
 function clear(g,ids){for(const id of ids)g.data.johto.cleared[id]=now;}
+const towerTraining=['j-sprout-sage-1','j-sprout-sage-2'];
+
+test('two tower trainers must be defeated in order before the elder, with original Crystal parties on both platforms',()=>{
+ for(const Type of [Adventure,Mobile]){
+  let g=fixture(Type);idle(g);assert.deepEqual(J.snapshot(g).cards.find(c=>c.id==='j-early').steps.map(n=>n.id),[towerTraining[0]]);
+  assert.equal(g.challenge(towerTraining[1],now),false);assert.equal(g.challenge('j-sprout',now),false);assert.equal(g.canChallenge('j-falkner'),false);
+  assert.deepEqual(J.nodes.get(towerTraining[0]).team.map(p=>[p.id,p.level]),[[69,6]]);
+  assert.deepEqual(J.nodes.get(towerTraining[1]).team.map(p=>[p.id,p.level]),[[69,7],[163,7]]);
+  assert.deepEqual(J.nodes.get('j-sprout').team.map(p=>[p.id,p.level]),[[69,7],[69,7],[163,10]]);
+  assert.ok(g.challenge(towerTraining[0],now));pages(g);g.endChallenge(false,now);pages(g);idle(g);
+  assert.equal(J.done(g,towerTraining[0]),false);assert.equal(g.canChallenge(towerTraining[1]),false);
+  assert.ok(g.challenge(towerTraining[0],now));win(g);assert.equal(g.canChallenge(towerTraining[0]),false);
+  g=new Type(structuredClone(g.data),now+1);idle(g);assert.ok(g.canChallenge(towerTraining[1]));assert.equal(g.canChallenge('j-sprout'),false);
+  assert.deepEqual(J.snapshot(g).cards.find(c=>c.id==='j-early').steps.map(n=>n.id),towerTraining);
+  assert.ok(g.challenge(towerTraining[1],now));win(g);idle(g);assert.ok(g.canChallenge('j-sprout'));assert.equal(g.canChallenge('j-falkner'),false);
+  assert.ok(g.challenge('j-sprout',now));assert.equal(g.data.battle.johtoId,'j-rival-0');win(g);
+  assert.ok(g.challenge('j-sprout',g.nextTick));win(g);assert.ok(g.canChallenge('j-falkner'));
+  assert.ok(J.snapshot(g).cards.find(c=>c.id==='j-early').done);assert.equal(g.data.workTokens,0);
+ }
+});
+
+test('older tower progress, active elder battles and queued elder challenges survive the added prerequisites',()=>{
+ for(const Type of [Adventure,Mobile])for(const progress of ['fresh','elder','badge','rival','active','queued']){
+  const old=fixture(Type).data;old.johto.revision=1;
+  if(progress==='elder')old.johto.cleared['j-sprout']=now;
+  if(progress==='badge')old.johto.cleared['j-falkner']=now;
+  if(progress==='rival')old.johto.rivals['j-rival-0']={state:'completed',metAt:now};
+  if(progress==='active'){
+   const g=new Type(old,now);idle(g);clear(g,towerTraining);g.data.johto.rivals['j-rival-0']={state:'won',metAt:now};assert.ok(g.challenge('j-sprout',now));
+   Object.assign(old,structuredClone(g.data));old.johto.revision=1;for(const id of towerTraining)delete old.johto.cleared[id];
+  }
+  if(progress==='queued')old.pendingChallenge={index:'j-sprout',queuedAt:now};
+  const before=structuredClone(old),g=new Type(old,now+1);
+  assert.equal(g.data.johto.revision,2);assert.ok(towerTraining.every(id=>J.done(g,id)===(progress!=='fresh')),progress);
+  for(const k of ['owned','slots','caught','badges'])assert.deepEqual(g.data[k],before[k],progress+' '+k);
+  if(progress==='queued')assert.deepEqual(g.data.pendingChallenge,before.pendingChallenge);
+  if(progress==='active')assert.equal(g.data.battle.johtoId,'j-sprout');
+  const loaded=new Type(structuredClone(g.data),now+2);assert.deepEqual(loaded.data.johto,g.data.johto);
+ }
+});
 
 test('regional migration preserves Kanto records, ownership, selected slots and save scenes',()=>{
  let g=fixture(),before=structuredClone(g.data);g=new Adventure(structuredClone(g.data),now+1);
@@ -42,7 +82,7 @@ test('the complete route from Elm through Mt Silver is reachable using actual ch
 });
 
 test('hidden rival intercepts the target once, retries after loss and survives reload',()=>{
- let g=fixture();clear(g,['j-partner']);idle(g);assert.ok(g.challenge('j-sprout',now));assert.equal(g.data.battle.johtoId,'j-rival-0');
+ let g=fixture();clear(g,towerTraining);idle(g);assert.ok(g.challenge('j-sprout',now));assert.equal(g.data.battle.johtoId,'j-rival-0');
  pages(g);g.endChallenge(false,now);pages(g);assert.equal(g.data.johto.rivals['j-rival-0'].state,'completed');assert.equal(g.canChallenge('j-sprout'),true);
  idle(g);assert.ok(g.challenge('j-sprout',now));assert.equal(g.data.battle.johtoId,'j-sprout');win(g);
  clear(g,['j-bugsy']);idle(g);assert.ok(g.challenge('j-ilex',now));assert.equal(g.data.battle.johtoId,'j-rival-1');pages(g);g.endChallenge(false,now);pages(g);idle(g);
@@ -94,7 +134,7 @@ test('every Johto species has an obtainable path, with starter/baby/special evol
 });
 
 test('regional travel needs no second tutorial or starter selection; optional starter gifts cannot duplicate or fill slots',()=>{
- const g=fixture();idle(g);assert.equal(g.presentation(),null);assert.equal(g.canChallenge('j-arrival'),false);assert.ok(g.canChallenge('j-sprout'));
+ const g=fixture();idle(g);assert.equal(g.presentation(),null);assert.equal(g.canChallenge('j-arrival'),false);assert.ok(g.canChallenge(towerTraining[0]));
  assert.ok(g.challenge('j-partner-155',now));assert.equal(g.presentation(),null);assert.equal(g.challenge('j-partner-155',now),false);
  assert.equal(Object.values(g.data.owned).filter(p=>p.id===155).length,1);assert.deepEqual(g.data.slots,[25,null,null,null,null,null]);assert.equal(g.canChallenge('j-partner-152'),false);
  clear(g,['j-bugsy']);assert.equal(g.canChallenge('j-partner-152'),true);
@@ -110,7 +150,7 @@ test('story encounter capture, duplicate shiny persistence and ordinary activity
 
 test('regional state, challenge gates, parties and acquisition hints match PC and Android',()=>{
  const pc=fixture(),mobile=new Mobile(structuredClone(pc.data),now);assert.deepEqual(pc.panelState(now).johto,mobile.panelState(now).johto);assert.deepEqual(pc.panelState(now).collection,mobile.panelState(now).collection);
- clear(pc,['j-partner']);mobile.data.johto=structuredClone(pc.data.johto);for(const g of [pc,mobile]){idle(g);assert.ok(g.challenge('j-sprout',now));}
+ clear(pc,towerTraining);mobile.data.johto=structuredClone(pc.data.johto);for(const g of [pc,mobile]){idle(g);assert.ok(g.challenge('j-sprout',now));}
  assert.deepEqual(pc.data.battle,mobile.data.battle);assert.deepEqual(pc.presentation(),mobile.presentation());
 });
 

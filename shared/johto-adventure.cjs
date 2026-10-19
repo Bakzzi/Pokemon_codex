@@ -8,7 +8,7 @@ const itemNames={'squirt-bottle':'꼬부기물뿌리개','secret-potion':'비전
 function withJohto(Base){return class JohtoAdventure extends Base{
  constructor(saved={},now=Date.now(),options={}){
   super(saved,now,options);
-  if(J.active(this)||saved.johto)J.init(this);
+  if(J.active(this)||saved.johto)J.init(this,saved.pendingChallenge);
   this.prepareJohtoJourney(now);
   this.awardCompletionItem(now);
   if(J.active(this)&&J.nodes.has(saved.pendingChallenge?.index)&&saved.pendingChallenge.index!=='j-arrival')this.data.pendingChallenge={...saved.pendingChallenge};

@@ -17,8 +17,10 @@ add('j-league','성도 포켓몬 리그','league-start',['j-dragon-den','j-victo
 const lab=group('j-lab','공박사의 소식','공박사가 새로운 동료를 맡아 줄 트레이너를 찾고 있어요.');
 step(lab,'j-arrival','공박사의 연구소','dialogue',[],{sprite:'j-elm',pages:['성도에 온 걸 환영한다! 함께 온 동료들도 믿음직하구나.','이 지방에서도 포켓몬을 만나고, 체육관에 도전하며 너희만의 모험을 이어 가 보렴.'],after:'j-arrival'});
 for(const id of [152,155,158])step(lab,'j-partner-'+id,species.get(id).name,'gift',['j-arrival'],{gift:id,level:5,starter:true,sprite:'pokemon:'+id,pages:['공박사가 맡아 돌보던 포켓몬이다. 함께 새로운 지방을 둘러보기로 했다.']});
-const early=group('j-early','모다피탑의 수행','비상에게 도전하려면 모다피탑에서 장로의 인정을 받아야 해요. 동료와 호흡을 맞춰 실력을 보여 주세요.',['j-partner']);
-step(early,'j-sprout','모다피탑의 장로','trainer',['j-partner'],{team:team('Sage',9),sprite:'j-sage',intro:['탑의 기둥처럼 유연하면서도 흔들리지 않는 마음이 필요하지.','너와 동료가 얼마나 서로를 믿는지 보여 주겠니?']});
+const early=group('j-early','모다피탑의 수행','비상에게 도전하려면 모다피탑에서 장로의 인정을 받아야 해요. 두 수행자와 실력을 겨루며 탑을 올라가 보세요.',['j-partner']);
+step(early,'j-sprout-sage-1','모다피탑의 수행자 1','trainer',['j-partner'],{team:team('Sage',3),sprite:'j-sage',intro:['우리는 포켓몬과 마음을 맞추기 위해 이 탑에서 수행하고 있지.','장로님을 만나기 전에 나와 실력을 겨뤄 보겠니?'],win:['좋은 호흡이구나. 더 위로 올라가 보렴.']});
+step(early,'j-sprout-sage-2','모다피탑의 수행자 2','trainer',['j-sprout-sage-1'],{team:team('Sage',4),sprite:'j-sage',intro:['동료마다 서로 다른 힘이 있지.','그 힘을 어떻게 이끌어 내는지 보여 주겠니?'],win:['너와 동료의 마음이 잘 맞는구나. 장로님이 기다리고 계신다.']});
+step(early,'j-sprout','모다피탑의 장로','trainer',['j-sprout-sage-2'],{team:team('Sage',9),sprite:'j-sage',intro:['탑의 기둥처럼 유연하면서도 흔들리지 않는 마음이 필요하지.','너와 동료가 얼마나 서로를 믿는지 보여 주겠니?']});
 const well=group('j-well','고동마을의 야돈우물','마을에서 야돈이 사라졌어요. 우물 안에서 수상한 사람들이 목격됐대요.',['j-falkner']);
 step(well,'j-well-grunt','로켓단 조무래기','trainer',['j-falkner'],{team:team('GruntM',1),sprite:'j-grunt'});
 step(well,'j-well-boss','로켓단 간부','trainer',['j-well-grunt'],{team:team('GruntM',4),sprite:'j-executive',rewardText:'야돈들이 무사히 마을로 돌아갔어요. 고동체육관에도 도전할 수 있어요.'});
@@ -82,7 +84,21 @@ routes([123,127],'j-park');routes([113,115,128,131],'j-morty');
 routes([179,180,181,183,184,187,188,189,194,195],'j-falkner');routes([190,193,191,192,204,205,209,210,214],'j-ilex');routes([177,178,201,235],'j-ruins');routes([170,171,202,203,211,213,216,217,222,226,231,232,234,241],'j-morty');routes([223,224],'j-pryce');routes([215,220,221,225],'j-ice-path');routes([227],'j-clair');routes([198,218,219,228,229],'j-ship');routes([200,246,247,248],'j-k-blue');routes([243,244],'j-burned');routes([245],'j-bell-sage-2');routes([249],'j-silver-wing');routes([250],'j-rainbow');routes([251],'j-shrine');
 const noWild=new Set([...starterFamilies,172,173,174,175,176,185,236,238,239,240]);
 function active(game){return !!game.data.johtoUnlocked;}
-function init(game){game.data.johto ||= {revision:1,cleared:{},rivals:{},items:{},starterChoice:null,champion:false,leagueBest:0};const s=game.data.johto;s.cleared ||= {};s.rivals ||= {};s.items ||= {};return s;}
+function init(game,pending=game.data.pendingChallenge){
+ game.data.johto ||= {revision:2,cleared:{},rivals:{},items:{},starterChoice:null,champion:false,leagueBest:0};
+ const s=game.data.johto;s.cleared ||= {};s.rivals ||= {};s.items ||= {};
+ if((s.revision||1)<2){
+  // Older saves could already be at, queued for, or beyond the elder. Do not
+  // insert new prerequisite battles behind their existing progress.
+  const b=game.data.battle,q=pending,r=s.rivals['j-rival-0'];
+  if(s.cleared['j-sprout']||s.cleared['j-falkner']||r?.state||[b?.johtoId,b?.bossIndex,q?.index].some(id=>['j-sprout','j-rival-0'].includes(id))){
+   const at=s.cleared['j-sprout']||s.cleared['j-falkner']||r?.metAt||b?.startedAt||q?.queuedAt||1;
+   for(const id of ['j-sprout-sage-1','j-sprout-sage-2'])s.cleared[id] ||= at;
+  }
+  s.revision=2;
+ }
+ return s;
+}
 function done(game,id){return !!game.data.johto?.cleared[id];}
 function nativeDex(game){return data.pokemon.filter(p=>p.generation===2&&!!game.data.caught[p.id]).length;}
 function available(game,n){

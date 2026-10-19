@@ -179,6 +179,18 @@ async function johtoSmokeTest(){
     check(Object.values(game.data.owned).some(p=>p.id===155),'real event tap grants selected partner');
     check(game.data.slots.filter(Boolean).length===1,'a gift preserves intentionally empty party slots');
     game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);
+    check(await read("!!document.querySelector('[data-challenge=\"j-sprout-sage-1\"]')&&!document.querySelector('[data-challenge=\"j-sprout\"]')"),'actual tower panel exposes its first trainer before the elder');
+    const advancePages=async()=>{for(let i=0;i<8&&game.presentation()?.mode==='dialogue';i++){publish(true);await wait(40);await click("document.getElementById('story-next').click()");await wait(50);}if(game.presentation()?.mode==='sendout')game.sceneTick(Date.now()+4000);};
+    for(const id of ['j-sprout-sage-1','j-sprout-sage-2']){
+      game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);
+      await read("document.getElementById('j-early').open=true;document.querySelector('[data-challenge=\""+id+"\"]').click()");await wait(80);
+      check(game.data.battle?.johtoId===id,'actual challenge IPC enters tower trainer '+id);
+      check(await click("document.getElementById('story-portrait').getAttribute('src').endsWith('j-sage.png')"),'actual widget shows the tower trainer '+id);
+      await advancePages();let turns=0;
+      while(game.data.battle?.johtoId===id&&turns++<8){game.nextTick=Date.now()+60000;game.data.battle.foe.hp=0;game.defeatOpponent(Date.now());await advancePages();}
+      check(J.done(game,id),'tower trainer victory unlocks the next stage '+id);
+    }
+    game.data.animation=null;game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);
     await read("document.getElementById('j-early').open=true;document.querySelector('[data-challenge=\"j-sprout\"]').click()");await wait(120);
     check(game.data.battle?.johtoId==='j-rival-0','actual challenge IPC performs the hidden rival intercept');
     check(await click("document.getElementById('story-portrait').getAttribute('src').endsWith('j-silver.png')"),'actual widget renders the regional rival sprite');
