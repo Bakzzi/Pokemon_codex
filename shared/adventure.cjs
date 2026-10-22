@@ -9,6 +9,7 @@ const safari=require('./safari.cjs');
 const mansion=require('./mansion.cjs');
 const trainerDialogue=require('./trainer-dialogue.cjs');
 const discovery=require('./challenge-discovery.cjs');
+const world=require('./kanto-world.cjs');
 const {species}=require('../desktop/pokemon.cjs');
 const {encounters,byId:rivals,champion}=require('./rivals.cjs');
 const rival=encounters[0];
@@ -46,6 +47,7 @@ class Adventure extends Engine{
     const pending=saved.pendingChallenge;
     if((rivals.has(pending?.index)&&this.rivalProgress(pending.index)?.state==='retry')||(storyEncounter(pending?.index)||['safari-start','mansion-investigate'].includes(pending?.index)||pending?.index===6)&&this.canChallenge(pending.index))this.data.pendingChallenge={...pending};
     const scene=story.scene,b=this.data.battle;
+    world.init(this,now);
     if(this.platform==='mobile'&&scene?.kind==='oak'&&scene.pages)scene.pages=scene.pages.map(text=>text==='앱을 켜 두면 자동으로 모험한단다. 꺼 둔 동안에는 10걸음마다 모험이 이어지지.'||text==='폰을 잠그면 10초마다 모험한단다. 잠근 동안 10걸음을 걸으면 한 번 더 모험하지. 도전 배틀은 직접 지켜볼 수 있어.'?oakIntro[2]:text);
     if(b?.kind==='trainer'&&scene?.mode==='dialogue'){
       const boss=this.battleBoss(b);
@@ -80,7 +82,10 @@ class Adventure extends Engine{
     if(rivals.has(b?.storyId)&&!b.rivalResolution)this.rivalProgress(b.storyId).state='active';
   }
   rivalProgress(id){return this.data.mobileStory?.rivals?.[id];}
-  wildOptions(){return {...super.wildOptions(),excluded:wildExclusions};}
+  wildOptions(){return {...super.wildOptions(),excluded:wildExclusions,...(world.active(this)?{...world.options(this),location:world.current(this).id}:{})};}
+  travelName(id){return world.byId.get(id)?.name;}
+  travelStatus(id){return world.status(this,id);}
+  travelTo(id,now){return world.travel(this,id,now);}
   canReserveCapture(id){return id!==131&&super.canReserveCapture(id);}
   canReceiveFlute(){const r=this.data.mobileStory?.rescue;return !!(r?.completedAt&&r.wins.every(Boolean));}
   fluteRewardText(){return '등나무노인에게 포켓몬피리를 받았다!';}
@@ -294,7 +299,7 @@ class Adventure extends Engine{
   }
   snapshot(now=Date.now()){
     const s=super.snapshot(now);
-    return this.data.mobileStory?.safari?{...s,safari:safari.snapshot(this)}:s;
+    return {...s,...(this.data.mobileStory?.safari?{safari:safari.snapshot(this)}:{}),...(world.active(this)&&this.data.mobileStory?{location:{id:world.current(this).id,name:world.current(this).name}}:{})};
   }
   tick(now=Date.now()){
     if(this.presentation())return false;
@@ -305,6 +310,7 @@ class Adventure extends Engine{
     return this.offerLapras(now)||this.offerMansion(now)||this.offerDevice(now)||super.tick(now);
   }
   actionStatus(a,now=Date.now()){
+    if(a.kind==='travel'){const status=world.status(this,a.location);if(status)return status;}
     if(a.kind==='select'&&a.uid===this.data.activeId)return super.actionStatus(a,now);
     if(this.presentation())return {state:'waiting',reason:'대화가 끝나면 실행해요.'};
     return super.actionStatus(a,now);
@@ -335,7 +341,7 @@ class Adventure extends Engine{
       routes.unshift({kind:'event',text:event?'모험 중 특별한 만남으로 동료가 될 수 있어요.':'사파리존에서 만날 수 있어요.'});
       p.acquisition={...p.acquisition,wildAllowed:false,routes,summary:[...new Set(summary)].join(' · '),note:'일반 야생에서는 출현하지 않아요.'};
     }
-    return {...s,inventory:[...s.inventory,...items],scene:this.presentation(),activityMode:this.platform==='desktop'?'tokens':'walking',onboarding:story?.onboarding!=='done',discovery,rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this),silph:silph.snapshot(this),safari:{...safari.snapshot(this),canStart:this.canChallenge('safari-start')},mansion:{...mansion.snapshot(this),canStart:this.canChallenge('mansion-investigate')},mobileGymHints:hints};
+    return {...s,kantoWorld:world.snapshot(this),inventory:[...s.inventory,...items],scene:this.presentation(),activityMode:this.platform==='desktop'?'tokens':'walking',onboarding:story?.onboarding!=='done',discovery,rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this),silph:silph.snapshot(this),safari:{...safari.snapshot(this),canStart:this.canChallenge('safari-start')},mansion:{...mansion.snapshot(this),canStart:this.canChallenge('mansion-investigate')},mobileGymHints:hints};
   }
 }
 module.exports={Adventure:require('./johto-adventure.cjs').withJohto(Adventure)};

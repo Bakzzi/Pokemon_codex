@@ -5,7 +5,7 @@ for(const name of ['adventure','rivals','rescue','silph','safari','mansion'])ass
 const shared=require('../../shared/adventure.cjs').Adventure,desktop=require('../adventure.cjs').Adventure;
 assert.ok(desktop.prototype instanceof shared,'Desktop must use shared adventure');
 assert.ok(read('desktop/main.cjs').includes("require('./adventure.cjs')"),'Desktop runtime must start the shared adventure');
-for(const name of ['panel-layout.js','rival-panel.js','rescue-panel.js','exploration-panel.js','league-portraits.js','challenge-ui.js','johto-art.js','johto-panel.js']){
+for(const name of ['panel-layout.js','rival-panel.js','rescue-panel.js','exploration-panel.js','league-portraits.js','challenge-ui.js','johto-art.js','johto-panel.js','world-map.js']){
   assert.equal(fs.existsSync(path.join(root,'mobile/web',name)),false,'Duplicated UI: '+name);
   assert.equal(read('desktop/panels.html').split('src="'+name+'"').length,2,'Missing or duplicate PC script: '+name);
   assert.ok(read('mobile/scripts/build-web.cjs').includes("'"+name+"'"),'Android must bundle shared UI: '+name);

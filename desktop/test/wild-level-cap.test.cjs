@@ -44,15 +44,16 @@ test('Johto follows its own original gym and league averages, with Clair badge a
 
 test('dex probabilities use the same capped pool and distinguish badge gating from partner level',()=>{
  for(const Type of [PC,Android]){const g=fixture(Type),entry=id=>g.panelState(now).collection.find(p=>p.id===id).acquisition.routes.find(r=>r.kind==='wild');
-  assert.equal(entry(18).chance,0);assert.match(entry(18).text,/상한 Lv\.36/);const actual=wildDistribution(1,100,g.wildOptions()).pokemon.find(p=>p.id===16);assert.equal(entry(16).chance,actual.chance);
-  g.data.badges=badges.slice(0,7);assert.ok(entry(18).chance>0);g.data.owned[g.data.activeId].level=10;assert.equal(entry(18).chance,0);assert.match(entry(18).text,/Lv\.36/);
+  assert.equal(entry(18).chance,0);assert.match(entry(18).note,/상한이 Lv\.36/);const actual=wildDistribution(1,100,g.wildOptions()).pokemon.find(p=>p.id===16);assert.equal(entry(16).chance,actual.chance);
+  g.data.badges=[...badges];g.data.kantoWorld.location='route-23';assert.ok(entry(18).chance>0);
+  g.data.owned[g.data.activeId].level=10;assert.equal(entry(18).chance,0);assert.match(entry(18).note,/Lv\.36/);
   const j=johto(Type);j.data.johto.cleared['j-burned']=now;assert.equal(j.panelState(now).collection.find(p=>p.id===243).acquisition.routes.find(r=>r.kind==='wild').chance,0);
  }
 });
 
 test('reload preserves existing high-level wilds, suspended wilds, partner XP, and applies caps to the next encounter',()=>{
  for(const Type of [PC,Android]){const g=fixture(Type);g.data.champion=true;g.newWild(now);g.data.battle.foe=require('../battle.cjs').combatant(g.data.battle.foe.id,100);g.data.suspendedWild=structuredClone(g.data.battle);g.data.champion=false;const before=structuredClone(g.data),loaded=new Type(g.data,now+1);
-  assert.deepEqual(loaded.data.battle,before.battle);assert.deepEqual(loaded.data.suspendedWild,before.suspendedWild);assert.equal(loaded.data.owned[25].xp,before.owned[25].xp);assert.equal(loaded.data.owned[25].level,100);loaded.newWild(now+2);assert.equal(loaded.data.battle.foe.level,10);
+  assert.deepEqual(loaded.data.battle,before.battle);assert.deepEqual(loaded.data.suspendedWild,before.suspendedWild);assert.equal(loaded.data.owned[25].xp,before.owned[25].xp);assert.equal(loaded.data.owned[25].level,100);loaded.newWild(now+2);assert.ok(loaded.data.battle.foe.level<=5);assert.equal(loaded.wildLevelCap(),10);
  }
 });
 
@@ -85,7 +86,7 @@ test('Johto postgame follows each next original revisit gym, including lower cap
 });
 
 test('original legendary minimums remain obtainable in late progress without a large league-clear boost',()=>{
- for(const Type of [PC,Android]){const g=fixture(Type);g.data.badges=[...badges];assert.equal(g.wildLevelCap(),47);assert.ok(!wildDistribution(1,100,g.wildOptions()).pokemon.some(p=>species.get(p.id).legendary));g.data.champion=true;assert.equal(g.wildLevelCap(),52);assert.ok(wildDistribution(1,100,g.wildOptions()).pokemon.some(p=>p.id===145));
+ for(const Type of [PC,Android]){const g=fixture(Type);g.data.badges=[...badges];g.data.kantoWorld.location='power-plant';assert.equal(g.wildLevelCap(),47);assert.ok(!wildDistribution(1,100,g.wildOptions()).pokemon.some(p=>species.get(p.id).legendary));g.data.champion=true;assert.equal(g.wildLevelCap(),52);assert.ok(wildDistribution(1,100,g.wildOptions()).pokemon.some(p=>p.id===145));
   const j=johto(Type);j.data.johto.champion=true;for(const n of J.nodes.values())j.data.johto.cleared[n.id]=now;const distribution=wildDistribution(2,100,j.wildOptions());for(const id of J.specialIds)assert.ok(distribution.pokemon.some(p=>p.id===id));assert.ok(distribution.pokemon.some(p=>p.id===248));
  }
 });

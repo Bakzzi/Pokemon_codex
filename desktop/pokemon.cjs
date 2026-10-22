@@ -65,12 +65,15 @@ function captureBonus(id,caught={}){
   const rule=captureMilestones.find(rule=>rule.targets.includes(id));
   return rule&&data.pokemon.every(p=>p.generation!==(rule.generation||1)||rule.excluded.includes(p.id)||!!caught[p.id])?rule.extra:0;
 }
-function wildDistribution(maxGeneration,partnerLevel,{champion=false,caught={},minimumLevel=0,maximumLevel=100,additions=[],excluded=[]}={}){
-  const all=data.pokemon.filter(p=>!excluded.includes(p.id)&&wildEligible(p,maxGeneration,Math.min(partnerLevel,maximumLevel))),baseRates=encounterChances(),common=all.filter(p=>rarity(p)==='common');
+function wildDistribution(maxGeneration,partnerLevel,{champion=false,caught={},minimumLevel=0,maximumLevel=100,additions=[],excluded=[],habitat=null}={}){
+  const local=habitat&&new Map(habitat.map(p=>[p.id,p.weight]));
+  const all=data.pokemon.filter(p=>(!local||local.has(p.id))&&!excluded.includes(p.id)&&wildEligible(p,maxGeneration,Math.min(partnerLevel,maximumLevel))),baseRates=encounterChances(),common=all.filter(p=>rarity(p)==='common');
+  if(!all.length)throw new Error('No eligible wild Pokemon in this habitat');
   const pokemon=all.map(p=>({id:p.id,tier:rarity(p),base:0,chance:0})),byId=new Map(pokemon.map(p=>[p.id,p])),bonus=championBonus(minimumLevel);
   for(const [tier,rate] of Object.entries(baseRates)){
-    const preferred=all.filter(p=>rarity(p)===tier),pool=preferred.length?preferred:common;
-    for(const p of pool)byId.get(p.id).base+=rate/pool.length;
+    const preferred=all.filter(p=>rarity(p)===tier),fallback=common.length?common:all.filter(p=>!p.legendary&&!p.mythical),pool=preferred.length?preferred:fallback.length?fallback:all;
+    const total=pool.reduce((sum,p)=>sum+(local?.get(p.id)||1),0);
+    for(const p of pool)byId.get(p.id).base+=rate*(local?.get(p.id)||1)/total;
   }
   let total=0;
   for(const p of pokemon){

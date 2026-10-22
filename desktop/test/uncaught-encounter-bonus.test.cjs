@@ -77,11 +77,12 @@ test('PC and Android both remove bonuses based on permanent registration, includ
   for(const Adventure of [Desktop,Mobile]){
     const g=new Adventure({},now);g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;
     g.data.champion=true;g.data.caught=registered([144,146,151]);
+    g.data.kantoWorld.location='seafoam';
     const active=g.data.owned[g.data.activeId];active.level=100;active.xp=xpAt(active.id,100);
     const before=structuredClone(g.data),d=wildDistribution(1,100,g.wildOptions());
-    assert.equal(entry(d,19).weight,1);assert.ok(entry(d,144).weight>1);assert.deepEqual(g.data,before);
+    assert.equal(entry(d,41).weight,1);assert.ok(entry(d,144).weight>1);assert.deepEqual(g.data,before);
     g.data.caught[144]=now;const after=wildDistribution(1,100,g.wildOptions());
     assert.equal(entry(after,144).weight,1);assert.ok(entry(after,144).chance<entry(d,144).chance);
-    assert.ok(!Object.values(g.data.owned).some(p=>p.id===19));assert.equal(entry(after,19).weight,1);
+    assert.ok(!Object.values(g.data.owned).some(p=>p.id===41));assert.equal(entry(after,41).weight,1);
   }
 });

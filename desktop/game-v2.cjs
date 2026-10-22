@@ -17,7 +17,7 @@ const nursery=require('./daycare.cjs');
 const {collectionHints}=require('./acquisition.cjs');
 const training=require('./training-device.cjs');
 const discovery=require('../shared/challenge-discovery.cjs');
-const ACTION_KINDS=new Set(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner']);
+const ACTION_KINDS=new Set(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel']);
 function moveDetails(p,entry){
   const saved=moves.get(entry.move),move=battleEngine.dex.moves.get(saved.identifier);
   const type=db.types.find(t=>t.identifier===(move.type==='???'?'unknown':move.type.toLowerCase()));
@@ -28,6 +28,7 @@ function moveDetails(p,entry){
 }
 function actionPayload(kind,value){
   if(!ACTION_KINDS.has(kind))return null;
+  if(kind==='travel')return typeof value==='string'&&/^[a-z][a-z0-9-]{0,40}$/.test(value)?{location:value}:null;
   if(kind==='select')return Number.isSafeInteger(Number(value))&&Number(value)>0?{uid:Number(value)}:null;
   if(kind==='device-learner')return value===null?{uid:null}:Number.isSafeInteger(value)&&value>0?{uid:value}:null;
   if(kind==='slot')return Number.isInteger(value?.slot)&&value.slot>=0&&value.slot<PARTY_SIZE&&(value.id===null||Number.isSafeInteger(value.id)&&value.id>0)?{slot:value.slot,uid:value.id}:null;
@@ -38,7 +39,7 @@ function actionPayload(kind,value){
 }
 function restoreAction(a){
   if(!a||!Number.isSafeInteger(a.id)||a.id<1||!validCount(a.queuedAt))return null;
-  const value=['select','device-learner'].includes(a.kind)?a.uid:a.kind==='slot'?{slot:a.slot,id:a.uid}:a.kind==='evolve'?{id:a.uid,to:a.to}:a.kind==='johto-unlock'?{speciesIds:a.speciesIds}:a.parents;
+  const value=a.kind==='travel'?a.location:['select','device-learner'].includes(a.kind)?a.uid:a.kind==='slot'?{slot:a.slot,id:a.uid}:a.kind==='evolve'?{id:a.uid,to:a.to}:a.kind==='johto-unlock'?{speciesIds:a.speciesIds}:a.parents;
   const payload=actionPayload(a.kind,value);if(!payload)return null;
   if(a.kind==='evolve'&&!species.has(a.from))return null;
   return {id:a.id,kind:a.kind,queuedAt:a.queuedAt,...payload,...(a.kind==='evolve'?{from:a.from}:{})};
@@ -229,6 +230,7 @@ class Game {
   battleBoss(b=this.data.battle){return training.battles[b.bossIndex]||db.bosses[b.bossIndex];}
   actionName(a){
     const name=uid=>species.get(this.data.owned[uid]?.id)?.name||'동료';
+    if(a.kind==='travel')return (this.travelName?.(a.location)||'장소')+'로 이동';
     if(a.kind==='select')return name(a.uid)+' 출전';
     if(a.kind==='slot')return a.uid===null?(a.slot+1)+'번 칸 비우기':name(a.uid)+' · '+(a.slot+1)+'번 칸 배치';
     if(a.kind==='evolve')return (species.get(a.from)?.name||name(a.uid))+' → '+species.get(a.to).name+' 진화';
@@ -240,6 +242,7 @@ class Game {
   actionStatus(a,now=Date.now()){
     const p=this.data.owned[a.uid],b=this.data.battle;
     const invalid=reason=>({state:'invalid',reason}),wait=reason=>({state:'waiting',reason}),done={state:'done',reason:'이미 완료했어요.'};
+    if(a.kind==='travel'){const status=this.travelStatus?this.travelStatus(a.location):invalid('지금은 이동할 수 없어요.');if(status)return status;}
     if(a.kind==='device-claim'&&training.has(this))return done;
     if(a.kind==='device-learner'){
       if(!training.has(this))return invalid('학습장치를 먼저 받아 주세요.');
@@ -293,6 +296,7 @@ class Game {
   }
   executeAction(a,now){
     let result=false;const previousActive=this.data.activeId;
+    if(a.kind==='travel')result=this.travelTo?.(a.location,now)||false;
     if(a.kind==='select'){result=this.select(a.uid,now);if(result)this.data.manualSelection=true;}
     if(a.kind==='slot'){
       const removed=a.uid===null?this.data.slots[a.slot]:null;
@@ -323,7 +327,7 @@ class Game {
     if(kind==='slot'&&a.uid===null)this.cancelPlacementRequests(this.data.slots[a.slot],now);
     const sameIntent=q=>q.kind===kind&&(kind==='evolve'?q.uid===a.uid:kind==='slot'?q.slot===a.slot:true)||kind.startsWith('johto-')&&q.kind.startsWith('johto-');
     const existing=this.data.pendingActions.find(sameIntent);
-    if(existing&&existing.uid===a.uid&&existing.to===a.to&&existing.from===a.from&&existing.slot===a.slot&&JSON.stringify(existing.parents)===JSON.stringify(a.parents)&&JSON.stringify(existing.speciesIds)===JSON.stringify(a.speciesIds))return true;
+    if(existing&&existing.location===a.location&&existing.uid===a.uid&&existing.to===a.to&&existing.from===a.from&&existing.slot===a.slot&&JSON.stringify(existing.parents)===JSON.stringify(a.parents)&&JSON.stringify(existing.speciesIds)===JSON.stringify(a.speciesIds))return true;
     if(!existing&&this.data.pendingActions.length>=32&&status.state!=='done')return false;
     if(existing)this.cancelAction(existing.id,now,'새 선택으로 변경');
     if(status.state==='done')return true;
@@ -533,9 +537,11 @@ class Game {
     this.data.pendingBattle=null;
     this.data.captureAnimation=null;
     const hero=this.data.owned[this.data.activeId],options=this.wildOptions(),id=pickWild(this.maxGeneration(),this.random,hero.level,options),p=species.get(id);
-    const level=Math.max(wildMinimum(p),Math.min(options.maximumLevel,hero.level-5+Math.floor(this.random()*11)));
+    const low=options.minimumEncounterLevel===undefined?Math.max(wildMinimum(p),hero.level-5):Math.max(wildMinimum(p),options.minimumEncounterLevel);
+    const high=options.minimumEncounterLevel===undefined?Math.min(options.maximumLevel,hero.level+5):options.maximumLevel;
+    const level=options.minimumEncounterLevel===undefined?Math.max(wildMinimum(p),Math.min(options.maximumLevel,hero.level-5+Math.floor(this.random()*11))):low+Math.floor(this.random()*(Math.max(low,high)-low+1));
     const party=Object.fromEntries(this.data.slots.filter(uid=>uid!==null&&!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
-    this.data.battle={kind:'wild',foe:combatant(id,level,null,{abilitySlot:Math.floor(this.random()*p.abilities.length),gender:nursery.genderFor(id,this.random)}),party,turn:0,captureAttempts:0,startedAt:now};
+    this.data.battle={kind:'wild',foe:combatant(id,level,null,{abilitySlot:Math.floor(this.random()*p.abilities.length),gender:nursery.genderFor(id,this.random)}),party,turn:0,captureAttempts:0,startedAt:now,...(options.location?{location:options.location}:{})};
     const first=!this.data.seen[id];this.data.seen[id]=this.data.seen[id]||now;
     this.animate('encounter',{text:`야생 ${p.name} Lv.${level} 등장!`,id},now);
     if(first||p.legendary||p.mythical)this.log(`${p.name} Lv.${level} 발견`,'encounter',id,now);

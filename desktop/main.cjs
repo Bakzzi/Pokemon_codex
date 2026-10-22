@@ -108,7 +108,7 @@ async function start(){
       if(action==='remote-key-file'&&panel){
         dialog.showOpenDialog(panel,{title:'SSH 개인키 선택',properties:['openFile']}).then(result=>{if(!result.canceled&&panel&&!panel.isDestroyed())panel.webContents.send('key-file',result.filePaths[0]);}).catch(()=>{});
       }
-      if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner'].includes(action))result=game.requestAction(action,value);
+      if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel'].includes(action))result=game.requestAction(action,value);
       if(action==='action-cancel')result=game.cancelAction(value);
       if(action==='capture-reserve')result=game.reserveCapture(value,1);
       if(action==='capture-cancel')result=game.reserveCapture(value,0);
@@ -153,7 +153,44 @@ async function start(){
       fs.writeFileSync(path.join(dataDir,'widget.png'),(await win.webContents.capturePage()).toPNG());
     }catch(error){console.error(error.message);}
   },3000);
-  if(smoke)await (process.argv.includes('--johto-smoke')?johtoSmokeTest():process.argv.includes('--safari-smoke')?safariSmokeTest():smokeTest());
+  if(smoke)await (process.argv.includes('--world-smoke')?worldSmokeTest():process.argv.includes('--johto-smoke')?johtoSmokeTest():process.argv.includes('--safari-smoke')?safariSmokeTest():smokeTest());
+}
+async function worldSmokeTest(){
+ const assert=require('node:assert/strict'),checks=[],errors=[],world=require('../shared/kanto-world.cjs');
+ const wait=ms=>new Promise(r=>setTimeout(r,ms)),check=(ok,label)=>{assert.ok(ok,label);checks.push(label);};
+ const read=code=>panel.webContents.executeJavaScript(code);
+ win.webContents.on('console-message',(_e,d)=>{if(d.level>=3)errors.push(d.message);});
+ try{
+  game.data.mobileStory.onboarding='done';game.data.mobileStory.scene=null;game.data.switchUntil=0;game.nextTick=Date.now();
+  await openPanel('challenge');panel.webContents.on('console-message',(_e,d)=>{if(d.level>=3)errors.push(d.message);});publish(true);await wait(160);
+  check(snapshot().location.id==='route-1','actual widget snapshot carries the current travel location');
+  check(await read("!!document.getElementById('reset-game')"),'PC reset remains available in connection settings');
+  check(await read("!document.getElementById('kanto-world').open"),'map starts collapsed with the other challenge cards');
+  check(await read("document.querySelectorAll('#world-place option').length===49"),'all first-region places reach the actual panel publisher');
+  await read("document.getElementById('kanto-world').open=true;document.getElementById('world-place').value='forest';document.getElementById('world-place').dispatchEvent(new Event('change'));document.querySelector('.world-controls>button').click()");await wait(100);
+  check(game.data.pendingActions.some(a=>a.kind==='travel'&&a.location==='forest'),'real panel IPC queues travel during a wild encounter');
+  check(snapshot().location.id==='route-1','queued travel preserves the ongoing encounter location');
+  check(await read("document.querySelector('.world-controls>button').textContent==='이동 예약됨'"),'actual publisher returns the queued location to the panel');
+  game.data.battle=null;game.data.pendingBattle=null;game.data.switchUntil=0;game.nextTick=Date.now();game.tick(Date.now());publish(true);await wait(100);
+  check(snapshot().location.id==='forest','actual main executes travel after the encounter boundary');
+  check(await win.webContents.executeJavaScript("document.getElementById('status').textContent.startsWith('상록숲 · ')"),'widget renderer presents the published location');
+  check(await read("document.querySelector('.world-marker.current').getAttribute('aria-label')==='상록숲'"),'map current marker follows the executed move');
+  await read("document.getElementById('world-place').value='route-3';document.getElementById('world-place').dispatchEvent(new Event('change'))");
+  check(await read("document.querySelector('.world-controls>button').disabled"),'future route cannot be selected for travel before its badge');
+  check(!game.requestAction('travel','route-3'),'the game rejects a forged locked-route action');
+  const party=JSON.stringify(game.data.owned),tokens=game.data.workTokens;game.data.badges=['brock'];publish(true);await wait(80);
+  check(await read("!document.querySelector('.world-controls>button').disabled"),'the actual panel unlocks the next stretch after a badge');
+  await read("document.querySelector('.world-controls>button').click()");await wait(100);publish(true);await wait(80);
+  check(snapshot().location.id==='route-3','unlocked travel reaches the actual model through IPC');
+  check(JSON.stringify(game.data.owned)===party&&game.data.workTokens===tokens,'travel preserves companions and banked activity');
+  game.newWild(Date.now());publish(true);await wait(100);const options=game.wildOptions();
+  check(options.habitat.some(p=>p.id===game.data.battle.foe.id)&&game.data.battle.foe.level<=options.maximumLevel,'actual encounter uses the selected local pool and range');
+  check(snapshot().location.id===game.data.battle.location,'new battle records its location consistently with widget state');
+  check(world.current(game).name==='3번도로','main uses the shared world rules');
+  await read("document.getElementById('kanto-world').open=true");fs.writeFileSync(path.join(dataDir,'world-pc.png'),(await panel.webContents.capturePage()).toPNG());
+  check(errors.length===0,'actual main and panel have no renderer errors');
+  fs.writeFileSync(path.join(dataDir,'world-main-result.json'),JSON.stringify({ok:true,checks,errors,version:app.getVersion(),statePath:'main snapshot -> publish -> preload -> renderer; panel travel -> IPC -> shared game'},null,2));app.exit(0);
+ }catch(error){fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'world-main-error.txt'),error.stack||String(error));app.exit(1);}
 }
 async function johtoSmokeTest(){
   const assert=require('node:assert/strict'),checks=[],errors=[],J=require('../shared/johto.cjs');

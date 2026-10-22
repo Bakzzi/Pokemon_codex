@@ -217,5 +217,6 @@ window.buddy.onState(s=>{
   }
   renderPartyStatus(s);
   document.querySelector('[data-panel="challenge"]').title='획득한 뱃지 '+s.badges.length+' / 8';
+  if(s.location&&!s.safari?.active)$('status').textContent=s.location.name+' · '+$('status').textContent;
   eventFx(s.animation);refreshScene();safariPresentation.render(s);
 });
