@@ -1,0 +1,69 @@
+{
+  "version": "0.1.49",
+  "versionCode": 51,
+  "platform": "android",
+  "channel": "android-preview",
+  "sourceCommit": "2bf73abecf84de239b7d03631a6f35d70b9024fa",
+  "sourceTag": "android-v0.1.49",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/android-v0.1.49",
+  "package": "io.github.bakzzi.pokemonidle",
+  "minSdk": 31,
+  "targetSdk": 36,
+  "artifact": "Pokemon-Idle-0.1.49.apk",
+  "bytes": 39123891,
+  "sha256": "3626d0092fcfc6157934ffb18708e26fde8f7474442ddf3644d55f263b7652b1",
+  "signingCertificateSha256": "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+  "toolchain": {
+    "node": "22.11.0",
+    "gradle": "8.13",
+    "agp": "8.13.0",
+    "compileSdk": 36,
+    "buildTools": "36.1.0",
+    "javaScriptEngine": "androidx.javascriptengine:javascriptengine:1.1.1",
+    "dependencyLockfile": "mobile/android/app/gradle.lockfile"
+  },
+  "validation": {
+    "releaseBuild": "passed",
+    "androidLintErrors": 0,
+    "apkSignatureVerified": true,
+    "embeddedBundleSha256": "4cb8b158e3a45a06c0b3bbd083c5e79eeefc4e17dcaa014e57b137b235bc587a",
+    "embeddedFilesMatched": 454,
+    "nodeTestsPassed": 683,
+    "embeddedApkWebRuntimeChecksPassed": 18,
+    "androidNativeWebViewVerified": false,
+    "physicalDeviceVerified": false,
+    "nativePlatformCodeUnchangedFrom": "0.1.48"
+  },
+  "retention": {
+    "latestAndroid": "0.1.49",
+    "previousAndroid": "0.1.48",
+    "additionalUnconfirmedDeviceVersions": [
+      "0.1.30",
+      "0.1.31",
+      "0.1.32",
+      "0.1.33",
+      "0.1.34",
+      "0.1.35",
+      "0.1.36",
+      "0.1.37",
+      "0.1.38",
+      "0.1.39",
+      "0.1.40",
+      "0.1.41",
+      "0.1.42",
+      "0.1.43",
+      "0.1.44",
+      "0.1.45",
+      "0.1.46",
+      "0.1.47"
+    ]
+  },
+  "activity": {
+    "lockedMillisecondsPerAction": 10000,
+    "stepsPerAction": 10,
+    "walkingRequiresLock": false,
+    "foregroundWalkingAnimated": true,
+    "unlockedIdleAdventure": false,
+    "foregroundChallenges": true
+  }
+}
