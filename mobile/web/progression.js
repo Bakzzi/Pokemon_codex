@@ -4,6 +4,7 @@
   class Progression{
     constructor(core,saved={},stepsPerAction=10){
       this.game=core;this.consumed=Number.isSafeInteger(saved.consumed)?saved.consumed:0;
+      this.dirty=false;
       this.lockConsumed=Number.isSafeInteger(saved.lockConsumed)?saved.lockConsumed:0;
       this.stepsPerAction=stepsPerAction;this.foreground=false;this.pausedAt=Number.isFinite(saved.pausedAt)?saved.pausedAt:0;
       // Game recreates nextTick at launch. Restore its old clock before shifting
@@ -28,27 +29,37 @@
       if(changed)root.MobileCore.nursery.advance(g,250,now);
       return changed;
     }
-    observe(totals){this.game.lockEpoch=Number.isSafeInteger(totals.lockEpoch)?totals.lockEpoch:0;}
+    observe(totals){if(Number.isSafeInteger(totals.lockEpoch))this.game.lockEpoch=totals.lockEpoch;if(this.game.recordTravelSteps?.(totals.steps))this.dirty=true;}
+    mapTick(now){
+      const g=this.game,d=g.data,w=d.johtoUnlocked?d.johtoWorld:d.kantoWorld;
+      if(g.platform!=='mobile'||!w?.journey&&!d.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind))||d.battle||d.pendingBattle||d.suspendedWild||d.pendingChallenge||g.presentation?.())return false;
+      const walk=w?.walk,end=walk&&walk.at+walk.duration;
+      // Fast-forward only the map's short arrival animation, never a battle result.
+      if(walk?.stepTravel&&g.nextTick<=end&&(d.switchUntil||0)<=end){g.nextTick=Math.min(g.nextTick,now);d.switchUntil=Math.min(d.switchUntil||0,now);walk.at=Math.min(walk.at,now-walk.duration);}
+      if(!g.controlTick(now))return false;this.dirty=true;return true;
+    }
     walkingReady(steps){return Number.isSafeInteger(steps)&&steps>=this.consumed+this.stepsPerAction;}
     live(now,totals={}){
       if(!this.foreground)return false;
+      this.observe(totals);
       const g=this.game,b=g.data.battle;
-      if(g.presentation?.())return g.sceneTick(now);
-      if(b?.kind==='trainer'||b?.storyId)return this.step(now);
+      if(g.presentation?.())return g.sceneTick(now)||this.dirty;
+      if(b?.kind==='trainer'||b?.storyId)return this.step(now)||this.dirty;
       if(g.controlTick(now))return true;
       // New foreground steps use ordinary animation waits, one paid action at a
       // time. The offline fast-forward path must not hide these live actions.
-      if(!this.walkingReady(totals.steps)||now<g.nextTick||now<g.data.switchUntil)return false;
+      if(!this.walkingReady(totals.steps)||now<g.nextTick||now<g.data.switchUntil)return this.dirty;
       if(b)delete b.resumeAfterLock;
       if(!g.walkingStep?.(this.stepsPerAction,now)&&!this.step(now))return false;
       this.consumed+=this.stepsPerAction;return true;
     }
     catchUp(total,now,maxActions=100){
       const steps=typeof total==='object'?total.steps:total,locked=typeof total==='object'?total.lockMillis:0;
-      this.observe(typeof total==='object'?total:{});
+      this.observe(typeof total==='object'?total:{steps});
       const available=(n,cost,cursor)=>Number.isSafeInteger(n)&&n>=cursor?Math.floor((n-cursor)/cost):0;
-      const g=this.game;let used=0;
+      const g=this.game;let used=0,moves=0;
       for(;used<maxActions;used++){
+        if(moves<512&&this.mapTick(now)){moves++;used--;continue;}
         const walking=available(steps,this.stepsPerAction,this.consumed)>0;
         if(!walking&&!available(locked,10000,this.lockConsumed))break;
         // Manual dialogue must preserve every unspent walking action.
@@ -72,6 +83,7 @@
         if(!this.step(now))break;
         if(walking)this.consumed+=this.stepsPerAction;else this.lockConsumed+=10000;
       }
+      while(moves<512&&this.mapTick(now))moves++;
       return used;
     }
     checkpoint(){return {consumed:this.consumed,lockConsumed:this.lockConsumed,pausedAt:this.pausedAt,nextTick:this.game.nextTick};}

@@ -27,14 +27,23 @@ final class BackgroundAdventure {
     void request(){requested.set(true);if(!queued.compareAndSet(false,true))return;worker.execute(this::drain);}
     private long total(){return context.getSharedPreferences("steps",0).getLong("total",0);}
     private long locked(){return context.getSharedPreferences("steps",0).getLong("lockMillis",0);}
-    private boolean available(JSONObject mobile){return total()-(mobile==null?0:mobile.optLong("consumed",0))>=10||locked()-(mobile==null?0:mobile.optLong("lockConsumed",0))>=10000;}
+    private boolean available(JSONObject save){
+        JSONObject mobile=save.optJSONObject("mobile"),game=save.optJSONObject("game");
+        if(total()-(mobile==null?0:mobile.optLong("consumed",0))>=10||locked()-(mobile==null?0:mobile.optLong("lockConsumed",0))>=10000)return true;
+        if(game==null)return false;
+        JSONObject map=game.optJSONObject(game.optBoolean("johtoUnlocked")?"johtoWorld":"kantoWorld"),distance=game.optJSONObject("mapTravel");
+        boolean moving=map!=null&&map.optJSONObject("journey")!=null;
+        JSONArray pending=game.optJSONArray("pendingActions");
+        if(pending!=null)for(int i=0;i<pending.length();i++){JSONObject a=pending.optJSONObject(i);if(a!=null&&(a.optString("kind").equals("travel")||a.optString("kind").equals("world-pass")))moving=true;}
+        return moving&&distance!=null&&(total()>distance.optLong("observed",total())||distance.optLong("credit",0)>=2000);
+    }
     private void drain(){
         boolean retry=false;PowerManager.WakeLock wake=null;busy=true;requested.set(false);
         try{
             AdventureStore.Snapshot before=store.backgroundSnapshot();
             if(before==null)return;
             JSONObject save=new JSONObject(before.raw);
-            if(!available(save.optJSONObject("mobile")))return;
+            if(!available(save))return;
             if(idle!=null)idle.cancel(false);
             wake=context.getSystemService(PowerManager.class).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"PokemonIdle:walking");wake.acquire(45000);
             ensureEngine();
@@ -44,13 +53,14 @@ final class BackgroundAdventure {
                 long count=total(),now=System.currentTimeMillis();
                 String code="MobileBackground.run("+JSONObject.quote(before.raw)+",{steps:"+count+",lockMillis:"+locked()+",lockEpoch:"+context.getSharedPreferences("steps",0).getLong("lockEpoch",0)+"},"+now+")";
                 JSONObject result=new JSONObject(isolate.evaluateJavaScriptAsync(code).get(30,TimeUnit.SECONDS));
-                if(result.getInt("used")==0)break;
+                if(result.getInt("used")==0&&!result.optBoolean("changed"))break;
                 if(!store.commitBackground(before,result.getJSONObject("save").toString()))break;
                 completed++;
                 context.getSharedPreferences("steps",0).edit().remove("backgroundError").apply();
+                if(result.getInt("used")==0)break;
             }
             AdventureStore.Snapshot remaining=store.backgroundSnapshot();
-            if(completed==32&&remaining!=null)retry=available(new JSONObject(remaining.raw).optJSONObject("mobile"));
+            if(completed==32&&remaining!=null)retry=available(new JSONObject(remaining.raw));
         }catch(Exception e){closeEngine();context.getSharedPreferences("steps",0).edit().putString("backgroundError","백그라운드 모험이 잠시 멈췄어요. 앱을 열면 기록한 활동으로 이어가요.").apply();android.util.Log.e("PokemonBackground","Adventure action not committed",e);}
         finally{if(wake!=null&&wake.isHeld())wake.release();busy=false;queued.set(false);if(isolate!=null){if(idle!=null)idle.cancel(false);idle=worker.schedule(this::closeEngine,60,TimeUnit.SECONDS);}if(retry||requested.get())request();}
     }

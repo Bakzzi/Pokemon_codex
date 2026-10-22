@@ -1,5 +1,6 @@
 'use strict';
 const walking=require('../desktop/map-walk.js');
+const steps=require('./step-travel.cjs');
 const same=(a,b)=>a.x===b.x&&a.y===b.y;
 const minimum=10,maximum=20;
 const isRoad=id=>/^(?:j-(?:k-)?)?route-?\d+$/.test(id);
@@ -21,6 +22,7 @@ function move(game,state,map,id,to,open,name,now){
  const result=plan(map,state.position||map.points[state.location],to,open);if(!result)return false;
  // A town and its interior can share one map pixel while having different gates.
  if(!result.blocked&&!open(id)){result.blocked=id;result.gate={...to};}
+ if(game.platform==='mobile')return steps.start(game,state,map,result,id,to,name,now);
  const segments=[];
  for(const p of result.path){
   const location=map.roads.find(c=>same(c,p)).place,last=segments.at(-1);
@@ -40,6 +42,7 @@ function enter(game,state,now){
 function advance(game,state,now){
  const trip=state.journey;
  if(!trip||game.seasonDue?.(now)||game.data.battle||game.data.suspendedWild||game.data.pendingBattle||game.data.pendingChallenge||game.presentation?.()||now<game.nextTick||now<game.data.switchUntil||game.data.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind)))return false;
+ if(game.platform==='mobile')return steps.advance(game,state,now);
  const leaving=trip.index+1<trip.segments.length||trip.blocked;
  const p=progress(state,game.random);if(leaving&&p&&p.completed<p.required)return false;
  if(trip.index+1<trip.segments.length){trip.index++;enter(game,state,now);return true;}

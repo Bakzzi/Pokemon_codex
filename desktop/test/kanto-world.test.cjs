@@ -49,7 +49,7 @@ test('dex uses exact current habitat probabilities and tells the player to chang
  assert.equal(hint(16).chance,wildDistribution(1,100,g.wildOptions()).pokemon.find(p=>p.id===16).chance);assert.equal(hint(144).chance,0);assert.match(hint(144).text,/쌍둥이섬/);assert.ok(!panel.collection.find(p=>p.id===65).acquisition.routes.some(r=>r.kind==='wild'));
 });
 test('PC and Android share geography; second-region wilds do not inherit the first road habitat or levels',()=>{
- const pc=late(PC),android=new Android(pc.data,now);assert.deepEqual(pc.panelState(now).kantoWorld,android.panelState(now).kantoWorld);
+ const pc=late(PC),android=new Android(pc.data,now);const a=pc.panelState(now).kantoWorld,b=android.panelState(now).kantoWorld;for(const key of ['map','places','levels'])assert.deepEqual(a[key],b[key]);assert.equal(b.travelMode,'steps');assert.equal(b.roadProgress,null);
  assert.ok(pc.unlockJohto(now,[25]));assert.deepEqual(pc.wildOptions().habitat,require('../../shared/johto-world.cjs').habitat(pc));assert.equal(pc.wildOptions().minimumEncounterLevel,undefined);assert.equal(pc.snapshot(now).location.id,'j-newbark');assert.equal(pc.panelState(now).kantoWorld.active,false);assert.ok(!pc.requestAction('travel','forest',now));
 });
 test('new season clears travel and visited places while permanent collection registration survives',()=>{

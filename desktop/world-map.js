@@ -38,7 +38,7 @@
   raf=0;if(!world||!actor)return;const ownZone=!world.maps||zone===world.zone,walk=ownZone?world.walk:null,frame=walk?MapWalk.frame(walk,Date.now()):{...world.position,walking:false,direction:world.facing,sprite:{up:1,left:2,right:2}[world.facing]||0};
   actor.hidden=!ownZone;actor.classList.toggle('walking',frame.walking);actor.style.left=frame.x/currentMap().width*100+'%';actor.style.top=frame.y/currentMap().height*100+'%';actor.dataset.x=frame.x;actor.dataset.y=frame.y;map.dataset.moving=String(frame.walking);
   const c=world.checkpoint;guard.hidden=!ownZone||!c||!!frame.walking;if(c){const p=c.gatePosition||world.position;guard.style.left=p.x/currentMap().width*100+'%';guard.style.top=p.y/currentMap().height*100+'%';guard.setAttribute('aria-label',c.name);guard.dataset.kind=c.sprite.startsWith('pokemon:')?'pokemon':'npc';guard.style.backgroundImage=c.sprite.startsWith('pokemon:')?'url(assets/'+c.sprite.slice(8)+'.gif)':'';}
-  caption.textContent=world.name+' · '+(!world.active?'지나온 길':frame.walking?'이동 중':world.roadProgress?'야생 만남 '+world.roadProgress.completed+' / '+world.roadProgress.required:'현재 위치');if(frame.walking)raf=requestAnimationFrame(draw);
+  caption.textContent=world.name+' · '+(!world.active?'지나온 길':frame.walking?'이동 중':world.stepProgress?'다음 칸까지 '+world.stepProgress.completed.toLocaleString('ko-KR')+' / 2,000걸음':world.roadProgress?'야생 만남 '+world.roadProgress.completed+' / '+world.roadProgress.required:'현재 위치');if(frame.walking)raf=requestAnimationFrame(draw);
  }
  function pick(id,position){
   const p=world?.places.find(p=>p.id===id);if(!p)return;choice=id;showPane('map');renderChoice();if(!world.active)return;
@@ -71,7 +71,7 @@
  }
  function renderChoice(){
   if(!world)return;const p=world.places.find(p=>p.id===choice)||world.places.find(p=>p.id===world.location);choice=p.id;selected.textContent=p.name;range.textContent=p.current?'현재 머무는 곳':p.visited?'다녀온 곳':'';
-  note.textContent=state.challengeReadOnly?'이전 모험은 모험 기록에서 볼 수 있어요.':world.pending?'진행 중인 배틀이 끝나면 이동해요.':world.journey?world.journey.name+'로 모험 중 · 지나치는 도로의 풀숲에서 야생 포켓몬을 만날 수 있어요!':world.walk?'레드가 길을 따라 이동하고 있어요.':'지나치는 도로의 풀숲에서 야생 포켓몬을 만날 수 있어요!';
+  note.textContent=state.challengeReadOnly?'이전 모험은 모험 기록에서 볼 수 있어요.':world.pending?'진행 중인 배틀이 끝나면 이동해요.':world.journey?world.journey.name+'로 모험 중 · '+(world.travelMode==='steps'?'한 칸마다 2,000걸음씩 이동해요.':'지나치는 도로의 풀숲에서 야생 포켓몬을 만날 수 있어요!'):world.walk?'레드가 길을 따라 이동하고 있어요.':'지나치는 도로의 풀숲에서 야생 포켓몬을 만날 수 있어요!';
   restoreList(inlineMounted);inlineMounted=[];local.replaceChildren();const gym=localGym(p);note.hidden=!!gym&&!world.pending&&!world.journey;
   if(gym?.card){range.textContent=p.name.replace(/(?:시티|마을|섬)$/,'')+'체육관';const heading=gym.card.querySelector('.gym-title h3');if(heading)heading.textContent='관장 '+gym.row.name;mount(gym.card,local);}
   cards.replaceChildren();if(world.active&&p.current&&!world.walk){if(world.checkpoint)cards.append(button('길목 살펴보기',()=>{context={npc:true};renderContext();if(!dialog.open)dialog.showModal();}));for(const a of activities(p.id).filter(a=>a.gym===undefined&&!['johto-gym-details','johto-kanto-gyms'].includes(a.key)))cards.append(button(a.title,()=>openPlace(p.id,a.key)));}

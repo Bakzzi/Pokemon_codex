@@ -90,6 +90,12 @@ class Adventure extends Engine{
   passCheckpoint(id,now){return world.pass(this,id,now);}
   advanceTravel(now){return world.active(this)&&world.advance(this,now);}
   onWildEnd(b,now){if(world.active(this))world.encounterEnded(this,b);}
+  recordTravelSteps(total){return require('./step-travel.cjs').observe(this,total);}
+  requestAction(kind,value,now=Date.now()){
+    if(this.platform!=='mobile'||!['travel','world-pass'].includes(kind))return super.requestAction(kind,value,now);
+    const steps=require('./step-travel.cjs'),before=steps.hasIntent(this),ok=super.requestAction(kind,value,now);
+    if(ok)steps.beginIntent(this,before);return ok;
+  }
   controlTick(now=Date.now()){return super.controlTick(now)||this.advanceTravel(now);}
   canReserveCapture(id){return id!==131&&super.canReserveCapture(id);}
   canReceiveFlute(){const r=this.data.mobileStory?.rescue;return !!(r?.completedAt&&r.wins.every(Boolean));}

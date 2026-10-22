@@ -2,7 +2,7 @@
 const $=id=>document.getElementById(id),native=window.Android;
 let saved,game,progression,active=false,catchingUp=false,updatePaused=false,ready=false,notice='',fatal=false,lastSave=0,panelTab='collection',panelDetail=false,nativeState={steps:0};
 try{saved=JSON.parse(native.load());game=new MobileCore.Adventure(saved.game||{});progression=new MobileProgression(game,saved.mobile,MobileConfig.stepsPerAction);}catch(e){fatal=true;notice='저장을 읽지 못했어요. 기존 데이터는 보존돼요. 앱을 다시 열어 주세요.';$('app-notice').textContent=notice;native.reportError(String(e));}
-function save(){if(fatal)return false;const ok=native.save(JSON.stringify({format:1,game:game.data,mobile:progression.checkpoint(),savedAt:Date.now()}));if(!ok){fatal=true;active=false;notice='진행을 저장하지 못해 모험을 멈췄어요. 저장 공간을 확인해 주세요.';}lastSave=Date.now();return ok;}
+function save(){if(fatal)return false;const ok=native.save(JSON.stringify({format:1,game:game.data,mobile:progression.checkpoint(),savedAt:Date.now()}));if(!ok){fatal=true;active=false;notice='진행을 저장하지 못해 모험을 멈췄어요. 저장 공간을 확인해 주세요.';}if(ok)progression.dirty=false;lastSave=Date.now();return ok;}
 function snapshot(){return {...game.panelState(),phase:'working',source:{connected:true},compact:false,pinned:false,demo:false,notice,remote:{connections:[]}};}
 function publish(){if(fatal){$('app-notice').textContent=notice;return;}const s=snapshot();for(const id of ['battle','panel'])$(id).contentWindow.postMessage({type:'state',state:s},location.origin);renderScene(s);$('app-notice').textContent=notice;}
 function openPanel(tab){panelTab=tab;panelDetail=false;$('back').textContent='‹ 모험으로';$('adventure').hidden=true;$('panel-wrap').hidden=false;$('panel').contentWindow.postMessage({type:'tab',tab},location.origin);publish();}
@@ -14,6 +14,7 @@ function action(action,value){
   if(action==='story-open'){$('adventure').hidden=false;$('panel-wrap').hidden=true;return;}
   let ok=true;
   try{
+    if(['travel','world-pass'].includes(action))refreshNative();
     if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass'].includes(action))ok=game.requestAction(action,value);
     else if(action==='action-cancel')ok=game.cancelAction(value);
     else if(action==='capture-reserve')ok=game.reserveCapture(value,1);
@@ -51,7 +52,7 @@ window.mobileLifecycle=function(visible,reload=false){
     if(!active||fatal||!native.foreground()){catchingUp=false;return;}
     try{refreshNative();if(applyReadyUpdate()){catchingUp=false;return;}const n=progression.catchUp(nativeState,Date.now(),10);actions+=n;
       if(n){notice='잠든 동안의 모험을 정리하는 중…';save();publish();setTimeout(drain,25);}
-      else{catchingUp=false;if(actions)notice='잠든 동안의 모험을 기록했어요.';publish();}
+      else{if(progression.dirty){save();publish();}catchingUp=false;if(actions)notice='잠든 동안의 모험을 기록했어요.';publish();}
     }catch(e){fatal=true;active=false;notice='모험을 처리하지 못했어요. 기존 저장은 보존돼요.';native.reportError(String(e));publish();}
   };drain();
 };

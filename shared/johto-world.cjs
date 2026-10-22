@@ -43,7 +43,14 @@ function travel(game,id,now,point){
  const s=init(game),p=byId.get(id),map=maps[p.zone],to=point||p.point,old=byId.get(s.location);
  if(old.zone!==p.zone||id==='j-silver'){
   if(!unlocked(game,p)){s.journey=null;s.blocked={location:id,checkpoint:id,position:{...to},at:now};game.holdUntil(now+180);return true;}
-  const entry=id==='j-silver'?to:p.zone==='kanto'?maps.kanto.points[J.done(game,'j-ship')?'j-k-vermilion':'j-k-indigo']:maps.johto.points['j-newbark'];s.location=p.zone==='kanto'?(J.done(game,'j-ship')?'j-k-vermilion':'j-k-indigo'):'j-newbark';s.position={...entry};
+  const entryId=id==='j-silver'?id:p.zone==='kanto'?(J.done(game,'j-ship')?'j-k-vermilion':'j-k-indigo'):'j-newbark',entry=id==='j-silver'?to:maps[p.zone].points[entryId];
+  if(game.platform==='mobile'){
+   const arrival={...s,visited:{...s.visited},location:entryId,position:{...entry}};if(!journey.move(game,arrival,map,id,to,place=>unlocked(game,byId.get(place)),p.name,now))return false;
+   // Separate regional maps have no shared cell edge. The crossing still costs
+   // one movement unit; selecting a remote region never relocates immediately.
+   arrival.journey.segments.unshift({location:entryId,path:[{...entry}]});s.journey=arrival.journey;s.walk=null;s.blocked=null;return true;
+  }
+  s.location=entryId;s.position={...entry};
  }
  return journey.move(game,s,map,id,to,place=>unlocked(game,byId.get(place)),p.name,now);
 }
@@ -55,6 +62,6 @@ const local={'j-falkner':'j-violet','j-bugsy':'j-azalea','j-whitney':'j-goldenro
 function locationFor(id){const n=J.nodes.get(id);return local[id]||grouped[n?.group]||(n?.target?locationFor(n.target):null);}
 function snapshot(game,now=Date.now()){
  const s=init(game),current=byId.get(s.location),map=maps[current.zone],pending=game.data.pendingActions?.find(a=>['travel','world-pass'].includes(a.kind));
- return {active:true,location:s.location,name:current.name,zone:current.zone,map,maps,...journey.snapshot(s,game.random),position:s.position,levels:{max:game.wildLevelCap()},walk:s.walk&&now<s.walk.at+s.walk.duration?s.walk:null,facing:s.walk?walking.frame(s.walk,s.walk.at+s.walk.duration).direction:'down',pending:pending?.location||null,checkpoint:checkpoint(game),locations:Object.fromEntries([...J.nodes.keys()].map(id=>[id,locationFor(id)])),places:places.map(p=>({id:p.id,name:p.name,zone:p.zone,current:p.id===s.location,open:unlocked(game,p),visited:!!s.visited[p.id],levels:{max:game.wildLevelCap()},notice:[...J.nodes.values()].some(n=>locationFor(n.id)===p.id&&J.available(game,n))}))};
+ return {active:true,location:s.location,name:current.name,zone:current.zone,map,maps,...journey.snapshot(s,game.random),...(game.platform==='mobile'?require('./step-travel.cjs').snapshot(game,s):{}),position:s.position,levels:{max:game.wildLevelCap()},walk:s.walk&&now<s.walk.at+s.walk.duration?s.walk:null,facing:s.walk?walking.frame(s.walk,s.walk.at+s.walk.duration).direction:'down',pending:pending?.location||null,checkpoint:checkpoint(game),locations:Object.fromEntries([...J.nodes.keys()].map(id=>[id,locationFor(id)])),places:places.map(p=>({id:p.id,name:p.name,zone:p.zone,current:p.id===s.location,open:unlocked(game,p),visited:!!s.visited[p.id],levels:{max:game.wildLevelCap()},notice:[...J.nodes.values()].some(n=>locationFor(n.id)===p.id&&J.available(game,n))}))};
 }
 module.exports={init,travel,status,checkpoint,passageStatus,pass,locationFor,snapshot,maps,places,byId,townRoads,habitat,poolNames,locationsFor,advance:(game,now)=>journey.advance(game,init(game),now),encounterEnded:(game,b)=>journey.encounterEnded(init(game),b,game.random)};

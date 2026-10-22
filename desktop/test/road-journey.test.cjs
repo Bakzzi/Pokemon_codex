@@ -6,7 +6,7 @@ const {finishJourney}=require('./helpers/travel-fixture.cjs');
 function ready(Type){const g=new Type({},now,{random:()=>.6});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;return g;}
 function clock(g){return Math.max(now,g.nextTick,g.data.switchUntil||0);}
 function win(g){const t=clock(g);g.newWild(t);const b=g.data.battle;b.foe.hp=0;g.showFaint(t);const result=clock(g);assert.equal(g.data.battle,b);assert.ok(g.tick(result));return b;}
-for(const Type of [PC,Android]){
+for(const Type of [PC]){
  test(Type.name+' shared map coordinates do not bypass a gated building or cave',()=>{
   const g=ready(Type);g.data.badges=['brock','misty','surge'];g.data.kantoWorld.location='lavender';g.data.kantoWorld.position={...K.snapshot(g).map.points.lavender};
   assert.ok(g.requestAction('travel','tower',now));finishJourney(g,now);assert.equal(K.current(g).id,'lavender');assert.equal(K.checkpoint(g).checkpoint,'tower');assert.equal(K.checkpoint(g).canPass,false);
