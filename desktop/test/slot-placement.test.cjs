@@ -33,6 +33,7 @@ test('separate individuals of the same species may occupy different slots',()=>{
 
 function nurseryFixture(){
   const g=fixture(),other=g.addPokemon(19,10,'fixture',now),bulba=g.addPokemon(1,10,'fixture',now),ditto=g.addPokemon(132,10,'fixture',now);
+  g.data.kantoWorld={location:'route-5'};
   assert.ok(g.setSlot(1,other,now));assert.ok(g.setSlot(2,bulba,now));assert.ok(g.requestAction('daycare-start',[bulba,ditto],now));assert.ok(g.data.daycare);
   return {g,bulba};
 }
@@ -63,6 +64,7 @@ test('a new explicit selection made after removal was requested is still honored
 
 for(let slot=0;slot<6;slot++)for(const reload of [false,true])test('empty slot '+(slot+1)+' survives conflicting reservations, gifts, captures and hatch'+(reload?' across restart':''),()=>{
   let g=fixture();const bulba=g.addPokemon(1,10,'fixture',now),ditto=g.addPokemon(132,10,'fixture',now),others=[25,...[19,16,21,23].map(id=>g.addPokemon(id,10,'fixture',now))];
+  g.data.kantoWorld={location:'route-5'};
   g.data.slots=Array.from({length:6},(_,i)=>i===slot?bulba:others.shift());g.data.activeId=25;const expected=[...g.data.slots];expected[slot]=null;
   assert.ok(g.requestAction('daycare-start',[bulba,ditto],now));assert.ok(g.requestAction('select',bulba,now));assert.ok(g.requestAction('slot',{slot:(slot+1)%6,id:bulba},now));
   assert.ok(g.requestAction('slot',{slot,id:null},now));assert.deepEqual(g.data.slots,expected);assert.ok(!g.data.pendingActions.some(a=>a.uid===bulba));

@@ -267,6 +267,7 @@ class Game {
       if(p.id!==a.from||!this.evolutions(a.uid,now).some(e=>e.to===a.to))return invalid('동료의 진화 경로가 바뀌었어요.');
     }
     if(a.kind==='daycare-start'){
+      const access=nursery.access(this,now);if(!access.atLocation)return invalid(access.reason);
       const preview=nursery.predict(this,a.parents);if(!preview.compatible)return invalid(preview.reason);
     }
     if(a.kind==='daycare-withdraw'&&!this.data.daycare||a.kind==='abandon'&&b?.kind!=='trainer')return done;
@@ -815,7 +816,7 @@ class Game {
   panelState(now=Date.now()){
     const hints=collectionHints(this);
     const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,shiny:!!p.shiny,level:p.level,xp:p.xp,...experienceView(p),gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:moveAccess.catalog(p).map(entry=>moveDetails(p,entry)),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
-    return {...this.snapshot(now),roster,daycare:nursery.snapshot(this),johtoUnlocked:this.maxGeneration()===2,johtoDeferred:this.data.johtoDeferred,johtoUnlockPreview:this.johtoUnlockPreview(),
+    return {...this.snapshot(now),roster,daycare:nursery.snapshot(this,now),johtoUnlocked:this.maxGeneration()===2,johtoDeferred:this.data.johtoDeferred,johtoUnlockPreview:this.johtoUnlockPreview(),
       kantoCaughtCount:this.kantoCaughtCount(),
       encounterBonus:this.encounterBonus(),
       specialEncounters:this.specialEncounters(),

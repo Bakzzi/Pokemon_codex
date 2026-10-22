@@ -53,7 +53,7 @@ test('fainted and nursery partners can be reserved; withdrawal resolves a waitin
 });
 
 test('nursery placement waits for the battle and an existing egg, then runs once after hatch',()=>{
-  const g=fixture(),a=g.addPokemon(134,20,'fixture',now),b=g.addPokemon(132,20,'fixture',now);wild(g);
+  const g=fixture(),a=g.addPokemon(134,20,'fixture',now),b=g.addPokemon(132,20,'fixture',now);g.data.kantoWorld={location:'route-5'};wild(g);
   assert.ok(g.requestAction('daycare-start',[a,b],now));assert.equal(g.data.daycare,null);g.data.egg={id:133,parents:[a,b],progress:0,required:100,obtainedAt:now};
   const end=finish(g);assert.equal(g.tick(end),false);assert.match(g.pendingActions(end)[0].reason,/부화/);nursery.advance(g,100,end);assert.ok(g.tick(end));assert.deepEqual(g.data.daycare.parents,[a,b]);assert.equal(g.data.pendingActions.length,0);
   assert.equal(g.tick(end+1),false);assert.equal(g.data.journal.filter(e=>e.kind==='daycare').length,1);

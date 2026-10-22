@@ -354,8 +354,9 @@ function renderNursery(){
     root.append(node('p','muted','알 발견까지 '+preview.eggTokens.toLocaleString('ko-KR')+'걸음 · 부화까지 '+preview.offspring[0].hatchTokens.toLocaleString('ko-KR')+'걸음'));
   }else root.append(node('p','',preview.reason));
   const waiting=!!d.care&&!d.care.produced,queued=state.pendingActions.some(a=>a.kind==='daycare-start'&&a.parents.every((uid,i)=>uid===d.selection[i])),withdrawQueued=state.pendingActions.some(a=>a.kind==='daycare-withdraw');
-  $('daycare-start').disabled=!preview.compatible||queued;
-  $('daycare-start').textContent=queued?'맡기기 통화 예약됨':waiting||d.egg||d.care?.produced?'다음 알 부탁하기':'전화로 맡기기';
+  $('daycare-location').textContent=d.access.reason;
+  $('daycare-start').disabled=!d.access.atLocation||!preview.compatible||queued;
+  $('daycare-start').textContent=queued?'맡기기 예약됨':waiting||d.egg||d.care?.produced?'다음 알 부탁하기':'맡기기';
   $('daycare-withdraw').disabled=withdrawQueued;$('daycare-withdraw').textContent=withdrawQueued?'데려오기 통화 예약됨':'전화로 데려오기';
   $('daycare-withdraw').hidden=!d.care;
   $('nursery-progress').replaceChildren();

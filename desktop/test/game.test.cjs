@@ -151,7 +151,7 @@ test('breeding rejects incompatible genders, groups, babies, legendaries and loc
 });
 test('nursery advances only on new coding work, survives restart and creates a separate Lv5 individual',()=>{
   let g=new Game({},now),a=g.addPokemon(134,30,'catch',now),b=g.addPokemon(132,20,'catch',now),oldEevee=g.addPokemon(133,12,'catch',now);
-  const before=structuredClone(g.data.owned);assert.ok(nursery.start(g,[a,b],now));assert.equal(g.select(a,now+2000),false);assert.equal(g.setSlot(0,b,now+2000),false);assert.equal(g.evolve(a,134,now+2000),false);
+  g.data.kantoWorld={location:'route-5'};const before=structuredClone(g.data.owned);assert.ok(nursery.start(g,[a,b],now));assert.equal(g.select(a,now+2000),false);assert.equal(g.setSlot(0,b,now+2000),false);assert.equal(g.evolve(a,134,now+2000),false);
   g.observe('work',tokens(100000),{baseline:true,now});assert.equal(g.data.daycare.progress,0);
   g.observe('work',tokens(120000,now+1),{now:now+1});assert.equal(g.data.egg.id,133);assert.equal(g.data.egg.progress,0);
   g=new Game(g.data,now+2);g.observe('work',tokens(120000,now+1),{baseline:true,now:now+2});assert.equal(g.data.egg.progress,0);
@@ -163,7 +163,7 @@ test('nursery advances only on new coding work, survives restart and creates a s
 });
 test('taking parents back preserves an obtained egg and boarded members stay out of challenges',()=>{
   const g=new Game({},now),a=g.addPokemon(134,20,'catch',now),b=g.addPokemon(132,20,'catch',now);
-  assert.ok(g.setSlot(0,a,now));assert.ok(g.setSlot(1,b,now));assert.ok(nursery.start(g,[a,b],now));
+  g.data.kantoWorld={location:'route-5'};assert.ok(g.setSlot(0,a,now));assert.ok(g.setSlot(1,b,now));assert.ok(nursery.start(g,[a,b],now));
   nursery.advance(g,20000,now+1);assert.ok(g.challenge(0,now+2000));assert.ok(!g.data.battle.party[a]&&!g.data.battle.party[b]);assert.equal(nursery.start(g,[1,4],now+3000),false);
   assert.ok(nursery.withdraw(g));assert.equal(g.data.egg.id,133);assert.equal(g.select(a,now+4000),false);
 });

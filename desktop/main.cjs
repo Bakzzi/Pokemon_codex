@@ -214,6 +214,15 @@ async function worldSmokeTest(){
   check(snapshot().location.id===game.data.battle.location,'wild encounter identity matches the actual map location');
   check(world.current(game).name==='3번도로','main uses the shared road rules');
   await read("WorldMap.show()");fs.writeFileSync(path.join(dataDir,'world-pc.png'),(await panel.webContents.capturePage()).toPNG());
+  game.data.battle=null;game.data.pendingBattle=null;game.data.switchUntil=0;game.nextTick=Date.now();game.data.badges=['brock','misty'];
+  const parents=[game.addPokemon(1,5,'fixture'),game.addPokemon(132,5,'fixture')];game.daycareSelection=parents;publish(true);await wait(60);await read("document.querySelector('[data-tab=daycare]').click()");
+  check(await read("document.getElementById('daycare-start').disabled&&document.getElementById('daycare-location').textContent.includes('5번도로')")&&!game.requestAction('daycare-start',parents),'actual publisher and action admission reject remote Day Care placement');
+  await read("document.querySelector('[data-tab=challenge]').click();document.querySelector('.world-marker[aria-label=\"5번도로\"]').click()");await wait(80);finish();if(game.data.kantoWorld.walk)game.data.kantoWorld.walk.at=Date.now()-game.data.kantoWorld.walk.duration-1;publish(true);await wait(70);
+  check(await read("!!document.querySelector('.world-local #world-daycare')&&!document.getElementById('world-daycare').open"),'actual map arrival publishes a collapsed local Day Care card');
+  await read("document.querySelector('#world-daycare>summary').click();document.querySelector('#world-daycare>button').click();document.getElementById('daycare-start').click()");await wait(80);
+  check(JSON.stringify(game.data.daycare?.parents)===JSON.stringify(parents),'the actual local Day Care button boards both partners through IPC');
+  game.data.kantoWorld.location='cerulean';publish(true);await wait(70);
+  check(await read("document.getElementById('daycare-start').disabled&&!document.getElementById('daycare-withdraw').hidden")&&game.data.daycare.parents.length===2,'leaving the Day Care blocks another deposit while retaining boarded partners');
   check(errors.length===0,'the actual main, panel and widget have no renderer errors');
   fs.writeFileSync(path.join(dataDir,'world-main-result.json'),JSON.stringify({ok:true,checks,errors,version:app.getVersion(),statePath:'main snapshot -> publish -> preload -> renderer; panel travel -> IPC -> shared game -> encounter result -> next road'},null,2));app.exit(0);
  }catch(error){fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'world-main-error.txt'),error.stack||String(error));app.exit(1);}
@@ -422,7 +431,7 @@ async function smokeTest(){
   await panel.webContents.executeJavaScript("document.querySelector('[data-challenge=\"0\"]').click()");await wait(80);
   game.defeatOpponent(Date.now());publish(true);await finishPresentation();game.tick();publish(true);await wait(100);
   const challenge=game.data.battle?.kind==='trainer'&&game.data.battle.bossIndex===0;
-  game.abandon();game.addPokemon(134,20,'fixture');game.addPokemon(132,20,'fixture');publish(true);
+  game.abandon();game.addPokemon(134,20,'fixture');game.addPokemon(132,20,'fixture');game.data.kantoWorld.location='route-5';game.data.kantoWorld.walk=null;publish(true);
   await panel.webContents.executeJavaScript("document.querySelector('[data-tab=\"daycare\"]').click();document.querySelector('#parent-a').value='134';document.querySelector('#parent-b').value='132';document.querySelector('#parent-b').dispatchEvent(new Event('change'))");await wait(180);
   const preview=await panel.webContents.executeJavaScript("({name:document.querySelector('#egg-preview').textContent.includes('이브이의 알'),image:!!document.querySelector('#egg-preview img[src=\"assets/133.gif\"]'),overflow:document.documentElement.scrollWidth>innerWidth})");
   fs.writeFileSync(path.join(dir,'daycare.png'),(await panel.webContents.capturePage()).toPNG());

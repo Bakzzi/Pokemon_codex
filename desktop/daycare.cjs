@@ -2,6 +2,12 @@
 const {species,view}=require('./pokemon.cjs');
 // Work-based pacing is specific to this widget; egg groups and hatch cycles come from PokeAPI.
 const breedingBalance={eggTokens:20000,tokensPerHatchCycle:1000};
+function access(game,now=Date.now()){
+  const johto=!!game.data.johtoUnlocked,world=johto?game.data.johtoWorld:game.data.kantoWorld;
+  const kanto=!johto||world?.location?.startsWith('j-k-'),locationId=kanto?(johto?'j-k-route-5':'route-5'):'j-route34',locationName=kanto?'5번도로':'34번도로';
+  const atLocation=world?.location===locationId&&(!world.walk||now>=world.walk.at+world.walk.duration);
+  return {locationId,locationName,atLocation:!!atLocation,reason:atLocation?locationName+'의 키우미집에 도착했어요.':locationName+'의 키우미집에 도착하면 맡길 수 있어요.'};
+}
 function genderFor(id,random=Math.random){
   const rate=species.get(id).genderRate;
   return rate<0?'none':random()*8<rate?'female':'male';
@@ -29,6 +35,7 @@ function predict(game,parents=[]){
 }
 function start(game,parents,now=Date.now()){
   parents=Array.isArray(parents)?parents.map(Number):[];
+  if(!access(game,now).atLocation)return false;
   if(game.data.battle?.kind==='trainer'||game.data.pendingBattle||now<game.data.switchUntil||game.data.egg||(game.data.daycare&&!game.data.daycare.produced))return false;
   const preview=predict(game,parents);if(!preview.compatible)return false;
   const available=Object.values(game.data.owned).filter(p=>!parents.includes(p.uid));
@@ -69,10 +76,10 @@ function advance(game,delta,now){
     }
   }
 }
-function snapshot(game){
+function snapshot(game,now=Date.now()){
   const d=game.data,care=d.daycare,egg=d.egg;
-  return {selection:game.daycareSelection||care?.parents||[],preview:predict(game,game.daycareSelection||care?.parents||[]),
+  return {access:access(game,now),selection:game.daycareSelection||care?.parents||[],preview:predict(game,game.daycareSelection||care?.parents||[]),
     care:care?{...care,parents:care.parents.map(uid=>({uid,...view(d.owned[uid].id),level:d.owned[uid].level})),offspring:care.offspring.map(id=>view(id))}:null,
     egg:egg?{...egg,...view(egg.id)}:null,balance:breedingBalance};
 }
-module.exports={genderFor,predict,start,withdraw,advance,snapshot,breedingBalance};
+module.exports={access,genderFor,predict,start,withdraw,advance,snapshot,breedingBalance};
