@@ -222,7 +222,7 @@ async function worldSmokeTest(){
   await read("document.querySelector('#world-daycare>summary').click();document.getElementById('daycare-start').click()");await wait(80);
   check(JSON.stringify(game.data.daycare?.parents)===JSON.stringify(parents),'the actual local Day Care button boards both partners through IPC');
   game.data.kantoWorld.location='cerulean';publish(true);await wait(70);await read("document.querySelector('[data-tab=daycare]').click()");
-  check(await read("!document.querySelector('#daycare #parent-a')&&!document.getElementById('parent-a').checkVisibility()&&!document.getElementById('daycare-withdraw').hidden")&&game.data.daycare.parents.length===2,'the bag keeps only remote phone status after leaving the local deposit form');
+  check(await read("!document.querySelector('#daycare #parent-a')&&!document.getElementById('parent-a').checkVisibility()&&!document.getElementById('daycare-phone')&&!document.getElementById('daycare-withdraw')")&&game.data.daycare.parents.length===2,'the bag has no Day Care phone and leaving preserves boarded partners');
   check(errors.length===0,'the actual main, panel and widget have no renderer errors');
   fs.writeFileSync(path.join(dataDir,'world-main-result.json'),JSON.stringify({ok:true,checks,errors,version:app.getVersion(),statePath:'main snapshot -> publish -> preload -> renderer; panel travel -> IPC -> shared game -> encounter result -> next road'},null,2));app.exit(0);
  }catch(error){fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'world-main-error.txt'),error.stack||String(error));app.exit(1);}

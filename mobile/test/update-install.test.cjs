@@ -16,7 +16,7 @@ function fixture(){
 test('app interval displays steps without granting battles or experience',()=>{
   const f=fixture();f.start();const before=f.snapshot().game;
   for(const steps of [9,10,20,50000]){f.status.steps=steps;f.tick();f.advance(10000);}
-  assert.deepEqual(f.snapshot().game,before);assert.equal(f.snapshot().mobile.consumed,0);assert.equal(f.snapshot().mobile.lockConsumed,0);
+  const after=f.snapshot().game;assert.equal(after.mapTravel.bank,50000);assert.deepEqual({...after,mapTravel:null},{...before,mapTravel:null});assert.equal(f.snapshot().mobile.consumed,0);assert.equal(f.snapshot().mobile.lockConsumed,0);
 });
 for(const kind of ['wild','trainer','capture'])test('save and install immediately during '+kind+' without waiting for the battle or animation',()=>{
   const f=fixture();f.start();f.run(kind==='trainer'?'game.challenge(0,Date.now())':'game.newWild(Date.now())');

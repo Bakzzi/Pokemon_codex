@@ -9,8 +9,8 @@ function finishDialogue(g,t=now){const id=g.presentation()?.id;for(let i=0;i<10&
 function playable(){return new Adventure(new Game({},now).data,now,{random:()=>.5});}
 function rivalBattle(){const g=new Adventure({},now);finishDialogue(g);assert.equal(g.data.battle.storyId,'tutorial-green');finishDialogue(g);assert.equal(g.presentation().mode,'sendout');assert.ok(g.sceneTick(now+3000));return g;}
 test('fresh game waits for taps; walking, clocks and duplicate taps cannot skip Oak',()=>{
-  const g=new Adventure({},now),p=new Progression(g),before=JSON.stringify(g.data);p.resume(now);
-  assert.equal(p.live(now+86400000),false);assert.equal(p.catchUp(2000,now+86400000),0);assert.equal(p.consumed,0);assert.equal(JSON.stringify(g.data),before);
+  const g=new Adventure({},now),p=new Progression(g),before=JSON.stringify({...g.data,mapTravel:null});p.resume(now);
+  assert.equal(p.live(now+86400000),false);assert.equal(p.catchUp(2000,now+86400000),0);assert.equal(p.consumed,0);assert.equal(JSON.stringify({...g.data,mapTravel:null}),before);assert.equal(g.data.mapTravel.bank,0);
   const s=g.presentation(),key=s.id+':'+s.index;assert.ok(g.advanceScene(key,now));assert.equal(g.advanceScene(key,now),false);assert.equal(g.presentation().index,1);
   tap(g);assert.equal(g.data.mobileStory.giftReceived,true);assert.equal(Object.values(g.data.owned).length,1);assert.equal(g.data.slots.filter(Boolean).length,1);
 });
@@ -26,7 +26,7 @@ test('existing saves migrate without a tutorial or interruption to their active 
 test('tutorial rival uses trainer rules and sequential send-out, without capture or resource use',()=>{
   const g=new Adventure({},now);finishDialogue(g);assert.equal(g.data.battle.kind,'trainer');assert.equal(g.data.battle.foe.id,133);assert.equal(g.captureOpportunity(),null);
   const p=new Progression(g);p.resume(now);finishDialogue(g);const at=g.presentation().at;
-  assert.equal(g.tick(at+9000),false);assert.equal(p.catchUp(1000,at+9000),0);assert.equal(p.live(at+2699),false);assert.equal(p.live(at+2700),true);assert.equal(g.presentation(),null);
+  assert.equal(g.tick(at+9000),false);assert.equal(p.catchUp(1000,at+9000),0);p.dirty=false;assert.equal(p.live(at+2699),false);assert.equal(p.live(at+2700),true);assert.equal(g.presentation(),null);
   assert.equal(g.data.workTokens,0);assert.equal(p.consumed,0);assert.equal(g.data.battle.turn,0);
   assert.ok(g.tick(at+20000));assert.ok(g.data.battle.turn>0);assert.equal(g.data.workTokens,0);
 });

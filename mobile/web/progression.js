@@ -31,6 +31,18 @@
       return changed;
     }
     observe(totals){if(Number.isSafeInteger(totals.lockEpoch))this.game.lockEpoch=totals.lockEpoch;if(this.game.recordTravelSteps?.(totals.steps))this.dirty=true;}
+    movementActive(){const d=this.game.data,w=d.johtoUnlocked?d.johtoWorld:d.kantoWorld;return !!d.battle?.movementTrainer||!d.battle&&!d.pendingBattle&&!!(w?.journey?.bankLeg||w?.journey?.bankCells>0);}
+    movementTick(now){
+      const g=this.game,d=g.data;if(!this.movementActive()||g.presentation?.()||d.battle&&!d.battle.movementTrainer)return false;
+      const changed=d.battle?.movementTrainer?this.step(now):g.startMovementTrainer?.(now);
+      if(changed)this.dirty=true;return !!changed;
+    }
+    skipWaits(now){
+      const g=this.game;g.nextTick=Math.min(g.nextTick,now);g.data.switchUntil=Math.min(g.data.switchUntil||0,now);
+      for(const w of [g.data.kantoWorld,g.data.johtoWorld])if(w?.walk)w.walk.at=Math.min(w.walk.at,now-w.walk.duration);
+      if(g.data.pendingBattle)g.data.pendingBattle.at=Math.min(g.data.pendingBattle.at,now);
+      for(const e of [g.data.animation,g.data.captureAnimation])if(e){e.at=Math.min(e.at,now-86400000);if(e.leadIn)e.leadIn.at=Math.min(e.leadIn.at,now-86400000);}
+    }
     mapTick(now){
       const g=this.game,d=g.data,w=d.johtoUnlocked?d.johtoWorld:d.kantoWorld;
       if(g.platform!=='mobile'||!w?.journey&&!d.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind))||d.battle||d.pendingBattle||d.suspendedWild||d.pendingChallenge||g.presentation?.())return false;
@@ -44,6 +56,7 @@
       this.observe(totals);
       const g=this.game,b=g.data.battle;
       if(g.presentation?.())return g.sceneTick(now)||this.dirty;
+      if(this.movementTick(now))return true;
       if(!b?.activityTrainer&&(b?.kind==='trainer'||b?.storyId))return this.step(now)||this.dirty;
       if(g.controlTick(now))return true;
       // Recorded steps can move the map, but cannot progress an ordinary battle.
@@ -53,8 +66,13 @@
       const steps=typeof total==='object'?total.steps:total,locked=typeof total==='object'?total.lockMillis:0;
       this.observe(typeof total==='object'?total:{steps});
       const available=(n,cost,cursor)=>Number.isSafeInteger(n)&&n>=cursor?Math.floor((n-cursor)/cost):0;
-      const g=this.game;let used=0,moves=0;
+      const g=this.game;let used=0,moves=0,travelTurns=0;this.moreMovement=false;
       for(;used<maxActions;used++){
+        if(this.movementActive()){
+          if(travelTurns>=128){this.moreMovement=true;break;}
+          this.skipWaits(now);
+          if(this.movementTick(now)){travelTurns++;used--;continue;}
+        }
         if(moves<512&&this.mapTick(now)){moves++;used--;continue;}
         if(!available(locked,20000,this.lockConsumed))break;
         // Manual dialogue must preserve every unspent lock-time action.
@@ -66,17 +84,19 @@
         if(g.activityStep?.(now)){this.lockConsumed+=20000;continue;}
         // Consume recorded activity immediately, never simulate a future calendar.
         // Only presentation waits are skipped; every game transition still uses tick().
-        g.nextTick=Math.min(g.nextTick,now);g.data.switchUntil=Math.min(g.data.switchUntil||0,now);
-        if(g.data.kantoWorld?.walk)g.data.kantoWorld.walk.at=Math.min(g.data.kantoWorld.walk.at,now-g.data.kantoWorld.walk.duration);
-        if(g.data.johtoWorld?.walk)g.data.johtoWorld.walk.at=Math.min(g.data.johtoWorld.walk.at,now-g.data.johtoWorld.walk.duration);
-        if(g.data.pendingBattle)g.data.pendingBattle.at=Math.min(g.data.pendingBattle.at,now);
-        for(const e of [g.data.animation,g.data.captureAnimation])if(e){e.at=Math.min(e.at,now-86400000);if(e.leadIn)e.leadIn.at=Math.min(e.leadIn.at,now-86400000);}
+        this.skipWaits(now);
         const world=g.data.johtoUnlocked?g.data.johtoWorld:g.data.kantoWorld;
         if(!g.data.battle&&(g.data.pendingActions.some(a=>['travel','world-pass'].includes(a.kind))||world?.journey&&!g.data.pendingChallenge)&&g.controlTick(now)){used--;continue;}
         if(!this.step(now))break;
         this.lockConsumed+=20000;
       }
-      while(moves<512&&this.mapTick(now))moves++;
+      while(moves<512){
+        if(this.movementActive()){
+          if(travelTurns>=128){this.moreMovement=true;break;}
+          this.skipWaits(now);if(this.movementTick(now)){travelTurns++;continue;}
+        }
+        if(!this.mapTick(now))break;moves++;
+      }
       return used;
     }
     checkpoint(){return {consumed:this.consumed,lockConsumed:this.lockConsumed,pausedAt:this.pausedAt,nextTick:this.game.nextTick};}

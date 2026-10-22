@@ -90,11 +90,11 @@ public final class MobileTest extends Instrumentation {
             waitReady();Thread.sleep(1500);
             if("walking-live".equals(arguments.getString("mode"))){
                 StepService service=StepService.instance;require(service!=null,"Step service missing");
-                js("game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);game.data.mobileStory.onboarding='done';game.data.mobileStory.scene=null;game.nextTick=0;game.data.switchUntil=0;refreshNative();progression=new MobileProgression(game,{consumed:nativeState.steps,lockConsumed:nativeState.lockMillis});progression.resume(Date.now());active=true;catchingUp=false;save();publish()");
+                js("game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);game.data.mobileStory.onboarding='done';game.data.mobileStory.scene=null;game.nextTick=0;game.data.switchUntil=0;refreshNative();progression=new MobileProgression(game,{consumed:nativeState.steps,lockConsumed:nativeState.lockMillis});progression.observe(nativeState);progression.resume(Date.now());active=true;catchingUp=false;save();publish()");
                 long base=SystemClock.elapsedRealtimeNanos(),time=System.currentTimeMillis();
-                String before=js("JSON.stringify(game.data)");
+                String before=js("JSON.stringify({...game.data,mapTravel:null})");
                 runOnMainSync(()->{service.recordSample(100,base,time,time);service.recordSample(110,base+1,time,time);});Thread.sleep(750);
-                require(before.equals(js("JSON.stringify(game.data)")),"Ten steps awarded a game action");
+                require(before.equals(js("JSON.stringify({...game.data,mapTravel:null})")),"Ten steps awarded a game action");
                 require("true".equals(js("game.data.battle===null&&progression.lockConsumed===0")),"Walking started a battle or used lock time");
                 require("true".equals(js("globalThis.mapBefore=JSON.stringify(game.panelState().kantoWorld.position);game.requestAction('travel',{location:'route-1',position:{x:44,y:92}},Date.now())")),"Map journey was not accepted");
                 runOnMainSync(()->service.recordSample(2109,base+2,time,time));Thread.sleep(750);
@@ -107,7 +107,11 @@ public final class MobileTest extends Instrumentation {
                 Thread.sleep(750);runOnMainSync(()->service.recordSample(2110,base+3,time,time));Thread.sleep(500);
                 require("true".equals(js("game.data.mapTravel.credit===0&&game.data.battle===null")),"Walking sample replayed");
                 require(MainActivity.visible&&!StepService.locked(getTargetContext()),"Fixture was not unlocked and foreground");
-                screenshot("walking-map-only.png");result.putInt("foregroundMovementOnlyChecks",7);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+                runOnMainSync(()->service.recordSample(7110,base+4,time,time));Thread.sleep(1000);
+                require("true".equals(js("game.data.mapTravel.bank===5010&&game.data.battle===null&&progression.lockConsumed===0")),"Surplus walking did not bank without battle actions");
+                require("true".equals(js("game.requestAction('travel',{location:'viridian',position:{x:44,y:84}},Date.now())&&game.requestAction('travel-bank',null,Date.now())")),"Stored movement could not be selected");
+                Thread.sleep(1500);require("true".equals(js("game.panelState().kantoWorld.position.y===84&&game.data.mapTravel.bank===3010&&game.data.mapTravel.credit===0")),"Bank travel did not spend exactly one move without new steps");
+                screenshot("walking-map-only.png");result.putInt("foregroundMovementOnlyChecks",10);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
             if("lock-adventure".equals(arguments.getString("mode"))){
                 Application.ActivityLifecycleCallbacks lockLifecycle=new Application.ActivityLifecycleCallbacks(){

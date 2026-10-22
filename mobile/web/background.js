@@ -7,5 +7,5 @@ globalThis.MobileBackground={run(raw,total,now,maxActions=32){
   const used=progression.catchUp(total,now,maxActions);
   if(!used&&!progression.dirty)return JSON.stringify({used:0});
   progression.pausedAt=now;
-  return JSON.stringify({used,changed:progression.dirty,save:{format:1,game:game.data,mobile:progression.checkpoint(),savedAt:now}});
+  return JSON.stringify({used,changed:progression.dirty,moreMovement:progression.moreMovement,save:{format:1,game:game.data,mobile:progression.checkpoint(),savedAt:now}});
 }};

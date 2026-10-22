@@ -60,8 +60,10 @@ class Adventure extends Engine{
     if(scene?.next==='sendout'||scene?.mode==='sendout')this.prepareTrainerLead();
   }
   resetSeason(now){
-    const story=this.data.mobileStory;
+    // The base constructor can roll the season before platform is initialized.
+    const story=this.data.mobileStory,distance=this.data.mapTravel;
     super.resetSeason(now);
+    if(distance){this.data.mapTravel=distance;require('./step-travel.cjs').bankRemainder(this);}
     if(story){this.data.mobileStory={revision:1,onboarding:'done',giftReceived:true,serial:story.serial||0,scene:null,rivals:null,rescue:null,silph:null,laprasResolved:false};rescue.init(this,now);silph.init(this,now);safari.init(this);mansion.init(this,now);this.initRivals(now);}
   }
   initRivals(now){
@@ -93,10 +95,13 @@ class Adventure extends Engine{
   onWildEnd(b,now){if(world.active(this))world.encounterEnded(this,b);}
   recordTravelSteps(total){return require('./step-travel.cjs').observe(this,total);}
   requestAction(kind,value,now=Date.now()){
+    if(kind==='travel-bank')return require('./step-travel.cjs').useBank(this);
     if(this.platform!=='mobile'||!['travel','world-pass'].includes(kind))return super.requestAction(kind,value,now);
     const steps=require('./step-travel.cjs'),before=steps.hasIntent(this),ok=super.requestAction(kind,value,now);
     if(ok)steps.beginIntent(this,before);return ok;
   }
+  executeAction(a,now){const ok=super.executeAction(a,now);if(ok&&a.useBank&&this.platform==='mobile')require('./step-travel.cjs').useBank(this,true);return ok;}
+  cancelAction(id,now=Date.now(),reason){const ok=super.cancelAction(id,now,reason);if(ok&&reason!=='새 선택으로 변경'&&this.platform==='mobile'&&!require('./step-travel.cjs').hasIntent(this))require('./step-travel.cjs').bankRemainder(this);return ok;}
   controlTick(now=Date.now()){return super.controlTick(now)||this.advanceTravel(now);}
   canReserveCapture(id){return id!==131&&super.canReserveCapture(id);}
   canReceiveFlute(){const r=this.data.mobileStory?.rescue;return !!(r?.completedAt&&r.wins.every(Boolean));}

@@ -32,10 +32,14 @@ final class BackgroundAdventure {
         if(locked()-(mobile==null?0:mobile.optLong("lockConsumed",0))>=20000)return true;
         if(game==null)return false;
         JSONObject map=game.optJSONObject(game.optBoolean("johtoUnlocked")?"johtoWorld":"kantoWorld"),distance=game.optJSONObject("mapTravel");
-        boolean moving=map!=null&&map.optJSONObject("journey")!=null;
+        JSONObject trip=map==null?null:map.optJSONObject("journey"),battle=game.optJSONObject("battle");
+        boolean moving=trip!=null;
         JSONArray pending=game.optJSONArray("pendingActions");
         if(pending!=null)for(int i=0;i<pending.length();i++){JSONObject a=pending.optJSONObject(i);if(a!=null&&(a.optString("kind").equals("travel")||a.optString("kind").equals("world-pass")))moving=true;}
-        return moving&&distance!=null&&(total()>distance.optLong("observed",total())||distance.optLong("credit",0)>=2000);
+        return distance==null||distance.isNull("observed")||total()>distance.optLong("observed",total())
+            ||battle!=null&&battle.optBoolean("movementTrainer")
+            ||trip!=null&&(trip.optBoolean("bankLeg")||trip.optInt("bankCells")>0)
+            ||moving&&distance.optLong("credit",0)>=2000;
     }
     private void drain(){
         boolean retry=false;PowerManager.WakeLock wake=null;busy=true;requested.set(false);
@@ -57,7 +61,7 @@ final class BackgroundAdventure {
                 if(!store.commitBackground(before,result.getJSONObject("save").toString()))break;
                 completed++;
                 context.getSharedPreferences("steps",0).edit().remove("backgroundError").apply();
-                if(result.getInt("used")==0)break;
+                if(result.getInt("used")==0&&!result.optBoolean("moreMovement"))break;
             }
             AdventureStore.Snapshot remaining=store.backgroundSnapshot();
             if(completed==32&&remaining!=null)retry=available(new JSONObject(remaining.raw));

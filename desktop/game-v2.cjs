@@ -47,7 +47,7 @@ function restoreAction(a){
   const value=a.kind==='world-pass'?a.location:a.kind==='travel'?{location:a.location,position:a.position}:['select','device-learner'].includes(a.kind)?a.uid:a.kind==='slot'?{slot:a.slot,id:a.uid}:a.kind==='evolve'?{id:a.uid,to:a.to}:a.kind==='johto-unlock'?{speciesIds:a.speciesIds}:a.parents;
   const payload=actionPayload(a.kind,value);if(!payload)return null;
   if(a.kind==='evolve'&&!species.has(a.from))return null;
-  return {id:a.id,kind:a.kind,queuedAt:a.queuedAt,...payload,...(a.kind==='evolve'?{from:a.from}:{})};
+  return {id:a.id,kind:a.kind,queuedAt:a.queuedAt,...payload,...(a.kind==='evolve'?{from:a.from}:{}),...(['travel','world-pass'].includes(a.kind)&&a.useBank?{useBank:true}:{})};
 }
 function healthView(p){return {hp:p.hp/p.maxHp,currentHp:Math.max(0,Math.ceil(p.hp)),maxHp:p.maxHp,status:p.status||null,...(p.shiny?{shiny:true}:{}),
   ...(p.id?{appearance:p.appearance||{speciesId:p.id,transformed:false,substitute:false,hidden:null}}:{})};}

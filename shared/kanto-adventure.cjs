@@ -97,7 +97,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
  }
  battleBoss(b=this.data.battle){const n=K.nodes.get(b?.kantoNode);if(n)return {...n,kind:'story',intro:n.pages};const alias={'tower-grunt-1':'tower','silph-grunt':'silph'}[b?.storyId];if(K.modern(this)&&alias){const t=K.aliases[alias];return {...super.battleBoss(b),name:t.name,sprite:t.sprite,team:t.team.map(p=>({...p,moves:learnedMoves(p.id,p.level).slice(-4)})),...(alias==='tower'?{intro:['누군가에게 홀린 듯한 무당이 길을 막았다.','배틀로 정신을 차리게 해 주자.']}: {})};}return super.battleBoss(b);}
  nextTrainer(now){if(this.autoStarting)this.data.battle.activityTrainer=true;super.nextTrainer(now);if(this.data.battle.activityTrainer)this.data.mobileStory.scene=null;}
- endChallenge(won,now){if(!this.data.battle?.activityTrainer)return super.endChallenge(won,now);const boss=this.battleBoss();this.data.pendingBattle=null;this.log(won?'승부를 마치고 모험으로 돌아왔다.':boss.name+'와의 승부에서 패배했다. 동료들을 회복했다.',won?'info':'loss',null,now);this.restoreWild(now);this.animate('result',{text:won?'모험을 계속해요.':'동료들을 회복했어요. 준비해서 다시 승부해요.'},now);}
+ endChallenge(won,now){if(!this.data.battle?.activityTrainer)return super.endChallenge(won,now);const boss=this.battleBoss();if(!won&&this.data.battle.movementTrainer){const trip=this.data.kantoWorld.journey;if(trip){trip.bankCells=0;trip.bankLeg=false;}}this.data.pendingBattle=null;this.log(won?'승부를 마치고 모험으로 돌아왔다.':boss.name+'와의 승부에서 패배했다. 동료들을 회복했다.',won?'info':'loss',null,now);this.restoreWild(now);this.animate('result',{text:won?'모험을 계속해요.':'동료들을 회복했어요. 준비해서 다시 승부해요.'},now);}
  finishTrainerWin(now){
   const b=this.data.battle,n=K.nodes.get(b?.kantoNode);
   if(K.modern(this)&&training.rocketOrder.includes(b?.storyId)){
@@ -144,7 +144,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
    this.data.kantoWorld.journey=null;this.data.kantoWorld.walk=null;
    if(event==='parcel'){s.parcelAt=now;s.items.parcel=1;this.log('오박사의 물건을 맡았다.','item',null,now);}
    if(event==='deliver'){s.deliveredAt=now;s.dexAt=now;delete s.items.parcel;this.log('오박사에게 물건을 전하고 도감과 몬스터볼을 받았다.','item',null,now);}
-   if(event==='map'){s.mapAt=now;this.data.kantoWorld.journey=null;this.data.kantoWorld.walk=null;this.data.mapTravel=null;this.log('그린의 누나에게 타운맵을 받았다.','item',null,now);}
+   if(event==='map'){s.mapAt=now;this.data.kantoWorld.journey=null;this.data.kantoWorld.walk=null;this.log('그린의 누나에게 타운맵을 받았다.','item',null,now);}
    this.animate('result',{text:event==='parcel'?'물건을 가지고 태초마을의 오박사에게 돌아가요.':event==='deliver'?'그린의 집에도 들러 보세요.':'타운맵에서 다음 목적지를 선택할 수 있어요.'},now);return true;
   }
   const ok=super.advanceScene(key,now);
@@ -177,8 +177,10 @@ function withKanto(Base){return class KantoAdventure extends Base{
   const n=K.nodes.get(id),alias=id==='tower-grunt-1'&&['won','completed'].includes(this.rivalProgress('rival-middle')?.state);
   if(!K.modern(this)||this.data.johtoUnlocked||!n?.automatic&&!alias||this.data.workTokens<balance.tokensPerAction||this.presentation()||this.data.battle||this.data.pendingBattle||this.data.suspendedWild||this.data.pendingChallenge||this.data.pendingActions.length||this.seasonDue(now)||now<this.nextTick||now<this.data.switchUntil)return false;
   if(n&&this.rivalGate(id)&&this.rivalProgress(this.rivalGate(id).id)?.state!=='won')return false;
-  this.autoStarting=true;let ok;try{ok=this.startChallenge(id,now);}finally{this.autoStarting=false;}if(ok)this.data.workTokens-=balance.tokensPerAction;return !!ok;
+  this.autoStarting=true;let ok;try{ok=this.startChallenge(id,now);}finally{this.autoStarting=false;}if(ok){this.data.workTokens-=balance.tokensPerAction;if(require('./step-travel.cjs').bankActive(this)&&this.data.battle)this.data.battle.movementTrainer=true;}return !!ok;
  }
+ movementTrainerNode(){return K.modern(this)&&!this.data.johtoUnlocked?[...K.nodes.values()].find(n=>n.trainer&&n.automatic&&K.ready(this,n.id))?.id:null;}
+ startMovementTrainer(now){const id=this.movementTrainerNode();if(!id||!require('./step-travel.cjs').bankActive(this))return false;this.data.workTokens=balance.tokensPerAction;try{return this.startAutomaticTrainer(id,now);}finally{this.data.workTokens=0;}}
  tick(now=Date.now()){
   if(this.guideTick(now))return true;
   // A guided cell spends an activity action, rather than starting wild combat.

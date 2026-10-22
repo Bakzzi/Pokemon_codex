@@ -68,7 +68,7 @@ for(const Type of [PC,Android])test(Type.name+' guides the parcel trip using pai
  let g=start(Type);assert.equal(g.data.kantoWorld.location,'pallet');assert.ok(!g.captureRequested(19));assert.equal(g.requestAction('travel','forest',settle(g)),false);
  assert.ok(g.tick(settle(g)));const startPoint={...W.position(g)};assert.equal(g.tick(settle(g)),false);assert.deepEqual(W.position(g),startPoint);
  g.data.workTokens=250;assert.ok(g.tick(settle(g)));assert.equal(g.data.workTokens,0);g=new Type(structuredClone(g.data),settle(g));assert.equal(g.data.kantoWorld.journey.mode,'guided');guide(g);
- assert.ok(g.data.kantoStory.parcelAt&&g.data.kantoStory.deliveredAt&&g.data.kantoStory.dexAt);assert.ok(g.captureRequested(19));assert.equal(g.panelState(settle(g)).kantoWorld.manualTravel,true);assert.equal(g.data.kantoStory.items.parcel,undefined);assert.equal(g.data.mapTravel,null);
+ assert.ok(g.data.kantoStory.parcelAt&&g.data.kantoStory.deliveredAt&&g.data.kantoStory.dexAt);assert.ok(g.captureRequested(19));assert.equal(g.panelState(settle(g)).kantoWorld.manualTravel,true);assert.equal(g.data.kantoStory.items.parcel,undefined);assert.equal(g.data.mapTravel?.bank||0,0);
  move(g,'route-22');assert.ok(g.canChallenge('rival-brock'));assert.ok(!g.canChallenge(0));g.challenge('rival-brock',settle(g));win(g);assert.ok(['won','completed'].includes(g.rivalProgress('rival-brock').state));
 });
 test('the complete early story uses original trainer counts, one-shot results, fossil selection, ticket and ship rival',()=>{

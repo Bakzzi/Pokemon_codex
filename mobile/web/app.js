@@ -14,8 +14,8 @@ function action(action,value){
   if(action==='story-open'){$('adventure').hidden=false;$('panel-wrap').hidden=true;return;}
   let ok=true;
   try{
-    if(['travel','world-pass','fossil-choice'].includes(action))refreshNative();
-    if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass','fossil-choice'].includes(action))ok=game.requestAction(action,value);
+    if(['travel','world-pass','travel-bank','fossil-choice'].includes(action))refreshNative();
+    if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass','travel-bank','fossil-choice'].includes(action))ok=game.requestAction(action,value);
     else if(action==='action-cancel')ok=game.cancelAction(value);
     else if(action==='capture-reserve')ok=game.reserveCapture(value,1);
     else if(action==='capture-cancel')ok=game.reserveCapture(value,0);
@@ -37,6 +37,7 @@ function refreshNative(){
   $('sensor-status').textContent=nativeState.sensor+(nativeState.monitorError?' '+nativeState.monitorError:'')+(nativeState.backgroundError?' '+nativeState.backgroundError:'');$('walk-status').textContent='모험의 발걸음';
   $('walk-today').textContent=(nativeState.todaySteps||0).toLocaleString('ko-KR')+'걸음';
   $('walk-total').textContent=(nativeState.lifetimeSteps||0).toLocaleString('ko-KR')+'걸음';
+  const bank=game.data.mapTravel?.bank||0;$('walk-movement').textContent='이동 '+Math.floor(bank/2000).toLocaleString('ko-KR')+'개 · '+(bank%2000).toLocaleString('ko-KR')+' / 2,000걸음';
   $('walk-note').textContent=nativeState.tracking?'걸음은 지도 이동에 사용해요. 폰을 잠그면 20초마다 모험해요.':'폰을 잠그면 20초마다 모험해요. 걸음 기록을 켜면 지도에서 이동할 수 있어요.';
   $('update-status').textContent=nativeState.update;$('update-confirm').hidden=!nativeState.pendingInstall;$('install-permission').hidden=nativeState.canInstall;
   $('update-check').disabled=!!nativeState.updateChecking||!!nativeState.installing;$('version').textContent='Android v'+(nativeState.versionName||MobileConfig.name);

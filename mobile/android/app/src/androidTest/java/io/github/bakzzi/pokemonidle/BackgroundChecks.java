@@ -11,6 +11,7 @@ final class BackgroundChecks {
     private static void check(boolean ok,String message){if(!ok)throw new AssertionError(message);}
     private static void set(Object object,String name,Object value)throws Exception{Field f=object.getClass().getDeclaredField(name);f.setAccessible(true);f.set(object,value);}
     private static long consumed(AdventureStore store)throws Exception{return new JSONObject(store.read()).getJSONObject("mobile").optLong("lockConsumed",0);}
+    private static String gameplay(AdventureStore store)throws Exception{JSONObject game=new JSONObject(store.read()).getJSONObject("game");game.remove("mapTravel");return game.toString();}
     private static void await(BackgroundAdventure runner,AdventureStore store,long expected)throws Exception{
         long end=SystemClock.elapsedRealtime()+45000;
         do{runner.barrier().get(45,TimeUnit.SECONDS);if(consumed(store)==expected)return;Thread.sleep(50);}while(SystemClock.elapsedRealtime()<end);
@@ -25,11 +26,11 @@ final class BackgroundChecks {
         StepLedger ledger=new StepLedger();WalkingCounter walking=new WalkingCounter();set(service,"ledger",ledger);set(service,"walking",walking);set(service,"locks",new LockLedger());set(service,"prefs",prefs);set(service,"boot",1L);
         context.getSystemService(NotificationManager.class).createNotificationChannel(new NotificationChannel("walking","걸음 모험",NotificationManager.IMPORTANCE_LOW));
         BackgroundAdventure runner=BackgroundAdventure.get(context);long now=System.currentTimeMillis();
-        service.recordSample(0,100,now,now);service.recordSample(9,200,now,now);await(runner,store,0);
-        String before=store.read();service.recordSample(10,300,now,now);await(runner,store,0);check(before.equals(store.read()),"Ten background steps changed game progress");
+        runner.request();await(runner,store,0);service.recordSample(0,100,now,now);service.recordSample(9,200,now,now);await(runner,store,0);
+        String before=gameplay(store);service.recordSample(10,300,now,now);await(runner,store,0);check(before.equals(gameplay(store)),"Ten background steps changed battle progress");check(new JSONObject(store.read()).getJSONObject("game").getJSONObject("mapTravel").getLong("bank")==10,"Idle background steps were not banked");
         prefs.edit().putLong("lockMillis",19999).commit();runner.request();await(runner,store,0);
         prefs.edit().putLong("lockMillis",20000).commit();runner.request();await(runner,store,20000);check(!new JSONObject(store.read()).getJSONObject("game").isNull("battle"),"No background lock action");
-        before=store.read();service.recordSample(25,400,now,now);await(runner,store,20000);service.recordSample(25,400,now,now);await(runner,store,20000);check(before.equals(store.read()),"Steps advanced a background battle");
+        before=gameplay(store);service.recordSample(25,400,now,now);await(runner,store,20000);service.recordSample(25,400,now,now);await(runner,store,20000);check(before.equals(gameplay(store)),"Steps advanced a background battle");check(new JSONObject(store.read()).getJSONObject("game").getJSONObject("mapTravel").getLong("bank")==25,"Battle-time idle steps were lost or replayed");
         prefs.edit().putLong("lockMillis",40000).commit();runner.request();await(runner,store,40000);
         runner.closeWhenIdle();runner.barrier().get(10,TimeUnit.SECONDS);service.recordSample(35,500,now,now);await(runner,store,40000);
         prefs.edit().putLong("lockMillis",60000).commit();runner.request();await(runner,store,60000);
@@ -40,6 +41,6 @@ final class BackgroundChecks {
         ledger.mode(false,650);service.recordSample(65,700,now,now);await(runner,store,60000);service.recordSample(75,800,now,now);await(runner,store,60000);
         prefs.edit().putLong("lockMillis",80000).commit();runner.request();await(runner,store,80000);
         check("UI retained".equals(new JSONObject(store.read()).getJSONObject("game").getString("fixtureMarker")),"UI change lost after handoff");
-        Bundle result=new Bundle();result.putString("result","passed");result.putInt("backgroundChecks",10);result.putLong("lockConsumed",consumed(store));result.putBoolean("noActivityCreated",!MainActivity.visible);context.getSystemService(NotificationManager.class).cancel(7);runner.closeWhenIdle();runner.barrier().get(10,TimeUnit.SECONDS);return result;
+        Bundle result=new Bundle();result.putString("result","passed");result.putInt("backgroundChecks",12);result.putLong("lockConsumed",consumed(store));result.putBoolean("noActivityCreated",!MainActivity.visible);context.getSystemService(NotificationManager.class).cancel(7);runner.closeWhenIdle();runner.barrier().get(10,TimeUnit.SECONDS);return result;
     }
 }
