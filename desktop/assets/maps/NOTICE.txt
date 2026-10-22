@@ -8,3 +8,4 @@ player-red.png is the unchanged original icon. No map pixels are redrawn.
 Pinned inputs and hashes: reference/kanto-map/manifest.json
 Rebuild: npm.cmd run build:town-map
 Game artwork is separate from the project's MIT-licensed code.
+Original Crystal Johto town-map tiles, placement, palettes and landmark coordinates are pinned in reference/johto-map/manifest.json. Rebuild with npm run build:johto-map. johto-crystal.png renders the original pixels and palette without redrawing geography. Original artwork remains Pokemon / Nintendo / Creatures / GAME FREAK content; the project MIT license does not relicense it.

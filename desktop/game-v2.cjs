@@ -17,7 +17,7 @@ const nursery=require('./daycare.cjs');
 const {collectionHints}=require('./acquisition.cjs');
 const training=require('./training-device.cjs');
 const discovery=require('../shared/challenge-discovery.cjs');
-const ACTION_KINDS=new Set(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel']);
+const ACTION_KINDS=new Set(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass']);
 function moveDetails(p,entry){
   const saved=moves.get(entry.move),move=battleEngine.dex.moves.get(saved.identifier);
   const type=db.types.find(t=>t.identifier===(move.type==='???'?'unknown':move.type.toLowerCase()));
@@ -28,6 +28,7 @@ function moveDetails(p,entry){
 }
 function actionPayload(kind,value){
   if(!ACTION_KINDS.has(kind))return null;
+  if(kind==='world-pass')return typeof value==='string'&&/^[a-z][a-z0-9-]{0,40}$/.test(value)?{location:value}:null;
   if(kind==='travel'){
     const location=typeof value==='string'?value:value?.location,position=typeof value==='object'?value?.position:null;
     if(typeof location!=='string'||!/^[a-z][a-z0-9-]{0,40}$/.test(location)||position&&(!Number.isInteger(position.x)||!Number.isInteger(position.y)||position.x<0||position.x>=192||position.y<0||position.y>=144))return null;
@@ -43,7 +44,7 @@ function actionPayload(kind,value){
 }
 function restoreAction(a){
   if(!a||!Number.isSafeInteger(a.id)||a.id<1||!validCount(a.queuedAt))return null;
-  const value=a.kind==='travel'?{location:a.location,position:a.position}:['select','device-learner'].includes(a.kind)?a.uid:a.kind==='slot'?{slot:a.slot,id:a.uid}:a.kind==='evolve'?{id:a.uid,to:a.to}:a.kind==='johto-unlock'?{speciesIds:a.speciesIds}:a.parents;
+  const value=a.kind==='world-pass'?a.location:a.kind==='travel'?{location:a.location,position:a.position}:['select','device-learner'].includes(a.kind)?a.uid:a.kind==='slot'?{slot:a.slot,id:a.uid}:a.kind==='evolve'?{id:a.uid,to:a.to}:a.kind==='johto-unlock'?{speciesIds:a.speciesIds}:a.parents;
   const payload=actionPayload(a.kind,value);if(!payload)return null;
   if(a.kind==='evolve'&&!species.has(a.from))return null;
   return {id:a.id,kind:a.kind,queuedAt:a.queuedAt,...payload,...(a.kind==='evolve'?{from:a.from}:{})};
@@ -233,6 +234,7 @@ class Game {
   isBoarded(uid){return this.data.daycare?.parents.includes(Number(uid))||false;}
   battleBoss(b=this.data.battle){return training.battles[b.bossIndex]||db.bosses[b.bossIndex];}
   actionName(a){
+    if(a.kind==='world-pass')return '길목 통과';
     const name=uid=>species.get(this.data.owned[uid]?.id)?.name||'동료';
     if(a.kind==='travel')return (this.travelName?.(a.location)||'장소')+'로 이동';
     if(a.kind==='select')return name(a.uid)+' 출전';
@@ -247,6 +249,7 @@ class Game {
     const p=this.data.owned[a.uid],b=this.data.battle;
     const invalid=reason=>({state:'invalid',reason}),wait=reason=>({state:'waiting',reason}),done={state:'done',reason:'이미 완료했어요.'};
     if(a.kind==='travel'){const status=this.travelStatus?this.travelStatus(a.location,a.position):invalid('지금은 이동할 수 없어요.');if(status)return status;}
+    if(a.kind==='world-pass'){const status=this.passageStatus?.(a.location);if(status)return status;}
     if(a.kind==='device-claim'&&training.has(this))return done;
     if(a.kind==='device-learner'){
       if(!training.has(this))return invalid('학습장치를 먼저 받아 주세요.');
@@ -301,6 +304,7 @@ class Game {
   executeAction(a,now){
     let result=false;const previousActive=this.data.activeId;
     if(a.kind==='travel')result=this.travelTo?.(a.location,now,a.position)||false;
+    if(a.kind==='world-pass')result=this.passCheckpoint?.(a.location,now)||false;
     if(a.kind==='select'){result=this.select(a.uid,now);if(result)this.data.manualSelection=true;}
     if(a.kind==='slot'){
       const removed=a.uid===null?this.data.slots[a.slot]:null;

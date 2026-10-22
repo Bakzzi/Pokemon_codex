@@ -5,6 +5,7 @@ const journal=require('../desktop/journal.cjs'),nursery=require('../desktop/dayc
 const consumables=require('../desktop/consumables.cjs');
 const storyText=require('./johto-dialogue.cjs');
 const discovery=require('./challenge-discovery.cjs');
+const world=require('./johto-world.cjs');
 const oddEgg=[172,173,174,236,238,239,240];
 const itemNames={'squirt-bottle':'꼬부기물뿌리개','secret-potion':'비전신약','clear-bell':'크리스탈방울','silver-wing':'은빛날개','rainbow-wing':'무지갯빛날개','ss-ticket':'승선티켓','machine-part':'기계부품','expansion-card':'라디오 확장카드','gs-ball':'GS볼','red-scale':'빨간비늘'};
 function withJohto(Base){return class JohtoAdventure extends Base{
@@ -12,6 +13,7 @@ function withJohto(Base){return class JohtoAdventure extends Base{
   super(saved,now,options);
   if(J.active(this)||saved.johto)J.init(this,saved.pendingChallenge);
   this.prepareJohtoJourney(now);
+  if(J.active(this))world.init(this,now);
   discovery.restore(this,[...J.nodes.values()].map(n=>({id:n.id,completed:J.done(this,n.id)||!!this.data.johto?.rivals[n.id]?.metAt,starts:[n.title+' 도전 시작'],loss:n.name+'에게 패배했다.'})),now);
   this.awardCompletionItem(now);
   if(J.active(this)&&J.nodes.has(saved.pendingChallenge?.index)&&saved.pendingChallenge.index!=='j-arrival')this.data.pendingChallenge={...saved.pendingChallenge};
@@ -23,7 +25,13 @@ function withJohto(Base){return class JohtoAdventure extends Base{
   const s=J.init(this);s.cleared['j-arrival'] ||= now;s.cleared['j-partner'] ||= now;
   if(this.presentation()?.next==='johto-reward:j-arrival')this.data.mobileStory.scene=null;
  }
- unlockJohto(now=Date.now(),ids){const ok=super.unlockJohto(now,ids);if(ok)this.prepareJohtoJourney(now);return ok;}
+ unlockJohto(now=Date.now(),ids){const ok=super.unlockJohto(now,ids);if(ok){this.prepareJohtoJourney(now);world.init(this,now);}return ok;}
+ travelName(id){return J.active(this)?world.byId.get(id)?.name:super.travelName(id);}
+ travelStatus(id,point){return J.active(this)?world.status(this,id,point):super.travelStatus(id,point);}
+ travelTo(id,now,point){return J.active(this)?world.travel(this,id,now,point):super.travelTo(id,now,point);}
+ passageStatus(id){return J.active(this)?world.passageStatus(this,id):super.passageStatus(id);}
+ passCheckpoint(id,now){return J.active(this)?world.pass(this,id,now):super.passCheckpoint(id,now);}
+ tick(now=Date.now()){if(J.active(this)&&world.init(this).blocked&&!this.data.battle&&!this.data.pendingChallenge&&!this.seasonDue(now))return this.controlTick(now);return super.tick(now);}
  battleBoss(b=this.data.battle){return J.battleBoss(this,b?.bossIndex)||super.battleBoss(b);}
  challengeName(id){return J.nodes.get(id)?.title||super.challengeName(id);}
  canChallenge(id){
@@ -71,6 +79,7 @@ function withJohto(Base){return class JohtoAdventure extends Base{
  advanceScene(id,now=Date.now()){
   const scene=this.presentation();if(!scene?.next?.startsWith('johto-'))return super.advanceScene(id,now);
   if(scene.mode!=='dialogue'||id!==scene.id+':'+scene.index)return false;
+  require('./adventure-records.cjs').remember(this,scene,now);
   if(scene.index+1<scene.pages.length){scene.index++;return true;}
   this.data.mobileStory.scene=null;
   if(scene.next==='johto-wild'){this.data.animation=null;this.holdUntil(now+650);return true;}
@@ -170,7 +179,7 @@ function withJohto(Base){return class JohtoAdventure extends Base{
  }
  snapshot(now=Date.now()){
   const s=super.snapshot(now),b=this.data.battle;if(!J.active(this))return s;
-  return {...s,champion:!!this.data.johto?.champion,badges:J.gyms.filter(n=>J.done(this,n.id)&&(n.id!=='j-clair'||J.done(this,'j-dragon-den'))).map(n=>n.id),regionName:this.data.johto?.champion&&J.done(this,'j-ship')?'성도 · 관동 재방문':'성도 지방',...(b?.johtoId?{battle:{...s.battle,johtoId:b.johtoId,freeChallenge:true,boss:this.battleBoss(b).name,teamSize:b.kind==='wild'?1:this.battleBoss(b).team.length}}:{})};
+  return {...s,location:{id:world.init(this).location,name:world.byId.get(world.init(this).location).name},champion:!!this.data.johto?.champion,badges:J.gyms.filter(n=>J.done(this,n.id)&&(n.id!=='j-clair'||J.done(this,'j-dragon-den'))).map(n=>n.id),regionName:this.data.johto?.champion&&J.done(this,'j-ship')?'성도 · 관동 재방문':'성도 지방',...(b?.johtoId?{battle:{...s.battle,johtoId:b.johtoId,freeChallenge:true,boss:this.battleBoss(b).name,teamSize:b.kind==='wild'?1:this.battleBoss(b).team.length}}:{})};
  }
  panelState(now=Date.now()){
   const s=super.panelState(now);if(!J.active(this))return s;
@@ -190,7 +199,7 @@ function withJohto(Base){return class JohtoAdventure extends Base{
    else if(event)p.acquisition={...original,routes};
   }
   const items=Object.keys(this.data.johto.items).map(key=>({id:'j-'+key,name:itemNames[key],count:1}));
-  return {...s,challengeHistory:{1:{badges:[...this.data.badges],champion:this.data.champion,leagueBest:this.data.leagueBest,gymAccess:Array(8).fill(false)}},johto:J.snapshot(this),inventory:[...s.inventory,...items]};
+  return {...s,johtoWorld:world.snapshot(this,now),challengeHistory:{1:{badges:[...this.data.badges],champion:this.data.champion,leagueBest:this.data.leagueBest,gymAccess:Array(8).fill(false)}},johto:J.snapshot(this),inventory:[...s.inventory,...items]};
  }
 };}
 module.exports={withJohto,itemNames,oddEgg};

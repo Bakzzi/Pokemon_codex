@@ -15,3 +15,4 @@ reference/pokeapi/raw/** -text
 reference/** linguist-vendored
 reference/johto/raw/*.asm text eol=lf
 reference/kanto-map/** -text
+reference/johto-map/** -text

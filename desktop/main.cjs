@@ -108,7 +108,7 @@ async function start(){
       if(action==='remote-key-file'&&panel){
         dialog.showOpenDialog(panel,{title:'SSH 개인키 선택',properties:['openFile']}).then(result=>{if(!result.canceled&&panel&&!panel.isDestroyed())panel.webContents.send('key-file',result.filePaths[0]);}).catch(()=>{});
       }
-      if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel'].includes(action))result=game.requestAction(action,value);
+      if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass'].includes(action))result=game.requestAction(action,value);
       if(action==='action-cancel')result=game.cancelAction(value);
       if(action==='capture-reserve')result=game.reserveCapture(value,1);
       if(action==='capture-cancel')result=game.reserveCapture(value,0);
@@ -165,9 +165,11 @@ async function worldSmokeTest(){
   await openPanel('challenge');panel.webContents.on('console-message',(_e,d)=>{if(d.level>=3)errors.push(d.message);});publish(true);await wait(160);
   check(snapshot().location.id==='route-1','actual widget snapshot carries the current travel location');
   check(await read("!!document.getElementById('reset-game')"),'PC reset remains available in connection settings');
-  check(await read("!document.getElementById('kanto-world').open"),'map starts collapsed with the other challenge cards');
+  check(await read("document.querySelector('.world-map').checkVisibility()&&document.querySelectorAll('.world-tabs button').length===2"),'map starts visible with only map and badge-case views');
+  check(await read("!document.getElementById('kanto-challenges').checkVisibility()&&!document.getElementById('johto-challenges').checkVisibility()"),'long challenge lists are kept outside the map page');
+  check(await read("document.querySelector('.world-marker[aria-label=회색시티]').textContent==='!'"),'a reached city marks an available challenge without revealing future cases');
   check(await read("document.querySelectorAll('.world-marker').length===49&&!document.getElementById('world-place')&&!document.querySelector('.world-controls>button')"),'actual panel uses direct map interaction without a dropdown or travel button');
-  await read("document.getElementById('kanto-world').open=true;document.querySelector('.world-marker[aria-label=상록숲]').click()");await wait(80);
+  await read("document.querySelector('.world-marker[aria-label=상록숲]').click()");await wait(80);
   check(game.data.pendingActions.some(a=>a.kind==='travel'&&a.location==='forest'),'real panel IPC queues travel during a wild encounter');
   check(snapshot().location.id==='route-1','queued travel preserves the ongoing encounter location');
   check(await read("document.querySelector('.world-controls [role=status]').textContent.includes('배틀이 끝나면')"),'actual publisher returns the queued location to the panel');
@@ -182,10 +184,13 @@ async function worldSmokeTest(){
   await wait(walk.duration+100);publish(true);await wait(50);
   check(await read("!document.querySelector('.world-player').classList.contains('walking')&&Number(document.querySelector('.world-player').dataset.y)===68"),'sprite arrives at its exact destination');
   await read("document.querySelector('.world-marker[aria-label=\"3번도로\"]').click()");
-  check(await read("document.querySelector('.world-controls [role=status]').textContent.includes('체육관')"),'locked map clicks explain the prerequisite without moving');
-  check(!game.requestAction('travel','route-3'),'the game rejects a forged locked-route action');
+  await wait(100);publish(true);await wait(50);
+  check(game.data.kantoWorld.blocked?.location==='route-3'&&snapshot().location.id!=='route-3','a locked route stops at its checkpoint instead of entering the destination');
+  await wait(game.data.kantoWorld.walk.duration+100);publish(true);await wait(70);
+  check(await read("document.getElementById('world-place-dialog').open&&!!document.querySelector('.world-npc')"),'arrival at a blocked route opens the checkpoint character and dialogue');
+  check(!game.requestAction('world-pass','route-3'),'the actual IPC model rejects passage before the required badge');
   const party=JSON.stringify(game.data.owned),tokens=game.data.workTokens;game.data.badges=['brock'];publish(true);await wait(80);
-  await read("document.querySelector('.world-marker[aria-label=\"3번도로\"]').click()");await wait(100);publish(true);await wait(50);
+  await read("document.querySelector('[data-world-pass=\"route-3\"]').click()");await wait(100);publish(true);await wait(50);
   check(await read("document.querySelector('.world-player').classList.contains('walking')"),'a newly unlocked map click starts walking directly');
   check(snapshot().location.id==='route-3','unlocked travel reaches the actual model through IPC');
   check(JSON.stringify(game.data.owned)===party&&game.data.workTokens===tokens,'travel preserves companions and banked activity');
@@ -193,7 +198,7 @@ async function worldSmokeTest(){
   check(options.habitat.some(p=>p.id===game.data.battle.foe.id)&&game.data.battle.foe.level<=options.maximumLevel,'actual encounter uses the selected local pool and range');
   check(snapshot().location.id===game.data.battle.location,'new battle records its location consistently with widget state');
   check(world.current(game).name==='3번도로','main uses the shared world rules');
-  await read("document.getElementById('kanto-world').open=true");fs.writeFileSync(path.join(dataDir,'world-pc.png'),(await panel.webContents.capturePage()).toPNG());
+  await read("WorldMap.show()");fs.writeFileSync(path.join(dataDir,'world-pc.png'),(await panel.webContents.capturePage()).toPNG());
   check(errors.length===0,'actual main and panel have no renderer errors');
   fs.writeFileSync(path.join(dataDir,'world-main-result.json'),JSON.stringify({ok:true,checks,errors,version:app.getVersion(),statePath:'main snapshot -> publish -> preload -> renderer; panel travel -> IPC -> shared game'},null,2));app.exit(0);
  }catch(error){fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'world-main-error.txt'),error.stack||String(error));app.exit(1);}

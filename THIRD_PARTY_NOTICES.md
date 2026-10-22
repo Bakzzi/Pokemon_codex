@@ -87,6 +87,8 @@ Recovery-tool icons also use unchanged PokeAPI sprite images. Pinned source URLs
 
 ## Johto reference data and artwork
 
+The original Crystal Johto town map is rendered from unchanged source tiles, tilemap and palette at the same pinned Crystal commit. Original source URLs, sizes and hashes are retained in reference/johto-map/manifest.json; desktop/scripts/build-johto-map.cjs reproduces the image and coordinates offline. The artwork retains the Pokemon rights holders' copyright.
+
 Original Crystal trainer parties, level learnsets and map references were checked against pret/pokecrystal at commit `3bc8daa4173e96a7f4011dad3922eb6fa5dad5c6`: https://github.com/pret/pokecrystal/tree/3bc8daa4173e96a7f4011dad3922eb6fa5dad5c6 . Source identity and hashes are recorded in `reference/johto/upstream.json` and `desktop/data/johto-data.json`. Original game content retains the Pokemon rights holders' copyright; this project's MIT license does not relicense it. No ROM is distributed.
 
 Original Generation II trainer sprites are mirrored by Pokemon Showdown. Official trainer illustrations and badges use unchanged Bulbagarden Archives images; item and Pokemon sprites use PokeAPI mirrors. Exact source URLs, dimensions and SHA-256 hashes are recorded in `desktop/assets/johto-sources.json`. Portraits are displayed through CSS face viewports. These assets remain Pokemon / Nintendo / Creatures / GAME FREAK artwork and are not MIT-licensed code.

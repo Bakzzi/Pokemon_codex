@@ -18,6 +18,7 @@
       if(g.presentation?.())g.presentation().at+=delta;
       if(d.pendingBattle)d.pendingBattle.at+=delta;
       if(d.kantoWorld?.walk)d.kantoWorld.walk.at+=delta;
+      if(d.johtoWorld?.walk)d.johtoWorld.walk.at+=delta;
       for(const e of [d.animation,d.captureAnimation])if(e){e.at+=delta;if(e.leadIn)e.leadIn.at+=delta;}
     }
     step(now){
@@ -63,9 +64,10 @@
         // Only presentation waits are skipped; every game transition still uses tick().
         g.nextTick=Math.min(g.nextTick,now);g.data.switchUntil=Math.min(g.data.switchUntil||0,now);
         if(g.data.kantoWorld?.walk)g.data.kantoWorld.walk.at=Math.min(g.data.kantoWorld.walk.at,now-g.data.kantoWorld.walk.duration);
+        if(g.data.johtoWorld?.walk)g.data.johtoWorld.walk.at=Math.min(g.data.johtoWorld.walk.at,now-g.data.johtoWorld.walk.duration);
         if(g.data.pendingBattle)g.data.pendingBattle.at=Math.min(g.data.pendingBattle.at,now);
         for(const e of [g.data.animation,g.data.captureAnimation])if(e){e.at=Math.min(e.at,now-86400000);if(e.leadIn)e.leadIn.at=Math.min(e.leadIn.at,now-86400000);}
-        if(!g.data.battle&&g.data.pendingActions.some(a=>a.kind==='travel')&&g.controlTick(now)){used--;continue;}
+        if(!g.data.battle&&g.data.pendingActions.some(a=>['travel','world-pass'].includes(a.kind))&&g.controlTick(now)){used--;continue;}
         if(!this.step(now))break;
         if(walking)this.consumed+=this.stepsPerAction;else this.lockConsumed+=10000;
       }

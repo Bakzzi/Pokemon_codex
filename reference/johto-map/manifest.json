@@ -1,0 +1,48 @@
+{
+  "repository": "https://github.com/pret/pokecrystal",
+  "commit": "3bc8daa4173e96a7f4011dad3922eb6fa5dad5c6",
+  "sources": [
+    {
+      "file": "town_map.png",
+      "url": "https://raw.githubusercontent.com/pret/pokecrystal/3bc8daa4173e96a7f4011dad3922eb6fa5dad5c6/gfx/pokegear/town_map.png",
+      "bytes": 441,
+      "sha256": "5d33cbb6c1dd2e88c68d51942489ca8dc56217ffff8b8f1a7628d59f153c25fb"
+    },
+    {
+      "file": "johto.bin",
+      "url": "https://raw.githubusercontent.com/pret/pokecrystal/3bc8daa4173e96a7f4011dad3922eb6fa5dad5c6/gfx/pokegear/johto.bin",
+      "bytes": 361,
+      "sha256": "d32fa5c06e8cf8a38caa290f677b5d292f411bf2a4661d4826d24ba83e69d7b3"
+    },
+    {
+      "file": "kanto.bin",
+      "url": "https://raw.githubusercontent.com/pret/pokecrystal/3bc8daa4173e96a7f4011dad3922eb6fa5dad5c6/gfx/pokegear/kanto.bin",
+      "bytes": 361,
+      "sha256": "9d7f64b1f1bb8768f07a23c8f49795faa1620b9f67e5aaa09319d4af6eab5517"
+    },
+    {
+      "file": "pokegear.pal",
+      "url": "https://raw.githubusercontent.com/pret/pokecrystal/3bc8daa4173e96a7f4011dad3922eb6fa5dad5c6/gfx/pokegear/pokegear.pal",
+      "bytes": 474,
+      "sha256": "c9e7862f1d8309b12a27ccd76e33f5f13faa1aa445ed9da8fe75c0d73353e86f"
+    },
+    {
+      "file": "landmarks.asm",
+      "url": "https://raw.githubusercontent.com/pret/pokecrystal/3bc8daa4173e96a7f4011dad3922eb6fa5dad5c6/data/maps/landmarks.asm",
+      "bytes": 7624,
+      "sha256": "bf61258379901daf794555b1a8f73bcf634d50ef3ca6e067f88f599b9df9816f"
+    },
+    {
+      "file": "pokegear.asm",
+      "url": "https://raw.githubusercontent.com/pret/pokecrystal/3bc8daa4173e96a7f4011dad3922eb6fa5dad5c6/engine/pokegear/pokegear.asm",
+      "bytes": 49826,
+      "sha256": "96d17eb94959827e05445d10f54d689ed4d0dbea7e05510b6fec557f20bf7458"
+    },
+    {
+      "file": "town_map_palette_map.asm",
+      "url": "https://raw.githubusercontent.com/pret/pokecrystal/3bc8daa4173e96a7f4011dad3922eb6fa5dad5c6/gfx/pokegear/town_map_palette_map.asm",
+      "bytes": 1429,
+      "sha256": "3434dc7d4b94fc99fd009038c4492a9fac6c13391692b7642f1dd7f9e7be37c7"
+    }
+  ]
+}

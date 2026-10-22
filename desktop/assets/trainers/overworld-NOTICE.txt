@@ -5,3 +5,6 @@ safari-grass.png: unchanged 16x80 field effect sheet from
 https://github.com/pret/pokefirered/blob/master/graphics/field_effects/pics/tall_grass.png
 Frames are selected and animated in CSS without redrawing or modifying the source images.
 These images are not covered by the project's MIT license.
+
+gate-guard.png: unchanged 144x32 policeman sheet from the original FRLG sources.
+Pinned URL and SHA-256 are recorded in gate-guard-source.json. The map selects the original standing frame; no pixels are redrawn.

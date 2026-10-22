@@ -3,6 +3,7 @@
 const habitats=require('./kanto-habitats.json');
 const map=require('./kanto-map.json');
 const walking=require('../desktop/map-walk.js');
+const journey=require('./world-travel.cjs');
 const badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'];
 // id, name, map x/y, required badges, local range, habitat, activity/card
 const rows=[
@@ -88,24 +89,36 @@ function position(game){const state=init(game);return state.position||map.points
 function validPosition(id,point){return !point||point.x===map.points[id]?.x&&point.y===map.points[id]?.y||map.roads.some(p=>p.place===id&&p.x===point.x&&p.y===point.y);}
 function status(game,id,point){
  if(!active(game))return {state:'invalid',reason:'지금 모험 중인 지방에서 장소를 선택해 주세요.'};
- const p=byId.get(id);if(!p||!unlocked(game,p))return {state:'invalid',reason:p?reason(game,p):'갈 수 없는 장소예요.'};
+ const p=byId.get(id);if(!p)return {state:'invalid',reason:'갈 수 없는 장소예요.'};
  if(!validPosition(id,point))return {state:'invalid',reason:'지도에 표시된 길을 선택해 주세요.'};
  const target=point||map.points[id],here=position(game);
- if(current(game).id===id&&here.x===target.x&&here.y===target.y)return {state:'done',reason:'지금 탐험 중이에요.'};
+ if(current(game).id===id&&here.x===target.x&&here.y===target.y&&!init(game).blocked)return {state:'done',reason:'지금 탐험 중이에요.'};
  if(game.data.mobileStory?.safari?.trip)return {state:'waiting',reason:'사파리 탐험을 마치면 이동해요.'};
  return null;
 }
 function travel(game,id,now,point){
- if(!unlocked(game,byId.get(id))||!active(game)||!validPosition(id,point)||game.data.battle||game.data.suspendedWild)return false;
- const state=init(game,now),to=point||map.points[id],path=walking.route(map,position(game),to);if(!path)return false;
- state.walk={from:state.location,to:id,path,at:now,duration:walking.duration(path)};
- state.location=id;state.position={x:to.x,y:to.y};state.visited[id] ||= now;game.holdUntil(now+state.walk.duration);
- game.log(byId.get(id).name+'에 도착했다. 주변을 탐험해 보자.','travel',null,now);return true;
+ if(!byId.has(id)||!active(game)||!validPosition(id,point)||game.data.battle||game.data.suspendedWild)return false;
+ const state=init(game,now),to=point||map.points[id];
+ const open=place=>(unlocked(game,byId.get(place))||place==='saffron'&&id!=='saffron'&&game.data.badges.includes('misty'))&&(!['route-23','victory-road','indigo'].includes(place)||!!state.leaguePass);
+ return journey.move(game,state,map,id,to,open,byId.get(id).name,now);
 }
+function checkpoint(game){
+ const state=init(game),block=state.blocked;if(!block)return null;
+ const p=byId.get(block.checkpoint),destination=byId.get(block.location);if(!p||!destination)return null;
+ const league=['route-23','victory-road','indigo'].includes(p.id),road=roadPlaces.has(p.id)&&!roadOpen(game),ready=unlocked(game,p)&&unlocked(game,destination);
+ let name='길목의 안내원',sprite='j-sage',pages;
+ if(league){name='포켓몬리그 경비원';sprite='j-sage';const earned=badges.filter(b=>game.data.badges.includes(b));pages=['포켓몬리그로 향하는 트레이너인가요? 배지를 확인하겠습니다.',...earned.map(id=>require('../desktop/pokemon.cjs').data.bosses.find(b=>b.id===id).badge+'를 확인했습니다.'),ready?'모든 배지를 확인했습니다. 챔피언로드로 가셔도 좋습니다.':'아직 확인하지 못한 배지가 있습니다. 체육관에서 실력을 증명하고 돌아오세요.'];}
+ else if(road){name='길을 막는 잠만보';sprite='pokemon:143';pages=['커다란 포켓몬이 길 한가운데 잠들어 있다.','아무리 불러도 일어나지 않는다. 깨울 방법을 찾아보자.'];}
+ else if(p.id==='tower'){name='포켓몬타워의 주민';pages=['탑 안에서 정체를 알 수 없는 기척이 느껴져요.','보이지 않는 존재를 확인할 방법이 필요하겠어요.'];}
+ else {const required=badges[Math.max(0,p.stage-1)],boss=require('../desktop/pokemon.cjs').data.bosses.find(b=>b.id===required);pages=ready?['길이 열렸어요. 조심히 다녀오세요.']:[boss?'이 앞은 조금 더 준비가 필요한 길이에요. '+boss.badge+'를 보여 주시겠어요?':'지금은 이 길로 들어갈 수 없어요.'];}
+ return {...block,name,sprite,pages,canPass:ready,destination:destination.name,nearby:road?'snorlax-road':null};
+}
+function passageStatus(game,id){const b=checkpoint(game);return !b||b.location!==id?{state:'invalid',reason:'이곳에 확인할 길목이 없어요.'}:!b.canPass?{state:'invalid',reason:'아직 이 길을 지나갈 수 없어요.'}:null;}
+function pass(game,id,now){if(passageStatus(game,id))return false;const state=init(game),block=state.blocked;state.leaguePass ||= ['route-23','victory-road','indigo'].includes(block.checkpoint);game.log(checkpoint(game).name+'에게 통행을 확인받았다.','gate',null,now);return travel(game,id,now,block.position);}
 function snapshot(game,now=Date.now()){
  const state=init(game),here=current(game),levels=range(game);
- const selected=game.data.pendingActions?.find(a=>a.kind==='travel');
- return {active:active(game),location:here.id,name:here.name,levels,map,position:position(game),facing:state.walk?walking.frame(state.walk,state.walk.at+state.walk.duration).direction:'down',walk:active(game)&&state.walk&&now<state.walk.at+state.walk.duration?state.walk:null,pending:selected?.location||null,places:places.map(p=>({id:p.id,name:p.name,x:p.x,y:p.y,activity:p.activity,open:unlocked(game,p),visited:!!state.visited[p.id],current:p.id===here.id,levels:range(game,p),reason:reason(game,p)})),links};
+ const selected=game.data.pendingActions?.find(a=>['travel','world-pass'].includes(a.kind));
+ return {active:active(game),location:here.id,name:here.name,levels,map,position:position(game),checkpoint:checkpoint(game),facing:state.walk?walking.frame(state.walk,state.walk.at+state.walk.duration).direction:'down',walk:active(game)&&state.walk&&now<state.walk.at+state.walk.duration?state.walk:null,pending:selected?.location||null,places:places.map(p=>({id:p.id,name:p.name,x:p.x,y:p.y,activity:p.activity,open:unlocked(game,p),visited:!!state.visited[p.id],current:p.id===here.id,levels:range(game,p),reason:reason(game,p)})),links};
 }
 function locationsFor(id){return places.filter(p=>(habitats[p.habitat]||[]).some(h=>h.id===id));}
-module.exports={places,byId,links,active,init,current,range,options,status,travel,snapshot,unlocked,locationsFor,position};
+module.exports={places,byId,links,active,init,current,range,options,status,travel,snapshot,unlocked,locationsFor,position,checkpoint,passageStatus,pass};

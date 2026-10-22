@@ -86,6 +86,8 @@ class Adventure extends Engine{
   travelName(id){return world.byId.get(id)?.name;}
   travelStatus(id,point){return world.status(this,id,point);}
   travelTo(id,now,point){return world.travel(this,id,now,point);}
+  passageStatus(id){return world.passageStatus(this,id);}
+  passCheckpoint(id,now){return world.pass(this,id,now);}
   canReserveCapture(id){return id!==131&&super.canReserveCapture(id);}
   canReceiveFlute(){const r=this.data.mobileStory?.rescue;return !!(r?.completedAt&&r.wins.every(Boolean));}
   fluteRewardText(){return '등나무노인에게 포켓몬피리를 받았다!';}
@@ -122,6 +124,7 @@ class Adventure extends Engine{
   advanceScene(id,now=Date.now()){
     const story=this.data.mobileStory,s=story.scene;
     if(!s||s.mode!=='dialogue'||id!==s.id+':'+s.index)return false;
+    require('./adventure-records.cjs').remember(this,s,now);
     if(s.kind==='oak'&&s.next==='rival'&&s.index===1&&!story.giftReceived){
       story.giftReceived=true;this.log('피카츄가 첫 동료가 되었다!','gift',25,now);
     }
@@ -304,13 +307,14 @@ class Adventure extends Engine{
   tick(now=Date.now()){
     if(this.presentation())return false;
     const b=this.data.battle;
+    if(world.active(this)&&world.init(this).blocked&&!b&&!this.data.pendingChallenge&&!this.seasonDue(now))return this.controlTick(now);
     // Exploring spends its own activity. Keep banked wild work and the paused
     // opponent intact; explicit challenges and the monthly rollover still run.
     if(this.data.mobileStory.safari.trip&&!this.data.pendingChallenge&&b?.kind!=='trainer'&&!b?.storyId&&!this.seasonDue(now))return this.controlTick(now);
     return this.offerLapras(now)||this.offerMansion(now)||this.offerDevice(now)||super.tick(now);
   }
   actionStatus(a,now=Date.now()){
-    if(a.kind==='travel'){const status=world.status(this,a.location,a.position);if(status)return status;}
+    if(a.kind==='travel'){const status=this.travelStatus(a.location,a.position);if(status)return status;}
     if(a.kind==='select'&&a.uid===this.data.activeId)return super.actionStatus(a,now);
     if(this.presentation())return {state:'waiting',reason:'대화가 끝나면 실행해요.'};
     return super.actionStatus(a,now);
@@ -341,7 +345,7 @@ class Adventure extends Engine{
       routes.unshift({kind:'event',text:event?'모험 중 특별한 만남으로 동료가 될 수 있어요.':'사파리존에서 만날 수 있어요.'});
       p.acquisition={...p.acquisition,wildAllowed:false,routes,summary:[...new Set(summary)].join(' · '),note:'일반 야생에서는 출현하지 않아요.'};
     }
-    return {...s,kantoWorld:world.snapshot(this,now),inventory:[...s.inventory,...items],scene:this.presentation(),activityMode:this.platform==='desktop'?'tokens':'walking',onboarding:story?.onboarding!=='done',discovery,rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this),silph:silph.snapshot(this),safari:{...safari.snapshot(this),canStart:this.canChallenge('safari-start')},mansion:{...mansion.snapshot(this),canStart:this.canChallenge('mansion-investigate')},mobileGymHints:hints};
+    return {...s,kantoWorld:world.snapshot(this,now),adventureRecords:require('./adventure-records.cjs').list(this),dialogueMemories:this.data.dialogueMemories||[],inventory:[...s.inventory,...items],scene:this.presentation(),activityMode:this.platform==='desktop'?'tokens':'walking',onboarding:story?.onboarding!=='done',discovery,rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this),silph:silph.snapshot(this),safari:{...safari.snapshot(this),canStart:this.canChallenge('safari-start')},mansion:{...mansion.snapshot(this),canStart:this.canChallenge('mansion-investigate')},mobileGymHints:hints};
   }
 }
 module.exports={Adventure:require('./johto-adventure.cjs').withJohto(Adventure)};

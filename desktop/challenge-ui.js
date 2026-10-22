@@ -21,7 +21,7 @@ globalThis.ChallengeUI=(()=>{
   }return fragment;
  }
  function badgeHolder({id,rows,earned,region,onPick}){
-  const holder=document.querySelector('#kanto-gyms .badge-case').cloneNode(true);for(const n of holder.querySelectorAll('[id]'))n.removeAttribute('id');holder.setAttribute('aria-label',region+' 뱃지 홀더');holder.querySelector('.case-heading b').textContent=region;
+  const holder=document.querySelector('#world-badge-host .badge-case,#kanto-gyms .badge-case').cloneNode(true);for(const n of holder.querySelectorAll('[id]'))n.removeAttribute('id');holder.setAttribute('aria-label',region+' 뱃지 홀더');holder.querySelector('.case-heading b').textContent=region;
   const slots=holder.querySelector('.badge-slots');slots.id=id;slots.replaceChildren(badgeSlots(rows,new Set(earned),null,onPick));holder.querySelector('.case-bottom span').textContent=earned.length===8?'여덟 번의 도전, 여덟 개의 증표':earned.length+'개의 증표 · 다음 도전을 기다리는 자리';return holder;
  }
  return {section,trainerBody,trainerCard,badgeSlots,badgeHolder};

@@ -51,7 +51,9 @@ function storyArtwork(requirement){
 }
 function dexList(){selected=null;memberUid=null;detailSignature='';render();document.querySelector('.dex-layout').scrollTop=dexListScroll;}
 function switchTab(value){
+  if(value!=='challenge')globalThis.WorldMap?.close();
   tab=['collection','challenge','journal','daycare','connections'].includes(value)?value:'collection';
+  if(tab==='challenge')globalThis.WorldMap?.show();
   if(tab==='challenge')for(const card of document.querySelectorAll('.challenge-card'))card.open=false;
   if(tab==='collection'&&!mobilePanel){selected=null;memberUid=null;detailSignature='';}
   if(mobilePanel){
@@ -165,7 +167,7 @@ function renderBadgeCase(){
   const earned=new Set(state.badges),signature=JSON.stringify([state.badges,state.bosses.slice(0,8).map(b=>b.revealed)]);
   if($('badge-slots').dataset.signature===signature)return;
   $('badge-slots').dataset.signature=signature;
-  $('badge-slots').replaceChildren(ChallengeUI.badgeSlots(state.bosses.slice(0,8).map((b,i)=>({...b,index:i,src:'assets/badges/'+b.id+'.png'})),earned,shownBadges,row=>focusGym(row.index)));
+  $('badge-slots').replaceChildren(ChallengeUI.badgeSlots(state.bosses.slice(0,8).map((b,i)=>({...b,index:i,src:'assets/badges/'+b.id+'.png'})),earned,shownBadges,row=>globalThis.WorldMap?.badge(row.id)));
   shownBadges=earned;
   $('badge-case-note').textContent=earned.size===8?'관동의 여덟 증표 · 포켓몬 리그로':earned.size+'개의 증표 · 다음 도전을 기다리는 자리';
 }
@@ -275,7 +277,7 @@ for(const b of document.querySelectorAll('[data-journal-tab]'))b.onclick=()=>{
 };
 function renderJournal(){
   if(!state)return;
-  const signature=JSON.stringify([state.journal,state.summary,journalTab]);if(signature===journalSignature)return;journalSignature=signature;
+  const signature=JSON.stringify([state.journal,state.summary,state.adventureRecords,state.dialogueMemories,journalTab]);if(signature===journalSignature)return;journalSignature=signature;
   for(const b of document.querySelectorAll('[data-journal-tab]'))b.setAttribute('aria-selected',String(b.dataset.journalTab===journalTab));
   $('journal-summary').hidden=journalTab!=='summary';$('journal-detail').hidden=journalTab!=='detail';
   const s=state.summary,c=s.counts;
@@ -285,10 +287,15 @@ function renderJournal(){
   $('summary-note').textContent='새로운 발견 '+(c.encounter||0)+' · 알 발견 '+(c.egg||0)+' · 관장·리그 승리 '+(c.badge||0)+' · 스토리 승리 '+(c.story||0)+' · 도구 발견 '+((c.item||0)+(c.device||0))+' · 패배 '+(c.loss||0);
   $('summary-highlights').replaceChildren(...(s.highlights.length?journalRows(s.highlights):[node('p','muted','아직 기억에 남는 모험이 없어요.')]));
   $('journal-list').replaceChildren(...(state.journal.length?journalRows(state.journal):[node('p','muted','첫 모험을 기다리고 있어요. Codex에서 작업하면 기록이 쌓여요.')]));
+  const records=state.adventureRecords||[];$('journey-records-title').hidden=!records.length;
+  $('journey-records').replaceChildren(...records.map(r=>{const d=node('details','journey-record'),head=node('summary','',r.title);d.dataset.record=r.id;d.append(head,node('p','muted',r.generation+'세대에서 남긴 모험'));if(r.team?.length)d.append(teamMembers(r.team,false,true));return d;}));
+  const memories=state.dialogueMemories||[];$('dialogue-records-title').hidden=!memories.length;
+  $('dialogue-records').replaceChildren(...[...memories].reverse().map(r=>{const d=node('details','journey-record');d.append(node('summary','',r.name+'와 나눈 이야기'));for(const text of r.pages)d.append(node('p','',text));return d;}));
 }
 
 function render(){
   if(!state)return;
+  globalThis.WorldMap?.beforeRender();
   $('panel-agent-label').textContent='POKÉMON / '+AgentStatus.presentation(state.source).label;
   $('totals').textContent=state.caughtCount+' / '+state.collection.length;$('region').textContent=state.generation===1?'관동 지방 · 1세대':'관동 + 성도 지방 · 2세대 해금';
   const boost=state.experienceBoost;$('xp-boost').textContent='경험치 +'+boost.percent.toLocaleString('ko-KR',{maximumFractionDigits:2})+'%';$('xp-boost').title='누적 도감 '+boost.count+'종 · 1종당 경험치 +1% · 시즌이 바뀌어도 유지';
