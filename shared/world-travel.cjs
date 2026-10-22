@@ -1,11 +1,13 @@
 'use strict';
 const walking=require('../desktop/map-walk.js');
 const same=(a,b)=>a.x===b.x&&a.y===b.y;
-const required=10;
+const minimum=10,maximum=20;
 const isRoad=id=>/^(?:j-(?:k-)?)?route-?\d+$/.test(id);
-function progress(state){
+function progress(state,random=Math.random){
  if(!isRoad(state.location))return null;
- return {location:state.location,completed:state.roadProgress?.location===state.location?Math.max(0,Math.min(required,Math.floor(state.roadProgress.completed)||0)):0};
+ const saved=state.roadProgress?.location===state.location?state.roadProgress:null;
+ const required=Number.isInteger(saved?.required)&&saved.required>=minimum&&saved.required<=maximum?saved.required:minimum+Math.min(maximum-minimum,Math.max(0,Math.floor(random()*(maximum-minimum+1))));
+ return state.roadProgress={location:state.location,completed:Math.max(0,Math.min(required,Math.floor(saved?.completed)||0)),required};
 }
 function plan(map,from,to,open){
  const safe={...map,roads:map.roads.filter(p=>same(p,from)||open(p.place))};
@@ -32,23 +34,23 @@ function move(game,state,map,id,to,open,name,now){
 function enter(game,state,now){
  const trip=state.journey,segment=trip.segments[trip.index],end=segment.path.at(-1);
  state.walk={from:state.location,to:segment.location,destination:trip.destination,path:segment.path,at:now,duration:walking.duration(segment.path)};
- state.location=segment.location;state.position={x:end.x,y:end.y};state.visited[state.location] ||= now;state.roadProgress=progress(state);
+ state.location=segment.location;state.position={x:end.x,y:end.y};state.visited[state.location] ||= now;state.roadProgress=progress(state,game.random);
  game.holdUntil(now+state.walk.duration);
 }
 function advance(game,state,now){
  const trip=state.journey;
  if(!trip||game.seasonDue?.(now)||game.data.battle||game.data.suspendedWild||game.data.pendingBattle||game.data.pendingChallenge||game.presentation?.()||now<game.nextTick||now<game.data.switchUntil||game.data.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind)))return false;
  const leaving=trip.index+1<trip.segments.length||trip.blocked;
- if(leaving&&isRoad(state.location)&&progress(state).completed<required)return false;
+ const p=progress(state,game.random);if(leaving&&p&&p.completed<p.required)return false;
  if(trip.index+1<trip.segments.length){trip.index++;enter(game,state,now);return true;}
  state.blocked=trip.blocked;state.journey=null;
  game.log(state.blocked?'길목에 도착했다. 앞을 지키는 사람과 이야기해 보자.':trip.name+'에 도착했다. 주변을 탐험해 보자.','travel',null,now);return true;
 }
-function encounterEnded(state,b){
+function encounterEnded(state,b,random){
  if(!b||b.kind!=='wild'||b.storyId||b.travelCounted||b.location!==state.location||!isRoad(state.location))return false;
- b.travelCounted=true;const p=state.roadProgress=progress(state);p.completed=Math.min(required,p.completed+1);return true;
+ b.travelCounted=true;const p=progress(state,random);p.completed=Math.min(p.required,p.completed+1);return true;
 }
-function snapshot(state){
- const p=progress(state);return {roadProgress:p?{...p,required}:null,journey:state.journey?{destination:state.journey.destination,name:state.journey.name}:null};
+function snapshot(state,random){
+ const p=progress(state,random);return {roadProgress:p?{...p}:null,journey:state.journey?{destination:state.journey.destination,name:state.journey.name}:null};
 }
-module.exports={same,plan,move,advance,encounterEnded,snapshot,required,isRoad};
+module.exports={init:progress,same,plan,move,advance,encounterEnded,snapshot,isRoad};

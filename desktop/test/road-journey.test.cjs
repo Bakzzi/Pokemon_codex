@@ -13,12 +13,12 @@ for(const Type of [PC,Android]){
   g.data.champion=true;g.unlockJohto(clock(g),[25]);g.data.johto.cleared['j-ice-path']=now;const w=J.init(g);w.location='j-ice';w.position={...J.maps.johto.points['j-ice']};g.data.switchUntil=0;g.nextTick=now;
   assert.ok(g.requestAction('travel','j-dragon',now));finishJourney(g,now);assert.equal(J.init(g).location,'j-ice');assert.equal(J.checkpoint(g).checkpoint,'j-dragon');assert.equal(J.checkpoint(g).canPass,false);
  });
- test(Type.name+' crosses each road only after ten completed wild encounters and never auto-starts a gym',()=>{
+ test(Type.name+' crosses each road only after the randomly drawn completed wild encounters and never auto-starts a gym',()=>{
   const g=ready(Type);assert.ok(g.requestAction('travel','pewter',now));assert.equal(K.current(g).id,'route-1');assert.equal(g.data.kantoWorld.journey.destination,'pewter');
-  for(let i=0;i<9;i++){win(g);assert.equal(g.panelState(clock(g)).kantoWorld.roadProgress.completed,i+1);assert.equal(g.advanceTravel(clock(g)),false);}
+  const quota=g.panelState(now).kantoWorld.roadProgress.required;assert.equal(quota,16);for(let i=0;i<quota-1;i++){win(g);assert.equal(g.panelState(clock(g)).kantoWorld.roadProgress.completed,i+1);assert.equal(g.advanceTravel(clock(g)),false);}
   win(g);assert.equal(g.advanceTravel(clock(g)-1),false);assert.ok(g.advanceTravel(clock(g)));assert.equal(K.current(g).id,'viridian');assert.equal(g.panelState(clock(g)).kantoWorld.roadProgress,null);
   assert.ok(g.controlTick(clock(g)));assert.equal(K.current(g).id,'route-2');assert.equal(g.panelState(clock(g)).kantoWorld.roadProgress.completed,0);
-  for(let i=0;i<10;i++)win(g);while(g.data.kantoWorld.journey)assert.ok(g.controlTick(clock(g)));
+  for(let i=0;i<g.data.kantoWorld.roadProgress.required;i++)win(g);while(g.data.kantoWorld.journey)assert.ok(g.controlTick(clock(g)));
   assert.equal(K.current(g).id,'pewter');assert.equal(g.data.pendingChallenge,null);assert.equal(g.data.battle,null);assert.deepEqual(g.data.badges,[]);
  });
  test(Type.name+' capture counts after the ball resolves, once, while failures and story encounters do not count',()=>{
@@ -33,17 +33,33 @@ for(const Type of [PC,Android]){
   g.newWild(clock(g));g.deferBattle('draw',clock(g));assert.ok(g.tick(clock(g)));assert.equal(g.panelState(clock(g)).kantoWorld.roadProgress.completed,2);
  });
  test(Type.name+' saves the itinerary and partial progress, preserves it on retarget and resets on road re-entry',()=>{
-  let g=ready(Type);g.requestAction('travel','pewter',now);for(let i=0;i<3;i++)win(g);const t=clock(g);g=new Type(structuredClone(g.data),t);
+  let g=ready(Type);g.requestAction('travel','pewter',now);for(let i=0;i<3;i++)win(g);const t=clock(g),quota=g.data.kantoWorld.roadProgress.required;g=new Type(structuredClone(g.data),t);assert.equal(g.data.kantoWorld.roadProgress.required,quota);
   assert.equal(g.panelState(t).kantoWorld.roadProgress.completed,3);assert.equal(g.data.kantoWorld.journey.destination,'pewter');assert.ok(g.requestAction('travel','viridian',t));assert.equal(g.panelState(t).kantoWorld.roadProgress.completed,3);
-  for(let i=0;i<7;i++)win(g);while(g.data.kantoWorld.journey)assert.ok(g.controlTick(clock(g)));assert.equal(K.current(g).id,'viridian');g.requestAction('travel','pallet',clock(g));assert.ok(g.controlTick(clock(g)));assert.equal(K.current(g).id,'route-1');assert.equal(g.panelState(clock(g)).kantoWorld.roadProgress.completed,0);
+  assert.equal(g.data.kantoWorld.roadProgress.required,quota);for(let i=3;i<quota;i++)win(g);while(g.data.kantoWorld.journey)assert.ok(g.controlTick(clock(g)));assert.equal(K.current(g).id,'viridian');g.requestAction('travel','pallet',clock(g));assert.ok(g.controlTick(clock(g)));assert.equal(K.current(g).id,'route-1');assert.equal(g.panelState(clock(g)).kantoWorld.roadProgress.completed,0);
  });
  test(Type.name+' Johto uses local encounter identity and the same per-road quota',()=>{
   const g=ready(Type);g.data.champion=true;g.unlockJohto(now,[25]);assert.ok(g.requestAction('travel','j-violet',now));assert.ok(g.controlTick(clock(g)));assert.equal(J.init(g).location,'j-route29');
-  for(let i=0;i<9;i++)win(g);assert.equal(g.advanceTravel(clock(g)),false);assert.equal(g.wildOptions().location,'j-route29');win(g);assert.ok(g.controlTick(clock(g)));assert.equal(J.init(g).location,'j-cherrygrove');
+  const quota=J.snapshot(g,now).roadProgress.required;for(let i=0;i<quota-1;i++)win(g);assert.equal(g.advanceTravel(clock(g)),false);assert.equal(g.wildOptions().location,'j-route29');win(g);assert.ok(g.controlTick(clock(g)));assert.equal(J.init(g).location,'j-cherrygrove');
  });
  test(Type.name+' a manual trainer challenge pauses the road journey and restores the same wild encounter',()=>{
-  const g=ready(Type);g.requestAction('travel','pewter',now);for(let i=0;i<3;i++)win(g);g.newWild(clock(g));const b=g.data.battle,trip=structuredClone(g.data.kantoWorld.journey);assert.ok(g.challenge(0,clock(g)));g.tick(clock(g));
+  const g=ready(Type);g.requestAction('travel','pewter',now);for(let i=0;i<3;i++)win(g);g.newWild(clock(g));const b=g.data.battle,trip=structuredClone(g.data.kantoWorld.journey),quota=g.data.kantoWorld.roadProgress.required;assert.ok(g.challenge(0,clock(g)));g.tick(clock(g));
   assert.equal(g.data.suspendedWild,b);assert.deepEqual(g.data.kantoWorld.journey,trip);assert.equal(g.panelState(clock(g)).kantoWorld.roadProgress.completed,3);
-  g.data.mobileStory.scene=null;g.restoreWild(clock(g));assert.equal(g.data.battle,b);g.data.battle.foe.hp=0;g.showFaint(clock(g));g.tick(clock(g));assert.equal(g.panelState(clock(g)).kantoWorld.roadProgress.completed,4);
+  g.data.mobileStory.scene=null;g.restoreWild(clock(g));assert.equal(g.data.battle,b);g.data.battle.foe.hp=0;g.showFaint(clock(g));g.tick(clock(g));assert.equal(g.panelState(clock(g)).kantoWorld.roadProgress.completed,4);assert.equal(g.data.kantoWorld.roadProgress.required,quota);
+ });
+ test(Type.name+' an existing ten-encounter save keeps completed battles and persists its newly drawn quota',()=>{
+  const g=ready(Type);g.data.kantoWorld.roadProgress={location:'route-1',completed:9};g.random=()=>.999;
+  const p=K.snapshot(g,now).roadProgress;assert.deepEqual(p,{location:'route-1',completed:9,required:20});
+  const loaded=new Type(structuredClone(g.data),now);loaded.random=()=>{throw new Error('A saved road quota must not be rerolled');};
+  assert.deepEqual(K.snapshot(loaded,now).roadProgress,p);assert.deepEqual(K.snapshot(loaded,now+1).roadProgress,p);
+ });
+ test(Type.name+' entering another road or returning rerolls the quota, but a same-road selection preserves it',()=>{
+  const g=ready(Type);g.random=()=>0;g.data.kantoWorld.roadProgress=null;g.requestAction('travel','viridian',now);assert.equal(g.data.kantoWorld.roadProgress.required,10);
+  g.random=()=>.999;g.requestAction('travel','pewter',clock(g));assert.equal(g.data.kantoWorld.roadProgress.required,10);finishJourney(g,clock(g));
+  g.requestAction('travel','pallet',clock(g));assert.ok(g.controlTick(clock(g)));assert.equal(g.data.kantoWorld.roadProgress.required,20);assert.equal(g.data.kantoWorld.roadProgress.completed,0);
  });
 }
+test('every quota from ten through twenty has an equal-sized draw interval',()=>{
+ const travel=require('../../shared/world-travel.cjs'),counts=new Map();
+ for(let i=0;i<1100;i++){const p=travel.snapshot({location:'route-1'},()=>(i+.5)/1100).roadProgress;counts.set(p.required,(counts.get(p.required)||0)+1);}
+ assert.deepEqual([...counts.keys()],[10,11,12,13,14,15,16,17,18,19,20]);assert.ok([...counts.values()].every(n=>n===100));
+});

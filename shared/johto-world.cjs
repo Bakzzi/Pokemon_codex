@@ -32,9 +32,9 @@ function geometry(zone){
 }
 const maps={johto:geometry('johto'),kanto:geometry('kanto')};
 function init(game,now=Date.now()){
- if(game.data.johtoWorld?.revision===1&&byId.has(game.data.johtoWorld.location))return game.data.johtoWorld;
+ if(game.data.johtoWorld?.revision===1&&byId.has(game.data.johtoWorld.location)){journey.init(game.data.johtoWorld,game.random);return game.data.johtoWorld;}
  const location=J.done(game,'j-ship')?'j-k-vermilion':J.done(game,'j-clair')?'j-blackthorn':J.done(game,'j-jasmine')?'j-mahogany':J.done(game,'j-morty')?'j-olivine':J.done(game,'j-sudowoodo')?'j-ecruteak':J.done(game,'j-ilex')?'j-goldenrod':J.done(game,'j-falkner')?'j-azalea':'j-newbark';
- return game.data.johtoWorld={revision:1,location,position:{...byId.get(location).point},visited:{[location]:now}};
+ game.data.johtoWorld={revision:1,location,position:{...byId.get(location).point},visited:{[location]:now}};journey.init(game.data.johtoWorld,game.random);return game.data.johtoWorld;
 }
 function unlocked(game,p){return !!p&&(!p.requires||J.done(game,p.requires));}
 function status(game,id,point){if(!J.active(game)||!byId.has(id))return {state:'invalid',reason:'지금 모험 중인 지방의 장소를 선택해 주세요.'};const p=byId.get(id),map=maps[p.zone];if(point&&!map.roads.some(c=>c.place===id&&journey.same(c,point))&&!journey.same(point,p.point))return {state:'invalid',reason:'지도에 표시된 길을 선택해 주세요.'};const s=init(game);if(s.journey?.destination===id&&journey.same(s.journey.position,point||p.point))return {state:'done',reason:'이곳으로 모험하고 있어요.'};if(s.location===id&&journey.same(s.position,point||p.point)&&!s.blocked&&!s.journey)return {state:'done',reason:'지금 탐험 중이에요.'};return null;}
@@ -55,6 +55,6 @@ const local={'j-falkner':'j-violet','j-bugsy':'j-azalea','j-whitney':'j-goldenro
 function locationFor(id){const n=J.nodes.get(id);return local[id]||grouped[n?.group]||(n?.target?locationFor(n.target):null);}
 function snapshot(game,now=Date.now()){
  const s=init(game),current=byId.get(s.location),map=maps[current.zone],pending=game.data.pendingActions?.find(a=>['travel','world-pass'].includes(a.kind));
- return {active:true,location:s.location,name:current.name,zone:current.zone,map,maps,...journey.snapshot(s),position:s.position,levels:{max:game.wildLevelCap()},walk:s.walk&&now<s.walk.at+s.walk.duration?s.walk:null,facing:s.walk?walking.frame(s.walk,s.walk.at+s.walk.duration).direction:'down',pending:pending?.location||null,checkpoint:checkpoint(game),locations:Object.fromEntries([...J.nodes.keys()].map(id=>[id,locationFor(id)])),places:places.map(p=>({id:p.id,name:p.name,zone:p.zone,current:p.id===s.location,open:unlocked(game,p),visited:!!s.visited[p.id],levels:{max:game.wildLevelCap()},notice:[...J.nodes.values()].some(n=>locationFor(n.id)===p.id&&J.available(game,n))}))};
+ return {active:true,location:s.location,name:current.name,zone:current.zone,map,maps,...journey.snapshot(s,game.random),position:s.position,levels:{max:game.wildLevelCap()},walk:s.walk&&now<s.walk.at+s.walk.duration?s.walk:null,facing:s.walk?walking.frame(s.walk,s.walk.at+s.walk.duration).direction:'down',pending:pending?.location||null,checkpoint:checkpoint(game),locations:Object.fromEntries([...J.nodes.keys()].map(id=>[id,locationFor(id)])),places:places.map(p=>({id:p.id,name:p.name,zone:p.zone,current:p.id===s.location,open:unlocked(game,p),visited:!!s.visited[p.id],levels:{max:game.wildLevelCap()},notice:[...J.nodes.values()].some(n=>locationFor(n.id)===p.id&&J.available(game,n))}))};
 }
-module.exports={init,travel,status,checkpoint,passageStatus,pass,locationFor,snapshot,maps,places,byId,townRoads,habitat,poolNames,locationsFor,advance:(game,now)=>journey.advance(game,init(game),now),encounterEnded:(game,b)=>journey.encounterEnded(init(game),b)};
+module.exports={init,travel,status,checkpoint,passageStatus,pass,locationFor,snapshot,maps,places,byId,townRoads,habitat,poolNames,locationsFor,advance:(game,now)=>journey.advance(game,init(game),now),encounterEnded:(game,b)=>journey.encounterEnded(init(game),b,game.random)};

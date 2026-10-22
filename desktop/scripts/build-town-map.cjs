@@ -21,7 +21,7 @@ function render(){
  const crop={x:24,y:16,width:192,height:144};
  const header=Buffer.alloc(13);header.writeUInt32BE(crop.width);header.writeUInt32BE(crop.height,4);header[8]=8;header[9]=3;const rows=Buffer.alloc((crop.width+1)*crop.height);for(let y=0;y<crop.height;y++)pixels.copy(rows,y*(crop.width+1)+1,(y+crop.y)*width+crop.x,(y+crop.y)*width+crop.x+crop.width);
  const png=Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),chunk('IHDR',header),chunk('PLTE',palette),chunk('IDAT',zlib.deflateSync(rows,{level:9})),chunk('IEND',Buffer.alloc(0))]);
- fs.mkdirSync(out,{recursive:true});fs.writeFileSync(path.join(out,'kanto-frlg.png'),png);
+ fs.mkdirSync(out,{recursive:true});fs.writeFileSync(path.join(out,'kanto-frlg.png'),png);fs.copyFileSync(path.join(source,'player_icon_red.png'),path.join(out,'player-red.png'));
  const cells=[...fs.readFileSync(path.join(source,'region_map_layout_kanto.h'),'utf8').matchAll(/\{((?:MAPSEC_[A-Z0-9_]+,?\s*)+)\}/g)].map(m=>m[1].match(/MAPSEC_[A-Z0-9_]+/g));assert.equal(cells.length,30);for(const row of cells)assert.equal(row.length,22);
  const sections={pallet:'PALLET_TOWN',viridian:'VIRIDIAN_CITY',forest:'VIRIDIAN_FOREST',pewter:'PEWTER_CITY','mt-moon':'MT_MOON',cerulean:'CERULEAN_CITY','sea-cottage':'ROUTE_25',vermilion:'VERMILION_CITY','ss-anne':'VERMILION_CITY',diglett:'DIGLETTS_CAVE','rock-tunnel':'ROCK_TUNNEL',lavender:'LAVENDER_TOWN',tower:'POKEMON_TOWER',celadon:'CELADON_CITY',fuchsia:'FUCHSIA_CITY',safari:'KANTO_SAFARI_ZONE',saffron:'SAFFRON_CITY',seafoam:'SEAFOAM_ISLANDS',cinnabar:'CINNABAR_ISLAND',mansion:'POKEMON_MANSION','power-plant':'POWER_PLANT','victory-road':'KANTO_VICTORY_ROAD',indigo:'INDIGO_PLATEAU','cerulean-cave':'CERULEAN_CAVE'};
  for(let i=1;i<=25;i++)sections['route-'+i]='ROUTE_'+i;

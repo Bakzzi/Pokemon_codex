@@ -45,7 +45,7 @@ function collectionHints(game){
     }
     if(p.id===25)routes.push({kind:'starter',text:'매 시즌 시작할 때 Lv.5 동료로 지급'});
     if([1,4,7].includes(p.id))routes.push({kind:'event',text:game.data.starterGifts[p.id]?'이번 시즌 모험에서 동료로 받은 포켓몬이에요.':'모험 중 특별한 만남으로 동료가 될 수 있어요.'});
-    if(p.id===143)routes.push({kind:'event',text:game.data.trainingDevice.fluteObtainedAt?'도전하기에서 포켓몬피리로 길을 막은 상대를 깨워 도전 · 피리 보유 중':'연분홍시티로 향하는 길목에 깊이 잠든 포켓몬 · 깨울 방법을 찾아야 해요.'});
+    if(p.id===143)routes.push({kind:'event',text:game.data.trainingDevice.fluteObtainedAt?'타운맵에서 포켓몬피리로 길을 막은 상대를 깨워 도전 · 피리 보유 중':'연분홍시티로 향하는 길목에 깊이 잠든 포켓몬 · 깨울 방법을 찾아야 해요.'});
     for(const rule of parents.get(p.id)||[]){
       if(species.get(rule.from).generation>generation)continue;
       const conditions=[];

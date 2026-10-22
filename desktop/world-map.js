@@ -36,7 +36,7 @@
  function currentMap(){return world.maps?.[zone]||world.map;}
  function draw(){
   raf=0;if(!world||!actor)return;const ownZone=!world.maps||zone===world.zone,walk=ownZone?world.walk:null,frame=walk?MapWalk.frame(walk,Date.now()):{...world.position,walking:false,direction:world.facing,sprite:{up:1,left:2,right:2}[world.facing]||0};
-  actor.hidden=!ownZone;actor.classList.toggle('walking',frame.walking);actor.style.left=frame.x/currentMap().width*100+'%';actor.style.top=frame.y/currentMap().height*100+'%';actor.dataset.x=frame.x;actor.dataset.y=frame.y;sprite.style.backgroundPositionX=-frame.sprite*16+'px';sprite.style.transform=frame.direction==='right'?'scaleX(-1)':'';map.dataset.moving=String(frame.walking);
+  actor.hidden=!ownZone;actor.classList.toggle('walking',frame.walking);actor.style.left=frame.x/currentMap().width*100+'%';actor.style.top=frame.y/currentMap().height*100+'%';actor.dataset.x=frame.x;actor.dataset.y=frame.y;map.dataset.moving=String(frame.walking);
   const c=world.checkpoint;guard.hidden=!ownZone||!c||!!frame.walking;if(c){const p=c.gatePosition||world.position;guard.style.left=p.x/currentMap().width*100+'%';guard.style.top=p.y/currentMap().height*100+'%';guard.setAttribute('aria-label',c.name);guard.dataset.kind=c.sprite.startsWith('pokemon:')?'pokemon':'npc';guard.style.backgroundImage=c.sprite.startsWith('pokemon:')?'url(assets/'+c.sprite.slice(8)+'.gif)':'';}
   caption.textContent=world.name+' · '+(!world.active?'지나온 길':frame.walking?'이동 중':world.roadProgress?'야생 만남 '+world.roadProgress.completed+' / '+world.roadProgress.required:'현재 위치');if(frame.walking)raf=requestAnimationFrame(draw);
  }
@@ -71,7 +71,7 @@
  }
  function renderChoice(){
   if(!world)return;const p=world.places.find(p=>p.id===choice)||world.places.find(p=>p.id===world.location);choice=p.id;selected.textContent=p.name;range.textContent=p.current?'현재 머무는 곳':p.visited?'다녀온 곳':'';
-  note.textContent=state.challengeReadOnly?'이전 모험은 모험 기록에서 볼 수 있어요.':world.pending?'진행 중인 배틀이 끝나면 이동해요.':world.journey?world.journey.name+'로 모험 중 · 도로마다 야생 만남 10회 후 이동해요.':world.walk?'레드가 길을 따라 이동하고 있어요.':'목적지를 누르면 도로마다 야생 포켓몬을 만나며 이동해요.';
+  note.textContent=state.challengeReadOnly?'이전 모험은 모험 기록에서 볼 수 있어요.':world.pending?'진행 중인 배틀이 끝나면 이동해요.':world.journey?world.journey.name+'로 모험 중 · 지나치는 도로의 풀숲에서 야생 포켓몬을 만날 수 있어요!':world.walk?'레드가 길을 따라 이동하고 있어요.':'지나치는 도로의 풀숲에서 야생 포켓몬을 만날 수 있어요!';
   restoreList(inlineMounted);inlineMounted=[];local.replaceChildren();const gym=localGym(p);note.hidden=!!gym&&!world.pending&&!world.journey;
   if(gym?.card){range.textContent=p.name.replace(/(?:시티|마을|섬)$/,'')+'체육관';const heading=gym.card.querySelector('.gym-title h3');if(heading)heading.textContent='관장 '+gym.row.name;mount(gym.card,local);}
   cards.replaceChildren();if(world.active&&p.current&&!world.walk){if(world.checkpoint)cards.append(button('길목 살펴보기',()=>{context={npc:true};renderContext();if(!dialog.open)dialog.showModal();}));for(const a of activities(p.id).filter(a=>a.gym===undefined&&!['johto-gym-details','johto-kanto-gyms'].includes(a.key)))cards.append(button(a.title,()=>openPlace(p.id,a.key)));}
@@ -91,7 +91,7 @@
   if(!world.maps)zone=null;else if(!zone||!(zone in world.maps)||arrival&&world.location===arrival)zone=world.zone;
   const geometry=currentMap();if(!geometry)return;zoneNav.replaceChildren();zoneNav.hidden=!world.maps;if(world.maps)for(const [id,name]of [['johto','성도'],['kanto','관동']]){const b=button(name,()=>{zone=id;choice=world.places.find(p=>p.zone===zone)?.id;shapeKey='';render(state);});b.disabled=!world.places.some(p=>p.zone===id&&p.open);b.setAttribute('aria-selected',String(zone===id));zoneNav.append(b);}
   const shape=(s.johto?.active?'johto:':'kanto:')+geometry.image;
-  if(shapeKey!==shape){shapeKey=shape;map.replaceChildren();markers.clear();map.style.aspectRatio=geometry.width+'/'+geometry.height;const art=el('img','world-art');art.src=geometry.image;art.alt=world.maps&&zone==='johto'?'크리스탈 성도 타운맵':'파이어레드·리프그린 관동 타운맵';art.draggable=false;map.append(art);
+  if(shapeKey!==shape){shapeKey=shape;map.replaceChildren();markers.clear();map.style.aspectRatio=geometry.width+'/'+geometry.height;map.style.setProperty('--map-width',geometry.width);const art=el('img','world-art');art.src=geometry.image;art.alt=world.maps&&zone==='johto'?'크리스탈 성도 타운맵':'파이어레드·리프그린 관동 타운맵';art.draggable=false;map.append(art);
    for(const p of world.places.filter(p=>!!geometry.points[p.id])){const point=geometry.points[p.id],b=el('button','world-marker');b.style.left=point.x/geometry.width*100+'%';b.style.top=point.y/geometry.height*100+'%';b.setAttribute('aria-label',p.name);b.onclick=e=>{e.stopPropagation();pick(p.id);};map.append(b);markers.set(p.id,b);}
    actor=el('div','world-player');actor.setAttribute('role','img');actor.setAttribute('aria-label','주인공 레드');sprite=el('span');actor.append(sprite);map.append(actor);guard=el('button','world-guard');guard.onclick=e=>{e.stopPropagation();context={npc:true};renderContext();if(!dialog.open)dialog.showModal();};map.append(guard);
   }

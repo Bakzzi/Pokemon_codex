@@ -76,10 +76,10 @@ function reason(game,p){
  return '이곳을 탐험할 방법을 먼저 찾아야 해요.';
 }
 function init(game,now=Date.now()){
- if(game.data.kantoWorld?.revision===1&&byId.has(game.data.kantoWorld.location))return game.data.kantoWorld;
+ if(game.data.kantoWorld?.revision===1&&byId.has(game.data.kantoWorld.location)){journey.init(game.data.kantoWorld,game.random);return game.data.kantoWorld;}
  const defaults=['route-1','route-3','route-5','route-9',roadOpen(game)?'route-15':'route-12','saffron','route-19','route-21','route-23','cerulean-cave'];
  const location=defaults[reachedStage(game)];
- return game.data.kantoWorld={revision:1,location,visited:{[location]:now}};
+ game.data.kantoWorld={revision:1,location,visited:{[location]:now}};journey.init(game.data.kantoWorld,game.random);return game.data.kantoWorld;
 }
 function current(game){return byId.get(init(game).location);}
 function range(game,p=current(game)){
@@ -123,7 +123,7 @@ function pass(game,id,now){if(passageStatus(game,id))return false;const state=in
 function snapshot(game,now=Date.now()){
  const state=init(game),here=current(game),levels=range(game);
  const selected=game.data.pendingActions?.find(a=>['travel','world-pass'].includes(a.kind));
- return {active:active(game),location:here.id,name:here.name,levels,map,...journey.snapshot(state),position:position(game),checkpoint:checkpoint(game),facing:state.walk?walking.frame(state.walk,state.walk.at+state.walk.duration).direction:'down',walk:active(game)&&state.walk&&now<state.walk.at+state.walk.duration?state.walk:null,pending:selected?.location||null,places:places.map(p=>({id:p.id,name:p.name,x:p.x,y:p.y,activity:p.activity,open:unlocked(game,p),visited:!!state.visited[p.id],current:p.id===here.id,levels:range(game,p),reason:reason(game,p)})),links};
+ return {active:active(game),location:here.id,name:here.name,levels,map,...journey.snapshot(state,game.random),position:position(game),checkpoint:checkpoint(game),facing:state.walk?walking.frame(state.walk,state.walk.at+state.walk.duration).direction:'down',walk:active(game)&&state.walk&&now<state.walk.at+state.walk.duration?state.walk:null,pending:selected?.location||null,places:places.map(p=>({id:p.id,name:p.name,x:p.x,y:p.y,activity:p.activity,open:unlocked(game,p),visited:!!state.visited[p.id],current:p.id===here.id,levels:range(game,p),reason:reason(game,p)})),links};
 }
 function locationsFor(id){return places.filter(p=>[p,...(townRoads[p.id]||[]).map(id=>byId.get(id))].some(q=>(habitats[q.habitat]||[]).some(h=>h.id===id)));}
-module.exports={places,byId,links,townRoads,habitat,active,init,current,range,options,status,travel,snapshot,unlocked,locationsFor,position,checkpoint,passageStatus,pass,advance:(game,now)=>journey.advance(game,init(game),now),encounterEnded:(game,b)=>journey.encounterEnded(init(game),b)};
+module.exports={places,byId,links,townRoads,habitat,active,init,current,range,options,status,travel,snapshot,unlocked,locationsFor,position,checkpoint,passageStatus,pass,advance:(game,now)=>journey.advance(game,init(game),now),encounterEnded:(game,b)=>journey.encounterEnded(init(game),b,game.random)};

@@ -159,7 +159,7 @@ async function worldSmokeTest(){
  const assert=require('node:assert/strict'),checks=[],errors=[],world=require('../shared/kanto-world.cjs');
  const wait=ms=>new Promise(r=>setTimeout(r,ms)),check=(ok,label)=>{assert.ok(ok,label);checks.push(label);};
  const read=code=>panel.webContents.executeJavaScript(code).catch(error=>{error.message+=' in '+code;throw error;});
- const finish=()=>{for(let i=0;i<200&&game.data.kantoWorld.journey;i++){const s=game.data.kantoWorld;for(let n=0;n<10;n++)game.onWildEnd({kind:'wild',location:s.location},Date.now());if(s.walk)s.walk.at=Date.now()-s.walk.duration-1;game.data.switchUntil=0;game.nextTick=Date.now();assert.ok(game.controlTick(Date.now()));}assert.ok(!game.data.kantoWorld.journey);};
+ const finish=()=>{for(let i=0;i<200&&game.data.kantoWorld.journey;i++){const s=game.data.kantoWorld;for(let n=0;n<20;n++)game.onWildEnd({kind:'wild',location:s.location},Date.now());if(s.walk)s.walk.at=Date.now()-s.walk.duration-1;game.data.switchUntil=0;game.nextTick=Date.now();assert.ok(game.controlTick(Date.now()));}assert.ok(!game.data.kantoWorld.journey);};
  win.webContents.on('console-message',(_e,d)=>{if(d.level>=3)errors.push(d.message);});
  try{
   game.data.mobileStory.onboarding='done';game.data.mobileStory.scene=null;game.data.switchUntil=0;game.nextTick=Date.now();
@@ -174,13 +174,13 @@ async function worldSmokeTest(){
   check(await read("document.querySelector('.world-controls [role=status]').textContent.includes('배틀이 끝나면')"),'actual publisher returns the queued destination');
   game.data.battle=null;game.data.pendingBattle=null;game.data.switchUntil=0;game.nextTick=Date.now();game.tick(Date.now());publish(true);await wait(80);
   check(snapshot().location.id==='route-1'&&game.data.kantoWorld.journey.destination==='forest','destination selection starts an itinerary without jumping to the destination');
-  for(let i=0;i<9;i++)game.onWildEnd({kind:'wild',location:'route-1'},Date.now());
-  game.data.switchUntil=0;game.nextTick=Date.now();check(!game.advanceTravel(Date.now()),'nine completed encounters cannot leave the road');await wait(game.data.kantoWorld.walk.duration+20);publish(true);await wait(70);
-  check(await read("document.querySelector('#kanto-world>p').textContent.includes('9 / 10')"),'the real panel shows the completed road encounters');
+  const quota=game.panelState().kantoWorld.roadProgress.required;for(let i=0;i<quota-1;i++)game.onWildEnd({kind:'wild',location:'route-1'},Date.now());
+  game.data.switchUntil=0;game.nextTick=Date.now();check(!game.advanceTravel(Date.now()),'an unfinished random quota cannot leave the road');await wait(game.data.kantoWorld.walk.duration+20);publish(true);await wait(70);
+  check(await read("document.querySelector('#kanto-world>p').textContent.includes('"+(quota-1)+" / "+quota+"')"),'the real panel shows the completed road encounters');
   game.newWild(Date.now());game.data.battle.foe.hp=0;game.showFaint(Date.now());
-  check(game.panelState().kantoWorld.roadProgress.completed===9,'a knockout animation has not yet counted the tenth encounter');
+  check(game.panelState().kantoWorld.roadProgress.completed===quota-1,'a knockout animation has not yet counted the final required encounter');
   game.finishBattleEvent(game.data.switchUntil);
-  check(game.panelState().kantoWorld.roadProgress.completed===10,'the real battle-result hook counts the tenth encounter');
+  check(game.panelState().kantoWorld.roadProgress.completed===quota,'the real battle-result hook counts the final required encounter');
   game.data.switchUntil=0;game.nextTick=Date.now();check(game.controlTick(Date.now()),'the completed road advances without another map click');publish(true);await wait(65);
   check(snapshot().location.id==='viridian'&&game.data.pendingChallenge===null,'automatic travel enters the next area without starting its gym');
   check(await read("document.querySelector('.world-player').classList.contains('walking')"),'the real panel animates Red between road segments');
@@ -364,7 +364,7 @@ function updateTray(){
   const update=updater?.snapshot();
   tray.setContextMenu(Menu.buildFromTemplate([
     {label:'포켓몬 보기',click:()=>win.showInactive()},{label:'포켓기어',click:()=>openPanel('collection')},
-    {label:'도전하기',click:()=>openPanel('challenge')},{label:'가방보기',click:()=>openPanel('daycare')},{label:'모험 기록',click:()=>openPanel('journal')},
+    {label:'타운맵',click:()=>openPanel('challenge')},{label:'가방보기',click:()=>openPanel('daycare')},{label:'모험 기록',click:()=>openPanel('journal')},
     {label:'AI Agent 연동 설정',click:()=>openPanel('connections')},
     {type:'separator'},{label:'v'+app.getVersion()+(update?' · '+update.label:''),enabled:false},
     {label:'자동 업데이트',type:'checkbox',checked:settings.autoUpdate!==false,enabled:!!updater,click:item=>{settings.autoUpdate=item.checked;save();updater.setEnabled(item.checked);}},
