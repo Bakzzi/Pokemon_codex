@@ -87,7 +87,7 @@ test('Johto postgame follows each next original revisit gym, including lower cap
 
 test('original legendary minimums remain obtainable in late progress without a large league-clear boost',()=>{
  for(const Type of [PC,Android]){const g=fixture(Type);g.data.badges=[...badges];g.data.kantoWorld.location='power-plant';assert.equal(g.wildLevelCap(),47);assert.ok(!wildDistribution(1,100,g.wildOptions()).pokemon.some(p=>species.get(p.id).legendary));g.data.champion=true;assert.equal(g.wildLevelCap(),52);assert.ok(wildDistribution(1,100,g.wildOptions()).pokemon.some(p=>p.id===145));
-  const j=johto(Type);j.data.johto.champion=true;for(const n of J.nodes.values())j.data.johto.cleared[n.id]=now;const distribution=wildDistribution(2,100,j.wildOptions());for(const id of J.specialIds)assert.ok(distribution.pokemon.some(p=>p.id===id));assert.ok(distribution.pokemon.some(p=>p.id===248));
+  const j=johto(Type);j.data.johto.champion=true;for(const n of J.nodes.values())j.data.johto.cleared[n.id]=now;for(const [id,location]of [[243,'j-route29'],[244,'j-route29'],[245,'j-route29'],[249,'j-whirl'],[250,'j-ecruteak'],[251,'j-ilex'],[248,'j-silver']]){j.data.johtoWorld.location=location;assert.ok(wildDistribution(2,100,j.wildOptions()).pokemon.some(p=>p.id===id),id+' in '+location);}
  }
 });
 

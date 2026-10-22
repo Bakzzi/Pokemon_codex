@@ -197,6 +197,12 @@ async function worldSmokeTest(){
   check(await read("document.getElementById('world-place-dialog').open&&!!document.querySelector('.world-npc')"),'a reached checkpoint opens its character and dialogue');
   check(!game.requestAction('world-pass','route-3'),'the actual game rejects passage before the badge');
   game.data.workTokens=250;check(game.tick(Date.now())&&game.data.battle.kind==='wild'&&game.data.workTokens===0,'ordinary adventures continue while a manual story branch is blocked');
+  publish(true);await wait(60);await read('WorldMap.close()');
+  check(await read("document.querySelector('.world-local [data-challenge]').dataset.challenge==='0'&&!!document.querySelector('.world-local .gym-trainer')"),'the actual panel shows the current town leader portrait, lineup and action inline');
+  check(await read("document.querySelector('.world-controls>p').textContent==='회색체육관'&&![...document.querySelectorAll('.world-links button')].some(b=>b.textContent==='이곳 살펴보기')"),'the town names its gym without an inspection step');
+  const townSaved=structuredClone(game.data);await read("document.querySelector('.world-local [data-challenge]').click()");await wait(70);
+  check(game.data.pendingChallenge?.index===0,'the inline gym button reaches the actual challenge queue through IPC');
+  game=new Game(townSaved,Date.now());game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);await read("document.querySelector('.world-guard').click()");
   game.data.battle=null;game.data.pendingBattle=null;game.data.switchUntil=0;game.nextTick=Date.now();
   const party=JSON.stringify(game.data.owned),tokens=game.data.workTokens;game.data.badges=['brock'];publish(true);await wait(70);
   await read("document.querySelector('[data-world-pass=\"route-3\"]').click()");await wait(80);finish();publish(true);await wait(60);

@@ -22,7 +22,7 @@ test('all original Johto road destinations except the separate mountain approach
 for(const Type of [PC,Android])test(Type.name+' uses the Johto map through the persistent travel queue without Kanto gates or habitats',()=>{
  const g=ready(Type);g.data.champion=true;assert.ok(g.unlockJohto(now,[25]));assert.equal(g.panelState(now).johtoWorld.location,'j-newbark');assert.ok(g.requestAction('travel','j-violet',now));let end=finishJourney(g,now);assert.equal(W.init(g).location,'j-violet');assert.equal(W.init(g).blocked,null);
  assert.ok(g.requestAction('travel','j-azalea',end));end=finishJourney(g,end);assert.equal(W.init(g).blocked.location,'j-azalea');assert.notEqual(W.init(g).location,'j-azalea');g.data.johto.cleared['j-falkner']=now;
- assert.ok(g.requestAction('world-pass','j-azalea',end));finishJourney(g,end);assert.equal(W.init(g).location,'j-azalea');assert.equal(g.wildOptions().habitat,undefined);assert.equal(g.snapshot(now).location.id,'j-azalea');
+ assert.ok(g.requestAction('world-pass','j-azalea',end));finishJourney(g,end);assert.equal(W.init(g).location,'j-azalea');assert.deepEqual(g.wildOptions().habitat,W.habitat(g));assert.equal(g.snapshot(now).location.id,'j-azalea');
 });
 test('completed adventure records outlive the short journal without exposing future opponents',()=>{
  const g=ready();g.data.badges=['brock'];g.data.journal=[];let records=g.panelState(now).adventureRecords;assert.equal(records.length,1);assert.equal(records[0].id,'brock');assert.ok(!JSON.stringify(records).includes('giovanni'));

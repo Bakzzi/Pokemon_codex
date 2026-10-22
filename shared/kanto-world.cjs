@@ -4,6 +4,7 @@ const habitats=require('./kanto-habitats.json');
 const map=require('./kanto-map.json');
 const walking=require('../desktop/map-walk.js');
 const journey=require('./world-travel.cjs');
+const {merge}=require('./local-habitats.cjs');
 const badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'];
 // id, name, map x/y, required badges, local range, habitat, activity/card
 const rows=[
@@ -59,6 +60,9 @@ const rows=[
 ];
 const places=rows.map(([id,name,x,y,stage,min,max,habitat,activity])=>({id,name,x,y,stage,min,max,habitat,activity:activity||null}));
 const byId=new Map(places.map(p=>[p.id,p]));
+const townRoads={pallet:['route-1','route-21'],viridian:['route-1','route-2','route-22'],pewter:['route-2','route-3'],cerulean:['route-4','route-5','route-9','route-24'],vermilion:['route-6','route-11'],lavender:['route-8','route-10','route-12'],celadon:['route-7','route-16'],fuchsia:['route-15','route-18','route-19'],saffron:['route-5','route-6','route-7','route-8'],cinnabar:['route-20','route-21'],indigo:['route-23','victory-road']};
+function sources(game,p){return [p,...(townRoads[p.id]||[]).map(id=>byId.get(id)).filter(q=>unlocked(game,q))];}
+function habitat(game,p=current(game)){return merge([...new Set(sources(game,p).map(q=>q.habitat))].map(key=>habitats[key]));}
 const roadPlaces=new Set(['route-13','route-14','route-15','route-17','route-18','fuchsia','safari']);
 const links=[['pallet','route-1','viridian','route-2','forest','pewter','route-3','mt-moon','route-4','cerulean','route-9','rock-tunnel','route-10','lavender','route-8','route-7','celadon','route-16','route-17','route-18','fuchsia','route-15','route-14','route-13','route-12','route-11','vermilion','route-6','saffron','route-5','cerulean','route-24','route-25','sea-cottage'],['viridian','route-22','route-23','victory-road','indigo'],['fuchsia','route-19','seafoam','route-20','cinnabar','route-21','pallet'],['celadon','saffron','lavender'],['route-10','power-plant'],['forest','diglett','route-11'],['vermilion','ss-anne'],['fuchsia','safari'],['cinnabar','mansion'],['cerulean','cerulean-cave']];
 function active(game){return !game.data.johtoUnlocked;}
@@ -79,11 +83,11 @@ function init(game,now=Date.now()){
 }
 function current(game){return byId.get(init(game).location);}
 function range(game,p=current(game)){
- const max=Math.min(p.max,game.wildLevelCap());return {min:Math.min(p.min,max),max};
+ const nearby=sources(game,p),max=Math.min(Math.max(...nearby.map(q=>q.max)),game.wildLevelCap());return {min:Math.min(...nearby.map(q=>q.min),max),max};
 }
 function options(game){
  const p=current(game),levels=range(game,p);
- return {habitat:habitats[p.habitat],minimumEncounterLevel:levels.min,maximumLevel:levels.max};
+ return {habitat:habitat(game,p),minimumEncounterLevel:levels.min,maximumLevel:levels.max};
 }
 function position(game){const state=init(game);return state.position||map.points[state.location];}
 function validPosition(id,point){return !point||point.x===map.points[id]?.x&&point.y===map.points[id]?.y||map.roads.some(p=>p.place===id&&p.x===point.x&&p.y===point.y);}
@@ -121,5 +125,5 @@ function snapshot(game,now=Date.now()){
  const selected=game.data.pendingActions?.find(a=>['travel','world-pass'].includes(a.kind));
  return {active:active(game),location:here.id,name:here.name,levels,map,...journey.snapshot(state),position:position(game),checkpoint:checkpoint(game),facing:state.walk?walking.frame(state.walk,state.walk.at+state.walk.duration).direction:'down',walk:active(game)&&state.walk&&now<state.walk.at+state.walk.duration?state.walk:null,pending:selected?.location||null,places:places.map(p=>({id:p.id,name:p.name,x:p.x,y:p.y,activity:p.activity,open:unlocked(game,p),visited:!!state.visited[p.id],current:p.id===here.id,levels:range(game,p),reason:reason(game,p)})),links};
 }
-function locationsFor(id){return places.filter(p=>(habitats[p.habitat]||[]).some(h=>h.id===id));}
-module.exports={places,byId,links,active,init,current,range,options,status,travel,snapshot,unlocked,locationsFor,position,checkpoint,passageStatus,pass,advance:(game,now)=>journey.advance(game,init(game),now),encounterEnded:(game,b)=>journey.encounterEnded(init(game),b)};
+function locationsFor(id){return places.filter(p=>[p,...(townRoads[p.id]||[]).map(id=>byId.get(id))].some(q=>(habitats[q.habitat]||[]).some(h=>h.id===id)));}
+module.exports={places,byId,links,townRoads,habitat,active,init,current,range,options,status,travel,snapshot,unlocked,locationsFor,position,checkpoint,passageStatus,pass,advance:(game,now)=>journey.advance(game,init(game),now),encounterEnded:(game,b)=>journey.encounterEnded(init(game),b)};

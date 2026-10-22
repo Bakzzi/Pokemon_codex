@@ -1,0 +1,5536 @@
+{
+  "azalea-town": [
+    {
+      "id": 10,
+      "weight": 180
+    },
+    {
+      "id": 11,
+      "weight": 30
+    },
+    {
+      "id": 12,
+      "weight": 15
+    },
+    {
+      "id": 13,
+      "weight": 180
+    },
+    {
+      "id": 14,
+      "weight": 30
+    },
+    {
+      "id": 15,
+      "weight": 15
+    },
+    {
+      "id": 21,
+      "weight": 180
+    },
+    {
+      "id": 22,
+      "weight": 1
+    },
+    {
+      "id": 23,
+      "weight": 30
+    },
+    {
+      "id": 24,
+      "weight": 1
+    },
+    {
+      "id": 102,
+      "weight": 90
+    },
+    {
+      "id": 190,
+      "weight": 60
+    },
+    {
+      "id": 204,
+      "weight": 60
+    },
+    {
+      "id": 205,
+      "weight": 1
+    },
+    {
+      "id": 214,
+      "weight": 30
+    }
+  ],
+  "bell-tower": [
+    {
+      "id": 19,
+      "weight": 5280
+    },
+    {
+      "id": 20,
+      "weight": 1
+    },
+    {
+      "id": 92,
+      "weight": 1920
+    },
+    {
+      "id": 93,
+      "weight": 1
+    },
+    {
+      "id": 250,
+      "weight": 1
+    }
+  ],
+  "blackthorn-city": [
+    {
+      "id": 60,
+      "weight": 480
+    },
+    {
+      "id": 61,
+      "weight": 1
+    },
+    {
+      "id": 129,
+      "weight": 720
+    },
+    {
+      "id": 130,
+      "weight": 1
+    }
+  ],
+  "burned-tower": [
+    {
+      "id": 19,
+      "weight": 405
+    },
+    {
+      "id": 20,
+      "weight": 15
+    },
+    {
+      "id": 41,
+      "weight": 70
+    },
+    {
+      "id": 42,
+      "weight": 1
+    },
+    {
+      "id": 109,
+      "weight": 459
+    },
+    {
+      "id": 110,
+      "weight": 1
+    },
+    {
+      "id": 126,
+      "weight": 50
+    }
+  ],
+  "celadon-city": [
+    {
+      "id": 88,
+      "weight": 270
+    },
+    {
+      "id": 89,
+      "weight": 30
+    },
+    {
+      "id": 133,
+      "weight": 1
+    },
+    {
+      "id": 137,
+      "weight": 1
+    }
+  ],
+  "cerulean-cave": [
+    {
+      "id": 28,
+      "weight": 20
+    },
+    {
+      "id": 42,
+      "weight": 220
+    },
+    {
+      "id": 44,
+      "weight": 15
+    },
+    {
+      "id": 47,
+      "weight": 111
+    },
+    {
+      "id": 49,
+      "weight": 5
+    },
+    {
+      "id": 54,
+      "weight": 139
+    },
+    {
+      "id": 55,
+      "weight": 70
+    },
+    {
+      "id": 57,
+      "weight": 22
+    },
+    {
+      "id": 60,
+      "weight": 500
+    },
+    {
+      "id": 61,
+      "weight": 160
+    },
+    {
+      "id": 64,
+      "weight": 72
+    },
+    {
+      "id": 67,
+      "weight": 80
+    },
+    {
+      "id": 70,
+      "weight": 15
+    },
+    {
+      "id": 75,
+      "weight": 45
+    },
+    {
+      "id": 79,
+      "weight": 139
+    },
+    {
+      "id": 80,
+      "weight": 70
+    },
+    {
+      "id": 82,
+      "weight": 80
+    },
+    {
+      "id": 101,
+      "weight": 26
+    },
+    {
+      "id": 108,
+      "weight": 5
+    },
+    {
+      "id": 111,
+      "weight": 20
+    },
+    {
+      "id": 112,
+      "weight": 15
+    },
+    {
+      "id": 113,
+      "weight": 5
+    },
+    {
+      "id": 118,
+      "weight": 260
+    },
+    {
+      "id": 119,
+      "weight": 120
+    },
+    {
+      "id": 129,
+      "weight": 680
+    },
+    {
+      "id": 130,
+      "weight": 62
+    },
+    {
+      "id": 132,
+      "weight": 124
+    },
+    {
+      "id": 139,
+      "weight": 1
+    },
+    {
+      "id": 141,
+      "weight": 1
+    },
+    {
+      "id": 147,
+      "weight": 1
+    },
+    {
+      "id": 148,
+      "weight": 1
+    },
+    {
+      "id": 149,
+      "weight": 1
+    },
+    {
+      "id": 150,
+      "weight": 1
+    },
+    {
+      "id": 151,
+      "weight": 1
+    }
+  ],
+  "cerulean-city": [
+    {
+      "id": 118,
+      "weight": 720
+    },
+    {
+      "id": 119,
+      "weight": 60
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    }
+  ],
+  "cherrygrove-city": [
+    {
+      "id": 72,
+      "weight": 270
+    },
+    {
+      "id": 73,
+      "weight": 30
+    },
+    {
+      "id": 98,
+      "weight": 1080
+    },
+    {
+      "id": 99,
+      "weight": 90
+    },
+    {
+      "id": 120,
+      "weight": 120
+    },
+    {
+      "id": 129,
+      "weight": 570
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 222,
+      "weight": 240
+    }
+  ],
+  "cianwood-city": [
+    {
+      "id": 72,
+      "weight": 270
+    },
+    {
+      "id": 73,
+      "weight": 30
+    },
+    {
+      "id": 98,
+      "weight": 1350
+    },
+    {
+      "id": 99,
+      "weight": 90
+    },
+    {
+      "id": 120,
+      "weight": 120
+    },
+    {
+      "id": 129,
+      "weight": 570
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 213,
+      "weight": 30
+    },
+    {
+      "id": 222,
+      "weight": 240
+    }
+  ],
+  "cinnabar-island": [
+    {
+      "id": 72,
+      "weight": 420
+    },
+    {
+      "id": 73,
+      "weight": 90
+    },
+    {
+      "id": 90,
+      "weight": 120
+    },
+    {
+      "id": 129,
+      "weight": 360
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 138,
+      "weight": 1
+    },
+    {
+      "id": 139,
+      "weight": 1
+    },
+    {
+      "id": 140,
+      "weight": 1
+    },
+    {
+      "id": 141,
+      "weight": 1
+    },
+    {
+      "id": 142,
+      "weight": 1
+    },
+    {
+      "id": 170,
+      "weight": 180
+    },
+    {
+      "id": 171,
+      "weight": 30
+    }
+  ],
+  "dark-cave": [
+    {
+      "id": 41,
+      "weight": 400
+    },
+    {
+      "id": 42,
+      "weight": 25
+    },
+    {
+      "id": 74,
+      "weight": 570
+    },
+    {
+      "id": 75,
+      "weight": 100
+    },
+    {
+      "id": 98,
+      "weight": 270
+    },
+    {
+      "id": 99,
+      "weight": 1
+    },
+    {
+      "id": 118,
+      "weight": 900
+    },
+    {
+      "id": 119,
+      "weight": 60
+    },
+    {
+      "id": 129,
+      "weight": 1440
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 202,
+      "weight": 45
+    },
+    {
+      "id": 206,
+      "weight": 125
+    },
+    {
+      "id": 213,
+      "weight": 30
+    },
+    {
+      "id": 216,
+      "weight": 10
+    },
+    {
+      "id": 217,
+      "weight": 25
+    }
+  ],
+  "digletts-cave": [
+    {
+      "id": 50,
+      "weight": 450
+    },
+    {
+      "id": 51,
+      "weight": 50
+    }
+  ],
+  "dragons-den": [
+    {
+      "id": 129,
+      "weight": 1020
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 147,
+      "weight": 150
+    },
+    {
+      "id": 148,
+      "weight": 30
+    },
+    {
+      "id": 149,
+      "weight": 1
+    }
+  ],
+  "ecruteak-city": [
+    {
+      "id": 60,
+      "weight": 750
+    },
+    {
+      "id": 61,
+      "weight": 30
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    }
+  ],
+  "fuchsia-city": [
+    {
+      "id": 129,
+      "weight": 1080
+    },
+    {
+      "id": 130,
+      "weight": 120
+    }
+  ],
+  "ice-path": [
+    {
+      "id": 41,
+      "weight": 320
+    },
+    {
+      "id": 42,
+      "weight": 1392
+    },
+    {
+      "id": 124,
+      "weight": 192
+    },
+    {
+      "id": 215,
+      "weight": 16
+    },
+    {
+      "id": 220,
+      "weight": 1280
+    },
+    {
+      "id": 221,
+      "weight": 1
+    },
+    {
+      "id": 225,
+      "weight": 400
+    }
+  ],
+  "ilex-forest": [
+    {
+      "id": 10,
+      "weight": 365
+    },
+    {
+      "id": 11,
+      "weight": 135
+    },
+    {
+      "id": 12,
+      "weight": 25
+    },
+    {
+      "id": 13,
+      "weight": 365
+    },
+    {
+      "id": 14,
+      "weight": 115
+    },
+    {
+      "id": 15,
+      "weight": 25
+    },
+    {
+      "id": 16,
+      "weight": 10
+    },
+    {
+      "id": 17,
+      "weight": 1
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 41,
+      "weight": 70
+    },
+    {
+      "id": 42,
+      "weight": 1
+    },
+    {
+      "id": 43,
+      "weight": 170
+    },
+    {
+      "id": 44,
+      "weight": 1
+    },
+    {
+      "id": 46,
+      "weight": 85
+    },
+    {
+      "id": 47,
+      "weight": 1
+    },
+    {
+      "id": 48,
+      "weight": 30
+    },
+    {
+      "id": 49,
+      "weight": 1
+    },
+    {
+      "id": 54,
+      "weight": 280
+    },
+    {
+      "id": 55,
+      "weight": 30
+    },
+    {
+      "id": 60,
+      "weight": 480
+    },
+    {
+      "id": 61,
+      "weight": 1
+    },
+    {
+      "id": 102,
+      "weight": 90
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 163,
+      "weight": 165
+    },
+    {
+      "id": 164,
+      "weight": 20
+    },
+    {
+      "id": 204,
+      "weight": 120
+    },
+    {
+      "id": 205,
+      "weight": 1
+    },
+    {
+      "id": 251,
+      "weight": 1
+    }
+  ],
+  "johto-route-29": [
+    {
+      "id": 16,
+      "weight": 320
+    },
+    {
+      "id": 17,
+      "weight": 1
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 19,
+      "weight": 105
+    },
+    {
+      "id": 20,
+      "weight": 1
+    },
+    {
+      "id": 21,
+      "weight": 420
+    },
+    {
+      "id": 22,
+      "weight": 1
+    },
+    {
+      "id": 102,
+      "weight": 60
+    },
+    {
+      "id": 161,
+      "weight": 240
+    },
+    {
+      "id": 162,
+      "weight": 1
+    },
+    {
+      "id": 163,
+      "weight": 375
+    },
+    {
+      "id": 164,
+      "weight": 1
+    },
+    {
+      "id": 165,
+      "weight": 30
+    },
+    {
+      "id": 166,
+      "weight": 1
+    },
+    {
+      "id": 167,
+      "weight": 30
+    },
+    {
+      "id": 168,
+      "weight": 1
+    },
+    {
+      "id": 187,
+      "weight": 10
+    },
+    {
+      "id": 188,
+      "weight": 1
+    },
+    {
+      "id": 189,
+      "weight": 1
+    },
+    {
+      "id": 190,
+      "weight": 120
+    },
+    {
+      "id": 204,
+      "weight": 30
+    },
+    {
+      "id": 205,
+      "weight": 1
+    },
+    {
+      "id": 214,
+      "weight": 60
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-30": [
+    {
+      "id": 10,
+      "weight": 185
+    },
+    {
+      "id": 11,
+      "weight": 25
+    },
+    {
+      "id": 12,
+      "weight": 1
+    },
+    {
+      "id": 13,
+      "weight": 95
+    },
+    {
+      "id": 14,
+      "weight": 25
+    },
+    {
+      "id": 15,
+      "weight": 1
+    },
+    {
+      "id": 16,
+      "weight": 200
+    },
+    {
+      "id": 17,
+      "weight": 1
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 19,
+      "weight": 80
+    },
+    {
+      "id": 20,
+      "weight": 1
+    },
+    {
+      "id": 21,
+      "weight": 420
+    },
+    {
+      "id": 22,
+      "weight": 1
+    },
+    {
+      "id": 41,
+      "weight": 5
+    },
+    {
+      "id": 42,
+      "weight": 1
+    },
+    {
+      "id": 60,
+      "weight": 770
+    },
+    {
+      "id": 61,
+      "weight": 30
+    },
+    {
+      "id": 102,
+      "weight": 60
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 163,
+      "weight": 285
+    },
+    {
+      "id": 164,
+      "weight": 1
+    },
+    {
+      "id": 165,
+      "weight": 90
+    },
+    {
+      "id": 166,
+      "weight": 1
+    },
+    {
+      "id": 167,
+      "weight": 90
+    },
+    {
+      "id": 168,
+      "weight": 1
+    },
+    {
+      "id": 187,
+      "weight": 10
+    },
+    {
+      "id": 188,
+      "weight": 1
+    },
+    {
+      "id": 189,
+      "weight": 1
+    },
+    {
+      "id": 190,
+      "weight": 120
+    },
+    {
+      "id": 204,
+      "weight": 30
+    },
+    {
+      "id": 205,
+      "weight": 1
+    },
+    {
+      "id": 214,
+      "weight": 60
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-31": [
+    {
+      "id": 10,
+      "weight": 170
+    },
+    {
+      "id": 11,
+      "weight": 30
+    },
+    {
+      "id": 12,
+      "weight": 1
+    },
+    {
+      "id": 13,
+      "weight": 75
+    },
+    {
+      "id": 14,
+      "weight": 25
+    },
+    {
+      "id": 15,
+      "weight": 1
+    },
+    {
+      "id": 16,
+      "weight": 150
+    },
+    {
+      "id": 17,
+      "weight": 1
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 19,
+      "weight": 80
+    },
+    {
+      "id": 20,
+      "weight": 1
+    },
+    {
+      "id": 21,
+      "weight": 420
+    },
+    {
+      "id": 22,
+      "weight": 1
+    },
+    {
+      "id": 41,
+      "weight": 5
+    },
+    {
+      "id": 42,
+      "weight": 1
+    },
+    {
+      "id": 60,
+      "weight": 780
+    },
+    {
+      "id": 61,
+      "weight": 30
+    },
+    {
+      "id": 69,
+      "weight": 140
+    },
+    {
+      "id": 70,
+      "weight": 1
+    },
+    {
+      "id": 92,
+      "weight": 5
+    },
+    {
+      "id": 93,
+      "weight": 1
+    },
+    {
+      "id": 102,
+      "weight": 60
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 163,
+      "weight": 210
+    },
+    {
+      "id": 164,
+      "weight": 1
+    },
+    {
+      "id": 165,
+      "weight": 90
+    },
+    {
+      "id": 166,
+      "weight": 1
+    },
+    {
+      "id": 167,
+      "weight": 90
+    },
+    {
+      "id": 168,
+      "weight": 1
+    },
+    {
+      "id": 187,
+      "weight": 10
+    },
+    {
+      "id": 188,
+      "weight": 1
+    },
+    {
+      "id": 189,
+      "weight": 1
+    },
+    {
+      "id": 190,
+      "weight": 120
+    },
+    {
+      "id": 204,
+      "weight": 30
+    },
+    {
+      "id": 205,
+      "weight": 1
+    },
+    {
+      "id": 214,
+      "weight": 60
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-32": [
+    {
+      "id": 16,
+      "weight": 10
+    },
+    {
+      "id": 17,
+      "weight": 1
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 19,
+      "weight": 210
+    },
+    {
+      "id": 20,
+      "weight": 1
+    },
+    {
+      "id": 21,
+      "weight": 420
+    },
+    {
+      "id": 22,
+      "weight": 1
+    },
+    {
+      "id": 23,
+      "weight": 180
+    },
+    {
+      "id": 24,
+      "weight": 1
+    },
+    {
+      "id": 41,
+      "weight": 22
+    },
+    {
+      "id": 42,
+      "weight": 1
+    },
+    {
+      "id": 69,
+      "weight": 220
+    },
+    {
+      "id": 70,
+      "weight": 1
+    },
+    {
+      "id": 72,
+      "weight": 630
+    },
+    {
+      "id": 73,
+      "weight": 30
+    },
+    {
+      "id": 92,
+      "weight": 5
+    },
+    {
+      "id": 93,
+      "weight": 1
+    },
+    {
+      "id": 102,
+      "weight": 60
+    },
+    {
+      "id": 129,
+      "weight": 675
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 163,
+      "weight": 185
+    },
+    {
+      "id": 164,
+      "weight": 1
+    },
+    {
+      "id": 179,
+      "weight": 100
+    },
+    {
+      "id": 180,
+      "weight": 1
+    },
+    {
+      "id": 181,
+      "weight": 1
+    },
+    {
+      "id": 187,
+      "weight": 70
+    },
+    {
+      "id": 188,
+      "weight": 1
+    },
+    {
+      "id": 189,
+      "weight": 1
+    },
+    {
+      "id": 190,
+      "weight": 120
+    },
+    {
+      "id": 194,
+      "weight": 108
+    },
+    {
+      "id": 195,
+      "weight": 90
+    },
+    {
+      "id": 204,
+      "weight": 30
+    },
+    {
+      "id": 205,
+      "weight": 1
+    },
+    {
+      "id": 211,
+      "weight": 570
+    },
+    {
+      "id": 214,
+      "weight": 60
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-33": [
+    {
+      "id": 19,
+      "weight": 300
+    },
+    {
+      "id": 20,
+      "weight": 1
+    },
+    {
+      "id": 21,
+      "weight": 740
+    },
+    {
+      "id": 22,
+      "weight": 1
+    },
+    {
+      "id": 23,
+      "weight": 130
+    },
+    {
+      "id": 24,
+      "weight": 1
+    },
+    {
+      "id": 41,
+      "weight": 130
+    },
+    {
+      "id": 42,
+      "weight": 1
+    },
+    {
+      "id": 74,
+      "weight": 60
+    },
+    {
+      "id": 75,
+      "weight": 1
+    },
+    {
+      "id": 187,
+      "weight": 170
+    },
+    {
+      "id": 188,
+      "weight": 1
+    },
+    {
+      "id": 189,
+      "weight": 1
+    },
+    {
+      "id": 190,
+      "weight": 180
+    },
+    {
+      "id": 214,
+      "weight": 90
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-34": [
+    {
+      "id": 10,
+      "weight": 180
+    },
+    {
+      "id": 11,
+      "weight": 30
+    },
+    {
+      "id": 12,
+      "weight": 15
+    },
+    {
+      "id": 13,
+      "weight": 180
+    },
+    {
+      "id": 14,
+      "weight": 30
+    },
+    {
+      "id": 15,
+      "weight": 15
+    },
+    {
+      "id": 16,
+      "weight": 40
+    },
+    {
+      "id": 17,
+      "weight": 1
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 19,
+      "weight": 160
+    },
+    {
+      "id": 20,
+      "weight": 1
+    },
+    {
+      "id": 39,
+      "weight": 15
+    },
+    {
+      "id": 63,
+      "weight": 50
+    },
+    {
+      "id": 64,
+      "weight": 1
+    },
+    {
+      "id": 72,
+      "weight": 270
+    },
+    {
+      "id": 73,
+      "weight": 30
+    },
+    {
+      "id": 96,
+      "weight": 130
+    },
+    {
+      "id": 97,
+      "weight": 1
+    },
+    {
+      "id": 98,
+      "weight": 1080
+    },
+    {
+      "id": 99,
+      "weight": 90
+    },
+    {
+      "id": 102,
+      "weight": 150
+    },
+    {
+      "id": 120,
+      "weight": 120
+    },
+    {
+      "id": 129,
+      "weight": 570
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 132,
+      "weight": 25
+    },
+    {
+      "id": 163,
+      "weight": 170
+    },
+    {
+      "id": 164,
+      "weight": 1
+    },
+    {
+      "id": 165,
+      "weight": 30
+    },
+    {
+      "id": 166,
+      "weight": 1
+    },
+    {
+      "id": 167,
+      "weight": 30
+    },
+    {
+      "id": 168,
+      "weight": 1
+    },
+    {
+      "id": 204,
+      "weight": 90
+    },
+    {
+      "id": 205,
+      "weight": 1
+    },
+    {
+      "id": 209,
+      "weight": 60
+    },
+    {
+      "id": 210,
+      "weight": 1
+    },
+    {
+      "id": 222,
+      "weight": 240
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-35": [
+    {
+      "id": 10,
+      "weight": 180
+    },
+    {
+      "id": 11,
+      "weight": 30
+    },
+    {
+      "id": 12,
+      "weight": 15
+    },
+    {
+      "id": 13,
+      "weight": 180
+    },
+    {
+      "id": 14,
+      "weight": 30
+    },
+    {
+      "id": 15,
+      "weight": 15
+    },
+    {
+      "id": 16,
+      "weight": 100
+    },
+    {
+      "id": 17,
+      "weight": 1
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 29,
+      "weight": 330
+    },
+    {
+      "id": 30,
+      "weight": 1
+    },
+    {
+      "id": 32,
+      "weight": 330
+    },
+    {
+      "id": 33,
+      "weight": 1
+    },
+    {
+      "id": 39,
+      "weight": 15
+    },
+    {
+      "id": 52,
+      "weight": 20
+    },
+    {
+      "id": 53,
+      "weight": 1
+    },
+    {
+      "id": 54,
+      "weight": 270
+    },
+    {
+      "id": 55,
+      "weight": 30
+    },
+    {
+      "id": 58,
+      "weight": 40
+    },
+    {
+      "id": 60,
+      "weight": 480
+    },
+    {
+      "id": 61,
+      "weight": 1
+    },
+    {
+      "id": 63,
+      "weight": 90
+    },
+    {
+      "id": 64,
+      "weight": 1
+    },
+    {
+      "id": 96,
+      "weight": 150
+    },
+    {
+      "id": 97,
+      "weight": 1
+    },
+    {
+      "id": 102,
+      "weight": 150
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 132,
+      "weight": 61
+    },
+    {
+      "id": 163,
+      "weight": 195
+    },
+    {
+      "id": 164,
+      "weight": 1
+    },
+    {
+      "id": 165,
+      "weight": 30
+    },
+    {
+      "id": 166,
+      "weight": 1
+    },
+    {
+      "id": 167,
+      "weight": 30
+    },
+    {
+      "id": 168,
+      "weight": 1
+    },
+    {
+      "id": 193,
+      "weight": 159
+    },
+    {
+      "id": 204,
+      "weight": 90
+    },
+    {
+      "id": 205,
+      "weight": 1
+    },
+    {
+      "id": 209,
+      "weight": 60
+    },
+    {
+      "id": 210,
+      "weight": 1
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-36": [
+    {
+      "id": 10,
+      "weight": 180
+    },
+    {
+      "id": 11,
+      "weight": 30
+    },
+    {
+      "id": 12,
+      "weight": 15
+    },
+    {
+      "id": 13,
+      "weight": 180
+    },
+    {
+      "id": 14,
+      "weight": 30
+    },
+    {
+      "id": 15,
+      "weight": 15
+    },
+    {
+      "id": 16,
+      "weight": 200
+    },
+    {
+      "id": 17,
+      "weight": 1
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 29,
+      "weight": 180
+    },
+    {
+      "id": 30,
+      "weight": 1
+    },
+    {
+      "id": 32,
+      "weight": 180
+    },
+    {
+      "id": 33,
+      "weight": 1
+    },
+    {
+      "id": 37,
+      "weight": 35
+    },
+    {
+      "id": 58,
+      "weight": 55
+    },
+    {
+      "id": 69,
+      "weight": 60
+    },
+    {
+      "id": 70,
+      "weight": 1
+    },
+    {
+      "id": 92,
+      "weight": 5
+    },
+    {
+      "id": 93,
+      "weight": 1
+    },
+    {
+      "id": 102,
+      "weight": 150
+    },
+    {
+      "id": 163,
+      "weight": 245
+    },
+    {
+      "id": 164,
+      "weight": 1
+    },
+    {
+      "id": 165,
+      "weight": 60
+    },
+    {
+      "id": 166,
+      "weight": 1
+    },
+    {
+      "id": 167,
+      "weight": 60
+    },
+    {
+      "id": 168,
+      "weight": 1
+    },
+    {
+      "id": 204,
+      "weight": 90
+    },
+    {
+      "id": 205,
+      "weight": 1
+    },
+    {
+      "id": 234,
+      "weight": 30
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-37": [
+    {
+      "id": 10,
+      "weight": 180
+    },
+    {
+      "id": 11,
+      "weight": 30
+    },
+    {
+      "id": 12,
+      "weight": 15
+    },
+    {
+      "id": 13,
+      "weight": 180
+    },
+    {
+      "id": 14,
+      "weight": 30
+    },
+    {
+      "id": 15,
+      "weight": 15
+    },
+    {
+      "id": 16,
+      "weight": 255
+    },
+    {
+      "id": 17,
+      "weight": 20
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 37,
+      "weight": 35
+    },
+    {
+      "id": 58,
+      "weight": 115
+    },
+    {
+      "id": 102,
+      "weight": 150
+    },
+    {
+      "id": 163,
+      "weight": 280
+    },
+    {
+      "id": 164,
+      "weight": 10
+    },
+    {
+      "id": 165,
+      "weight": 70
+    },
+    {
+      "id": 166,
+      "weight": 1
+    },
+    {
+      "id": 167,
+      "weight": 100
+    },
+    {
+      "id": 168,
+      "weight": 5
+    },
+    {
+      "id": 204,
+      "weight": 90
+    },
+    {
+      "id": 205,
+      "weight": 1
+    },
+    {
+      "id": 234,
+      "weight": 220
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-38": [
+    {
+      "id": 10,
+      "weight": 180
+    },
+    {
+      "id": 11,
+      "weight": 30
+    },
+    {
+      "id": 12,
+      "weight": 15
+    },
+    {
+      "id": 13,
+      "weight": 180
+    },
+    {
+      "id": 14,
+      "weight": 30
+    },
+    {
+      "id": 15,
+      "weight": 15
+    },
+    {
+      "id": 17,
+      "weight": 20
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 19,
+      "weight": 190
+    },
+    {
+      "id": 20,
+      "weight": 330
+    },
+    {
+      "id": 52,
+      "weight": 110
+    },
+    {
+      "id": 53,
+      "weight": 1
+    },
+    {
+      "id": 81,
+      "weight": 220
+    },
+    {
+      "id": 82,
+      "weight": 1
+    },
+    {
+      "id": 83,
+      "weight": 60
+    },
+    {
+      "id": 102,
+      "weight": 150
+    },
+    {
+      "id": 128,
+      "weight": 44
+    },
+    {
+      "id": 163,
+      "weight": 150
+    },
+    {
+      "id": 164,
+      "weight": 10
+    },
+    {
+      "id": 165,
+      "weight": 30
+    },
+    {
+      "id": 166,
+      "weight": 1
+    },
+    {
+      "id": 167,
+      "weight": 30
+    },
+    {
+      "id": 168,
+      "weight": 1
+    },
+    {
+      "id": 204,
+      "weight": 90
+    },
+    {
+      "id": 205,
+      "weight": 1
+    },
+    {
+      "id": 209,
+      "weight": 66
+    },
+    {
+      "id": 210,
+      "weight": 1
+    },
+    {
+      "id": 241,
+      "weight": 50
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-39": [
+    {
+      "id": 10,
+      "weight": 180
+    },
+    {
+      "id": 11,
+      "weight": 30
+    },
+    {
+      "id": 12,
+      "weight": 15
+    },
+    {
+      "id": 13,
+      "weight": 180
+    },
+    {
+      "id": 14,
+      "weight": 30
+    },
+    {
+      "id": 15,
+      "weight": 15
+    },
+    {
+      "id": 17,
+      "weight": 20
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 19,
+      "weight": 190
+    },
+    {
+      "id": 20,
+      "weight": 270
+    },
+    {
+      "id": 52,
+      "weight": 110
+    },
+    {
+      "id": 53,
+      "weight": 1
+    },
+    {
+      "id": 81,
+      "weight": 180
+    },
+    {
+      "id": 82,
+      "weight": 1
+    },
+    {
+      "id": 83,
+      "weight": 40
+    },
+    {
+      "id": 102,
+      "weight": 150
+    },
+    {
+      "id": 128,
+      "weight": 40
+    },
+    {
+      "id": 163,
+      "weight": 150
+    },
+    {
+      "id": 164,
+      "weight": 10
+    },
+    {
+      "id": 165,
+      "weight": 30
+    },
+    {
+      "id": 166,
+      "weight": 1
+    },
+    {
+      "id": 167,
+      "weight": 30
+    },
+    {
+      "id": 168,
+      "weight": 1
+    },
+    {
+      "id": 204,
+      "weight": 90
+    },
+    {
+      "id": 205,
+      "weight": 1
+    },
+    {
+      "id": 241,
+      "weight": 40
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-42": [
+    {
+      "id": 19,
+      "weight": 70
+    },
+    {
+      "id": 20,
+      "weight": 40
+    },
+    {
+      "id": 21,
+      "weight": 800
+    },
+    {
+      "id": 22,
+      "weight": 10
+    },
+    {
+      "id": 23,
+      "weight": 90
+    },
+    {
+      "id": 24,
+      "weight": 10
+    },
+    {
+      "id": 41,
+      "weight": 100
+    },
+    {
+      "id": 42,
+      "weight": 15
+    },
+    {
+      "id": 56,
+      "weight": 90
+    },
+    {
+      "id": 57,
+      "weight": 1
+    },
+    {
+      "id": 118,
+      "weight": 720
+    },
+    {
+      "id": 119,
+      "weight": 60
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 179,
+      "weight": 240
+    },
+    {
+      "id": 180,
+      "weight": 60
+    },
+    {
+      "id": 181,
+      "weight": 1
+    },
+    {
+      "id": 183,
+      "weight": 5
+    },
+    {
+      "id": 184,
+      "weight": 1
+    },
+    {
+      "id": 190,
+      "weight": 180
+    },
+    {
+      "id": 214,
+      "weight": 90
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-43": [
+    {
+      "id": 17,
+      "weight": 150
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 20,
+      "weight": 35
+    },
+    {
+      "id": 21,
+      "weight": 420
+    },
+    {
+      "id": 22,
+      "weight": 1
+    },
+    {
+      "id": 48,
+      "weight": 110
+    },
+    {
+      "id": 49,
+      "weight": 5
+    },
+    {
+      "id": 60,
+      "weight": 480
+    },
+    {
+      "id": 61,
+      "weight": 1
+    },
+    {
+      "id": 83,
+      "weight": 40
+    },
+    {
+      "id": 102,
+      "weight": 60
+    },
+    {
+      "id": 129,
+      "weight": 720
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 161,
+      "weight": 60
+    },
+    {
+      "id": 162,
+      "weight": 30
+    },
+    {
+      "id": 163,
+      "weight": 210
+    },
+    {
+      "id": 164,
+      "weight": 40
+    },
+    {
+      "id": 179,
+      "weight": 50
+    },
+    {
+      "id": 180,
+      "weight": 200
+    },
+    {
+      "id": 181,
+      "weight": 1
+    },
+    {
+      "id": 190,
+      "weight": 120
+    },
+    {
+      "id": 203,
+      "weight": 180
+    },
+    {
+      "id": 204,
+      "weight": 30
+    },
+    {
+      "id": 205,
+      "weight": 1
+    },
+    {
+      "id": 214,
+      "weight": 60
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-44": [
+    {
+      "id": 21,
+      "weight": 630
+    },
+    {
+      "id": 22,
+      "weight": 1
+    },
+    {
+      "id": 60,
+      "weight": 760
+    },
+    {
+      "id": 61,
+      "weight": 40
+    },
+    {
+      "id": 69,
+      "weight": 100
+    },
+    {
+      "id": 70,
+      "weight": 100
+    },
+    {
+      "id": 108,
+      "weight": 110
+    },
+    {
+      "id": 114,
+      "weight": 150
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 190,
+      "weight": 180
+    },
+    {
+      "id": 214,
+      "weight": 90
+    },
+    {
+      "id": 223,
+      "weight": 380
+    },
+    {
+      "id": 224,
+      "weight": 1
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-45": [
+    {
+      "id": 21,
+      "weight": 630
+    },
+    {
+      "id": 22,
+      "weight": 1
+    },
+    {
+      "id": 74,
+      "weight": 150
+    },
+    {
+      "id": 75,
+      "weight": 205
+    },
+    {
+      "id": 129,
+      "weight": 1050
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 147,
+      "weight": 120
+    },
+    {
+      "id": 148,
+      "weight": 30
+    },
+    {
+      "id": 149,
+      "weight": 1
+    },
+    {
+      "id": 190,
+      "weight": 180
+    },
+    {
+      "id": 207,
+      "weight": 80
+    },
+    {
+      "id": 214,
+      "weight": 90
+    },
+    {
+      "id": 216,
+      "weight": 10
+    },
+    {
+      "id": 217,
+      "weight": 1
+    },
+    {
+      "id": 227,
+      "weight": 15
+    },
+    {
+      "id": 231,
+      "weight": 15
+    },
+    {
+      "id": 232,
+      "weight": 25
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-route-46": [
+    {
+      "id": 19,
+      "weight": 265
+    },
+    {
+      "id": 20,
+      "weight": 1
+    },
+    {
+      "id": 21,
+      "weight": 830
+    },
+    {
+      "id": 22,
+      "weight": 1
+    },
+    {
+      "id": 39,
+      "weight": 30
+    },
+    {
+      "id": 74,
+      "weight": 400
+    },
+    {
+      "id": 75,
+      "weight": 1
+    },
+    {
+      "id": 190,
+      "weight": 180
+    },
+    {
+      "id": 214,
+      "weight": 90
+    },
+    {
+      "id": 231,
+      "weight": 5
+    },
+    {
+      "id": 232,
+      "weight": 1
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-sea-route-40": [
+    {
+      "id": 72,
+      "weight": 270
+    },
+    {
+      "id": 73,
+      "weight": 30
+    },
+    {
+      "id": 98,
+      "weight": 1350
+    },
+    {
+      "id": 99,
+      "weight": 90
+    },
+    {
+      "id": 120,
+      "weight": 120
+    },
+    {
+      "id": 129,
+      "weight": 570
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 213,
+      "weight": 30
+    },
+    {
+      "id": 222,
+      "weight": 240
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "johto-sea-route-41": [
+    {
+      "id": 72,
+      "weight": 340
+    },
+    {
+      "id": 73,
+      "weight": 150
+    },
+    {
+      "id": 90,
+      "weight": 120
+    },
+    {
+      "id": 129,
+      "weight": 360
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 170,
+      "weight": 180
+    },
+    {
+      "id": 171,
+      "weight": 30
+    },
+    {
+      "id": 226,
+      "weight": 20
+    },
+    {
+      "id": 243,
+      "weight": 1
+    },
+    {
+      "id": 244,
+      "weight": 1
+    },
+    {
+      "id": 245,
+      "weight": 1
+    }
+  ],
+  "kanto-power-plant": [
+    {
+      "id": 25,
+      "weight": 50
+    },
+    {
+      "id": 81,
+      "weight": 100
+    },
+    {
+      "id": 82,
+      "weight": 45
+    },
+    {
+      "id": 88,
+      "weight": 15
+    },
+    {
+      "id": 89,
+      "weight": 5
+    },
+    {
+      "id": 100,
+      "weight": 80
+    },
+    {
+      "id": 101,
+      "weight": 1
+    },
+    {
+      "id": 125,
+      "weight": 5
+    },
+    {
+      "id": 145,
+      "weight": 1
+    }
+  ],
+  "kanto-route-1": [
+    {
+      "id": 16,
+      "weight": 270
+    },
+    {
+      "id": 17,
+      "weight": 1
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 19,
+      "weight": 340
+    },
+    {
+      "id": 20,
+      "weight": 5
+    },
+    {
+      "id": 161,
+      "weight": 120
+    },
+    {
+      "id": 162,
+      "weight": 30
+    },
+    {
+      "id": 163,
+      "weight": 135
+    },
+    {
+      "id": 164,
+      "weight": 1
+    }
+  ],
+  "kanto-route-10": [
+    {
+      "id": 20,
+      "weight": 190
+    },
+    {
+      "id": 21,
+      "weight": 180
+    },
+    {
+      "id": 22,
+      "weight": 60
+    },
+    {
+      "id": 41,
+      "weight": 5
+    },
+    {
+      "id": 42,
+      "weight": 1
+    },
+    {
+      "id": 48,
+      "weight": 30
+    },
+    {
+      "id": 49,
+      "weight": 10
+    },
+    {
+      "id": 100,
+      "weight": 270
+    },
+    {
+      "id": 101,
+      "weight": 1
+    },
+    {
+      "id": 105,
+      "weight": 10
+    },
+    {
+      "id": 118,
+      "weight": 720
+    },
+    {
+      "id": 119,
+      "weight": 60
+    },
+    {
+      "id": 125,
+      "weight": 55
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 195,
+      "weight": 90
+    }
+  ],
+  "kanto-route-11": [
+    {
+      "id": 17,
+      "weight": 20
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 19,
+      "weight": 70
+    },
+    {
+      "id": 20,
+      "weight": 65
+    },
+    {
+      "id": 52,
+      "weight": 30
+    },
+    {
+      "id": 53,
+      "weight": 1
+    },
+    {
+      "id": 81,
+      "weight": 100
+    },
+    {
+      "id": 82,
+      "weight": 1
+    },
+    {
+      "id": 96,
+      "weight": 110
+    },
+    {
+      "id": 97,
+      "weight": 25
+    },
+    {
+      "id": 164,
+      "weight": 10
+    },
+    {
+      "id": 187,
+      "weight": 70
+    },
+    {
+      "id": 188,
+      "weight": 1
+    },
+    {
+      "id": 189,
+      "weight": 1
+    }
+  ],
+  "kanto-route-12": [
+    {
+      "id": 72,
+      "weight": 630
+    },
+    {
+      "id": 73,
+      "weight": 30
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 195,
+      "weight": 90
+    },
+    {
+      "id": 211,
+      "weight": 30
+    }
+  ],
+  "kanto-route-13": [
+    {
+      "id": 17,
+      "weight": 120
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 30,
+      "weight": 240
+    },
+    {
+      "id": 33,
+      "weight": 240
+    },
+    {
+      "id": 48,
+      "weight": 30
+    },
+    {
+      "id": 49,
+      "weight": 10
+    },
+    {
+      "id": 72,
+      "weight": 630
+    },
+    {
+      "id": 73,
+      "weight": 30
+    },
+    {
+      "id": 113,
+      "weight": 9
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 164,
+      "weight": 60
+    },
+    {
+      "id": 187,
+      "weight": 106
+    },
+    {
+      "id": 188,
+      "weight": 1
+    },
+    {
+      "id": 189,
+      "weight": 1
+    },
+    {
+      "id": 195,
+      "weight": 175
+    },
+    {
+      "id": 211,
+      "weight": 30
+    }
+  ],
+  "kanto-route-14": [
+    {
+      "id": 17,
+      "weight": 120
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 30,
+      "weight": 240
+    },
+    {
+      "id": 33,
+      "weight": 240
+    },
+    {
+      "id": 48,
+      "weight": 30
+    },
+    {
+      "id": 49,
+      "weight": 10
+    },
+    {
+      "id": 113,
+      "weight": 9
+    },
+    {
+      "id": 127,
+      "weight": 1
+    },
+    {
+      "id": 164,
+      "weight": 60
+    },
+    {
+      "id": 187,
+      "weight": 60
+    },
+    {
+      "id": 188,
+      "weight": 46
+    },
+    {
+      "id": 189,
+      "weight": 1
+    },
+    {
+      "id": 195,
+      "weight": 85
+    }
+  ],
+  "kanto-route-15": [
+    {
+      "id": 17,
+      "weight": 120
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 30,
+      "weight": 240
+    },
+    {
+      "id": 33,
+      "weight": 240
+    },
+    {
+      "id": 48,
+      "weight": 30
+    },
+    {
+      "id": 49,
+      "weight": 10
+    },
+    {
+      "id": 113,
+      "weight": 9
+    },
+    {
+      "id": 164,
+      "weight": 60
+    },
+    {
+      "id": 187,
+      "weight": 106
+    },
+    {
+      "id": 188,
+      "weight": 1
+    },
+    {
+      "id": 189,
+      "weight": 1
+    },
+    {
+      "id": 195,
+      "weight": 85
+    }
+  ],
+  "kanto-route-16": [
+    {
+      "id": 22,
+      "weight": 245
+    },
+    {
+      "id": 88,
+      "weight": 540
+    },
+    {
+      "id": 89,
+      "weight": 45
+    },
+    {
+      "id": 198,
+      "weight": 35
+    },
+    {
+      "id": 218,
+      "weight": 35
+    },
+    {
+      "id": 219,
+      "weight": 1
+    }
+  ],
+  "kanto-route-17": [
+    {
+      "id": 22,
+      "weight": 240
+    },
+    {
+      "id": 88,
+      "weight": 470
+    },
+    {
+      "id": 89,
+      "weight": 65
+    },
+    {
+      "id": 218,
+      "weight": 125
+    },
+    {
+      "id": 219,
+      "weight": 1
+    }
+  ],
+  "kanto-route-18": [
+    {
+      "id": 22,
+      "weight": 245
+    },
+    {
+      "id": 88,
+      "weight": 555
+    },
+    {
+      "id": 89,
+      "weight": 45
+    },
+    {
+      "id": 198,
+      "weight": 20
+    },
+    {
+      "id": 218,
+      "weight": 35
+    },
+    {
+      "id": 219,
+      "weight": 1
+    }
+  ],
+  "kanto-route-2": [
+    {
+      "id": 10,
+      "weight": 120
+    },
+    {
+      "id": 11,
+      "weight": 40
+    },
+    {
+      "id": 12,
+      "weight": 30
+    },
+    {
+      "id": 13,
+      "weight": 60
+    },
+    {
+      "id": 14,
+      "weight": 40
+    },
+    {
+      "id": 15,
+      "weight": 10
+    },
+    {
+      "id": 16,
+      "weight": 180
+    },
+    {
+      "id": 17,
+      "weight": 20
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 25,
+      "weight": 40
+    },
+    {
+      "id": 163,
+      "weight": 180
+    },
+    {
+      "id": 164,
+      "weight": 40
+    },
+    {
+      "id": 165,
+      "weight": 60
+    },
+    {
+      "id": 166,
+      "weight": 10
+    },
+    {
+      "id": 167,
+      "weight": 60
+    },
+    {
+      "id": 168,
+      "weight": 10
+    }
+  ],
+  "kanto-route-22": [
+    {
+      "id": 19,
+      "weight": 430
+    },
+    {
+      "id": 20,
+      "weight": 1
+    },
+    {
+      "id": 21,
+      "weight": 300
+    },
+    {
+      "id": 22,
+      "weight": 30
+    },
+    {
+      "id": 60,
+      "weight": 790
+    },
+    {
+      "id": 61,
+      "weight": 30
+    },
+    {
+      "id": 77,
+      "weight": 40
+    },
+    {
+      "id": 78,
+      "weight": 1
+    },
+    {
+      "id": 84,
+      "weight": 60
+    },
+    {
+      "id": 85,
+      "weight": 1
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    }
+  ],
+  "kanto-route-23": [
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 21,
+      "weight": 30
+    },
+    {
+      "id": 22,
+      "weight": 65
+    },
+    {
+      "id": 23,
+      "weight": 20
+    },
+    {
+      "id": 24,
+      "weight": 5
+    },
+    {
+      "id": 27,
+      "weight": 20
+    },
+    {
+      "id": 28,
+      "weight": 5
+    },
+    {
+      "id": 30,
+      "weight": 30
+    },
+    {
+      "id": 33,
+      "weight": 30
+    },
+    {
+      "id": 54,
+      "weight": 105
+    },
+    {
+      "id": 55,
+      "weight": 1
+    },
+    {
+      "id": 56,
+      "weight": 80
+    },
+    {
+      "id": 57,
+      "weight": 15
+    },
+    {
+      "id": 60,
+      "weight": 320
+    },
+    {
+      "id": 61,
+      "weight": 110
+    },
+    {
+      "id": 79,
+      "weight": 105
+    },
+    {
+      "id": 80,
+      "weight": 1
+    },
+    {
+      "id": 118,
+      "weight": 90
+    },
+    {
+      "id": 119,
+      "weight": 1
+    },
+    {
+      "id": 129,
+      "weight": 340
+    },
+    {
+      "id": 130,
+      "weight": 30
+    }
+  ],
+  "kanto-route-24": [
+    {
+      "id": 10,
+      "weight": 110
+    },
+    {
+      "id": 11,
+      "weight": 20
+    },
+    {
+      "id": 12,
+      "weight": 10
+    },
+    {
+      "id": 43,
+      "weight": 110
+    },
+    {
+      "id": 44,
+      "weight": 5
+    },
+    {
+      "id": 48,
+      "weight": 100
+    },
+    {
+      "id": 49,
+      "weight": 10
+    },
+    {
+      "id": 63,
+      "weight": 150
+    },
+    {
+      "id": 64,
+      "weight": 1
+    },
+    {
+      "id": 69,
+      "weight": 215
+    },
+    {
+      "id": 70,
+      "weight": 80
+    },
+    {
+      "id": 118,
+      "weight": 720
+    },
+    {
+      "id": 119,
+      "weight": 60
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 191,
+      "weight": 90
+    }
+  ],
+  "kanto-route-25": [
+    {
+      "id": 10,
+      "weight": 60
+    },
+    {
+      "id": 11,
+      "weight": 20
+    },
+    {
+      "id": 12,
+      "weight": 10
+    },
+    {
+      "id": 16,
+      "weight": 220
+    },
+    {
+      "id": 17,
+      "weight": 60
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 43,
+      "weight": 90
+    },
+    {
+      "id": 44,
+      "weight": 1
+    },
+    {
+      "id": 48,
+      "weight": 120
+    },
+    {
+      "id": 49,
+      "weight": 40
+    },
+    {
+      "id": 63,
+      "weight": 60
+    },
+    {
+      "id": 64,
+      "weight": 1
+    },
+    {
+      "id": 69,
+      "weight": 145
+    },
+    {
+      "id": 70,
+      "weight": 30
+    },
+    {
+      "id": 118,
+      "weight": 720
+    },
+    {
+      "id": 119,
+      "weight": 60
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 163,
+      "weight": 30
+    },
+    {
+      "id": 164,
+      "weight": 15
+    }
+  ],
+  "kanto-route-26": [
+    {
+      "id": 10,
+      "weight": 180
+    },
+    {
+      "id": 11,
+      "weight": 30
+    },
+    {
+      "id": 12,
+      "weight": 15
+    },
+    {
+      "id": 13,
+      "weight": 180
+    },
+    {
+      "id": 14,
+      "weight": 30
+    },
+    {
+      "id": 15,
+      "weight": 15
+    },
+    {
+      "id": 20,
+      "weight": 248
+    },
+    {
+      "id": 23,
+      "weight": 30
+    },
+    {
+      "id": 24,
+      "weight": 25
+    },
+    {
+      "id": 28,
+      "weight": 150
+    },
+    {
+      "id": 72,
+      "weight": 420
+    },
+    {
+      "id": 73,
+      "weight": 90
+    },
+    {
+      "id": 77,
+      "weight": 160
+    },
+    {
+      "id": 78,
+      "weight": 1
+    },
+    {
+      "id": 84,
+      "weight": 230
+    },
+    {
+      "id": 85,
+      "weight": 10
+    },
+    {
+      "id": 90,
+      "weight": 120
+    },
+    {
+      "id": 102,
+      "weight": 150
+    },
+    {
+      "id": 129,
+      "weight": 360
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 163,
+      "weight": 180
+    },
+    {
+      "id": 164,
+      "weight": 50
+    },
+    {
+      "id": 170,
+      "weight": 180
+    },
+    {
+      "id": 171,
+      "weight": 30
+    },
+    {
+      "id": 195,
+      "weight": 27
+    },
+    {
+      "id": 204,
+      "weight": 90
+    },
+    {
+      "id": 205,
+      "weight": 1
+    }
+  ],
+  "kanto-route-27": [
+    {
+      "id": 10,
+      "weight": 180
+    },
+    {
+      "id": 11,
+      "weight": 30
+    },
+    {
+      "id": 12,
+      "weight": 15
+    },
+    {
+      "id": 13,
+      "weight": 180
+    },
+    {
+      "id": 14,
+      "weight": 30
+    },
+    {
+      "id": 15,
+      "weight": 15
+    },
+    {
+      "id": 20,
+      "weight": 190
+    },
+    {
+      "id": 23,
+      "weight": 30
+    },
+    {
+      "id": 24,
+      "weight": 150
+    },
+    {
+      "id": 28,
+      "weight": 15
+    },
+    {
+      "id": 72,
+      "weight": 420
+    },
+    {
+      "id": 73,
+      "weight": 90
+    },
+    {
+      "id": 77,
+      "weight": 40
+    },
+    {
+      "id": 78,
+      "weight": 1
+    },
+    {
+      "id": 84,
+      "weight": 280
+    },
+    {
+      "id": 85,
+      "weight": 20
+    },
+    {
+      "id": 90,
+      "weight": 120
+    },
+    {
+      "id": 102,
+      "weight": 150
+    },
+    {
+      "id": 129,
+      "weight": 360
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 163,
+      "weight": 180
+    },
+    {
+      "id": 164,
+      "weight": 40
+    },
+    {
+      "id": 170,
+      "weight": 180
+    },
+    {
+      "id": 171,
+      "weight": 30
+    },
+    {
+      "id": 195,
+      "weight": 165
+    },
+    {
+      "id": 204,
+      "weight": 90
+    },
+    {
+      "id": 205,
+      "weight": 1
+    }
+  ],
+  "kanto-route-28": [
+    {
+      "id": 24,
+      "weight": 20
+    },
+    {
+      "id": 42,
+      "weight": 30
+    },
+    {
+      "id": 60,
+      "weight": 750
+    },
+    {
+      "id": 61,
+      "weight": 70
+    },
+    {
+      "id": 77,
+      "weight": 240
+    },
+    {
+      "id": 78,
+      "weight": 100
+    },
+    {
+      "id": 84,
+      "weight": 30
+    },
+    {
+      "id": 85,
+      "weight": 30
+    },
+    {
+      "id": 114,
+      "weight": 270
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 215,
+      "weight": 20
+    },
+    {
+      "id": 217,
+      "weight": 60
+    },
+    {
+      "id": 232,
+      "weight": 60
+    }
+  ],
+  "kanto-route-3": [
+    {
+      "id": 19,
+      "weight": 350
+    },
+    {
+      "id": 20,
+      "weight": 50
+    },
+    {
+      "id": 21,
+      "weight": 240
+    },
+    {
+      "id": 22,
+      "weight": 1
+    },
+    {
+      "id": 23,
+      "weight": 100
+    },
+    {
+      "id": 24,
+      "weight": 25
+    },
+    {
+      "id": 35,
+      "weight": 5
+    },
+    {
+      "id": 39,
+      "weight": 60
+    },
+    {
+      "id": 41,
+      "weight": 70
+    },
+    {
+      "id": 42,
+      "weight": 1
+    }
+  ],
+  "kanto-route-4": [
+    {
+      "id": 19,
+      "weight": 350
+    },
+    {
+      "id": 20,
+      "weight": 50
+    },
+    {
+      "id": 21,
+      "weight": 240
+    },
+    {
+      "id": 22,
+      "weight": 1
+    },
+    {
+      "id": 23,
+      "weight": 100
+    },
+    {
+      "id": 24,
+      "weight": 25
+    },
+    {
+      "id": 35,
+      "weight": 5
+    },
+    {
+      "id": 39,
+      "weight": 60
+    },
+    {
+      "id": 41,
+      "weight": 70
+    },
+    {
+      "id": 42,
+      "weight": 1
+    },
+    {
+      "id": 118,
+      "weight": 270
+    },
+    {
+      "id": 119,
+      "weight": 30
+    }
+  ],
+  "kanto-route-5": [
+    {
+      "id": 16,
+      "weight": 260
+    },
+    {
+      "id": 17,
+      "weight": 40
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 39,
+      "weight": 15
+    },
+    {
+      "id": 43,
+      "weight": 90
+    },
+    {
+      "id": 44,
+      "weight": 20
+    },
+    {
+      "id": 52,
+      "weight": 100
+    },
+    {
+      "id": 53,
+      "weight": 1
+    },
+    {
+      "id": 63,
+      "weight": 105
+    },
+    {
+      "id": 64,
+      "weight": 1
+    },
+    {
+      "id": 69,
+      "weight": 160
+    },
+    {
+      "id": 70,
+      "weight": 1
+    },
+    {
+      "id": 163,
+      "weight": 30
+    },
+    {
+      "id": 164,
+      "weight": 20
+    },
+    {
+      "id": 209,
+      "weight": 60
+    },
+    {
+      "id": 210,
+      "weight": 1
+    }
+  ],
+  "kanto-route-6": [
+    {
+      "id": 16,
+      "weight": 160
+    },
+    {
+      "id": 17,
+      "weight": 1
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 19,
+      "weight": 60
+    },
+    {
+      "id": 20,
+      "weight": 25
+    },
+    {
+      "id": 39,
+      "weight": 15
+    },
+    {
+      "id": 43,
+      "weight": 90
+    },
+    {
+      "id": 44,
+      "weight": 1
+    },
+    {
+      "id": 52,
+      "weight": 100
+    },
+    {
+      "id": 53,
+      "weight": 1
+    },
+    {
+      "id": 54,
+      "weight": 280
+    },
+    {
+      "id": 55,
+      "weight": 30
+    },
+    {
+      "id": 60,
+      "weight": 480
+    },
+    {
+      "id": 61,
+      "weight": 1
+    },
+    {
+      "id": 63,
+      "weight": 60
+    },
+    {
+      "id": 64,
+      "weight": 1
+    },
+    {
+      "id": 69,
+      "weight": 160
+    },
+    {
+      "id": 70,
+      "weight": 1
+    },
+    {
+      "id": 81,
+      "weight": 120
+    },
+    {
+      "id": 82,
+      "weight": 1
+    },
+    {
+      "id": 96,
+      "weight": 30
+    },
+    {
+      "id": 97,
+      "weight": 1
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 209,
+      "weight": 60
+    },
+    {
+      "id": 210,
+      "weight": 10
+    }
+  ],
+  "kanto-route-7": [
+    {
+      "id": 19,
+      "weight": 170
+    },
+    {
+      "id": 20,
+      "weight": 80
+    },
+    {
+      "id": 21,
+      "weight": 180
+    },
+    {
+      "id": 22,
+      "weight": 1
+    },
+    {
+      "id": 37,
+      "weight": 65
+    },
+    {
+      "id": 39,
+      "weight": 15
+    },
+    {
+      "id": 52,
+      "weight": 120
+    },
+    {
+      "id": 53,
+      "weight": 25
+    },
+    {
+      "id": 58,
+      "weight": 65
+    },
+    {
+      "id": 63,
+      "weight": 15
+    },
+    {
+      "id": 64,
+      "weight": 1
+    },
+    {
+      "id": 106,
+      "weight": 1
+    },
+    {
+      "id": 107,
+      "weight": 1
+    },
+    {
+      "id": 198,
+      "weight": 95
+    },
+    {
+      "id": 209,
+      "weight": 40
+    },
+    {
+      "id": 210,
+      "weight": 1
+    },
+    {
+      "id": 228,
+      "weight": 30
+    },
+    {
+      "id": 229,
+      "weight": 1
+    }
+  ],
+  "kanto-route-8": [
+    {
+      "id": 17,
+      "weight": 240
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 19,
+      "weight": 20
+    },
+    {
+      "id": 20,
+      "weight": 1
+    },
+    {
+      "id": 37,
+      "weight": 25
+    },
+    {
+      "id": 39,
+      "weight": 15
+    },
+    {
+      "id": 52,
+      "weight": 120
+    },
+    {
+      "id": 53,
+      "weight": 1
+    },
+    {
+      "id": 58,
+      "weight": 45
+    },
+    {
+      "id": 63,
+      "weight": 180
+    },
+    {
+      "id": 64,
+      "weight": 45
+    },
+    {
+      "id": 93,
+      "weight": 70
+    },
+    {
+      "id": 164,
+      "weight": 80
+    },
+    {
+      "id": 209,
+      "weight": 60
+    },
+    {
+      "id": 210,
+      "weight": 1
+    }
+  ],
+  "kanto-route-9": [
+    {
+      "id": 19,
+      "weight": 380
+    },
+    {
+      "id": 20,
+      "weight": 170
+    },
+    {
+      "id": 21,
+      "weight": 140
+    },
+    {
+      "id": 22,
+      "weight": 50
+    },
+    {
+      "id": 41,
+      "weight": 5
+    },
+    {
+      "id": 42,
+      "weight": 1
+    },
+    {
+      "id": 48,
+      "weight": 30
+    },
+    {
+      "id": 49,
+      "weight": 10
+    },
+    {
+      "id": 56,
+      "weight": 90
+    },
+    {
+      "id": 57,
+      "weight": 15
+    },
+    {
+      "id": 105,
+      "weight": 10
+    },
+    {
+      "id": 118,
+      "weight": 720
+    },
+    {
+      "id": 119,
+      "weight": 60
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    }
+  ],
+  "kanto-sea-route-19": [
+    {
+      "id": 72,
+      "weight": 270
+    },
+    {
+      "id": 73,
+      "weight": 30
+    },
+    {
+      "id": 98,
+      "weight": 1080
+    },
+    {
+      "id": 99,
+      "weight": 90
+    },
+    {
+      "id": 120,
+      "weight": 120
+    },
+    {
+      "id": 129,
+      "weight": 570
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 222,
+      "weight": 240
+    }
+  ],
+  "kanto-sea-route-20": [
+    {
+      "id": 72,
+      "weight": 420
+    },
+    {
+      "id": 73,
+      "weight": 90
+    },
+    {
+      "id": 90,
+      "weight": 120
+    },
+    {
+      "id": 129,
+      "weight": 360
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 170,
+      "weight": 180
+    },
+    {
+      "id": 171,
+      "weight": 30
+    }
+  ],
+  "kanto-sea-route-21": [
+    {
+      "id": 19,
+      "weight": 90
+    },
+    {
+      "id": 20,
+      "weight": 30
+    },
+    {
+      "id": 72,
+      "weight": 420
+    },
+    {
+      "id": 73,
+      "weight": 90
+    },
+    {
+      "id": 90,
+      "weight": 120
+    },
+    {
+      "id": 114,
+      "weight": 720
+    },
+    {
+      "id": 122,
+      "weight": 60
+    },
+    {
+      "id": 129,
+      "weight": 360
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 149,
+      "weight": 1
+    },
+    {
+      "id": 170,
+      "weight": 180
+    },
+    {
+      "id": 171,
+      "weight": 30
+    }
+  ],
+  "kanto-victory-road-1": [
+    {
+      "id": 28,
+      "weight": 30
+    },
+    {
+      "id": 42,
+      "weight": 330
+    },
+    {
+      "id": 75,
+      "weight": 510
+    },
+    {
+      "id": 95,
+      "weight": 270
+    },
+    {
+      "id": 111,
+      "weight": 210
+    },
+    {
+      "id": 112,
+      "weight": 30
+    },
+    {
+      "id": 217,
+      "weight": 60
+    },
+    {
+      "id": 232,
+      "weight": 60
+    }
+  ],
+  "kanto-victory-road-2": [
+    {
+      "id": 24,
+      "weight": 15
+    },
+    {
+      "id": 28,
+      "weight": 15
+    },
+    {
+      "id": 41,
+      "weight": 90
+    },
+    {
+      "id": 42,
+      "weight": 60
+    },
+    {
+      "id": 57,
+      "weight": 20
+    },
+    {
+      "id": 66,
+      "weight": 120
+    },
+    {
+      "id": 67,
+      "weight": 45
+    },
+    {
+      "id": 74,
+      "weight": 285
+    },
+    {
+      "id": 75,
+      "weight": 30
+    },
+    {
+      "id": 78,
+      "weight": 1
+    },
+    {
+      "id": 95,
+      "weight": 190
+    },
+    {
+      "id": 105,
+      "weight": 30
+    },
+    {
+      "id": 146,
+      "weight": 1
+    }
+  ],
+  "lake-of-rage": [
+    {
+      "id": 10,
+      "weight": 180
+    },
+    {
+      "id": 11,
+      "weight": 30
+    },
+    {
+      "id": 12,
+      "weight": 15
+    },
+    {
+      "id": 13,
+      "weight": 180
+    },
+    {
+      "id": 14,
+      "weight": 30
+    },
+    {
+      "id": 15,
+      "weight": 15
+    },
+    {
+      "id": 48,
+      "weight": 30
+    },
+    {
+      "id": 49,
+      "weight": 1
+    },
+    {
+      "id": 102,
+      "weight": 150
+    },
+    {
+      "id": 129,
+      "weight": 1050
+    },
+    {
+      "id": 130,
+      "weight": 150
+    },
+    {
+      "id": 163,
+      "weight": 180
+    },
+    {
+      "id": 164,
+      "weight": 1
+    },
+    {
+      "id": 204,
+      "weight": 90
+    },
+    {
+      "id": 205,
+      "weight": 1
+    }
+  ],
+  "mt-moon": [
+    {
+      "id": 27,
+      "weight": 60
+    },
+    {
+      "id": 28,
+      "weight": 5
+    },
+    {
+      "id": 35,
+      "weight": 45
+    },
+    {
+      "id": 41,
+      "weight": 170
+    },
+    {
+      "id": 42,
+      "weight": 1
+    },
+    {
+      "id": 46,
+      "weight": 50
+    },
+    {
+      "id": 47,
+      "weight": 1
+    },
+    {
+      "id": 74,
+      "weight": 170
+    },
+    {
+      "id": 75,
+      "weight": 1
+    }
+  ],
+  "mt-mortar": [
+    {
+      "id": 19,
+      "weight": 258
+    },
+    {
+      "id": 20,
+      "weight": 140
+    },
+    {
+      "id": 41,
+      "weight": 600
+    },
+    {
+      "id": 42,
+      "weight": 140
+    },
+    {
+      "id": 66,
+      "weight": 310
+    },
+    {
+      "id": 67,
+      "weight": 120
+    },
+    {
+      "id": 74,
+      "weight": 360
+    },
+    {
+      "id": 75,
+      "weight": 150
+    },
+    {
+      "id": 118,
+      "weight": 2190
+    },
+    {
+      "id": 119,
+      "weight": 200
+    },
+    {
+      "id": 129,
+      "weight": 1260
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 183,
+      "weight": 272
+    },
+    {
+      "id": 184,
+      "weight": 1
+    },
+    {
+      "id": 237,
+      "weight": 1
+    }
+  ],
+  "mt-silver": [
+    {
+      "id": 24,
+      "weight": 40
+    },
+    {
+      "id": 42,
+      "weight": 375
+    },
+    {
+      "id": 47,
+      "weight": 45
+    },
+    {
+      "id": 55,
+      "weight": 255
+    },
+    {
+      "id": 60,
+      "weight": 510
+    },
+    {
+      "id": 61,
+      "weight": 310
+    },
+    {
+      "id": 67,
+      "weight": 60
+    },
+    {
+      "id": 75,
+      "weight": 210
+    },
+    {
+      "id": 77,
+      "weight": 240
+    },
+    {
+      "id": 78,
+      "weight": 80
+    },
+    {
+      "id": 84,
+      "weight": 30
+    },
+    {
+      "id": 85,
+      "weight": 30
+    },
+    {
+      "id": 95,
+      "weight": 270
+    },
+    {
+      "id": 114,
+      "weight": 270
+    },
+    {
+      "id": 118,
+      "weight": 480
+    },
+    {
+      "id": 119,
+      "weight": 270
+    },
+    {
+      "id": 126,
+      "weight": 30
+    },
+    {
+      "id": 129,
+      "weight": 840
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 195,
+      "weight": 250
+    },
+    {
+      "id": 200,
+      "weight": 25
+    },
+    {
+      "id": 215,
+      "weight": 20
+    },
+    {
+      "id": 217,
+      "weight": 310
+    },
+    {
+      "id": 232,
+      "weight": 160
+    },
+    {
+      "id": 246,
+      "weight": 88
+    },
+    {
+      "id": 247,
+      "weight": 2
+    },
+    {
+      "id": 248,
+      "weight": 1
+    }
+  ],
+  "national-park": [
+    {
+      "id": 10,
+      "weight": 90
+    },
+    {
+      "id": 11,
+      "weight": 60
+    },
+    {
+      "id": 12,
+      "weight": 1
+    },
+    {
+      "id": 13,
+      "weight": 90
+    },
+    {
+      "id": 14,
+      "weight": 60
+    },
+    {
+      "id": 15,
+      "weight": 1
+    },
+    {
+      "id": 16,
+      "weight": 90
+    },
+    {
+      "id": 17,
+      "weight": 1
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 29,
+      "weight": 60
+    },
+    {
+      "id": 30,
+      "weight": 1
+    },
+    {
+      "id": 32,
+      "weight": 60
+    },
+    {
+      "id": 33,
+      "weight": 1
+    },
+    {
+      "id": 48,
+      "weight": 10
+    },
+    {
+      "id": 49,
+      "weight": 1
+    },
+    {
+      "id": 54,
+      "weight": 30
+    },
+    {
+      "id": 55,
+      "weight": 1
+    },
+    {
+      "id": 123,
+      "weight": 1
+    },
+    {
+      "id": 163,
+      "weight": 240
+    },
+    {
+      "id": 164,
+      "weight": 1
+    },
+    {
+      "id": 165,
+      "weight": 20
+    },
+    {
+      "id": 166,
+      "weight": 1
+    },
+    {
+      "id": 167,
+      "weight": 20
+    },
+    {
+      "id": 168,
+      "weight": 1
+    },
+    {
+      "id": 191,
+      "weight": 70
+    }
+  ],
+  "new-bark-town": [
+    {
+      "id": 72,
+      "weight": 420
+    },
+    {
+      "id": 73,
+      "weight": 90
+    },
+    {
+      "id": 90,
+      "weight": 120
+    },
+    {
+      "id": 129,
+      "weight": 360
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 170,
+      "weight": 180
+    },
+    {
+      "id": 171,
+      "weight": 30
+    }
+  ],
+  "olivine-city": [
+    {
+      "id": 72,
+      "weight": 270
+    },
+    {
+      "id": 73,
+      "weight": 30
+    },
+    {
+      "id": 98,
+      "weight": 1080
+    },
+    {
+      "id": 99,
+      "weight": 90
+    },
+    {
+      "id": 120,
+      "weight": 120
+    },
+    {
+      "id": 129,
+      "weight": 570
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 222,
+      "weight": 240
+    }
+  ],
+  "pallet-town": [
+    {
+      "id": 72,
+      "weight": 420
+    },
+    {
+      "id": 73,
+      "weight": 90
+    },
+    {
+      "id": 90,
+      "weight": 120
+    },
+    {
+      "id": 129,
+      "weight": 360
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 170,
+      "weight": 180
+    },
+    {
+      "id": 171,
+      "weight": 30
+    }
+  ],
+  "pokemon-mansion": [
+    {
+      "id": 19,
+      "weight": 190
+    },
+    {
+      "id": 20,
+      "weight": 370
+    },
+    {
+      "id": 37,
+      "weight": 60
+    },
+    {
+      "id": 58,
+      "weight": 80
+    },
+    {
+      "id": 88,
+      "weight": 270
+    },
+    {
+      "id": 89,
+      "weight": 40
+    },
+    {
+      "id": 109,
+      "weight": 140
+    },
+    {
+      "id": 110,
+      "weight": 20
+    },
+    {
+      "id": 126,
+      "weight": 1
+    },
+    {
+      "id": 132,
+      "weight": 30
+    }
+  ],
+  "pokemon-tower": [
+    {
+      "id": 92,
+      "weight": 1304
+    },
+    {
+      "id": 93,
+      "weight": 89
+    },
+    {
+      "id": 104,
+      "weight": 107
+    },
+    {
+      "id": 105,
+      "weight": 1
+    }
+  ],
+  "rock-tunnel": [
+    {
+      "id": 41,
+      "weight": 160
+    },
+    {
+      "id": 42,
+      "weight": 5
+    },
+    {
+      "id": 66,
+      "weight": 80
+    },
+    {
+      "id": 67,
+      "weight": 20
+    },
+    {
+      "id": 74,
+      "weight": 320
+    },
+    {
+      "id": 75,
+      "weight": 1
+    },
+    {
+      "id": 93,
+      "weight": 15
+    },
+    {
+      "id": 95,
+      "weight": 100
+    },
+    {
+      "id": 104,
+      "weight": 250
+    },
+    {
+      "id": 105,
+      "weight": 30
+    },
+    {
+      "id": 115,
+      "weight": 20
+    }
+  ],
+  "ruins-of-alph": [
+    {
+      "id": 60,
+      "weight": 480
+    },
+    {
+      "id": 61,
+      "weight": 1
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 177,
+      "weight": 450
+    },
+    {
+      "id": 178,
+      "weight": 1
+    },
+    {
+      "id": 194,
+      "weight": 190
+    },
+    {
+      "id": 195,
+      "weight": 130
+    },
+    {
+      "id": 201,
+      "weight": 1200
+    },
+    {
+      "id": 235,
+      "weight": 30
+    }
+  ],
+  "seafoam-islands": [
+    {
+      "id": 41,
+      "weight": 371
+    },
+    {
+      "id": 42,
+      "weight": 189
+    },
+    {
+      "id": 54,
+      "weight": 181
+    },
+    {
+      "id": 55,
+      "weight": 47
+    },
+    {
+      "id": 60,
+      "weight": 100
+    },
+    {
+      "id": 61,
+      "weight": 1
+    },
+    {
+      "id": 72,
+      "weight": 140
+    },
+    {
+      "id": 73,
+      "weight": 1
+    },
+    {
+      "id": 79,
+      "weight": 210
+    },
+    {
+      "id": 80,
+      "weight": 48
+    },
+    {
+      "id": 86,
+      "weight": 530
+    },
+    {
+      "id": 87,
+      "weight": 60
+    },
+    {
+      "id": 98,
+      "weight": 585
+    },
+    {
+      "id": 99,
+      "weight": 75
+    },
+    {
+      "id": 116,
+      "weight": 380
+    },
+    {
+      "id": 117,
+      "weight": 1
+    },
+    {
+      "id": 118,
+      "weight": 100
+    },
+    {
+      "id": 119,
+      "weight": 1
+    },
+    {
+      "id": 120,
+      "weight": 140
+    },
+    {
+      "id": 124,
+      "weight": 1
+    },
+    {
+      "id": 129,
+      "weight": 680
+    },
+    {
+      "id": 130,
+      "weight": 64
+    },
+    {
+      "id": 144,
+      "weight": 1
+    }
+  ],
+  "slowpoke-well": [
+    {
+      "id": 41,
+      "weight": 495
+    },
+    {
+      "id": 42,
+      "weight": 15
+    },
+    {
+      "id": 79,
+      "weight": 660
+    },
+    {
+      "id": 80,
+      "weight": 30
+    },
+    {
+      "id": 118,
+      "weight": 900
+    },
+    {
+      "id": 119,
+      "weight": 60
+    },
+    {
+      "id": 129,
+      "weight": 840
+    },
+    {
+      "id": 130,
+      "weight": 1
+    }
+  ],
+  "sprout-tower": [
+    {
+      "id": 19,
+      "weight": 1290
+    },
+    {
+      "id": 20,
+      "weight": 1
+    },
+    {
+      "id": 92,
+      "weight": 510
+    },
+    {
+      "id": 93,
+      "weight": 1
+    }
+  ],
+  "ss-anne": [
+    {
+      "id": 54,
+      "weight": 1
+    },
+    {
+      "id": 55,
+      "weight": 1
+    },
+    {
+      "id": 72,
+      "weight": 200
+    },
+    {
+      "id": 73,
+      "weight": 1
+    },
+    {
+      "id": 79,
+      "weight": 1
+    },
+    {
+      "id": 80,
+      "weight": 1
+    },
+    {
+      "id": 90,
+      "weight": 40
+    },
+    {
+      "id": 98,
+      "weight": 124
+    },
+    {
+      "id": 99,
+      "weight": 1
+    },
+    {
+      "id": 116,
+      "weight": 124
+    },
+    {
+      "id": 117,
+      "weight": 1
+    },
+    {
+      "id": 120,
+      "weight": 40
+    },
+    {
+      "id": 129,
+      "weight": 240
+    },
+    {
+      "id": 130,
+      "weight": 30
+    }
+  ],
+  "tohjo-falls": [
+    {
+      "id": 19,
+      "weight": 15
+    },
+    {
+      "id": 20,
+      "weight": 90
+    },
+    {
+      "id": 41,
+      "weight": 90
+    },
+    {
+      "id": 42,
+      "weight": 60
+    },
+    {
+      "id": 79,
+      "weight": 135
+    },
+    {
+      "id": 80,
+      "weight": 1
+    },
+    {
+      "id": 118,
+      "weight": 630
+    },
+    {
+      "id": 119,
+      "weight": 60
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    }
+  ],
+  "union-cave": [
+    {
+      "id": 19,
+      "weight": 190
+    },
+    {
+      "id": 20,
+      "weight": 90
+    },
+    {
+      "id": 27,
+      "weight": 120
+    },
+    {
+      "id": 28,
+      "weight": 1
+    },
+    {
+      "id": 41,
+      "weight": 475
+    },
+    {
+      "id": 42,
+      "weight": 130
+    },
+    {
+      "id": 72,
+      "weight": 180
+    },
+    {
+      "id": 73,
+      "weight": 30
+    },
+    {
+      "id": 74,
+      "weight": 335
+    },
+    {
+      "id": 75,
+      "weight": 1
+    },
+    {
+      "id": 95,
+      "weight": 100
+    },
+    {
+      "id": 98,
+      "weight": 1080
+    },
+    {
+      "id": 99,
+      "weight": 90
+    },
+    {
+      "id": 118,
+      "weight": 900
+    },
+    {
+      "id": 119,
+      "weight": 60
+    },
+    {
+      "id": 120,
+      "weight": 120
+    },
+    {
+      "id": 129,
+      "weight": 1410
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 131,
+      "weight": 1
+    },
+    {
+      "id": 194,
+      "weight": 400
+    },
+    {
+      "id": 195,
+      "weight": 350
+    },
+    {
+      "id": 222,
+      "weight": 240
+    }
+  ],
+  "vermilion-city": [
+    {
+      "id": 72,
+      "weight": 840
+    },
+    {
+      "id": 73,
+      "weight": 180
+    },
+    {
+      "id": 90,
+      "weight": 240
+    },
+    {
+      "id": 129,
+      "weight": 720
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 170,
+      "weight": 360
+    },
+    {
+      "id": 171,
+      "weight": 60
+    }
+  ],
+  "violet-city": [
+    {
+      "id": 60,
+      "weight": 750
+    },
+    {
+      "id": 61,
+      "weight": 30
+    },
+    {
+      "id": 129,
+      "weight": 420
+    },
+    {
+      "id": 130,
+      "weight": 1
+    }
+  ],
+  "viridian-city": [
+    {
+      "id": 60,
+      "weight": 270
+    },
+    {
+      "id": 61,
+      "weight": 30
+    }
+  ],
+  "viridian-forest": [
+    {
+      "id": 10,
+      "weight": 130
+    },
+    {
+      "id": 11,
+      "weight": 40
+    },
+    {
+      "id": 12,
+      "weight": 1
+    },
+    {
+      "id": 13,
+      "weight": 80
+    },
+    {
+      "id": 14,
+      "weight": 15
+    },
+    {
+      "id": 15,
+      "weight": 1
+    },
+    {
+      "id": 16,
+      "weight": 24
+    },
+    {
+      "id": 17,
+      "weight": 1
+    },
+    {
+      "id": 18,
+      "weight": 1
+    },
+    {
+      "id": 25,
+      "weight": 10
+    }
+  ],
+  "whirl-islands": [
+    {
+      "id": 41,
+      "weight": 600
+    },
+    {
+      "id": 42,
+      "weight": 115
+    },
+    {
+      "id": 72,
+      "weight": 180
+    },
+    {
+      "id": 73,
+      "weight": 110
+    },
+    {
+      "id": 86,
+      "weight": 335
+    },
+    {
+      "id": 87,
+      "weight": 1
+    },
+    {
+      "id": 98,
+      "weight": 1940
+    },
+    {
+      "id": 99,
+      "weight": 180
+    },
+    {
+      "id": 116,
+      "weight": 960
+    },
+    {
+      "id": 117,
+      "weight": 100
+    },
+    {
+      "id": 129,
+      "weight": 1080
+    },
+    {
+      "id": 130,
+      "weight": 1
+    },
+    {
+      "id": 249,
+      "weight": 1
+    }
+  ]
+}

@@ -176,7 +176,7 @@ function withJohto(Base){return class JohtoAdventure extends Base{
   // These species have ordinary Johto habitats even when their Kanto route
   // was Safari-only. Scyther must remain obtainable as Scizor's parent.
   const habitats=[113,115,123,127,128,131],regional=habitats.filter(id=>!J.done(this,id===123||id===127?'j-park':'j-morty'));
-  return {...previous,location:world.init(this).location,champion:!!this.data.johto?.champion,minimumLevel:this.encounterBonus()?.minimumLevel||0,excluded:[...new Set([...(previous.excluded||[]).filter(id=>!habitats.includes(id)),...regional,...J.wildExclusions(this)])],additions:[...previous.additions,...J.bonuses(this)]};
+  return {...previous,habitat:world.habitat(this),location:world.init(this).location,champion:!!this.data.johto?.champion,minimumLevel:this.encounterBonus()?.minimumLevel||0,excluded:[...new Set([...(previous.excluded||[]).filter(id=>!habitats.includes(id)),...regional,...J.wildExclusions(this)])],additions:[...previous.additions,...J.bonuses(this)]};
  }
  snapshot(now=Date.now()){
   const s=super.snapshot(now),b=this.data.battle;if(!J.active(this))return s;
@@ -190,13 +190,14 @@ function withJohto(Base){return class JohtoAdventure extends Base{
   for(const p of s.collection){
    const original=p.acquisition,routes=original.routes.filter(r=>r.kind!=='wild'&&!(p.id<152&&J.routeGates.has(p.id)&&r.kind==='event')),wild=wildEligible(species.get(p.id),2,100)&&!J.noWild.has(p.id),gate=J.routeGates.get(p.id),open=!gate||J.done(this,gate);
    if(wild){
-    const previous=original.routes.find(r=>r.kind==='wild'),current=realChance.get(p.id)||0;
+    const current=realChance.get(p.id)||0;
     const hint=gate==='j-k-blue'?'성도와 관동의 체육관을 모두 통과하면 야생에서 만날 수 있어요.':gate==='j-ship'?'관동에 다시 도착한 뒤 야생에서 만날 수 있어요.':gate==='j-ice-path'?'얼음샛길에 도달한 뒤 야생에서 만날 수 있어요.':gate==='j-ruins'?'알프의유적을 조사한 뒤 야생에서 만날 수 있어요.':gate==='j-park'?'자연공원의 채집대회에 참가한 뒤 야생에서 만날 수 있어요.':J.specialIds.includes(p.id)?'성도의 전설과 관련된 이야기를 따라가 보세요.':'성도에서 모험을 더 진행하면 야생에서 만날 수 있어요.';
-    routes.unshift({kind:'wild',chance:current,minimumLevel:wildMinimum(species.get(p.id)),text:open?(previous?.text||'현재 '+(current*100).toFixed(2)+'% 확률로 야생에서 출현.'):hint,...(J.specialIds.includes(p.id)&&open?{note:this.data.caught[p.id]?'포획을 마쳐 추가 출현 보너스가 종료됐어요.':'모험을 진행할수록 포획에 성공할 때까지 더 자주 만날 수 있어요.'}:{})});
+    const nearby=world.locationsFor(p.id).slice(0,3).map(p=>p.name).join(' · '),text=current?'현재 '+(current*100).toFixed(2)+'% 확률로 야생에서 출현.':nearby?nearby+'에서 만날 수 있어요.':'다른 도로에서도 찾아보세요.';
+    routes.unshift({kind:'wild',chance:current,minimumLevel:wildMinimum(species.get(p.id)),text:open?text:hint,...(J.specialIds.includes(p.id)&&open?{note:this.data.caught[p.id]?'포획을 마쳐 추가 출현 보너스가 종료됐어요.':'모험을 진행할수록 포획에 성공할 때까지 더 자주 만날 수 있어요.'}:{})});
    }
    const event=[...J.nodes.values()].some(n=>n.gift===p.id||n.egg===p.id||n.pokemon===p.id)||oddEgg.includes(p.id);
    if(event&&!routes.some(r=>r.kind==='event'))routes.push({kind:'event',text:'모험 중 특별한 만남으로 동료가 될 수 있어요.'});
-   if(p.id>=152||J.routeGates.has(p.id)){const labels={wild:'야생',event:'이벤트',hatch:'부화',evolution:'진화',starter:'스타팅'};p.acquisition={...original,wildAllowed:wild,routes,summary:[...new Set(routes.map(r=>r.kind==='evolution'&&r.special?'특수진화':labels[r.kind]))].join(' · '),note:wild?'야생 확률은 플레이 중 야생 1회에 만날 확률이에요. 포획 성공률과는 달라요.':routes.every(r=>r.kind==='evolution')?'진화로만 얻을 수 있어요.':'일반 야생에서는 출현하지 않아요.'};}
+   if(wild||p.id>=152||J.routeGates.has(p.id)){const labels={wild:'야생',event:'이벤트',hatch:'부화',evolution:'진화',starter:'스타팅'};p.acquisition={...original,wildAllowed:wild,routes,summary:[...new Set(routes.map(r=>r.kind==='evolution'&&r.special?'특수진화':labels[r.kind]))].join(' · '),note:wild?'야생 확률은 플레이 중 야생 1회에 만날 확률이에요. 포획 성공률과는 달라요.':routes.every(r=>r.kind==='evolution')?'진화로만 얻을 수 있어요.':'일반 야생에서는 출현하지 않아요.'};}
    else if(event)p.acquisition={...original,routes};
   }
   const items=Object.keys(this.data.johto.items).map(key=>({id:'j-'+key,name:itemNames[key],count:1}));

@@ -1,6 +1,6 @@
 {
   "name": "pokemon-codex-buddy",
-  "version": "0.3.117",
+  "version": "0.3.118",
   "private": true,
   "description": "A local Pokemon desktop companion for AI agents, inspired by momozzing/Digimon_mod",
   "main": "desktop/main.cjs",
@@ -11,7 +11,7 @@
     "test": "node desktop/scripts/check-parity.cjs && node --test desktop/test/*.test.cjs mobile/test/*.test.cjs",
     "smoke": "electron . --smoke-test",
     "build:data": "node desktop/scripts/build-data.cjs",
-    "build:habitats": "node desktop/scripts/build-kanto-habitats.cjs",
+    "build:habitats": "node desktop/scripts/build-kanto-habitats.cjs && node desktop/scripts/build-johto-habitats.cjs",
     "build:town-map": "node desktop/scripts/build-town-map.cjs",
     "mobile:bundle": "node mobile/scripts/build-web.cjs",
     "mobile:build": "powershell -NoProfile -ExecutionPolicy Bypass -File mobile/scripts/build-android.ps1",

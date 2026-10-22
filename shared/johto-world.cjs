@@ -6,9 +6,18 @@ const rows=[
  ['route38','38번도로','Route38','j-morty'],['route39','39번도로','Route39','j-morty'],['olivine','담청시티','OlivineCity','j-morty'],['route40','40번수로','Route40','j-lighthouse'],['whirl','소용돌이섬','WhirlIslands','j-lighthouse'],['route41','41번수로','Route41','j-lighthouse'],['cianwood','진청시티','CianwoodCity','j-lighthouse'],
  ['route42','42번도로','Route42','j-jasmine'],['mortar','절구산','MtMortar','j-jasmine'],['mahogany','황토마을','MahoganyTown','j-jasmine'],['route43','43번도로','Route43','j-jasmine'],['rage','분노의호수','LakeOfRage','j-jasmine'],['route44','44번도로','Route44','j-radio-final'],['ice','얼음샛길','IcePath','j-radio-final'],['blackthorn','검은먹시티','BlackthornCity','j-ice-path'],['dragon','용의굴','DragonsDen','j-clair'],['route45','45번도로','Route45','j-clair'],['route46','46번도로','Route46'],['silver','은빛산','SilverCave','j-k-blue']
 ];
+rows.push(['dark','어둠의동굴','DarkCave']);
 const places=rows.map(([id,name,landmark,requires])=>({id:'j-'+id,name,zone:'johto',requires:requires||null,point:original.landmarks[landmark]}));
 for(const p of K.places)places.push({id:'j-k-'+p.id,name:p.name,zone:'kanto',requires:['indigo','victory-road','route-23'].includes(p.id)?'j-dragon-den':'j-ship',point:require('./kanto-map.json').points[p.id]});
 const byId=new Map(places.map(p=>[p.id,p]));
+const habitats=require('./johto-habitats.json'),{merge}=require('./local-habitats.cjs');
+const localNames={newbark:'new-bark-town',cherrygrove:'cherrygrove-city',violet:'violet-city',ruins:'ruins-of-alph',union:'union-cave',azalea:'azalea-town',ilex:'ilex-forest',goldenrod:'goldenrod-city',park:'national-park',ecruteak:'ecruteak-city',olivine:'olivine-city',whirl:'whirl-islands',cianwood:'cianwood-city',mortar:'mt-mortar',mahogany:'mahogany-town',rage:'lake-of-rage',ice:'ice-path',blackthorn:'blackthorn-city',dragon:'dragons-den',silver:'mt-silver'};
+const townRoads={newbark:['route29'],cherrygrove:['route29','route30'],violet:['route31','route32','route36'],azalea:['route33','ilex'],goldenrod:['route34','route35'],ecruteak:['route37','route38','route42'],olivine:['route39','route40'],cianwood:['route41'],mahogany:['route42','route43','route44'],blackthorn:['route45','ice']};
+localNames.dark='dark-cave';
+function poolNames(p){if(p.id.startsWith('j-k-'))return [K.byId.get(p.id.slice(4)).habitat];const id=p.id.slice(2);return [localNames[id]||'johto-'+([40,41].includes(+id.slice(5))?'sea-':'')+id.replace(/^route(\d+)/,'route-$1'),...(id==='ecruteak'?['bell-tower']:[])];}
+function sources(game,p){const ids=p.zone==='kanto'?(K.townRoads[p.id.slice(4)]||[]).map(id=>'j-k-'+id):(townRoads[p.id.slice(2)]||[]).map(id=>'j-'+id);return [p,...ids.map(id=>byId.get(id)).filter(q=>unlocked(game,q))];}
+function habitat(game,p=byId.get(init(game).location)){return merge([...new Set(sources(game,p).flatMap(poolNames))].map(key=>habitats[key]));}
+function locationsFor(id){return places.filter(p=>poolNames(p).some(key=>habitats[key]?.some(p=>p.id===id)));}
 function geometry(zone){
  if(zone==='kanto'){const map=require('./kanto-map.json');return {...map,points:Object.fromEntries(Object.entries(map.points).map(([id,p])=>['j-k-'+id,p])),roads:map.roads.map(p=>({...p,place:'j-k-'+p.place}))};}
  const points=Object.fromEntries(places.filter(p=>p.zone==='johto').map(p=>[p.id,p.point])),roads=original.roads.map(p=>({...p}));
@@ -48,4 +57,4 @@ function snapshot(game,now=Date.now()){
  const s=init(game),current=byId.get(s.location),map=maps[current.zone],pending=game.data.pendingActions?.find(a=>['travel','world-pass'].includes(a.kind));
  return {active:true,location:s.location,name:current.name,zone:current.zone,map,maps,...journey.snapshot(s),position:s.position,levels:{max:game.wildLevelCap()},walk:s.walk&&now<s.walk.at+s.walk.duration?s.walk:null,facing:s.walk?walking.frame(s.walk,s.walk.at+s.walk.duration).direction:'down',pending:pending?.location||null,checkpoint:checkpoint(game),locations:Object.fromEntries([...J.nodes.keys()].map(id=>[id,locationFor(id)])),places:places.map(p=>({id:p.id,name:p.name,zone:p.zone,current:p.id===s.location,open:unlocked(game,p),visited:!!s.visited[p.id],levels:{max:game.wildLevelCap()},notice:[...J.nodes.values()].some(n=>locationFor(n.id)===p.id&&J.available(game,n))}))};
 }
-module.exports={init,travel,status,checkpoint,passageStatus,pass,locationFor,snapshot,maps,places,byId,advance:(game,now)=>journey.advance(game,init(game),now),encounterEnded:(game,b)=>journey.encounterEnded(init(game),b)};
+module.exports={init,travel,status,checkpoint,passageStatus,pass,locationFor,snapshot,maps,places,byId,townRoads,habitat,poolNames,locationsFor,advance:(game,now)=>journey.advance(game,init(game),now),encounterEnded:(game,b)=>journey.encounterEnded(init(game),b)};

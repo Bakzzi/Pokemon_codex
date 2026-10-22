@@ -50,7 +50,7 @@ test('dex uses exact current habitat probabilities and tells the player to chang
 });
 test('PC and Android share geography; second-region wilds do not inherit the first road habitat or levels',()=>{
  const pc=late(PC),android=new Android(pc.data,now);assert.deepEqual(pc.panelState(now).kantoWorld,android.panelState(now).kantoWorld);
- assert.ok(pc.unlockJohto(now,[25]));assert.equal(pc.wildOptions().habitat,undefined);assert.equal(pc.wildOptions().minimumEncounterLevel,undefined);assert.equal(pc.snapshot(now).location.id,'j-newbark');assert.equal(pc.panelState(now).kantoWorld.active,false);assert.ok(!pc.requestAction('travel','forest',now));
+ assert.ok(pc.unlockJohto(now,[25]));assert.deepEqual(pc.wildOptions().habitat,require('../../shared/johto-world.cjs').habitat(pc));assert.equal(pc.wildOptions().minimumEncounterLevel,undefined);assert.equal(pc.snapshot(now).location.id,'j-newbark');assert.equal(pc.panelState(now).kantoWorld.active,false);assert.ok(!pc.requestAction('travel','forest',now));
 });
 test('new season clears travel and visited places while permanent collection registration survives',()=>{
  const g=late();g.data.kantoWorld.location='seafoam';g.data.caught[144]=now;g.data.pendingActions=[];g.resetSeason(now+1000);assert.equal(world.current(g).id,'route-1');assert.ok(g.data.caught[144]);assert.equal(world.snapshot(g).places.find(p=>p.id==='seafoam').visited,false);
