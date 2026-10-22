@@ -92,7 +92,8 @@ function status(game,id,point){
  const p=byId.get(id);if(!p)return {state:'invalid',reason:'갈 수 없는 장소예요.'};
  if(!validPosition(id,point))return {state:'invalid',reason:'지도에 표시된 길을 선택해 주세요.'};
  const target=point||map.points[id],here=position(game);
- if(current(game).id===id&&here.x===target.x&&here.y===target.y&&!init(game).blocked)return {state:'done',reason:'지금 탐험 중이에요.'};
+ if(init(game).journey?.destination===id&&journey.same(init(game).journey.position,target))return {state:'done',reason:'이곳으로 모험하고 있어요.'};
+ if(current(game).id===id&&here.x===target.x&&here.y===target.y&&!init(game).blocked&&!init(game).journey)return {state:'done',reason:'지금 탐험 중이에요.'};
  if(game.data.mobileStory?.safari?.trip)return {state:'waiting',reason:'사파리 탐험을 마치면 이동해요.'};
  return null;
 }
@@ -118,7 +119,7 @@ function pass(game,id,now){if(passageStatus(game,id))return false;const state=in
 function snapshot(game,now=Date.now()){
  const state=init(game),here=current(game),levels=range(game);
  const selected=game.data.pendingActions?.find(a=>['travel','world-pass'].includes(a.kind));
- return {active:active(game),location:here.id,name:here.name,levels,map,position:position(game),checkpoint:checkpoint(game),facing:state.walk?walking.frame(state.walk,state.walk.at+state.walk.duration).direction:'down',walk:active(game)&&state.walk&&now<state.walk.at+state.walk.duration?state.walk:null,pending:selected?.location||null,places:places.map(p=>({id:p.id,name:p.name,x:p.x,y:p.y,activity:p.activity,open:unlocked(game,p),visited:!!state.visited[p.id],current:p.id===here.id,levels:range(game,p),reason:reason(game,p)})),links};
+ return {active:active(game),location:here.id,name:here.name,levels,map,...journey.snapshot(state),position:position(game),checkpoint:checkpoint(game),facing:state.walk?walking.frame(state.walk,state.walk.at+state.walk.duration).direction:'down',walk:active(game)&&state.walk&&now<state.walk.at+state.walk.duration?state.walk:null,pending:selected?.location||null,places:places.map(p=>({id:p.id,name:p.name,x:p.x,y:p.y,activity:p.activity,open:unlocked(game,p),visited:!!state.visited[p.id],current:p.id===here.id,levels:range(game,p),reason:reason(game,p)})),links};
 }
 function locationsFor(id){return places.filter(p=>(habitats[p.habitat]||[]).some(h=>h.id===id));}
-module.exports={places,byId,links,active,init,current,range,options,status,travel,snapshot,unlocked,locationsFor,position,checkpoint,passageStatus,pass};
+module.exports={places,byId,links,active,init,current,range,options,status,travel,snapshot,unlocked,locationsFor,position,checkpoint,passageStatus,pass,advance:(game,now)=>journey.advance(game,init(game),now),encounterEnded:(game,b)=>journey.encounterEnded(init(game),b)};

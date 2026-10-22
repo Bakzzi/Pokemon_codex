@@ -3,6 +3,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict');
 const {Adventure:PC}=require('../adventure.cjs'),{Adventure:Android}=require('../../mobile/adventure.cjs');
 const world=require('../../shared/kanto-world.cjs'),{data,wildEligible,wildDistribution,xpAt,wildMinimum,species}=require('../pokemon.cjs');
 const now=Date.parse('2026-10-22T05:00:00Z'),badges=data.bosses.slice(0,8).map(b=>b.id);
+const {finishJourney}=require('./helpers/travel-fixture.cjs');
 function ready(Type=PC){const g=new Type({},now,{random:()=>.5});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;return g;}
 function late(Type=PC){const g=ready(Type);g.data.badges=[...badges];g.data.champion=true;g.data.trainingDevice.snorlaxWonAt=now;g.data.mobileStory.scopeObtainedAt=now;const p=g.data.owned[g.data.activeId];p.level=100;p.xp=xpAt(p.id,100);require('../move-access.cjs').update(p);return g;}
 test('town map covers every first-region route and all lines connect existing distinct places',()=>{
@@ -29,8 +30,8 @@ for(const Type of [PC,Android])test(Type.name+' travels after results, saves the
  assert.ok(g.requestAction('travel','forest',now));assert.equal(world.current(g).id,'route-1');assert.deepEqual(g.data.battle,battle);
  const loaded=new Type(g.data,now+1);assert.equal(loaded.data.pendingActions[0].location,'forest');assert.ok(loaded.requestAction('travel','route-2',now+2));assert.equal(loaded.data.pendingActions.length,1);assert.equal(loaded.data.pendingActions[0].location,'route-2');
  loaded.data.battle=null;loaded.data.pendingBattle=null;loaded.data.switchUntil=now+100;loaded.nextTick=now;
- assert.equal(loaded.processActions(now+99),false);assert.equal(loaded.processActions(now+101),true);assert.equal(world.current(loaded).id,'route-2');assert.equal(loaded.data.workTokens,work);
- assert.ok(loaded.requestAction('travel','route-2',now+102));assert.equal(loaded.data.pendingActions.length,0);assert.ok(loaded.requestAction('travel','route-3',now+102));assert.ok(!loaded.requestAction('travel','../../outside',now));
+ assert.equal(loaded.processActions(now+99),false);assert.equal(loaded.processActions(now+101),true);assert.equal(world.current(loaded).id,'route-1');assert.equal(loaded.data.kantoWorld.journey.destination,'route-2');const end=finishJourney(loaded,now+101);assert.equal(world.current(loaded).id,'route-2');assert.equal(loaded.data.workTokens,work);
+ assert.ok(loaded.requestAction('travel','route-2',end));assert.equal(loaded.data.pendingActions.length,0);assert.ok(loaded.requestAction('travel','route-3',end));assert.ok(!loaded.requestAction('travel','../../outside',end));
 });
 test('all reached places draw only local eligible species with local ranges clamped below original boss levels',()=>{
  const g=late();let draw=0;g.random=()=>((draw++*71)%997)/997;

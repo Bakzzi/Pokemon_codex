@@ -73,3 +73,11 @@ test('offline map reservations and walking finish without consuming a walking ac
  const g=new context.MobileCore.Adventure({},now),p=new Progression(g);g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=now+100;g.nextTick=now;
  assert.ok(g.requestAction('travel',{location:'route-1',position:{x:44,y:92}},now));assert.equal(g.data.pendingActions.length,1);assert.equal(p.catchUp(10,now+1000),1);assert.equal(p.consumed,10);assert.equal(g.data.pendingActions.length,0);assert.equal(g.data.battle.location,'route-1');assert.equal(g.data.kantoWorld.walk.at+g.data.kantoWorld.walk.duration<=now+1000,true);
 });
+
+test('offline road departures use ten completed encounters and never charge movement as a walking action',()=>{
+ const g=new context.MobileCore.Adventure({},now),p=new Progression(g);g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;
+ assert.ok(g.requestAction('travel','pewter',now));for(let i=0;i<9;i++)g.onWildEnd({kind:'wild',location:'route-1'},now);
+ assert.equal(p.catchUp(10,now+10000,1),1);assert.equal(g.data.battle.location,'route-1');assert.equal(p.consumed,10);assert.equal(g.data.kantoWorld.roadProgress.completed,9);
+ g.data.battle.foe.hp=0;g.showFaint(now+10000);g.tick(g.data.switchUntil);assert.equal(g.data.kantoWorld.roadProgress.completed,10);
+ assert.equal(p.catchUp(20,now+20000,1),1);assert.equal(p.consumed,20);assert.equal(g.data.battle.location,'route-2');assert.equal(g.data.kantoWorld.roadProgress.completed,0);assert.equal(g.data.pendingChallenge,null);
+});

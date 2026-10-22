@@ -88,6 +88,9 @@ class Adventure extends Engine{
   travelTo(id,now,point){return world.travel(this,id,now,point);}
   passageStatus(id){return world.passageStatus(this,id);}
   passCheckpoint(id,now){return world.pass(this,id,now);}
+  advanceTravel(now){return world.active(this)&&world.advance(this,now);}
+  onWildEnd(b,now){if(world.active(this))world.encounterEnded(this,b);}
+  controlTick(now=Date.now()){return super.controlTick(now)||this.advanceTravel(now);}
   canReserveCapture(id){return id!==131&&super.canReserveCapture(id);}
   canReceiveFlute(){const r=this.data.mobileStory?.rescue;return !!(r?.completedAt&&r.wins.every(Boolean));}
   fluteRewardText(){return '등나무노인에게 포켓몬피리를 받았다!';}
@@ -307,7 +310,7 @@ class Adventure extends Engine{
   tick(now=Date.now()){
     if(this.presentation())return false;
     const b=this.data.battle;
-    if(world.active(this)&&world.init(this).blocked&&!b&&!this.data.pendingChallenge&&!this.seasonDue(now))return this.controlTick(now);
+    if(!this.seasonDue(now)&&this.advanceTravel(now))return true;
     // Exploring spends its own activity. Keep banked wild work and the paused
     // opponent intact; explicit challenges and the monthly rollover still run.
     if(this.data.mobileStory.safari.trip&&!this.data.pendingChallenge&&b?.kind!=='trainer'&&!b?.storyId&&!this.seasonDue(now))return this.controlTick(now);

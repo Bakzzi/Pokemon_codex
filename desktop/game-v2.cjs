@@ -426,7 +426,7 @@ class Game {
     if(pending.kind==='after-action'){this.showFaint(now);return true;}
     if(pending.kind==='draw'){
       this.log('긴 배틀을 마치고 회복했다','draw',null,now);
-      if(b.kind==='trainer'||b.storyId)this.endChallenge(false,now);else{this.data.battle=null;this.animate('result',{text:'긴 배틀을 마치고 잠시 쉬어가요.'},now);}
+      if(b.kind==='trainer'||b.storyId)this.endChallenge(false,now);else{this.onWildEnd?.(b,now);this.data.battle=null;this.animate('result',{text:'긴 배틀을 마치고 잠시 쉬어가요.'},now);}
       return true;
     }
     const hero=b.party[this.data.activeId];
@@ -481,7 +481,7 @@ class Game {
     if(this.data.battle.kind==='trainer'?this.switchToMatchup('faint',now):this.switchToLowest('faint',now))return;
     const b=this.data.battle;
     if(b.kind==='trainer'||b.storyId)this.endChallenge(false,now);
-    else{const text=`${species.get(b.foe.id).name}에게 패배 · 동료들을 회복했다`;this.log(text,'loss',null,now);this.data.battle=null;this.animate('result',{text},now);}
+    else{const text=`${species.get(b.foe.id).name}에게 패배 · 동료들을 회복했다`;this.log(text,'loss',null,now);this.onWildEnd?.(b,now);this.data.battle=null;this.animate('result',{text},now);}
   }
   select(id,now=Date.now()){
     id=Number(id);
@@ -674,6 +674,7 @@ class Game {
   defeatOpponent(now,captured=false){
     const b=this.data.battle,foe=b.foe;this.awardXp(foe,b.kind==='trainer'&&this.battleBoss(b)?.xpTrainer!==false,now);this.data.battles++;journal.increment(this.data,'wins');
     if(b.kind==='wild'){
+      this.onWildEnd?.(b,now);
       const roadCleared=b.storyId==='road-snorlax'&&training.win(this,b.storyId,now,captured);
       if(!captured)this.log(`야생 ${species.get(foe.id).name}에게 승리했다!`,'win',foe.id,now);
       if(this.random()<consumables.economy.evolutionDropChance){

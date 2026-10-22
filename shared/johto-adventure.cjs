@@ -31,7 +31,8 @@ function withJohto(Base){return class JohtoAdventure extends Base{
  travelTo(id,now,point){return J.active(this)?world.travel(this,id,now,point):super.travelTo(id,now,point);}
  passageStatus(id){return J.active(this)?world.passageStatus(this,id):super.passageStatus(id);}
  passCheckpoint(id,now){return J.active(this)?world.pass(this,id,now):super.passCheckpoint(id,now);}
- tick(now=Date.now()){if(J.active(this)&&world.init(this).blocked&&!this.data.battle&&!this.data.pendingChallenge&&!this.seasonDue(now))return this.controlTick(now);return super.tick(now);}
+ advanceTravel(now){return J.active(this)?world.advance(this,now):super.advanceTravel(now);}
+ onWildEnd(b,now){return J.active(this)?world.encounterEnded(this,b):super.onWildEnd(b,now);}
  battleBoss(b=this.data.battle){return J.battleBoss(this,b?.bossIndex)||super.battleBoss(b);}
  challengeName(id){return J.nodes.get(id)?.title||super.challengeName(id);}
  canChallenge(id){
@@ -175,7 +176,7 @@ function withJohto(Base){return class JohtoAdventure extends Base{
   // These species have ordinary Johto habitats even when their Kanto route
   // was Safari-only. Scyther must remain obtainable as Scizor's parent.
   const habitats=[113,115,123,127,128,131],regional=habitats.filter(id=>!J.done(this,id===123||id===127?'j-park':'j-morty'));
-  return {...previous,champion:!!this.data.johto?.champion,minimumLevel:this.encounterBonus()?.minimumLevel||0,excluded:[...new Set([...(previous.excluded||[]).filter(id=>!habitats.includes(id)),...regional,...J.wildExclusions(this)])],additions:[...previous.additions,...J.bonuses(this)]};
+  return {...previous,location:world.init(this).location,champion:!!this.data.johto?.champion,minimumLevel:this.encounterBonus()?.minimumLevel||0,excluded:[...new Set([...(previous.excluded||[]).filter(id=>!habitats.includes(id)),...regional,...J.wildExclusions(this)])],additions:[...previous.additions,...J.bonuses(this)]};
  }
  snapshot(now=Date.now()){
   const s=super.snapshot(now),b=this.data.battle;if(!J.active(this))return s;

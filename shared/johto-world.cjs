@@ -11,8 +11,14 @@ for(const p of K.places)places.push({id:'j-k-'+p.id,name:p.name,zone:'kanto',req
 const byId=new Map(places.map(p=>[p.id,p]));
 function geometry(zone){
  if(zone==='kanto'){const map=require('./kanto-map.json');return {...map,points:Object.fromEntries(Object.entries(map.points).map(([id,p])=>['j-k-'+id,p])),roads:map.roads.map(p=>({...p,place:'j-k-'+p.place}))};}
- const points=Object.fromEntries(places.filter(p=>p.zone==='johto').map(p=>[p.id,p.point])),roads=original.roads.map(p=>({...p,place:places.filter(q=>q.zone==='johto').reduce((a,b)=>Math.hypot(a.point.x-p.x,a.point.y-p.y)<=Math.hypot(b.point.x-p.x,b.point.y-p.y)?a:b).id}));
+ const points=Object.fromEntries(places.filter(p=>p.zone==='johto').map(p=>[p.id,p.point])),roads=original.roads.map(p=>({...p}));
  for(const [place,p]of Object.entries(points))if(!roads.some(q=>journey.same(p,q)))roads.push({...p,place});
+ // Assign cells along connected roads, so a nearby branch across empty map
+ // space cannot become a compulsory detour in the travel itinerary.
+ const key=p=>p.x+','+p.y,cells=new Map(roads.map(p=>[key(p),p])),owners=new Map(),queue=[];
+ for(const [id,p]of Object.entries(points))if(!owners.has(key(p))){owners.set(key(p),id);queue.push(p);}
+ for(let i=0;i<queue.length;i++){const p=queue[i];for(const [dx,dy]of [[0,-8],[8,0],[0,8],[-8,0]]){const next=cells.get((p.x+dx)+','+(p.y+dy));if(next&&!owners.has(key(next))){owners.set(key(next),owners.get(key(p)));queue.push(next);}}}
+ for(const p of roads)p.place=owners.get(key(p));
  return {image:original.image,width:original.width,height:original.height,points,roads};
 }
 const maps={johto:geometry('johto'),kanto:geometry('kanto')};
@@ -22,12 +28,12 @@ function init(game,now=Date.now()){
  return game.data.johtoWorld={revision:1,location,position:{...byId.get(location).point},visited:{[location]:now}};
 }
 function unlocked(game,p){return !!p&&(!p.requires||J.done(game,p.requires));}
-function status(game,id,point){if(!J.active(game)||!byId.has(id))return {state:'invalid',reason:'지금 모험 중인 지방의 장소를 선택해 주세요.'};const p=byId.get(id),map=maps[p.zone];if(point&&!map.roads.some(c=>c.place===id&&journey.same(c,point))&&!journey.same(point,p.point))return {state:'invalid',reason:'지도에 표시된 길을 선택해 주세요.'};const s=init(game);if(s.location===id&&journey.same(s.position,point||p.point)&&!s.blocked)return {state:'done',reason:'지금 탐험 중이에요.'};return null;}
+function status(game,id,point){if(!J.active(game)||!byId.has(id))return {state:'invalid',reason:'지금 모험 중인 지방의 장소를 선택해 주세요.'};const p=byId.get(id),map=maps[p.zone];if(point&&!map.roads.some(c=>c.place===id&&journey.same(c,point))&&!journey.same(point,p.point))return {state:'invalid',reason:'지도에 표시된 길을 선택해 주세요.'};const s=init(game);if(s.journey?.destination===id&&journey.same(s.journey.position,point||p.point))return {state:'done',reason:'이곳으로 모험하고 있어요.'};if(s.location===id&&journey.same(s.position,point||p.point)&&!s.blocked&&!s.journey)return {state:'done',reason:'지금 탐험 중이에요.'};return null;}
 function travel(game,id,now,point){
  if(status(game,id,point)?.state==='invalid'||game.data.battle||game.data.suspendedWild)return false;
  const s=init(game),p=byId.get(id),map=maps[p.zone],to=point||p.point,old=byId.get(s.location);
  if(old.zone!==p.zone||id==='j-silver'){
-  if(!unlocked(game,p)){s.blocked={location:id,checkpoint:id,position:{...to},at:now};game.holdUntil(now+180);return true;}
+  if(!unlocked(game,p)){s.journey=null;s.blocked={location:id,checkpoint:id,position:{...to},at:now};game.holdUntil(now+180);return true;}
   const entry=id==='j-silver'?to:p.zone==='kanto'?maps.kanto.points[J.done(game,'j-ship')?'j-k-vermilion':'j-k-indigo']:maps.johto.points['j-newbark'];s.location=p.zone==='kanto'?(J.done(game,'j-ship')?'j-k-vermilion':'j-k-indigo'):'j-newbark';s.position={...entry};
  }
  return journey.move(game,s,map,id,to,place=>unlocked(game,byId.get(place)),p.name,now);
@@ -40,6 +46,6 @@ const local={'j-falkner':'j-violet','j-bugsy':'j-azalea','j-whitney':'j-goldenro
 function locationFor(id){const n=J.nodes.get(id);return local[id]||grouped[n?.group]||(n?.target?locationFor(n.target):null);}
 function snapshot(game,now=Date.now()){
  const s=init(game),current=byId.get(s.location),map=maps[current.zone],pending=game.data.pendingActions?.find(a=>['travel','world-pass'].includes(a.kind));
- return {active:true,location:s.location,name:current.name,zone:current.zone,map,maps,position:s.position,levels:{max:game.wildLevelCap()},walk:s.walk&&now<s.walk.at+s.walk.duration?s.walk:null,facing:s.walk?walking.frame(s.walk,s.walk.at+s.walk.duration).direction:'down',pending:pending?.location||null,checkpoint:checkpoint(game),locations:Object.fromEntries([...J.nodes.keys()].map(id=>[id,locationFor(id)])),places:places.map(p=>({id:p.id,name:p.name,zone:p.zone,current:p.id===s.location,open:unlocked(game,p),visited:!!s.visited[p.id],levels:{max:game.wildLevelCap()},notice:[...J.nodes.values()].some(n=>locationFor(n.id)===p.id&&J.available(game,n))}))};
+ return {active:true,location:s.location,name:current.name,zone:current.zone,map,maps,...journey.snapshot(s),position:s.position,levels:{max:game.wildLevelCap()},walk:s.walk&&now<s.walk.at+s.walk.duration?s.walk:null,facing:s.walk?walking.frame(s.walk,s.walk.at+s.walk.duration).direction:'down',pending:pending?.location||null,checkpoint:checkpoint(game),locations:Object.fromEntries([...J.nodes.keys()].map(id=>[id,locationFor(id)])),places:places.map(p=>({id:p.id,name:p.name,zone:p.zone,current:p.id===s.location,open:unlocked(game,p),visited:!!s.visited[p.id],levels:{max:game.wildLevelCap()},notice:[...J.nodes.values()].some(n=>locationFor(n.id)===p.id&&J.available(game,n))}))};
 }
-module.exports={init,travel,status,checkpoint,passageStatus,pass,locationFor,snapshot,maps,places,byId};
+module.exports={init,travel,status,checkpoint,passageStatus,pass,locationFor,snapshot,maps,places,byId,advance:(game,now)=>journey.advance(game,init(game),now),encounterEnded:(game,b)=>journey.encounterEnded(init(game),b)};

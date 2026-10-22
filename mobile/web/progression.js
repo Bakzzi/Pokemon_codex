@@ -67,7 +67,8 @@
         if(g.data.johtoWorld?.walk)g.data.johtoWorld.walk.at=Math.min(g.data.johtoWorld.walk.at,now-g.data.johtoWorld.walk.duration);
         if(g.data.pendingBattle)g.data.pendingBattle.at=Math.min(g.data.pendingBattle.at,now);
         for(const e of [g.data.animation,g.data.captureAnimation])if(e){e.at=Math.min(e.at,now-86400000);if(e.leadIn)e.leadIn.at=Math.min(e.leadIn.at,now-86400000);}
-        if(!g.data.battle&&g.data.pendingActions.some(a=>['travel','world-pass'].includes(a.kind))&&g.controlTick(now)){used--;continue;}
+        const world=g.data.johtoUnlocked?g.data.johtoWorld:g.data.kantoWorld;
+        if(!g.data.battle&&(g.data.pendingActions.some(a=>['travel','world-pass'].includes(a.kind))||world?.journey&&!g.data.pendingChallenge)&&g.controlTick(now)){used--;continue;}
         if(!this.step(now))break;
         if(walking)this.consumed+=this.stepsPerAction;else this.lockConsumed+=10000;
       }
