@@ -64,3 +64,12 @@ test('offline processing never creates future events or advances the season earl
   assert.equal(p.catchUp(50000,edge,500),500);
   assert.equal(g.data.season.key,'2026-10');assert.ok(g.data.journal.every(e=>e.at<=edge));
 });
+test('map walking clocks pause with mobile presentation and do not spend foreground steps',()=>{
+ const g=new context.MobileCore.Adventure({},now),p=new Progression(g);g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;p.resume(now);
+ assert.ok(g.requestAction('travel','forest',now));const duration=g.data.kantoWorld.walk.duration;p.pause(now+100);p.resume(now+10100);assert.equal(g.data.kantoWorld.walk.at,now+10000);assert.equal(g.data.switchUntil,now+10000+duration);assert.equal(p.live(now+10100,{steps:0}),false);assert.equal(p.consumed,0);
+ assert.equal(p.live(now+11000,{steps:0}),false);assert.equal(p.consumed,0);assert.equal(g.data.battle,null);
+});
+test('offline map reservations and walking finish without consuming a walking action',()=>{
+ const g=new context.MobileCore.Adventure({},now),p=new Progression(g);g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=now+100;g.nextTick=now;
+ assert.ok(g.requestAction('travel',{location:'route-1',position:{x:44,y:92}},now));assert.equal(g.data.pendingActions.length,1);assert.equal(p.catchUp(10,now+1000),1);assert.equal(p.consumed,10);assert.equal(g.data.pendingActions.length,0);assert.equal(g.data.battle.location,'route-1');assert.equal(g.data.kantoWorld.walk.at+g.data.kantoWorld.walk.duration<=now+1000,true);
+});

@@ -28,7 +28,14 @@ function render(){
  const points={};for(const [id,name] of Object.entries(sections)){const positions=[];for(let y=0;y<30;y++)for(let x=0;x<22;x++)if(cells[y][x]==='MAPSEC_'+name)positions.push({x,y:y%15});assert.ok(positions.length,id);const p=positions[Math.floor(positions.length/2)];points[id]={x:p.x*8+36-crop.x,y:p.y*8+36-crop.y};}
  // The house and ship use their entrances adjacent to the original road/city.
  points['sea-cottage']={x:16*8+36-crop.x,y:1*8+36-crop.y};points['ss-anne']={x:14*8+36-crop.x,y:10*8+36-crop.y};
- const geometry={image:'assets/maps/kanto-frlg.png',width:crop.width,height:crop.height,points};fs.writeFileSync(path.join(root,'shared/kanto-map.json'),JSON.stringify(geometry,null,2)+'\n');
+ const names=new Map(Object.entries(sections).map(([id,name])=>['MAPSEC_'+name,id]));
+ names.set('MAPSEC_VERMILION_CITY','vermilion');
+ const roadCells=new Map();for(let y=0;y<15;y++)for(let x=0;x<22;x++)if(cells[y][x]!=='MAPSEC_NONE'){
+  const name=cells[y][x],place=names.get(name)||(name==='MAPSEC_ROUTE_4_POKECENTER'?'route-4':name==='MAPSEC_ROUTE_10_POKECENTER'?'route-10':null);assert.ok(place,name);
+  const cell={x:x*8+36-crop.x,y:y*8+36-crop.y,place};roadCells.set(cell.x+','+cell.y,cell);
+ }
+ for(const [place,point] of Object.entries(points))if(!roadCells.has(point.x+','+point.y))roadCells.set(point.x+','+point.y,{...point,place});
+ const geometry={image:'assets/maps/kanto-frlg.png',width:crop.width,height:crop.height,points,roads:[...roadCells.values()]};fs.writeFileSync(path.join(root,'shared/kanto-map.json'),JSON.stringify(geometry,null,2)+'\n');
  console.log(JSON.stringify({file:'desktop/assets/maps/kanto-frlg.png',...crop,sha256:hash(png),sourceCommit:manifest.commit,places:Object.keys(points).length}));
 }
 if(require.main===module)render();module.exports={render,decodePNG};

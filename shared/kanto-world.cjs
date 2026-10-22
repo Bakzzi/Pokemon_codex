@@ -2,6 +2,7 @@
 // Geography is shared by both products. Story state remains the source of truth.
 const habitats=require('./kanto-habitats.json');
 const map=require('./kanto-map.json');
+const walking=require('../desktop/map-walk.js');
 const badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'];
 // id, name, map x/y, required badges, local range, habitat, activity/card
 const rows=[
@@ -83,22 +84,28 @@ function options(game){
  const p=current(game),levels=range(game,p);
  return {habitat:habitats[p.habitat],minimumEncounterLevel:levels.min,maximumLevel:levels.max};
 }
-function status(game,id){
+function position(game){const state=init(game);return state.position||map.points[state.location];}
+function validPosition(id,point){return !point||point.x===map.points[id]?.x&&point.y===map.points[id]?.y||map.roads.some(p=>p.place===id&&p.x===point.x&&p.y===point.y);}
+function status(game,id,point){
  if(!active(game))return {state:'invalid',reason:'지금 모험 중인 지방에서 장소를 선택해 주세요.'};
  const p=byId.get(id);if(!p||!unlocked(game,p))return {state:'invalid',reason:p?reason(game,p):'갈 수 없는 장소예요.'};
- if(current(game).id===id)return {state:'done',reason:'지금 탐험 중이에요.'};
+ if(!validPosition(id,point))return {state:'invalid',reason:'지도에 표시된 길을 선택해 주세요.'};
+ const target=point||map.points[id],here=position(game);
+ if(current(game).id===id&&here.x===target.x&&here.y===target.y)return {state:'done',reason:'지금 탐험 중이에요.'};
  if(game.data.mobileStory?.safari?.trip)return {state:'waiting',reason:'사파리 탐험을 마치면 이동해요.'};
  return null;
 }
-function travel(game,id,now){
- if(!unlocked(game,byId.get(id))||!active(game)||game.data.battle||game.data.suspendedWild)return false;
- const state=init(game,now);state.location=id;state.visited[id] ||= now;
+function travel(game,id,now,point){
+ if(!unlocked(game,byId.get(id))||!active(game)||!validPosition(id,point)||game.data.battle||game.data.suspendedWild)return false;
+ const state=init(game,now),to=point||map.points[id],path=walking.route(map,position(game),to);if(!path)return false;
+ state.walk={from:state.location,to:id,path,at:now,duration:walking.duration(path)};
+ state.location=id;state.position={x:to.x,y:to.y};state.visited[id] ||= now;game.holdUntil(now+state.walk.duration);
  game.log(byId.get(id).name+'에 도착했다. 주변을 탐험해 보자.','travel',null,now);return true;
 }
-function snapshot(game){
+function snapshot(game,now=Date.now()){
  const state=init(game),here=current(game),levels=range(game);
  const selected=game.data.pendingActions?.find(a=>a.kind==='travel');
- return {active:active(game),location:here.id,name:here.name,levels,map,pending:selected?.location||null,places:places.map(p=>({id:p.id,name:p.name,x:p.x,y:p.y,activity:p.activity,open:unlocked(game,p),visited:!!state.visited[p.id],current:p.id===here.id,levels:range(game,p),reason:reason(game,p)})),links};
+ return {active:active(game),location:here.id,name:here.name,levels,map,position:position(game),facing:state.walk?walking.frame(state.walk,state.walk.at+state.walk.duration).direction:'down',walk:active(game)&&state.walk&&now<state.walk.at+state.walk.duration?state.walk:null,pending:selected?.location||null,places:places.map(p=>({id:p.id,name:p.name,x:p.x,y:p.y,activity:p.activity,open:unlocked(game,p),visited:!!state.visited[p.id],current:p.id===here.id,levels:range(game,p),reason:reason(game,p)})),links};
 }
 function locationsFor(id){return places.filter(p=>(habitats[p.habitat]||[]).some(h=>h.id===id));}
-module.exports={places,byId,links,active,init,current,range,options,status,travel,snapshot,unlocked,locationsFor};
+module.exports={places,byId,links,active,init,current,range,options,status,travel,snapshot,unlocked,locationsFor,position};

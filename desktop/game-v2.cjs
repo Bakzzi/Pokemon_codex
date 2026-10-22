@@ -28,7 +28,11 @@ function moveDetails(p,entry){
 }
 function actionPayload(kind,value){
   if(!ACTION_KINDS.has(kind))return null;
-  if(kind==='travel')return typeof value==='string'&&/^[a-z][a-z0-9-]{0,40}$/.test(value)?{location:value}:null;
+  if(kind==='travel'){
+    const location=typeof value==='string'?value:value?.location,position=typeof value==='object'?value?.position:null;
+    if(typeof location!=='string'||!/^[a-z][a-z0-9-]{0,40}$/.test(location)||position&&(!Number.isInteger(position.x)||!Number.isInteger(position.y)||position.x<0||position.x>=192||position.y<0||position.y>=144))return null;
+    return {location,...(position?{position:{x:position.x,y:position.y}}:{})};
+  }
   if(kind==='select')return Number.isSafeInteger(Number(value))&&Number(value)>0?{uid:Number(value)}:null;
   if(kind==='device-learner')return value===null?{uid:null}:Number.isSafeInteger(value)&&value>0?{uid:value}:null;
   if(kind==='slot')return Number.isInteger(value?.slot)&&value.slot>=0&&value.slot<PARTY_SIZE&&(value.id===null||Number.isSafeInteger(value.id)&&value.id>0)?{slot:value.slot,uid:value.id}:null;
@@ -39,7 +43,7 @@ function actionPayload(kind,value){
 }
 function restoreAction(a){
   if(!a||!Number.isSafeInteger(a.id)||a.id<1||!validCount(a.queuedAt))return null;
-  const value=a.kind==='travel'?a.location:['select','device-learner'].includes(a.kind)?a.uid:a.kind==='slot'?{slot:a.slot,id:a.uid}:a.kind==='evolve'?{id:a.uid,to:a.to}:a.kind==='johto-unlock'?{speciesIds:a.speciesIds}:a.parents;
+  const value=a.kind==='travel'?{location:a.location,position:a.position}:['select','device-learner'].includes(a.kind)?a.uid:a.kind==='slot'?{slot:a.slot,id:a.uid}:a.kind==='evolve'?{id:a.uid,to:a.to}:a.kind==='johto-unlock'?{speciesIds:a.speciesIds}:a.parents;
   const payload=actionPayload(a.kind,value);if(!payload)return null;
   if(a.kind==='evolve'&&!species.has(a.from))return null;
   return {id:a.id,kind:a.kind,queuedAt:a.queuedAt,...payload,...(a.kind==='evolve'?{from:a.from}:{})};
@@ -242,7 +246,7 @@ class Game {
   actionStatus(a,now=Date.now()){
     const p=this.data.owned[a.uid],b=this.data.battle;
     const invalid=reason=>({state:'invalid',reason}),wait=reason=>({state:'waiting',reason}),done={state:'done',reason:'이미 완료했어요.'};
-    if(a.kind==='travel'){const status=this.travelStatus?this.travelStatus(a.location):invalid('지금은 이동할 수 없어요.');if(status)return status;}
+    if(a.kind==='travel'){const status=this.travelStatus?this.travelStatus(a.location,a.position):invalid('지금은 이동할 수 없어요.');if(status)return status;}
     if(a.kind==='device-claim'&&training.has(this))return done;
     if(a.kind==='device-learner'){
       if(!training.has(this))return invalid('학습장치를 먼저 받아 주세요.');
@@ -296,7 +300,7 @@ class Game {
   }
   executeAction(a,now){
     let result=false;const previousActive=this.data.activeId;
-    if(a.kind==='travel')result=this.travelTo?.(a.location,now)||false;
+    if(a.kind==='travel')result=this.travelTo?.(a.location,now,a.position)||false;
     if(a.kind==='select'){result=this.select(a.uid,now);if(result)this.data.manualSelection=true;}
     if(a.kind==='slot'){
       const removed=a.uid===null?this.data.slots[a.slot]:null;
@@ -327,7 +331,7 @@ class Game {
     if(kind==='slot'&&a.uid===null)this.cancelPlacementRequests(this.data.slots[a.slot],now);
     const sameIntent=q=>q.kind===kind&&(kind==='evolve'?q.uid===a.uid:kind==='slot'?q.slot===a.slot:true)||kind.startsWith('johto-')&&q.kind.startsWith('johto-');
     const existing=this.data.pendingActions.find(sameIntent);
-    if(existing&&existing.location===a.location&&existing.uid===a.uid&&existing.to===a.to&&existing.from===a.from&&existing.slot===a.slot&&JSON.stringify(existing.parents)===JSON.stringify(a.parents)&&JSON.stringify(existing.speciesIds)===JSON.stringify(a.speciesIds))return true;
+    if(existing&&existing.location===a.location&&JSON.stringify(existing.position)===JSON.stringify(a.position)&&existing.uid===a.uid&&existing.to===a.to&&existing.from===a.from&&existing.slot===a.slot&&JSON.stringify(existing.parents)===JSON.stringify(a.parents)&&JSON.stringify(existing.speciesIds)===JSON.stringify(a.speciesIds))return true;
     if(!existing&&this.data.pendingActions.length>=32&&status.state!=='done')return false;
     if(existing)this.cancelAction(existing.id,now,'새 선택으로 변경');
     if(status.state==='done')return true;
