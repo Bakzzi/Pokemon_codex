@@ -652,7 +652,11 @@ class Game {
     }return actual;
   }
   awardXp(foe,trainer,now){
-    const base=Math.max(1,Math.floor(species.get(foe.id).baseExperience*foe.level/7*(trainer?1.5:1))),boost=this.experienceBoost();
+    // Classic unscaled XP: only the defeated species/level determine the base.
+    // Round before the trainer bonus, as in the original integer calculation.
+    let base=Math.max(1,Math.floor(species.get(foe.id).baseExperience*foe.level/7));
+    if(trainer)base+=Math.floor(base/2);
+    const boost=this.experienceBoost();
     const gained=base+Math.floor(base*boost.percent/100);
     this.gainXp(this.data.activeId,gained,now);
     const uid=this.data.trainingDevice.learnerUid,p=this.data.owned[uid];

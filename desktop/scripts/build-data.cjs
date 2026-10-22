@@ -6,6 +6,7 @@ async function main(){
   const species=[...await read('pokemon-kanto'),...await read('pokemon-johto-future')];
   const learning=await read('learnsets-generation-2-3'), moveSource=await read('moves-generation-2-3');
   const growth=await read('growth-and-experience'), typeSource=await read('types-and-matchups'), lookup=await read('reference-lookups');
+  const experienceSource=require('../../reference/pokeapi/firered-experience.cjs').load();
   const evolution=await read('evolution-rules');
   const {parseCSV}=require('../../reference/pokeapi/prepare.cjs');
   const groups=parseCSV(await fs.readFile(path.join(ref,'raw/version_groups.csv'),'utf8'));
@@ -19,6 +20,9 @@ async function main(){
   const typeById=new Map(typeSource.types.map(t=>[t.id,t]));
   const ailments=new Map(lookup.moveAilments.map(a=>[a.id,a.identifier]));
   const pokemon=species.map(p=>{
+    const originalExperience=experienceSource.facts.get(p.identifier.toUpperCase().replaceAll('-','_'));
+    assert.ok(originalExperience,'Missing original experience yield: '+p.identifier);
+    assert.equal(p.growthRateId,originalExperience.growth,'Growth group differs from FRLG: '+p.identifier);
     const stats={};
     for(const s of p.latestReference.stats){
       const old=p.historicalOverrides.stats.filter(x=>x.stat_id===s.stat_id&&x.generation_id>=3).sort((a,b)=>a.generation_id-b.generation_id)[0];
@@ -33,7 +37,7 @@ async function main(){
       const past=p.historicalOverrides.abilities.filter(a=>a.slot===slot&&a.generation_id>=3).sort((a,b)=>a.generation_id-b.generation_id)[0];
       return (past||p.latestReference.abilities.find(a=>a.slot===slot&&!a.is_hidden))?.ability_id;
     }).filter(id=>abilities.some(a=>a.id===id));
-    return {id:p.id,name:p.name,identifier:p.identifier,generation:p.introducedGeneration,catchRate:p.captureRate,growth:p.growthRateId,legendary:p.isLegendary,mythical:p.isMythical,types,stats,abilities:[...new Set(normalAbilities)],baseExperience:p.latestReference.baseExperience,learn,evolutions,genderRate:breeding.gender_rate,hatchCycles:breeding.hatch_counter,preEvolution:p.evolvesFromSpeciesId,eggGroups:eggGroups.filter(g=>g.species_id===p.id).map(g=>g.egg_group_id),description:p.koreanDescriptions.at(-1)?.text?.replace(/\s+/g,' ')||p.genus};
+    return {id:p.id,name:p.name,identifier:p.identifier,generation:p.introducedGeneration,catchRate:p.captureRate,growth:p.growthRateId,legendary:p.isLegendary,mythical:p.isMythical,types,stats,abilities:[...new Set(normalAbilities)],baseExperience:originalExperience.baseExperience,learn,evolutions,genderRate:breeding.gender_rate,hatchCycles:breeding.hatch_counter,preEvolution:p.evolvesFromSpeciesId,eggGroups:eggGroups.filter(g=>g.species_id===p.id).map(g=>g.egg_group_id),description:p.koreanDescriptions.at(-1)?.text?.replace(/\s+/g,' ')||p.genus};
   });
   const minimum=(p,visited=new Set())=>{
     if(visited.has(p.id))throw new Error('Evolution cycle');
@@ -68,6 +72,7 @@ async function main(){
   });
   const experience=Object.fromEntries(growth.growthRates.map(g=>[g.id,growth.entries.filter(e=>e.growth_rate_id===g.id).map(e=>e.experience)]));
   const data={version:2,ruleset:'firered-leafgreen',pokemon,moves,abilities,types:typeSource.types,matchups,experience,items:evolution.items,bosses,sources:{data:'https://github.com/PokeAPI/pokeapi/tree/81d20919845b6a445969b9265aab5cec6b04cece/data/v2/csv',trainers:'https://github.com/pret/pokefirered/blob/master/src/data/trainer_parties.h',battle:'https://github.com/pkmn/ps/tree/main/sim'}};
+  data.sources.experience=experienceSource.manifest.sources[0].url;
   assert.equal(pokemon.length,251);assert.equal(bosses.length,13);
   await fs.mkdir(path.join(root,'desktop/data'),{recursive:true});
   await fs.writeFile(path.join(root,'desktop/data/game-data.json'),JSON.stringify(data));

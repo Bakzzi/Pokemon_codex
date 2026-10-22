@@ -72,7 +72,7 @@ test('a claim can wait for unmet requirements and its final animation without gr
 test('one learner can be selected outside the four slots and receives exactly 10 percent extra after the dex booster',()=>{
   for(const n of [4,50,151])for(const trainer of [false,true]){
     const g=fixture(),uid=g.addPokemon(133,5,'fixture',now),reserve=g.addPokemon(19,5,'fixture',now);count(g,n);device(g,null);const slots=[...g.data.slots];assert.ok(g.requestAction('device-learner',uid,now));assert.deepEqual(g.data.slots,slots);assert.equal(g.data.activeId,25);
-    const before=structuredClone(g.data.owned),foe=combatant(19,20),base=Math.floor(species.get(19).baseExperience*20/7*(trainer?1.5:1)),gained=base+Math.floor(base*g.experienceBoost().count/100),shared=Math.floor(gained/10);
+    const before=structuredClone(g.data.owned),foe=combatant(19,20),base=trainer?243:162,gained=base+Math.floor(base*g.experienceBoost().count/100),shared=Math.floor(gained/10);
     assert.equal(g.awardXp(foe,trainer,now),gained);assert.equal(g.data.owned[25].xp-before[25].xp,gained);assert.equal(g.data.owned[uid].xp-before[uid].xp,shared);assert.equal(g.data.adventure.totals.xp,gained+shared);
     for(const other of [1,4,7,reserve])assert.deepEqual(g.data.owned[other],before[other]);
   }

@@ -1,0 +1,18 @@
+{
+  "repository": "https://github.com/pret/pokefirered",
+  "commit": "ce6406d8c2eaf46d543c8a2606de0c3cb1951982",
+  "sources": [
+    {
+      "file": "firered-species-info.h",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/src/data/pokemon/species_info.h",
+      "bytes": 342600,
+      "sha256": "9c2da1284f7859700b315abda0499334c422f2c6776d576c788fcd1e4050f71e"
+    },
+    {
+      "file": "firered-battle-script-commands.c",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/src/battle_script_commands.c",
+      "bytes": 355862,
+      "sha256": "3b7341db8cd58c54fb0b54b47e6eef89c5c05e8a60ab4e9b45bdc907845c19b3"
+    }
+  ]
+}

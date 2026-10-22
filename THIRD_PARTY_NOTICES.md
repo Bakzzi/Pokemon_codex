@@ -43,6 +43,8 @@ Pokémon names, characters and game artwork belong to their respective rights ho
 FRLG trainer party facts:
 https://github.com/pret/pokefirered/blob/master/src/data/trainer_parties.h
 
+FRLG species experience yields and original experience arithmetic are pinned to pret/pokefirered commit ce6406d8c2eaf46d543c8a2606de0c3cb1951982. Source URLs, byte counts and SHA-256 hashes are preserved in reference/pokeapi/firered-experience-source.json. Growth groups are checked against the original table; the game retains its own collection and training-device bonuses.
+
 Trainer and encounter references are credited in the source data and artwork manifests. Event progression, encounter selection and other game-specific adjustments are implemented by this project; their solutions are omitted from public player guidance.
 
 Evolution and breeding references:

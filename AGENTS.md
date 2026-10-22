@@ -2,6 +2,8 @@
 
 ## Shared game parity
 
+- User instruction (2026-10-22): experience follows the classic unscaled structure. A lower-level defeated Pokemon yields less XP, but the recipient's level never adds a relative-level penalty or bonus. Use pinned FRLG species experience yields and the original growth groups/tables; round the base before the trainer multiplier. Preserve the collection booster, active-only award and custom 10% training device share. Never retroactively recalculate saved levels/XP. Share the calculation and data across PC/Android.
+
 - Map travel is direct click/touch movement: show the full Red walking sprite following original road cells, without a destination dropdown or a separate travel-confirm button. Preserve exact selected road cells and queued destinations across saves. Movement starts after the current battle/result, has a shared timed walk, consumes no activity, and holds new battles until arrival. Keep mobile pause/catchup clocks aligned with the walk and preserve read-only regional history.
 
 - Use the original FRLG Kanto map artwork (`desktop/assets/maps/kanto-frlg.png`), not a redrawn schematic. Rebuild original tiles/layout and hit positions with `npm.cmd run build:town-map`; retain pinned sources and notices. Keep location selection/current-position overlays aligned to the original game coordinates and share them across PC/Android.

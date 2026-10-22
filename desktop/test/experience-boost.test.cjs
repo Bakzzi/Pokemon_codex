@@ -34,7 +34,7 @@ test('Gen II registrations count while locked; invalid, duplicate-ID and false e
 test('wild and trainer XP add the collection bonus once, only to the active individual, with whole-number rounding',()=>{
   for(const count of [4,75,151])for(const trainer of [false,true]){
     const g=fixture(count),sibling=g.addPokemon(25,5,'hatch',now),before=structuredClone(g.data.owned),foe=combatant(19,20);
-    const base=Math.max(1,Math.floor(species.get(19).baseExperience*20/7*(trainer?1.5:1))),expected=base+Math.floor(base*count/100);
+    const base=trainer?243:162,expected=base+Math.floor(base*count/100);
     assert.equal(g.awardXp(foe,trainer,now),expected);assert.equal(g.data.owned[25].xp-before[25].xp,expected);
     assert.equal(g.data.adventure.totals.xp,expected);for(const uid of [1,4,7,sibling])assert.deepEqual(g.data.owned[uid],before[uid]);
     if(count===151)assert.equal(expected,base+Math.floor(base*151/100));
