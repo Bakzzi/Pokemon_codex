@@ -158,7 +158,7 @@ async function start(){
 async function worldSmokeTest(){
  const assert=require('node:assert/strict'),checks=[],errors=[],world=require('../shared/kanto-world.cjs');
  const wait=ms=>new Promise(r=>setTimeout(r,ms)),check=(ok,label)=>{assert.ok(ok,label);checks.push(label);};
- const read=code=>panel.webContents.executeJavaScript(code);
+ const read=code=>panel.webContents.executeJavaScript(code).catch(error=>{error.message+=' in '+code;throw error;});
  const finish=()=>{for(let i=0;i<200&&game.data.kantoWorld.journey;i++){const s=game.data.kantoWorld;for(let n=0;n<10;n++)game.onWildEnd({kind:'wild',location:s.location},Date.now());if(s.walk)s.walk.at=Date.now()-s.walk.duration-1;game.data.switchUntil=0;game.nextTick=Date.now();assert.ok(game.controlTick(Date.now()));}assert.ok(!game.data.kantoWorld.journey);};
  win.webContents.on('console-message',(_e,d)=>{if(d.level>=3)errors.push(d.message);});
  try{

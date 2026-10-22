@@ -98,7 +98,7 @@
   if(!choice||!geometry.points[choice])choice=geometry.points[world.location]?world.location:world.places.find(p=>geometry.points[p.id])?.id;
   renderBadges();renderChoice();status.replaceChildren();status.hidden=!s.pendingChallenge&&s.battle?.kind!=='trainer';if(!status.hidden)status.append(el('span','',s.pendingChallenge?s.pendingChallenge.name+' · 도전 예약':s.battle.boss+'와 배틀 중'),button(s.pendingChallenge?'예약 취소':'배틀 보기',()=>window.buddy.action(s.pendingChallenge?'challenge-cancel':'story-open')));
   if(context&&dialog.open){if(!world.active||context.id&&context.id!==world.location||context.npc&&!world.checkpoint)hideDialog();else renderContext();}
-  if(arrival&&!world.journey&&!world.walk&&!world.pending){if(world.checkpoint){context={npc:true};renderContext();if(!dialog.open)dialog.showModal();arrival=null;}else if(world.location===arrival){const id=arrival;arrival=null;if(!localGym(world.places.find(p=>p.id===id))&&activities(id).length)openPlace(id);}}
+  if(arrival&&!world.journey&&!world.walk&&!world.pending){if(world.checkpoint){choice=world.location;renderChoice();context={npc:true};renderContext();if(!dialog.open)dialog.showModal();arrival=null;}else if(world.location===arrival){const id=arrival;arrival=null;if(!localGym(world.places.find(p=>p.id===id))&&activities(id).length)openPlace(id);}}
  }
  document.addEventListener('panel-rendered',({detail:s})=>render(s));
  globalThis.WorldMap={beforeRender:restore,pick,badge(id){const slot=document.querySelector('[data-badge="'+id+'"]');if(slot){restoreDialog();title.textContent='배지함';content.replaceChildren(el('p','',slot.getAttribute('aria-label')));context=null;if(!dialog.open)dialog.showModal();}},show(){showPane('map');},close:hideDialog};
