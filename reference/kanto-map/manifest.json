@@ -1,0 +1,48 @@
+{
+  "repository": "https://github.com/pret/pokefirered",
+  "commit": "ce6406d8c2eaf46d543c8a2606de0c3cb1951982",
+  "sources": [
+    {
+      "file": "region_map.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/region_map/region_map.png",
+      "bytes": 3846,
+      "sha256": "7c402c5461d5547191cbfefb279727964e19c6dd60d33f5b0bb052ea20545184"
+    },
+    {
+      "file": "region_map.pal",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/region_map/region_map.pal",
+      "bytes": 855,
+      "sha256": "9151a87908033522cf4c3ae2b54cf65f77f7609c353ac73ceae402a386245bc8"
+    },
+    {
+      "file": "kanto.bin",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/region_map/kanto.bin",
+      "bytes": 1200,
+      "sha256": "c9f38c5d52099958c18efe737a45ba04ce8101b0eb349e9d2243bf8324d82b49"
+    },
+    {
+      "file": "player_icon_red.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/region_map/player_icon_red.png",
+      "bytes": 233,
+      "sha256": "21436cfd27537f034fc57679beaf6d3f980a1df6ef26a7a2c1ff1adda3723b49"
+    },
+    {
+      "file": "region_map_layout_kanto.h",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/src/data/region_map/region_map_layout_kanto.h",
+      "bytes": 9549,
+      "sha256": "62b8f2e60891a97cb44bb16f52c2a1fb45be5f2caff5f0db86dd36dbe3b5c194"
+    },
+    {
+      "file": "region_map_sections.json",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/src/data/region_map/region_map_sections.json",
+      "bytes": 19656,
+      "sha256": "82e456cbe86a57ebc4bd0d88d6e000e83e28340895ac038079c38d415bc6de5f"
+    },
+    {
+      "file": "region_map.c",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/src/region_map.c",
+      "bytes": 138368,
+      "sha256": "b761f02803a1c5aada4465b9a93bf2b02c5ef1118432e677a30a5a4a4b78e0cb"
+    }
+  ]
+}

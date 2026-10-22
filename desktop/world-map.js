@@ -31,13 +31,10 @@
   const key=JSON.stringify([state,s.challengeReadOnly,s.discovery,s.rescue?.visible,s.silph?.visible]);if(key===stateKey)return;stateKey=key;
   if(!choice||!state.places.some(p=>p.id===choice)||state.location!==root.dataset.location){choice=state.location;root.dataset.location=state.location;}
   caption.textContent=state.name+' · '+(state.active?'탐험 중':'지나온 길');
-  if(shapeKey!==JSON.stringify(state.links)){
-   shapeKey=JSON.stringify(state.links);map.replaceChildren();markers.clear();
-   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 170 170');svg.setAttribute('aria-hidden','true');svg.classList.add('world-roads');
-   for(const line of state.links){const path=document.createElementNS(svg.namespaceURI,'polyline'),points=[];let last;for(const id of line){const p=state.places.find(p=>p.id===id),x=(p.x+1)*10,y=(p.y+1)*10;if(last&&last.x!==x&&last.y!==y)points.push(x+','+last.y);points.push(x+','+y);last={x,y};}path.setAttribute('points',points.join(' '));svg.append(path);}map.append(svg);
-   for(const p of state.places){const b=el('button','world-marker'+(!p.id.startsWith('route-')?' landmark':''));b.style.left=(p.x+1)/17*100+'%';b.style.top=(p.y+1)/17*100+'%';b.setAttribute('aria-label',p.name);b.onclick=()=>{choice=p.id;renderChoice();};map.append(b);markers.set(p.id,b);}
-   for(const id of ['pallet','viridian','pewter','cerulean','lavender','vermilion','celadon','saffron','fuchsia','cinnabar','indigo']){const p=state.places.find(p=>p.id===id),label=el('span','world-place-name'+(p.y>=15?' above':''),p.name);label.style.left=(p.x+1)/17*100+'%';label.style.top=(p.y+1)/17*100+'%';map.append(label);}
-   const sea=el('span','world-sea','KANTO');map.append(sea);
+  if(shapeKey!==JSON.stringify(state.map)){
+   shapeKey=JSON.stringify(state.map);map.replaceChildren();markers.clear();
+   const art=el('img','world-art');art.src=state.map.image;art.alt='파이어레드·리프그린 관동 타운맵';art.width=state.map.width;art.height=state.map.height;art.draggable=false;map.append(art);
+   for(const p of state.places){const point=state.map.points[p.id],b=el('button','world-marker'+(p.activity?.startsWith('gym:')?' landmark':''));b.style.left=point.x/state.map.width*100+'%';b.style.top=point.y/state.map.height*100+'%';b.setAttribute('aria-label',p.name);b.onclick=()=>{choice=p.id;renderChoice();};map.append(b);markers.set(p.id,b);}
   }
   select.replaceChildren(...state.places.map(p=>{const o=el('option','',p.name+(p.current?' · 현재 위치':!p.open?' · 미개방':''));o.value=p.id;return o;}));renderChoice();
  });

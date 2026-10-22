@@ -34,6 +34,8 @@ Item sprites are downloaded unchanged from https://github.com/PokeAPI/sprites/tr
 
 The unchanged FireRed/LeafGreen Red walking and tall-grass sheets are credited in desktop/assets/trainers/overworld-NOTICE.txt. CSS selects original frames without redrawing. Artwork rights remain with the Pokemon rights holders.
 
+The original FireRed/LeafGreen Kanto Town Map and player icon are credited in desktop/assets/maps/NOTICE.txt. The map uses the original tiles, palette and layout, with empty screen margins cropped. Pinned sources and hashes are retained in reference/kanto-map/manifest.json.
+
 Pokémon names, characters and game artwork belong to their respective rights holders, including Nintendo, Creatures, GAME FREAK and The Pokémon Company. They are separate from the MIT-licensed project source. This is an unofficial noncommercial fan project.
 
 ## Game rule references

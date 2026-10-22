@@ -1,0 +1,10 @@
+Original FireRed/LeafGreen Kanto Town Map and Red player icon.
+Artwork: Pokemon / Nintendo / Creatures / GAME FREAK / The Pokemon Company.
+Source: https://github.com/pret/pokefirered/tree/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/region_map
+
+kanto-frlg.png assembles the original 8x8 tiles with the original tilemap,
+palette banks and flips. Only empty screen/UI margins are cropped.
+player-red.png is the unchanged original icon. No map pixels are redrawn.
+Pinned inputs and hashes: reference/kanto-map/manifest.json
+Rebuild: npm.cmd run build:town-map
+Game artwork is separate from the project's MIT-licensed code.

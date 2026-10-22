@@ -1,6 +1,7 @@
 'use strict';
 // Geography is shared by both products. Story state remains the source of truth.
 const habitats=require('./kanto-habitats.json');
+const map=require('./kanto-map.json');
 const badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'];
 // id, name, map x/y, required badges, local range, habitat, activity/card
 const rows=[
@@ -97,7 +98,7 @@ function travel(game,id,now){
 function snapshot(game){
  const state=init(game),here=current(game),levels=range(game);
  const selected=game.data.pendingActions?.find(a=>a.kind==='travel');
- return {active:active(game),location:here.id,name:here.name,levels,pending:selected?.location||null,places:places.map(p=>({id:p.id,name:p.name,x:p.x,y:p.y,activity:p.activity,open:unlocked(game,p),visited:!!state.visited[p.id],current:p.id===here.id,levels:range(game,p),reason:reason(game,p)})),links};
+ return {active:active(game),location:here.id,name:here.name,levels,map,pending:selected?.location||null,places:places.map(p=>({id:p.id,name:p.name,x:p.x,y:p.y,activity:p.activity,open:unlocked(game,p),visited:!!state.visited[p.id],current:p.id===here.id,levels:range(game,p),reason:reason(game,p)})),links};
 }
 function locationsFor(id){return places.filter(p=>(habitats[p.habitat]||[]).some(h=>h.id===id));}
 module.exports={places,byId,links,active,init,current,range,options,status,travel,snapshot,unlocked,locationsFor};
