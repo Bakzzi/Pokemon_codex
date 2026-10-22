@@ -1,0 +1,73 @@
+{
+  "version": "0.1.52",
+  "versionCode": 54,
+  "platform": "android",
+  "channel": "android-preview",
+  "sourceCommit": "fff1eee80705d0c3097d1ef5a3812cf5a69aca71",
+  "sourceTag": "android-v0.1.52",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/android-v0.1.52",
+  "package": "io.github.bakzzi.pokemonidle",
+  "minSdk": 31,
+  "targetSdk": 36,
+  "artifact": "Pokemon-Idle-0.1.52.apk",
+  "bytes": 39142059,
+  "sha256": "6dffc318192b649b632e237d532f2be278c998ee32b24ba7f75fde577a371706",
+  "signingCertificateSha256": "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+  "toolchain": {
+    "node": "22.11.0",
+    "gradle": "8.13",
+    "agp": "8.13.0",
+    "compileSdk": 36,
+    "buildTools": "36.1.0",
+    "javaScriptEngine": "androidx.javascriptengine:javascriptengine:1.1.1",
+    "dependencyLockfile": "mobile/android/app/gradle.lockfile"
+  },
+  "validation": {
+    "releaseBuild": "passed",
+    "androidLintErrors": 0,
+    "apkSignatureVerified": true,
+    "embeddedBundleSha256": "a4a0b85ba690d01ab1481a2cba38e5bf233cdcfebf619a1a3bb4f8e8c9ae6ec4",
+    "embeddedFilesMatched": 458,
+    "nodeTestsPassed": 706,
+    "embeddedApkMapAndLocationChecksPassed": 26,
+    "bundledProgressionTestsPassed": 14,
+    "androidNativeWebViewVerified": false,
+    "physicalDeviceVerified": false,
+    "nativePlatformCodeUnchangedFrom": "0.1.51"
+  },
+  "retention": {
+    "latestAndroid": "0.1.52",
+    "previousAndroid": "0.1.51",
+    "additionalUnconfirmedDeviceVersions": [
+      "0.1.30",
+      "0.1.31",
+      "0.1.32",
+      "0.1.33",
+      "0.1.34",
+      "0.1.35",
+      "0.1.36",
+      "0.1.37",
+      "0.1.38",
+      "0.1.39",
+      "0.1.40",
+      "0.1.41",
+      "0.1.42",
+      "0.1.43",
+      "0.1.44",
+      "0.1.45",
+      "0.1.46",
+      "0.1.47",
+      "0.1.48",
+      "0.1.49",
+      "0.1.50"
+    ]
+  },
+  "activity": {
+    "lockedMillisecondsPerAction": 10000,
+    "stepsPerAction": 10,
+    "walkingRequiresLock": false,
+    "foregroundWalkingAnimated": true,
+    "unlockedIdleAdventure": false,
+    "foregroundChallenges": true
+  }
+}
