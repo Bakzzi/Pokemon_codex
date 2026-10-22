@@ -5,25 +5,27 @@ globalThis.MobileCore={nursery:require('../../desktop/daycare.cjs')};
 const now=Date.parse('2026-10-18T06:00:00Z');
 function fixture(){const g=new Adventure(new Game({},now).data,now,{random:()=>.7}),p=new Progression(g);p.resume(now);return {g,p};}
 test('an old saved tutorial updates the activity explanation without skipping a page',()=>{
-  const old=new Adventure({},now);old.presentation().pages[2]='앱을 켜 두면 자동으로 모험한단다. 꺼 둔 동안에는 10걸음마다 모험이 이어지지.';old.presentation().index=2;
-  const next=new Adventure(structuredClone(old.data),now+1000);assert.equal(next.presentation().index,2);assert.match(next.presentation().pages[2],/앱을 켜고 걸어도/);
+  for(const text of ['앱을 켜 두면 자동으로 모험한단다. 꺼 둔 동안에는 10걸음마다 모험이 이어지지.','10걸음마다 동료와 모험한단다. 폰을 잠그면 10초마다 한 번 더 모험하지. 앱을 켜고 걸어도 모험을 지켜볼 수 있어.']){
+    const old=new Adventure({},now);old.presentation().pages[2]=text;old.presentation().index=2;
+    const next=new Adventure(structuredClone(old.data),now+1000);assert.equal(next.presentation().index,2);assert.match(next.presentation().pages[2],/20초마다/);assert.match(next.presentation().pages[2],/앱을 켜고 걸어도/);
+  }
 });
 test('ordinary adventure stays frozen while unlocked, with the app open or closed',()=>{
   const {g,p}=fixture();g.newWild(now);const before=JSON.stringify(g.data);
   for(let n=1;n<10;n++)assert.equal(p.live(now+n*10000),false);
   p.pause(now+100000);assert.equal(p.live(now+500000),false);assert.equal(JSON.stringify(g.data),before);
 });
-test('ten seconds and ten steps add independently, retaining both remainders across a restart',()=>{
-  const {g,p}=fixture();assert.equal(p.catchUp({steps:19,lockMillis:29999},now),3);
-  assert.equal(p.consumed,10);assert.equal(p.lockConsumed,20000);
+test('twenty seconds and ten steps add independently, retaining both remainders across a restart',()=>{
+  const {g,p}=fixture();assert.equal(p.catchUp({steps:19,lockMillis:59999},now),3);
+  assert.equal(p.consumed,10);assert.equal(p.lockConsumed,40000);
   const restored=new Progression(new Adventure(structuredClone(g.data),now),structuredClone(p.checkpoint()));
-  assert.equal(restored.catchUp({steps:19,lockMillis:29999},now),0);
-  assert.equal(restored.catchUp({steps:20,lockMillis:30000},now),2);
-  assert.equal(restored.catchUp({steps:20,lockMillis:30000},now),0);
+  assert.equal(restored.catchUp({steps:19,lockMillis:59999},now),0);
+  assert.equal(restored.catchUp({steps:20,lockMillis:60000},now),2);
+  assert.equal(restored.catchUp({steps:20,lockMillis:60000},now),0);
 });
 test('recorded lock time is required; wall clock and invalid counters grant no actions',()=>{
   const {g,p}=fixture(),before=JSON.stringify(g.data);
-  for(const t of [undefined,-1,NaN,Infinity,9999,10000.1])assert.equal(p.catchUp({steps:0,lockMillis:t},now+86400000),0);
+  for(const t of [undefined,-1,NaN,Infinity,10000,19999,20000.1])assert.equal(p.catchUp({steps:0,lockMillis:t},now+86400000),0);
   assert.equal(JSON.stringify(g.data),before);
 });
 test('a challenge runs in foreground without consuming either activity balance and pauses in background',()=>{
@@ -41,7 +43,7 @@ test('challenge return preserves a wild foe until recorded walking or another lo
   assert.equal(g.data.battle,wild);assert.deepEqual(wild.foe,foe);assert.equal(wild.resumeAfterLock,4);
   assert.equal(p.live(now+100000),false);assert.equal(p.catchUp({steps:0,lockMillis:100000,lockEpoch:4},now+100000),0);
   const next=new Progression(new Adventure(structuredClone(g.data),now+110000),p.checkpoint());
-  assert.equal(next.catchUp({steps:0,lockMillis:10000,lockEpoch:5},now+110000),1);assert.equal(next.lockConsumed,10000);
+  assert.equal(next.catchUp({steps:0,lockMillis:20000,lockEpoch:5},now+110000),1);assert.equal(next.lockConsumed,20000);
 });
 
 test('foreground walking pays ten steps once and keeps live animation delays',()=>{
@@ -73,6 +75,13 @@ test('dialogue and challenge turns preserve foreground walking credits',()=>{
 });
 test('clock credits do not fabricate walking progress for Safari',()=>{
   const {g,p}=fixture();let walked=0;g.walkingStep=()=>{walked++;return true;};
-  assert.equal(p.catchUp({steps:0,lockMillis:10000},now),1);assert.equal(walked,0);
-  assert.equal(p.catchUp({steps:10,lockMillis:10000},now),1);assert.equal(walked,1);
+  assert.equal(p.catchUp({steps:0,lockMillis:20000},now),1);assert.equal(walked,0);
+  assert.equal(p.catchUp({steps:10,lockMillis:20000},now),1);assert.equal(walked,1);
+});
+test('the slower lock rate retains raw milliseconds, prior paid time and the remainder across an upgrade',()=>{
+  const {g}=fixture(),p=new Progression(g,{lockConsumed:10000});
+  assert.equal(p.catchUp({steps:0,lockMillis:29999},now),0);assert.equal(p.lockConsumed,10000);
+  assert.equal(p.catchUp({steps:0,lockMillis:30000},now),1);assert.equal(p.lockConsumed,30000);
+  const restored=new Progression(new Adventure(structuredClone(g.data),now),p.checkpoint());
+  assert.equal(restored.catchUp({steps:0,lockMillis:49999},now),0);assert.equal(restored.catchUp({steps:0,lockMillis:50000},now),1);assert.equal(restored.lockConsumed,50000);assert.equal(restored.consumed,0);
 });

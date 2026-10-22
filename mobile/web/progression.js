@@ -61,7 +61,7 @@
       for(;used<maxActions;used++){
         if(moves<512&&this.mapTick(now)){moves++;used--;continue;}
         const walking=available(steps,this.stepsPerAction,this.consumed)>0;
-        if(!walking&&!available(locked,10000,this.lockConsumed))break;
+        if(!walking&&!available(locked,20000,this.lockConsumed))break;
         // Manual dialogue must preserve every unspent walking action.
         if(g.presentation?.()||g.data.battle?.kind==='trainer'||g.data.battle?.storyId)break;
         if(g.data.battle?.resumeAfterLock!==undefined){
@@ -81,7 +81,7 @@
         const world=g.data.johtoUnlocked?g.data.johtoWorld:g.data.kantoWorld;
         if(!g.data.battle&&(g.data.pendingActions.some(a=>['travel','world-pass'].includes(a.kind))||world?.journey&&!g.data.pendingChallenge)&&g.controlTick(now)){used--;continue;}
         if(!this.step(now))break;
-        if(walking)this.consumed+=this.stepsPerAction;else this.lockConsumed+=10000;
+        if(walking)this.consumed+=this.stepsPerAction;else this.lockConsumed+=20000;
       }
       while(moves<512&&this.mapTick(now))moves++;
       return used;

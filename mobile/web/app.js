@@ -37,7 +37,7 @@ function refreshNative(){
   $('sensor-status').textContent=nativeState.sensor+(nativeState.monitorError?' '+nativeState.monitorError:'')+(nativeState.backgroundError?' '+nativeState.backgroundError:'');$('walk-status').textContent='모험의 발걸음';
   $('walk-today').textContent=(nativeState.todaySteps||0).toLocaleString('ko-KR')+'걸음';
   $('walk-total').textContent=(nativeState.lifetimeSteps||0).toLocaleString('ko-KR')+'걸음';
-  $('walk-note').textContent=game?.data.mobileStory?.safari?.trip?'사파리 탐험 중 · 10걸음마다 탐험을 이어가요.':nativeState.tracking?'10걸음마다 모험해요. 폰을 잠그면 10초마다 한 번 더!':'폰을 잠그면 10초마다 모험해요. 걸음 기록을 켜면 걸은 만큼 더 모험해요.';
+  $('walk-note').textContent=game?.data.mobileStory?.safari?.trip?'사파리 탐험 중 · 10걸음마다 탐험을 이어가요.':nativeState.tracking?'10걸음마다 모험해요. 폰을 잠그면 20초마다 한 번 더!':'폰을 잠그면 20초마다 모험해요. 걸음 기록을 켜면 걸은 만큼 더 모험해요.';
   $('update-status').textContent=nativeState.update;$('update-confirm').hidden=!nativeState.pendingInstall;$('install-permission').hidden=nativeState.canInstall;
   $('update-check').disabled=!!nativeState.updateChecking||!!nativeState.installing;$('version').textContent='Android v'+(nativeState.versionName||MobileConfig.name);
 }

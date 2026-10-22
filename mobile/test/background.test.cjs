@@ -9,6 +9,11 @@ test('headless engine uses no DOM or browser APIs and requires ten recorded step
   assert.equal(vm.runInContext('typeof document',c),'undefined');assert.equal(vm.runInContext('typeof TextEncoder',c),'undefined');
   assert.equal(run(playable(),9).used,0);const r=run(playable(),10);assert.equal(r.used,1);assert.equal(r.save.mobile.consumed,10);assert.ok(r.save.game.battle);
 });
+test('headless lock rewards start at twenty seconds and persist their exact cursor without replaying it',()=>{
+  const initial=playable();assert.equal(run(initial,{steps:0,lockMillis:19999}).used,0);
+  let r=run(initial,{steps:0,lockMillis:20000});assert.equal(r.used,1);assert.equal(r.save.mobile.lockConsumed,20000);assert.equal(r.save.mobile.consumed,0);
+  assert.equal(run(r.save,{steps:0,lockMillis:39999}).used,0);r=run(r.save,{steps:0,lockMillis:40000});assert.equal(r.used,1);assert.equal(r.save.mobile.lockConsumed,40000);assert.equal(run(r.save,{steps:0,lockMillis:40000}).used,0);
+});
 test('background checkpoints pay once, preserve remainders and resume without a long wait',()=>{
   let r=run(playable(),25);assert.equal(r.used,2);assert.equal(r.save.mobile.consumed,20);assert.equal(run(r.save,29).used,0);
   r=run(r.save,35,now+100000);assert.equal(r.used,1);assert.equal(r.save.mobile.consumed,30);

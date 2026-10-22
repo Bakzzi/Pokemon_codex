@@ -128,8 +128,8 @@ public final class MobileTest extends Instrumentation {
                 require(baseline==getTargetContext().getSharedPreferences("steps",0).getLong("lockMillis",0),"Unlocked home time was counted");
                 try(InputStream cmd=new ParcelFileDescriptor.AutoCloseInputStream(getUiAutomation().executeShellCommand("input keyevent KEYCODE_SLEEP"))){cmd.readAllBytes();}
                 BackgroundAdventure runner=BackgroundAdventure.get(getTargetContext());JSONObject lockedSave=null;long end=SystemClock.elapsedRealtime()+45000;
-                do{Thread.sleep(500);runner.barrier().get(35,TimeUnit.SECONDS);lockedSave=new JSONObject(readSave());}while(lockedSave.getJSONObject("mobile").optLong("lockConsumed",0)<baseline+10000&&SystemClock.elapsedRealtime()<end);
-                require(lockedSave.getJSONObject("mobile").getLong("lockConsumed")>=baseline+10000,"Lock time did not produce a background action");
+                do{Thread.sleep(500);runner.barrier().get(35,TimeUnit.SECONDS);lockedSave=new JSONObject(readSave());}while(lockedSave.getJSONObject("mobile").optLong("lockConsumed",0)<baseline+20000&&SystemClock.elapsedRealtime()<end);
+                require(lockedSave.getJSONObject("mobile").getLong("lockConsumed")>=baseline+20000,"Lock time did not produce a background action");
                 require(!lockedSave.getJSONObject("game").isNull("battle"),"Headless lock action did not create an encounter");
                 require(lockedSave.getJSONObject("mobile").getLong("consumed")==0,"Time action spent steps");
                 try(InputStream cmd=new ParcelFileDescriptor.AutoCloseInputStream(getUiAutomation().executeShellCommand("input keyevent KEYCODE_WAKEUP"))){cmd.readAllBytes();}
@@ -137,7 +137,7 @@ public final class MobileTest extends Instrumentation {
                 try(InputStream cmd=new ParcelFileDescriptor.AutoCloseInputStream(getUiAutomation().executeShellCommand("am start -W -n io.github.bakzzi.pokemonidle/.MainActivity"))){cmd.readAllBytes();}
                 for(int i=0;i<100&&resumedActivity==null;i++)Thread.sleep(50);require(resumedActivity!=null&&MainActivity.visible,"App did not resume after unlock");
                 activity=resumedActivity;activity.getApplication().unregisterActivityLifecycleCallbacks(lockLifecycle);web=(WebView)field.get(activity);Thread.sleep(1000);waitReady();
-                require("true".equals(js("progression.lockConsumed>=10000&&!catchingUp")),"UI did not reload background lock cursor");
+                require("true".equals(js("progression.lockConsumed>=20000&&!catchingUp")),"UI did not reload background lock cursor");
                 String afterUnlock=js("JSON.stringify(game.data)");Thread.sleep(11000);require(afterUnlock.equals(js("JSON.stringify(game.data)")),"Wild battle continued while unlocked");
                 require("true".equals(js("game.data.mobileStory.rivals['rival-brock'].state='won';game.data.pendingBattle=null;game.data.battle=null;game.newWild(Date.now()-10000);game.nextTick=Date.now();game.data.switchUntil=Date.now();globalThis.pausedFoe=JSON.stringify(game.data.battle.foe);action('challenge',0);true")),"Challenge request failed");
                 Thread.sleep(1500);require("true".equals(js("game.data.battle.kind==='trainer'&&JSON.stringify(game.data.suspendedWild.foe)===pausedFoe&&!!game.presentation()")),"Foreground challenge did not suspend wild encounter");

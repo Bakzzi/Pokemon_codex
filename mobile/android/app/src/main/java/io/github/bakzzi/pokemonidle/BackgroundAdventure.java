@@ -29,7 +29,7 @@ final class BackgroundAdventure {
     private long locked(){return context.getSharedPreferences("steps",0).getLong("lockMillis",0);}
     private boolean available(JSONObject save){
         JSONObject mobile=save.optJSONObject("mobile"),game=save.optJSONObject("game");
-        if(total()-(mobile==null?0:mobile.optLong("consumed",0))>=10||locked()-(mobile==null?0:mobile.optLong("lockConsumed",0))>=10000)return true;
+        if(total()-(mobile==null?0:mobile.optLong("consumed",0))>=10||locked()-(mobile==null?0:mobile.optLong("lockConsumed",0))>=20000)return true;
         if(game==null)return false;
         JSONObject map=game.optJSONObject(game.optBoolean("johtoUnlocked")?"johtoWorld":"kantoWorld"),distance=game.optJSONObject("mapTravel");
         boolean moving=map!=null&&map.optJSONObject("journey")!=null;
