@@ -22,6 +22,24 @@ public final class StepService extends Service implements SensorEventListener {
     private long boot;
     private long lockEpoch;
     private final Handler clock=new Handler(Looper.getMainLooper());
+    private final java.util.concurrent.ExecutorService notificationWorker=java.util.concurrent.Executors.newSingleThreadExecutor();
+    private final java.util.concurrent.atomic.AtomicBoolean notificationQueued=new java.util.concurrent.atomic.AtomicBoolean();
+    private String notificationKey="";
+    private final Runnable refreshNotification=()->{
+        if(instance!=this)return;
+        notificationQueued.set(false);
+        notificationWorker.execute(()->{
+            NotificationPartner.State state=NotificationPartner.read(this,AdventureStore.get(this).read());
+            long count=today(this);
+            clock.post(()->{
+                if(instance!=this)return;
+                String key=count+":"+state.key();
+                if(key.equals(notificationKey))return;
+                getSystemService(NotificationManager.class).notify(7,notification(this,count,state));
+                notificationKey=key;
+            });
+        });
+    };
     private final Runnable midnight=()->refreshClock();
     private final Runnable pulse=()->observeLock(null);
     private final BroadcastReceiver dateChanged=new BroadcastReceiver(){@Override public void onReceive(Context c,Intent i){observeLock(Intent.ACTION_SCREEN_OFF.equals(i.getAction())?Boolean.TRUE:Intent.ACTION_USER_PRESENT.equals(i.getAction())?Boolean.FALSE:null);refreshClock();}};
@@ -30,9 +48,17 @@ public final class StepService extends Service implements SensorEventListener {
     static long today(Context c){android.content.SharedPreferences p=c.getSharedPreferences("steps",0);return WalkingCounter.dayKey(System.currentTimeMillis(),ZoneId.systemDefault()).equals(p.getString("walkingDay",""))?p.getLong("walkingToday",0):0;}
     static long lifetime(Context c){android.content.SharedPreferences p=c.getSharedPreferences("steps",0);return p.getLong("walkingTotal",p.getLong("total",0));}
     static Notification notification(Context c,long today){
-        PendingIntent open=PendingIntent.getActivity(c,0,new Intent(c,MainActivity.class),PendingIntent.FLAG_IMMUTABLE);
-        return new Notification.Builder(c,"walking").setSmallIcon(R.drawable.ic_stat_pokeball).setContentTitle("포켓몬 작은 모험").setContentText("오늘 "+NumberFormat.getIntegerInstance(Locale.KOREA).format(today)+"걸음").setContentIntent(open).setOngoing(true).setOnlyAlertOnce(true).build();
+        return notification(c,today,NotificationPartner.read(c,AdventureStore.get(c).read()));
     }
+    private static Notification notification(Context c,long today,NotificationPartner.State state){
+        PendingIntent open=PendingIntent.getActivity(c,0,new Intent(c,MainActivity.class),PendingIntent.FLAG_IMMUTABLE);
+        String steps="오늘 "+NumberFormat.getIntegerInstance(Locale.KOREA).format(today)+"걸음";
+        return new Notification.Builder(c,"walking").setSmallIcon(R.drawable.ic_stat_pokeball).setContentTitle("포켓몬 작은 모험").setContentText(steps).setContentIntent(open).setOngoing(true).setOnlyAlertOnce(true)
+            .setStyle(new Notification.DecoratedCustomViewStyle()).setCustomBigContentView(NotificationPartner.view(c,steps,state)).build();
+    }
+    // Queue only after an atomic save; no game actions or polling are used for this presentation.
+    static void saved(){StepService service=instance;if(service!=null)service.queueNotification();}
+    private void queueNotification(){if(notificationQueued.compareAndSet(false,true))clock.postDelayed(refreshNotification,250);}
     static boolean supported(Context c) { return ((SensorManager)c.getSystemService(SENSOR_SERVICE)).getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null; }
     static void start(Context c) {
         try { c.startForegroundService(new Intent(c,StepService.class)); } catch (RuntimeException e) { c.getSharedPreferences("steps",0).edit().putString("monitorError","잠금 모험을 시작하려면 앱을 다시 열어 주세요.").apply(); }
@@ -80,12 +106,12 @@ public final class StepService extends Service implements SensorEventListener {
         long now=System.currentTimeMillis(),eventTime=now-Math.max(0,(SystemClock.elapsedRealtimeNanos()-event.timestamp)/1000000);
         recordSample((long)event.values[0],event.timestamp,eventTime,now);
     }
-    synchronized void recordSample(long count,long elapsed,long eventTime,long now){ledger.sample(count,boot,elapsed);walking.sample(count,boot,elapsed,eventTime,now,ZoneId.systemDefault());persist();getSystemService(NotificationManager.class).notify(7,notification(this,walking.today));BackgroundAdventure.get(this).request();}
+    synchronized void recordSample(long count,long elapsed,long eventTime,long now){ledger.sample(count,boot,elapsed);walking.sample(count,boot,elapsed,eventTime,now,ZoneId.systemDefault());persist();queueNotification();BackgroundAdventure.get(this).request();}
     private void scheduleMidnight(){clock.removeCallbacks(midnight);clock.postDelayed(midnight,Math.max(1000,WalkingCounter.nextMidnight(System.currentTimeMillis(),ZoneId.systemDefault())-System.currentTimeMillis()));}
-    private synchronized void refreshClock(){walking.rollover(System.currentTimeMillis(),ZoneId.systemDefault());persist();getSystemService(NotificationManager.class).notify(7,notification(this,walking.today));scheduleMidnight();}
+    private synchronized void refreshClock(){walking.rollover(System.currentTimeMillis(),ZoneId.systemDefault());persist();queueNotification();scheduleMidnight();}
     private void persist(){prefs.edit().putLong("total",ledger.total).putLong("lockMillis",locks.totalMillis).putLong("lockEpoch",lockEpoch).putLong("count",ledger.lastCount).putLong("boot",ledger.lastBoot).putLong("sample",ledger.lastSample).putLong("transition",ledger.transitionAt).putBoolean("foreground",ledger.foreground).putLong("walkingTotal",walking.total).putLong("walkingToday",walking.today).putString("walkingDay",walking.day).putLong("walkingCount",walking.lastCount).putLong("walkingBoot",walking.lastBoot).putLong("walkingSample",walking.lastSample).commit();}
     @Override public void onAccuracyChanged(Sensor s,int a) {}
     @Override public int onStartCommand(Intent i,int f,int id) { refreshSensor();observeLock(null);return START_STICKY; }
-    @Override public void onDestroy() { observeLock(null);instance=null;clock.removeCallbacksAndMessages(null);if(clockRegistered)unregisterReceiver(dateChanged);if(sensors!=null)sensors.unregisterListener(this);super.onDestroy(); }
+    @Override public void onDestroy() { observeLock(null);instance=null;clock.removeCallbacksAndMessages(null);notificationWorker.shutdown();if(clockRegistered)unregisterReceiver(dateChanged);if(sensors!=null)sensors.unregisterListener(this);super.onDestroy(); }
     @Override public IBinder onBind(Intent intent) { return null; }
 }

@@ -33,6 +33,9 @@ android {
         debug { applicationIdSuffix '.test'; debuggable true }
     }
     sourceSets.main.assets.srcDir layout.buildDirectory.dir('generated/gameAssets')
+    sourceSets.main.assets.srcDir layout.buildDirectory.dir('generated/notification/assets')
+    sourceSets.main.res.srcDir layout.buildDirectory.dir('generated/notification/res')
+    sourceSets.main.java.srcDir layout.buildDirectory.dir('generated/notification/java')
     compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
     lint { abortOnError true; checkReleaseBuilds true }
     testBuildType 'release'
@@ -44,4 +47,11 @@ tasks.register('bundleGame', Exec) {
     inputs.files(fileTree('../../../desktop') { exclude '.smoke/**', '.demo/**', 'test/**' }, fileTree('../../../shared'), fileTree('../../web'), file('../../adventure.cjs'), file('../../rivals.cjs'), file('../../rescue.cjs'), file('../../silph.cjs'), file('../../safari.cjs'), file('../../mansion.cjs'), fileTree('../../assets'), file('../../version.json'), file('../../scripts/build-web.cjs'), file('../../../package-lock.json'))
     outputs.dir layout.buildDirectory.dir('generated/gameAssets')
 }
-tasks.named('preBuild').configure { dependsOn 'bundleGame' }
+tasks.register('bundleNotification', Exec) {
+    workingDir file('../../..')
+    commandLine 'node', 'mobile/scripts/build-notification.cjs'
+    inputs.files(file('../../../desktop/data/game-data.json'), fileTree('../../../desktop/assets') { include '*.gif', 'shiny/*.gif' }, file('../../scripts/build-notification.cjs'))
+    outputs.dir layout.buildDirectory.dir('generated/notification')
+}
+
+tasks.named('preBuild').configure { dependsOn 'bundleGame', 'bundleNotification' }

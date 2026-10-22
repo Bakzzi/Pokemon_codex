@@ -67,6 +67,7 @@ public final class MobileTest extends Instrumentation {
     @Override public void onStart(){
         Bundle result=new Bundle();
         try{
+            if("notification-partner".equals(arguments.getString("mode"))){finish(Activity.RESULT_OK,NotificationPartnerChecks.run(this));return;}
             if("background".equals(arguments.getString("mode"))){finish(Activity.RESULT_OK,BackgroundChecks.run(getTargetContext()));return;}
             if("update-checks".equals(arguments.getString("mode"))){finish(Activity.RESULT_OK,UpdateChecks.run(getTargetContext()));return;}
             if("update-lifecycle".equals(arguments.getString("mode"))){finish(Activity.RESULT_OK,UpdateLifecycleChecks.run(getTargetContext()));return;}

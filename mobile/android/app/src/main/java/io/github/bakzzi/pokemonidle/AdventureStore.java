@@ -23,7 +23,7 @@ final class AdventureStore {
     private static void validate(String raw)throws JSONException{if(raw.length()>20_000_000)throw new JSONException("Save too large");JSONObject data=new JSONObject(raw);if(data.getInt("format")!=1||!data.has("game")||!data.has("mobile"))throw new JSONException("Invalid adventure");}
     private boolean write(String raw){
         FileOutputStream out=null;
-        try{validate(raw);out=file.startWrite();out.write(raw.getBytes(StandardCharsets.UTF_8));file.finishWrite(out);generation++;return true;}
+        try{validate(raw);out=file.startWrite();out.write(raw.getBytes(StandardCharsets.UTF_8));file.finishWrite(out);generation++;StepService.saved();return true;}
         catch(Exception e){if(out!=null)file.failWrite(out);return false;}
     }
     synchronized boolean saveUi(Object owner,String raw){
