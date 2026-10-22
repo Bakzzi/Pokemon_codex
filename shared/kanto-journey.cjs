@@ -120,8 +120,20 @@ for(const location of Object.keys(original.counts)){
  const id='trainers-'+location.replace(':','-');add(id,place,title,'이곳에서 기다리는 트레이너들과 승부해요. 한 번 이긴 상대와는 다시 싸우지 않아요.',records.map(t=>({id:t.id,name:t.name,pages:[t.name+'이 승부를 걸어왔다!'],result:'승부를 마쳤어요. 모험길을 계속 살펴보세요.',trainer:true,originalLocation:location})));
  for(const t of records)bind(nodes.get(t.id),t);
 }
+// Gym visits use two ordinary opponents. Keep the complete source definitions
+// available so an older save can finish a battle that is no longer offered.
+for(let i=0;i<gymPlaces.length;i++){
+ const group=cases.find(c=>c.id==='trainers-gym-'+i);
+ group.entries=group.entries.slice(0,2);
+ if(group.entries.length===1){
+  const originalTrainer=nodes.get(group.entries[0]),id='k-gym-'+i+'-trainee';
+  nodes.set(id,{...originalTrainer,id,source:undefined,adaptedFrom:originalTrainer.id,team:structuredClone(originalTrainer.team.slice(-1))});
+  group.entries.push(id);
+ }
+ group.description='두 트레이너와 승부한 뒤 관장에게 도전해요. 한 번 이긴 상대와는 다시 싸우지 않아요.';
+}
 function trainersDone(g,caseId){const group=cases.find(c=>c.id===caseId);return !!group&&group.entries.filter(id=>nodes.get(id).trainer).every(id=>done(g,id));}
-function originalDone(g,location){return original.trainers.filter(t=>t.location===location&&!Object.values(aliases).some(a=>a.id===t.id)).every(t=>done(g,sourceNodes.get(t.id)?.id));}
+function originalDone(g,location){if(location.startsWith('gym:'))return trainersDone(g,'trainers-'+location.replace(':','-'));return original.trainers.filter(t=>t.location===location&&!Object.values(aliases).some(a=>a.id===t.id)).every(t=>done(g,sourceNodes.get(t.id)?.id));}
 function fossilBlocked(g,id){const f=g.data.kantoStory?.fossil;return f===138?[140,141].includes(id):f===140?[138,139].includes(id):false;}
 function prerequisite(g,n){
  const s=g.data.kantoStory,b=g.data.badges,has=id=>b.includes(id),win=id=>['won','completed'].includes(g.rivalProgress(id)?.state);
@@ -152,7 +164,7 @@ function prerequisite(g,n){
  if(n.originalLocation==='silph')return !!s.drinkAt&&!!g.data.mobileStory.silph.wins[0];
  if(n.originalLocation==='tower')return !!g.data.mobileStory.rescue.wins[0];
  if(n.originalLocation==='mansion')return !!g.data.mobileStory.mansion.startedAt;
- if(n.originalLocation?.startsWith('gym:'))return !has(badges[Number(n.originalLocation.slice(4))]);
+ if(n.originalLocation?.startsWith('gym:'))return !has(badges[Number(n.originalLocation.slice(4))])&&cases.find(c=>c.id===n.case).entries.includes(n.id);
  if(n.trainer&&!n.id.startsWith('k-bridge-'))return true;
  const list=cases.find(c=>c.id===n.case).entries,index=list.indexOf(n.id);
  return index===0||done(g,list[index-1]);

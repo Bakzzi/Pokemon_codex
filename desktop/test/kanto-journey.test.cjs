@@ -11,7 +11,7 @@ function guide(g){for(let i=0;i<200&&!g.data.kantoStory.mapAt;i++){pages(g);if(g
 function move(g,id){assert.ok(g.requestAction('travel',id,settle(g)),'select '+id);finishJourney(g,settle(g));assert.equal(g.data.kantoWorld.location,id,'arrive '+id);}
 function clear(g,id){const before=Object.keys(g.data.kantoStory.cleared).length;if(K.nodes.get(id)?.automatic){g.data.workTokens=250;assert.ok(g.startAutomaticTrainer(id,settle(g)),'auto '+id);}else assert.ok(g.challenge(id,settle(g)),'challenge '+id);pages(g);if(g.data.battle?.kind==='trainer')win(g);if(g.presentation()?.awaitChoice)assert.ok(g.chooseFossil(138,settle(g)));assert.ok(Object.keys(g.data.kantoStory.cleared).length>before||g.rivalProgress('rival-surge')?.state==='won','complete '+id);}
 function clearCase(g,id){const c=K.cases.find(c=>c.id===id);for(const id of c.entries)if(!K.done(g,id)&&K.prerequisite(g,K.nodes.get(id)))clear(g,id);}
-function gym(g,index){for(const n of K.nodes.values())if(n.originalLocation==='gym:'+index)clear(g,n.id);assert.ok(g.challenge(index,settle(g)),'gym '+index);win(g);assert.ok(g.data.badges.includes(K.badges[index]));}
+function gym(g,index){clearCase(g,'trainers-gym-'+index);assert.ok(g.challenge(index,settle(g)),'gym '+index);win(g);assert.ok(g.data.badges.includes(K.badges[index]));}
 
 test('all 224 original maps are inventoried, including zero-trainer maps, with pinned source hashes',()=>{
  const root=path.resolve(__dirname,'../..'),meta=require('../data/kanto-trainer-source/sources.json');assert.equal(Object.keys(K.original.maps).length,224);
@@ -33,6 +33,27 @@ for(const Type of [PC,Android])test(Type.name+' original story aliases match the
 test('automatic versus manual trainer encounters follow original wild tables, not a town merged encounter pool',()=>{
  assert.ok(K.original.trainers.filter(t=>t.location==='forest').every(t=>t.automatic));assert.ok(K.original.trainers.filter(t=>t.location==='ss-anne'||t.location.startsWith('gym:')||['silph','hideout','saffron'].includes(t.location)).every(t=>!t.automatic));
  for(const t of K.original.trainers)assert.equal(t.automatic,K.original.maps[t.map].wild,t.id);
+});
+for(const Type of [PC,Android])test(Type.name+' each Kanto gym offers exactly two one-time ordinary trainers before its unchanged leader',()=>{
+ let g=start(Type);guide(g);g.rivalProgress('rival-brock').state='won';
+ for(const c of K.cases.filter(c=>!c.id.startsWith('trainers-gym-')))for(const id of c.entries)g.data.kantoStory.cleared[id]=now;
+ g.data.mobileStory.silph.completedAt=now;g.data.mobileStory.mansion.completedAt=now;g.data.kantoStory.roads['route-16']=now;
+ for(const index of K.order){
+  const group=K.cases.find(c=>c.id==='trainers-gym-'+index);g.data.kantoWorld.location=group.location;
+  assert.equal(group.entries.length,2);const rows=g.panelState(now).kantoStory.cases.find(c=>c.id===group.id).entries;assert.equal(rows.length,2);assert.ok(rows.every(n=>n.ready&&!n.automatic&&!n.levelsKnown));
+  assert.equal(g.canChallenge(index),false);const before=structuredClone(g.data.owned);assert.ok(g.challenge(rows[0].id,settle(g)));pages(g);g.endChallenge(false,settle(g));pages(g);assert.ok(!K.done(g,rows[0].id));assert.ok(g.canChallenge(rows[0].id));assert.deepEqual(g.data.owned,before);
+  clear(g,rows[0].id);assert.ok(!g.canChallenge(index));g=new Type(structuredClone(g.data),settle(g));assert.ok(K.done(g,rows[0].id));assert.ok(!g.canChallenge(rows[0].id));
+  const dialogue=require('../../shared/kanto-dialogue.cjs');assert.match(dialogue.result(g,K.nodes.get(rows[1].id)),/관장/);
+  clear(g,rows[1].id);assert.ok(K.originalDone(g,'gym:'+index));assert.ok(g.canChallenge(index),'leader '+index);
+  for(const n of K.nodes.values())if(n.originalLocation==='gym:'+index&&!group.entries.includes(n.id))assert.equal(g.canChallenge(n.id),false);
+  assert.ok(g.challenge(index,settle(g)));win(g);assert.ok(g.data.badges.includes(K.badges[index]));assert.ok(group.entries.every(id=>!g.canChallenge(id)));assert.ok(!g.canChallenge(index));
+ }
+});
+for(const Type of [PC,Android])test(Type.name+' reducing gym visits preserves old victory flags, badges and an omitted opponent already in battle',()=>{
+ let g=start(Type);guide(g);g.data.kantoWorld.location='vermilion';const omitted=K.original.trainers.filter(t=>t.location==='gym:2')[2],node=K.nodes.get(omitted.id);
+ g.data.battle={kind:'trainer',bossIndex:node.id,storyId:node.id,kantoNode:node.id,foeIndex:0,party:g.data.slots.filter(Boolean),turn:0,startedAt:now};g.nextTrainer(settle(g));pages(g);
+ const battle=structuredClone(g.data.battle),owned=structuredClone(g.data.owned);g=new Type(structuredClone(g.data),settle(g));assert.deepEqual(g.data.battle,battle);assert.deepEqual(g.data.owned,owned);assert.deepEqual(g.battleBoss().team,node.team);win(g);assert.ok(K.done(g,node.id));assert.equal(g.canChallenge(node.id),false);
+ g.data.badges=['brock','misty','surge'];g=new Type(structuredClone(g.data),settle(g));assert.ok(K.done(g,node.id));assert.equal(g.canChallenge(2),false);assert.ok(K.cases.find(c=>c.id==='trainers-gym-2').entries.every(id=>!g.canChallenge(id)));
 });
 for(const Type of [PC,Android])test(Type.name+' ordinary automatic trainers cost activity, never pause for taps and stay defeated after reload',()=>{
  let g=start(Type);guide(g);g.rivalProgress('rival-brock').state='won';move(g,'forest');g.data.workTokens=0;assert.equal(g.tick(settle(g)),false);g.data.workTokens=250;assert.ok(g.tick(settle(g)));const id=g.data.battle.kantoNode;assert.ok(g.data.battle.activityTrainer);assert.equal(g.data.workTokens,0);assert.equal(g.presentation(),null);

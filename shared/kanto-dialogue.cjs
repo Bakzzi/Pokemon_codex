@@ -16,8 +16,8 @@ const endings={
 const forward={'forest-path':'상록숲을 통과했어요. 회색시티의 체육관을 찾아가 보세요.','route3-path':'달맞이산 입구로 향해요.','moon-path':'연구원이 화석 하나를 골라도 좋다고 해요.','anne-visit':'선장실을 찾아가 보세요.','route11-path':'디그다의 굴을 건너 보세요.','route9-path':'돌산터널 입구로 향해요.','tunnel-path':'돌산터널을 빠져나왔어요. 보라타운으로 향해요.','victory-path':'챔피언로드를 통과했어요. 석영고원에서 리그에 도전해 보세요.','trainers-hideout':'조무래기들이 떠난 곳을 살펴보세요.','trainers-silph':'닫힌 사무실로 가는 방법을 찾아보세요.'};
 function result(g,boss){
  if(!K.modern(g))return null;
- if(boss.source){const group=K.cases.find(c=>c.id===boss.case),remaining=group.entries.filter(id=>K.nodes.get(id).trainer&&id!==boss.id&&!K.done(g,id)).length;if(remaining)return '아직 이곳에서 기다리는 트레이너가 있어요.';if(boss.originalLocation?.startsWith('gym:'))return '관장에게 도전할 준비가 됐어요.';return forward[boss.case]||'이곳의 트레이너들과 승부를 마쳤어요.';}
+ if(boss.source||boss.adaptedFrom){const group=K.cases.find(c=>c.id===boss.case),remaining=group.entries.filter(id=>K.nodes.get(id).trainer&&id!==boss.id&&!K.done(g,id)).length;if(remaining)return '아직 이곳에서 기다리는 트레이너가 있어요.';if(boss.originalLocation?.startsWith('gym:'))return '관장에게 도전할 준비가 됐어요.';return forward[boss.case]||'이곳의 트레이너들과 승부를 마쳤어요.';}
  return endings[boss.id]?.at(-1)||null;
 }
-function victory(g,boss){if(!K.modern(g))return null;if(endings[boss.id])return endings[boss.id];if(boss.source){const text={ROCKET:'쳇! 여기까지 밀고 들어오다니!',HIKER:'단단한 내 동료들을 이겨 냈군!',BUG_CATCHER:'내가 키운 포켓몬들이 졌다니!',SAILOR:'좋은 승부였어! 네 동료들도 제법이군!',SCIENTIST:'내 계산이 틀렸군. 네 실력은 인정하겠어.',CHANNELER:'아…… 이제 정신이 드는구나. 도와줘서 고맙다.'}[boss.source.class]||'네가 이겼어. 좋은 승부였어!';return [text,result(g,boss)];}return null;}
+function victory(g,boss){if(!K.modern(g))return null;if(endings[boss.id])return endings[boss.id];if(boss.source||boss.adaptedFrom){const text={ROCKET:'쳇! 여기까지 밀고 들어오다니!',HIKER:'단단한 내 동료들을 이겨 냈군!',BUG_CATCHER:'내가 키운 포켓몬들이 졌다니!',SAILOR:'좋은 승부였어! 네 동료들도 제법이군!',SCIENTIST:'내 계산이 틀렸군. 네 실력은 인정하겠어.',CHANNELER:'아…… 이제 정신이 드는구나. 도와줘서 고맙다.'}[boss.source?.class]||'네가 이겼어. 좋은 승부였어!';return [text,result(g,boss)];}return null;}
 module.exports={victory,result};
