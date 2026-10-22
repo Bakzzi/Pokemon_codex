@@ -7,7 +7,7 @@ function fixture(){const g=new Adventure(new Game({},now).data,now,{random:()=>.
 test('an old saved tutorial updates the activity explanation without skipping a page',()=>{
   for(const text of ['앱을 켜 두면 자동으로 모험한단다. 꺼 둔 동안에는 10걸음마다 모험이 이어지지.','10걸음마다 동료와 모험한단다. 폰을 잠그면 10초마다 한 번 더 모험하지. 앱을 켜고 걸어도 모험을 지켜볼 수 있어.']){
     const old=new Adventure({},now);old.presentation().pages[2]=text;old.presentation().index=2;
-    const next=new Adventure(structuredClone(old.data),now+1000);assert.equal(next.presentation().index,2);assert.match(next.presentation().pages[2],/20초마다/);assert.match(next.presentation().pages[2],/앱을 켜고 걸어도/);
+    const next=new Adventure(structuredClone(old.data),now+1000);assert.equal(next.presentation().index,2);assert.match(next.presentation().pages[2],/20초마다/);assert.match(next.presentation().pages[2],/걸음은 타운맵에서 이동/);
   }
 });
 test('ordinary adventure stays frozen while unlocked, with the app open or closed',()=>{
@@ -15,12 +15,12 @@ test('ordinary adventure stays frozen while unlocked, with the app open or close
   for(let n=1;n<10;n++)assert.equal(p.live(now+n*10000),false);
   p.pause(now+100000);assert.equal(p.live(now+500000),false);assert.equal(JSON.stringify(g.data),before);
 });
-test('twenty seconds and ten steps add independently, retaining both remainders across a restart',()=>{
-  const {g,p}=fixture();assert.equal(p.catchUp({steps:19,lockMillis:59999},now),3);
-  assert.equal(p.consumed,10);assert.equal(p.lockConsumed,40000);
+test('only lock time awards actions and its remainder survives restart',()=>{
+  const {g,p}=fixture();assert.equal(p.catchUp({steps:19,lockMillis:59999},now),2);
+  assert.equal(p.consumed,0);assert.equal(p.lockConsumed,40000);
   const restored=new Progression(new Adventure(structuredClone(g.data),now),structuredClone(p.checkpoint()));
   assert.equal(restored.catchUp({steps:19,lockMillis:59999},now),0);
-  assert.equal(restored.catchUp({steps:20,lockMillis:60000},now),2);
+  assert.equal(restored.catchUp({steps:20,lockMillis:60000},now),1);
   assert.equal(restored.catchUp({steps:20,lockMillis:60000},now),0);
 });
 test('recorded lock time is required; wall clock and invalid counters grant no actions',()=>{
@@ -46,26 +46,24 @@ test('challenge return preserves a wild foe until recorded walking or another lo
   assert.equal(next.catchUp({steps:0,lockMillis:20000,lockEpoch:5},now+110000),1);assert.equal(next.lockConsumed,20000);
 });
 
-test('foreground walking pays ten steps once and keeps live animation delays',()=>{
-  const {g,p}=fixture();assert.equal(p.live(now,{steps:9}),false);
-  assert.equal(p.live(now,{steps:20}),true);assert.equal(p.consumed,10);assert.ok(g.data.battle);
-  const before=JSON.stringify(g.data);assert.equal(p.live(now+1,{steps:20}),false);assert.equal(p.consumed,10);assert.equal(JSON.stringify(g.data),before);
-  const ready=Math.max(g.nextTick,g.data.switchUntil);assert.equal(p.live(ready,{steps:20}),true);assert.equal(p.consumed,20);
-  assert.equal(p.live(ready+60000,{steps:20}),false);assert.equal(p.lockConsumed,0);
+test('foreground walking cannot advance a battle or change its XP',()=>{
+  const {g,p}=fixture();g.newWild(now);const before=JSON.stringify(g.data);
+  for(const steps of [9,10,20,100000])assert.equal(p.live(now+60000,{steps}),false);
+  assert.equal(JSON.stringify(g.data),before);assert.equal(p.consumed,0);assert.equal(p.lockConsumed,0);
 });
 
-test('foreground walking survives handoff without replaying steps or inventing idle actions',()=>{
-  const {g,p}=fixture();assert.equal(p.live(now,{steps:19}),true);p.pause(now+1000);
+test('walking does not become a reward during foreground and background handoff',()=>{
+  const {g,p}=fixture();assert.equal(p.live(now,{steps:19}),false);p.pause(now+1000);
   const q=new Progression(new Adventure(structuredClone(g.data),now+60000),p.checkpoint());q.resume(now+60000);
-  assert.equal(q.live(now+120000,{steps:19}),false);assert.equal(q.catchUp({steps:19,lockMillis:0},now+120000),0);
-  assert.equal(q.live(now+120000,{steps:20}),true);assert.equal(q.consumed,20);
+  assert.equal(q.live(now+120000,{steps:20000}),false);assert.equal(q.catchUp({steps:20000,lockMillis:0},now+120000),0);assert.equal(q.consumed,0);
 });
 
-test('walking after a challenge can resume the same wild opponent without locking again',()=>{
+test('walking after a challenge preserves its wild opponent until another lock',()=>{
   const {g,p}=fixture();g.data.mobileStory.rivals['rival-brock'].state='won';p.observe({lockEpoch:4});g.newWild(now-10000);
   const wild=g.data.battle;assert.ok(g.challenge(0,now));assert.ok(p.live(now));g.data.mobileStory.scene=null;g.endChallenge(true,now+10000);
-  assert.equal(g.data.battle,wild);assert.equal(p.live(now+100000,{steps:9}),false);
-  assert.ok(p.live(now+100000,{steps:10}));assert.equal(p.consumed,10);assert.equal(wild.resumeAfterLock,undefined);
+  assert.equal(g.data.battle,wild);const before=JSON.stringify(wild);
+  assert.equal(p.live(now+100000,{steps:100000}),false);assert.equal(p.catchUp({steps:100000,lockMillis:20000,lockEpoch:4},now+100000),0);assert.equal(JSON.stringify(wild),before);
+  assert.ok(p.catchUp({steps:100000,lockMillis:20000,lockEpoch:5},now+110000));assert.equal(p.lockConsumed,20000);assert.equal(wild.resumeAfterLock,undefined);
 });
 
 test('dialogue and challenge turns preserve foreground walking credits',()=>{
@@ -73,10 +71,10 @@ test('dialogue and challenge turns preserve foreground walking credits',()=>{
   assert.equal(p.live(now+10000,{steps:100}),false);assert.equal(p.consumed,0);
   g.data.mobileStory.scene=null;assert.ok(g.challenge(0,now+10000));p.live(now+20000,{steps:100});assert.equal(p.consumed,0);
 });
-test('clock credits do not fabricate walking progress for Safari',()=>{
-  const {g,p}=fixture();let walked=0;g.walkingStep=()=>{walked++;return true;};
-  assert.equal(p.catchUp({steps:0,lockMillis:20000},now),1);assert.equal(walked,0);
-  assert.equal(p.catchUp({steps:10,lockMillis:20000},now),1);assert.equal(walked,1);
+test('Safari uses lock actions and never sensor steps',()=>{
+  const {g,p}=fixture();let walked=0;g.activityStep=()=>{walked++;return true;};
+  assert.equal(p.catchUp({steps:0,lockMillis:20000},now),1);assert.equal(walked,1);
+  assert.equal(p.catchUp({steps:10000,lockMillis:20000},now),0);assert.equal(walked,1);
 });
 test('the slower lock rate retains raw milliseconds, prior paid time and the remainder across an upgrade',()=>{
   const {g}=fixture(),p=new Progression(g,{lockConsumed:10000});

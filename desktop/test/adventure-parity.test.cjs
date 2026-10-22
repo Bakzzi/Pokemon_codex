@@ -22,7 +22,7 @@ test('desktop and Android share story visibility, gates, teams, collection route
     const old=new Game({},now);old.data.badges=badges.slice(0,n);
     const pc=new Adventure(structuredClone(old.data),now),mobile=new Mobile(structuredClone(old.data),now),a=pc.panelState(now),b=mobile.panelState(now);
     for(const key of ['discovery','rivals','rivalLocks','rescue','silph','safari','mansion','mobileGymHints','bosses','collection','pendingActions'])assert.deepEqual(a[key],b[key],key+' badges '+n);
-    assert.deepEqual(pc.wildOptions(),mobile.wildOptions());assert.equal(a.activityMode,'tokens');assert.equal(b.activityMode,'walking');
+    assert.deepEqual(pc.wildOptions(),mobile.wildOptions());assert.equal(a.activityMode,'tokens');assert.equal(b.activityMode,'locked');
   }
 });
 test('a PC story page survives a save and reload at the same page',()=>{

@@ -13,12 +13,10 @@ function fixture(){
   const run=code=>vm.runInContext(code,c);
   return {status,calls,timers,run,tick:()=>intervals[0](),start:()=>run('mobileLifecycle(true)'),snapshot:()=>JSON.parse(run('JSON.stringify({game:game.data,mobile:progression.checkpoint(),active,catchingUp,updatePaused,fatal})')),stored:()=>stored,setSaveOk:value=>{saveOk=value;},advance:ms=>{now+=ms;}};
 }
-test('app interval renders newly recorded walking actions without reopening or skipping animation',()=>{
-  const f=fixture();f.start();f.status.steps=9;f.tick();assert.equal(f.snapshot().game.battle,null);
-  f.status.steps=20;f.tick();assert.ok(f.snapshot().game.battle);assert.equal(f.snapshot().mobile.consumed,10);
-  const before=f.snapshot();f.advance(250);f.tick();assert.deepEqual(f.snapshot().game,before.game);assert.equal(f.snapshot().mobile.consumed,10);
-  f.advance(10000);f.tick();assert.equal(f.snapshot().mobile.consumed,20);
-  f.advance(100000);f.tick();assert.equal(f.snapshot().mobile.consumed,20);
+test('app interval displays steps without granting battles or experience',()=>{
+  const f=fixture();f.start();const before=f.snapshot().game;
+  for(const steps of [9,10,20,50000]){f.status.steps=steps;f.tick();f.advance(10000);}
+  assert.deepEqual(f.snapshot().game,before);assert.equal(f.snapshot().mobile.consumed,0);assert.equal(f.snapshot().mobile.lockConsumed,0);
 });
 for(const kind of ['wild','trainer','capture'])test('save and install immediately during '+kind+' without waiting for the battle or animation',()=>{
   const f=fixture();f.start();f.run(kind==='trainer'?'game.challenge(0,Date.now())':'game.newWild(Date.now())');
@@ -30,8 +28,8 @@ for(const kind of ['wild','trainer','capture'])test('save and install immediatel
 test('a ready update takes priority even when the foreground game is not active',()=>{
   const f=fixture();f.run('active=false');f.status.updateReady=true;f.tick();assert.deepEqual(f.calls,['save','install']);
 });
-test('a ready update stops queued walking catch-up before any more steps are spent',()=>{
-  const f=fixture();f.status.steps=10000;f.start();const consumed=f.snapshot().mobile.consumed;assert.ok(f.timers.length);
+test('a ready update stops queued lock catch-up before another action is spent',()=>{
+  const f=fixture();f.status.lockMillis=10000000;f.start();const consumed=f.snapshot().mobile.consumed;assert.ok(f.timers.length);
   f.status.updateReady=true;f.timers.shift()();assert.equal(f.snapshot().mobile.consumed,consumed);assert.equal(f.stored().mobile.consumed,consumed);assert.equal(f.calls.at(-1),'install');
 });
 test('failed atomic save prevents installation and further game actions',()=>{

@@ -10,7 +10,7 @@ import org.json.*;
 final class BackgroundChecks {
     private static void check(boolean ok,String message){if(!ok)throw new AssertionError(message);}
     private static void set(Object object,String name,Object value)throws Exception{Field f=object.getClass().getDeclaredField(name);f.setAccessible(true);f.set(object,value);}
-    private static long consumed(AdventureStore store)throws Exception{return new JSONObject(store.read()).getJSONObject("mobile").optLong("consumed",0);}
+    private static long consumed(AdventureStore store)throws Exception{return new JSONObject(store.read()).getJSONObject("mobile").optLong("lockConsumed",0);}
     private static void await(BackgroundAdventure runner,AdventureStore store,long expected)throws Exception{
         long end=SystemClock.elapsedRealtime()+45000;
         do{runner.barrier().get(45,TimeUnit.SECONDS);if(consumed(store)==expected)return;Thread.sleep(50);}while(SystemClock.elapsedRealtime()<end);
@@ -26,15 +26,20 @@ final class BackgroundChecks {
         context.getSystemService(NotificationManager.class).createNotificationChannel(new NotificationChannel("walking","걸음 모험",NotificationManager.IMPORTANCE_LOW));
         BackgroundAdventure runner=BackgroundAdventure.get(context);long now=System.currentTimeMillis();
         service.recordSample(0,100,now,now);service.recordSample(9,200,now,now);await(runner,store,0);
-        service.recordSample(10,300,now,now);await(runner,store,10);check(new JSONObject(store.read()).getJSONObject("game").has("battle"),"No background game action");
-        service.recordSample(25,400,now,now);await(runner,store,20);service.recordSample(25,400,now,now);await(runner,store,20);
-        runner.closeWhenIdle();runner.barrier().get(10,TimeUnit.SECONDS);service.recordSample(35,500,now,now);await(runner,store,30);
+        String before=store.read();service.recordSample(10,300,now,now);await(runner,store,0);check(before.equals(store.read()),"Ten background steps changed game progress");
+        prefs.edit().putLong("lockMillis",19999).commit();runner.request();await(runner,store,0);
+        prefs.edit().putLong("lockMillis",20000).commit();runner.request();await(runner,store,20000);check(!new JSONObject(store.read()).getJSONObject("game").isNull("battle"),"No background lock action");
+        before=store.read();service.recordSample(25,400,now,now);await(runner,store,20000);service.recordSample(25,400,now,now);await(runner,store,20000);check(before.equals(store.read()),"Steps advanced a background battle");
+        prefs.edit().putLong("lockMillis",40000).commit();runner.request();await(runner,store,40000);
+        runner.closeWhenIdle();runner.barrier().get(10,TimeUnit.SECONDS);service.recordSample(35,500,now,now);await(runner,store,40000);
+        prefs.edit().putLong("lockMillis",60000).commit();runner.request();await(runner,store,60000);
         AdventureStore.Snapshot stale=store.backgroundSnapshot();store.claimUi(owner);JSONObject latest=new JSONObject(store.read());latest.getJSONObject("game").put("fixtureMarker","UI retained");check(store.saveUi(owner,latest.toString()),"UI save failed");check(!store.commitBackground(stale,stale.raw),"Background overwrote foreground");
-        ledger.mode(true,550);service.recordSample(55,600,now,now);await(runner,store,30);check(prefs.getLong("total",-1)==55&&prefs.getLong("walkingTotal",-1)==55,"Unlocked steps were excluded or paid while UI owned the save");
+        ledger.mode(true,550);service.recordSample(55,600,now,now);await(runner,store,60000);check(prefs.getLong("total",-1)==55&&prefs.getLong("walkingTotal",-1)==55,"Displayed steps were lost while UI owned the save");
         String valid=store.read();check(!store.saveUi(owner,"not-json"),"Invalid save accepted");check(valid.equals(store.read()),"Rejected save damaged progress");
         store.releaseUi(owner);check(!store.commitBackground(stale,stale.raw),"Old generation accepted after return");
-        ledger.mode(false,650);service.recordSample(65,700,now,now);await(runner,store,60);service.recordSample(75,800,now,now);await(runner,store,70);
+        ledger.mode(false,650);service.recordSample(65,700,now,now);await(runner,store,60000);service.recordSample(75,800,now,now);await(runner,store,60000);
+        prefs.edit().putLong("lockMillis",80000).commit();runner.request();await(runner,store,80000);
         check("UI retained".equals(new JSONObject(store.read()).getJSONObject("game").getString("fixtureMarker")),"UI change lost after handoff");
-        Bundle result=new Bundle();result.putString("result","passed");result.putInt("backgroundChecks",10);result.putLong("consumed",consumed(store));result.putBoolean("noActivityCreated",!MainActivity.visible);context.getSystemService(NotificationManager.class).cancel(7);runner.closeWhenIdle();runner.barrier().get(10,TimeUnit.SECONDS);return result;
+        Bundle result=new Bundle();result.putString("result","passed");result.putInt("backgroundChecks",10);result.putLong("lockConsumed",consumed(store));result.putBoolean("noActivityCreated",!MainActivity.visible);context.getSystemService(NotificationManager.class).cancel(7);runner.closeWhenIdle();runner.barrier().get(10,TimeUnit.SECONDS);return result;
     }
 }

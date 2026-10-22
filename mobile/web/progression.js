@@ -2,11 +2,12 @@
 (function(root){
   // Persist this cursor in the SAME atomic file as game progress.
   class Progression{
-    constructor(core,saved={},stepsPerAction=10){
+    constructor(core,saved={}){
       this.game=core;this.consumed=Number.isSafeInteger(saved.consumed)?saved.consumed:0;
       this.dirty=false;
       this.lockConsumed=Number.isSafeInteger(saved.lockConsumed)?saved.lockConsumed:0;
-      this.stepsPerAction=stepsPerAction;this.foreground=false;this.pausedAt=Number.isFinite(saved.pausedAt)?saved.pausedAt:0;
+      // Preserve the legacy step cursor for save compatibility; steps never buy actions.
+      this.foreground=false;this.pausedAt=Number.isFinite(saved.pausedAt)?saved.pausedAt:0;
       // Game recreates nextTick at launch. Restore its old clock before shifting
       // paused presentation waits; otherwise the entire offline interval is added twice.
       if(this.pausedAt>0)this.game.nextTick=Number.isFinite(saved.nextTick)?saved.nextTick:this.pausedAt;
@@ -38,7 +39,6 @@
       if(walk?.stepTravel&&g.nextTick<=end&&(d.switchUntil||0)<=end){g.nextTick=Math.min(g.nextTick,now);d.switchUntil=Math.min(d.switchUntil||0,now);walk.at=Math.min(walk.at,now-walk.duration);}
       if(!g.controlTick(now))return false;this.dirty=true;return true;
     }
-    walkingReady(steps){return Number.isSafeInteger(steps)&&steps>=this.consumed+this.stepsPerAction;}
     live(now,totals={}){
       if(!this.foreground)return false;
       this.observe(totals);
@@ -46,12 +46,8 @@
       if(g.presentation?.())return g.sceneTick(now)||this.dirty;
       if(!b?.activityTrainer&&(b?.kind==='trainer'||b?.storyId))return this.step(now)||this.dirty;
       if(g.controlTick(now))return true;
-      // New foreground steps use ordinary animation waits, one paid action at a
-      // time. The offline fast-forward path must not hide these live actions.
-      if(!this.walkingReady(totals.steps)||now<g.nextTick||now<g.data.switchUntil)return this.dirty;
-      if(b)delete b.resumeAfterLock;
-      if(!g.walkingStep?.(this.stepsPerAction,now)&&!this.step(now))return false;
-      this.consumed+=this.stepsPerAction;return true;
+      // Recorded steps can move the map, but cannot progress an ordinary battle.
+      return this.dirty;
     }
     catchUp(total,now,maxActions=100){
       const steps=typeof total==='object'?total.steps:total,locked=typeof total==='object'?total.lockMillis:0;
@@ -60,17 +56,14 @@
       const g=this.game;let used=0,moves=0;
       for(;used<maxActions;used++){
         if(moves<512&&this.mapTick(now)){moves++;used--;continue;}
-        const walking=available(steps,this.stepsPerAction,this.consumed)>0;
-        if(!walking&&!available(locked,20000,this.lockConsumed))break;
-        // Manual dialogue must preserve every unspent walking action.
+        if(!available(locked,20000,this.lockConsumed))break;
+        // Manual dialogue must preserve every unspent lock-time action.
         if(g.presentation?.()||!g.data.battle?.activityTrainer&&(g.data.battle?.kind==='trainer'||g.data.battle?.storyId))break;
         if(g.data.battle?.resumeAfterLock!==undefined){
-          if(!walking&&g.lockEpoch<=g.data.battle.resumeAfterLock)break;
+          if(g.lockEpoch<=g.data.battle.resumeAfterLock)break;
           delete g.data.battle.resumeAfterLock;
         }
-        // Safari replaces walking actions only. Foreground play keeps its
-        // ordinary battles, and a saved dialogue never spends unseen steps.
-        if(walking&&g.walkingStep?.(this.stepsPerAction,now)){this.consumed+=this.stepsPerAction;continue;}
+        if(g.activityStep?.(now)){this.lockConsumed+=20000;continue;}
         // Consume recorded activity immediately, never simulate a future calendar.
         // Only presentation waits are skipped; every game transition still uses tick().
         g.nextTick=Math.min(g.nextTick,now);g.data.switchUntil=Math.min(g.data.switchUntil||0,now);
@@ -81,7 +74,7 @@
         const world=g.data.johtoUnlocked?g.data.johtoWorld:g.data.kantoWorld;
         if(!g.data.battle&&(g.data.pendingActions.some(a=>['travel','world-pass'].includes(a.kind))||world?.journey&&!g.data.pendingChallenge)&&g.controlTick(now)){used--;continue;}
         if(!this.step(now))break;
-        if(walking)this.consumed+=this.stepsPerAction;else this.lockConsumed+=20000;
+        this.lockConsumed+=20000;
       }
       while(moves<512&&this.mapTick(now))moves++;
       return used;

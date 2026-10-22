@@ -3,7 +3,7 @@
 // the game and raw-step cursor together only while it still owns the snapshot.
 globalThis.MobileBackground={run(raw,total,now,maxActions=32){
   const saved=JSON.parse(raw),game=new MobileCore.Adventure(saved.game||{},now);
-  const progression=new MobileProgression(game,saved.mobile,MobileConfig.stepsPerAction);
+  const progression=new MobileProgression(game,saved.mobile);
   const used=progression.catchUp(total,now,maxActions);
   if(!used&&!progression.dirty)return JSON.stringify({used:0});
   progression.pausedAt=now;

@@ -17,27 +17,27 @@ test('background time without steps never changes game or XP',()=>{
   const g=new Game({},now),p=new Progression(g);p.resume(now);p.live(now);p.pause(now+1000);
   const before=JSON.stringify(g.data);assert.equal(p.live(now+3600000),false);assert.equal(p.catchUp(9,now+3600000),0);assert.equal(JSON.stringify(g.data),before);
 });
-test('recorded steps are paid once across saves, reopening, and update',()=>{
-  const g=new Game({},now,{random:()=>.4}),p=new Progression(g);p.resume(now);
-  assert.equal(p.catchUp(34,now),3);assert.equal(p.consumed,30);assert.equal(p.catchUp(34,now),0);
-  const g2=new Game(JSON.parse(JSON.stringify(g.data)),now+1000),p2=new Progression(g2,JSON.parse(JSON.stringify(p.checkpoint())));
-  assert.equal(p2.catchUp(34,now+1000),0);assert.equal(p2.catchUp(40,now+1000),1);assert.equal(p2.consumed,40);
+test('legacy unspent steps never award actions after upgrade or reopening',()=>{
+  const g=new Game({},now),p=new Progression(g,{consumed:1200,lockConsumed:10000});p.resume(now);
+  const before=JSON.stringify(g.data);assert.equal(p.catchUp({steps:50000,lockMillis:29999},now),0);assert.equal(JSON.stringify(g.data),before);
+  const q=new Progression(new Game(JSON.parse(before),now),p.checkpoint());
+  assert.equal(q.catchUp({steps:100000,lockMillis:29999},now),0);assert.equal(q.consumed,1200);assert.equal(q.lockConsumed,10000);
+  assert.equal(q.catchUp({steps:100000,lockMillis:30000},now),1);assert.equal(q.lockConsumed,30000);
 });
-test('ten-step threshold keeps the remainder and does not replay paid actions',()=>{
-  const g=new Game({},now,{random:()=>.4}),p=new Progression(g,{},require('../version.json').stepsPerAction);
-  assert.equal(p.catchUp(9,now),0);assert.equal(p.catchUp(10,now),1);assert.equal(p.consumed,10);
-  assert.equal(p.catchUp(19,now),0);assert.equal(p.catchUp(20,now),1);assert.equal(p.consumed,20);
-  assert.equal(p.catchUp(20,now),0);
+test('ten or many recorded steps cannot start battles or grant XP',()=>{
+  const g=new Game({},now),p=new Progression(g);p.resume(now);const before=JSON.stringify(g.data);
+  for(const steps of [9,10,19,20,50000]){assert.equal(p.live(now,{steps}),false);assert.equal(p.catchUp({steps,lockMillis:0},now),0);}
+  assert.equal(JSON.stringify(g.data),before);assert.equal(p.lockConsumed,0);
 });
-test('upgrading the rate preserves the old raw-step cursor without paying past steps again',()=>{
-  const g=new Game({},now,{random:()=>.4}),p=new Progression(g,{consumed:1200,pausedAt:now});
-  assert.equal(p.catchUp(1200,now),0);assert.equal(p.catchUp(1234,now),3);assert.equal(p.consumed,1230);
+test('twenty-second lock actions retain the raw time remainder and do not replay',()=>{
+  const g=new Game({},now),p=new Progression(g,{consumed:1200,lockConsumed:10000});
+  assert.equal(p.catchUp({steps:1234,lockMillis:29999},now),0);assert.equal(p.catchUp({steps:1240,lockMillis:30000},now),1);
   const resumed=new Progression(new Game(JSON.parse(JSON.stringify(g.data)),now),p.checkpoint());
-  assert.equal(resumed.catchUp(1234,now),0);assert.equal(resumed.catchUp(1240,now),1);assert.equal(resumed.consumed,1240);
+  assert.equal(resumed.catchUp({steps:50000,lockMillis:49999},now),0);assert.equal(resumed.catchUp({steps:50000,lockMillis:50000},now),1);
 });
 test('pause preserves battle pacing without adding hours after offline catchup',()=>{
   const g=new Game({},now,{random:()=>.4}),p=new Progression(g);p.resume(now);p.live(now);p.pause(now+1000);
-  const next=now+3600000;p.resume(next);p.catchUp(100,next);
+  const next=now+3600000;p.resume(next);p.catchUp({steps:100,lockMillis:200000},next);
   assert.ok(g.nextTick-next<60000);assert.ok(g.data.switchUntil-next<60000);assert.equal(p.pausedAt,0);
 });
 for(const inBattle of [false,true])test('reopening a legacy paused save does not wait through the offline interval again: battle='+inBattle,()=>{
@@ -61,7 +61,7 @@ test('invalid sensor totals cannot award actions',()=>{
 });
 test('offline processing never creates future events or advances the season early',()=>{
   const edge=new Date('2026-10-31T14:59:59Z').getTime(),g=new Game({},edge,{random:()=>.4}),p=new Progression(g);p.resume(edge);
-  assert.equal(p.catchUp(50000,edge,500),500);
+  assert.equal(p.catchUp({steps:50000,lockMillis:10000000},edge,500),500);
   assert.equal(g.data.season.key,'2026-10');assert.ok(g.data.journal.every(e=>e.at<=edge));
 });
 // Mobile map-distance regressions run against this same bundle in map-travel.test.cjs.

@@ -17,7 +17,7 @@ const wildExclusions=[131,...safari.pool.map(([id])=>id)];
 const oakIntro=[
   '반갑다! 나는 포켓몬을 연구하는 오박사란다. 작은 모험에 온 걸 환영한다!',
   '이 피카츄가 네 첫 동료란다. 함께 포켓몬을 만나고, 잡고, 키워 보렴.',
-  '10걸음마다 동료와 모험한단다. 폰을 잠그면 20초마다 한 번 더 모험하지. 앱을 켜고 걸어도 모험을 지켜볼 수 있어.',
+  '폰을 잠그면 20초마다 동료와 모험한단다. 걸음은 타운맵에서 이동할 때 사용하지. 도전 배틀은 직접 지켜볼 수 있어.',
   '도감에서 동료를 살펴보고, 타운맵에서 다음 모험을 찾아보렴. 물건은 가방에 있단다.'
 ];
 const oakClose=['첫 배틀은 어땠니? 이기든 지든 동료와 함께 배우면 된단다. 피카츄는 회복해 두었단다.','이제 너희의 모험이 시작이다! 새로 만난 동료와 모험 기록도 가끔 살펴보렴.'];
@@ -48,7 +48,8 @@ class Adventure extends Engine{
     if((rivals.has(pending?.index)&&this.rivalProgress(pending.index)?.state==='retry')||(storyEncounter(pending?.index)||['safari-start','mansion-investigate'].includes(pending?.index)||pending?.index===6)&&this.canChallenge(pending.index))this.data.pendingChallenge={...pending};
     const scene=story.scene,b=this.data.battle;
     world.init(this,now);
-    if(this.platform==='mobile'&&scene?.kind==='oak'&&scene.pages)scene.pages=scene.pages.map(text=>['앱을 켜 두면 자동으로 모험한단다. 꺼 둔 동안에는 10걸음마다 모험이 이어지지.','폰을 잠그면 10초마다 모험한단다. 잠근 동안 10걸음을 걸으면 한 번 더 모험하지. 도전 배틀은 직접 지켜볼 수 있어.','10걸음마다 동료와 모험한단다. 폰을 잠그면 10초마다 한 번 더 모험하지. 앱을 켜고 걸어도 모험을 지켜볼 수 있어.'].includes(text)?oakIntro[2]:text);
+    if(this.platform==='mobile'&&scene?.kind==='oak'&&scene.pages)scene.pages=scene.pages.map(text=>['앱을 켜 두면 자동으로 모험한단다. 꺼 둔 동안에는 10걸음마다 모험이 이어지지.','폰을 잠그면 10초마다 모험한단다. 잠근 동안 10걸음을 걸으면 한 번 더 모험하지. 도전 배틀은 직접 지켜볼 수 있어.','10걸음마다 동료와 모험한단다. 폰을 잠그면 10초마다 한 번 더 모험하지. 앱을 켜고 걸어도 모험을 지켜볼 수 있어.','10걸음마다 동료와 모험한단다. 폰을 잠그면 20초마다 한 번 더 모험하지. 앱을 켜고 걸어도 모험을 지켜볼 수 있어.'].includes(text)?oakIntro[2]:text);
+    if(this.platform==='mobile'&&scene?.kind==='safari'&&scene.pages)scene.pages=scene.pages.map(text=>text==='걸어서 탐험하고 돌아오면 어떤 동료를 만났는지 살펴보렴. 몬스터볼 30개로 1,500걸음 동안 다녀올 수 있어.'?'폰을 잠근 동안 탐험하고 돌아오면 어떤 동료를 만났는지 살펴보렴. 몬스터볼 30개로 다녀올 수 있어.':text);
     if(b?.kind==='trainer'&&scene?.mode==='dialogue'){
       const boss=this.battleBoss(b);
       if(scene.next==='sendout'&&scene.pages?.[0]===boss.name+'의 도전!')scene.pages=trainerDialogue.intro(boss,this.data.champion);
@@ -101,6 +102,7 @@ class Adventure extends Engine{
   canReceiveFlute(){const r=this.data.mobileStory?.rescue;return !!(r?.completedAt&&r.wins.every(Boolean));}
   fluteRewardText(){return '등나무노인에게 포켓몬피리를 받았다!';}
   walkingStep(steps,now){return !this.presentation()&&safari.walk(this,steps,now);}
+  activityStep(now){return this.platform==='mobile'&&this.walkingStep(10,now);}
   returnSafari(now=Date.now()){return safari.finish(this,now,true);}
   storySafe(now){return this.data.mobileStory?.onboarding==='done'&&!this.presentation()&&!this.seasonDue(now)&&!this.data.battle&&!this.data.pendingBattle&&!this.data.pendingChallenge&&now>=this.data.switchUntil&&now>=this.nextTick;}
   offerMansion(now){
@@ -217,7 +219,7 @@ class Adventure extends Engine{
       this.data.pendingChallenge=null;
       if(index==='safari-start'){
         if(this.data.mobileStory.safari.visitedAt){safari.start(this,now);this.animate('result',{text:'사파리존 탐험을 시작했어요.'},now);}
-        else this.dialogue('safari','사파리 안내원','scientist',['사파리존에 어서 와! 여기서는 포켓몬과 싸우지 않고 조용히 다가가서 포획한단다.',this.platform==='desktop'?'작업하는 동안 탐험하고 돌아오면 어떤 동료를 만났는지 살펴보렴. 몬스터볼 30개로 다녀올 수 있어.':'걸어서 탐험하고 돌아오면 어떤 동료를 만났는지 살펴보렴. 몬스터볼 30개로 1,500걸음 동안 다녀올 수 있어.'],'safari-depart',now);
+        else this.dialogue('safari','사파리 안내원','scientist',['사파리존에 어서 와! 여기서는 포켓몬과 싸우지 않고 조용히 다가가서 포획한단다.',this.platform==='desktop'?'작업하는 동안 탐험하고 돌아오면 어떤 동료를 만났는지 살펴보렴. 몬스터볼 30개로 다녀올 수 있어.':'폰을 잠근 동안 탐험하고 돌아오면 어떤 동료를 만났는지 살펴보렴. 몬스터볼 30개로 다녀올 수 있어.'],'safari-depart',now);
       }
       else this.dialogue('diary','홍련섬의 폐저택','item:journal',['불에 탄 저택 안에는 오래된 연구 흔적이 남아 있다. 잠긴 체육관과도 관계가 있을까?','동료와 모험을 이어가며 남은 기록을 조사해 보기로 했다.'],'mansion-begin',now);
       return true;
@@ -354,7 +356,7 @@ class Adventure extends Engine{
       routes.unshift({kind:'event',text:event?'모험 중 특별한 만남으로 동료가 될 수 있어요.':'사파리존에서 만날 수 있어요.'});
       p.acquisition={...p.acquisition,wildAllowed:false,routes,summary:[...new Set(summary)].join(' · '),note:'일반 야생에서는 출현하지 않아요.'};
     }
-    return {...s,kantoWorld:world.snapshot(this,now),adventureRecords:require('./adventure-records.cjs').list(this),dialogueMemories:this.data.dialogueMemories||[],inventory:[...s.inventory,...items],scene:this.presentation(),activityMode:this.platform==='desktop'?'tokens':'walking',onboarding:story?.onboarding!=='done',discovery,rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this),silph:silph.snapshot(this),safari:{...safari.snapshot(this),canStart:this.canChallenge('safari-start')},mansion:{...mansion.snapshot(this),canStart:this.canChallenge('mansion-investigate')},mobileGymHints:hints};
+    return {...s,kantoWorld:world.snapshot(this,now),adventureRecords:require('./adventure-records.cjs').list(this),dialogueMemories:this.data.dialogueMemories||[],inventory:[...s.inventory,...items],scene:this.presentation(),activityMode:this.platform==='desktop'?'tokens':'locked',onboarding:story?.onboarding!=='done',discovery,rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this),silph:silph.snapshot(this),safari:{...safari.snapshot(this),canStart:this.canChallenge('safari-start')},mansion:{...mansion.snapshot(this),canStart:this.canChallenge('mansion-investigate')},mobileGymHints:hints};
   }
 }
 module.exports={Adventure:require('./johto-adventure.cjs').withJohto(require('./kanto-adventure.cjs').withKanto(Adventure))};

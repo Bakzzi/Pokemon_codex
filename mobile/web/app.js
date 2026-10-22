@@ -1,7 +1,7 @@
 'use strict';
 const $=id=>document.getElementById(id),native=window.Android;
 let saved,game,progression,active=false,catchingUp=false,updatePaused=false,ready=false,notice='',fatal=false,lastSave=0,panelTab='collection',panelDetail=false,nativeState={steps:0};
-try{saved=JSON.parse(native.load());game=new MobileCore.Adventure(saved.game||{});progression=new MobileProgression(game,saved.mobile,MobileConfig.stepsPerAction);}catch(e){fatal=true;notice='저장을 읽지 못했어요. 기존 데이터는 보존돼요. 앱을 다시 열어 주세요.';$('app-notice').textContent=notice;native.reportError(String(e));}
+try{saved=JSON.parse(native.load());game=new MobileCore.Adventure(saved.game||{});progression=new MobileProgression(game,saved.mobile);}catch(e){fatal=true;notice='저장을 읽지 못했어요. 기존 데이터는 보존돼요. 앱을 다시 열어 주세요.';$('app-notice').textContent=notice;native.reportError(String(e));}
 function save(){if(fatal)return false;const ok=native.save(JSON.stringify({format:1,game:game.data,mobile:progression.checkpoint(),savedAt:Date.now()}));if(!ok){fatal=true;active=false;notice='진행을 저장하지 못해 모험을 멈췄어요. 저장 공간을 확인해 주세요.';}if(ok)progression.dirty=false;lastSave=Date.now();return ok;}
 function snapshot(){return {...game.panelState(),phase:'working',source:{connected:true},compact:false,pinned:false,demo:false,notice,remote:{connections:[]}};}
 function publish(){if(fatal){$('app-notice').textContent=notice;return;}const s=snapshot();for(const id of ['battle','panel'])$(id).contentWindow.postMessage({type:'state',state:s},location.origin);renderScene(s);$('app-notice').textContent=notice;}
@@ -37,14 +37,14 @@ function refreshNative(){
   $('sensor-status').textContent=nativeState.sensor+(nativeState.monitorError?' '+nativeState.monitorError:'')+(nativeState.backgroundError?' '+nativeState.backgroundError:'');$('walk-status').textContent='모험의 발걸음';
   $('walk-today').textContent=(nativeState.todaySteps||0).toLocaleString('ko-KR')+'걸음';
   $('walk-total').textContent=(nativeState.lifetimeSteps||0).toLocaleString('ko-KR')+'걸음';
-  $('walk-note').textContent=game?.data.mobileStory?.safari?.trip?'사파리 탐험 중 · 10걸음마다 탐험을 이어가요.':nativeState.tracking?'10걸음마다 모험해요. 폰을 잠그면 20초마다 한 번 더!':'폰을 잠그면 20초마다 모험해요. 걸음 기록을 켜면 걸은 만큼 더 모험해요.';
+  $('walk-note').textContent=nativeState.tracking?'걸음은 지도 이동에 사용해요. 폰을 잠그면 20초마다 모험해요.':'폰을 잠그면 20초마다 모험해요. 걸음 기록을 켜면 지도에서 이동할 수 있어요.';
   $('update-status').textContent=nativeState.update;$('update-confirm').hidden=!nativeState.pendingInstall;$('install-permission').hidden=nativeState.canInstall;
   $('update-check').disabled=!!nativeState.updateChecking||!!nativeState.installing;$('version').textContent='Android v'+(nativeState.versionName||MobileConfig.name);
 }
 window.mobileLifecycle=function(visible,reload=false){
   if(fatal)return;const now=Date.now();
   if(!visible){active=false;progression.pause(now);save();return;}
-  if(reload){active=false;try{saved=JSON.parse(native.load());game=new MobileCore.Adventure(saved.game||{},now);progression=new MobileProgression(game,saved.mobile,MobileConfig.stepsPerAction);}catch(e){fatal=true;notice='저장을 읽지 못했어요. 기존 데이터는 보존돼요.';native.reportError(String(e));publish();return;}}
+  if(reload){active=false;try{saved=JSON.parse(native.load());game=new MobileCore.Adventure(saved.game||{},now);progression=new MobileProgression(game,saved.mobile);}catch(e){fatal=true;notice='저장을 읽지 못했어요. 기존 데이터는 보존돼요.';native.reportError(String(e));publish();return;}}
   refreshNative();if(applyReadyUpdate())return;
   updatePaused=false;active=true;progression.resume(now);
   catchingUp=true;let actions=0;

@@ -19,12 +19,12 @@
     if(safari.root.hidden){safari.root.open=false;safari.body.replaceChildren();safariKey='';}
     else{
       const desktop=s.activityMode==='tokens',key=JSON.stringify([a,busy,queued,desktop]);if(key!==safariKey){safariKey=key;safari.body.replaceChildren();
-        safari.label.textContent=a.active?'탐험 중':a.last?'귀환':desktop?'작업과 함께 탐험':'걸어서 탐험';
-        safari.note.textContent=a.active?(desktop?'작업하는 동안 사파리의 풀숲과 물가를 탐험하고 있어요.':'걸음을 따라 사파리의 풀숲과 물가를 탐험하고 있어요.'):a.last?'탐험에서 돌아왔어요. 어떤 만남이 있었는지 살펴보세요.':desktop?'작업하는 동안 다녀오는 작은 포획 여행. 돌아와서 새 동료를 확인해 보세요.':'걸어서 다녀오는 작은 포획 여행. 돌아와서 새 동료를 확인해 보세요.';
+        safari.label.textContent=a.active?'탐험 중':a.last?'귀환':desktop?'작업과 함께 탐험':'잠금 시간에 탐험';
+        safari.note.textContent=a.active?(desktop?'작업하는 동안 사파리의 풀숲과 물가를 탐험하고 있어요.':'폰을 잠근 동안 사파리의 풀숲과 물가를 탐험하고 있어요.'):a.last?'탐험에서 돌아왔어요. 어떤 만남이 있었는지 살펴보세요.':desktop?'작업하는 동안 다녀오는 작은 포획 여행. 돌아와서 새 동료를 확인해 보세요.':'폰을 잠근 동안 다녀오는 작은 포획 여행. 돌아와서 새 동료를 확인해 보세요.';
         if(a.active){
-          const meter=document.createElement('progress');meter.max=1;meter.value=a.progress;meter.setAttribute('aria-label','사파리 탐험 진행');safari.body.append(meter,note(desktop?'몬스터볼 '+a.balls+'개':'남은 거리 '+a.remaining.toLocaleString('ko-KR')+'걸음 · 몬스터볼 '+a.balls+'개'),note(desktop?'AI 에이전트 작업에 맞춰 탐험하고 포획을 시도해요.':'걸음을 따라 탐험하고 포획을 시도해요. 앱을 켜고 걸어도 탐험을 볼 수 있어요.'),button('탐험 마치고 돌아오기','safari-return'));
+          const meter=document.createElement('progress');meter.max=1;meter.value=a.progress;meter.setAttribute('aria-label','사파리 탐험 진행');safari.body.append(meter,note(desktop?'몬스터볼 '+a.balls+'개':'몬스터볼 '+a.balls+'개'),note(desktop?'AI 에이전트 작업에 맞춰 탐험하고 포획을 시도해요.':'폰을 잠그면 20초마다 탐험을 이어가요.'),button('탐험 마치고 돌아오기','safari-return'));
         }else{
-          safari.body.append(note(desktop?'몬스터볼 30개로 탐험해요. 이미 데려온 포켓몬은 포획 예약이 있을 때만 다시 잡아요.':'몬스터볼 30개 · 1,500걸음 동안 탐험해요. 이미 데려온 포켓몬은 포획 예약이 있을 때만 다시 잡아요.'));
+          safari.body.append(note(desktop?'몬스터볼 30개로 탐험해요. 이미 데려온 포켓몬은 포획 예약이 있을 때만 다시 잡아요.':'몬스터볼 30개로 탐험해요. 이미 데려온 포켓몬은 포획 예약이 있을 때만 다시 잡아요.'));
           const start=button(queued?.index==='safari-start'?'출발 예약됨':a.visited?'다시 탐험하기':'탐험 떠나기','challenge','safari-start');start.id='safari-start';start.disabled=!a.canStart||busy||!!queued;safari.body.append(start);
         }
         if(a.last){
