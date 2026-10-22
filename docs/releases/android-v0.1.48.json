@@ -1,0 +1,68 @@
+{
+  "version": "0.1.48",
+  "versionCode": 50,
+  "platform": "android",
+  "channel": "android-preview",
+  "sourceCommit": "617a74f402200303a79aa5363f828a5d3977fced",
+  "sourceTag": "android-v0.1.48",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/android-v0.1.48",
+  "package": "io.github.bakzzi.pokemonidle",
+  "minSdk": 31,
+  "targetSdk": 36,
+  "artifact": "Pokemon-Idle-0.1.48.apk",
+  "bytes": 39119934,
+  "sha256": "d66db4955099220fe00ea90bcb828fdab9081026683d0f212363b0bc7636b3ff",
+  "signingCertificateSha256": "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+  "toolchain": {
+    "node": "22.11.0",
+    "gradle": "8.13",
+    "agp": "8.13.0",
+    "compileSdk": 36,
+    "buildTools": "36.1.0",
+    "javaScriptEngine": "androidx.javascriptengine:javascriptengine:1.1.1",
+    "dependencyLockfile": "mobile/android/app/gradle.lockfile"
+  },
+  "validation": {
+    "releaseBuild": "passed",
+    "androidLintErrors": 0,
+    "apkSignatureVerified": true,
+    "embeddedBundleSha256": "e66b0b20ee952541ccc9607ad563e0f6ce035ec4fa09e11c16118943e32181f0",
+    "embeddedFilesMatched": 451,
+    "nodeTestsPassed": 683,
+    "embeddedApkWebRuntimeChecksPassed": 17,
+    "androidNativeWebViewVerified": false,
+    "physicalDeviceVerified": false,
+    "nativePlatformCodeUnchangedFrom": "0.1.47"
+  },
+  "retention": {
+    "latestAndroid": "0.1.48",
+    "previousAndroid": "0.1.47",
+    "additionalUnconfirmedDeviceVersions": [
+      "0.1.30",
+      "0.1.31",
+      "0.1.32",
+      "0.1.33",
+      "0.1.34",
+      "0.1.35",
+      "0.1.36",
+      "0.1.37",
+      "0.1.38",
+      "0.1.39",
+      "0.1.40",
+      "0.1.41",
+      "0.1.42",
+      "0.1.43",
+      "0.1.44",
+      "0.1.45",
+      "0.1.46"
+    ]
+  },
+  "activity": {
+    "lockedMillisecondsPerAction": 10000,
+    "stepsPerAction": 10,
+    "walkingRequiresLock": false,
+    "foregroundWalkingAnimated": true,
+    "unlockedIdleAdventure": false,
+    "foregroundChallenges": true
+  }
+}
