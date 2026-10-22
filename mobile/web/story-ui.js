@@ -1,5 +1,5 @@
 'use strict';
-const storyPresentation=StoryPresentation.create({advance:key=>action('scene-next',key)});
+const storyPresentation=StoryPresentation.create({advance:key=>action('scene-next',key),choose:value=>action('fossil-choice',value)});
 function renderScene(state){
   storyPresentation.render(state);$('battle').style.visibility=state.scene?'hidden':'';
   if(state.scene){$('adventure').hidden=false;$('panel-wrap').hidden=true;}

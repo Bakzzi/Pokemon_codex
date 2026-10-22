@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const root=path.resolve(__dirname,'../..'),c=vm.createContext({console,structuredClone,TextEncoder,TextDecoder});
 for(const f of ['mobile/android/app/build/generated/gameAssets/web/game.bundle.js','mobile/android/app/build/generated/gameAssets/web/config.js','mobile/web/progression.js','mobile/web/background.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),c);
 const A=c.MobileCore.Adventure,P=c.MobileProgression,now=Date.parse('2026-10-22T06:00:00Z'),plain=x=>JSON.parse(JSON.stringify(x));
-function ready(saved){const g=new A(saved||{},now,{random:()=>.6});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;const p=new P(g);p.resume(now);p.observe({steps:10000});return {g,p};}
+function ready(saved){const g=new A(saved||new c.MobileCore.Game({},now).data,now,{random:()=>.6});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;const p=new P(g);p.resume(now);p.observe({steps:10000});return {g,p};}
 const world=g=>g.data.johtoUnlocked?g.data.johtoWorld:g.data.kantoWorld;
 const view=g=>{const s=g.panelState(now);return g.data.johtoUnlocked?s.johtoWorld:s.kantoWorld;};
 const here=g=>plain(view(g).position),next={x:44,y:92};
@@ -57,7 +57,7 @@ test('Johto uses the same 2,000-step cells and regional crossings do not relocat
  assert.ok(g.requestAction('travel','j-k-vermilion',now));assert.equal(world(g).location,previous);p.observe({steps:14000});assert.ok(g.advanceTravel(now));assert.equal(world(g).location,'j-k-vermilion');
 });
 test('old encounter-based itineraries keep the current place and destination but require new steps for remaining cells',()=>{
- const PC=require('../../desktop/adventure.cjs').Adventure,pc=new PC({},now,{random:()=>.6});pc.data.mobileStory.onboarding='done';pc.data.mobileStory.scene=null;pc.data.switchUntil=0;pc.nextTick=now;pc.requestAction('travel','pewter',now);
+ const PC=require('../../desktop/adventure.cjs').Adventure,pc=require('../../desktop/test/helpers/kanto-fixture.cjs').existing(PC,now,{random:()=>.6});pc.data.mobileStory.onboarding='done';pc.data.mobileStory.scene=null;pc.data.switchUntil=0;pc.nextTick=now;pc.requestAction('travel','pewter',now);
  const {g,p}=ready(plain(pc.data)),start=here(g);g.data.switchUntil=0;g.nextTick=now;assert.ok(settle(g)===false);assert.equal(world(g).journey.mode,'steps');assert.deepEqual(here(g),start);assert.equal(world(g).journey.destination,'pewter');assert.equal(g.data.mapTravel?.credit||0,0);
  p.observe({steps:12000});assert.ok(g.advanceTravel(now));assert.notDeepEqual(here(g),start);
 });

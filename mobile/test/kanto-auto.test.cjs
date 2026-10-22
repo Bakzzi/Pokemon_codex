@@ -1,0 +1,7 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+test('the embedded headless runtime pays for automatic trainer turns and completes them without foreground dialogue',()=>{
+ const root=path.resolve(__dirname,'../..'),c=vm.createContext({});for(const f of ['mobile/android/app/build/generated/gameAssets/web/game.bundle.js','mobile/web/progression.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),c);
+ const now=Date.parse('2026-10-22T09:00:00Z'),g=new c.MobileCore.Adventure({},now);g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.kantoStory.mapAt=now;g.data.kantoStory.dexAt=now;g.data.kantoWorld.location='forest';g.rivalProgress('rival-brock').state='won';g.data.switchUntil=0;g.nextTick=now;g.gainXp(25,1000000,now);g.data.switchUntil=0;g.nextTick=now;
+ const p=new c.MobileProgression(g);assert.equal(p.catchUp({steps:0,lockMillis:19999},now),0);assert.equal(g.data.battle,null);assert.equal(p.catchUp({steps:0,lockMillis:20000},now),1);assert.ok(g.data.battle.activityTrainer);const id=g.data.battle.kantoNode;assert.equal(g.presentation(),null);assert.equal(p.catchUp({steps:0,lockMillis:39999},now),0);assert.ok(p.catchUp({steps:0,lockMillis:2000000},now)>0);assert.ok(g.data.kantoStory.cleared[id]);assert.equal(g.presentation(),null);assert.ok(p.lockConsumed>20000);assert.equal(p.consumed,0);
+});

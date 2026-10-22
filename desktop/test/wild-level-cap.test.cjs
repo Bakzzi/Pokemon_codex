@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const {Game}=require('../game.cjs'),{Adventure:PC}=require('../adventure.cjs'),{Adventure:Android}=require('../../mobile/adventure.cjs');
 const {data,species,xpAt,wildMinimum,wildLevelCap,wildDistribution}=require('../pokemon.cjs'),J=require('../../shared/johto.cjs');
 const now=Date.parse('2026-10-19T10:00:00Z'),caps=[10,14,16,21,34,32,34,36,46],johtoCaps=[3,9,13,16,21,23,20,28,34],badges=data.bosses.slice(0,8).map(b=>b.id);
-function fixture(Type=Game,level=100){const g=new Type({},now,{random:()=>.73});if(g.data.mobileStory){g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;}const p=g.data.owned[g.data.activeId];p.level=level;p.xp=xpAt(p.id,level);require('../move-access.cjs').update(p);return g;}
+function fixture(Type=Game,level=100){const g=require('./helpers/kanto-fixture.cjs').existing(Type,now,{random:()=>.73});if(g.data.mobileStory){g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;}const p=g.data.owned[g.data.activeId];p.level=level;p.xp=xpAt(p.id,level);require('../move-access.cjs').update(p);return g;}
 function johto(Type){const g=fixture(Type);g.data.champion=true;g.data.badges=[...badges];assert.ok(g.unlockJohto(now,[25]));const p=g.data.owned[g.data.activeId];p.level=100;p.xp=xpAt(p.id,100);return g;}
 
 test('Kanto caps follow original opponent averages with Brock and Koga exceptions and only a small championship increase',()=>{

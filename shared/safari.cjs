@@ -15,6 +15,7 @@ function start(game,now){
 function finish(game,now,returned=false){
   const s=game.data.mobileStory.safari;if(!s.trip)return false;
   s.last={...s.trip,finishedAt:now,returned};s.trip=null;
+  if(!returned&&(s.last.steps>=DISTANCE||s.last.balls===0)&&!s.completedAt){s.completedAt=now;game.log('사파리존 탐험을 마쳤다. 바다를 안전하게 건너는 길을 배웠다.','story',null,now);}
   game.log(s.last.caught.length?'사파리존에서 새 동료 '+s.last.caught.length+'마리와 함께 돌아왔다.':'사파리존에서 돌아왔다. 이번 탐험에서는 포획에 성공하지 못했다.','info',null,now);return true;
 }
 function walk(game,steps,now){
@@ -41,6 +42,6 @@ function walk(game,steps,now){
 function snapshot(game){
   const s=game.data.mobileStory.safari,t=s.trip,last=s.last;
   const visual=trip=>{const e=trip.encounters.at(-1);return {tripId:trip.id,encounterCount:trip.encounters.length,lastEncounter:e?{...e,sequence:trip.encounters.length,name:species.get(e.id).name}:null};};
-  return {visible:unlocked(game)||!!s.visitedAt,active:!!t,visited:!!s.visitedAt,remaining:t?DISTANCE-t.steps:DISTANCE,balls:t?.balls??BALLS,progress:t?t.steps/DISTANCE:0,caught:t?.caught.length||0,...(t?visual(t):{}),last:last?{id:last.id,...visual(last),returned:!!last.returned,balls:last.balls,steps:last.steps,encounters:last.encounters.length,caught:last.caught.map(p=>({...p,name:species.get(p.id).name})),finishedAt:last.finishedAt}:null};
+  return {visible:unlocked(game)||!!s.visitedAt,active:!!t,visited:!!s.visitedAt,completed:!!s.completedAt,remaining:t?DISTANCE-t.steps:DISTANCE,balls:t?.balls??BALLS,progress:t?t.steps/DISTANCE:0,caught:t?.caught.length||0,...(t?visual(t):{}),last:last?{id:last.id,...visual(last),returned:!!last.returned,balls:last.balls,steps:last.steps,encounters:last.encounters.length,caught:last.caught.map(p=>({...p,name:species.get(p.id).name})),finishedAt:last.finishedAt}:null};
 }
 module.exports={init,unlocked,start,finish,walk,snapshot,DISTANCE,INTERVAL,BALLS,pool};

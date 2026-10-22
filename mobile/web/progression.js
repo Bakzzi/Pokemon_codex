@@ -44,7 +44,7 @@
       this.observe(totals);
       const g=this.game,b=g.data.battle;
       if(g.presentation?.())return g.sceneTick(now)||this.dirty;
-      if(b?.kind==='trainer'||b?.storyId)return this.step(now)||this.dirty;
+      if(!b?.activityTrainer&&(b?.kind==='trainer'||b?.storyId))return this.step(now)||this.dirty;
       if(g.controlTick(now))return true;
       // New foreground steps use ordinary animation waits, one paid action at a
       // time. The offline fast-forward path must not hide these live actions.
@@ -63,7 +63,7 @@
         const walking=available(steps,this.stepsPerAction,this.consumed)>0;
         if(!walking&&!available(locked,20000,this.lockConsumed))break;
         // Manual dialogue must preserve every unspent walking action.
-        if(g.presentation?.()||g.data.battle?.kind==='trainer'||g.data.battle?.storyId)break;
+        if(g.presentation?.()||!g.data.battle?.activityTrainer&&(g.data.battle?.kind==='trainer'||g.data.battle?.storyId))break;
         if(g.data.battle?.resumeAfterLock!==undefined){
           if(!walking&&g.lockEpoch<=g.data.battle.resumeAfterLock)break;
           delete g.data.battle.resumeAfterLock;

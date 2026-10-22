@@ -5,7 +5,7 @@ globalThis.JohtoPanel=(()=>{
  const path=sprite=>sprite?.startsWith('pokemon:')?'assets/'+sprite.slice(8)+'.gif':sprite?.startsWith('item:')?'assets/items/'+sprite.slice(5)+'.png':'assets/trainers/battle/'+sprite+'.png';
  function portrait(boss){
   if(!boss.portrait||boss.revealed===false)return null;
-  const key=boss.portrait,entry=globalThis.JohtoPortraits?.[key];return {name:boss.name,src:entry?'assets/trainers/portraits/'+key+'.png':'assets/trainers/'+key+'.png',crop:entry||trainerFaces[key]};
+  const key=boss.portrait,entry=globalThis.JohtoPortraits?.[key];return {name:boss.name,src:'assets/trainers/battle/'+key+'.png',crop:entry||trainerFaces[key]};
  }
  function disclosure(id,title,description,done=false,header={}){
   if(done&&completed.get(id)===false)open.set(id,false);completed.set(id,done);

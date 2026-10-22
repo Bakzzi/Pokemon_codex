@@ -1,0 +1,8823 @@
+{
+  "version": "yellow",
+  "sourceCommit": "b6696f24b3be84fe64cf702f5a15ba40c66b7f39",
+  "maps": {
+    "AgathasRoom": {
+      "location": "indigo",
+      "trainers": 0,
+      "wild": false
+    },
+    "BikeShop": {
+      "location": "cerulean",
+      "trainers": 0,
+      "wild": false
+    },
+    "BillsHouse": {
+      "location": "sea-cottage",
+      "trainers": 0,
+      "wild": false
+    },
+    "BluesHouse": {
+      "location": "pallet",
+      "trainers": 0,
+      "wild": false
+    },
+    "BrunosRoom": {
+      "location": "indigo",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonChiefHouse": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonCity": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonDiner": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonGym": {
+      "location": "gym:3",
+      "trainers": 7,
+      "wild": false
+    },
+    "CeladonHotel": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonMansion1F": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonMansion2F": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonMansion3F": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonMansionRoof": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonMansionRoofHouse": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonMart1F": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonMart2F": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonMart3F": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonMart4F": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonMart5F": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonMartElevator": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonMartRoof": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeladonPokecenter": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeruleanBadgeHouse": {
+      "location": "cerulean",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeruleanCave1F": {
+      "location": "cerulean-cave",
+      "trainers": 0,
+      "wild": true
+    },
+    "CeruleanCave2F": {
+      "location": "cerulean-cave",
+      "trainers": 0,
+      "wild": true
+    },
+    "CeruleanCaveB1F": {
+      "location": "cerulean-cave",
+      "trainers": 0,
+      "wild": true
+    },
+    "CeruleanCity": {
+      "location": "cerulean",
+      "trainers": 1,
+      "wild": false
+    },
+    "CeruleanGym": {
+      "location": "gym:1",
+      "trainers": 2,
+      "wild": false
+    },
+    "CeruleanMart": {
+      "location": "cerulean",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeruleanMelaniesHouse": {
+      "location": "cerulean",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeruleanPokecenter": {
+      "location": "cerulean",
+      "trainers": 0,
+      "wild": false
+    },
+    "CeruleanTrashedHouse": {
+      "location": "cerulean",
+      "trainers": 0,
+      "wild": false
+    },
+    "ChampionsRoom": {
+      "location": "indigo",
+      "trainers": 0,
+      "wild": false
+    },
+    "CinnabarGym": {
+      "location": "gym:6",
+      "trainers": 7,
+      "wild": false
+    },
+    "CinnabarIsland": {
+      "location": "cinnabar",
+      "trainers": 0,
+      "wild": false
+    },
+    "CinnabarLab": {
+      "location": "cinnabar",
+      "trainers": 0,
+      "wild": false
+    },
+    "CinnabarLabFossilRoom": {
+      "location": "cinnabar",
+      "trainers": 0,
+      "wild": false
+    },
+    "CinnabarLabMetronomeRoom": {
+      "location": "cinnabar",
+      "trainers": 0,
+      "wild": false
+    },
+    "CinnabarLabTradeRoom": {
+      "location": "cinnabar",
+      "trainers": 0,
+      "wild": false
+    },
+    "CinnabarMart": {
+      "location": "cinnabar",
+      "trainers": 0,
+      "wild": false
+    },
+    "CinnabarPokecenter": {
+      "location": "cinnabar",
+      "trainers": 0,
+      "wild": false
+    },
+    "Colosseum": {
+      "location": null,
+      "trainers": 0,
+      "wild": false
+    },
+    "CopycatsHouse1F": {
+      "location": "saffron",
+      "trainers": 0,
+      "wild": false
+    },
+    "CopycatsHouse2F": {
+      "location": "saffron",
+      "trainers": 0,
+      "wild": false
+    },
+    "Daycare": {
+      "location": "route-5",
+      "trainers": 0,
+      "wild": false
+    },
+    "DiglettsCave": {
+      "location": "diglett",
+      "trainers": 0,
+      "wild": true
+    },
+    "DiglettsCaveRoute11": {
+      "location": "route-11",
+      "trainers": 0,
+      "wild": false
+    },
+    "DiglettsCaveRoute2": {
+      "location": "route-2",
+      "trainers": 0,
+      "wild": false
+    },
+    "FightingDojo": {
+      "location": "saffron",
+      "trainers": 5,
+      "wild": false
+    },
+    "FuchsiaBillsGrandpasHouse": {
+      "location": "fuchsia",
+      "trainers": 0,
+      "wild": false
+    },
+    "FuchsiaCity": {
+      "location": "fuchsia",
+      "trainers": 0,
+      "wild": false
+    },
+    "FuchsiaGoodRodHouse": {
+      "location": "fuchsia",
+      "trainers": 0,
+      "wild": false
+    },
+    "FuchsiaGym": {
+      "location": "gym:4",
+      "trainers": 6,
+      "wild": false
+    },
+    "FuchsiaMart": {
+      "location": "fuchsia",
+      "trainers": 0,
+      "wild": false
+    },
+    "FuchsiaMeetingRoom": {
+      "location": "fuchsia",
+      "trainers": 0,
+      "wild": false
+    },
+    "FuchsiaPokecenter": {
+      "location": "fuchsia",
+      "trainers": 0,
+      "wild": false
+    },
+    "GameCorner": {
+      "location": "hideout",
+      "trainers": 1,
+      "wild": false
+    },
+    "GameCornerPrizeRoom": {
+      "location": "celadon",
+      "trainers": 0,
+      "wild": false
+    },
+    "HallOfFame": {
+      "location": "indigo",
+      "trainers": 0,
+      "wild": false
+    },
+    "IndigoPlateau": {
+      "location": "indigo",
+      "trainers": 0,
+      "wild": false
+    },
+    "IndigoPlateauLobby": {
+      "location": "indigo",
+      "trainers": 0,
+      "wild": false
+    },
+    "LancesRoom": {
+      "location": "indigo",
+      "trainers": 0,
+      "wild": false
+    },
+    "LavenderCuboneHouse": {
+      "location": "lavender",
+      "trainers": 0,
+      "wild": false
+    },
+    "LavenderMart": {
+      "location": "lavender",
+      "trainers": 0,
+      "wild": false
+    },
+    "LavenderPokecenter": {
+      "location": "lavender",
+      "trainers": 0,
+      "wild": false
+    },
+    "LavenderTown": {
+      "location": "lavender",
+      "trainers": 0,
+      "wild": false
+    },
+    "LoreleisRoom": {
+      "location": "indigo",
+      "trainers": 0,
+      "wild": false
+    },
+    "MrFujisHouse": {
+      "location": "lavender",
+      "trainers": 0,
+      "wild": false
+    },
+    "MrPsychicsHouse": {
+      "location": "saffron",
+      "trainers": 0,
+      "wild": false
+    },
+    "MtMoon1F": {
+      "location": "mt-moon",
+      "trainers": 7,
+      "wild": true
+    },
+    "MtMoonB1F": {
+      "location": "mt-moon",
+      "trainers": 0,
+      "wild": true
+    },
+    "MtMoonB2F": {
+      "location": "mt-moon",
+      "trainers": 4,
+      "wild": true
+    },
+    "MtMoonPokecenter": {
+      "location": "route-4",
+      "trainers": 0,
+      "wild": false
+    },
+    "Museum1F": {
+      "location": "pewter",
+      "trainers": 0,
+      "wild": false
+    },
+    "Museum2F": {
+      "location": "pewter",
+      "trainers": 0,
+      "wild": false
+    },
+    "NameRatersHouse": {
+      "location": "lavender",
+      "trainers": 0,
+      "wild": false
+    },
+    "OaksLab": {
+      "location": "pallet",
+      "trainers": 0,
+      "wild": false
+    },
+    "PalletTown": {
+      "location": "pallet",
+      "trainers": 0,
+      "wild": false
+    },
+    "PewterCity": {
+      "location": "pewter",
+      "trainers": 0,
+      "wild": false
+    },
+    "PewterGym": {
+      "location": "gym:0",
+      "trainers": 1,
+      "wild": false
+    },
+    "PewterMart": {
+      "location": "pewter",
+      "trainers": 0,
+      "wild": false
+    },
+    "PewterNidoranHouse": {
+      "location": "pewter",
+      "trainers": 0,
+      "wild": false
+    },
+    "PewterPokecenter": {
+      "location": "pewter",
+      "trainers": 0,
+      "wild": false
+    },
+    "PewterSpeechHouse": {
+      "location": "pewter",
+      "trainers": 0,
+      "wild": false
+    },
+    "PokemonFanClub": {
+      "location": "vermilion",
+      "trainers": 0,
+      "wild": false
+    },
+    "PokemonMansion1F": {
+      "location": "mansion",
+      "trainers": 1,
+      "wild": true
+    },
+    "PokemonMansion2F": {
+      "location": "mansion",
+      "trainers": 1,
+      "wild": true
+    },
+    "PokemonMansion3F": {
+      "location": "mansion",
+      "trainers": 2,
+      "wild": true
+    },
+    "PokemonMansionB1F": {
+      "location": "mansion",
+      "trainers": 2,
+      "wild": true
+    },
+    "PokemonTower1F": {
+      "location": "tower",
+      "trainers": 0,
+      "wild": false
+    },
+    "PokemonTower2F": {
+      "location": "tower",
+      "trainers": 0,
+      "wild": false
+    },
+    "PokemonTower3F": {
+      "location": "tower",
+      "trainers": 3,
+      "wild": true
+    },
+    "PokemonTower4F": {
+      "location": "tower",
+      "trainers": 3,
+      "wild": true
+    },
+    "PokemonTower5F": {
+      "location": "tower",
+      "trainers": 4,
+      "wild": true
+    },
+    "PokemonTower6F": {
+      "location": "tower",
+      "trainers": 3,
+      "wild": true
+    },
+    "PokemonTower7F": {
+      "location": "tower",
+      "trainers": 0,
+      "wild": true
+    },
+    "PowerPlant": {
+      "location": "power-plant",
+      "trainers": 0,
+      "wild": true
+    },
+    "RedsHouse1F": {
+      "location": "pallet",
+      "trainers": 0,
+      "wild": false
+    },
+    "RedsHouse2F": {
+      "location": "pallet",
+      "trainers": 0,
+      "wild": false
+    },
+    "RockTunnel1F": {
+      "location": "rock-tunnel",
+      "trainers": 7,
+      "wild": true
+    },
+    "RockTunnelB1F": {
+      "location": "rock-tunnel",
+      "trainers": 8,
+      "wild": true
+    },
+    "RockTunnelPokecenter": {
+      "location": "route-10",
+      "trainers": 0,
+      "wild": false
+    },
+    "RocketHideoutB1F": {
+      "location": "hideout",
+      "trainers": 5,
+      "wild": false
+    },
+    "RocketHideoutB2F": {
+      "location": "hideout",
+      "trainers": 1,
+      "wild": false
+    },
+    "RocketHideoutB3F": {
+      "location": "hideout",
+      "trainers": 2,
+      "wild": false
+    },
+    "RocketHideoutB4F": {
+      "location": "hideout",
+      "trainers": 1,
+      "wild": false
+    },
+    "RocketHideoutElevator": {
+      "location": "hideout",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route1": {
+      "location": "route-1",
+      "trainers": 0,
+      "wild": true
+    },
+    "Route10": {
+      "location": "route-10",
+      "trainers": 6,
+      "wild": true
+    },
+    "Route11": {
+      "location": "route-11",
+      "trainers": 10,
+      "wild": true
+    },
+    "Route11Gate1F": {
+      "location": "route-11",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route11Gate2F": {
+      "location": "route-11",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route12": {
+      "location": "route-12",
+      "trainers": 7,
+      "wild": true
+    },
+    "Route12Gate1F": {
+      "location": "route-12",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route12Gate2F": {
+      "location": "route-12",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route12SuperRodHouse": {
+      "location": "route-12",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route13": {
+      "location": "route-13",
+      "trainers": 10,
+      "wild": true
+    },
+    "Route14": {
+      "location": "route-14",
+      "trainers": 10,
+      "wild": true
+    },
+    "Route15": {
+      "location": "route-15",
+      "trainers": 10,
+      "wild": true
+    },
+    "Route15Gate1F": {
+      "location": "route-15",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route15Gate2F": {
+      "location": "route-15",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route16": {
+      "location": "route-16",
+      "trainers": 6,
+      "wild": true
+    },
+    "Route16FlyHouse": {
+      "location": "route-16",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route16Gate1F": {
+      "location": "route-16",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route16Gate2F": {
+      "location": "route-16",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route17": {
+      "location": "route-17",
+      "trainers": 10,
+      "wild": true
+    },
+    "Route18": {
+      "location": "route-18",
+      "trainers": 3,
+      "wild": true
+    },
+    "Route18Gate1F": {
+      "location": "route-18",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route18Gate2F": {
+      "location": "route-18",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route19": {
+      "location": "route-19",
+      "trainers": 10,
+      "wild": true
+    },
+    "Route2": {
+      "location": "route-2",
+      "trainers": 0,
+      "wild": true
+    },
+    "Route20": {
+      "location": "route-20",
+      "trainers": 10,
+      "wild": true
+    },
+    "Route21": {
+      "location": "route-21",
+      "trainers": 9,
+      "wild": true
+    },
+    "Route22": {
+      "location": "route-22",
+      "trainers": 0,
+      "wild": true
+    },
+    "Route22Gate": {
+      "location": "route-22",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route23": {
+      "location": "route-23",
+      "trainers": 0,
+      "wild": true
+    },
+    "Route24": {
+      "location": "route-24",
+      "trainers": 7,
+      "wild": true
+    },
+    "Route25": {
+      "location": "route-25",
+      "trainers": 9,
+      "wild": true
+    },
+    "Route2Gate": {
+      "location": "route-2",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route2TradeHouse": {
+      "location": "route-2",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route3": {
+      "location": "route-3",
+      "trainers": 8,
+      "wild": true
+    },
+    "Route4": {
+      "location": "route-4",
+      "trainers": 1,
+      "wild": true
+    },
+    "Route5": {
+      "location": "route-5",
+      "trainers": 0,
+      "wild": true
+    },
+    "Route5Gate": {
+      "location": "route-5",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route6": {
+      "location": "route-6",
+      "trainers": 6,
+      "wild": true
+    },
+    "Route6Gate": {
+      "location": "route-6",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route7": {
+      "location": "route-7",
+      "trainers": 0,
+      "wild": true
+    },
+    "Route7Gate": {
+      "location": "route-7",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route8": {
+      "location": "route-8",
+      "trainers": 9,
+      "wild": true
+    },
+    "Route8Gate": {
+      "location": "route-8",
+      "trainers": 0,
+      "wild": false
+    },
+    "Route9": {
+      "location": "route-9",
+      "trainers": 9,
+      "wild": true
+    },
+    "SSAnne1F": {
+      "location": "ss-anne",
+      "trainers": 0,
+      "wild": false
+    },
+    "SSAnne1FRooms": {
+      "location": "ss-anne",
+      "trainers": 4,
+      "wild": false
+    },
+    "SSAnne2F": {
+      "location": "ss-anne",
+      "trainers": 0,
+      "wild": false
+    },
+    "SSAnne2FRooms": {
+      "location": "ss-anne",
+      "trainers": 4,
+      "wild": false
+    },
+    "SSAnne3F": {
+      "location": "ss-anne",
+      "trainers": 0,
+      "wild": false
+    },
+    "SSAnneB1F": {
+      "location": "ss-anne",
+      "trainers": 0,
+      "wild": false
+    },
+    "SSAnneB1FRooms": {
+      "location": "ss-anne",
+      "trainers": 6,
+      "wild": false
+    },
+    "SSAnneBow": {
+      "location": "ss-anne",
+      "trainers": 2,
+      "wild": false
+    },
+    "SSAnneCaptainsRoom": {
+      "location": "ss-anne",
+      "trainers": 0,
+      "wild": false
+    },
+    "SSAnneKitchen": {
+      "location": "ss-anne",
+      "trainers": 0,
+      "wild": false
+    },
+    "SafariZoneCenter": {
+      "location": "safari",
+      "trainers": 0,
+      "wild": true
+    },
+    "SafariZoneCenterRestHouse": {
+      "location": "safari",
+      "trainers": 0,
+      "wild": false
+    },
+    "SafariZoneEast": {
+      "location": "safari",
+      "trainers": 0,
+      "wild": true
+    },
+    "SafariZoneEastRestHouse": {
+      "location": "safari",
+      "trainers": 0,
+      "wild": false
+    },
+    "SafariZoneGate": {
+      "location": "safari",
+      "trainers": 0,
+      "wild": false
+    },
+    "SafariZoneNorth": {
+      "location": "safari",
+      "trainers": 0,
+      "wild": true
+    },
+    "SafariZoneNorthRestHouse": {
+      "location": "safari",
+      "trainers": 0,
+      "wild": false
+    },
+    "SafariZoneSecretHouse": {
+      "location": "safari",
+      "trainers": 0,
+      "wild": false
+    },
+    "SafariZoneWest": {
+      "location": "safari",
+      "trainers": 0,
+      "wild": true
+    },
+    "SafariZoneWestRestHouse": {
+      "location": "safari",
+      "trainers": 0,
+      "wild": false
+    },
+    "SaffronCity": {
+      "location": "saffron",
+      "trainers": 0,
+      "wild": false
+    },
+    "SaffronGym": {
+      "location": "gym:5",
+      "trainers": 7,
+      "wild": false
+    },
+    "SaffronMart": {
+      "location": "saffron",
+      "trainers": 0,
+      "wild": false
+    },
+    "SaffronPidgeyHouse": {
+      "location": "saffron",
+      "trainers": 0,
+      "wild": false
+    },
+    "SaffronPokecenter": {
+      "location": "saffron",
+      "trainers": 0,
+      "wild": false
+    },
+    "SeafoamIslands1F": {
+      "location": "seafoam",
+      "trainers": 0,
+      "wild": true
+    },
+    "SeafoamIslandsB1F": {
+      "location": "seafoam",
+      "trainers": 0,
+      "wild": true
+    },
+    "SeafoamIslandsB2F": {
+      "location": "seafoam",
+      "trainers": 0,
+      "wild": true
+    },
+    "SeafoamIslandsB3F": {
+      "location": "seafoam",
+      "trainers": 0,
+      "wild": true
+    },
+    "SeafoamIslandsB4F": {
+      "location": "seafoam",
+      "trainers": 0,
+      "wild": true
+    },
+    "SilphCo10F": {
+      "location": "silph",
+      "trainers": 2,
+      "wild": false
+    },
+    "SilphCo11F": {
+      "location": "silph",
+      "trainers": 1,
+      "wild": false
+    },
+    "SilphCo1F": {
+      "location": "silph",
+      "trainers": 0,
+      "wild": false
+    },
+    "SilphCo2F": {
+      "location": "silph",
+      "trainers": 4,
+      "wild": false
+    },
+    "SilphCo3F": {
+      "location": "silph",
+      "trainers": 2,
+      "wild": false
+    },
+    "SilphCo4F": {
+      "location": "silph",
+      "trainers": 3,
+      "wild": false
+    },
+    "SilphCo5F": {
+      "location": "silph",
+      "trainers": 4,
+      "wild": false
+    },
+    "SilphCo6F": {
+      "location": "silph",
+      "trainers": 3,
+      "wild": false
+    },
+    "SilphCo7F": {
+      "location": "silph",
+      "trainers": 4,
+      "wild": false
+    },
+    "SilphCo8F": {
+      "location": "silph",
+      "trainers": 3,
+      "wild": false
+    },
+    "SilphCo9F": {
+      "location": "silph",
+      "trainers": 3,
+      "wild": false
+    },
+    "SilphCoElevator": {
+      "location": "silph",
+      "trainers": 0,
+      "wild": false
+    },
+    "SummerBeachHouse": {
+      "location": "route-19",
+      "trainers": 0,
+      "wild": false
+    },
+    "TradeCenter": {
+      "location": null,
+      "trainers": 0,
+      "wild": false
+    },
+    "UndergroundPathNorthSouth": {
+      "location": "route-6",
+      "trainers": 0,
+      "wild": false
+    },
+    "UndergroundPathRoute5": {
+      "location": "route-5",
+      "trainers": 0,
+      "wild": false
+    },
+    "UndergroundPathRoute6": {
+      "location": "route-6",
+      "trainers": 0,
+      "wild": false
+    },
+    "UndergroundPathRoute7": {
+      "location": "route-7",
+      "trainers": 0,
+      "wild": false
+    },
+    "UndergroundPathRoute7Copy": {
+      "location": "route-7",
+      "trainers": 0,
+      "wild": false
+    },
+    "UndergroundPathRoute8": {
+      "location": "route-8",
+      "trainers": 0,
+      "wild": false
+    },
+    "UndergroundPathWestEast": {
+      "location": "route-7",
+      "trainers": 0,
+      "wild": false
+    },
+    "VermilionCity": {
+      "location": "vermilion",
+      "trainers": 0,
+      "wild": false
+    },
+    "VermilionDock": {
+      "location": "vermilion",
+      "trainers": 0,
+      "wild": false
+    },
+    "VermilionGym": {
+      "location": "gym:2",
+      "trainers": 3,
+      "wild": false
+    },
+    "VermilionMart": {
+      "location": "vermilion",
+      "trainers": 0,
+      "wild": false
+    },
+    "VermilionOldRodHouse": {
+      "location": "vermilion",
+      "trainers": 0,
+      "wild": false
+    },
+    "VermilionPidgeyHouse": {
+      "location": "vermilion",
+      "trainers": 0,
+      "wild": false
+    },
+    "VermilionPokecenter": {
+      "location": "vermilion",
+      "trainers": 0,
+      "wild": false
+    },
+    "VermilionTradeHouse": {
+      "location": "vermilion",
+      "trainers": 0,
+      "wild": false
+    },
+    "VictoryRoad1F": {
+      "location": "victory-road",
+      "trainers": 2,
+      "wild": true
+    },
+    "VictoryRoad2F": {
+      "location": "victory-road",
+      "trainers": 5,
+      "wild": true
+    },
+    "VictoryRoad3F": {
+      "location": "victory-road",
+      "trainers": 4,
+      "wild": true
+    },
+    "ViridianCity": {
+      "location": "viridian",
+      "trainers": 0,
+      "wild": false
+    },
+    "ViridianForest": {
+      "location": "forest",
+      "trainers": 5,
+      "wild": true
+    },
+    "ViridianForestNorthGate": {
+      "location": "viridian",
+      "trainers": 0,
+      "wild": false
+    },
+    "ViridianForestSouthGate": {
+      "location": "viridian",
+      "trainers": 0,
+      "wild": false
+    },
+    "ViridianGym": {
+      "location": "gym:7",
+      "trainers": 8,
+      "wild": false
+    },
+    "ViridianMart": {
+      "location": "viridian",
+      "trainers": 0,
+      "wild": false
+    },
+    "ViridianNicknameHouse": {
+      "location": "viridian",
+      "trainers": 0,
+      "wild": false
+    },
+    "ViridianPokecenter": {
+      "location": "viridian",
+      "trainers": 0,
+      "wild": false
+    },
+    "ViridianSchoolHouse": {
+      "location": "viridian",
+      "trainers": 0,
+      "wild": false
+    },
+    "WardensHouse": {
+      "location": "fuchsia",
+      "trainers": 0,
+      "wild": false
+    }
+  },
+  "trainers": [
+    {
+      "id": "k-npc-celadongym-1",
+      "location": "gym:3",
+      "map": "CeladonGym",
+      "event": "TEXT_CELADONGYM_COOLTRAINER_F1",
+      "x": 2,
+      "y": 11,
+      "class": "LASS",
+      "partyIndex": 17,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": false,
+      "team": [
+        {
+          "id": 69,
+          "level": 23
+        },
+        {
+          "id": 70,
+          "level": 23
+        }
+      ]
+    },
+    {
+      "id": "k-npc-celadongym-2",
+      "location": "gym:3",
+      "map": "CeladonGym",
+      "event": "TEXT_CELADONGYM_BEAUTY1",
+      "x": 7,
+      "y": 10,
+      "class": "BEAUTY",
+      "partyIndex": 1,
+      "name": "아름다운 아가씨",
+      "sprite": "beauty",
+      "automatic": false,
+      "team": [
+        {
+          "id": 43,
+          "level": 21
+        },
+        {
+          "id": 69,
+          "level": 21
+        },
+        {
+          "id": 43,
+          "level": 21
+        },
+        {
+          "id": 69,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-celadongym-3",
+      "location": "gym:3",
+      "map": "CeladonGym",
+      "event": "TEXT_CELADONGYM_COOLTRAINER_F2",
+      "x": 9,
+      "y": 5,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 11,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": false,
+      "team": [
+        {
+          "id": 1,
+          "level": 24
+        },
+        {
+          "id": 2,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-celadongym-4",
+      "location": "gym:3",
+      "map": "CeladonGym",
+      "event": "TEXT_CELADONGYM_BEAUTY2",
+      "x": 1,
+      "y": 5,
+      "class": "BEAUTY",
+      "partyIndex": 2,
+      "name": "아름다운 아가씨",
+      "sprite": "beauty",
+      "automatic": false,
+      "team": [
+        {
+          "id": 69,
+          "level": 24
+        },
+        {
+          "id": 69,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-celadongym-5",
+      "location": "gym:3",
+      "map": "CeladonGym",
+      "event": "TEXT_CELADONGYM_COOLTRAINER_F3",
+      "x": 6,
+      "y": 3,
+      "class": "LASS",
+      "partyIndex": 18,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": false,
+      "team": [
+        {
+          "id": 43,
+          "level": 23
+        },
+        {
+          "id": 44,
+          "level": 23
+        }
+      ]
+    },
+    {
+      "id": "k-npc-celadongym-6",
+      "location": "gym:3",
+      "map": "CeladonGym",
+      "event": "TEXT_CELADONGYM_BEAUTY3",
+      "x": 3,
+      "y": 3,
+      "class": "BEAUTY",
+      "partyIndex": 3,
+      "name": "아름다운 아가씨",
+      "sprite": "beauty",
+      "automatic": false,
+      "team": [
+        {
+          "id": 102,
+          "level": 26
+        }
+      ]
+    },
+    {
+      "id": "k-npc-celadongym-7",
+      "location": "gym:3",
+      "map": "CeladonGym",
+      "event": "TEXT_CELADONGYM_COOLTRAINER_F4",
+      "x": 5,
+      "y": 3,
+      "class": "COOLTRAINER_F",
+      "partyIndex": 1,
+      "name": "엘리트 트레이너",
+      "sprite": "cooltrainer-f",
+      "automatic": false,
+      "team": [
+        {
+          "id": 70,
+          "level": 24
+        },
+        {
+          "id": 44,
+          "level": 24
+        },
+        {
+          "id": 2,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ceruleancity-1",
+      "location": "cerulean",
+      "map": "CeruleanCity",
+      "event": "TEXT_CERULEANCITY_ROCKET",
+      "x": 30,
+      "y": 8,
+      "class": "ROCKET",
+      "partyIndex": 5,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 66,
+          "level": 17
+        },
+        {
+          "id": 96,
+          "level": 17
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ceruleangym-1",
+      "location": "gym:1",
+      "map": "CeruleanGym",
+      "event": "TEXT_CERULEANGYM_COOLTRAINER_F",
+      "x": 2,
+      "y": 3,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 1,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": false,
+      "team": [
+        {
+          "id": 118,
+          "level": 19
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ceruleangym-2",
+      "location": "gym:1",
+      "map": "CeruleanGym",
+      "event": "TEXT_CERULEANGYM_SWIMMER",
+      "x": 8,
+      "y": 7,
+      "class": "SWIMMER",
+      "partyIndex": 1,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": false,
+      "team": [
+        {
+          "id": 116,
+          "level": 16
+        },
+        {
+          "id": 90,
+          "level": 16
+        }
+      ]
+    },
+    {
+      "id": "k-npc-cinnabargym-1",
+      "location": "gym:6",
+      "map": "CinnabarGym",
+      "event": "TEXT_CINNABARGYM_SUPER_NERD1",
+      "x": 17,
+      "y": 2,
+      "class": "SUPER_NERD",
+      "partyIndex": 9,
+      "name": "이과계 남자",
+      "sprite": "super-nerd",
+      "automatic": false,
+      "team": [
+        {
+          "id": 37,
+          "level": 36
+        },
+        {
+          "id": 37,
+          "level": 36
+        },
+        {
+          "id": 38,
+          "level": 36
+        }
+      ]
+    },
+    {
+      "id": "k-npc-cinnabargym-2",
+      "location": "gym:6",
+      "map": "CinnabarGym",
+      "event": "TEXT_CINNABARGYM_SUPER_NERD2",
+      "x": 17,
+      "y": 8,
+      "class": "BURGLAR",
+      "partyIndex": 4,
+      "name": "도둑",
+      "sprite": "burglar",
+      "automatic": false,
+      "team": [
+        {
+          "id": 58,
+          "level": 36
+        },
+        {
+          "id": 37,
+          "level": 36
+        },
+        {
+          "id": 38,
+          "level": 36
+        }
+      ]
+    },
+    {
+      "id": "k-npc-cinnabargym-3",
+      "location": "gym:6",
+      "map": "CinnabarGym",
+      "event": "TEXT_CINNABARGYM_SUPER_NERD3",
+      "x": 11,
+      "y": 4,
+      "class": "SUPER_NERD",
+      "partyIndex": 10,
+      "name": "이과계 남자",
+      "sprite": "super-nerd",
+      "automatic": false,
+      "team": [
+        {
+          "id": 77,
+          "level": 34
+        },
+        {
+          "id": 4,
+          "level": 34
+        },
+        {
+          "id": 37,
+          "level": 34
+        },
+        {
+          "id": 58,
+          "level": 34
+        }
+      ]
+    },
+    {
+      "id": "k-npc-cinnabargym-4",
+      "location": "gym:6",
+      "map": "CinnabarGym",
+      "event": "TEXT_CINNABARGYM_SUPER_NERD4",
+      "x": 11,
+      "y": 8,
+      "class": "BURGLAR",
+      "partyIndex": 5,
+      "name": "도둑",
+      "sprite": "burglar",
+      "automatic": false,
+      "team": [
+        {
+          "id": 77,
+          "level": 41
+        }
+      ]
+    },
+    {
+      "id": "k-npc-cinnabargym-5",
+      "location": "gym:6",
+      "map": "CinnabarGym",
+      "event": "TEXT_CINNABARGYM_SUPER_NERD5",
+      "x": 11,
+      "y": 14,
+      "class": "SUPER_NERD",
+      "partyIndex": 11,
+      "name": "이과계 남자",
+      "sprite": "super-nerd",
+      "automatic": false,
+      "team": [
+        {
+          "id": 78,
+          "level": 41
+        }
+      ]
+    },
+    {
+      "id": "k-npc-cinnabargym-6",
+      "location": "gym:6",
+      "map": "CinnabarGym",
+      "event": "TEXT_CINNABARGYM_SUPER_NERD6",
+      "x": 3,
+      "y": 14,
+      "class": "BURGLAR",
+      "partyIndex": 6,
+      "name": "도둑",
+      "sprite": "burglar",
+      "automatic": false,
+      "team": [
+        {
+          "id": 37,
+          "level": 37
+        },
+        {
+          "id": 58,
+          "level": 37
+        }
+      ]
+    },
+    {
+      "id": "k-npc-cinnabargym-7",
+      "location": "gym:6",
+      "map": "CinnabarGym",
+      "event": "TEXT_CINNABARGYM_SUPER_NERD7",
+      "x": 3,
+      "y": 8,
+      "class": "SUPER_NERD",
+      "partyIndex": 12,
+      "name": "이과계 남자",
+      "sprite": "super-nerd",
+      "automatic": false,
+      "team": [
+        {
+          "id": 58,
+          "level": 37
+        },
+        {
+          "id": 37,
+          "level": 37
+        }
+      ]
+    },
+    {
+      "id": "k-npc-fightingdojo-1",
+      "location": "saffron",
+      "map": "FightingDojo",
+      "event": "TEXT_FIGHTINGDOJO_KARATE_MASTER",
+      "x": 5,
+      "y": 3,
+      "class": "BLACKBELT",
+      "partyIndex": 1,
+      "name": "태권왕",
+      "sprite": "black-belt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 106,
+          "level": 37
+        },
+        {
+          "id": 107,
+          "level": 37
+        }
+      ]
+    },
+    {
+      "id": "k-npc-fightingdojo-2",
+      "location": "saffron",
+      "map": "FightingDojo",
+      "event": "TEXT_FIGHTINGDOJO_BLACKBELT1",
+      "x": 3,
+      "y": 4,
+      "class": "BLACKBELT",
+      "partyIndex": 2,
+      "name": "태권왕",
+      "sprite": "black-belt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 56,
+          "level": 31
+        },
+        {
+          "id": 56,
+          "level": 31
+        },
+        {
+          "id": 57,
+          "level": 31
+        }
+      ]
+    },
+    {
+      "id": "k-npc-fightingdojo-3",
+      "location": "saffron",
+      "map": "FightingDojo",
+      "event": "TEXT_FIGHTINGDOJO_BLACKBELT2",
+      "x": 3,
+      "y": 6,
+      "class": "BLACKBELT",
+      "partyIndex": 3,
+      "name": "태권왕",
+      "sprite": "black-belt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 66,
+          "level": 32
+        },
+        {
+          "id": 67,
+          "level": 32
+        }
+      ]
+    },
+    {
+      "id": "k-npc-fightingdojo-4",
+      "location": "saffron",
+      "map": "FightingDojo",
+      "event": "TEXT_FIGHTINGDOJO_BLACKBELT3",
+      "x": 5,
+      "y": 5,
+      "class": "BLACKBELT",
+      "partyIndex": 4,
+      "name": "태권왕",
+      "sprite": "black-belt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 57,
+          "level": 36
+        }
+      ]
+    },
+    {
+      "id": "k-npc-fightingdojo-5",
+      "location": "saffron",
+      "map": "FightingDojo",
+      "event": "TEXT_FIGHTINGDOJO_BLACKBELT4",
+      "x": 5,
+      "y": 7,
+      "class": "BLACKBELT",
+      "partyIndex": 5,
+      "name": "태권왕",
+      "sprite": "black-belt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 66,
+          "level": 31
+        },
+        {
+          "id": 56,
+          "level": 31
+        },
+        {
+          "id": 57,
+          "level": 31
+        }
+      ]
+    },
+    {
+      "id": "k-npc-fuchsiagym-1",
+      "location": "gym:4",
+      "map": "FuchsiaGym",
+      "event": "TEXT_FUCHSIAGYM_ROCKER1",
+      "x": 8,
+      "y": 13,
+      "class": "JUGGLER",
+      "partyIndex": 7,
+      "name": "저글러",
+      "sprite": "juggler",
+      "automatic": false,
+      "team": [
+        {
+          "id": 97,
+          "level": 38
+        }
+      ]
+    },
+    {
+      "id": "k-npc-fuchsiagym-2",
+      "location": "gym:4",
+      "map": "FuchsiaGym",
+      "event": "TEXT_FUCHSIAGYM_ROCKER2",
+      "x": 7,
+      "y": 8,
+      "class": "JUGGLER",
+      "partyIndex": 3,
+      "name": "저글러",
+      "sprite": "juggler",
+      "automatic": false,
+      "team": [
+        {
+          "id": 96,
+          "level": 31
+        },
+        {
+          "id": 96,
+          "level": 31
+        },
+        {
+          "id": 64,
+          "level": 31
+        },
+        {
+          "id": 96,
+          "level": 31
+        }
+      ]
+    },
+    {
+      "id": "k-npc-fuchsiagym-3",
+      "location": "gym:4",
+      "map": "FuchsiaGym",
+      "event": "TEXT_FUCHSIAGYM_ROCKER3",
+      "x": 1,
+      "y": 12,
+      "class": "JUGGLER",
+      "partyIndex": 8,
+      "name": "저글러",
+      "sprite": "juggler",
+      "automatic": false,
+      "team": [
+        {
+          "id": 96,
+          "level": 34
+        },
+        {
+          "id": 64,
+          "level": 34
+        }
+      ]
+    },
+    {
+      "id": "k-npc-fuchsiagym-4",
+      "location": "gym:4",
+      "map": "FuchsiaGym",
+      "event": "TEXT_FUCHSIAGYM_ROCKER4",
+      "x": 3,
+      "y": 5,
+      "class": "TAMER",
+      "partyIndex": 1,
+      "name": "조련사",
+      "sprite": "tamer",
+      "automatic": false,
+      "team": [
+        {
+          "id": 28,
+          "level": 34
+        },
+        {
+          "id": 24,
+          "level": 34
+        }
+      ]
+    },
+    {
+      "id": "k-npc-fuchsiagym-5",
+      "location": "gym:4",
+      "map": "FuchsiaGym",
+      "event": "TEXT_FUCHSIAGYM_ROCKER5",
+      "x": 8,
+      "y": 2,
+      "class": "TAMER",
+      "partyIndex": 2,
+      "name": "조련사",
+      "sprite": "tamer",
+      "automatic": false,
+      "team": [
+        {
+          "id": 24,
+          "level": 33
+        },
+        {
+          "id": 28,
+          "level": 33
+        },
+        {
+          "id": 24,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-fuchsiagym-6",
+      "location": "gym:4",
+      "map": "FuchsiaGym",
+      "event": "TEXT_FUCHSIAGYM_ROCKER6",
+      "x": 2,
+      "y": 7,
+      "class": "JUGGLER",
+      "partyIndex": 4,
+      "name": "저글러",
+      "sprite": "juggler",
+      "automatic": false,
+      "team": [
+        {
+          "id": 96,
+          "level": 34
+        },
+        {
+          "id": 97,
+          "level": 34
+        }
+      ]
+    },
+    {
+      "id": "k-npc-gamecorner-1",
+      "location": "hideout",
+      "map": "GameCorner",
+      "event": "TEXT_GAMECORNER_ROCKET",
+      "x": 9,
+      "y": 5,
+      "class": "ROCKET",
+      "partyIndex": 7,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 20,
+          "level": 20
+        },
+        {
+          "id": 41,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-mtmoon1f-1",
+      "location": "mt-moon",
+      "map": "MtMoon1F",
+      "event": "TEXT_MTMOON1F_HIKER",
+      "x": 5,
+      "y": 6,
+      "class": "HIKER",
+      "partyIndex": 1,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 74,
+          "level": 10
+        },
+        {
+          "id": 74,
+          "level": 10
+        },
+        {
+          "id": 95,
+          "level": 10
+        }
+      ]
+    },
+    {
+      "id": "k-npc-mtmoon1f-2",
+      "location": "mt-moon",
+      "map": "MtMoon1F",
+      "event": "TEXT_MTMOON1F_YOUNGSTER1",
+      "x": 12,
+      "y": 16,
+      "class": "YOUNGSTER",
+      "partyIndex": 3,
+      "name": "반바지 꼬마",
+      "sprite": "youngster",
+      "automatic": true,
+      "team": [
+        {
+          "id": 19,
+          "level": 10
+        },
+        {
+          "id": 19,
+          "level": 10
+        },
+        {
+          "id": 41,
+          "level": 10
+        }
+      ]
+    },
+    {
+      "id": "k-npc-mtmoon1f-3",
+      "location": "mt-moon",
+      "map": "MtMoon1F",
+      "event": "TEXT_MTMOON1F_COOLTRAINER_F1",
+      "x": 30,
+      "y": 4,
+      "class": "LASS",
+      "partyIndex": 5,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 43,
+          "level": 11
+        },
+        {
+          "id": 69,
+          "level": 11
+        }
+      ]
+    },
+    {
+      "id": "k-npc-mtmoon1f-4",
+      "location": "mt-moon",
+      "map": "MtMoon1F",
+      "event": "TEXT_MTMOON1F_SUPER_NERD",
+      "x": 24,
+      "y": 31,
+      "class": "SUPER_NERD",
+      "partyIndex": 1,
+      "name": "이과계 남자",
+      "sprite": "super-nerd",
+      "automatic": true,
+      "team": [
+        {
+          "id": 81,
+          "level": 11
+        },
+        {
+          "id": 100,
+          "level": 11
+        }
+      ]
+    },
+    {
+      "id": "k-npc-mtmoon1f-5",
+      "location": "mt-moon",
+      "map": "MtMoon1F",
+      "event": "TEXT_MTMOON1F_COOLTRAINER_F2",
+      "x": 16,
+      "y": 23,
+      "class": "LASS",
+      "partyIndex": 6,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 35,
+          "level": 14
+        }
+      ]
+    },
+    {
+      "id": "k-npc-mtmoon1f-6",
+      "location": "mt-moon",
+      "map": "MtMoon1F",
+      "event": "TEXT_MTMOON1F_YOUNGSTER2",
+      "x": 7,
+      "y": 22,
+      "class": "BUG_CATCHER",
+      "partyIndex": 7,
+      "name": "곤충채집 소년",
+      "sprite": "bug-catcher",
+      "automatic": true,
+      "team": [
+        {
+          "id": 13,
+          "level": 11
+        },
+        {
+          "id": 14,
+          "level": 11
+        }
+      ]
+    },
+    {
+      "id": "k-npc-mtmoon1f-7",
+      "location": "mt-moon",
+      "map": "MtMoon1F",
+      "event": "TEXT_MTMOON1F_YOUNGSTER3",
+      "x": 30,
+      "y": 27,
+      "class": "BUG_CATCHER",
+      "partyIndex": 8,
+      "name": "곤충채집 소년",
+      "sprite": "bug-catcher",
+      "automatic": true,
+      "team": [
+        {
+          "id": 10,
+          "level": 10
+        },
+        {
+          "id": 11,
+          "level": 10
+        },
+        {
+          "id": 10,
+          "level": 10
+        }
+      ]
+    },
+    {
+      "id": "k-npc-mtmoonb2f-1",
+      "location": "mt-moon",
+      "map": "MtMoonB2F",
+      "event": "TEXT_MTMOONB2F_SUPER_NERD",
+      "x": 12,
+      "y": 8,
+      "class": "SUPER_NERD",
+      "partyIndex": 2,
+      "name": "이과계 남자",
+      "sprite": "super-nerd",
+      "automatic": true,
+      "team": [
+        {
+          "id": 88,
+          "level": 12
+        },
+        {
+          "id": 100,
+          "level": 12
+        },
+        {
+          "id": 109,
+          "level": 12
+        }
+      ]
+    },
+    {
+      "id": "k-npc-mtmoonb2f-2",
+      "location": "mt-moon",
+      "map": "MtMoonB2F",
+      "event": "TEXT_MTMOONB2F_ROCKET1",
+      "x": 15,
+      "y": 22,
+      "class": "ROCKET",
+      "partyIndex": 2,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": true,
+      "team": [
+        {
+          "id": 27,
+          "level": 11
+        },
+        {
+          "id": 19,
+          "level": 11
+        },
+        {
+          "id": 41,
+          "level": 11
+        }
+      ]
+    },
+    {
+      "id": "k-npc-mtmoonb2f-3",
+      "location": "mt-moon",
+      "map": "MtMoonB2F",
+      "event": "TEXT_MTMOONB2F_ROCKET2",
+      "x": 29,
+      "y": 11,
+      "class": "ROCKET",
+      "partyIndex": 3,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": true,
+      "team": [
+        {
+          "id": 41,
+          "level": 12
+        },
+        {
+          "id": 23,
+          "level": 12
+        }
+      ]
+    },
+    {
+      "id": "k-npc-mtmoonb2f-4",
+      "location": "mt-moon",
+      "map": "MtMoonB2F",
+      "event": "TEXT_MTMOONB2F_ROCKET3",
+      "x": 29,
+      "y": 17,
+      "class": "ROCKET",
+      "partyIndex": 1,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": true,
+      "team": [
+        {
+          "id": 19,
+          "level": 13
+        },
+        {
+          "id": 41,
+          "level": 13
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pewtergym-1",
+      "location": "gym:0",
+      "map": "PewterGym",
+      "event": "TEXT_PEWTERGYM_COOLTRAINER_M",
+      "x": 3,
+      "y": 6,
+      "class": "JR_TRAINER_M",
+      "partyIndex": 1,
+      "name": "보이스카우트",
+      "sprite": "camper",
+      "automatic": false,
+      "team": [
+        {
+          "id": 50,
+          "level": 9
+        },
+        {
+          "id": 27,
+          "level": 9
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemonmansion1f-1",
+      "location": "mansion",
+      "map": "PokemonMansion1F",
+      "event": "TEXT_POKEMONMANSION1F_SCIENTIST",
+      "x": 17,
+      "y": 17,
+      "class": "SCIENTIST",
+      "partyIndex": 4,
+      "name": "연구원",
+      "sprite": "scientist",
+      "automatic": true,
+      "team": [
+        {
+          "id": 101,
+          "level": 29
+        },
+        {
+          "id": 110,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemonmansion2f-1",
+      "location": "mansion",
+      "map": "PokemonMansion2F",
+      "event": "TEXT_POKEMONMANSION2F_SUPER_NERD",
+      "x": 3,
+      "y": 17,
+      "class": "BURGLAR",
+      "partyIndex": 7,
+      "name": "도둑",
+      "sprite": "burglar",
+      "automatic": true,
+      "team": [
+        {
+          "id": 4,
+          "level": 34
+        },
+        {
+          "id": 5,
+          "level": 34
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemonmansion3f-1",
+      "location": "mansion",
+      "map": "PokemonMansion3F",
+      "event": "TEXT_POKEMONMANSION3F_SUPER_NERD",
+      "x": 5,
+      "y": 11,
+      "class": "BURGLAR",
+      "partyIndex": 8,
+      "name": "도둑",
+      "sprite": "burglar",
+      "automatic": true,
+      "team": [
+        {
+          "id": 38,
+          "level": 38
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemonmansion3f-2",
+      "location": "mansion",
+      "map": "PokemonMansion3F",
+      "event": "TEXT_POKEMONMANSION3F_SCIENTIST",
+      "x": 20,
+      "y": 11,
+      "class": "SCIENTIST",
+      "partyIndex": 12,
+      "name": "연구원",
+      "sprite": "scientist",
+      "automatic": true,
+      "team": [
+        {
+          "id": 81,
+          "level": 33
+        },
+        {
+          "id": 82,
+          "level": 33
+        },
+        {
+          "id": 100,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemonmansionb1f-1",
+      "location": "mansion",
+      "map": "PokemonMansionB1F",
+      "event": "TEXT_POKEMONMANSIONB1F_BURGLAR",
+      "x": 16,
+      "y": 23,
+      "class": "BURGLAR",
+      "partyIndex": 9,
+      "name": "도둑",
+      "sprite": "burglar",
+      "automatic": true,
+      "team": [
+        {
+          "id": 58,
+          "level": 34
+        },
+        {
+          "id": 77,
+          "level": 34
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemonmansionb1f-2",
+      "location": "mansion",
+      "map": "PokemonMansionB1F",
+      "event": "TEXT_POKEMONMANSIONB1F_SCIENTIST",
+      "x": 27,
+      "y": 11,
+      "class": "SCIENTIST",
+      "partyIndex": 13,
+      "name": "연구원",
+      "sprite": "scientist",
+      "automatic": true,
+      "team": [
+        {
+          "id": 81,
+          "level": 34
+        },
+        {
+          "id": 101,
+          "level": 34
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemontower3f-1",
+      "location": "tower",
+      "map": "PokemonTower3F",
+      "event": "TEXT_POKEMONTOWER3F_CHANNELER1",
+      "x": 12,
+      "y": 3,
+      "class": "CHANNELER",
+      "partyIndex": 5,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 92,
+          "level": 23
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemontower3f-2",
+      "location": "tower",
+      "map": "PokemonTower3F",
+      "event": "TEXT_POKEMONTOWER3F_CHANNELER2",
+      "x": 9,
+      "y": 8,
+      "class": "CHANNELER",
+      "partyIndex": 6,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 92,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemontower3f-3",
+      "location": "tower",
+      "map": "PokemonTower3F",
+      "event": "TEXT_POKEMONTOWER3F_CHANNELER3",
+      "x": 10,
+      "y": 13,
+      "class": "CHANNELER",
+      "partyIndex": 8,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 92,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemontower4f-1",
+      "location": "tower",
+      "map": "PokemonTower4F",
+      "event": "TEXT_POKEMONTOWER4F_CHANNELER1",
+      "x": 5,
+      "y": 10,
+      "class": "CHANNELER",
+      "partyIndex": 9,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 92,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemontower4f-2",
+      "location": "tower",
+      "map": "PokemonTower4F",
+      "event": "TEXT_POKEMONTOWER4F_CHANNELER2",
+      "x": 15,
+      "y": 7,
+      "class": "CHANNELER",
+      "partyIndex": 10,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 92,
+          "level": 23
+        },
+        {
+          "id": 92,
+          "level": 23
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemontower4f-3",
+      "location": "tower",
+      "map": "PokemonTower4F",
+      "event": "TEXT_POKEMONTOWER4F_CHANNELER3",
+      "x": 14,
+      "y": 12,
+      "class": "CHANNELER",
+      "partyIndex": 12,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 92,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemontower5f-1",
+      "location": "tower",
+      "map": "PokemonTower5F",
+      "event": "TEXT_POKEMONTOWER5F_CHANNELER2",
+      "x": 17,
+      "y": 7,
+      "class": "CHANNELER",
+      "partyIndex": 14,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 93,
+          "level": 23
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemontower5f-2",
+      "location": "tower",
+      "map": "PokemonTower5F",
+      "event": "TEXT_POKEMONTOWER5F_CHANNELER3",
+      "x": 14,
+      "y": 3,
+      "class": "CHANNELER",
+      "partyIndex": 16,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 92,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemontower5f-3",
+      "location": "tower",
+      "map": "PokemonTower5F",
+      "event": "TEXT_POKEMONTOWER5F_CHANNELER4",
+      "x": 6,
+      "y": 10,
+      "class": "CHANNELER",
+      "partyIndex": 17,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 92,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemontower5f-4",
+      "location": "tower",
+      "map": "PokemonTower5F",
+      "event": "TEXT_POKEMONTOWER5F_CHANNELER5",
+      "x": 9,
+      "y": 16,
+      "class": "CHANNELER",
+      "partyIndex": 18,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 93,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemontower6f-1",
+      "location": "tower",
+      "map": "PokemonTower6F",
+      "event": "TEXT_POKEMONTOWER6F_CHANNELER1",
+      "x": 12,
+      "y": 10,
+      "class": "CHANNELER",
+      "partyIndex": 19,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 92,
+          "level": 22
+        },
+        {
+          "id": 92,
+          "level": 22
+        },
+        {
+          "id": 92,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemontower6f-2",
+      "location": "tower",
+      "map": "PokemonTower6F",
+      "event": "TEXT_POKEMONTOWER6F_CHANNELER2",
+      "x": 9,
+      "y": 5,
+      "class": "CHANNELER",
+      "partyIndex": 20,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 92,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-pokemontower6f-3",
+      "location": "tower",
+      "map": "PokemonTower6F",
+      "event": "TEXT_POKEMONTOWER6F_CHANNELER3",
+      "x": 16,
+      "y": 5,
+      "class": "CHANNELER",
+      "partyIndex": 21,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 92,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnel1f-1",
+      "location": "rock-tunnel",
+      "map": "RockTunnel1F",
+      "event": "TEXT_ROCKTUNNEL1F_HIKER1",
+      "x": 7,
+      "y": 5,
+      "class": "HIKER",
+      "partyIndex": 12,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 74,
+          "level": 19
+        },
+        {
+          "id": 66,
+          "level": 19
+        },
+        {
+          "id": 74,
+          "level": 19
+        },
+        {
+          "id": 74,
+          "level": 19
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnel1f-2",
+      "location": "rock-tunnel",
+      "map": "RockTunnel1F",
+      "event": "TEXT_ROCKTUNNEL1F_HIKER2",
+      "x": 5,
+      "y": 16,
+      "class": "HIKER",
+      "partyIndex": 13,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 95,
+          "level": 20
+        },
+        {
+          "id": 95,
+          "level": 20
+        },
+        {
+          "id": 74,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnel1f-3",
+      "location": "rock-tunnel",
+      "map": "RockTunnel1F",
+      "event": "TEXT_ROCKTUNNEL1F_HIKER3",
+      "x": 17,
+      "y": 15,
+      "class": "HIKER",
+      "partyIndex": 14,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 74,
+          "level": 21
+        },
+        {
+          "id": 75,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnel1f-4",
+      "location": "rock-tunnel",
+      "map": "RockTunnel1F",
+      "event": "TEXT_ROCKTUNNEL1F_SUPER_NERD",
+      "x": 23,
+      "y": 8,
+      "class": "POKEMANIAC",
+      "partyIndex": 7,
+      "name": "포켓몬 마니아",
+      "sprite": "pokemaniac",
+      "automatic": true,
+      "team": [
+        {
+          "id": 104,
+          "level": 23
+        },
+        {
+          "id": 79,
+          "level": 23
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnel1f-5",
+      "location": "rock-tunnel",
+      "map": "RockTunnel1F",
+      "event": "TEXT_ROCKTUNNEL1F_COOLTRAINER_F1",
+      "x": 37,
+      "y": 21,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 17,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 69,
+          "level": 22
+        },
+        {
+          "id": 35,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnel1f-6",
+      "location": "rock-tunnel",
+      "map": "RockTunnel1F",
+      "event": "TEXT_ROCKTUNNEL1F_COOLTRAINER_F2",
+      "x": 22,
+      "y": 24,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 18,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 52,
+          "level": 20
+        },
+        {
+          "id": 43,
+          "level": 20
+        },
+        {
+          "id": 16,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnel1f-7",
+      "location": "rock-tunnel",
+      "map": "RockTunnel1F",
+      "event": "TEXT_ROCKTUNNEL1F_COOLTRAINER_F3",
+      "x": 32,
+      "y": 24,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 19,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 16,
+          "level": 19
+        },
+        {
+          "id": 19,
+          "level": 19
+        },
+        {
+          "id": 19,
+          "level": 19
+        },
+        {
+          "id": 69,
+          "level": 19
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnelb1f-1",
+      "location": "rock-tunnel",
+      "map": "RockTunnelB1F",
+      "event": "TEXT_ROCKTUNNELB1F_COOLTRAINER_F1",
+      "x": 11,
+      "y": 13,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 9,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 39,
+          "level": 21
+        },
+        {
+          "id": 16,
+          "level": 21
+        },
+        {
+          "id": 52,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnelb1f-2",
+      "location": "rock-tunnel",
+      "map": "RockTunnelB1F",
+      "event": "TEXT_ROCKTUNNELB1F_HIKER1",
+      "x": 6,
+      "y": 10,
+      "class": "HIKER",
+      "partyIndex": 9,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 74,
+          "level": 21
+        },
+        {
+          "id": 74,
+          "level": 21
+        },
+        {
+          "id": 75,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnelb1f-3",
+      "location": "rock-tunnel",
+      "map": "RockTunnelB1F",
+      "event": "TEXT_ROCKTUNNELB1F_SUPER_NERD1",
+      "x": 3,
+      "y": 5,
+      "class": "POKEMANIAC",
+      "partyIndex": 3,
+      "name": "포켓몬 마니아",
+      "sprite": "pokemaniac",
+      "automatic": true,
+      "team": [
+        {
+          "id": 79,
+          "level": 20
+        },
+        {
+          "id": 79,
+          "level": 20
+        },
+        {
+          "id": 79,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnelb1f-4",
+      "location": "rock-tunnel",
+      "map": "RockTunnelB1F",
+      "event": "TEXT_ROCKTUNNELB1F_SUPER_NERD2",
+      "x": 20,
+      "y": 21,
+      "class": "POKEMANIAC",
+      "partyIndex": 4,
+      "name": "포켓몬 마니아",
+      "sprite": "pokemaniac",
+      "automatic": true,
+      "team": [
+        {
+          "id": 4,
+          "level": 22
+        },
+        {
+          "id": 104,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnelb1f-5",
+      "location": "rock-tunnel",
+      "map": "RockTunnelB1F",
+      "event": "TEXT_ROCKTUNNELB1F_HIKER2",
+      "x": 30,
+      "y": 10,
+      "class": "HIKER",
+      "partyIndex": 10,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 74,
+          "level": 25
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnelb1f-6",
+      "location": "rock-tunnel",
+      "map": "RockTunnelB1F",
+      "event": "TEXT_ROCKTUNNELB1F_COOLTRAINER_F2",
+      "x": 14,
+      "y": 28,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 10,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 43,
+          "level": 22
+        },
+        {
+          "id": 1,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnelb1f-7",
+      "location": "rock-tunnel",
+      "map": "RockTunnelB1F",
+      "event": "TEXT_ROCKTUNNELB1F_HIKER3",
+      "x": 33,
+      "y": 5,
+      "class": "HIKER",
+      "partyIndex": 11,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 66,
+          "level": 20
+        },
+        {
+          "id": 95,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rocktunnelb1f-8",
+      "location": "rock-tunnel",
+      "map": "RockTunnelB1F",
+      "event": "TEXT_ROCKTUNNELB1F_SUPER_NERD3",
+      "x": 26,
+      "y": 30,
+      "class": "POKEMANIAC",
+      "partyIndex": 5,
+      "name": "포켓몬 마니아",
+      "sprite": "pokemaniac",
+      "automatic": true,
+      "team": [
+        {
+          "id": 79,
+          "level": 25
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rockethideoutb1f-1",
+      "location": "hideout",
+      "map": "RocketHideoutB1F",
+      "event": "TEXT_ROCKETHIDEOUTB1F_ROCKET1",
+      "x": 26,
+      "y": 8,
+      "class": "ROCKET",
+      "partyIndex": 8,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 96,
+          "level": 21
+        },
+        {
+          "id": 66,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rockethideoutb1f-2",
+      "location": "hideout",
+      "map": "RocketHideoutB1F",
+      "event": "TEXT_ROCKETHIDEOUTB1F_ROCKET2",
+      "x": 12,
+      "y": 6,
+      "class": "ROCKET",
+      "partyIndex": 9,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 20,
+          "level": 21
+        },
+        {
+          "id": 20,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rockethideoutb1f-3",
+      "location": "hideout",
+      "map": "RocketHideoutB1F",
+      "event": "TEXT_ROCKETHIDEOUTB1F_ROCKET3",
+      "x": 18,
+      "y": 17,
+      "class": "ROCKET",
+      "partyIndex": 10,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 88,
+          "level": 20
+        },
+        {
+          "id": 109,
+          "level": 20
+        },
+        {
+          "id": 109,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rockethideoutb1f-4",
+      "location": "hideout",
+      "map": "RocketHideoutB1F",
+      "event": "TEXT_ROCKETHIDEOUTB1F_ROCKET4",
+      "x": 15,
+      "y": 25,
+      "class": "ROCKET",
+      "partyIndex": 11,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 19,
+          "level": 19
+        },
+        {
+          "id": 20,
+          "level": 19
+        },
+        {
+          "id": 20,
+          "level": 19
+        },
+        {
+          "id": 19,
+          "level": 19
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rockethideoutb1f-5",
+      "location": "hideout",
+      "map": "RocketHideoutB1F",
+      "event": "TEXT_ROCKETHIDEOUTB1F_ROCKET5",
+      "x": 28,
+      "y": 18,
+      "class": "ROCKET",
+      "partyIndex": 12,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 88,
+          "level": 22
+        },
+        {
+          "id": 109,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rockethideoutb2f-1",
+      "location": "hideout",
+      "map": "RocketHideoutB2F",
+      "event": "TEXT_ROCKETHIDEOUTB2F_ROCKET",
+      "x": 20,
+      "y": 12,
+      "class": "ROCKET",
+      "partyIndex": 13,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 41,
+          "level": 17
+        },
+        {
+          "id": 109,
+          "level": 17
+        },
+        {
+          "id": 88,
+          "level": 17
+        },
+        {
+          "id": 41,
+          "level": 17
+        },
+        {
+          "id": 20,
+          "level": 17
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rockethideoutb3f-1",
+      "location": "hideout",
+      "map": "RocketHideoutB3F",
+      "event": "TEXT_ROCKETHIDEOUTB3F_ROCKET1",
+      "x": 10,
+      "y": 22,
+      "class": "ROCKET",
+      "partyIndex": 14,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 19,
+          "level": 20
+        },
+        {
+          "id": 20,
+          "level": 20
+        },
+        {
+          "id": 96,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rockethideoutb3f-2",
+      "location": "hideout",
+      "map": "RocketHideoutB3F",
+      "event": "TEXT_ROCKETHIDEOUTB3F_ROCKET2",
+      "x": 26,
+      "y": 12,
+      "class": "ROCKET",
+      "partyIndex": 15,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 66,
+          "level": 21
+        },
+        {
+          "id": 66,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-rockethideoutb4f-1",
+      "location": "hideout",
+      "map": "RocketHideoutB4F",
+      "event": "TEXT_ROCKETHIDEOUTB4F_ROCKET",
+      "x": 11,
+      "y": 2,
+      "class": "ROCKET",
+      "partyIndex": 18,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 109,
+          "level": 21
+        },
+        {
+          "id": 41,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route10-1",
+      "location": "route-10",
+      "map": "Route10",
+      "event": "TEXT_ROUTE10_SUPER_NERD1",
+      "x": 10,
+      "y": 44,
+      "class": "POKEMANIAC",
+      "partyIndex": 1,
+      "name": "포켓몬 마니아",
+      "sprite": "pokemaniac",
+      "automatic": true,
+      "team": [
+        {
+          "id": 111,
+          "level": 30
+        },
+        {
+          "id": 108,
+          "level": 30
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route10-2",
+      "location": "route-10",
+      "map": "Route10",
+      "event": "TEXT_ROUTE10_HIKER1",
+      "x": 3,
+      "y": 57,
+      "class": "HIKER",
+      "partyIndex": 7,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 74,
+          "level": 21
+        },
+        {
+          "id": 95,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route10-3",
+      "location": "route-10",
+      "map": "Route10",
+      "event": "TEXT_ROUTE10_SUPER_NERD2",
+      "x": 14,
+      "y": 64,
+      "class": "POKEMANIAC",
+      "partyIndex": 2,
+      "name": "포켓몬 마니아",
+      "sprite": "pokemaniac",
+      "automatic": true,
+      "team": [
+        {
+          "id": 104,
+          "level": 20
+        },
+        {
+          "id": 79,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route10-4",
+      "location": "route-10",
+      "map": "Route10",
+      "event": "TEXT_ROUTE10_COOLTRAINER_F1",
+      "x": 7,
+      "y": 25,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 7,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 39,
+          "level": 20
+        },
+        {
+          "id": 35,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route10-5",
+      "location": "route-10",
+      "map": "Route10",
+      "event": "TEXT_ROUTE10_HIKER2",
+      "x": 3,
+      "y": 61,
+      "class": "HIKER",
+      "partyIndex": 8,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 95,
+          "level": 19
+        },
+        {
+          "id": 75,
+          "level": 19
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route10-6",
+      "location": "route-10",
+      "map": "Route10",
+      "event": "TEXT_ROUTE10_COOLTRAINER_F2",
+      "x": 7,
+      "y": 54,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 8,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 16,
+          "level": 21
+        },
+        {
+          "id": 17,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route11-1",
+      "location": "route-11",
+      "map": "Route11",
+      "event": "TEXT_ROUTE11_GAMBLER1",
+      "x": 10,
+      "y": 14,
+      "class": "GAMBLER",
+      "partyIndex": 1,
+      "name": "도박꾼",
+      "sprite": "gamer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 60,
+          "level": 18
+        },
+        {
+          "id": 116,
+          "level": 18
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route11-2",
+      "location": "route-11",
+      "map": "Route11",
+      "event": "TEXT_ROUTE11_GAMBLER2",
+      "x": 26,
+      "y": 9,
+      "class": "GAMBLER",
+      "partyIndex": 2,
+      "name": "도박꾼",
+      "sprite": "gamer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 69,
+          "level": 18
+        },
+        {
+          "id": 43,
+          "level": 18
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route11-3",
+      "location": "route-11",
+      "map": "Route11",
+      "event": "TEXT_ROUTE11_YOUNGSTER1",
+      "x": 13,
+      "y": 5,
+      "class": "YOUNGSTER",
+      "partyIndex": 9,
+      "name": "반바지 꼬마",
+      "sprite": "youngster",
+      "automatic": true,
+      "team": [
+        {
+          "id": 23,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route11-4",
+      "location": "route-11",
+      "map": "Route11",
+      "event": "TEXT_ROUTE11_SUPER_NERD1",
+      "x": 36,
+      "y": 11,
+      "class": "ENGINEER",
+      "partyIndex": 2,
+      "name": "전기공",
+      "sprite": "engineer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 81,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route11-5",
+      "location": "route-11",
+      "map": "Route11",
+      "event": "TEXT_ROUTE11_YOUNGSTER2",
+      "x": 22,
+      "y": 4,
+      "class": "YOUNGSTER",
+      "partyIndex": 10,
+      "name": "반바지 꼬마",
+      "sprite": "youngster",
+      "automatic": true,
+      "team": [
+        {
+          "id": 27,
+          "level": 19
+        },
+        {
+          "id": 41,
+          "level": 19
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route11-6",
+      "location": "route-11",
+      "map": "Route11",
+      "event": "TEXT_ROUTE11_GAMBLER3",
+      "x": 45,
+      "y": 7,
+      "class": "GAMBLER",
+      "partyIndex": 3,
+      "name": "도박꾼",
+      "sprite": "gamer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 100,
+          "level": 18
+        },
+        {
+          "id": 81,
+          "level": 18
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route11-7",
+      "location": "route-11",
+      "map": "Route11",
+      "event": "TEXT_ROUTE11_GAMBLER4",
+      "x": 33,
+      "y": 3,
+      "class": "GAMBLER",
+      "partyIndex": 4,
+      "name": "도박꾼",
+      "sprite": "gamer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 58,
+          "level": 18
+        },
+        {
+          "id": 37,
+          "level": 18
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route11-8",
+      "location": "route-11",
+      "map": "Route11",
+      "event": "TEXT_ROUTE11_YOUNGSTER3",
+      "x": 43,
+      "y": 5,
+      "class": "YOUNGSTER",
+      "partyIndex": 11,
+      "name": "반바지 꼬마",
+      "sprite": "youngster",
+      "automatic": true,
+      "team": [
+        {
+          "id": 19,
+          "level": 17
+        },
+        {
+          "id": 19,
+          "level": 17
+        },
+        {
+          "id": 20,
+          "level": 17
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route11-9",
+      "location": "route-11",
+      "map": "Route11",
+      "event": "TEXT_ROUTE11_SUPER_NERD2",
+      "x": 45,
+      "y": 16,
+      "class": "ENGINEER",
+      "partyIndex": 3,
+      "name": "전기공",
+      "sprite": "engineer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 81,
+          "level": 18
+        },
+        {
+          "id": 81,
+          "level": 18
+        },
+        {
+          "id": 82,
+          "level": 18
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route11-10",
+      "location": "route-11",
+      "map": "Route11",
+      "event": "TEXT_ROUTE11_YOUNGSTER4",
+      "x": 22,
+      "y": 12,
+      "class": "YOUNGSTER",
+      "partyIndex": 12,
+      "name": "반바지 꼬마",
+      "sprite": "youngster",
+      "automatic": true,
+      "team": [
+        {
+          "id": 32,
+          "level": 18
+        },
+        {
+          "id": 33,
+          "level": 18
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route12-1",
+      "location": "route-12",
+      "map": "Route12",
+      "event": "TEXT_ROUTE12_FISHER1",
+      "x": 14,
+      "y": 31,
+      "class": "FISHER",
+      "partyIndex": 3,
+      "name": "낚시꾼",
+      "sprite": "fisherman",
+      "automatic": true,
+      "team": [
+        {
+          "id": 118,
+          "level": 22
+        },
+        {
+          "id": 60,
+          "level": 22
+        },
+        {
+          "id": 118,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route12-2",
+      "location": "route-12",
+      "map": "Route12",
+      "event": "TEXT_ROUTE12_FISHER2",
+      "x": 5,
+      "y": 39,
+      "class": "FISHER",
+      "partyIndex": 4,
+      "name": "낚시꾼",
+      "sprite": "fisherman",
+      "automatic": true,
+      "team": [
+        {
+          "id": 72,
+          "level": 24
+        },
+        {
+          "id": 118,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route12-3",
+      "location": "route-12",
+      "map": "Route12",
+      "event": "TEXT_ROUTE12_COOLTRAINER_M",
+      "x": 11,
+      "y": 92,
+      "class": "JR_TRAINER_M",
+      "partyIndex": 9,
+      "name": "보이스카우트",
+      "sprite": "camper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 32,
+          "level": 29
+        },
+        {
+          "id": 33,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route12-4",
+      "location": "route-12",
+      "map": "Route12",
+      "event": "TEXT_ROUTE12_SUPER_NERD",
+      "x": 14,
+      "y": 76,
+      "class": "ROCKER",
+      "partyIndex": 2,
+      "name": "로커",
+      "sprite": "rocker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 100,
+          "level": 29
+        },
+        {
+          "id": 101,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route12-5",
+      "location": "route-12",
+      "map": "Route12",
+      "event": "TEXT_ROUTE12_FISHER3",
+      "x": 12,
+      "y": 40,
+      "class": "FISHER",
+      "partyIndex": 5,
+      "name": "낚시꾼",
+      "sprite": "fisherman",
+      "automatic": true,
+      "team": [
+        {
+          "id": 118,
+          "level": 27
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route12-6",
+      "location": "route-12",
+      "map": "Route12",
+      "event": "TEXT_ROUTE12_FISHER4",
+      "x": 9,
+      "y": 52,
+      "class": "FISHER",
+      "partyIndex": 6,
+      "name": "낚시꾼",
+      "sprite": "fisherman",
+      "automatic": true,
+      "team": [
+        {
+          "id": 60,
+          "level": 21
+        },
+        {
+          "id": 90,
+          "level": 21
+        },
+        {
+          "id": 118,
+          "level": 21
+        },
+        {
+          "id": 116,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route12-7",
+      "location": "route-12",
+      "map": "Route12",
+      "event": "TEXT_ROUTE12_FISHER5",
+      "x": 6,
+      "y": 87,
+      "class": "FISHER",
+      "partyIndex": 11,
+      "name": "낚시꾼",
+      "sprite": "fisherman",
+      "automatic": true,
+      "team": [
+        {
+          "id": 129,
+          "level": 24
+        },
+        {
+          "id": 129,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route13-1",
+      "location": "route-13",
+      "map": "Route13",
+      "event": "TEXT_ROUTE13_COOLTRAINER_M1",
+      "x": 49,
+      "y": 10,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 1,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 16,
+          "level": 29
+        },
+        {
+          "id": 17,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route13-2",
+      "location": "route-13",
+      "map": "Route13",
+      "event": "TEXT_ROUTE13_COOLTRAINER_F1",
+      "x": 48,
+      "y": 10,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 12,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 16,
+          "level": 24
+        },
+        {
+          "id": 52,
+          "level": 24
+        },
+        {
+          "id": 19,
+          "level": 24
+        },
+        {
+          "id": 16,
+          "level": 24
+        },
+        {
+          "id": 52,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route13-3",
+      "location": "route-13",
+      "map": "Route13",
+      "event": "TEXT_ROUTE13_COOLTRAINER_F2",
+      "x": 27,
+      "y": 9,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 13,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 60,
+          "level": 30
+        },
+        {
+          "id": 60,
+          "level": 30
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route13-4",
+      "location": "route-13",
+      "map": "Route13",
+      "event": "TEXT_ROUTE13_COOLTRAINER_F3",
+      "x": 23,
+      "y": 10,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 14,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 16,
+          "level": 27
+        },
+        {
+          "id": 52,
+          "level": 27
+        },
+        {
+          "id": 16,
+          "level": 27
+        },
+        {
+          "id": 17,
+          "level": 27
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route13-5",
+      "location": "route-13",
+      "map": "Route13",
+      "event": "TEXT_ROUTE13_COOLTRAINER_F4",
+      "x": 50,
+      "y": 5,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 15,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 118,
+          "level": 28
+        },
+        {
+          "id": 60,
+          "level": 28
+        },
+        {
+          "id": 116,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route13-6",
+      "location": "route-13",
+      "map": "Route13",
+      "event": "TEXT_ROUTE13_COOLTRAINER_M2",
+      "x": 12,
+      "y": 4,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 2,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 21,
+          "level": 25
+        },
+        {
+          "id": 16,
+          "level": 25
+        },
+        {
+          "id": 16,
+          "level": 25
+        },
+        {
+          "id": 21,
+          "level": 25
+        },
+        {
+          "id": 21,
+          "level": 25
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route13-7",
+      "location": "route-13",
+      "map": "Route13",
+      "event": "TEXT_ROUTE13_BEAUTY1",
+      "x": 33,
+      "y": 6,
+      "class": "BEAUTY",
+      "partyIndex": 4,
+      "name": "아름다운 아가씨",
+      "sprite": "beauty",
+      "automatic": true,
+      "team": [
+        {
+          "id": 19,
+          "level": 27
+        },
+        {
+          "id": 37,
+          "level": 27
+        },
+        {
+          "id": 19,
+          "level": 27
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route13-8",
+      "location": "route-13",
+      "map": "Route13",
+      "event": "TEXT_ROUTE13_BEAUTY2",
+      "x": 32,
+      "y": 6,
+      "class": "BEAUTY",
+      "partyIndex": 5,
+      "name": "아름다운 아가씨",
+      "sprite": "beauty",
+      "automatic": true,
+      "team": [
+        {
+          "id": 35,
+          "level": 29
+        },
+        {
+          "id": 52,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route13-9",
+      "location": "route-13",
+      "map": "Route13",
+      "event": "TEXT_ROUTE13_BIKER",
+      "x": 10,
+      "y": 7,
+      "class": "BIKER",
+      "partyIndex": 1,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 109,
+          "level": 28
+        },
+        {
+          "id": 109,
+          "level": 28
+        },
+        {
+          "id": 109,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route13-10",
+      "location": "route-13",
+      "map": "Route13",
+      "event": "TEXT_ROUTE13_COOLTRAINER_M3",
+      "x": 7,
+      "y": 13,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 3,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 16,
+          "level": 26
+        },
+        {
+          "id": 17,
+          "level": 26
+        },
+        {
+          "id": 21,
+          "level": 26
+        },
+        {
+          "id": 22,
+          "level": 26
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route14-1",
+      "location": "route-14",
+      "map": "Route14",
+      "event": "TEXT_ROUTE14_COOLTRAINER_M1",
+      "x": 4,
+      "y": 4,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 14,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 16,
+          "level": 28
+        },
+        {
+          "id": 84,
+          "level": 28
+        },
+        {
+          "id": 17,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route14-2",
+      "location": "route-14",
+      "map": "Route14",
+      "event": "TEXT_ROUTE14_COOLTRAINER_M2",
+      "x": 15,
+      "y": 6,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 15,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 16,
+          "level": 26
+        },
+        {
+          "id": 21,
+          "level": 26
+        },
+        {
+          "id": 16,
+          "level": 26
+        },
+        {
+          "id": 22,
+          "level": 26
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route14-3",
+      "location": "route-14",
+      "map": "Route14",
+      "event": "TEXT_ROUTE14_COOLTRAINER_M3",
+      "x": 12,
+      "y": 11,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 16,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 17,
+          "level": 29
+        },
+        {
+          "id": 22,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route14-4",
+      "location": "route-14",
+      "map": "Route14",
+      "event": "TEXT_ROUTE14_COOLTRAINER_M4",
+      "x": 14,
+      "y": 15,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 17,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 21,
+          "level": 28
+        },
+        {
+          "id": 84,
+          "level": 28
+        },
+        {
+          "id": 22,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route14-5",
+      "location": "route-14",
+      "map": "Route14",
+      "event": "TEXT_ROUTE14_COOLTRAINER_M5",
+      "x": 15,
+      "y": 31,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 4,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 83,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route14-6",
+      "location": "route-14",
+      "map": "Route14",
+      "event": "TEXT_ROUTE14_COOLTRAINER_M6",
+      "x": 6,
+      "y": 49,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 5,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 21,
+          "level": 29
+        },
+        {
+          "id": 22,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route14-7",
+      "location": "route-14",
+      "map": "Route14",
+      "event": "TEXT_ROUTE14_BIKER1",
+      "x": 5,
+      "y": 39,
+      "class": "BIKER",
+      "partyIndex": 13,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 109,
+          "level": 26
+        },
+        {
+          "id": 109,
+          "level": 26
+        },
+        {
+          "id": 88,
+          "level": 26
+        },
+        {
+          "id": 109,
+          "level": 26
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route14-8",
+      "location": "route-14",
+      "map": "Route14",
+      "event": "TEXT_ROUTE14_BIKER2",
+      "x": 4,
+      "y": 30,
+      "class": "BIKER",
+      "partyIndex": 14,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 88,
+          "level": 28
+        },
+        {
+          "id": 88,
+          "level": 28
+        },
+        {
+          "id": 109,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route14-9",
+      "location": "route-14",
+      "map": "Route14",
+      "event": "TEXT_ROUTE14_BIKER3",
+      "x": 15,
+      "y": 30,
+      "class": "BIKER",
+      "partyIndex": 15,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 109,
+          "level": 29
+        },
+        {
+          "id": 89,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route14-10",
+      "location": "route-14",
+      "map": "Route14",
+      "event": "TEXT_ROUTE14_BIKER4",
+      "x": 4,
+      "y": 31,
+      "class": "BIKER",
+      "partyIndex": 2,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 109,
+          "level": 29
+        },
+        {
+          "id": 88,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route15-1",
+      "location": "route-15",
+      "map": "Route15",
+      "event": "TEXT_ROUTE15_COOLTRAINER_F1",
+      "x": 41,
+      "y": 11,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 20,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 44,
+          "level": 28
+        },
+        {
+          "id": 43,
+          "level": 28
+        },
+        {
+          "id": 43,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route15-2",
+      "location": "route-15",
+      "map": "Route15",
+      "event": "TEXT_ROUTE15_COOLTRAINER_F2",
+      "x": 53,
+      "y": 10,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 21,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 16,
+          "level": 29
+        },
+        {
+          "id": 17,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route15-3",
+      "location": "route-15",
+      "map": "Route15",
+      "event": "TEXT_ROUTE15_COOLTRAINER_M1",
+      "x": 31,
+      "y": 13,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 6,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 17,
+          "level": 26
+        },
+        {
+          "id": 83,
+          "level": 26
+        },
+        {
+          "id": 84,
+          "level": 26
+        },
+        {
+          "id": 16,
+          "level": 26
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route15-4",
+      "location": "route-15",
+      "map": "Route15",
+      "event": "TEXT_ROUTE15_COOLTRAINER_M2",
+      "x": 35,
+      "y": 13,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 7,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 85,
+          "level": 28
+        },
+        {
+          "id": 84,
+          "level": 28
+        },
+        {
+          "id": 84,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route15-5",
+      "location": "route-15",
+      "map": "Route15",
+      "event": "TEXT_ROUTE15_BEAUTY1",
+      "x": 53,
+      "y": 11,
+      "class": "BEAUTY",
+      "partyIndex": 9,
+      "name": "아름다운 아가씨",
+      "sprite": "beauty",
+      "automatic": true,
+      "team": [
+        {
+          "id": 17,
+          "level": 29
+        },
+        {
+          "id": 40,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route15-6",
+      "location": "route-15",
+      "map": "Route15",
+      "event": "TEXT_ROUTE15_BEAUTY2",
+      "x": 41,
+      "y": 10,
+      "class": "BEAUTY",
+      "partyIndex": 10,
+      "name": "아름다운 아가씨",
+      "sprite": "beauty",
+      "automatic": true,
+      "team": [
+        {
+          "id": 1,
+          "level": 29
+        },
+        {
+          "id": 2,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route15-7",
+      "location": "route-15",
+      "map": "Route15",
+      "event": "TEXT_ROUTE15_BIKER1",
+      "x": 48,
+      "y": 10,
+      "class": "BIKER",
+      "partyIndex": 3,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 109,
+          "level": 25
+        },
+        {
+          "id": 109,
+          "level": 25
+        },
+        {
+          "id": 110,
+          "level": 25
+        },
+        {
+          "id": 109,
+          "level": 25
+        },
+        {
+          "id": 88,
+          "level": 25
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route15-8",
+      "location": "route-15",
+      "map": "Route15",
+      "event": "TEXT_ROUTE15_BIKER2",
+      "x": 46,
+      "y": 10,
+      "class": "BIKER",
+      "partyIndex": 4,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 109,
+          "level": 28
+        },
+        {
+          "id": 88,
+          "level": 28
+        },
+        {
+          "id": 110,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route15-9",
+      "location": "route-15",
+      "map": "Route15",
+      "event": "TEXT_ROUTE15_COOLTRAINER_F3",
+      "x": 37,
+      "y": 5,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 22,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 35,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route15-10",
+      "location": "route-15",
+      "map": "Route15",
+      "event": "TEXT_ROUTE15_COOLTRAINER_F4",
+      "x": 18,
+      "y": 13,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 23,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 69,
+          "level": 29
+        },
+        {
+          "id": 43,
+          "level": 29
+        },
+        {
+          "id": 114,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route16-1",
+      "location": "route-16",
+      "map": "Route16",
+      "event": "TEXT_ROUTE16_BIKER1",
+      "x": 17,
+      "y": 12,
+      "class": "BIKER",
+      "partyIndex": 5,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 88,
+          "level": 29
+        },
+        {
+          "id": 109,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route16-2",
+      "location": "route-16",
+      "map": "Route16",
+      "event": "TEXT_ROUTE16_BIKER2",
+      "x": 14,
+      "y": 13,
+      "class": "CUE_BALL",
+      "partyIndex": 1,
+      "name": "불량배",
+      "sprite": "cue-ball",
+      "automatic": true,
+      "team": [
+        {
+          "id": 66,
+          "level": 28
+        },
+        {
+          "id": 56,
+          "level": 28
+        },
+        {
+          "id": 66,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route16-3",
+      "location": "route-16",
+      "map": "Route16",
+      "event": "TEXT_ROUTE16_BIKER3",
+      "x": 11,
+      "y": 12,
+      "class": "CUE_BALL",
+      "partyIndex": 2,
+      "name": "불량배",
+      "sprite": "cue-ball",
+      "automatic": true,
+      "team": [
+        {
+          "id": 56,
+          "level": 29
+        },
+        {
+          "id": 66,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route16-4",
+      "location": "route-16",
+      "map": "Route16",
+      "event": "TEXT_ROUTE16_BIKER4",
+      "x": 9,
+      "y": 11,
+      "class": "BIKER",
+      "partyIndex": 6,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 110,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route16-5",
+      "location": "route-16",
+      "map": "Route16",
+      "event": "TEXT_ROUTE16_BIKER5",
+      "x": 6,
+      "y": 10,
+      "class": "CUE_BALL",
+      "partyIndex": 3,
+      "name": "불량배",
+      "sprite": "cue-ball",
+      "automatic": true,
+      "team": [
+        {
+          "id": 66,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route16-6",
+      "location": "route-16",
+      "map": "Route16",
+      "event": "TEXT_ROUTE16_BIKER6",
+      "x": 3,
+      "y": 12,
+      "class": "BIKER",
+      "partyIndex": 7,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 88,
+          "level": 26
+        },
+        {
+          "id": 88,
+          "level": 26
+        },
+        {
+          "id": 88,
+          "level": 26
+        },
+        {
+          "id": 88,
+          "level": 26
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route17-1",
+      "location": "route-17",
+      "map": "Route17",
+      "event": "TEXT_ROUTE17_BIKER1",
+      "x": 12,
+      "y": 19,
+      "class": "CUE_BALL",
+      "partyIndex": 4,
+      "name": "불량배",
+      "sprite": "cue-ball",
+      "automatic": true,
+      "team": [
+        {
+          "id": 56,
+          "level": 29
+        },
+        {
+          "id": 57,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route17-2",
+      "location": "route-17",
+      "map": "Route17",
+      "event": "TEXT_ROUTE17_BIKER2",
+      "x": 11,
+      "y": 16,
+      "class": "CUE_BALL",
+      "partyIndex": 5,
+      "name": "불량배",
+      "sprite": "cue-ball",
+      "automatic": true,
+      "team": [
+        {
+          "id": 66,
+          "level": 29
+        },
+        {
+          "id": 67,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route17-3",
+      "location": "route-17",
+      "map": "Route17",
+      "event": "TEXT_ROUTE17_BIKER3",
+      "x": 4,
+      "y": 18,
+      "class": "BIKER",
+      "partyIndex": 8,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 110,
+          "level": 28
+        },
+        {
+          "id": 109,
+          "level": 28
+        },
+        {
+          "id": 110,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route17-4",
+      "location": "route-17",
+      "map": "Route17",
+      "event": "TEXT_ROUTE17_BIKER4",
+      "x": 7,
+      "y": 32,
+      "class": "BIKER",
+      "partyIndex": 9,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 89,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route17-5",
+      "location": "route-17",
+      "map": "Route17",
+      "event": "TEXT_ROUTE17_BIKER5",
+      "x": 14,
+      "y": 34,
+      "class": "BIKER",
+      "partyIndex": 10,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 100,
+          "level": 29
+        },
+        {
+          "id": 100,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route17-6",
+      "location": "route-17",
+      "map": "Route17",
+      "event": "TEXT_ROUTE17_BIKER6",
+      "x": 17,
+      "y": 58,
+      "class": "CUE_BALL",
+      "partyIndex": 6,
+      "name": "불량배",
+      "sprite": "cue-ball",
+      "automatic": true,
+      "team": [
+        {
+          "id": 67,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route17-7",
+      "location": "route-17",
+      "map": "Route17",
+      "event": "TEXT_ROUTE17_BIKER7",
+      "x": 2,
+      "y": 68,
+      "class": "CUE_BALL",
+      "partyIndex": 7,
+      "name": "불량배",
+      "sprite": "cue-ball",
+      "automatic": true,
+      "team": [
+        {
+          "id": 56,
+          "level": 26
+        },
+        {
+          "id": 56,
+          "level": 26
+        },
+        {
+          "id": 67,
+          "level": 26
+        },
+        {
+          "id": 66,
+          "level": 26
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route17-8",
+      "location": "route-17",
+      "map": "Route17",
+      "event": "TEXT_ROUTE17_BIKER8",
+      "x": 14,
+      "y": 98,
+      "class": "CUE_BALL",
+      "partyIndex": 8,
+      "name": "불량배",
+      "sprite": "cue-ball",
+      "automatic": true,
+      "team": [
+        {
+          "id": 57,
+          "level": 29
+        },
+        {
+          "id": 67,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route17-9",
+      "location": "route-17",
+      "map": "Route17",
+      "event": "TEXT_ROUTE17_BIKER9",
+      "x": 5,
+      "y": 98,
+      "class": "BIKER",
+      "partyIndex": 11,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 110,
+          "level": 29
+        },
+        {
+          "id": 89,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route17-10",
+      "location": "route-17",
+      "map": "Route17",
+      "event": "TEXT_ROUTE17_BIKER10",
+      "x": 10,
+      "y": 118,
+      "class": "BIKER",
+      "partyIndex": 12,
+      "name": "폭주족",
+      "sprite": "biker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 109,
+          "level": 25
+        },
+        {
+          "id": 110,
+          "level": 25
+        },
+        {
+          "id": 109,
+          "level": 25
+        },
+        {
+          "id": 109,
+          "level": 25
+        },
+        {
+          "id": 110,
+          "level": 25
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route18-1",
+      "location": "route-18",
+      "map": "Route18",
+      "event": "TEXT_ROUTE18_COOLTRAINER_M1",
+      "x": 36,
+      "y": 11,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 8,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 21,
+          "level": 29
+        },
+        {
+          "id": 22,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route18-2",
+      "location": "route-18",
+      "map": "Route18",
+      "event": "TEXT_ROUTE18_COOLTRAINER_M2",
+      "x": 40,
+      "y": 15,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 9,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 85,
+          "level": 34
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route18-3",
+      "location": "route-18",
+      "map": "Route18",
+      "event": "TEXT_ROUTE18_COOLTRAINER_M3",
+      "x": 42,
+      "y": 13,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 10,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 21,
+          "level": 26
+        },
+        {
+          "id": 21,
+          "level": 26
+        },
+        {
+          "id": 22,
+          "level": 26
+        },
+        {
+          "id": 21,
+          "level": 26
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route19-1",
+      "location": "route-19",
+      "map": "Route19",
+      "event": "TEXT_ROUTE19_COOLTRAINER_M1",
+      "x": 9,
+      "y": 7,
+      "class": "SWIMMER",
+      "partyIndex": 2,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 72,
+          "level": 30
+        },
+        {
+          "id": 90,
+          "level": 30
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route19-2",
+      "location": "route-19",
+      "map": "Route19",
+      "event": "TEXT_ROUTE19_COOLTRAINER_M2",
+      "x": 12,
+      "y": 9,
+      "class": "SWIMMER",
+      "partyIndex": 3,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 118,
+          "level": 29
+        },
+        {
+          "id": 116,
+          "level": 29
+        },
+        {
+          "id": 120,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route19-3",
+      "location": "route-19",
+      "map": "Route19",
+      "event": "TEXT_ROUTE19_SWIMMER1",
+      "x": 13,
+      "y": 25,
+      "class": "SWIMMER",
+      "partyIndex": 4,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 60,
+          "level": 30
+        },
+        {
+          "id": 61,
+          "level": 30
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route19-4",
+      "location": "route-19",
+      "map": "Route19",
+      "event": "TEXT_ROUTE19_SWIMMER2",
+      "x": 4,
+      "y": 27,
+      "class": "SWIMMER",
+      "partyIndex": 5,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 116,
+          "level": 27
+        },
+        {
+          "id": 72,
+          "level": 27
+        },
+        {
+          "id": 72,
+          "level": 27
+        },
+        {
+          "id": 118,
+          "level": 27
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route19-5",
+      "location": "route-19",
+      "map": "Route19",
+      "event": "TEXT_ROUTE19_SWIMMER3",
+      "x": 16,
+      "y": 31,
+      "class": "SWIMMER",
+      "partyIndex": 6,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 118,
+          "level": 29
+        },
+        {
+          "id": 90,
+          "level": 29
+        },
+        {
+          "id": 119,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route19-6",
+      "location": "route-19",
+      "map": "Route19",
+      "event": "TEXT_ROUTE19_SWIMMER4",
+      "x": 9,
+      "y": 13,
+      "class": "SWIMMER",
+      "partyIndex": 7,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 116,
+          "level": 30
+        },
+        {
+          "id": 116,
+          "level": 30
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route19-7",
+      "location": "route-19",
+      "map": "Route19",
+      "event": "TEXT_ROUTE19_SWIMMER5",
+      "x": 8,
+      "y": 43,
+      "class": "BEAUTY",
+      "partyIndex": 12,
+      "name": "아름다운 아가씨",
+      "sprite": "beauty",
+      "automatic": true,
+      "team": [
+        {
+          "id": 60,
+          "level": 27
+        },
+        {
+          "id": 118,
+          "level": 27
+        },
+        {
+          "id": 119,
+          "level": 27
+        },
+        {
+          "id": 118,
+          "level": 27
+        },
+        {
+          "id": 60,
+          "level": 27
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route19-8",
+      "location": "route-19",
+      "map": "Route19",
+      "event": "TEXT_ROUTE19_SWIMMER6",
+      "x": 11,
+      "y": 43,
+      "class": "BEAUTY",
+      "partyIndex": 13,
+      "name": "아름다운 아가씨",
+      "sprite": "beauty",
+      "automatic": true,
+      "team": [
+        {
+          "id": 118,
+          "level": 30
+        },
+        {
+          "id": 119,
+          "level": 30
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route19-9",
+      "location": "route-19",
+      "map": "Route19",
+      "event": "TEXT_ROUTE19_SWIMMER7",
+      "x": 9,
+      "y": 42,
+      "class": "SWIMMER",
+      "partyIndex": 8,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 72,
+          "level": 27
+        },
+        {
+          "id": 72,
+          "level": 27
+        },
+        {
+          "id": 120,
+          "level": 27
+        },
+        {
+          "id": 116,
+          "level": 27
+        },
+        {
+          "id": 73,
+          "level": 27
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route19-10",
+      "location": "route-19",
+      "map": "Route19",
+      "event": "TEXT_ROUTE19_SWIMMER8",
+      "x": 10,
+      "y": 44,
+      "class": "BEAUTY",
+      "partyIndex": 14,
+      "name": "아름다운 아가씨",
+      "sprite": "beauty",
+      "automatic": true,
+      "team": [
+        {
+          "id": 120,
+          "level": 29
+        },
+        {
+          "id": 120,
+          "level": 29
+        },
+        {
+          "id": 120,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route20-1",
+      "location": "route-20",
+      "map": "Route20",
+      "event": "TEXT_ROUTE20_SWIMMER1",
+      "x": 87,
+      "y": 8,
+      "class": "SWIMMER",
+      "partyIndex": 9,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 90,
+          "level": 31
+        },
+        {
+          "id": 91,
+          "level": 31
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route20-2",
+      "location": "route-20",
+      "map": "Route20",
+      "event": "TEXT_ROUTE20_SWIMMER2",
+      "x": 68,
+      "y": 11,
+      "class": "BEAUTY",
+      "partyIndex": 15,
+      "name": "아름다운 아가씨",
+      "sprite": "beauty",
+      "automatic": true,
+      "team": [
+        {
+          "id": 117,
+          "level": 30
+        },
+        {
+          "id": 116,
+          "level": 30
+        },
+        {
+          "id": 117,
+          "level": 30
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route20-3",
+      "location": "route-20",
+      "map": "Route20",
+      "event": "TEXT_ROUTE20_SWIMMER3",
+      "x": 45,
+      "y": 10,
+      "class": "BEAUTY",
+      "partyIndex": 6,
+      "name": "아름다운 아가씨",
+      "sprite": "beauty",
+      "automatic": true,
+      "team": [
+        {
+          "id": 119,
+          "level": 35
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route20-4",
+      "location": "route-20",
+      "map": "Route20",
+      "event": "TEXT_ROUTE20_SWIMMER4",
+      "x": 55,
+      "y": 14,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 24,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 72,
+          "level": 30
+        },
+        {
+          "id": 116,
+          "level": 30
+        },
+        {
+          "id": 86,
+          "level": 30
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route20-5",
+      "location": "route-20",
+      "map": "Route20",
+      "event": "TEXT_ROUTE20_SWIMMER5",
+      "x": 38,
+      "y": 13,
+      "class": "SWIMMER",
+      "partyIndex": 10,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 120,
+          "level": 35
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route20-6",
+      "location": "route-20",
+      "map": "Route20",
+      "event": "TEXT_ROUTE20_SWIMMER6",
+      "x": 87,
+      "y": 13,
+      "class": "SWIMMER",
+      "partyIndex": 11,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 116,
+          "level": 28
+        },
+        {
+          "id": 116,
+          "level": 28
+        },
+        {
+          "id": 117,
+          "level": 28
+        },
+        {
+          "id": 116,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route20-7",
+      "location": "route-20",
+      "map": "Route20",
+      "event": "TEXT_ROUTE20_COOLTRAINER_M",
+      "x": 34,
+      "y": 9,
+      "class": "BIRD_KEEPER",
+      "partyIndex": 11,
+      "name": "새 조련사",
+      "sprite": "bird-keeper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 22,
+          "level": 30
+        },
+        {
+          "id": 22,
+          "level": 30
+        },
+        {
+          "id": 17,
+          "level": 30
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route20-8",
+      "location": "route-20",
+      "map": "Route20",
+      "event": "TEXT_ROUTE20_SWIMMER7",
+      "x": 25,
+      "y": 7,
+      "class": "BEAUTY",
+      "partyIndex": 7,
+      "name": "아름다운 아가씨",
+      "sprite": "beauty",
+      "automatic": true,
+      "team": [
+        {
+          "id": 90,
+          "level": 30
+        },
+        {
+          "id": 90,
+          "level": 30
+        },
+        {
+          "id": 91,
+          "level": 30
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route20-9",
+      "location": "route-20",
+      "map": "Route20",
+      "event": "TEXT_ROUTE20_SWIMMER8",
+      "x": 24,
+      "y": 12,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 16,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 118,
+          "level": 31
+        },
+        {
+          "id": 119,
+          "level": 31
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route20-10",
+      "location": "route-20",
+      "map": "Route20",
+      "event": "TEXT_ROUTE20_SWIMMER9",
+      "x": 15,
+      "y": 8,
+      "class": "BEAUTY",
+      "partyIndex": 8,
+      "name": "아름다운 아가씨",
+      "sprite": "beauty",
+      "automatic": true,
+      "team": [
+        {
+          "id": 60,
+          "level": 31
+        },
+        {
+          "id": 119,
+          "level": 31
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route21-1",
+      "location": "route-21",
+      "map": "Route21",
+      "event": "TEXT_ROUTE21_FISHER1",
+      "x": 4,
+      "y": 24,
+      "class": "FISHER",
+      "partyIndex": 7,
+      "name": "낚시꾼",
+      "sprite": "fisherman",
+      "automatic": true,
+      "team": [
+        {
+          "id": 119,
+          "level": 28
+        },
+        {
+          "id": 118,
+          "level": 28
+        },
+        {
+          "id": 119,
+          "level": 28
+        },
+        {
+          "id": 119,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route21-2",
+      "location": "route-21",
+      "map": "Route21",
+      "event": "TEXT_ROUTE21_FISHER2",
+      "x": 6,
+      "y": 25,
+      "class": "FISHER",
+      "partyIndex": 9,
+      "name": "낚시꾼",
+      "sprite": "fisherman",
+      "automatic": true,
+      "team": [
+        {
+          "id": 129,
+          "level": 27
+        },
+        {
+          "id": 129,
+          "level": 27
+        },
+        {
+          "id": 129,
+          "level": 27
+        },
+        {
+          "id": 129,
+          "level": 27
+        },
+        {
+          "id": 129,
+          "level": 27
+        },
+        {
+          "id": 129,
+          "level": 27
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route21-3",
+      "location": "route-21",
+      "map": "Route21",
+      "event": "TEXT_ROUTE21_SWIMMER1",
+      "x": 10,
+      "y": 31,
+      "class": "SWIMMER",
+      "partyIndex": 12,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 117,
+          "level": 33
+        },
+        {
+          "id": 73,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route21-4",
+      "location": "route-21",
+      "map": "Route21",
+      "event": "TEXT_ROUTE21_SWIMMER2",
+      "x": 12,
+      "y": 30,
+      "class": "CUE_BALL",
+      "partyIndex": 9,
+      "name": "불량배",
+      "sprite": "cue-ball",
+      "automatic": true,
+      "team": [
+        {
+          "id": 72,
+          "level": 31
+        },
+        {
+          "id": 72,
+          "level": 31
+        },
+        {
+          "id": 73,
+          "level": 31
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route21-5",
+      "location": "route-21",
+      "map": "Route21",
+      "event": "TEXT_ROUTE21_SWIMMER3",
+      "x": 16,
+      "y": 63,
+      "class": "SWIMMER",
+      "partyIndex": 13,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 121,
+          "level": 37
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route21-6",
+      "location": "route-21",
+      "map": "Route21",
+      "event": "TEXT_ROUTE21_SWIMMER4",
+      "x": 5,
+      "y": 71,
+      "class": "SWIMMER",
+      "partyIndex": 14,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 120,
+          "level": 33
+        },
+        {
+          "id": 8,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route21-7",
+      "location": "route-21",
+      "map": "Route21",
+      "event": "TEXT_ROUTE21_SWIMMER5",
+      "x": 15,
+      "y": 71,
+      "class": "SWIMMER",
+      "partyIndex": 15,
+      "name": "수영팬",
+      "sprite": "swimmer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 61,
+          "level": 32
+        },
+        {
+          "id": 72,
+          "level": 32
+        },
+        {
+          "id": 117,
+          "level": 32
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route21-8",
+      "location": "route-21",
+      "map": "Route21",
+      "event": "TEXT_ROUTE21_FISHER3",
+      "x": 14,
+      "y": 56,
+      "class": "FISHER",
+      "partyIndex": 8,
+      "name": "낚시꾼",
+      "sprite": "fisherman",
+      "automatic": true,
+      "team": [
+        {
+          "id": 90,
+          "level": 31
+        },
+        {
+          "id": 91,
+          "level": 31
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route21-9",
+      "location": "route-21",
+      "map": "Route21",
+      "event": "TEXT_ROUTE21_FISHER4",
+      "x": 17,
+      "y": 57,
+      "class": "FISHER",
+      "partyIndex": 10,
+      "name": "낚시꾼",
+      "sprite": "fisherman",
+      "automatic": true,
+      "team": [
+        {
+          "id": 119,
+          "level": 33
+        },
+        {
+          "id": 118,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route24-1",
+      "location": "route-24",
+      "map": "Route24",
+      "event": "TEXT_ROUTE24_COOLTRAINER_M1",
+      "x": 11,
+      "y": 15,
+      "class": "ROCKET",
+      "partyIndex": 6,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": true,
+      "team": [
+        {
+          "id": 23,
+          "level": 15
+        },
+        {
+          "id": 41,
+          "level": 15
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route24-2",
+      "location": "route-24",
+      "map": "Route24",
+      "event": "TEXT_ROUTE24_COOLTRAINER_M2",
+      "x": 5,
+      "y": 20,
+      "class": "JR_TRAINER_M",
+      "partyIndex": 2,
+      "name": "보이스카우트",
+      "sprite": "camper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 19,
+          "level": 14
+        },
+        {
+          "id": 23,
+          "level": 14
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route24-3",
+      "location": "route-24",
+      "map": "Route24",
+      "event": "TEXT_ROUTE24_COOLTRAINER_M3",
+      "x": 11,
+      "y": 19,
+      "class": "JR_TRAINER_M",
+      "partyIndex": 3,
+      "name": "보이스카우트",
+      "sprite": "camper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 56,
+          "level": 18
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route24-4",
+      "location": "route-24",
+      "map": "Route24",
+      "event": "TEXT_ROUTE24_COOLTRAINER_F1",
+      "x": 10,
+      "y": 22,
+      "class": "LASS",
+      "partyIndex": 7,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 16,
+          "level": 16
+        },
+        {
+          "id": 29,
+          "level": 16
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route24-5",
+      "location": "route-24",
+      "map": "Route24",
+      "event": "TEXT_ROUTE24_YOUNGSTER1",
+      "x": 11,
+      "y": 25,
+      "class": "YOUNGSTER",
+      "partyIndex": 4,
+      "name": "반바지 꼬마",
+      "sprite": "youngster",
+      "automatic": true,
+      "team": [
+        {
+          "id": 19,
+          "level": 14
+        },
+        {
+          "id": 23,
+          "level": 14
+        },
+        {
+          "id": 41,
+          "level": 14
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route24-6",
+      "location": "route-24",
+      "map": "Route24",
+      "event": "TEXT_ROUTE24_COOLTRAINER_F2",
+      "x": 10,
+      "y": 28,
+      "class": "LASS",
+      "partyIndex": 8,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 16,
+          "level": 14
+        },
+        {
+          "id": 29,
+          "level": 14
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route24-7",
+      "location": "route-24",
+      "map": "Route24",
+      "event": "TEXT_ROUTE24_YOUNGSTER2",
+      "x": 11,
+      "y": 31,
+      "class": "BUG_CATCHER",
+      "partyIndex": 9,
+      "name": "곤충채집 소년",
+      "sprite": "bug-catcher",
+      "automatic": true,
+      "team": [
+        {
+          "id": 10,
+          "level": 14
+        },
+        {
+          "id": 13,
+          "level": 14
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route25-1",
+      "location": "route-25",
+      "map": "Route25",
+      "event": "TEXT_ROUTE25_YOUNGSTER1",
+      "x": 14,
+      "y": 2,
+      "class": "YOUNGSTER",
+      "partyIndex": 5,
+      "name": "반바지 꼬마",
+      "sprite": "youngster",
+      "automatic": true,
+      "team": [
+        {
+          "id": 19,
+          "level": 15
+        },
+        {
+          "id": 21,
+          "level": 15
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route25-2",
+      "location": "route-25",
+      "map": "Route25",
+      "event": "TEXT_ROUTE25_YOUNGSTER2",
+      "x": 18,
+      "y": 5,
+      "class": "YOUNGSTER",
+      "partyIndex": 6,
+      "name": "반바지 꼬마",
+      "sprite": "youngster",
+      "automatic": true,
+      "team": [
+        {
+          "id": 79,
+          "level": 17
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route25-3",
+      "location": "route-25",
+      "map": "Route25",
+      "event": "TEXT_ROUTE25_COOLTRAINER_M",
+      "x": 24,
+      "y": 4,
+      "class": "JR_TRAINER_M",
+      "partyIndex": 2,
+      "name": "보이스카우트",
+      "sprite": "camper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 19,
+          "level": 14
+        },
+        {
+          "id": 23,
+          "level": 14
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route25-4",
+      "location": "route-25",
+      "map": "Route25",
+      "event": "TEXT_ROUTE25_COOLTRAINER_F1",
+      "x": 18,
+      "y": 8,
+      "class": "LASS",
+      "partyIndex": 9,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 32,
+          "level": 15
+        },
+        {
+          "id": 29,
+          "level": 15
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route25-5",
+      "location": "route-25",
+      "map": "Route25",
+      "event": "TEXT_ROUTE25_YOUNGSTER3",
+      "x": 32,
+      "y": 3,
+      "class": "YOUNGSTER",
+      "partyIndex": 7,
+      "name": "반바지 꼬마",
+      "sprite": "youngster",
+      "automatic": true,
+      "team": [
+        {
+          "id": 23,
+          "level": 14
+        },
+        {
+          "id": 27,
+          "level": 14
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route25-6",
+      "location": "route-25",
+      "map": "Route25",
+      "event": "TEXT_ROUTE25_COOLTRAINER_F2",
+      "x": 37,
+      "y": 4,
+      "class": "LASS",
+      "partyIndex": 10,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 43,
+          "level": 13
+        },
+        {
+          "id": 16,
+          "level": 13
+        },
+        {
+          "id": 43,
+          "level": 13
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route25-7",
+      "location": "route-25",
+      "map": "Route25",
+      "event": "TEXT_ROUTE25_HIKER1",
+      "x": 8,
+      "y": 4,
+      "class": "HIKER",
+      "partyIndex": 2,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 66,
+          "level": 15
+        },
+        {
+          "id": 74,
+          "level": 15
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route25-8",
+      "location": "route-25",
+      "map": "Route25",
+      "event": "TEXT_ROUTE25_HIKER2",
+      "x": 23,
+      "y": 9,
+      "class": "HIKER",
+      "partyIndex": 3,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 74,
+          "level": 13
+        },
+        {
+          "id": 74,
+          "level": 13
+        },
+        {
+          "id": 66,
+          "level": 13
+        },
+        {
+          "id": 74,
+          "level": 13
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route25-9",
+      "location": "route-25",
+      "map": "Route25",
+      "event": "TEXT_ROUTE25_HIKER3",
+      "x": 13,
+      "y": 7,
+      "class": "HIKER",
+      "partyIndex": 4,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 95,
+          "level": 17
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route3-1",
+      "location": "route-3",
+      "map": "Route3",
+      "event": "TEXT_ROUTE3_YOUNGSTER1",
+      "x": 10,
+      "y": 6,
+      "class": "BUG_CATCHER",
+      "partyIndex": 4,
+      "name": "곤충채집 소년",
+      "sprite": "bug-catcher",
+      "automatic": true,
+      "team": [
+        {
+          "id": 10,
+          "level": 10
+        },
+        {
+          "id": 13,
+          "level": 10
+        },
+        {
+          "id": 10,
+          "level": 10
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route3-2",
+      "location": "route-3",
+      "map": "Route3",
+      "event": "TEXT_ROUTE3_YOUNGSTER2",
+      "x": 14,
+      "y": 4,
+      "class": "YOUNGSTER",
+      "partyIndex": 1,
+      "name": "반바지 꼬마",
+      "sprite": "youngster",
+      "automatic": true,
+      "team": [
+        {
+          "id": 19,
+          "level": 11
+        },
+        {
+          "id": 23,
+          "level": 11
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route3-3",
+      "location": "route-3",
+      "map": "Route3",
+      "event": "TEXT_ROUTE3_COOLTRAINER_F1",
+      "x": 16,
+      "y": 9,
+      "class": "LASS",
+      "partyIndex": 1,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 16,
+          "level": 9
+        },
+        {
+          "id": 16,
+          "level": 9
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route3-4",
+      "location": "route-3",
+      "map": "Route3",
+      "event": "TEXT_ROUTE3_YOUNGSTER3",
+      "x": 19,
+      "y": 5,
+      "class": "BUG_CATCHER",
+      "partyIndex": 5,
+      "name": "곤충채집 소년",
+      "sprite": "bug-catcher",
+      "automatic": true,
+      "team": [
+        {
+          "id": 13,
+          "level": 9
+        },
+        {
+          "id": 14,
+          "level": 9
+        },
+        {
+          "id": 10,
+          "level": 9
+        },
+        {
+          "id": 11,
+          "level": 9
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route3-5",
+      "location": "route-3",
+      "map": "Route3",
+      "event": "TEXT_ROUTE3_COOLTRAINER_F2",
+      "x": 23,
+      "y": 4,
+      "class": "LASS",
+      "partyIndex": 2,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 19,
+          "level": 10
+        },
+        {
+          "id": 32,
+          "level": 10
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route3-6",
+      "location": "route-3",
+      "map": "Route3",
+      "event": "TEXT_ROUTE3_YOUNGSTER4",
+      "x": 22,
+      "y": 9,
+      "class": "YOUNGSTER",
+      "partyIndex": 2,
+      "name": "반바지 꼬마",
+      "sprite": "youngster",
+      "automatic": true,
+      "team": [
+        {
+          "id": 21,
+          "level": 14
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route3-7",
+      "location": "route-3",
+      "map": "Route3",
+      "event": "TEXT_ROUTE3_YOUNGSTER5",
+      "x": 24,
+      "y": 6,
+      "class": "BUG_CATCHER",
+      "partyIndex": 6,
+      "name": "곤충채집 소년",
+      "sprite": "bug-catcher",
+      "automatic": true,
+      "team": [
+        {
+          "id": 10,
+          "level": 11
+        },
+        {
+          "id": 11,
+          "level": 11
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route3-8",
+      "location": "route-3",
+      "map": "Route3",
+      "event": "TEXT_ROUTE3_COOLTRAINER_F3",
+      "x": 33,
+      "y": 10,
+      "class": "LASS",
+      "partyIndex": 3,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 39,
+          "level": 14
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route4-1",
+      "location": "route-4",
+      "map": "Route4",
+      "event": "TEXT_ROUTE4_COOLTRAINER_F2",
+      "x": 63,
+      "y": 3,
+      "class": "LASS",
+      "partyIndex": 4,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 46,
+          "level": 31
+        },
+        {
+          "id": 46,
+          "level": 31
+        },
+        {
+          "id": 47,
+          "level": 31
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route6-1",
+      "location": "route-6",
+      "map": "Route6",
+      "event": "TEXT_ROUTE6_COOLTRAINER_M1",
+      "x": 10,
+      "y": 21,
+      "class": "JR_TRAINER_M",
+      "partyIndex": 10,
+      "name": "보이스카우트",
+      "sprite": "camper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 70,
+          "level": 16
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route6-2",
+      "location": "route-6",
+      "map": "Route6",
+      "event": "TEXT_ROUTE6_COOLTRAINER_F1",
+      "x": 11,
+      "y": 21,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 25,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 104,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route6-3",
+      "location": "route-6",
+      "map": "Route6",
+      "event": "TEXT_ROUTE6_YOUNGSTER1",
+      "x": 0,
+      "y": 15,
+      "class": "BUG_CATCHER",
+      "partyIndex": 10,
+      "name": "곤충채집 소년",
+      "sprite": "bug-catcher",
+      "automatic": true,
+      "team": [
+        {
+          "id": 13,
+          "level": 16
+        },
+        {
+          "id": 10,
+          "level": 16
+        },
+        {
+          "id": 13,
+          "level": 16
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route6-4",
+      "location": "route-6",
+      "map": "Route6",
+      "event": "TEXT_ROUTE6_COOLTRAINER_M2",
+      "x": 11,
+      "y": 31,
+      "class": "JR_TRAINER_M",
+      "partyIndex": 5,
+      "name": "보이스카우트",
+      "sprite": "camper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 21,
+          "level": 16
+        },
+        {
+          "id": 20,
+          "level": 16
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route6-5",
+      "location": "route-6",
+      "map": "Route6",
+      "event": "TEXT_ROUTE6_COOLTRAINER_F2",
+      "x": 11,
+      "y": 30,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 3,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 16,
+          "level": 16
+        },
+        {
+          "id": 16,
+          "level": 16
+        },
+        {
+          "id": 16,
+          "level": 16
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route6-6",
+      "location": "route-6",
+      "map": "Route6",
+      "event": "TEXT_ROUTE6_YOUNGSTER2",
+      "x": 19,
+      "y": 26,
+      "class": "BUG_CATCHER",
+      "partyIndex": 11,
+      "name": "곤충채집 소년",
+      "sprite": "bug-catcher",
+      "automatic": true,
+      "team": [
+        {
+          "id": 12,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route8-1",
+      "location": "route-8",
+      "map": "Route8",
+      "event": "TEXT_ROUTE8_SUPER_NERD1",
+      "x": 8,
+      "y": 5,
+      "class": "SUPER_NERD",
+      "partyIndex": 3,
+      "name": "이과계 남자",
+      "sprite": "super-nerd",
+      "automatic": true,
+      "team": [
+        {
+          "id": 100,
+          "level": 20
+        },
+        {
+          "id": 109,
+          "level": 20
+        },
+        {
+          "id": 100,
+          "level": 20
+        },
+        {
+          "id": 81,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route8-2",
+      "location": "route-8",
+      "map": "Route8",
+      "event": "TEXT_ROUTE8_GAMBLER1",
+      "x": 13,
+      "y": 9,
+      "class": "GAMBLER",
+      "partyIndex": 5,
+      "name": "도박꾼",
+      "sprite": "gamer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 60,
+          "level": 22
+        },
+        {
+          "id": 60,
+          "level": 22
+        },
+        {
+          "id": 61,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route8-3",
+      "location": "route-8",
+      "map": "Route8",
+      "event": "TEXT_ROUTE8_SUPER_NERD2",
+      "x": 42,
+      "y": 6,
+      "class": "SUPER_NERD",
+      "partyIndex": 4,
+      "name": "이과계 남자",
+      "sprite": "super-nerd",
+      "automatic": true,
+      "team": [
+        {
+          "id": 88,
+          "level": 22
+        },
+        {
+          "id": 89,
+          "level": 22
+        },
+        {
+          "id": 88,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route8-4",
+      "location": "route-8",
+      "map": "Route8",
+      "event": "TEXT_ROUTE8_COOLTRAINER_F1",
+      "x": 26,
+      "y": 3,
+      "class": "LASS",
+      "partyIndex": 13,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 29,
+          "level": 23
+        },
+        {
+          "id": 30,
+          "level": 23
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route8-5",
+      "location": "route-8",
+      "map": "Route8",
+      "event": "TEXT_ROUTE8_SUPER_NERD3",
+      "x": 26,
+      "y": 4,
+      "class": "SUPER_NERD",
+      "partyIndex": 5,
+      "name": "이과계 남자",
+      "sprite": "super-nerd",
+      "automatic": true,
+      "team": [
+        {
+          "id": 109,
+          "level": 26
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route8-6",
+      "location": "route-8",
+      "map": "Route8",
+      "event": "TEXT_ROUTE8_COOLTRAINER_F2",
+      "x": 26,
+      "y": 5,
+      "class": "LASS",
+      "partyIndex": 14,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 52,
+          "level": 24
+        },
+        {
+          "id": 52,
+          "level": 24
+        },
+        {
+          "id": 52,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route8-7",
+      "location": "route-8",
+      "map": "Route8",
+      "event": "TEXT_ROUTE8_COOLTRAINER_F3",
+      "x": 26,
+      "y": 6,
+      "class": "LASS",
+      "partyIndex": 15,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 16,
+          "level": 19
+        },
+        {
+          "id": 19,
+          "level": 19
+        },
+        {
+          "id": 29,
+          "level": 19
+        },
+        {
+          "id": 52,
+          "level": 19
+        },
+        {
+          "id": 32,
+          "level": 19
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route8-8",
+      "location": "route-8",
+      "map": "Route8",
+      "event": "TEXT_ROUTE8_GAMBLER2",
+      "x": 46,
+      "y": 13,
+      "class": "GAMBLER",
+      "partyIndex": 7,
+      "name": "도박꾼",
+      "sprite": "gamer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 58,
+          "level": 24
+        },
+        {
+          "id": 37,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route8-9",
+      "location": "route-8",
+      "map": "Route8",
+      "event": "TEXT_ROUTE8_COOLTRAINER_F4",
+      "x": 51,
+      "y": 12,
+      "class": "LASS",
+      "partyIndex": 16,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 35,
+          "level": 22
+        },
+        {
+          "id": 35,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route9-1",
+      "location": "route-9",
+      "map": "Route9",
+      "event": "TEXT_ROUTE9_COOLTRAINER_F1",
+      "x": 13,
+      "y": 10,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 5,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 43,
+          "level": 18
+        },
+        {
+          "id": 69,
+          "level": 18
+        },
+        {
+          "id": 43,
+          "level": 18
+        },
+        {
+          "id": 69,
+          "level": 18
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route9-2",
+      "location": "route-9",
+      "map": "Route9",
+      "event": "TEXT_ROUTE9_COOLTRAINER_M1",
+      "x": 24,
+      "y": 7,
+      "class": "YOUNGSTER",
+      "partyIndex": 14,
+      "name": "반바지 꼬마",
+      "sprite": "youngster",
+      "automatic": true,
+      "team": [
+        {
+          "id": 27,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route9-3",
+      "location": "route-9",
+      "map": "Route9",
+      "event": "TEXT_ROUTE9_COOLTRAINER_M2",
+      "x": 31,
+      "y": 7,
+      "class": "JR_TRAINER_M",
+      "partyIndex": 8,
+      "name": "보이스카우트",
+      "sprite": "camper",
+      "automatic": true,
+      "team": [
+        {
+          "id": 19,
+          "level": 19
+        },
+        {
+          "id": 50,
+          "level": 19
+        },
+        {
+          "id": 23,
+          "level": 19
+        },
+        {
+          "id": 27,
+          "level": 19
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route9-4",
+      "location": "route-9",
+      "map": "Route9",
+      "event": "TEXT_ROUTE9_COOLTRAINER_F2",
+      "x": 48,
+      "y": 8,
+      "class": "JR_TRAINER_F",
+      "partyIndex": 6,
+      "name": "걸스카우트",
+      "sprite": "picnicker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 52,
+          "level": 23
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route9-5",
+      "location": "route-9",
+      "map": "Route9",
+      "event": "TEXT_ROUTE9_HIKER1",
+      "x": 16,
+      "y": 15,
+      "class": "HIKER",
+      "partyIndex": 11,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 66,
+          "level": 20
+        },
+        {
+          "id": 95,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route9-6",
+      "location": "route-9",
+      "map": "Route9",
+      "event": "TEXT_ROUTE9_HIKER2",
+      "x": 43,
+      "y": 3,
+      "class": "HIKER",
+      "partyIndex": 6,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 74,
+          "level": 20
+        },
+        {
+          "id": 66,
+          "level": 20
+        },
+        {
+          "id": 74,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route9-7",
+      "location": "route-9",
+      "map": "Route9",
+      "event": "TEXT_ROUTE9_YOUNGSTER1",
+      "x": 22,
+      "y": 2,
+      "class": "BUG_CATCHER",
+      "partyIndex": 13,
+      "name": "곤충채집 소년",
+      "sprite": "bug-catcher",
+      "automatic": true,
+      "team": [
+        {
+          "id": 15,
+          "level": 19
+        },
+        {
+          "id": 15,
+          "level": 19
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route9-8",
+      "location": "route-9",
+      "map": "Route9",
+      "event": "TEXT_ROUTE9_HIKER3",
+      "x": 45,
+      "y": 15,
+      "class": "HIKER",
+      "partyIndex": 5,
+      "name": "등산가",
+      "sprite": "hiker",
+      "automatic": true,
+      "team": [
+        {
+          "id": 74,
+          "level": 21
+        },
+        {
+          "id": 95,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-route9-9",
+      "location": "route-9",
+      "map": "Route9",
+      "event": "TEXT_ROUTE9_YOUNGSTER2",
+      "x": 40,
+      "y": 8,
+      "class": "BUG_CATCHER",
+      "partyIndex": 14,
+      "name": "곤충채집 소년",
+      "sprite": "bug-catcher",
+      "automatic": true,
+      "team": [
+        {
+          "id": 10,
+          "level": 20
+        },
+        {
+          "id": 13,
+          "level": 20
+        },
+        {
+          "id": 48,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssanne1frooms-1",
+      "location": "ss-anne",
+      "map": "SSAnne1FRooms",
+      "event": "TEXT_SSANNE1FROOMS_GENTLEMAN1",
+      "x": 2,
+      "y": 3,
+      "class": "GENTLEMAN",
+      "partyIndex": 1,
+      "name": "신사",
+      "sprite": "gentleman",
+      "automatic": false,
+      "team": [
+        {
+          "id": 58,
+          "level": 18
+        },
+        {
+          "id": 58,
+          "level": 18
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssanne1frooms-2",
+      "location": "ss-anne",
+      "map": "SSAnne1FRooms",
+      "event": "TEXT_SSANNE1FROOMS_GENTLEMAN2",
+      "x": 11,
+      "y": 4,
+      "class": "GENTLEMAN",
+      "partyIndex": 2,
+      "name": "신사",
+      "sprite": "gentleman",
+      "automatic": false,
+      "team": [
+        {
+          "id": 32,
+          "level": 19
+        },
+        {
+          "id": 29,
+          "level": 19
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssanne1frooms-3",
+      "location": "ss-anne",
+      "map": "SSAnne1FRooms",
+      "event": "TEXT_SSANNE1FROOMS_YOUNGSTER",
+      "x": 11,
+      "y": 14,
+      "class": "YOUNGSTER",
+      "partyIndex": 8,
+      "name": "반바지 꼬마",
+      "sprite": "youngster",
+      "automatic": false,
+      "team": [
+        {
+          "id": 32,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssanne1frooms-4",
+      "location": "ss-anne",
+      "map": "SSAnne1FRooms",
+      "event": "TEXT_SSANNE1FROOMS_COOLTRAINER_F",
+      "x": 13,
+      "y": 11,
+      "class": "LASS",
+      "partyIndex": 11,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": false,
+      "team": [
+        {
+          "id": 16,
+          "level": 18
+        },
+        {
+          "id": 29,
+          "level": 18
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssanne2frooms-1",
+      "location": "ss-anne",
+      "map": "SSAnne2FRooms",
+      "event": "TEXT_SSANNE2FROOMS_GENTLEMAN1",
+      "x": 10,
+      "y": 2,
+      "class": "GENTLEMAN",
+      "partyIndex": 3,
+      "name": "신사",
+      "sprite": "gentleman",
+      "automatic": false,
+      "team": [
+        {
+          "id": 100,
+          "level": 22
+        },
+        {
+          "id": 81,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssanne2frooms-2",
+      "location": "ss-anne",
+      "map": "SSAnne2FRooms",
+      "event": "TEXT_SSANNE2FROOMS_FISHER",
+      "x": 13,
+      "y": 4,
+      "class": "FISHER",
+      "partyIndex": 1,
+      "name": "낚시꾼",
+      "sprite": "fisherman",
+      "automatic": false,
+      "team": [
+        {
+          "id": 118,
+          "level": 17
+        },
+        {
+          "id": 72,
+          "level": 17
+        },
+        {
+          "id": 118,
+          "level": 17
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssanne2frooms-3",
+      "location": "ss-anne",
+      "map": "SSAnne2FRooms",
+      "event": "TEXT_SSANNE2FROOMS_GENTLEMAN2",
+      "x": 0,
+      "y": 14,
+      "class": "GENTLEMAN",
+      "partyIndex": 5,
+      "name": "신사",
+      "sprite": "gentleman",
+      "automatic": false,
+      "team": [
+        {
+          "id": 58,
+          "level": 17
+        },
+        {
+          "id": 77,
+          "level": 17
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssanne2frooms-4",
+      "location": "ss-anne",
+      "map": "SSAnne2FRooms",
+      "event": "TEXT_SSANNE2FROOMS_COOLTRAINER_F",
+      "x": 2,
+      "y": 11,
+      "class": "LASS",
+      "partyIndex": 12,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": false,
+      "team": [
+        {
+          "id": 39,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssanneb1frooms-1",
+      "location": "ss-anne",
+      "map": "SSAnneB1FRooms",
+      "event": "TEXT_SSANNEB1FROOMS_SAILOR1",
+      "x": 0,
+      "y": 13,
+      "class": "SAILOR",
+      "partyIndex": 3,
+      "name": "선원",
+      "sprite": "sailor",
+      "automatic": false,
+      "team": [
+        {
+          "id": 90,
+          "level": 21
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssanneb1frooms-2",
+      "location": "ss-anne",
+      "map": "SSAnneB1FRooms",
+      "event": "TEXT_SSANNEB1FROOMS_SAILOR2",
+      "x": 2,
+      "y": 11,
+      "class": "SAILOR",
+      "partyIndex": 4,
+      "name": "선원",
+      "sprite": "sailor",
+      "automatic": false,
+      "team": [
+        {
+          "id": 116,
+          "level": 17
+        },
+        {
+          "id": 90,
+          "level": 17
+        },
+        {
+          "id": 72,
+          "level": 17
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssanneb1frooms-3",
+      "location": "ss-anne",
+      "map": "SSAnneB1FRooms",
+      "event": "TEXT_SSANNEB1FROOMS_SAILOR3",
+      "x": 12,
+      "y": 3,
+      "class": "SAILOR",
+      "partyIndex": 5,
+      "name": "선원",
+      "sprite": "sailor",
+      "automatic": false,
+      "team": [
+        {
+          "id": 72,
+          "level": 18
+        },
+        {
+          "id": 120,
+          "level": 18
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssanneb1frooms-4",
+      "location": "ss-anne",
+      "map": "SSAnneB1FRooms",
+      "event": "TEXT_SSANNEB1FROOMS_SAILOR4",
+      "x": 22,
+      "y": 2,
+      "class": "SAILOR",
+      "partyIndex": 6,
+      "name": "선원",
+      "sprite": "sailor",
+      "automatic": false,
+      "team": [
+        {
+          "id": 116,
+          "level": 17
+        },
+        {
+          "id": 116,
+          "level": 17
+        },
+        {
+          "id": 116,
+          "level": 17
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssanneb1frooms-5",
+      "location": "ss-anne",
+      "map": "SSAnneB1FRooms",
+      "event": "TEXT_SSANNEB1FROOMS_SAILOR5",
+      "x": 0,
+      "y": 2,
+      "class": "SAILOR",
+      "partyIndex": 7,
+      "name": "선원",
+      "sprite": "sailor",
+      "automatic": false,
+      "team": [
+        {
+          "id": 66,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssanneb1frooms-6",
+      "location": "ss-anne",
+      "map": "SSAnneB1FRooms",
+      "event": "TEXT_SSANNEB1FROOMS_FISHER",
+      "x": 0,
+      "y": 4,
+      "class": "FISHER",
+      "partyIndex": 2,
+      "name": "낚시꾼",
+      "sprite": "fisherman",
+      "automatic": false,
+      "team": [
+        {
+          "id": 72,
+          "level": 17
+        },
+        {
+          "id": 120,
+          "level": 17
+        },
+        {
+          "id": 90,
+          "level": 17
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssannebow-1",
+      "location": "ss-anne",
+      "map": "SSAnneBow",
+      "event": "TEXT_SSANNEBOW_SAILOR2",
+      "x": 4,
+      "y": 4,
+      "class": "SAILOR",
+      "partyIndex": 1,
+      "name": "선원",
+      "sprite": "sailor",
+      "automatic": false,
+      "team": [
+        {
+          "id": 66,
+          "level": 18
+        },
+        {
+          "id": 90,
+          "level": 18
+        }
+      ]
+    },
+    {
+      "id": "k-npc-ssannebow-2",
+      "location": "ss-anne",
+      "map": "SSAnneBow",
+      "event": "TEXT_SSANNEBOW_SAILOR3",
+      "x": 10,
+      "y": 8,
+      "class": "SAILOR",
+      "partyIndex": 2,
+      "name": "선원",
+      "sprite": "sailor",
+      "automatic": false,
+      "team": [
+        {
+          "id": 66,
+          "level": 17
+        },
+        {
+          "id": 72,
+          "level": 17
+        }
+      ]
+    },
+    {
+      "id": "k-npc-saffrongym-1",
+      "location": "gym:5",
+      "map": "SaffronGym",
+      "event": "TEXT_SAFFRONGYM_CHANNELER1",
+      "x": 10,
+      "y": 1,
+      "class": "CHANNELER",
+      "partyIndex": 22,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": false,
+      "team": [
+        {
+          "id": 92,
+          "level": 34
+        },
+        {
+          "id": 93,
+          "level": 34
+        }
+      ]
+    },
+    {
+      "id": "k-npc-saffrongym-2",
+      "location": "gym:5",
+      "map": "SaffronGym",
+      "event": "TEXT_SAFFRONGYM_YOUNGSTER1",
+      "x": 17,
+      "y": 1,
+      "class": "PSYCHIC_TR",
+      "partyIndex": 1,
+      "name": "초능력자",
+      "sprite": "psychic",
+      "automatic": false,
+      "team": [
+        {
+          "id": 64,
+          "level": 31
+        },
+        {
+          "id": 79,
+          "level": 31
+        },
+        {
+          "id": 122,
+          "level": 31
+        },
+        {
+          "id": 64,
+          "level": 31
+        }
+      ]
+    },
+    {
+      "id": "k-npc-saffrongym-3",
+      "location": "gym:5",
+      "map": "SaffronGym",
+      "event": "TEXT_SAFFRONGYM_CHANNELER2",
+      "x": 3,
+      "y": 7,
+      "class": "CHANNELER",
+      "partyIndex": 23,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": false,
+      "team": [
+        {
+          "id": 93,
+          "level": 38
+        }
+      ]
+    },
+    {
+      "id": "k-npc-saffrongym-4",
+      "location": "gym:5",
+      "map": "SaffronGym",
+      "event": "TEXT_SAFFRONGYM_YOUNGSTER2",
+      "x": 17,
+      "y": 7,
+      "class": "PSYCHIC_TR",
+      "partyIndex": 2,
+      "name": "초능력자",
+      "sprite": "psychic",
+      "automatic": false,
+      "team": [
+        {
+          "id": 122,
+          "level": 34
+        },
+        {
+          "id": 64,
+          "level": 34
+        }
+      ]
+    },
+    {
+      "id": "k-npc-saffrongym-5",
+      "location": "gym:5",
+      "map": "SaffronGym",
+      "event": "TEXT_SAFFRONGYM_CHANNELER3",
+      "x": 3,
+      "y": 13,
+      "class": "CHANNELER",
+      "partyIndex": 24,
+      "name": "무당",
+      "sprite": "channeler",
+      "automatic": false,
+      "team": [
+        {
+          "id": 92,
+          "level": 33
+        },
+        {
+          "id": 92,
+          "level": 33
+        },
+        {
+          "id": 93,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-saffrongym-6",
+      "location": "gym:5",
+      "map": "SaffronGym",
+      "event": "TEXT_SAFFRONGYM_YOUNGSTER3",
+      "x": 17,
+      "y": 13,
+      "class": "PSYCHIC_TR",
+      "partyIndex": 3,
+      "name": "초능력자",
+      "sprite": "psychic",
+      "automatic": false,
+      "team": [
+        {
+          "id": 79,
+          "level": 33
+        },
+        {
+          "id": 79,
+          "level": 33
+        },
+        {
+          "id": 80,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-saffrongym-7",
+      "location": "gym:5",
+      "map": "SaffronGym",
+      "event": "TEXT_SAFFRONGYM_YOUNGSTER4",
+      "x": 3,
+      "y": 1,
+      "class": "PSYCHIC_TR",
+      "partyIndex": 4,
+      "name": "초능력자",
+      "sprite": "psychic",
+      "automatic": false,
+      "team": [
+        {
+          "id": 80,
+          "level": 38
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco10f-1",
+      "location": "silph",
+      "map": "SilphCo10F",
+      "event": "TEXT_SILPHCO10F_ROCKET",
+      "x": 1,
+      "y": 9,
+      "class": "ROCKET",
+      "partyIndex": 39,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 67,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco10f-2",
+      "location": "silph",
+      "map": "SilphCo10F",
+      "event": "TEXT_SILPHCO10F_SCIENTIST",
+      "x": 10,
+      "y": 2,
+      "class": "SCIENTIST",
+      "partyIndex": 11,
+      "name": "연구원",
+      "sprite": "scientist",
+      "automatic": false,
+      "team": [
+        {
+          "id": 81,
+          "level": 29
+        },
+        {
+          "id": 109,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco11f-1",
+      "location": "silph",
+      "map": "SilphCo11F",
+      "event": "TEXT_SILPHCO11F_ROCKET",
+      "x": 15,
+      "y": 9,
+      "class": "ROCKET",
+      "partyIndex": 40,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 19,
+          "level": 25
+        },
+        {
+          "id": 19,
+          "level": 25
+        },
+        {
+          "id": 41,
+          "level": 25
+        },
+        {
+          "id": 19,
+          "level": 25
+        },
+        {
+          "id": 23,
+          "level": 25
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco2f-1",
+      "location": "silph",
+      "map": "SilphCo2F",
+      "event": "TEXT_SILPHCO2F_SCIENTIST1",
+      "x": 5,
+      "y": 12,
+      "class": "SCIENTIST",
+      "partyIndex": 2,
+      "name": "연구원",
+      "sprite": "scientist",
+      "automatic": false,
+      "team": [
+        {
+          "id": 88,
+          "level": 26
+        },
+        {
+          "id": 110,
+          "level": 26
+        },
+        {
+          "id": 109,
+          "level": 26
+        },
+        {
+          "id": 110,
+          "level": 26
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco2f-2",
+      "location": "silph",
+      "map": "SilphCo2F",
+      "event": "TEXT_SILPHCO2F_SCIENTIST2",
+      "x": 24,
+      "y": 13,
+      "class": "SCIENTIST",
+      "partyIndex": 3,
+      "name": "연구원",
+      "sprite": "scientist",
+      "automatic": false,
+      "team": [
+        {
+          "id": 81,
+          "level": 28
+        },
+        {
+          "id": 100,
+          "level": 28
+        },
+        {
+          "id": 82,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco2f-3",
+      "location": "silph",
+      "map": "SilphCo2F",
+      "event": "TEXT_SILPHCO2F_ROCKET1",
+      "x": 16,
+      "y": 11,
+      "class": "ROCKET",
+      "partyIndex": 23,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 104,
+          "level": 29
+        },
+        {
+          "id": 41,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco2f-4",
+      "location": "silph",
+      "map": "SilphCo2F",
+      "event": "TEXT_SILPHCO2F_ROCKET2",
+      "x": 24,
+      "y": 7,
+      "class": "ROCKET",
+      "partyIndex": 24,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 42,
+          "level": 25
+        },
+        {
+          "id": 41,
+          "level": 25
+        },
+        {
+          "id": 41,
+          "level": 25
+        },
+        {
+          "id": 20,
+          "level": 25
+        },
+        {
+          "id": 41,
+          "level": 25
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco3f-1",
+      "location": "silph",
+      "map": "SilphCo3F",
+      "event": "TEXT_SILPHCO3F_ROCKET",
+      "x": 20,
+      "y": 7,
+      "class": "ROCKET",
+      "partyIndex": 25,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 20,
+          "level": 28
+        },
+        {
+          "id": 97,
+          "level": 28
+        },
+        {
+          "id": 20,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco3f-2",
+      "location": "silph",
+      "map": "SilphCo3F",
+      "event": "TEXT_SILPHCO3F_SCIENTIST",
+      "x": 7,
+      "y": 9,
+      "class": "SCIENTIST",
+      "partyIndex": 4,
+      "name": "연구원",
+      "sprite": "scientist",
+      "automatic": false,
+      "team": [
+        {
+          "id": 101,
+          "level": 29
+        },
+        {
+          "id": 110,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco4f-1",
+      "location": "silph",
+      "map": "SilphCo4F",
+      "event": "TEXT_SILPHCO4F_ROCKET1",
+      "x": 9,
+      "y": 14,
+      "class": "ROCKET",
+      "partyIndex": 26,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 66,
+          "level": 29
+        },
+        {
+          "id": 96,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco4f-2",
+      "location": "silph",
+      "map": "SilphCo4F",
+      "event": "TEXT_SILPHCO4F_SCIENTIST",
+      "x": 14,
+      "y": 6,
+      "class": "SCIENTIST",
+      "partyIndex": 5,
+      "name": "연구원",
+      "sprite": "scientist",
+      "automatic": false,
+      "team": [
+        {
+          "id": 101,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco4f-3",
+      "location": "silph",
+      "map": "SilphCo4F",
+      "event": "TEXT_SILPHCO4F_ROCKET2",
+      "x": 26,
+      "y": 10,
+      "class": "ROCKET",
+      "partyIndex": 27,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 23,
+          "level": 28
+        },
+        {
+          "id": 41,
+          "level": 28
+        },
+        {
+          "id": 104,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco5f-1",
+      "location": "silph",
+      "map": "SilphCo5F",
+      "event": "TEXT_SILPHCO5F_ROCKET1",
+      "x": 8,
+      "y": 16,
+      "class": "ROCKET",
+      "partyIndex": 28,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 24,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco5f-2",
+      "location": "silph",
+      "map": "SilphCo5F",
+      "event": "TEXT_SILPHCO5F_SCIENTIST",
+      "x": 8,
+      "y": 3,
+      "class": "SCIENTIST",
+      "partyIndex": 6,
+      "name": "연구원",
+      "sprite": "scientist",
+      "automatic": false,
+      "team": [
+        {
+          "id": 82,
+          "level": 26
+        },
+        {
+          "id": 109,
+          "level": 26
+        },
+        {
+          "id": 110,
+          "level": 26
+        },
+        {
+          "id": 81,
+          "level": 26
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco5f-3",
+      "location": "silph",
+      "map": "SilphCo5F",
+      "event": "TEXT_SILPHCO5F_ROCKER",
+      "x": 18,
+      "y": 10,
+      "class": "JUGGLER",
+      "partyIndex": 1,
+      "name": "저글러",
+      "sprite": "juggler",
+      "automatic": false,
+      "team": [
+        {
+          "id": 64,
+          "level": 29
+        },
+        {
+          "id": 122,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco5f-4",
+      "location": "silph",
+      "map": "SilphCo5F",
+      "event": "TEXT_SILPHCO5F_ROCKET2",
+      "x": 28,
+      "y": 4,
+      "class": "ROCKET",
+      "partyIndex": 29,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 97,
+          "level": 33
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco6f-1",
+      "location": "silph",
+      "map": "SilphCo6F",
+      "event": "TEXT_SILPHCO6F_ROCKET1",
+      "x": 17,
+      "y": 3,
+      "class": "ROCKET",
+      "partyIndex": 30,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 66,
+          "level": 29
+        },
+        {
+          "id": 67,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco6f-2",
+      "location": "silph",
+      "map": "SilphCo6F",
+      "event": "TEXT_SILPHCO6F_SCIENTIST",
+      "x": 7,
+      "y": 8,
+      "class": "SCIENTIST",
+      "partyIndex": 7,
+      "name": "연구원",
+      "sprite": "scientist",
+      "automatic": false,
+      "team": [
+        {
+          "id": 100,
+          "level": 25
+        },
+        {
+          "id": 109,
+          "level": 25
+        },
+        {
+          "id": 82,
+          "level": 25
+        },
+        {
+          "id": 81,
+          "level": 25
+        },
+        {
+          "id": 109,
+          "level": 25
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco6f-3",
+      "location": "silph",
+      "map": "SilphCo6F",
+      "event": "TEXT_SILPHCO6F_ROCKET2",
+      "x": 14,
+      "y": 15,
+      "class": "ROCKET",
+      "partyIndex": 31,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 41,
+          "level": 28
+        },
+        {
+          "id": 41,
+          "level": 28
+        },
+        {
+          "id": 42,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco7f-1",
+      "location": "silph",
+      "map": "SilphCo7F",
+      "event": "TEXT_SILPHCO7F_ROCKET1",
+      "x": 13,
+      "y": 1,
+      "class": "ROCKET",
+      "partyIndex": 32,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 20,
+          "level": 26
+        },
+        {
+          "id": 24,
+          "level": 26
+        },
+        {
+          "id": 109,
+          "level": 26
+        },
+        {
+          "id": 42,
+          "level": 26
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco7f-2",
+      "location": "silph",
+      "map": "SilphCo7F",
+      "event": "TEXT_SILPHCO7F_SCIENTIST",
+      "x": 2,
+      "y": 13,
+      "class": "SCIENTIST",
+      "partyIndex": 8,
+      "name": "연구원",
+      "sprite": "scientist",
+      "automatic": false,
+      "team": [
+        {
+          "id": 101,
+          "level": 29
+        },
+        {
+          "id": 89,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco7f-3",
+      "location": "silph",
+      "map": "SilphCo7F",
+      "event": "TEXT_SILPHCO7F_ROCKET2",
+      "x": 20,
+      "y": 2,
+      "class": "ROCKET",
+      "partyIndex": 33,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 104,
+          "level": 29
+        },
+        {
+          "id": 104,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco7f-4",
+      "location": "silph",
+      "map": "SilphCo7F",
+      "event": "TEXT_SILPHCO7F_ROCKET3",
+      "x": 19,
+      "y": 14,
+      "class": "ROCKET",
+      "partyIndex": 34,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 27,
+          "level": 29
+        },
+        {
+          "id": 28,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco8f-1",
+      "location": "silph",
+      "map": "SilphCo8F",
+      "event": "TEXT_SILPHCO8F_ROCKET1",
+      "x": 19,
+      "y": 2,
+      "class": "ROCKET",
+      "partyIndex": 35,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 20,
+          "level": 26
+        },
+        {
+          "id": 41,
+          "level": 26
+        },
+        {
+          "id": 42,
+          "level": 26
+        },
+        {
+          "id": 19,
+          "level": 26
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco8f-2",
+      "location": "silph",
+      "map": "SilphCo8F",
+      "event": "TEXT_SILPHCO8F_SCIENTIST",
+      "x": 10,
+      "y": 2,
+      "class": "SCIENTIST",
+      "partyIndex": 9,
+      "name": "연구원",
+      "sprite": "scientist",
+      "automatic": false,
+      "team": [
+        {
+          "id": 88,
+          "level": 29
+        },
+        {
+          "id": 101,
+          "level": 29
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco8f-3",
+      "location": "silph",
+      "map": "SilphCo8F",
+      "event": "TEXT_SILPHCO8F_ROCKET2",
+      "x": 12,
+      "y": 15,
+      "class": "ROCKET",
+      "partyIndex": 36,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 110,
+          "level": 28
+        },
+        {
+          "id": 42,
+          "level": 28
+        },
+        {
+          "id": 109,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco9f-1",
+      "location": "silph",
+      "map": "SilphCo9F",
+      "event": "TEXT_SILPHCO9F_ROCKET1",
+      "x": 2,
+      "y": 4,
+      "class": "ROCKET",
+      "partyIndex": 37,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 96,
+          "level": 28
+        },
+        {
+          "id": 88,
+          "level": 28
+        },
+        {
+          "id": 66,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco9f-2",
+      "location": "silph",
+      "map": "SilphCo9F",
+      "event": "TEXT_SILPHCO9F_SCIENTIST",
+      "x": 21,
+      "y": 13,
+      "class": "SCIENTIST",
+      "partyIndex": 10,
+      "name": "연구원",
+      "sprite": "scientist",
+      "automatic": false,
+      "team": [
+        {
+          "id": 100,
+          "level": 28
+        },
+        {
+          "id": 109,
+          "level": 28
+        },
+        {
+          "id": 82,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-silphco9f-3",
+      "location": "silph",
+      "map": "SilphCo9F",
+      "event": "TEXT_SILPHCO9F_ROCKET2",
+      "x": 13,
+      "y": 16,
+      "class": "ROCKET",
+      "partyIndex": 38,
+      "name": "로켓단 조무래기",
+      "sprite": "rocket-grunt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 42,
+          "level": 28
+        },
+        {
+          "id": 96,
+          "level": 28
+        },
+        {
+          "id": 97,
+          "level": 28
+        }
+      ]
+    },
+    {
+      "id": "k-npc-vermiliongym-1",
+      "location": "gym:2",
+      "map": "VermilionGym",
+      "event": "TEXT_VERMILIONGYM_GENTLEMAN",
+      "x": 9,
+      "y": 6,
+      "class": "GENTLEMAN",
+      "partyIndex": 3,
+      "name": "신사",
+      "sprite": "gentleman",
+      "automatic": false,
+      "team": [
+        {
+          "id": 100,
+          "level": 22
+        },
+        {
+          "id": 81,
+          "level": 22
+        }
+      ]
+    },
+    {
+      "id": "k-npc-vermiliongym-2",
+      "location": "gym:2",
+      "map": "VermilionGym",
+      "event": "TEXT_VERMILIONGYM_SUPER_NERD",
+      "x": 3,
+      "y": 8,
+      "class": "ROCKER",
+      "partyIndex": 1,
+      "name": "로커",
+      "sprite": "rocker",
+      "automatic": false,
+      "team": [
+        {
+          "id": 100,
+          "level": 20
+        },
+        {
+          "id": 100,
+          "level": 20
+        },
+        {
+          "id": 100,
+          "level": 20
+        }
+      ]
+    },
+    {
+      "id": "k-npc-vermiliongym-3",
+      "location": "gym:2",
+      "map": "VermilionGym",
+      "event": "TEXT_VERMILIONGYM_SAILOR",
+      "x": 0,
+      "y": 10,
+      "class": "SAILOR",
+      "partyIndex": 8,
+      "name": "선원",
+      "sprite": "sailor",
+      "automatic": false,
+      "team": [
+        {
+          "id": 81,
+          "level": 24
+        }
+      ]
+    },
+    {
+      "id": "k-npc-victoryroad1f-1",
+      "location": "victory-road",
+      "map": "VictoryRoad1F",
+      "event": "TEXT_VICTORYROAD1F_COOLTRAINER_F",
+      "x": 7,
+      "y": 5,
+      "class": "COOLTRAINER_F",
+      "partyIndex": 5,
+      "name": "엘리트 트레이너",
+      "sprite": "cooltrainer-f",
+      "automatic": true,
+      "team": [
+        {
+          "id": 53,
+          "level": 44
+        },
+        {
+          "id": 38,
+          "level": 44
+        }
+      ]
+    },
+    {
+      "id": "k-npc-victoryroad1f-2",
+      "location": "victory-road",
+      "map": "VictoryRoad1F",
+      "event": "TEXT_VICTORYROAD1F_COOLTRAINER_M",
+      "x": 3,
+      "y": 2,
+      "class": "COOLTRAINER_M",
+      "partyIndex": 5,
+      "name": "엘리트 트레이너",
+      "sprite": "cooltrainer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 2,
+          "level": 42
+        },
+        {
+          "id": 8,
+          "level": 42
+        },
+        {
+          "id": 5,
+          "level": 42
+        },
+        {
+          "id": 6,
+          "level": 42
+        }
+      ]
+    },
+    {
+      "id": "k-npc-victoryroad2f-1",
+      "location": "victory-road",
+      "map": "VictoryRoad2F",
+      "event": "TEXT_VICTORYROAD2F_HIKER",
+      "x": 12,
+      "y": 9,
+      "class": "BLACKBELT",
+      "partyIndex": 9,
+      "name": "태권왕",
+      "sprite": "black-belt",
+      "automatic": true,
+      "team": [
+        {
+          "id": 67,
+          "level": 43
+        },
+        {
+          "id": 66,
+          "level": 43
+        },
+        {
+          "id": 67,
+          "level": 43
+        }
+      ]
+    },
+    {
+      "id": "k-npc-victoryroad2f-2",
+      "location": "victory-road",
+      "map": "VictoryRoad2F",
+      "event": "TEXT_VICTORYROAD2F_SUPER_NERD1",
+      "x": 21,
+      "y": 13,
+      "class": "JUGGLER",
+      "partyIndex": 2,
+      "name": "저글러",
+      "sprite": "juggler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 96,
+          "level": 41
+        },
+        {
+          "id": 97,
+          "level": 41
+        },
+        {
+          "id": 64,
+          "level": 41
+        },
+        {
+          "id": 64,
+          "level": 41
+        }
+      ]
+    },
+    {
+      "id": "k-npc-victoryroad2f-3",
+      "location": "victory-road",
+      "map": "VictoryRoad2F",
+      "event": "TEXT_VICTORYROAD2F_COOLTRAINER_M",
+      "x": 19,
+      "y": 8,
+      "class": "TAMER",
+      "partyIndex": 5,
+      "name": "조련사",
+      "sprite": "tamer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 53,
+          "level": 44
+        },
+        {
+          "id": 55,
+          "level": 44
+        }
+      ]
+    },
+    {
+      "id": "k-npc-victoryroad2f-4",
+      "location": "victory-road",
+      "map": "VictoryRoad2F",
+      "event": "TEXT_VICTORYROAD2F_SUPER_NERD2",
+      "x": 4,
+      "y": 2,
+      "class": "POKEMANIAC",
+      "partyIndex": 6,
+      "name": "포켓몬 마니아",
+      "sprite": "pokemaniac",
+      "automatic": true,
+      "team": [
+        {
+          "id": 5,
+          "level": 40
+        },
+        {
+          "id": 131,
+          "level": 40
+        },
+        {
+          "id": 108,
+          "level": 40
+        }
+      ]
+    },
+    {
+      "id": "k-npc-victoryroad2f-5",
+      "location": "victory-road",
+      "map": "VictoryRoad2F",
+      "event": "TEXT_VICTORYROAD2F_SUPER_NERD3",
+      "x": 26,
+      "y": 3,
+      "class": "JUGGLER",
+      "partyIndex": 5,
+      "name": "저글러",
+      "sprite": "juggler",
+      "automatic": true,
+      "team": [
+        {
+          "id": 122,
+          "level": 48
+        }
+      ]
+    },
+    {
+      "id": "k-npc-victoryroad3f-1",
+      "location": "victory-road",
+      "map": "VictoryRoad3F",
+      "event": "TEXT_VICTORYROAD3F_COOLTRAINER_M1",
+      "x": 28,
+      "y": 5,
+      "class": "COOLTRAINER_M",
+      "partyIndex": 2,
+      "name": "엘리트 트레이너",
+      "sprite": "cooltrainer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 103,
+          "level": 43
+        },
+        {
+          "id": 91,
+          "level": 43
+        },
+        {
+          "id": 59,
+          "level": 43
+        }
+      ]
+    },
+    {
+      "id": "k-npc-victoryroad3f-2",
+      "location": "victory-road",
+      "map": "VictoryRoad3F",
+      "event": "TEXT_VICTORYROAD3F_COOLTRAINER_F1",
+      "x": 7,
+      "y": 13,
+      "class": "COOLTRAINER_F",
+      "partyIndex": 2,
+      "name": "엘리트 트레이너",
+      "sprite": "cooltrainer-f",
+      "automatic": true,
+      "team": [
+        {
+          "id": 69,
+          "level": 43
+        },
+        {
+          "id": 70,
+          "level": 43
+        },
+        {
+          "id": 71,
+          "level": 43
+        }
+      ]
+    },
+    {
+      "id": "k-npc-victoryroad3f-3",
+      "location": "victory-road",
+      "map": "VictoryRoad3F",
+      "event": "TEXT_VICTORYROAD3F_COOLTRAINER_M2",
+      "x": 6,
+      "y": 14,
+      "class": "COOLTRAINER_M",
+      "partyIndex": 3,
+      "name": "엘리트 트레이너",
+      "sprite": "cooltrainer",
+      "automatic": true,
+      "team": [
+        {
+          "id": 99,
+          "level": 43
+        },
+        {
+          "id": 73,
+          "level": 43
+        },
+        {
+          "id": 9,
+          "level": 43
+        }
+      ]
+    },
+    {
+      "id": "k-npc-victoryroad3f-4",
+      "location": "victory-road",
+      "map": "VictoryRoad3F",
+      "event": "TEXT_VICTORYROAD3F_COOLTRAINER_F2",
+      "x": 13,
+      "y": 3,
+      "class": "COOLTRAINER_F",
+      "partyIndex": 3,
+      "name": "엘리트 트레이너",
+      "sprite": "cooltrainer-f",
+      "automatic": true,
+      "team": [
+        {
+          "id": 47,
+          "level": 43
+        },
+        {
+          "id": 87,
+          "level": 43
+        },
+        {
+          "id": 113,
+          "level": 43
+        }
+      ]
+    },
+    {
+      "id": "k-npc-viridianforest-1",
+      "location": "forest",
+      "map": "ViridianForest",
+      "event": "TEXT_VIRIDIANFOREST_YOUNGSTER2",
+      "x": 30,
+      "y": 33,
+      "class": "BUG_CATCHER",
+      "partyIndex": 1,
+      "name": "곤충채집 소년",
+      "sprite": "bug-catcher",
+      "automatic": true,
+      "team": [
+        {
+          "id": 10,
+          "level": 7
+        },
+        {
+          "id": 10,
+          "level": 7
+        }
+      ]
+    },
+    {
+      "id": "k-npc-viridianforest-2",
+      "location": "forest",
+      "map": "ViridianForest",
+      "event": "TEXT_VIRIDIANFOREST_YOUNGSTER3",
+      "x": 30,
+      "y": 19,
+      "class": "BUG_CATCHER",
+      "partyIndex": 2,
+      "name": "곤충채집 소년",
+      "sprite": "bug-catcher",
+      "automatic": true,
+      "team": [
+        {
+          "id": 11,
+          "level": 6
+        },
+        {
+          "id": 10,
+          "level": 6
+        },
+        {
+          "id": 11,
+          "level": 6
+        }
+      ]
+    },
+    {
+      "id": "k-npc-viridianforest-3",
+      "location": "forest",
+      "map": "ViridianForest",
+      "event": "TEXT_VIRIDIANFOREST_YOUNGSTER4",
+      "x": 2,
+      "y": 18,
+      "class": "BUG_CATCHER",
+      "partyIndex": 3,
+      "name": "곤충채집 소년",
+      "sprite": "bug-catcher",
+      "automatic": true,
+      "team": [
+        {
+          "id": 10,
+          "level": 10
+        }
+      ]
+    },
+    {
+      "id": "k-npc-viridianforest-4",
+      "location": "forest",
+      "map": "ViridianForest",
+      "event": "TEXT_VIRIDIANFOREST_COOLTRAINER_F",
+      "x": 2,
+      "y": 41,
+      "class": "LASS",
+      "partyIndex": 19,
+      "name": "아가씨",
+      "sprite": "lass",
+      "automatic": true,
+      "team": [
+        {
+          "id": 29,
+          "level": 6
+        },
+        {
+          "id": 32,
+          "level": 6
+        }
+      ]
+    },
+    {
+      "id": "k-npc-viridianforest-5",
+      "location": "forest",
+      "map": "ViridianForest",
+      "event": "TEXT_VIRIDIANFOREST_YOUNGSTER5",
+      "x": 13,
+      "y": 17,
+      "class": "BUG_CATCHER",
+      "partyIndex": 15,
+      "name": "곤충채집 소년",
+      "sprite": "bug-catcher",
+      "automatic": true,
+      "team": [
+        {
+          "id": 10,
+          "level": 8
+        },
+        {
+          "id": 11,
+          "level": 8
+        }
+      ]
+    },
+    {
+      "id": "k-npc-viridiangym-1",
+      "location": "gym:7",
+      "map": "ViridianGym",
+      "event": "TEXT_VIRIDIANGYM_COOLTRAINER_M1",
+      "x": 12,
+      "y": 7,
+      "class": "COOLTRAINER_M",
+      "partyIndex": 9,
+      "name": "엘리트 트레이너",
+      "sprite": "cooltrainer",
+      "automatic": false,
+      "team": [
+        {
+          "id": 28,
+          "level": 39
+        },
+        {
+          "id": 51,
+          "level": 39
+        }
+      ]
+    },
+    {
+      "id": "k-npc-viridiangym-2",
+      "location": "gym:7",
+      "map": "ViridianGym",
+      "event": "TEXT_VIRIDIANGYM_HIKER1",
+      "x": 11,
+      "y": 11,
+      "class": "BLACKBELT",
+      "partyIndex": 6,
+      "name": "태권왕",
+      "sprite": "black-belt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 66,
+          "level": 40
+        },
+        {
+          "id": 67,
+          "level": 40
+        }
+      ]
+    },
+    {
+      "id": "k-npc-viridiangym-3",
+      "location": "gym:7",
+      "map": "ViridianGym",
+      "event": "TEXT_VIRIDIANGYM_ROCKER1",
+      "x": 10,
+      "y": 7,
+      "class": "TAMER",
+      "partyIndex": 3,
+      "name": "조련사",
+      "sprite": "tamer",
+      "automatic": false,
+      "team": [
+        {
+          "id": 111,
+          "level": 43
+        }
+      ]
+    },
+    {
+      "id": "k-npc-viridiangym-4",
+      "location": "gym:7",
+      "map": "ViridianGym",
+      "event": "TEXT_VIRIDIANGYM_HIKER2",
+      "x": 3,
+      "y": 7,
+      "class": "BLACKBELT",
+      "partyIndex": 7,
+      "name": "태권왕",
+      "sprite": "black-belt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 67,
+          "level": 43
+        }
+      ]
+    },
+    {
+      "id": "k-npc-viridiangym-5",
+      "location": "gym:7",
+      "map": "ViridianGym",
+      "event": "TEXT_VIRIDIANGYM_COOLTRAINER_M2",
+      "x": 13,
+      "y": 5,
+      "class": "COOLTRAINER_M",
+      "partyIndex": 10,
+      "name": "엘리트 트레이너",
+      "sprite": "cooltrainer",
+      "automatic": false,
+      "team": [
+        {
+          "id": 111,
+          "level": 43
+        }
+      ]
+    },
+    {
+      "id": "k-npc-viridiangym-6",
+      "location": "gym:7",
+      "map": "ViridianGym",
+      "event": "TEXT_VIRIDIANGYM_HIKER3",
+      "x": 10,
+      "y": 1,
+      "class": "BLACKBELT",
+      "partyIndex": 8,
+      "name": "태권왕",
+      "sprite": "black-belt",
+      "automatic": false,
+      "team": [
+        {
+          "id": 67,
+          "level": 38
+        },
+        {
+          "id": 66,
+          "level": 38
+        },
+        {
+          "id": 67,
+          "level": 38
+        }
+      ]
+    },
+    {
+      "id": "k-npc-viridiangym-7",
+      "location": "gym:7",
+      "map": "ViridianGym",
+      "event": "TEXT_VIRIDIANGYM_ROCKER2",
+      "x": 2,
+      "y": 16,
+      "class": "TAMER",
+      "partyIndex": 4,
+      "name": "조련사",
+      "sprite": "tamer",
+      "automatic": false,
+      "team": [
+        {
+          "id": 24,
+          "level": 39
+        },
+        {
+          "id": 128,
+          "level": 39
+        }
+      ]
+    },
+    {
+      "id": "k-npc-viridiangym-8",
+      "location": "gym:7",
+      "map": "ViridianGym",
+      "event": "TEXT_VIRIDIANGYM_COOLTRAINER_M3",
+      "x": 6,
+      "y": 5,
+      "class": "COOLTRAINER_M",
+      "partyIndex": 1,
+      "name": "엘리트 트레이너",
+      "sprite": "cooltrainer",
+      "automatic": false,
+      "team": [
+        {
+          "id": 33,
+          "level": 39
+        },
+        {
+          "id": 34,
+          "level": 39
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "gym:3": 7,
+    "cerulean": 1,
+    "gym:1": 2,
+    "gym:6": 7,
+    "saffron": 5,
+    "gym:4": 6,
+    "hideout": 10,
+    "mt-moon": 11,
+    "gym:0": 1,
+    "mansion": 6,
+    "tower": 13,
+    "rock-tunnel": 15,
+    "route-10": 6,
+    "route-11": 10,
+    "route-12": 7,
+    "route-13": 10,
+    "route-14": 10,
+    "route-15": 10,
+    "route-16": 6,
+    "route-17": 10,
+    "route-18": 3,
+    "route-19": 10,
+    "route-20": 10,
+    "route-21": 9,
+    "route-24": 7,
+    "route-25": 9,
+    "route-3": 8,
+    "route-4": 1,
+    "route-6": 6,
+    "route-8": 9,
+    "route-9": 9,
+    "ss-anne": 16,
+    "gym:5": 7,
+    "silph": 29,
+    "gym:2": 3,
+    "victory-road": 11,
+    "forest": 5,
+    "gym:7": 8
+  }
+}

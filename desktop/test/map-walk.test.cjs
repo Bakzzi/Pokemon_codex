@@ -3,7 +3,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict'),map=requi
 const {Adventure:PC}=require('../adventure.cjs'),{Adventure:Android}=require('../../mobile/adventure.cjs'),world=require('../../shared/kanto-world.cjs');
 const now=Date.parse('2026-10-22T05:00:00Z');
 const {finishJourney}=require('./helpers/travel-fixture.cjs');
-function ready(Type=PC){const g=new Type({},now,{random:()=>.5});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;return g;}
+function ready(Type=PC){const g=require('./helpers/kanto-fixture.cjs').existing(Type,now,{random:()=>.5});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;return g;}
 test('every place has a connected path consisting only of adjacent original road cells',()=>{
  const allowed=new Set(map.roads.map(p=>p.x+','+p.y));for(const [id,to] of Object.entries(map.points)){const path=walking.route(map,map.points.pallet,to);assert.ok(path,id);assert.deepEqual(path[0],map.points.pallet);assert.deepEqual(path.at(-1),to);for(let i=0;i<path.length;i++){assert.ok(allowed.has(path[i].x+','+path[i].y));if(i)assert.equal(Math.abs(path[i].x-path[i-1].x)+Math.abs(path[i].y-path[i-1].y),8);}}
  assert.equal(walking.route(map,{x:0,y:0},map.points.pallet),null);

@@ -765,7 +765,7 @@ class Game {
     // Rotation is free and waits until the previous battle's result has been shown.
     // The next wild encounter is then scaled to the newly selected partner.
     if(!b&&!this.data.manualSelection&&this.switchToLowest('balance',now))return true;
-    if(b?.kind!=='trainer'&&!b?.storyId){
+    if(b?.activityTrainer||b?.kind!=='trainer'&&!b?.storyId){
       if(this.data.workTokens<balance.tokensPerAction)return false;this.data.workTokens-=balance.tokensPerAction;
       if(!b){this.newWild(now);return true;}
     }

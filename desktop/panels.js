@@ -24,9 +24,9 @@ function inventoryCard(item){
   card.dataset.item=item.id;card.setAttribute('role','listitem');card.title=[item.name+' × '+item.count,item.description,item.automatic&&'도전 배틀에서 필요할 때 자동 사용 · 사용한 턴에는 공격하지 않아요.'].filter(Boolean).join(' · ');body.append(node('b','',item.name),node('small','', '× '+item.count));if(item.description)body.append(node('small','',item.description));card.append(icon,body);return card;
 }
 // Original image width, then the square viewport's x/y/size in source pixels.
-const trainerFaces={brock:[196,52,5,104],misty:[228,61,7,112],surge:[156,22,1,110],erika:[198,22,3,114],koga:[217,113,5,103],sabrina:[216,17,13,112],blaine:[273,24,18,112],giovanni:[179,25,5,112]};
+const trainerFaces=Object.fromEntries(['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'].map(id=>[id,[64,16,0,32]]));
 const gymLocations={brock:'회색시티',misty:'블루시티',surge:'갈색시티',erika:'무지개시티',koga:'연분홍시티',sabrina:'노랑시티',blaine:'홍련섬',giovanni:'상록시티'};
-const storyFaces={erika:[['erika.png',trainerFaces.erika]],'rocket-grunt':[['rocket-grunts.png',[433,238,0,112]]],'rocket-duo':[['james.png',[150,16,4,112]],['jessie.png',[197,32,10,112]]],'rocket-giovanni':[['giovanni.png',trainerFaces.giovanni]]};
+const storyFaces={erika:[['erika.png',trainerFaces.erika]],'rocket-grunt':[['rocket-grunt.png',[64,16,0,32]]],'rocket-duo':[['rocket-duo.png',[60,0,0,60]]],'rocket-giovanni':[['giovanni.png',trainerFaces.giovanni]]};
 const completedDisclosures=new Map();
 function syncDisclosure(id,completed){
   if($(id).classList.contains('challenge-card'))return;
@@ -44,7 +44,7 @@ function storyArtwork(requirement){
   const hidden=requirement.revealed===false,art=node('span','rocket-art'+(hidden?' unseen':''));
   art.setAttribute('role','img');art.setAttribute('aria-label',hidden?'아직 만나지 않은 상대':requirement.id==='erika'?'민화의 얼굴과 무지개뱃지':requirement.name.replace('에게 승리','')+' 얼굴 초상화');
   for(const [file,[width,x,y,size]] of storyFaces[requirement.id]||[]){
-    const frame=node('span','rocket-portrait'),portrait=node('img','rocket-trainer');portrait.src='assets/trainers/'+file;portrait.alt='';portrait.draggable=false;portrait.style.width=width/size*100+'%';portrait.style.left=-x/size*100+'%';portrait.style.top=-y/size*100+'%';frame.append(portrait);art.append(frame);
+    const frame=node('span','rocket-portrait'),portrait=node('img','rocket-trainer');portrait.src='assets/trainers/battle/'+file;portrait.alt='';portrait.draggable=false;portrait.style.width=width/size*100+'%';portrait.style.left=-x/size*100+'%';portrait.style.top=-y/size*100+'%';frame.append(portrait);art.append(frame);
   }
   if(requirement.id==='erika')art.append(badgeImage(state.bosses[3],'rocket-badge'+(requirement.done?' earned':'')));
   return art;
@@ -161,7 +161,7 @@ function teamMembers(team,showNames=false,levelsKnown=false){
 function trainerTeam(boss,showNames=false){return boss.revealed===false?node('p','muted','포켓몬 편성 미공개'):teamMembers(boss.team,showNames,boss.levelsKnown);}
 let shownBadges=null;
 function badgeImage(boss,className=''){
-  const image=node('img',className);image.src='assets/badges/'+boss.id+'.png';image.alt='';image.draggable=false;return image;
+  return ChallengeUI.badgeImage(boss.id,className,boss.badge);
 }
 function renderBadgeCase(){
   const earned=new Set(state.badges),signature=JSON.stringify([state.badges,state.bosses.slice(0,8).map(b=>b.revealed)]);
@@ -183,7 +183,7 @@ function renderBosses(){
   $('badges').textContent='뱃지 '+state.badges.length+' / 8';
   renderBadgeCase();
   $('gyms').replaceChildren(...state.bosses.slice(0,8).map((boss,i)=>{
-    const done=state.badges.includes(boss.id),card=ChallengeUI.trainerCard({id:boss.id,done,title:(i+1)+'. '+gymLocations[boss.id]+' 체육관 관장 '+boss.name,badge:{name:boss.badge,src:'assets/badges/'+boss.id+'.png'},team:trainerTeam(boss),portrait:{name:boss.name,src:'assets/trainers/'+boss.id+'.png',crop:trainerFaces[boss.id]},unknown:boss.revealed===false});
+    const done=state.badges.includes(boss.id),card=ChallengeUI.trainerCard({id:boss.id,done,title:(i+1)+'. '+gymLocations[boss.id]+' 체육관 관장 '+boss.name,badge:{name:boss.badge,src:'assets/badges/'+boss.id+'.png'},team:trainerTeam(boss),portrait:{name:boss.name,src:'assets/trainers/battle/'+boss.id+'.png',crop:trainerFaces[boss.id]},unknown:boss.revealed===false});
     const rocketLocked=i===3&&!state.trainingDevice.rocketWonAt,roadLocked=i===4&&!state.trainingDevice.routeOpen;
     if(i===3&&!done)card.append(node('p','muted',rocketLocked?'민화는 무지개시티에 숨어든 로켓단 때문에 골머리를 앓고 있어요. 아지트의 로켓단을 모두 물리친 뒤 도전해 주세요.':'로켓단 문제가 해결됐어요. 민화가 체육관에서 도전을 기다리고 있어요.'));
     const b=node('button','',done?'뱃지 획득 완료':queued?.index===i?'도전 예약됨':rocketLocked?'로켓단 아지트 격파 시 해금':roadLocked?'길을 막는 잠만보 해결 시 해금':i>state.badges.length?'앞선 체육관 뱃지가 필요해요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||!!queued||!state.gymAccess[i];b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;

@@ -18,7 +18,7 @@ const oakIntro=[
   '반갑다! 나는 포켓몬을 연구하는 오박사란다. 작은 모험에 온 걸 환영한다!',
   '이 피카츄가 네 첫 동료란다. 함께 포켓몬을 만나고, 잡고, 키워 보렴.',
   '10걸음마다 동료와 모험한단다. 폰을 잠그면 20초마다 한 번 더 모험하지. 앱을 켜고 걸어도 모험을 지켜볼 수 있어.',
-  '포켓기어에서 동료를 살펴보고, 타운맵에서 다음 모험을 찾아보렴. 물건은 가방에 있단다.'
+  '도감에서 동료를 살펴보고, 타운맵에서 다음 모험을 찾아보렴. 물건은 가방에 있단다.'
 ];
 const oakClose=['첫 배틀은 어땠니? 이기든 지든 동료와 함께 배우면 된단다. 피카츄는 회복해 두었단다.','이제 너희의 모험이 시작이다! 새로 만난 동료와 모험 기록도 가끔 살펴보렴.'];
 function storyEncounter(id){return rescue.byId.get(id)||silph.byId.get(id);}
@@ -52,7 +52,7 @@ class Adventure extends Engine{
     if(b?.kind==='trainer'&&scene?.mode==='dialogue'){
       const boss=this.battleBoss(b);
       if(scene.next==='sendout'&&scene.pages?.[0]===boss.name+'의 도전!')scene.pages=trainerDialogue.intro(boss,this.data.champion);
-      if(scene.next==='win'&&!boss.ghost&&trainerDialogue.hasVictory(boss)){scene.pages=trainerDialogue.victory(boss,this.data.champion);scene.index=Math.min(scene.index,scene.pages.length-1);}
+      if(scene.next==='win'&&!boss.ghost&&trainerDialogue.hasVictory(boss)){scene.pages=trainerDialogue.victory(boss,this.data.champion,this);scene.index=Math.min(scene.index,scene.pages.length-1);}
       if(scene.next==='loss'&&scene.pages?.[0]==='동료들과 더 성장해서 다시 만나자!')scene.pages=trainerDialogue.defeat(boss);
     }
     if(scene?.next==='rival-win'&&rivals.has(b?.storyId)){scene.pages=rivals.get(b.storyId).win;scene.index=Math.min(scene.index,scene.pages.length-1);}
@@ -265,7 +265,7 @@ class Adventure extends Engine{
       const boss=this.battleBoss(b);
       this.data.pendingBattle=null;
       if(rivals.has(b.storyId))this.resolveRival(true,now);
-      else this.dialogue(boss.ghost?'ghost':'trainer',boss.name,portrait(boss),boss.ghost?['텅구리의 유령은 잠시 이쪽을 바라보았다. 새끼를 향한 걱정이 조금씩 누그러지는 듯했다.','어미의 영혼이 안식을 찾고, 위층으로 향하는 길이 열렸다.']:trainerDialogue.victory(boss,this.data.champion),'win',now);
+      else this.dialogue(boss.ghost?'ghost':'trainer',boss.name,portrait(boss),boss.ghost?['텅구리의 유령은 잠시 이쪽을 바라보았다. 새끼를 향한 걱정이 조금씩 누그러지는 듯했다.','어미의 영혼이 안식을 찾고, 위층으로 향하는 길이 열렸다.']:trainerDialogue.victory(boss,this.data.champion,this),'win',now);
       return;
     }
     super.defeatOpponent(now,captured);
@@ -280,7 +280,7 @@ class Adventure extends Engine{
       if(scope&&this.data.trainingDevice.rocketWonAt)this.dialogue('item','아지트의 남겨진 물건','item:silph-scope',['비주기가 떠난 자리에서 낯선 장치를 발견했다. “실프스코프”라고 적혀 있다.','눈에 보이지 않는 존재의 정체를 확인하는 장치인 모양이다. 가방에 넣어 두자.'],'scope-reward',now);
       if(!this.presentation()&&this.data.animation?.kind==='result'){
         const joined=Object.entries(this.data.owned).filter(([uid])=>!owned.has(uid)).map(([,p])=>species.get(p.id).name+'가 동료가 됐어요. ').join('');
-        this.animate('result',{text:joined+trainerDialogue.result(boss)},now);
+        this.animate('result',{text:joined+trainerDialogue.result(boss,this)},now);
       }
       return;
     }
@@ -289,10 +289,10 @@ class Adventure extends Engine{
     this.data.pendingChallenge=null;this.restoreWild(now);
     if(isSilph){
       if(r.wins.every(Boolean))r.completedAt=now;
-      this.animate('result',{text:trainerDialogue.result(e)},now);
+      this.animate('result',{text:trainerDialogue.result(e,this)},now);
     }else if(r.wins.every(Boolean)){
       r.rewardPending=true;this.dialogue('elder','등나무노인','mr-fuji',['어미 텅구리의 영혼도 이제 편히 쉴 수 있겠구나. 도와줘서 정말 고맙다.','이 피리를 받아 주렴. 포켓몬의 마음까지 닿는 소리가 난단다.'],'rescue-reward',now);
-    }else this.animate('result',{text:trainerDialogue.result(e)},now);
+    }else this.animate('result',{text:trainerDialogue.result(e,this)},now);
   }
   endChallenge(won,now){
     const b=this.data.battle;
@@ -357,4 +357,4 @@ class Adventure extends Engine{
     return {...s,kantoWorld:world.snapshot(this,now),adventureRecords:require('./adventure-records.cjs').list(this),dialogueMemories:this.data.dialogueMemories||[],inventory:[...s.inventory,...items],scene:this.presentation(),activityMode:this.platform==='desktop'?'tokens':'walking',onboarding:story?.onboarding!=='done',discovery,rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this),silph:silph.snapshot(this),safari:{...safari.snapshot(this),canStart:this.canChallenge('safari-start')},mansion:{...mansion.snapshot(this),canStart:this.canChallenge('mansion-investigate')},mobileGymHints:hints};
   }
 }
-module.exports={Adventure:require('./johto-adventure.cjs').withJohto(Adventure)};
+module.exports={Adventure:require('./johto-adventure.cjs').withJohto(require('./kanto-adventure.cjs').withKanto(Adventure))};

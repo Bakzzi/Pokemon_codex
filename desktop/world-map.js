@@ -21,6 +21,7 @@
   if(!state||state.challengeReadOnly)return [];const p=world.places.find(p=>p.id===id);if(!p)return [];
   if(state.johto?.active){const result=[];for(const n of $('johto-challenges').children){if(n.classList.contains('ongoing'))continue;const rows=[...n.querySelectorAll('[data-challenge]')].filter(b=>world.locations[b.dataset.challenge]===id);if(rows.length)result.push({key:n.id,title:n.querySelector('h2')?.textContent||p.name,node:n,johto:true});}return result;}
   const a=[],add=(key,title,ready=true)=>{const n=$(key);if(n&&!n.hidden)a.push({key,title,ready,node:n});};
+  for(const n of document.querySelectorAll('#kanto-journey-cases > [data-world-location]'))if(n.dataset.worldLocation===id)a.push({key:n.id,title:n.querySelector('h2').textContent,ready:!!n.querySelector('button:not(:disabled)'),node:n});
   if(p.activity?.startsWith('gym:')){const i=Number(p.activity.slice(4));add('kanto-gyms','체육관',state.gymAccess[i]);if(a.length)a.at(-1).gym=i;}
   if(id==='celadon'&&state.discovery?.rocket)add('rocket-hideout','게임코너 지하',state.trainingDevice.steps.some(p=>p.available&&p.id!=='road-snorlax'));
   if(id==='tower'&&state.rescue?.visible)add('rescue-details','포켓몬타워',state.rescue.steps.some(p=>p.canChallenge));
@@ -29,7 +30,7 @@
   if(id==='safari'&&state.safari?.visible)add('safari-details','사파리존',state.safari.canStart);
   if(id==='mansion'&&state.mansion?.visible)add('mansion-details','폐저택 조사',state.mansion.canStart);
   if(id==='indigo'){add('pokemon-league','포켓몬리그',state.badges.length>=8);if(state.champion&&!state.johtoUnlocked)add('johto-choice','다음 지방으로');}
-  const retry=(state.rivals||[]).find(r=>r.state==='retry'),places={'rival-brock':'pewter','rival-surge':'vermilion','rival-middle':'tower','rival-silph':'saffron','rival-league':'indigo'};
+  const retry=(state.rivals||[]).find(r=>r.state==='retry'||r.canRetry&&r.state==='unseen'),places={'rival-brock':state.kantoStory&&!state.kantoStory.legacy?'route-22':'pewter','rival-surge':state.kantoStory&&!state.kantoStory.legacy?'ss-anne':'vermilion','rival-middle':'tower','rival-silph':'saffron','rival-league':state.kantoStory&&!state.kantoStory.legacy?'route-22':'indigo'};
   if(retry&&places[retry.id]===id)add('rival-details','그린과 다시 승부하기');return a;
  }
  function knownNotice(p){return p.notice??(p.open&&activities(p.id).some(a=>a.ready));}
@@ -41,7 +42,7 @@
   caption.textContent=world.name+' · '+(!world.active?'지나온 길':frame.walking?'이동 중':world.stepProgress?'다음 칸까지 '+world.stepProgress.completed.toLocaleString('ko-KR')+' / 2,000걸음':world.roadProgress?'야생 만남 '+world.roadProgress.completed+' / '+world.roadProgress.required:'현재 위치');if(frame.walking)raf=requestAnimationFrame(draw);
  }
  function pick(id,position){
-  const p=world?.places.find(p=>p.id===id);if(!p)return;choice=id;showPane('map');renderChoice();if(!world.active)return;
+  const p=world?.places.find(p=>p.id===id);if(!p)return;choice=id;showPane('map');renderChoice();if(!world.active||world.manualTravel===false)return;
   const to=position||currentMap().points[id],here=world.position;
   if(p.current&&to.x===here.x&&to.y===here.y&&!world.checkpoint&&!world.journey){if(!localGym(p))openPlace(id);return;}
   if(dialog.open)hideDialog();arrival=id;window.buddy.action('travel',position?{location:id,position}:id);
@@ -75,14 +76,14 @@
   restoreList(inlineMounted);inlineMounted=[];local.replaceChildren();const gym=localGym(p);note.hidden=!!gym&&!world.pending&&!world.journey;
   if(gym?.card){range.textContent=p.name.replace(/(?:시티|마을|섬)$/,'')+'체육관';const heading=gym.card.querySelector('.gym-title h3');if(heading)heading.textContent='관장 '+gym.row.name;mount(gym.card,local);}
   cards.replaceChildren();if(world.active&&p.current&&!world.walk){if(world.checkpoint)cards.append(button('길목 살펴보기',()=>{context={npc:true};renderContext();if(!dialog.open)dialog.showModal();}));for(const a of activities(p.id).filter(a=>a.gym===undefined&&!['johto-gym-details','johto-kanto-gyms'].includes(a.key)))cards.append(button(a.title,()=>openPlace(p.id,a.key)));}
-  for(const [id,m]of markers){const q=world.places.find(p=>p.id===id);m.disabled=!world.active;m.classList.toggle('chosen',choice===id);m.classList.toggle('current',q.current);m.classList.toggle('locked',!q.open);m.classList.toggle('has-event',world.active&&knownNotice(q));m.textContent=world.active&&knownNotice(q)?'!':'';m.title=q.name+(world.active&&knownNotice(q)?' · 새로운 소식':'');m.setAttribute('aria-pressed',String(choice===id));}
+  for(const [id,m]of markers){const q=world.places.find(p=>p.id===id);m.disabled=!world.active||world.manualTravel===false;m.classList.toggle('chosen',choice===id);m.classList.toggle('current',q.current);m.classList.toggle('locked',!q.open);m.classList.toggle('has-event',world.active&&knownNotice(q));m.textContent=world.active&&knownNotice(q)?'!':'';m.title=q.name+(world.active&&knownNotice(q)?' · 새로운 소식':'');m.setAttribute('aria-pressed',String(choice===id));}
   if(raf)cancelAnimationFrame(raf);draw();
  }
  map.onclick=e=>{if(!world||e.target.closest('button'))return;const r=map.getBoundingClientRect(),m=currentMap(),x=(e.clientX-r.left-map.clientLeft)/map.clientWidth*m.width,y=(e.clientY-r.top-map.clientTop)/map.clientHeight*m.height,cell=m.roads.reduce((a,b)=>!a||Math.hypot(b.x-x,b.y-y)<Math.hypot(a.x-x,a.y-y)?b:a,null);if(cell&&Math.hypot(cell.x-x,cell.y-y)<=7)pick(cell.place,{x:cell.x,y:cell.y});};
- map.onkeydown=e=>{const d={ArrowUp:[0,-8],ArrowRight:[8,0],ArrowDown:[0,8],ArrowLeft:[-8,0]}[e.key];if(!d||!world?.active||world.maps&&zone!==world.zone)return;e.preventDefault();const p=world.position,c=currentMap().roads.find(c=>c.x===p.x+d[0]&&c.y===p.y+d[1]);if(c)pick(c.place,{x:c.x,y:c.y});};
+ map.onkeydown=e=>{const d={ArrowUp:[0,-8],ArrowRight:[8,0],ArrowDown:[0,8],ArrowLeft:[-8,0]}[e.key];if(!d||!world?.active||world.manualTravel===false||world.maps&&zone!==world.zone)return;e.preventDefault();const p=world.position,c=currentMap().roads.find(c=>c.x===p.x+d[0]&&c.y===p.y+d[1]);if(c)pick(c.place,{x:c.x,y:c.y});};
  function renderBadges(){
   badgeHost.hidden=!!state.johto?.active;const signature=JSON.stringify([state.johto?.active,state.johto?.badges,state.johto?.kantoBadges]);if(signature===badgeSignature)return;badgeSignature=signature;extraBadges.replaceChildren();if(!state.johto?.active)return;
-  for(const id of ['johto-badge-slots','johto-kanto-badge-slots']){const holder=$(id)?.closest('.badge-case');if(holder){const clone=holder.cloneNode(true);for(const n of clone.querySelectorAll('[id]'))n.removeAttribute('id');clone.hidden=false;extraBadges.append(clone);}}
+  for(const id of ['johto-badge-slots','johto-kanto-badge-slots']){const holder=$(id)?.closest('.badge-case');if(holder){const clone=holder.cloneNode(true);for(const n of clone.querySelectorAll('[id]'))n.removeAttribute('id');for(const n of clone.querySelectorAll('canvas[data-badge-sprite]'))n.replaceWith(ChallengeUI.badgeImage(n.dataset.badgeSprite,n.className,n.getAttribute('aria-label')));clone.hidden=false;extraBadges.append(clone);}}
  }
  function render(s){
   state=s;world=s.johto?.active?s.johtoWorld:s.kantoWorld;if(!world)return;world={...world,active:world.active&&!s.challengeReadOnly};

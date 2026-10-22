@@ -16,3 +16,5 @@ reference/** linguist-vendored
 reference/johto/raw/*.asm text eol=lf
 reference/kanto-map/** -text
 reference/johto-map/** -text
+desktop/data/kanto-trainer-source/** -text
+desktop/data/kanto-story-parties.asm -text

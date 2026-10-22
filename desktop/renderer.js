@@ -216,6 +216,7 @@ window.buddy.onState(s=>{
     $('party').replaceChildren(...s.slots.map((p,i)=>{const b=document.createElement('button');b.dataset.slot=i;b.onclick=()=>b.dataset.id?window.buddy.action('select',Number(b.dataset.id)):window.buddy.action('panel','collection');const img=document.createElement('img');img.alt='';b.append(img,document.createElement('small'));return b;}));$('party').dataset.ids=s.slots.map(p=>p.uid).join(',');
   }
   renderPartyStatus(s);
+  for(const b of document.querySelectorAll('[data-panel]'))b.disabled=!!s.kantoStory?.guided&&(b.dataset.panel==='challenge'||b.dataset.panel==='collection'&&!s.kantoStory.dexObtained);
   document.querySelector('[data-panel="challenge"]').title='획득한 뱃지 '+s.badges.length+' / 8';
   if(s.location&&!s.safari?.active)$('status').textContent=s.location.name+' · '+$('status').textContent;
   eventFx(s.animation);refreshScene();safariPresentation.render(s);

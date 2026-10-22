@@ -19,13 +19,13 @@
       if(button){button.disabled=true;button.textContent=text;button.dataset.rivalLock=index;}
     }
     const key=JSON.stringify([s.rivals,s.battle?.kind,s.pendingChallenge,s.scene?.id]);if(signature===key)return;signature=key;
-    const rivals=(s.rivals||[]).filter(e=>e.stage>0),e=rivals.find(e=>e.state==='active')||rivals.find(e=>e.state==='retry');
+    const rivals=(s.rivals||[]).filter(e=>e.stage>0),e=rivals.find(e=>e.state==='active')||rivals.find(e=>e.state==='retry')||rivals.find(e=>e.canRetry);
     currentId=e?.id||null;image.src='assets/trainers/battle/'+(e?.sprite||'green')+'.png';lineup.replaceChildren();
     if(e){if(e.met&&e.team?.length)lineup.append(trainerTeam(e));button.dataset.rivalChallenge=e.id;}
     else delete button.dataset.rivalChallenge;
     const queued=!!e&&s.pendingChallenge?.index===e.id,busy=s.battle?.kind==='trainer';
-    status.textContent=queued?'진행 중인 동작이 끝나면 그린과 다시 승부해요.':e?.state==='active'?'그린과 승부하고 있어요.':e?'동료를 준비하고 그린에게 다시 도전해 보세요.':'그린과 다시 만날 날을 기다리고 있어요.';
-    button.textContent=queued?'재도전 예약됨':e?.state==='active'?'배틀 중':'그린에게 재도전';
+    status.textContent=queued?'진행 중인 동작이 끝나면 그린과 다시 승부해요.':e?.state==='active'?'그린과 승부하고 있어요.':e?.state==='unseen'?'그린이 길목에서 기다리고 있어요.':e?'동료를 준비하고 그린에게 다시 도전해 보세요.':'그린과 다시 만날 날을 기다리고 있어요.';
+    button.textContent=queued?'재도전 예약됨':e?.state==='active'?'배틀 중':e?.state==='unseen'?'그린과 승부하기':'그린에게 재도전';
     button.disabled=!e?.canRetry||busy||!!s.pendingChallenge||!!s.scene;
   });
 })();

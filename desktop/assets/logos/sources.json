@@ -10,6 +10,13 @@
       "height": 970,
       "bytes": 11777,
       "sha256": "5ddbd869390674e97b2373d136675ede72a82b30e01aead1495d2454878be56f"
+    },
+    {
+      "name": "Pixel Team Rocket R mark",
+      "file": "team-rocket-pixel.svg",
+      "source": "Project-authored 16-grid vector mark, replacing the high-resolution logo in product UI",
+      "bytes": 325,
+      "sha256": "d8d7f430d0a00ea64a301669cb8529697d23417beccf5aa24d30be886c6d10b6"
     }
   ]
 }

@@ -14,8 +14,8 @@ function action(action,value){
   if(action==='story-open'){$('adventure').hidden=false;$('panel-wrap').hidden=true;return;}
   let ok=true;
   try{
-    if(['travel','world-pass'].includes(action))refreshNative();
-    if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass'].includes(action))ok=game.requestAction(action,value);
+    if(['travel','world-pass','fossil-choice'].includes(action))refreshNative();
+    if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass','fossil-choice'].includes(action))ok=game.requestAction(action,value);
     else if(action==='action-cancel')ok=game.cancelAction(value);
     else if(action==='capture-reserve')ok=game.reserveCapture(value,1);
     else if(action==='capture-cancel')ok=game.reserveCapture(value,0);

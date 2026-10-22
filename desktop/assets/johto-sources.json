@@ -511,11 +511,12 @@
     },
     {
       "file": "trainers/battle/j-elm.png",
-      "url": "https://archives.bulbagarden.net/media/upload/e/ec/HeartGold_SoulSilver_Professor_Elm.png",
-      "width": 636,
-      "height": 1280,
-      "bytes": 522399,
-      "sha256": "d17690466490f45978d77fff37042b5467a59088eb8e8b3e3ce0c28c0893f6f9"
+      "url": "https://raw.githubusercontent.com/pret/pokecrystal/5c877ef55197039c9676e8e3eec6d254b1c40fe8/gfx/sprites/elm.png",
+      "width": 16,
+      "height": 96,
+      "bytes": 314,
+      "sha256": "3dfa48fe2f3371344e74f31aed1aca3a5964aad0119c823fdbb15d0878ab7090",
+      "display": "First original 16x16 overworld frame, clipped by UI"
     },
     {
       "file": "badges/j-falkner.png",
@@ -647,11 +648,12 @@
     },
     {
       "file": "items/j-gs-ball.png",
-      "url": "https://archives.bulbagarden.net/media/upload/4/42/GS_Ball_Crystal.png",
-      "width": 729,
-      "height": 730,
-      "bytes": 382938,
-      "sha256": "f6c278f6604737c871c3ff33970686e9c18ed6c0fcff29ff4875a463a1faecf1"
+      "width": 30,
+      "height": 30,
+      "bytes": 256,
+      "sha256": "a4c7b9e8ff5727d10e6f679bcf16a963a95b2a36480d3bd9156d9808bdf54dff",
+      "sourceFile": "items/poke-ball.png",
+      "usage": "Generic original pixel ball icon used for the GS Ball presentation instead of illustration"
     },
     {
       "file": "items/j-expansion-card.png",

@@ -21,8 +21,12 @@ fs.mkdirSync(out,{recursive:true});
 const bundle=`'use strict';globalThis.MobileCore=(()=>{const m=[${modules.join(',\n')}],cache={};function load(id){if(cache[id])return cache[id].exports;const mod=cache[id]={exports:{}};m[id][0](name=>{if(!(name in m[id][1]))throw Error('Unbundled module: '+name);return load(m[id][1][name]);},mod,mod.exports);return mod.exports;}return {...load(${game}),...load(${adventure}),nursery:load(${nursery})};})();\n`;
 fs.writeFileSync(path.join(out,'game.bundle.js'),bundle);
 for(const name of ['world-map.js','world-map.css','map-walk.js'])fs.copyFileSync(path.join(root,'desktop',name),path.join(out,name));
-for(const name of ['widget.css','battle-ui.css','panels.css','badge-case.css','capture-animation.js','move-effects.js','battle-pacing.js','connections.css','story-panels.css','story-presentation.js','panel-layout.js','rival-panel.js','rescue-panel.js','exploration-panel.js','league-portraits.js','challenge-ui.js','johto-art.js','johto-panel.js','johto-panel.css','safari-presentation.js','safari-scene.css'])fs.copyFileSync(path.join(root,'desktop',name),path.join(out,name));
-fs.cpSync(path.join(root,'desktop/assets'),path.join(out,'assets'),{recursive:true});
+for(const name of ['widget.css','battle-ui.css','panels.css','badge-case.css','capture-animation.js','move-effects.js','battle-pacing.js','connections.css','story-panels.css','story-presentation.js','panel-layout.js','rival-panel.js','rescue-panel.js','exploration-panel.js','kanto-journey-panel.js','league-portraits.js','challenge-ui.js','johto-art.js','johto-panel.js','johto-panel.css','safari-presentation.js','safari-scene.css'])fs.copyFileSync(path.join(root,'desktop',name),path.join(out,name));
+const assetPolicy=require('../../desktop/scripts/asset-policy.cjs'),assetSource=path.join(root,'desktop/assets'),assetTarget=path.join(out,'assets');
+// Remove only known obsolete images in this generated build tree. Source and
+// retained releases are untouched; a previous bundle must not keep old artwork.
+if(fs.existsSync(assetTarget))for(const item of fs.readdirSync(assetTarget,{recursive:true,withFileTypes:true})){const parent=item.parentPath||item.path,file=path.join(parent,item.name);if(item.isFile()&&!assetPolicy.include(file,assetTarget)){if(!path.resolve(file).startsWith(path.resolve(assetTarget)+path.sep)||fs.lstatSync(file).isSymbolicLink())throw Error('Unsafe generated asset path');fs.unlinkSync(file);}}
+fs.cpSync(assetSource,assetTarget,{recursive:true,filter:file=>assetPolicy.include(file,assetSource)});
 for(const [source,target] of [['index.html','battle.html'],['panels.html','panels.html']]){
   let html=fs.readFileSync(path.join(root,'desktop',source),'utf8');
   html=html.replace("style-src 'self'","style-src 'self' 'unsafe-inline'"); // Existing renderers animate inline styles.

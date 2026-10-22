@@ -4,7 +4,7 @@ const {Adventure:PC}=require('../adventure.cjs'),{Adventure:Android}=require('..
 const world=require('../../shared/kanto-world.cjs'),{data,wildEligible,wildDistribution,xpAt,wildMinimum,species}=require('../pokemon.cjs');
 const now=Date.parse('2026-10-22T05:00:00Z'),badges=data.bosses.slice(0,8).map(b=>b.id);
 const {finishJourney}=require('./helpers/travel-fixture.cjs');
-function ready(Type=PC){const g=new Type({},now,{random:()=>.5});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;return g;}
+function ready(Type=PC){const g=require('./helpers/kanto-fixture.cjs').existing(Type,now,{random:()=>.5});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;return g;}
 function late(Type=PC){const g=ready(Type);g.data.badges=[...badges];g.data.champion=true;g.data.trainingDevice.snorlaxWonAt=now;g.data.mobileStory.scopeObtainedAt=now;const p=g.data.owned[g.data.activeId];p.level=100;p.xp=xpAt(p.id,100);require('../move-access.cjs').update(p);return g;}
 test('town map covers every first-region route and all lines connect existing distinct places',()=>{
  assert.equal(new Set(world.places.map(p=>p.id)).size,world.places.length);
@@ -53,5 +53,5 @@ test('PC and Android share geography; second-region wilds do not inherit the fir
  assert.ok(pc.unlockJohto(now,[25]));assert.deepEqual(pc.wildOptions().habitat,require('../../shared/johto-world.cjs').habitat(pc));assert.equal(pc.wildOptions().minimumEncounterLevel,undefined);assert.equal(pc.snapshot(now).location.id,'j-newbark');assert.equal(pc.panelState(now).kantoWorld.active,false);assert.ok(!pc.requestAction('travel','forest',now));
 });
 test('new season clears travel and visited places while permanent collection registration survives',()=>{
- const g=late();g.data.kantoWorld.location='seafoam';g.data.caught[144]=now;g.data.pendingActions=[];g.resetSeason(now+1000);assert.equal(world.current(g).id,'route-1');assert.ok(g.data.caught[144]);assert.equal(world.snapshot(g).places.find(p=>p.id==='seafoam').visited,false);
+ const g=late();g.data.kantoWorld.location='seafoam';g.data.caught[144]=now;g.data.pendingActions=[];g.resetSeason(now+1000);assert.equal(world.current(g).id,'pallet');assert.ok(g.data.caught[144]);assert.equal(world.snapshot(g).places.find(p=>p.id==='seafoam').visited,false);
 });

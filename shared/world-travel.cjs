@@ -22,7 +22,13 @@ function move(game,state,map,id,to,open,name,now){
  const result=plan(map,state.position||map.points[state.location],to,open);if(!result)return false;
  // A town and its interior can share one map pixel while having different gates.
  if(!result.blocked&&!open(id)){result.blocked=id;result.gate={...to};}
- if(game.platform==='mobile')return steps.start(game,state,map,result,id,to,name,now);
+ const guided=!!game.data.kantoStory&&!game.data.kantoStory.legacy&&!game.data.kantoStory.mapAt&&!game.data.johtoUnlocked;
+ if(game.platform==='mobile'&&!guided)return steps.start(game,state,map,result,id,to,name,now);
+ if(guided){
+  const segments=result.path.slice(1).map((p,i)=>({location:map.roads.find(c=>same(c,p)).place,path:[result.path[i],p]}));
+  if(segments.length&&!result.blocked)segments.at(-1).location=id;
+  state.journey={mode:'guided',destination:id,position:{...to},name,segments,index:0,blocked:null};state.blocked=null;state.walk=null;state.guideCredit=0;return true;
+ }
  const segments=[];
  for(const p of result.path){
   const location=map.roads.find(c=>same(c,p)).place,last=segments.at(-1);
@@ -42,6 +48,10 @@ function enter(game,state,now){
 function advance(game,state,now){
  const trip=state.journey;
  if(!trip||game.seasonDue?.(now)||game.data.battle||game.data.suspendedWild||game.data.pendingBattle||game.data.pendingChallenge||game.presentation?.()||now<game.nextTick||now<game.data.switchUntil||game.data.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind)))return false;
+ if(trip.mode==='guided'){
+  if(trip.index<trip.segments.length){if(!(state.guideCredit>0))return false;state.guideCredit--;const segment=trip.segments[trip.index++],end=segment.path.at(-1);state.walk={from:state.location,to:segment.location,destination:trip.destination,path:segment.path,at:now,duration:walking.duration(segment.path),guided:true};state.location=segment.location;state.position={...end};state.visited[state.location] ||= now;game.holdUntil(now+state.walk.duration);return true;}
+  state.journey=null;state.walk=null;return true;
+ }
  if(game.platform==='mobile')return steps.advance(game,state,now);
  const leaving=trip.index+1<trip.segments.length||trip.blocked;
  const p=progress(state,game.random);if(leaving&&p&&p.completed<p.required)return false;

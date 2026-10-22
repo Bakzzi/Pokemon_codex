@@ -34,7 +34,7 @@ for(const won of [true,false])test('first battle '+(won?'victory':'loss')+' cont
   const g=rivalBattle();if(won){g.data.battle.foe.hp=0;g.defeatOpponent(now+10000);}else{g.data.battle.party[g.data.activeId].hp=0;g.endChallenge(false,now+10000);}
   assert.equal(g.presentation().name,'그린');finishDialogue(g,now+11000);assert.equal(g.presentation().name,'오박사');assert.equal(g.data.battle,null);
   finishDialogue(g,now+12000);assert.equal(g.data.mobileStory.onboarding,'done');assert.equal(g.presentation(),null);assert.ok(g.snapshot().hero.hp>0);assert.deepEqual(g.data.badges,[]);assert.equal(g.data.champion,false);
-  g.data.workTokens=250;assert.ok(g.tick(now+50000));assert.equal(g.data.battle.kind,'wild');
+  g.data.workTokens=250;assert.ok(g.tick(now+50000));assert.equal(g.data.battle,null);assert.equal(g.data.kantoWorld.journey.destination,'viridian');
 });
 test('trainer intro occurs once per trainer, and badge rewards wait for victory dialogue',()=>{
   const g=playable();g.rivalProgress('rival-brock').state='won';assert.ok(g.challenge(0,now));assert.equal(g.presentation().sprite,'brock');finishDialogue(g);g.sceneTick(now+3000);

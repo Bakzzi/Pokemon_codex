@@ -1,0 +1,227 @@
+{
+  "sources": [
+    {
+      "file": "desktop/data/kanto-story-parties.asm",
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/trainers/parties.asm",
+      "bytes": 18229,
+      "sha256": "ebb66129bb01bacd957dd7408506e8fa06bf78f1e53d98c0e0b0115fd45566e2"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/bug-catcher.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/bug_catcher_front_pic.png",
+      "bytes": 747,
+      "sha256": "d4fde22863bf180ae3ab808d1cc1a2680e828b66fa2ce12c55bfe96cad097243"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/youngster.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/youngster_front_pic.png",
+      "bytes": 579,
+      "sha256": "60dbe142a269771c9a8926fa04ab9ec96ee0ec1dfba422847563cc776bd466bd"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/hiker.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/hiker_front_pic.png",
+      "bytes": 939,
+      "sha256": "3d9dd9533f6727cf5616197614276b77d7eac80a859d80852ece15a24298dc7b"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/super-nerd.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/super_nerd_front_pic.png",
+      "bytes": 672,
+      "sha256": "4440978cb7a157aa403cf3f9d10e58238a60b8db3f42829623fdbe39c780f5e8"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/lass.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/lass_front_pic.png",
+      "bytes": 662,
+      "sha256": "69e2ffea592401d14c1b1828a280b1bfff5f01be743a337a9659c6b00d30f342"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/sailor.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/sailor_front_pic.png",
+      "bytes": 685,
+      "sha256": "975f66fcf50ac654db7cabca35242c3defd65fc9f67ad24b18bca1f6ad3ea3f9"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/gentleman.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/gentleman_front_pic.png",
+      "bytes": 691,
+      "sha256": "6c293ec4e38bd30711e757db385fd12dcfc27dabc87d8670fb877334385f3821"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/cooltrainer.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/cool_trainer_m_front_pic.png",
+      "bytes": 598,
+      "sha256": "864f400db9c8fcca461ccb36c705d738975a74be20258aae2fdf342a37ab1e99"
+    },
+    {
+      "file": "desktop/assets/items/parcel.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/97a7832d307311c0e1c6ea9035308bf80cc94f81/sprites/items/parcel.png",
+      "bytes": 267,
+      "sha256": "8a742701b8d396dd769fde5f0fd11665b849b0464ef7c80dedde7338ed09a520"
+    },
+    {
+      "file": "desktop/assets/items/ss-ticket.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/97a7832d307311c0e1c6ea9035308bf80cc94f81/sprites/items/ss-ticket.png",
+      "bytes": 214,
+      "sha256": "b6d7834d0e22980c6057c6aeb859211795567dba1e4aedb708fe109019945cd9"
+    },
+    {
+      "file": "desktop/assets/items/lift-key.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/97a7832d307311c0e1c6ea9035308bf80cc94f81/sprites/items/lift-key.png",
+      "bytes": 244,
+      "sha256": "41ed0664c2d64e5d7c1c274a9ab4145c8ae455e58d15743af8a51881aa4df473"
+    },
+    {
+      "file": "desktop/assets/items/card-key.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/97a7832d307311c0e1c6ea9035308bf80cc94f81/sprites/items/card-key.png",
+      "bytes": 230,
+      "sha256": "17cecedf60b38785b0008955adfb8cfaa3b38dc6617f81d50202107363081a56"
+    },
+    {
+      "file": "desktop/assets/items/helix-fossil.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/97a7832d307311c0e1c6ea9035308bf80cc94f81/sprites/items/helix-fossil.png",
+      "bytes": 319,
+      "sha256": "767985225c29056024506d43ae367adb37438241714159a337a1c08a0dfbe8e7"
+    },
+    {
+      "file": "desktop/assets/items/dome-fossil.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/97a7832d307311c0e1c6ea9035308bf80cc94f81/sprites/items/dome-fossil.png",
+      "bytes": 317,
+      "sha256": "2a8242c5b3d4f599a04863f0ceb0b469b3e2fa14442d0dd215420e334c61bb11"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/beauty.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/beauty_front_pic.png",
+      "bytes": 738,
+      "sha256": "1c22fa5f9d3b437ba55edec0ed16833c074218488791089e2d8692b72c19a9d6"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/picnicker.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/picnicker_front_pic.png",
+      "bytes": 626,
+      "sha256": "14239b7899f3ed92405448ee9b1377d98633d294ea4205f7ac20ca6758fceb0b"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/cooltrainer-f.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/cool_trainer_f_front_pic.png",
+      "bytes": 715,
+      "sha256": "72b166d0fa89fcbcffe36f10c3a4f7cb7793bd03f11a2a55bd745873c1913f80"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/swimmer.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/swimmer_m_front_pic.png",
+      "bytes": 602,
+      "sha256": "5ccbf8e4e1c7f8fb9adcfd82b58b50ebb447590c644f134cec31aa5af3857a9e"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/burglar.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/burglar_front_pic.png",
+      "bytes": 726,
+      "sha256": "57a067eb9c02f2504e460bd0ad1a2f5b47bf2d4dc477b6aa23e0267b61345cd5"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/black-belt.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/black_belt_front_pic.png",
+      "bytes": 888,
+      "sha256": "dfb5a74143e3cc0a54e0cc6fd39c5e5cf32d1351bf7886d3dda0667309b02b96"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/juggler.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/juggler_front_pic.png",
+      "bytes": 921,
+      "sha256": "9e784e92218b9f188a3fc34b340b9d0726f62556aaa94d66c70a528242057ae1"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/tamer.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/tamer_front_pic.png",
+      "bytes": 848,
+      "sha256": "800ca2c3847446d988bf6d0c194856f25f94b5b83933a5bb5cdc7653c42c240b"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/camper.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/camper_front_pic.png",
+      "bytes": 614,
+      "sha256": "d9897dfb2105df1ebf2d4fdcc250bf4e5380361c1439826e26c201a40738ae9b"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/channeler.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/channeler_front_pic.png",
+      "bytes": 834,
+      "sha256": "138d565d374659853fe3626ae274dc8468a90890a2d25c8e430ffe892b051856"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/pokemaniac.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/pokemaniac_front_pic.png",
+      "bytes": 821,
+      "sha256": "edf55aa598cca80b928327cc7a05eee78774ca6c8584972025c1ae1c77f1ff0b"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/gamer.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/gamer_front_pic.png",
+      "bytes": 754,
+      "sha256": "2f36f1521f48a067a92adeedc75f3c867e59b1312c28795928efda9f1e40ca08"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/engineer.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/engineer_front_pic.png",
+      "bytes": 897,
+      "sha256": "dac2b5c785735958af6c96c9687aace57a0255ee13bd4a6ef55c830095eda6de"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/fisherman.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/fisherman_front_pic.png",
+      "bytes": 841,
+      "sha256": "a401f48a32aaf05381ba17530312b985bd6f154709a3a5b8d93c65f2548a4075"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/rocker.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/rocker_front_pic.png",
+      "bytes": 953,
+      "sha256": "2fac2e7a42704b85388d3c30afa159a945888984c6a81891e5391472b1b1fe7f"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/bird-keeper.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/bird_keeper_front_pic.png",
+      "bytes": 829,
+      "sha256": "534ce64571c8e071f738c7a4710a892e281ff565c78f857961067b5cda83c1ff"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/biker.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/biker_front_pic.png",
+      "bytes": 1179,
+      "sha256": "a676b6b30fe7479f52313a95afb1e05c904c34c7ec972c7cf755f2c711ba1644"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/cue-ball.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/cue_ball_front_pic.png",
+      "bytes": 1225,
+      "sha256": "b38fa93535f4043e963a429b7cbaaae57c6c50c833df017ecf8b1deaa402bd92"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/psychic.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainers/front_pics/psychic_m_front_pic.png",
+      "bytes": 754,
+      "sha256": "20aab3bb1b95d1f694b82e0926836e1c738a27742e164f511d58042b04d2238a"
+    },
+    {
+      "file": "desktop/assets/trainers/battle/j-elm.png",
+      "url": "https://raw.githubusercontent.com/pret/pokecrystal/5c877ef55197039c9676e8e3eec6d254b1c40fe8/gfx/sprites/elm.png",
+      "bytes": 314,
+      "sha256": "3dfa48fe2f3371344e74f31aed1aca3a5964aad0119c823fdbb15d0878ab7090",
+      "display": "Original first 16x16 overworld frame, clipped by the UI"
+    },
+    {
+      "file": "desktop/assets/badges/kanto-pixel.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/trainer_card/badges.png",
+      "bytes": 537,
+      "sha256": "213fcf06d1125b42df17c9de249fa8cd76a428da2b38582a04c9b1f52b2130c1"
+    },
+    {
+      "file": "desktop/assets/badges/johto-pixel.png",
+      "url": "https://raw.githubusercontent.com/pret/pokecrystal/5c877ef55197039c9676e8e3eec6d254b1c40fe8/gfx/trainer_card/badges.png",
+      "bytes": 517,
+      "sha256": "d89bf9193198261a887296d81b5ead91471a26a769c998b380d055bb070832db"
+    }
+  ]
+}

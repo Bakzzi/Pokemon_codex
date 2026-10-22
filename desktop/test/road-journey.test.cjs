@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const PC=require('../adventure.cjs').Adventure,Android=require('../../mobile/adventure.cjs').Adventure,K=require('../../shared/kanto-world.cjs'),J=require('../../shared/johto-world.cjs');
 const now=Date.parse('2026-10-22T06:00:00Z');
 const {finishJourney}=require('./helpers/travel-fixture.cjs');
-function ready(Type){const g=new Type({},now,{random:()=>.6});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;return g;}
+function ready(Type){const g=require('./helpers/kanto-fixture.cjs').existing(Type,now,{random:()=>.6});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;return g;}
 function clock(g){return Math.max(now,g.nextTick,g.data.switchUntil||0);}
 function win(g){const t=clock(g);g.newWild(t);const b=g.data.battle;b.foe.hp=0;g.showFaint(t);const result=clock(g);assert.equal(g.data.battle,b);assert.ok(g.tick(result));return b;}
 for(const Type of [PC]){

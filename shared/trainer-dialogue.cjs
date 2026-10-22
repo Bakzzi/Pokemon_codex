@@ -79,11 +79,12 @@ function intro(boss,reigning=false){
   const greeting=boss.id==='champion'&&reigning?'다시 왔구나! 이번에는 내가 이길 차례야!':openings[boss.id]||'네 실력이 어느 정도인지 보자!';
   return [boss.id==='champion'&&reigning?withName(boss.name)+'의 재대결!':role+withName(boss.name)+'의 승부!',greeting];
 }
-function victory(boss,reigning=false){
+function victory(boss,reigning=false,game){
+  const modern=game&&require('./kanto-dialogue.cjs').victory(game,boss);if(modern)return modern;
   if(boss.id==='champion'&&reigning)return ['이번에도 챔피언 자리를 지켜 냈네. 다음에는 내가 되찾을 거야!','관동의 남은 포켓몬을 찾을지, 성도에서 새로 모험할지는 네가 정해.'];
   return victories[boss.id]||(rocket(boss)?['쳇! 이런 데서 발목을 잡히다니…!']:['네가 이겼어. 너와 동료들의 실력, 잘 봤다!']);
 }
 function defeat(boss){return defeats[boss.id]||(rocket(boss)?['우리 일을 방해하려면 그 정도 실력으로는 어림없지!']:['동료들을 쉬게 하고 다시 도전해 봐. 기다리고 있을게!']);}
-function result(boss){return results[boss.id]||boss.name+'와의 승부를 마쳤어요.';}
+function result(boss,game){const modern=game&&require('./kanto-dialogue.cjs').result(game,boss);if(modern)return modern;return results[boss.id]||boss.name+'와의 승부를 마쳤어요.';}
 function hasVictory(boss){return Object.hasOwn(victories,boss.id);}
 module.exports={intro,victory,defeat,result,hasVictory};

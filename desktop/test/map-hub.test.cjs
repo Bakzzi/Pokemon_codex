@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const PC=require('../adventure.cjs').Adventure,Android=require('../../mobile/adventure.cjs').Adventure,K=require('../../shared/kanto-world.cjs'),W=require('../../shared/johto-world.cjs'),J=require('../../shared/johto.cjs'),walking=require('../map-walk.js');
 const now=Date.parse('2026-10-22T06:00:00Z');
 const {finishJourney}=require('./helpers/travel-fixture.cjs');
-function ready(Type=PC){const g=new Type({},now,{random:()=>.73});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;return g;}
+function ready(Type=PC){const g=require('./helpers/kanto-fixture.cjs').existing(Type,now,{random:()=>.73});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;return g;}
 for(const Type of [PC,Android])test(Type.name+' approaches blocked roads, preserves activity and passes only after the real prerequisite',()=>{
  const g=ready(Type);g.data.workTokens=2000;const roster=structuredClone(g.data.owned);assert.ok(g.requestAction('travel','route-3',now));const end=finishJourney(g,now),s=g.data.kantoWorld;
  assert.equal(s.blocked.location,'route-3');assert.notEqual(s.location,'route-3');for(const p of s.walk.path)assert.ok(K.unlocked(g,K.byId.get(K.snapshot(g).map.roads.find(c=>c.x===p.x&&c.y===p.y).place)));

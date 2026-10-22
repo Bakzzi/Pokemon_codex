@@ -68,7 +68,7 @@ function pickEvolutionItem(candidates,inventory,random){
   return weighted.at(-1).id;
 }
 function choose(game,b,sim){
-  if(b.kind!=='trainer'||b.pendingSwitch||sim.requestState!=='move'||sim.p1.activeRequest?.wait)return null;
+  if(b.kind!=='trainer'||b.activityTrainer||b.pendingSwitch||sim.requestState!=='move'||sim.p1.activeRequest?.wait)return null;
   const actor=sim.p1.active[0];if(!actor.hp||actor.fainted)return null;
   const has=id=>Number.isSafeInteger(game.data.inventory[id])&&game.data.inventory[id]>0;
   const target=actor.name;
@@ -91,7 +91,7 @@ function choose(game,b,sim){
   return null;
 }
 function use(game,b,sim,choice){
-  if(b.kind!=='trainer'||!byId.has(choice.id)||!(game.data.inventory[choice.id]>0))return false;
+  if(b.kind!=='trainer'||b.activityTrainer||!byId.has(choice.id)||!(game.data.inventory[choice.id]>0))return false;
   const target=sim.p1.pokemon.find(mon=>mon.name===choice.target),item=byId.get(choice.id);
   if(!target||!game.data.slots.includes(Number(target.name.slice(1)))||game.isBoarded(Number(target.name.slice(1))))return false;
   const slot=target.moveSlots.find(slot=>slot.id===choice.move);

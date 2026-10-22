@@ -75,7 +75,7 @@ test('late-game missing legends stay comparable to registered ordinary species w
 
 test('PC and Android both remove bonuses based on permanent registration, including evolved-away species',()=>{
   for(const Adventure of [Desktop,Mobile]){
-    const g=new Adventure({},now);g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;
+    const g=require('./helpers/kanto-fixture.cjs').existing(Adventure,now);g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;
     g.data.champion=true;g.data.caught=registered([144,146,151]);
     g.data.kantoWorld.location='seafoam';
     const active=g.data.owned[g.data.activeId];active.level=100;active.xp=xpAt(active.id,100);

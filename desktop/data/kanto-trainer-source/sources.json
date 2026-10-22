@@ -1,0 +1,1370 @@
+{
+  "locations": {
+    "AgathasRoom": "indigo",
+    "BikeShop": "cerulean",
+    "BillsHouse": "sea-cottage",
+    "BluesHouse": "pallet",
+    "BrunosRoom": "indigo",
+    "CeladonChiefHouse": "celadon",
+    "CeladonCity": "celadon",
+    "CeladonDiner": "celadon",
+    "CeladonGym": "gym:3",
+    "CeladonHotel": "celadon",
+    "CeladonMansion1F": "celadon",
+    "CeladonMansion2F": "celadon",
+    "CeladonMansion3F": "celadon",
+    "CeladonMansionRoof": "celadon",
+    "CeladonMansionRoofHouse": "celadon",
+    "CeladonMart1F": "celadon",
+    "CeladonMart2F": "celadon",
+    "CeladonMart3F": "celadon",
+    "CeladonMart4F": "celadon",
+    "CeladonMart5F": "celadon",
+    "CeladonMartElevator": "celadon",
+    "CeladonMartRoof": "celadon",
+    "CeladonPokecenter": "celadon",
+    "CeruleanBadgeHouse": "cerulean",
+    "CeruleanCave1F": "cerulean-cave",
+    "CeruleanCave2F": "cerulean-cave",
+    "CeruleanCaveB1F": "cerulean-cave",
+    "CeruleanCity": "cerulean",
+    "CeruleanGym": "gym:1",
+    "CeruleanMart": "cerulean",
+    "CeruleanMelaniesHouse": "cerulean",
+    "CeruleanPokecenter": "cerulean",
+    "CeruleanTrashedHouse": "cerulean",
+    "ChampionsRoom": "indigo",
+    "CinnabarGym": "gym:6",
+    "CinnabarIsland": "cinnabar",
+    "CinnabarLab": "cinnabar",
+    "CinnabarLabFossilRoom": "cinnabar",
+    "CinnabarLabMetronomeRoom": "cinnabar",
+    "CinnabarLabTradeRoom": "cinnabar",
+    "CinnabarMart": "cinnabar",
+    "CinnabarPokecenter": "cinnabar",
+    "Colosseum": null,
+    "CopycatsHouse1F": "saffron",
+    "CopycatsHouse2F": "saffron",
+    "Daycare": "route-5",
+    "DiglettsCave": "diglett",
+    "DiglettsCaveRoute11": "route-11",
+    "DiglettsCaveRoute2": "route-2",
+    "FightingDojo": "saffron",
+    "FuchsiaBillsGrandpasHouse": "fuchsia",
+    "FuchsiaCity": "fuchsia",
+    "FuchsiaGoodRodHouse": "fuchsia",
+    "FuchsiaGym": "gym:4",
+    "FuchsiaMart": "fuchsia",
+    "FuchsiaMeetingRoom": "fuchsia",
+    "FuchsiaPokecenter": "fuchsia",
+    "GameCorner": "hideout",
+    "GameCornerPrizeRoom": "celadon",
+    "HallOfFame": "indigo",
+    "IndigoPlateau": "indigo",
+    "IndigoPlateauLobby": "indigo",
+    "LancesRoom": "indigo",
+    "LavenderCuboneHouse": "lavender",
+    "LavenderMart": "lavender",
+    "LavenderPokecenter": "lavender",
+    "LavenderTown": "lavender",
+    "LoreleisRoom": "indigo",
+    "MrFujisHouse": "lavender",
+    "MrPsychicsHouse": "saffron",
+    "MtMoon1F": "mt-moon",
+    "MtMoonB1F": "mt-moon",
+    "MtMoonB2F": "mt-moon",
+    "MtMoonPokecenter": "route-4",
+    "Museum1F": "pewter",
+    "Museum2F": "pewter",
+    "NameRatersHouse": "lavender",
+    "OaksLab": "pallet",
+    "PalletTown": "pallet",
+    "PewterCity": "pewter",
+    "PewterGym": "gym:0",
+    "PewterMart": "pewter",
+    "PewterNidoranHouse": "pewter",
+    "PewterPokecenter": "pewter",
+    "PewterSpeechHouse": "pewter",
+    "PokemonFanClub": "vermilion",
+    "PokemonMansion1F": "mansion",
+    "PokemonMansion2F": "mansion",
+    "PokemonMansion3F": "mansion",
+    "PokemonMansionB1F": "mansion",
+    "PokemonTower1F": "tower",
+    "PokemonTower2F": "tower",
+    "PokemonTower3F": "tower",
+    "PokemonTower4F": "tower",
+    "PokemonTower5F": "tower",
+    "PokemonTower6F": "tower",
+    "PokemonTower7F": "tower",
+    "PowerPlant": "power-plant",
+    "RedsHouse1F": "pallet",
+    "RedsHouse2F": "pallet",
+    "RockTunnel1F": "rock-tunnel",
+    "RockTunnelB1F": "rock-tunnel",
+    "RockTunnelPokecenter": "route-10",
+    "RocketHideoutB1F": "hideout",
+    "RocketHideoutB2F": "hideout",
+    "RocketHideoutB3F": "hideout",
+    "RocketHideoutB4F": "hideout",
+    "RocketHideoutElevator": "hideout",
+    "Route1": "route-1",
+    "Route10": "route-10",
+    "Route11": "route-11",
+    "Route11Gate1F": "route-11",
+    "Route11Gate2F": "route-11",
+    "Route12": "route-12",
+    "Route12Gate1F": "route-12",
+    "Route12Gate2F": "route-12",
+    "Route12SuperRodHouse": "route-12",
+    "Route13": "route-13",
+    "Route14": "route-14",
+    "Route15": "route-15",
+    "Route15Gate1F": "route-15",
+    "Route15Gate2F": "route-15",
+    "Route16": "route-16",
+    "Route16FlyHouse": "route-16",
+    "Route16Gate1F": "route-16",
+    "Route16Gate2F": "route-16",
+    "Route17": "route-17",
+    "Route18": "route-18",
+    "Route18Gate1F": "route-18",
+    "Route18Gate2F": "route-18",
+    "Route19": "route-19",
+    "Route2": "route-2",
+    "Route20": "route-20",
+    "Route21": "route-21",
+    "Route22": "route-22",
+    "Route22Gate": "route-22",
+    "Route23": "route-23",
+    "Route24": "route-24",
+    "Route25": "route-25",
+    "Route2Gate": "route-2",
+    "Route2TradeHouse": "route-2",
+    "Route3": "route-3",
+    "Route4": "route-4",
+    "Route5": "route-5",
+    "Route5Gate": "route-5",
+    "Route6": "route-6",
+    "Route6Gate": "route-6",
+    "Route7": "route-7",
+    "Route7Gate": "route-7",
+    "Route8": "route-8",
+    "Route8Gate": "route-8",
+    "Route9": "route-9",
+    "SSAnne1F": "ss-anne",
+    "SSAnne1FRooms": "ss-anne",
+    "SSAnne2F": "ss-anne",
+    "SSAnne2FRooms": "ss-anne",
+    "SSAnne3F": "ss-anne",
+    "SSAnneB1F": "ss-anne",
+    "SSAnneB1FRooms": "ss-anne",
+    "SSAnneBow": "ss-anne",
+    "SSAnneCaptainsRoom": "ss-anne",
+    "SSAnneKitchen": "ss-anne",
+    "SafariZoneCenter": "safari",
+    "SafariZoneCenterRestHouse": "safari",
+    "SafariZoneEast": "safari",
+    "SafariZoneEastRestHouse": "safari",
+    "SafariZoneGate": "safari",
+    "SafariZoneNorth": "safari",
+    "SafariZoneNorthRestHouse": "safari",
+    "SafariZoneSecretHouse": "safari",
+    "SafariZoneWest": "safari",
+    "SafariZoneWestRestHouse": "safari",
+    "SaffronCity": "saffron",
+    "SaffronGym": "gym:5",
+    "SaffronMart": "saffron",
+    "SaffronPidgeyHouse": "saffron",
+    "SaffronPokecenter": "saffron",
+    "SeafoamIslands1F": "seafoam",
+    "SeafoamIslandsB1F": "seafoam",
+    "SeafoamIslandsB2F": "seafoam",
+    "SeafoamIslandsB3F": "seafoam",
+    "SeafoamIslandsB4F": "seafoam",
+    "SilphCo10F": "silph",
+    "SilphCo11F": "silph",
+    "SilphCo1F": "silph",
+    "SilphCo2F": "silph",
+    "SilphCo3F": "silph",
+    "SilphCo4F": "silph",
+    "SilphCo5F": "silph",
+    "SilphCo6F": "silph",
+    "SilphCo7F": "silph",
+    "SilphCo8F": "silph",
+    "SilphCo9F": "silph",
+    "SilphCoElevator": "silph",
+    "SummerBeachHouse": "route-19",
+    "TradeCenter": null,
+    "UndergroundPathNorthSouth": "route-6",
+    "UndergroundPathRoute5": "route-5",
+    "UndergroundPathRoute6": "route-6",
+    "UndergroundPathRoute7": "route-7",
+    "UndergroundPathRoute7Copy": "route-7",
+    "UndergroundPathRoute8": "route-8",
+    "UndergroundPathWestEast": "route-7",
+    "VermilionCity": "vermilion",
+    "VermilionDock": "vermilion",
+    "VermilionGym": "gym:2",
+    "VermilionMart": "vermilion",
+    "VermilionOldRodHouse": "vermilion",
+    "VermilionPidgeyHouse": "vermilion",
+    "VermilionPokecenter": "vermilion",
+    "VermilionTradeHouse": "vermilion",
+    "VictoryRoad1F": "victory-road",
+    "VictoryRoad2F": "victory-road",
+    "VictoryRoad3F": "victory-road",
+    "ViridianCity": "viridian",
+    "ViridianForest": "forest",
+    "ViridianForestNorthGate": "viridian",
+    "ViridianForestSouthGate": "viridian",
+    "ViridianGym": "gym:7",
+    "ViridianMart": "viridian",
+    "ViridianNicknameHouse": "viridian",
+    "ViridianPokecenter": "viridian",
+    "ViridianSchoolHouse": "viridian",
+    "WardensHouse": "fuchsia"
+  },
+  "sources": {
+    "Route1.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route1.asm",
+      "sha256": "ec8fce208c628b4e2c3a97d6acecc7c1caf9def2008568f2e9756804ebf52d6e"
+    },
+    "Route7.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route7.asm",
+      "sha256": "6233fbbe83b356befdc10d01e7678a81fe9cfd1689cf248c631a6e8c1ffe1399"
+    },
+    "Route3.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route3.asm",
+      "sha256": "ab1c7d4d6b3dfd7437a65e7b58c6ed83932cb6313b674ddb43f325c872d803f1"
+    },
+    "pokedex_constants.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/constants/pokedex_constants.asm",
+      "sha256": "cddea6d35fd356a2982b50af10122225b46273e5e0f7f0ea04a7a31c5e93cfef"
+    },
+    "Route6.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route6.asm",
+      "sha256": "d6dd86c96851b7fc1187bda629884a511ad633520342f682a9cef40a1ffffdb1"
+    },
+    "Route2.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route2.asm",
+      "sha256": "f1eedc125401f37dedb3b7b341690c65a803cf719a626edab5321f11038d23fa"
+    },
+    "Route5.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route5.asm",
+      "sha256": "19aefd1f46c4dd11f5ad0428a198fa21f2f5025b7ddaff766dac4603df061091"
+    },
+    "Route4.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route4.asm",
+      "sha256": "ae90dabec1af40a964b5376b70c00834abbe6a8b8ec590af5edb5e9a7112d721"
+    },
+    "Route10.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route10.asm",
+      "sha256": "0a59825f046f91b8308b8954e57d07b3d898265a394ef7abb7be32b074076e68"
+    },
+    "Route14.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route14.asm",
+      "sha256": "68a2e38d0dcadaeac1a5b2a6fdf158ce0a86815e61d27a727240d37073138721"
+    },
+    "Route12.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route12.asm",
+      "sha256": "dfc68c26983e3ed975f1870bc6df48ab3f258f63672102932b88646e6be655c7"
+    },
+    "Route9.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route9.asm",
+      "sha256": "e1d5cce3cee9e02f602a2e5fe82196ac2d1633834a14a3127b30dd303b82b418"
+    },
+    "Route11.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route11.asm",
+      "sha256": "0cc573e42f0bc484c5d0d65a99099289e1f336c3f133b9f8d371cf378fc787fe"
+    },
+    "Route8.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route8.asm",
+      "sha256": "0e317e8d4ec90a7ac38670ee1caf67b7fcdde4fce163620f375dc1a248455856"
+    },
+    "Route13.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route13.asm",
+      "sha256": "2b4b80f028bc2f49110af49063975de0be562ad12fbb51291190bdf9f33ad856"
+    },
+    "Route15.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route15.asm",
+      "sha256": "52b586fa85aa2d6f0bfbcdc322cfaf49241d4823223f8cc1683f30cd94f2c8c4"
+    },
+    "Route21.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route21.asm",
+      "sha256": "9001ae6f965c477a5e476daeb4e2b7e4c2d239d52a8379251cabb2ed80f0ec74"
+    },
+    "Route22.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route22.asm",
+      "sha256": "2fb4976299688985d485b06e00af23995933e166578d1d1a388e556d27566beb"
+    },
+    "Route16.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route16.asm",
+      "sha256": "a9f3e778dfdc5b59123003ab8cfdb585f7050a720500619b0fcefdd60e6ed4a8"
+    },
+    "Route19.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route19.asm",
+      "sha256": "799d5894c18bac2009f167ad5265d9cb85a4e2822cc1504c6b71dc90128cf68b"
+    },
+    "Route17.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route17.asm",
+      "sha256": "ce3f24770c8b506fb3bc9e44a0f58568ef8ee1277d8d46423739ad06b218850e"
+    },
+    "Route23.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route23.asm",
+      "sha256": "54fb01cc43b60e9270c8ff545b68ae287139409ff4be0f817454669059a4c8fe"
+    },
+    "Route18.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route18.asm",
+      "sha256": "397d3c22c403554f51308836d66d1e3a24b6d41ea4539df90576f77ca3e7b431"
+    },
+    "Route20.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route20.asm",
+      "sha256": "e5273f04892f32320ee83420086bdc58ab039d2a42994d254f561b0e67370c45"
+    },
+    "Route24.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route24.asm",
+      "sha256": "d4e2ce8d7627c30496c7f0b0a8ff552c52bb9ee8169736fa3cc93e41e91a48cf"
+    },
+    "RockTunnelB1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/RockTunnelB1F.asm",
+      "sha256": "4cda025b1301a7a6e400d025c5476538d77ba5363f7cc1725f7a9f14ff0cfc39"
+    },
+    "ViridianForest.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/ViridianForest.asm",
+      "sha256": "f989b7bacc01db6b8ed1246ea7f92e063379fd4d6dc1ce9a83dc97b612aa54ae"
+    },
+    "Route25.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route25.asm",
+      "sha256": "5b7ffd57bcf5cc1bda0481d01548345342e03ea421fd4458b5041c4329a2f96b"
+    },
+    "MtMoonB1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/MtMoonB1F.asm",
+      "sha256": "29c88a22c278bf68ad2ec0a7b1329c1e221258546c3014d1a24fd26ba28d6477"
+    },
+    "RockTunnel1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/RockTunnel1F.asm",
+      "sha256": "7df3572fb14bd692dd6c1c9b0723515156f806bed434570e1b2431e7bbcd2ce2"
+    },
+    "MtMoon1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/MtMoon1F.asm",
+      "sha256": "1539b0d5b3b21a247476391126b196baa04cbbf2c918e2f2abe1027b4a53e038"
+    },
+    "MtMoonB2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/MtMoonB2F.asm",
+      "sha256": "d821501136c8579912dbc4bed4b3fde34d5854a0a1d9db606030bd92ffa383d0"
+    },
+    "RocketHideoutB2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/RocketHideoutB2F.asm",
+      "sha256": "ce33bb367b2a0be107e316b998241845f99c732b60ae9adbb3110e481eef59c2"
+    },
+    "RocketHideoutB4F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/RocketHideoutB4F.asm",
+      "sha256": "447bb09cc6f282e78af27168a1a9523b073b1d16e3a2a97b8063f95d12fdf506"
+    },
+    "RocketHideoutB1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/RocketHideoutB1F.asm",
+      "sha256": "c64e6cebf7a00f896713c4e344058bf15f661f5a09db392545be87ef9e3dc67a"
+    },
+    "GameCorner.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/GameCorner.asm",
+      "sha256": "936f099f599a350887196eab178f12a781519d280e5e36aa57bfc7fcddcf3971"
+    },
+    "VictoryRoad3F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/VictoryRoad3F.asm",
+      "sha256": "17c90dbf2c31ef089b6ec7cf9c8338110d6b87a80a988a3b0e595ca9fb9d2dd1"
+    },
+    "VictoryRoad2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/VictoryRoad2F.asm",
+      "sha256": "e3a503cc86a345f61ba5cbb8b1ad1fffd25e6c2639514be9a705b4bddf2cffb9"
+    },
+    "VictoryRoad1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/VictoryRoad1F.asm",
+      "sha256": "c8503d5f8b8ef1d1c19150a8ba25b99fca5ed109f650fcbe01dbef4925d9beff"
+    },
+    "RocketHideoutB3F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/RocketHideoutB3F.asm",
+      "sha256": "0cc39b6752e150dd38e57c245ce43ce8bf43f0eb1325441ae3a3fb4ec45bc26b"
+    },
+    "CinnabarGym.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CinnabarGym.asm",
+      "sha256": "2fad54319afcdbd81178d8f7fa733962af2684f5e31e167b0992b6dd6110e10c"
+    },
+    "SaffronGym.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SaffronGym.asm",
+      "sha256": "81b3f8e055e82c0800235daaf5301e5b8af55808cf25eb2915277c291ae73246"
+    },
+    "FuchsiaGym.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/FuchsiaGym.asm",
+      "sha256": "e2a7831dffbd5ed6023c88a7ae20cc2b0d5d78244b90b11b467b6c2dfeefb168"
+    },
+    "CeruleanGym.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeruleanGym.asm",
+      "sha256": "47ad3f5cf237065fe0a68d37574707208d0187e04dee50c79031141f631f192d"
+    },
+    "PewterGym.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PewterGym.asm",
+      "sha256": "5c7fb37602bdab9b8f51af52a38e09dfa1e05555b8aabb01a2a3fec2b02d36be"
+    },
+    "CeladonGym.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonGym.asm",
+      "sha256": "49d7b14810a4b62e2a1a13a73f75481332f2b8f0c3ad776055852e1d3fc22c85"
+    },
+    "ViridianGym.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/ViridianGym.asm",
+      "sha256": "1198ab1f7c863f6dc860bb2b250e0acdeadb3a96d362213a08e383f255bfaf90"
+    },
+    "VermilionGym.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/VermilionGym.asm",
+      "sha256": "6fda47678115f64f0dfb3d1fb4f5be7daad642e9e29a2331d9b69992f5edf99b"
+    },
+    "SSAnne3F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SSAnne3F.asm",
+      "sha256": "1a3cb0d19a4edae664efc8890e048c8cd285fe8e4d3b550f78a55eee83a49acd"
+    },
+    "SSAnneBow.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SSAnneBow.asm",
+      "sha256": "ba3d576b0cb93273848e2da629061bffc4afad33dd6e6459bb3ee638878ced5b"
+    },
+    "SSAnne1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SSAnne1F.asm",
+      "sha256": "361245ac785dd8c708414094a780a3f7af85737d009de1dc8a55617b008ed043"
+    },
+    "SSAnne2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SSAnne2F.asm",
+      "sha256": "8a78ffbf91fae7a4155052c05d1bda24fde18682d949b2afb3aefae0bc60a8f4"
+    },
+    "SSAnne1FRooms.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SSAnne1FRooms.asm",
+      "sha256": "99c48cf967f44317373d730291e4074e617430efde973cdbfc951d126b5eda41"
+    },
+    "SSAnneB1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SSAnneB1F.asm",
+      "sha256": "883c52874459c8c12e955af969993d01b6500e9196d6e08694b1d2f99c2a6af4"
+    },
+    "SSAnneKitchen.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SSAnneKitchen.asm",
+      "sha256": "cbb02de0d7cd0487ff3d48841cab95431f2baffa4603cb9793fb18e70f83cc17"
+    },
+    "SSAnneCaptainsRoom.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SSAnneCaptainsRoom.asm",
+      "sha256": "2221f666cb23ccfce92130910988af75cc89439f291df107de2b2d3eb8862f29"
+    },
+    "SSAnne2FRooms.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SSAnne2FRooms.asm",
+      "sha256": "dac5e32a9e2b49a51bf1d72e1e417d4101677bdf552ff278d3caca163facad1b"
+    },
+    "PokemonTower3F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PokemonTower3F.asm",
+      "sha256": "ebf63a09fb670e95a2cda014f45e876465191a1a6330202df61a6fa869a846b0"
+    },
+    "PokemonTower6F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PokemonTower6F.asm",
+      "sha256": "4667d347a7c933b34edc0f795d1cab805f99c35008dae0170b5ecf4a3a247e58"
+    },
+    "SSAnneB1FRooms.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SSAnneB1FRooms.asm",
+      "sha256": "ac5d68c73b8c9cc7ab425477d0f0a0b0e8d538207f0bae537b2a08e994e1a5a0"
+    },
+    "PokemonTower2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PokemonTower2F.asm",
+      "sha256": "8681eb100bd226550307a8d84c2e19e62872bcef7a086325c753733995e3befe"
+    },
+    "PokemonTower5F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PokemonTower5F.asm",
+      "sha256": "60720d7b0623490e80518f3ce1a3452efe1c6f033bf4fe30523b2469627d3587"
+    },
+    "PokemonTower4F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PokemonTower4F.asm",
+      "sha256": "2121bf35e48e0e7f96784461812de8a3bae55483f35651acfdb83572fd1b8f86"
+    },
+    "PokemonTower1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PokemonTower1F.asm",
+      "sha256": "5725d0efe1b2313e708f35754f6e9c55ba80ab4d3f63d25fb468289ed0ba054d"
+    },
+    "SilphCo2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SilphCo2F.asm",
+      "sha256": "46c2860fc0809f784d663b858d2190af9a4d8934bd9d2e27219b03cbee3c5314"
+    },
+    "SilphCo4F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SilphCo4F.asm",
+      "sha256": "d22fe454967e15743360f08cfe7d49dac603e80934ff756270b73c0f22571e7f"
+    },
+    "SilphCo1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SilphCo1F.asm",
+      "sha256": "d2d1e5308a8bc56f0d317fe7247a32c87ef2d7080d2a57eba4c895cfbf3f8e1b"
+    },
+    "SilphCo3F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SilphCo3F.asm",
+      "sha256": "42faf4070d8e156e8f7f0130c6ef1d419a0ce577c209beb0f616f021620869ed"
+    },
+    "PokemonTower7F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PokemonTower7F.asm",
+      "sha256": "93ad6b0b241a3155b9028e8bb8d69cb71ecbf26f1aec7ac9f8fbf0a0c9242cfc"
+    },
+    "SilphCo5F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SilphCo5F.asm",
+      "sha256": "6267d37bcd8444aafcbc422a8f7c6526cae32a40cc0ade51577362a1eda7664a"
+    },
+    "SilphCo7F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SilphCo7F.asm",
+      "sha256": "f9b1490f3d3ca7ee87812e98339736230c78ee42cef0bf0fc4ee2944e10bcd60"
+    },
+    "SilphCo6F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SilphCo6F.asm",
+      "sha256": "39da087e53133ff3b3cc052ab21cc6bebedca8a75e0515f040f165cd87e243c6"
+    },
+    "SilphCo8F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SilphCo8F.asm",
+      "sha256": "054e7b0879257fecf7ac284fdb5ed4ced58a8124e0a0ba91213c5cfe56fcd8cd"
+    },
+    "SilphCo10F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SilphCo10F.asm",
+      "sha256": "8c114bf701ab17f0d9be20e21d2d70c2484404e604302273d55267e14ae9ce92"
+    },
+    "SilphCo9F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SilphCo9F.asm",
+      "sha256": "de3b21151ee9a6ab68ad163d75a1d26a8dafa200acef98ea1a63c98af2e9b938"
+    },
+    "SilphCo11F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SilphCo11F.asm",
+      "sha256": "9cf4cb6e69907ea5bb99c900157bbc3715cf9d242d1c72b072c53beeb7cb4cea"
+    },
+    "BillsHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/BillsHouse.asm",
+      "sha256": "2a5dfa9de51dd772709f47d42441079d0888f4dbae0e9f2c99c37408b6a185ff"
+    },
+    "CeladonHotel.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonHotel.asm",
+      "sha256": "5827c00d57b566db1bbda466a090c8e77497c0d61e2e21b87cb2fa24fbeae79a"
+    },
+    "CeladonChiefHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonChiefHouse.asm",
+      "sha256": "4f8e09a91f51d80d66af7acc79556cf813b39ca108d2f7bcb0c839ffd87adeb1"
+    },
+    "CeladonDiner.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonDiner.asm",
+      "sha256": "7e7bdd801b58d607a4965e3241db530efe0620bf800b8f7a1158ddb5b779a16c"
+    },
+    "BrunosRoom.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/BrunosRoom.asm",
+      "sha256": "0dbb38b1a93bb0a93d877b64f94fc667e26fb63d4e4caf8130ae6cbcd4ca09bb"
+    },
+    "AgathasRoom.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/AgathasRoom.asm",
+      "sha256": "2c07e82f659828dee0db1fa4baffd84e1d8bb403714ef12cd5e436b4c2ba6d75"
+    },
+    "BikeShop.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/BikeShop.asm",
+      "sha256": "66b162619195f51c81ed74e65f0c8975bd8ff354ce99ee0ac8ad793ee428105c"
+    },
+    "CeladonMansion1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonMansion1F.asm",
+      "sha256": "c895ed57d4a8d885a4a6044ff19fdfb389ba4d8eb9d9396381cd184d8d10035d"
+    },
+    "CeladonCity.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonCity.asm",
+      "sha256": "1fae0f7b93794b311adb640c1d0d45d6984065899beb73c857ea9322674fc070"
+    },
+    "CeladonMansion3F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonMansion3F.asm",
+      "sha256": "378c674de299685f2a6b3e7278abf170289d234fec7531e73bf279b6be2b1796"
+    },
+    "BluesHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/BluesHouse.asm",
+      "sha256": "7591e9b74958658606c43765be2b8a20e0ba23a3988b9d9d650519a9bd81fb17"
+    },
+    "CeladonMansion2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonMansion2F.asm",
+      "sha256": "558f91614a42e8e1f0c5bc3041d17b97c3c495bc79eb61d73dfe084c20990802"
+    },
+    "CeruleanCave1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeruleanCave1F.asm",
+      "sha256": "5a6d77d5b5bbdff0ddb37b9ba689ceb949cbe97c3096c073ccdfa3a0ff8c2d69"
+    },
+    "CeladonMart1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonMart1F.asm",
+      "sha256": "8fc668f5a864b63ed802928a227e61a4c73156dd53e74c6ac7b719e2e516bd5e"
+    },
+    "CeladonMart5F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonMart5F.asm",
+      "sha256": "0b498abf0415b9afdabfaa72904672622bc26bdca5d55945b0672a34e93ce51a"
+    },
+    "CeladonMansionRoofHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonMansionRoofHouse.asm",
+      "sha256": "0578fe2474220cfa7c457d4eac1b65413c40ec71e27ed416c02383a2cf23f748"
+    },
+    "CeladonMartRoof.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonMartRoof.asm",
+      "sha256": "ac59a0d761cd793f86bfac323faf342f58bbcbf3dd46d722302313ebfade7751"
+    },
+    "CeladonMart2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonMart2F.asm",
+      "sha256": "d9b7d089f7c9073b1b0fb7e2e91b643fd73759823e916b8217ba60cb1f504839"
+    },
+    "CeruleanBadgeHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeruleanBadgeHouse.asm",
+      "sha256": "6351ed9b9fe255b6c54b0099427bd5e472bb694043c1b741cdb1be63fbe6ae58"
+    },
+    "CeladonMart3F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonMart3F.asm",
+      "sha256": "1f542f25a17f1a426ee9372413ffacae413459c10b699f21141d627a4346dfac"
+    },
+    "CeladonMansionRoof.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonMansionRoof.asm",
+      "sha256": "ad97d6bf0b58d58adbc624895bbf4e72c6faeed90783cb2aed37eede240472ef"
+    },
+    "CeladonPokecenter.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonPokecenter.asm",
+      "sha256": "5b43a628a3fbf9a285d54fdbbe64eb667c1b3cbd3962be8a2b7f17f1cb8f8beb"
+    },
+    "CeladonMartElevator.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonMartElevator.asm",
+      "sha256": "c432b5d51114d2dcd4dee74d43cb90babff6af50a3bdd76f8ca3bc13626c7ef9"
+    },
+    "CeladonMart4F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeladonMart4F.asm",
+      "sha256": "60c15d15f57b55faaddcbf20bc1bbbf6d0c552650fe659a5f295a2e53ff7129a"
+    },
+    "CeruleanCity.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeruleanCity.asm",
+      "sha256": "a52943aa590ee57daf13056ee34380b2fefa18974250c2f64b88c6273897dc42"
+    },
+    "CeruleanCave2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeruleanCave2F.asm",
+      "sha256": "225a626c06eeaf52749987de78fc0aa694b9764f98244b64c0434d10660245c3"
+    },
+    "CinnabarLabMetronomeRoom.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CinnabarLabMetronomeRoom.asm",
+      "sha256": "c988fe7a065560698d18cfc289d98cef6cf91d53d443f6e95d17b00419b49bcf"
+    },
+    "CinnabarIsland.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CinnabarIsland.asm",
+      "sha256": "3170c8c30499298ec11e1346c564c8f8345103fad5a9e7944e0ea3e257d7f5c2"
+    },
+    "CeruleanMelaniesHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeruleanMelaniesHouse.asm",
+      "sha256": "44fb52555df16c4ca79af9765b1b4b7f308f7295be13ab72010c966ee06ba7cc"
+    },
+    "CeruleanCaveB1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeruleanCaveB1F.asm",
+      "sha256": "b15e79e5e7f63b1e8f22175b37770c0cedfcce1f13b5014c6430b08cb428caeb"
+    },
+    "ChampionsRoom.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/ChampionsRoom.asm",
+      "sha256": "3cf6d071ecf9737ae2f9a91c56aaa343b4a07305f1136d281c4d6bf116d43d26"
+    },
+    "CinnabarLab.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CinnabarLab.asm",
+      "sha256": "b30837c1c06503c901403d8502d882a91af91bd852721c50a0144b9b29455f14"
+    },
+    "CinnabarLabFossilRoom.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CinnabarLabFossilRoom.asm",
+      "sha256": "76440f1aafc4e715ffc8c52d1b3d69c776456347834eaa372ac68ca0dea9479e"
+    },
+    "CeruleanTrashedHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeruleanTrashedHouse.asm",
+      "sha256": "03fe57feb1aed33918931c333ec75ca705b6065bef198f250507d44df3bae852"
+    },
+    "CeruleanPokecenter.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeruleanPokecenter.asm",
+      "sha256": "a0c98ae11ee18842dc6e6f077b6078ef713a31a71f0a7df38f5551fb48681fb2"
+    },
+    "CeruleanMart.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CeruleanMart.asm",
+      "sha256": "7d8c486ae1208dcf46e0d0be33cb5ecb052c95faa11d10212096ccb3d0d09188"
+    },
+    "FightingDojo.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/FightingDojo.asm",
+      "sha256": "43afb37595e1df67034d9ae93b15d277d6e623485be766e5060cbf6e10e9bf2d"
+    },
+    "CinnabarMart.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CinnabarMart.asm",
+      "sha256": "46734977403b47027a80090827971c56357b1f6f04e0c7ca01a82a8a87e5de8e"
+    },
+    "FuchsiaBillsGrandpasHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/FuchsiaBillsGrandpasHouse.asm",
+      "sha256": "169f018ce02d0de13ec294b2b5158b86395b6a0c919f2243867f32c59d6c5ca1"
+    },
+    "Daycare.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Daycare.asm",
+      "sha256": "7e629ddcba17b878018de1aee655dfc39c56ce09df047562052339c6261ca90a"
+    },
+    "DiglettsCaveRoute2.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/DiglettsCaveRoute2.asm",
+      "sha256": "ccc891b6a3a5853de215c4f218fbbf60ecc5b192750f20033a3e4353fba82e1f"
+    },
+    "CinnabarPokecenter.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CinnabarPokecenter.asm",
+      "sha256": "e95cc67d86c2f2b9d48321064f1c333c97d17c1394e47b731cc7770810563e49"
+    },
+    "Colosseum.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Colosseum.asm",
+      "sha256": "f1f6f13cf8de99c8170ccf64c2dd35f83fe2a7df90c30c668e6219ff78fc6978"
+    },
+    "DiglettsCave.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/DiglettsCave.asm",
+      "sha256": "261d1d11e48a3fcf0138512e0b37d70100d941a9f2744484d06e8ccc2c09fd32"
+    },
+    "CopycatsHouse1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CopycatsHouse1F.asm",
+      "sha256": "da0195d6a0735e671b808eea3484f83fcc05ec1d8eca7912fc999bf693cd3ac3"
+    },
+    "CopycatsHouse2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CopycatsHouse2F.asm",
+      "sha256": "d26253fd35178356bada728d58cad4b4502d5435864b37529de4a2ea721427d9"
+    },
+    "DiglettsCaveRoute11.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/DiglettsCaveRoute11.asm",
+      "sha256": "8461df1a7590024bf276354ec38fcfdc1615ce77e086acfe0bd8a6a3f0912067"
+    },
+    "CinnabarLabTradeRoom.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/CinnabarLabTradeRoom.asm",
+      "sha256": "31f00018d180105a5247a475354dc9c918adc1ba089c5c25b7f4bbc8e4c7e6f6"
+    },
+    "FuchsiaMart.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/FuchsiaMart.asm",
+      "sha256": "4dcb04cd86b057fb964401592683cc47b34419a2166ad04afc2eccab2baff773"
+    },
+    "GameCornerPrizeRoom.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/GameCornerPrizeRoom.asm",
+      "sha256": "235e9d79ef0eed90944a5e62d53b08bc38d681fa6a2760168e12605eef0e74dd"
+    },
+    "FuchsiaPokecenter.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/FuchsiaPokecenter.asm",
+      "sha256": "b12a1cf92d63c2833d5ba64fa5afd472bd96c2e052d51214184c2ed069702110"
+    },
+    "IndigoPlateauLobby.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/IndigoPlateauLobby.asm",
+      "sha256": "4bb4b9e3df18fe22f83d5b8dde38d41f975c17dc48807b82edf9b1ad0a63af51"
+    },
+    "FuchsiaMeetingRoom.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/FuchsiaMeetingRoom.asm",
+      "sha256": "e5a5aecaefc9a4d4b7e16f0025c4dbd87f4e43bcd21747311a1033d0c9140c92"
+    },
+    "LavenderCuboneHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/LavenderCuboneHouse.asm",
+      "sha256": "2c000264a740fbed8082e68748dd0921a9998906c1d826c8bba6c0e8672a0d04"
+    },
+    "FuchsiaGoodRodHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/FuchsiaGoodRodHouse.asm",
+      "sha256": "93f2858e7eca24e1c542ee2a3d82efd778efbb344913cc60b056d24a1672a4be"
+    },
+    "IndigoPlateau.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/IndigoPlateau.asm",
+      "sha256": "7ae61074c4ab21ee3c0e6426ebc59d2a935d56fa5c04cf0a92482fb8f1e5799c"
+    },
+    "FuchsiaCity.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/FuchsiaCity.asm",
+      "sha256": "9e33a0c04e2bf0adb10b078b027c5296ddd93583ac3385dd9e9bc4ed9c39e973"
+    },
+    "HallOfFame.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/HallOfFame.asm",
+      "sha256": "3e7acc89cdd45a062aca7a245b951ce2a0f8e14065a55d0fd44b1b34bb43f744"
+    },
+    "LavenderMart.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/LavenderMart.asm",
+      "sha256": "7923fa78398cdfb15f46fec78ce746ec968d9b90a44b197ba153d212d662fdf4"
+    },
+    "LancesRoom.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/LancesRoom.asm",
+      "sha256": "83a99b8da65619f82e1a0d2a7014cccbf67909bcc07df8fbe53fd4924c5aeaef"
+    },
+    "LavenderPokecenter.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/LavenderPokecenter.asm",
+      "sha256": "548603c3fbf3682276be7674be95b5911142fa29da92feb514d511f71c6336da"
+    },
+    "Museum1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Museum1F.asm",
+      "sha256": "c0ef10f5ab778abf62596d93eb728789e962c649d2bb109b5236988b86a876e7"
+    },
+    "OaksLab.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/OaksLab.asm",
+      "sha256": "4ad19d6ef8dfa9451e37c5a48d6aee6bdec0ba661c3e0e23a72f90d493eefa29"
+    },
+    "MrFujisHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/MrFujisHouse.asm",
+      "sha256": "9ccab50eb7c908b23dbf1788623f0d36f06305e20020b8e8559f1174214f259d"
+    },
+    "MrPsychicsHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/MrPsychicsHouse.asm",
+      "sha256": "cac2a0ee53ed9215dc8f29760584e6cedf12e05a05df021c77cab658bf66296a"
+    },
+    "PewterCity.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PewterCity.asm",
+      "sha256": "0c98a4b6dbfbbf25d50717d48ca521240e58a6dff89574589a08c5ad25247c81"
+    },
+    "MtMoonPokecenter.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/MtMoonPokecenter.asm",
+      "sha256": "896188bb59a906fbf17e40a3af1939a8a4c8fc5f0f6ac2e47c5a323b7f66b99e"
+    },
+    "LoreleisRoom.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/LoreleisRoom.asm",
+      "sha256": "176e85105b5a9c477c3f8ab09b4268cf5bc0bb6aa87eb976558e6b6b69f056bd"
+    },
+    "NameRatersHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/NameRatersHouse.asm",
+      "sha256": "8fa3aefe0a9f328c5d777fe55199f8fa622376ef1a74ee8013ccb21a6d960a79"
+    },
+    "PalletTown.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PalletTown.asm",
+      "sha256": "828cfb1865b624e3ae432eec6615a23a3f979137998bcd89591e61429ac2fefe"
+    },
+    "LavenderTown.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/LavenderTown.asm",
+      "sha256": "729fad12674e43db524dd22696f21f2dae735adcb275c3068253cefb881de127"
+    },
+    "Museum2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Museum2F.asm",
+      "sha256": "4aa39525d7a9cde94543d8206ddec325bc78b4dbdee7ed407789edf8aa488d41"
+    },
+    "PokemonMansion2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PokemonMansion2F.asm",
+      "sha256": "e318e9cc7e598be3d508487041e3cce83bcdeead98048fbd6ea67bc3ab3bbaa2"
+    },
+    "PewterMart.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PewterMart.asm",
+      "sha256": "b5f037618bc4aacba6f7315c75c349127320893b8b23bcb067d58477a44011e0"
+    },
+    "PokemonMansion3F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PokemonMansion3F.asm",
+      "sha256": "cc04594eb9682dfdf33c57076a4919d1ca989a0a126d0aaaa0cab46cf0d724f1"
+    },
+    "PokemonMansion1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PokemonMansion1F.asm",
+      "sha256": "8ca114b2e8ca7bd2e3f939cb25b6b5d02c3d28228832ad0e5e1b505f9e3ec0d2"
+    },
+    "PowerPlant.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PowerPlant.asm",
+      "sha256": "0f4d0a0b68cb88aba37eefbae2621297e1459e12e49d2b118a025941a552b8f2"
+    },
+    "RedsHouse1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/RedsHouse1F.asm",
+      "sha256": "27ffde18b57e239b0f1557b74dfe300fd98864fe4cfe2157c48e84942655fbbe"
+    },
+    "PewterSpeechHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PewterSpeechHouse.asm",
+      "sha256": "c26bf94e35f1a9764578ed61a777a2d99834ada7eceb702b4f2a6bd46aac7bf9"
+    },
+    "PewterPokecenter.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PewterPokecenter.asm",
+      "sha256": "ee5818d7cfdf27631b2ac93fbf4e5fd7523e88a7f97dce21e214f0ce9f8bcf0e"
+    },
+    "PokemonMansionB1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PokemonMansionB1F.asm",
+      "sha256": "eff8c91005e5e952dafd48258637e326ef2fbd6b4067041f38bd3663d2e8ae44"
+    },
+    "PokemonFanClub.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PokemonFanClub.asm",
+      "sha256": "80d132006f0b6bddb3721ecb8d5b9600b46825b80bb7c9cfa9995299ea438802"
+    },
+    "RedsHouse2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/RedsHouse2F.asm",
+      "sha256": "e6331a77c7482fff55402d86f17d74eb3500b4c74a38136e9bc2be813d75ce75"
+    },
+    "PewterNidoranHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/PewterNidoranHouse.asm",
+      "sha256": "d154ae5c10e974dee90ae94842470a648069cd6e6a56e9e607784bf43cf454ba"
+    },
+    "Route12Gate1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route12Gate1F.asm",
+      "sha256": "20f52b9977a025293374ca76afd19be9f30b3c0069eeb57a0eb008e4658c6ab9"
+    },
+    "Route11Gate1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route11Gate1F.asm",
+      "sha256": "2fe7da2cc8b3ee052178e4ffe5e28dd6489ca8bf81f9f1cce78b82152f90b704"
+    },
+    "Route15Gate2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route15Gate2F.asm",
+      "sha256": "92fd579262a8154cbefec135f044231c9b66434c671addff0cf424f19aef7d14"
+    },
+    "RocketHideoutElevator.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/RocketHideoutElevator.asm",
+      "sha256": "5572b308ca6352381f5b28d3766ba16f878bbf0aa484926d92a149ab10e807e1"
+    },
+    "Route12SuperRodHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route12SuperRodHouse.asm",
+      "sha256": "686242e0cf1de08a233087c90618c5fae961b8017bc1e28f405eddb6c5db1511"
+    },
+    "Route12Gate2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route12Gate2F.asm",
+      "sha256": "7bfd8a7b223de841b18d4bb13580f832ec81212e1c1f3bbb9faf9163384a7eb0"
+    },
+    "RockTunnelPokecenter.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/RockTunnelPokecenter.asm",
+      "sha256": "7ca99d23035bfe13dce370b737018e5469437c0f1e8c98e88c80e76594050ef0"
+    },
+    "Route11Gate2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route11Gate2F.asm",
+      "sha256": "0b81601bf46e0dd3347230d746e3fdabe4947792a254e345922b4f5389577273"
+    },
+    "Route16Gate2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route16Gate2F.asm",
+      "sha256": "805b9302c546fb3d3844e17248c269706ce539f11130b09e5c1892f2b284e685"
+    },
+    "Route15Gate1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route15Gate1F.asm",
+      "sha256": "bcd04e4a31df3e8bd679676efcdf05f621d4583be4a61af6041f55acb1f02873"
+    },
+    "Route16Gate1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route16Gate1F.asm",
+      "sha256": "16fd05a07e6d827f52efc1f9535069429b4f6c38ea65f23cd733dc7de7b9851d"
+    },
+    "Route16FlyHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route16FlyHouse.asm",
+      "sha256": "77017aad8800849434eefaa4509bf61ef311abd53d8cfb00ca08b72c32faebb1"
+    },
+    "SafariZoneCenterRestHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SafariZoneCenterRestHouse.asm",
+      "sha256": "0565594a6a948b1ac000721e8f44f014493a360d9d6d8c00f57fb5a25b60711b"
+    },
+    "Route22Gate.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route22Gate.asm",
+      "sha256": "fe3bcaf451c6212de193e3dd4fc038511c4f52c9adae22b647e891cb5a50cf42"
+    },
+    "Route2TradeHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route2TradeHouse.asm",
+      "sha256": "af188bbe96e10baf796cfd36345e34f81d45af8965e0ad3f1f07562a8c1239cd"
+    },
+    "Route6Gate.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route6Gate.asm",
+      "sha256": "45e6fff1781c960920e16eb083a17fb2a0c628097106059d0d8c4a179f7230b5"
+    },
+    "SafariZoneCenter.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SafariZoneCenter.asm",
+      "sha256": "ea39ea8b241b0075334c2feb60717c8659b7bbd67f7030feec60cae5ff8e94d5"
+    },
+    "Route18Gate1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route18Gate1F.asm",
+      "sha256": "503ff2b66927fb5ac3740c967bc3928b19430e3e0a655d21e5bd3179e1bbfc14"
+    },
+    "Route8Gate.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route8Gate.asm",
+      "sha256": "59547ec6bb2fc8215651509ed72a5eb40f4abb8ea9b4577791134557148589eb"
+    },
+    "Route18Gate2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route18Gate2F.asm",
+      "sha256": "281abae57a6ff13b2c4f1c0b7dec4221fb5bb5a63138981ca063221fb1c46e5e"
+    },
+    "Route5Gate.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route5Gate.asm",
+      "sha256": "5314f9c3869e2202dd0e6e65cd201fd6cb28e8c8c56ea56638afe22c1bc9daba"
+    },
+    "SafariZoneEast.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SafariZoneEast.asm",
+      "sha256": "d089123cb2b963224e4f6c81f5a123f71d3ce21bfeeb1a8072bfffc677afe118"
+    },
+    "Route2Gate.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route2Gate.asm",
+      "sha256": "68d62fe7da5a5838bb297f9c6957c5e9fc471388588452cb551778740375fed5"
+    },
+    "Route7Gate.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/Route7Gate.asm",
+      "sha256": "dfe6f73fca5400dcbd65c612627a3b4845b446f69db2feda3fdb7bc25d2af9dc"
+    },
+    "SafariZoneNorthRestHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SafariZoneNorthRestHouse.asm",
+      "sha256": "e05eac75ed98d65577a546ecd4c04eec830d85b41db0ebb49fc086285eaa2b85"
+    },
+    "SaffronCity.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SaffronCity.asm",
+      "sha256": "da59cd276974a4753b2fe4ec30ee13241a9bbc5afa10ed8fdf050497e51e2d16"
+    },
+    "SafariZoneWest.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SafariZoneWest.asm",
+      "sha256": "a81216b68f836b05d322daf38fafba88122e4aa3ecca8efa3d676d079842b1f5"
+    },
+    "SafariZoneGate.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SafariZoneGate.asm",
+      "sha256": "d183f383e65949e948dc05554860a6fb558d6c2c61f2453b9e3f0ff2df814b61"
+    },
+    "SaffronPokecenter.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SaffronPokecenter.asm",
+      "sha256": "4f830dbd8cad717a65a543540491774b30b4f426a5ea9a917df1cfd9233163be"
+    },
+    "SafariZoneSecretHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SafariZoneSecretHouse.asm",
+      "sha256": "0130b60b0df05d6b7f4b1af185ecc6e79552ad2d9bc846b7e16c203c18bf42f8"
+    },
+    "SafariZoneWestRestHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SafariZoneWestRestHouse.asm",
+      "sha256": "5dda3c90b0a351b32aaab57fef257cf9a8437ac8e6494183ca54a6bb3746fa7d"
+    },
+    "SafariZoneEastRestHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SafariZoneEastRestHouse.asm",
+      "sha256": "1c53c6a7907bffd43720a28ffc0a689c08d5a56dfbfa3eb893b7634960123ce6"
+    },
+    "SaffronPidgeyHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SaffronPidgeyHouse.asm",
+      "sha256": "9c2bde481b1fdd90bbbc3513e12fddbf788e521c7eff535c57cef09a663e2b50"
+    },
+    "SafariZoneNorth.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SafariZoneNorth.asm",
+      "sha256": "05b02f62b79162de2c487b2c9275a66ed13e33f5fc8fec377007e80ffc5bac07"
+    },
+    "SaffronMart.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SaffronMart.asm",
+      "sha256": "2b879142151c18b49a49d6e71b7cfc6c0978aa40abd920560d57c48f3ae081dc"
+    },
+    "SeafoamIslands1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SeafoamIslands1F.asm",
+      "sha256": "0e2bab6aec12c7a86c3a0b3c6341ef92daf7cfbfe2904ccc13aeb550d5b6af9c"
+    },
+    "UndergroundPathNorthSouth.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/UndergroundPathNorthSouth.asm",
+      "sha256": "94259d8a9fe66687a7acc6d57ae00866c9ec015e4a057d45b52df8d2510ed7e1"
+    },
+    "UndergroundPathRoute6.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/UndergroundPathRoute6.asm",
+      "sha256": "ec1da2dd7d5713539bed3c427b5eea52c373209c7b179b96610d123f40dfb8de"
+    },
+    "UndergroundPathRoute5.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/UndergroundPathRoute5.asm",
+      "sha256": "b7c8512a301360a97dac894ee966aaab152eb00534beec46d27c78df9f6c7efc"
+    },
+    "SeafoamIslandsB1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SeafoamIslandsB1F.asm",
+      "sha256": "264b3f35d132edc18d651077970fcd4fbe724282bfcf28d6a52f8ef99a2ba18b"
+    },
+    "UndergroundPathRoute7.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/UndergroundPathRoute7.asm",
+      "sha256": "d42e1ed2cf84821fc0cc02df46adffe385d88b1e5652f09443b3d24874dd64de"
+    },
+    "SummerBeachHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SummerBeachHouse.asm",
+      "sha256": "5a07b4176339a1379e95a4e20b90c1c5d5c1e5043a612ea7391ba579d82e69f6"
+    },
+    "TradeCenter.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/TradeCenter.asm",
+      "sha256": "f27178ba4345de883cc41ccfcc4608c05fef89e17bead270938fd317819f6f58"
+    },
+    "SeafoamIslandsB4F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SeafoamIslandsB4F.asm",
+      "sha256": "31ec0a1b026863e22c81c9eaf8894ebcb0748ae0f20d6ef110de0ab0e37c08fb"
+    },
+    "SilphCoElevator.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SilphCoElevator.asm",
+      "sha256": "e981d41bd2573cc0804b6e7f876e5853420a662a1716f6b99f980607f01f086e"
+    },
+    "UndergroundPathRoute7Copy.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/UndergroundPathRoute7Copy.asm",
+      "sha256": "b1b1e5f83badf964d9493032e9736e5114fe721020ca091fdbb44fc6b495c794"
+    },
+    "SeafoamIslandsB3F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SeafoamIslandsB3F.asm",
+      "sha256": "ecd5317049f0a67b24e84d5ef9cd29450403dcdb7258153aaf554084793b0c1a"
+    },
+    "SeafoamIslandsB2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/SeafoamIslandsB2F.asm",
+      "sha256": "e640987aa942e6d42948e10933fdab21084e8dd91741ba13ed4eaceee03197f6"
+    },
+    "VermilionCity.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/VermilionCity.asm",
+      "sha256": "446af410f59e6cc0dab11b9538fd90caa2e0c054a78745218c8eaf00f32c70af"
+    },
+    "UndergroundPathWestEast.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/UndergroundPathWestEast.asm",
+      "sha256": "dee4e5f2cee47208ae15c223c5c6c4edb07833a80d7940f9ed0033fb454f1e9e"
+    },
+    "ViridianCity.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/ViridianCity.asm",
+      "sha256": "7ec22ff6da01e4e2d1a9e251f8a1b70249605f42c27cdca6ee955ca21dc8b699"
+    },
+    "VermilionPokecenter.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/VermilionPokecenter.asm",
+      "sha256": "d5215813f64a200e82c30925b67405296606121a18bb2c9d4ab02cd8776a183b"
+    },
+    "VermilionPidgeyHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/VermilionPidgeyHouse.asm",
+      "sha256": "f262dc1ed0f3add50c891d53812d7d42a90a10e835baedf73413958864a89a4e"
+    },
+    "VermilionTradeHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/VermilionTradeHouse.asm",
+      "sha256": "a261d5dc3e692a210db64bbb8620cd3a26fb2927f9a0d7cfbc7f191a944f5af3"
+    },
+    "ViridianForestNorthGate.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/ViridianForestNorthGate.asm",
+      "sha256": "e334f404dd063045187792baae3665a90ff2f8139fa7831a88e2bbf5282d300d"
+    },
+    "VermilionOldRodHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/VermilionOldRodHouse.asm",
+      "sha256": "df0a6721e66004d212a7f11a4cecae5a8ea9db9e8afaabcc46175b6741cca383"
+    },
+    "VermilionDock.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/VermilionDock.asm",
+      "sha256": "18fb0b72c5f0c39e01cd0abcdac7d756075a733934e46be95836e0c21d0035a0"
+    },
+    "ViridianForestSouthGate.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/ViridianForestSouthGate.asm",
+      "sha256": "5e4a998dbd3522938c8db94ea208b07c707d62178c1ba8926990df8501ce0414"
+    },
+    "UndergroundPathRoute8.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/UndergroundPathRoute8.asm",
+      "sha256": "f32ed463b5838323e405a30ae3c6724ca6a924dd7f7cea70bd9dfa316571c687"
+    },
+    "VermilionMart.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/VermilionMart.asm",
+      "sha256": "78b6e9e29190db9f4f2b854818fd59d1cedc96bdf5f87fc20967b3ae7c7d17f8"
+    },
+    "ViridianMart.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/ViridianMart.asm",
+      "sha256": "ff5e9c6fc5eea24bd2cede7cd5fd3e141b545293f0430c3070af0d5cd391016c"
+    },
+    "ViridianSchoolHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/ViridianSchoolHouse.asm",
+      "sha256": "9e374b45bff94b30409fff04d49ff01ddc8dafda7244d527d05622bd46796194"
+    },
+    "ViridianPokecenter.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/ViridianPokecenter.asm",
+      "sha256": "d9d6365e4f624a3624747293377139e6a17d378fc5f88fd7753dbd06a40829f8"
+    },
+    "WardensHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/WardensHouse.asm",
+      "sha256": "40e487f7ec17c4c57229e05b113a7ef6d679b639284e47bedaa1771a38e4ea30"
+    },
+    "ViridianNicknameHouse.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/maps/objects/ViridianNicknameHouse.asm",
+      "sha256": "927096f4b2d502483c1272d76ddd055c14d122ad2a9a7bf0cf7e6b62b81a2e73"
+    },
+    "wild-PokemonMansionB1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/PokemonMansionB1F.asm",
+      "sha256": "c53c1bb4acf60dd7723112de551914f2e7d2fa32e9afb45e0186e68a63b3da92"
+    },
+    "wild-MtMoonB2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/MtMoonB2F.asm",
+      "sha256": "280579d3847218e1d512d3e1176c6bee91614e200473d372579b144ea43df46f"
+    },
+    "wild-MtMoonB1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/MtMoonB1F.asm",
+      "sha256": "c6b45cbd818b63a642cb04776788803092cb917f33dcabf1ce3d187cdf41d7f9"
+    },
+    "wild-DiglettsCave.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/DiglettsCave.asm",
+      "sha256": "96cf42496e77431ed3d735a6796e74974880287dc4772c70ac8cd850d06e8fe3"
+    },
+    "wild-PokemonMansion1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/PokemonMansion1F.asm",
+      "sha256": "11b35af7e3a265ef4f4c119e55adfa074dd185a537ae45a0d08cb1996974632d"
+    },
+    "wild-CeruleanCave1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/CeruleanCave1F.asm",
+      "sha256": "fc264e3664db0f65cbf9a2792d3381955f57497509d301958c0c3f099f7f3c31"
+    },
+    "wild-PokemonMansion3F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/PokemonMansion3F.asm",
+      "sha256": "d6e080b81376399eb0a0ba63e2932461569e208a10cb8ab55fd175b41ee37409"
+    },
+    "wild-CeruleanCave2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/CeruleanCave2F.asm",
+      "sha256": "bb5332cb8fd956e5485816eb43859fde8a6acf15f41127729f3e81dc92684143"
+    },
+    "wild-MtMoon1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/MtMoon1F.asm",
+      "sha256": "8cd70932b9d80a4e2729883f2cb9f5837a050fe8b3ca071ee57a04afeeb2be11"
+    },
+    "wild-PokemonTower1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/PokemonTower1F.asm",
+      "sha256": "52fab16ba478cd29185c491760cba61167030c141acb3597859ab50368ff855c"
+    },
+    "wild-PokemonMansion2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/PokemonMansion2F.asm",
+      "sha256": "ec459dd9fc1526ea073a5180d479a52ef3f0750010d6230b91b5f97d15a83499"
+    },
+    "wild-CeruleanCaveB1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/CeruleanCaveB1F.asm",
+      "sha256": "14e456d75b51ed5982670049f0def513fd678c3a82979db1e1a7c8c0c6557f32"
+    },
+    "wild-PokemonTower7F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/PokemonTower7F.asm",
+      "sha256": "6c3a055b950c29d81a0ee5b63f78f529e854e56457ad09cceec8d4ed6fa23683"
+    },
+    "wild-PokemonTower6F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/PokemonTower6F.asm",
+      "sha256": "b0607c59891a9413c728526b6ed697ac9ae32d479d4149f22100fefef7c1386b"
+    },
+    "wild-PokemonTower2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/PokemonTower2F.asm",
+      "sha256": "4329e5e45752ff236714e9a7b683745781472b3ff343438d76e6c50a3dfd2698"
+    },
+    "wild-PokemonTower5F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/PokemonTower5F.asm",
+      "sha256": "7943858948699dd15feb47dacef8e2b946db415829c9a705647036d90ce57696"
+    },
+    "wild-Route10.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route10.asm",
+      "sha256": "be3f058d4df7e4f304613e7b4a9b0ad4e8bac7b9d3f36b14bab69e5edd79c1e6"
+    },
+    "wild-PowerPlant.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/PowerPlant.asm",
+      "sha256": "9cbfe837705756b44b07566d57503d8caed43cb3bcf8a14a33eb96a25a468328"
+    },
+    "wild-RockTunnel1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/RockTunnel1F.asm",
+      "sha256": "9f828b63437891de0d131fcbf8a29fb185e83ad78166799cf3bc2c7ab7e2adec"
+    },
+    "wild-Route11.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route11.asm",
+      "sha256": "8762d39c00653df205bb7c111d8c9b9dc8451aab87b0979282f4c7d7f9eae24f"
+    },
+    "wild-RockTunnelB1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/RockTunnelB1F.asm",
+      "sha256": "9f707bb9718ed692250a45e573ff32898808110ba6ecd3ef3ad9ff42df6f83a8"
+    },
+    "wild-PokemonTower3F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/PokemonTower3F.asm",
+      "sha256": "6054ea1faf1aefc553f71bbbb8305e27e11192c9fbd215856d9445937c040845"
+    },
+    "wild-PokemonTower4F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/PokemonTower4F.asm",
+      "sha256": "05e1fac8b765e50914a69fd96ad0b303006ca2bb9e1501e6ccf980b11ef733d3"
+    },
+    "wild-Route1.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route1.asm",
+      "sha256": "09f8d890b55ad15d4d225789eb3b03851d9078a033062bb5b28053968ab36507"
+    },
+    "wild-Route20.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route20.asm",
+      "sha256": "e254cf0c0b40f1f3adda4be9e73c0351bacb982c6a00be9b1f909bea450b4398"
+    },
+    "wild-Route14.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route14.asm",
+      "sha256": "bfb179e92c9559c8385d4ba61692dee5eaa39b4bacf1ee4fdea0b5575d719f66"
+    },
+    "wild-Route21.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route21.asm",
+      "sha256": "3f7ea9ce7594f5ef49319c22435d8047a91c92193172d980160a8f7e3d4b5e0b"
+    },
+    "wild-Route13.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route13.asm",
+      "sha256": "58876ac79878a84b228a69e3082b4c3193f71f8f4762418ee4a94e1638e2dd8a"
+    },
+    "wild-Route17.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route17.asm",
+      "sha256": "2236d1a894f3d7c601717339c7a94afaac0bc4e434c03ae0e76d3852e997d69c"
+    },
+    "wild-Route22.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route22.asm",
+      "sha256": "37129c36f121cd3061ba385dee839fcad6702eccbee6983ec93069930178611a"
+    },
+    "wild-Route18.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route18.asm",
+      "sha256": "9e77dd92cff96fb394dbdf343e47a88b95f2c70ed649c8ebbf3ea076aef0b7de"
+    },
+    "wild-Route2.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route2.asm",
+      "sha256": "6b6e2b12e4df7b5fe8679943114dbefc9d2023a5e33f181ef58b9054a2797475"
+    },
+    "wild-Route16.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route16.asm",
+      "sha256": "6581ce62b584776decc4473ca6554ff9af19d604e429a1f8c1ba6bb8edadc1fb"
+    },
+    "wild-Route15.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route15.asm",
+      "sha256": "1dd2075f3878d5ef1b263534f1b445d869110cc953fc0ae6c6278405daef4249"
+    },
+    "wild-Route12.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route12.asm",
+      "sha256": "25abbcd1f21400aed70d5d78adf5a87c7cb55ab7642680a80a88ade6853379c3"
+    },
+    "wild-Route19.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route19.asm",
+      "sha256": "e6255fbc92aa512ab88dff1583c79963161d26e48065bcf57137519f9c29b04c"
+    },
+    "wild-Route23.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route23.asm",
+      "sha256": "bb1d294558d5fc1e14489cdf25c0c12fbf32d0bf1af6b4d03d5927485cb486d0"
+    },
+    "wild-Route24.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route24.asm",
+      "sha256": "563f022194e8807591a9740e5e76f4b23a14c529932b9eed0974972bf6be7ae8"
+    },
+    "wild-Route8.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route8.asm",
+      "sha256": "1a10716c15b2022274c18439a67472597cd7bde864f68cc192b7b4613f0741dc"
+    },
+    "wild-SafariZoneEast.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/SafariZoneEast.asm",
+      "sha256": "947340d5cae6da9737330e6c305d97af0dd3eb779a61937a5a103f4594845294"
+    },
+    "wild-Route7.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route7.asm",
+      "sha256": "1bbb338b531c1dbffcc1a5b09f1a5a89e795793098b878e48c3e42ba78cb9f64"
+    },
+    "wild-Route3.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route3.asm",
+      "sha256": "ae767f9eaab6fad9f8d9aa404c154596ba39f9a0cb17d83ed9c5843f3f826772"
+    },
+    "wild-Route25.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route25.asm",
+      "sha256": "ef767eb25018425a28abf9c605d1cf78b6b7dfff189fa20c9fde87ce0a8a954c"
+    },
+    "wild-Route9.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route9.asm",
+      "sha256": "e81394847f99a2f73fe41525b84535a44b1a3ba32460ac4db371e1176aff3381"
+    },
+    "wild-SafariZoneCenter.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/SafariZoneCenter.asm",
+      "sha256": "3b6431a6a102f327878901d5ba8f6e4079789abc30eda9e7363442edee73e9fd"
+    },
+    "wild-Route6.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route6.asm",
+      "sha256": "e77c43433bbc285c535427d421aa32b617d322bd025009e3b4e7f0fee5bbed43"
+    },
+    "wild-Route4.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route4.asm",
+      "sha256": "512ca149ace1205c84fc699270b49623d66d20f635b2adce9835a39455e041ed"
+    },
+    "wild-Route5.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/Route5.asm",
+      "sha256": "b29edc049776d4701c8dfbe2b9b13075ab19f393a02e61d311d61f463ad44c8b"
+    },
+    "wild-VictoryRoad3F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/VictoryRoad3F.asm",
+      "sha256": "95d14c33fd90b98d2ab84f119841732df1e7c0ea5465594bdeba702c53bfdefa"
+    },
+    "wild-VictoryRoad2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/VictoryRoad2F.asm",
+      "sha256": "447c9fd830a95df9355091061763c8ad6310a7ca5cc15a435228462e28396b57"
+    },
+    "wild-SeafoamIslandsB4F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/SeafoamIslandsB4F.asm",
+      "sha256": "c11f5f4fe54c456a17ba7828c87c3d5f1fdf0d1114dfa6bd4cb9ad732a9718f3"
+    },
+    "wild-SafariZoneWest.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/SafariZoneWest.asm",
+      "sha256": "91dfa96cf4a52a010e2c6642726cc134e1b0bf82a3e4b975e052da0726542670"
+    },
+    "wild-SeafoamIslandsB3F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/SeafoamIslandsB3F.asm",
+      "sha256": "d290f6275f899130ebb917821c7deb3e2995529938a5d37a6c1dd10dce978b31"
+    },
+    "wild-nothing.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/nothing.asm",
+      "sha256": "2a1a0bce377ee3ba195c165b0b67d4cf861a5466bce45e42d6df109e0c7d930c"
+    },
+    "wild-SeafoamIslandsB2F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/SeafoamIslandsB2F.asm",
+      "sha256": "613c3c4f2c11553e223c381a10e893c7aeccc29d3a3d02176f34ffd28d0b8dd3"
+    },
+    "wild-VictoryRoad1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/VictoryRoad1F.asm",
+      "sha256": "4a502dd6203f3862758c24b9262e0ee1508b850c14f1c5e5349dd1bc0425ab17"
+    },
+    "wild-ViridianForest.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/ViridianForest.asm",
+      "sha256": "0773ac5e23b6e127cd3d5895746dd89b0f216aa43e22412f6875611316521ea0"
+    },
+    "wild-SeafoamIslands1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/SeafoamIslands1F.asm",
+      "sha256": "08d7d84a1ac675162b202e857ffbb54e9040cb396e51494b6fc37d7eb6599200"
+    },
+    "wild-SeafoamIslandsB1F.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/SeafoamIslandsB1F.asm",
+      "sha256": "5a5e1f353fc7ec124404243cb5e0a5038a3a9cba734192478f0ca526f47e3ef4"
+    },
+    "wild-SafariZoneNorth.asm": {
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/data/wild/maps/SafariZoneNorth.asm",
+      "sha256": "ce13557594e2fc60867a07844b2a12708467dc019351b2de59786f7cc5618d9e"
+    }
+  }
+}

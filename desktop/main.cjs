@@ -66,6 +66,7 @@ async function openPanel(tab='collection'){
 async function start(){
   store=new Store(dataDir);const saved=smoke||demo?{}:store.load();settings=saved.settings||{};game=new Game(saved.game);
   if(smoke){
+    game=new Game(new (require('./game.cjs').Game)({},Date.now()).data);
     game.newWild(Date.now());game.data.battle.foe=combatant(19,5);game.data.seen={1:1,4:1,7:1,25:1,19:1};
     game.animate('encounter',{id:19,text:'야생 꼬렛 Lv.5 등장!'});
   }else if(demo)game.data.workTokens=25000;
@@ -108,7 +109,7 @@ async function start(){
       if(action==='remote-key-file'&&panel){
         dialog.showOpenDialog(panel,{title:'SSH 개인키 선택',properties:['openFile']}).then(result=>{if(!result.canceled&&panel&&!panel.isDestroyed())panel.webContents.send('key-file',result.filePaths[0]);}).catch(()=>{});
       }
-      if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass'].includes(action))result=game.requestAction(action,value);
+      if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass','fossil-choice'].includes(action))result=game.requestAction(action,value);
       if(action==='action-cancel')result=game.cancelAction(value);
       if(action==='capture-reserve')result=game.reserveCapture(value,1);
       if(action==='capture-cancel')result=game.reserveCapture(value,0);
@@ -363,8 +364,8 @@ function updateTray(){
   if(!tray||tray.isDestroyed())return;
   const update=updater?.snapshot();
   tray.setContextMenu(Menu.buildFromTemplate([
-    {label:'포켓몬 보기',click:()=>win.showInactive()},{label:'포켓기어',click:()=>openPanel('collection')},
-    {label:'타운맵',click:()=>openPanel('challenge')},{label:'가방보기',click:()=>openPanel('daycare')},{label:'모험 기록',click:()=>openPanel('journal')},
+    {label:'포켓몬 보기',click:()=>win.showInactive()},{label:'도감',click:()=>openPanel('collection')},
+    {label:'타운맵',click:()=>openPanel('challenge')},{label:'가방',click:()=>openPanel('daycare')},{label:'모험 기록',click:()=>openPanel('journal')},
     {label:'AI Agent 연동 설정',click:()=>openPanel('connections')},
     {type:'separator'},{label:'v'+app.getVersion()+(update?' · '+update.label:''),enabled:false},
     {label:'자동 업데이트',type:'checkbox',checked:settings.autoUpdate!==false,enabled:!!updater,click:item=>{settings.autoUpdate=item.checked;save();updater.setEnabled(item.checked);}},

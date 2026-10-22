@@ -7,6 +7,7 @@ function list(game){
  for(const [id,field]of [['rocket-grunt','gruntWonAt'],['rocket-duo','duoWonAt'],['rocket-giovanni','rocketWonAt'],['road-snorlax','snorlaxWonAt']])if(g.trainingDevice?.[field])add(id,training.battles[id].name+' · 해결',1,training.battles[id].team,g.trainingDevice[field]);
  for(const group of [rescue,silph])for(const e of group.encounters)if(g.mobileStory?.[group===rescue?'rescue':'silph']?.wins[e.stage])add(e.id,e.name+' · 해결',1,e.team,g.mobileStory[group===rescue?'rescue':'silph'].wins[e.stage]);
  for(const e of require('./rivals.cjs').encounters)if(['won','completed'].includes(g.mobileStory?.rivals?.[e.id]?.state)&&!g.mobileStory.rivals[e.id].migratedAt)add(e.id,'그린과의 승부',1,e.team,g.mobileStory.rivals[e.id].wonAt||null);
+ for(const n of require('./kanto-journey.cjs').nodes.values())if(g.kantoStory?.cleared[n.id])add(n.id,n.name+' · 완료',1,n.team||[],g.kantoStory.cleared[n.id]);
  for(const n of J.nodes.values())if(J.done(game,n.id)&&!['j-arrival','j-partner','j-league'].includes(n.id))add(n.id,n.type==='rival'?'실버와의 승부':n.title+' · 완료',2,n.team||[],g.johto.cleared[n.id]);
  return records;
 }

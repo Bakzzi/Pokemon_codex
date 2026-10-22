@@ -5,6 +5,7 @@ const map=require('./kanto-map.json');
 const walking=require('../desktop/map-walk.js');
 const journey=require('./world-travel.cjs');
 const {merge}=require('./local-habitats.cjs');
+const story=require('./kanto-journey.cjs');
 const badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'];
 // id, name, map x/y, required badges, local range, habitat, activity/card
 const rows=[
@@ -66,11 +67,17 @@ function habitat(game,p=current(game)){return merge([...new Set(sources(game,p).
 const roadPlaces=new Set(['route-13','route-14','route-15','route-17','route-18','fuchsia','safari']);
 const links=[['pallet','route-1','viridian','route-2','forest','pewter','route-3','mt-moon','route-4','cerulean','route-9','rock-tunnel','route-10','lavender','route-8','route-7','celadon','route-16','route-17','route-18','fuchsia','route-15','route-14','route-13','route-12','route-11','vermilion','route-6','saffron','route-5','cerulean','route-24','route-25','sea-cottage'],['viridian','route-22','route-23','victory-road','indigo'],['fuchsia','route-19','seafoam','route-20','cinnabar','route-21','pallet'],['celadon','saffron','lavender'],['route-10','power-plant'],['forest','diglett','route-11'],['vermilion','ss-anne'],['fuchsia','safari'],['cinnabar','mansion'],['cerulean','cerulean-cave']];
 function active(game){return !game.data.johtoUnlocked;}
-function reachedStage(game){return game.data.champion?9:badges.findIndex(b=>!game.data.badges.includes(b))<0?8:badges.findIndex(b=>!game.data.badges.includes(b));}
+function reachedStage(game){const order=story.modern(game)?story.order.map(i=>badges[i]):badges;return game.data.champion?9:order.findIndex(b=>!game.data.badges.includes(b))<0?8:order.findIndex(b=>!game.data.badges.includes(b));}
 function roadOpen(game){return !!(game.data.trainingDevice?.snorlaxWonAt||game.data.trainingDevice?.legacyRoadAccess);}
-function unlocked(game,p){return !!p&&reachedStage(game)>=p.stage&&(!roadPlaces.has(p.id)||roadOpen(game))&&(p.id!=='tower'||!!game.data.mobileStory?.scopeObtainedAt);}
+function unlocked(game,p){
+ if(!p)return false;
+ if(!story.modern(game))return reachedStage(game)>=p.stage&&(!roadPlaces.has(p.id)||roadOpen(game))&&(p.id!=='tower'||!!game.data.mobileStory?.scopeObtainedAt);
+ const stage=p.id==='saffron'?4:p.id==='route-21'?6:p.stage;
+ return reachedStage(game)>=stage&&!story.gate(game,p.id);
+}
 function reason(game,p){
  if(unlocked(game,p))return '';
+ if(story.modern(game)&&story.gate(game,p.id))return story.gateText[story.gate(game,p.id)];
  if(p.stage>reachedStage(game))return '앞선 체육관을 통과하면 갈 수 있어요.';
  if(roadPlaces.has(p.id))return '길을 막는 잠만보를 해결해야 해요.';
  return '이곳을 탐험할 방법을 먼저 찾아야 해요.';
@@ -92,6 +99,7 @@ function options(game){
 function position(game){const state=init(game);return state.position||map.points[state.location];}
 function validPosition(id,point){return !point||point.x===map.points[id]?.x&&point.y===map.points[id]?.y||map.roads.some(p=>p.place===id&&p.x===point.x&&p.y===point.y);}
 function status(game,id,point){
+ if(story.modern(game)&&!game.data.kantoStory.mapAt&&!game.guiding)return {state:'invalid',reason:'타운맵을 받기 전에는 정해진 길로 모험해요.'};
  if(!active(game))return {state:'invalid',reason:'지금 모험 중인 지방에서 장소를 선택해 주세요.'};
  const p=byId.get(id);if(!p)return {state:'invalid',reason:'갈 수 없는 장소예요.'};
  if(!validPosition(id,point))return {state:'invalid',reason:'지도에 표시된 길을 선택해 주세요.'};
@@ -102,15 +110,19 @@ function status(game,id,point){
  return null;
 }
 function travel(game,id,now,point){
- if(!byId.has(id)||!active(game)||!validPosition(id,point)||game.data.battle||game.data.suspendedWild)return false;
+ if(!byId.has(id)||!active(game)||!validPosition(id,point)||game.data.battle||game.data.suspendedWild||story.modern(game)&&!game.data.kantoStory.mapAt&&!game.guiding)return false;
  const state=init(game,now),to=point||map.points[id];
- const open=place=>(unlocked(game,byId.get(place))||place==='saffron'&&id!=='saffron'&&game.data.badges.includes('misty'))&&(!['route-23','victory-road','indigo'].includes(place)||!!state.leaguePass);
+ const approach=place=>story.modern(game)&&((id==='mt-moon'&&place==='route-4'&&story.trainersDone(game,'route3-path'))||(id==='rock-tunnel'&&place==='route-10'&&story.done(game,'k-aide')&&story.trainersDone(game,'route9-path'))||(id==='seafoam'&&place==='route-20'&&game.data.mobileStory.safari.completedAt));
+ const open=place=>(unlocked(game,byId.get(place))||approach(place)||place==='saffron'&&id!=='saffron'&&game.data.badges.includes('misty'))&&(!['route-23','victory-road','indigo'].includes(place)||!!state.leaguePass);
  return journey.move(game,state,map,id,to,open,byId.get(id).name,now);
 }
 function checkpoint(game){
  const state=init(game),block=state.blocked;if(!block)return null;
  const p=byId.get(block.checkpoint),destination=byId.get(block.location);if(!p||!destination)return null;
  const league=['route-23','victory-road','indigo'].includes(p.id),road=roadPlaces.has(p.id)&&!roadOpen(game),ready=unlocked(game,p)&&unlocked(game,destination);
+ const gate=story.modern(game)&&story.gate(game,p.id);
+ if(gate==='drink')return {...block,name:'노랑시티 경비원',sprite:'sailor',pages:game.data.kantoWorld.visited.celadon&&game.data.mobileStory.rescue.completedAt?['목이 말라서 꼼짝하기 싫군요…… 어? 음료수를 주시겠다고요?','무지개시티에서 사 둔 음료수를 건넸다.','정말 고맙습니다! 다른 경비원들에게도 나눠 주죠. 이제 지나가셔도 좋습니다.']:['잠깐! 지금은 지나갈 수 없습니다.','경비원은 목이 마른 듯 지쳐 보인다.'],canPass:!!game.data.kantoWorld.visited.celadon&&!!game.data.mobileStory.rescue.completedAt,destination:destination.name};
+ if(gate)return {...block,name:gate.startsWith('snorlax')?'길을 막는 잠만보':gate==='aide'?'터널 입구의 안내원':gate.includes('rival')?'길목의 트레이너':'길목의 안내원',sprite:gate.startsWith('snorlax')?'pokemon:143':gate.includes('rival')?'green':'j-sage',pages:[story.gateText[gate]],canPass:false,destination:destination.name,nearby:gate.startsWith('snorlax')?'snorlax-road':null};
  let name='길목의 안내원',sprite='j-sage',pages;
  if(league){name='포켓몬리그 경비원';sprite='j-sage';const earned=badges.filter(b=>game.data.badges.includes(b));pages=['포켓몬리그로 향하는 트레이너인가요? 배지를 확인하겠습니다.',...earned.map(id=>require('../desktop/pokemon.cjs').data.bosses.find(b=>b.id===id).badge+'를 확인했습니다.'),ready?'모든 배지를 확인했습니다. 챔피언로드로 가셔도 좋습니다.':'아직 확인하지 못한 배지가 있습니다. 체육관에서 실력을 증명하고 돌아오세요.'];}
  else if(road){name='길을 막는 잠만보';sprite='pokemon:143';pages=['커다란 포켓몬이 길 한가운데 잠들어 있다.','아무리 불러도 일어나지 않는다. 깨울 방법을 찾아보자.'];}
@@ -119,11 +131,11 @@ function checkpoint(game){
  return {...block,name,sprite,pages,canPass:ready,destination:destination.name,nearby:road?'snorlax-road':null};
 }
 function passageStatus(game,id){const b=checkpoint(game);return !b||b.location!==id?{state:'invalid',reason:'이곳에 확인할 길목이 없어요.'}:!b.canPass?{state:'invalid',reason:'아직 이 길을 지나갈 수 없어요.'}:null;}
-function pass(game,id,now){if(passageStatus(game,id))return false;const state=init(game),block=state.blocked;state.leaguePass ||= ['route-23','victory-road','indigo'].includes(block.checkpoint);game.log(checkpoint(game).name+'에게 통행을 확인받았다.','gate',null,now);return travel(game,id,now,block.position);}
+function pass(game,id,now){if(passageStatus(game,id))return false;const state=init(game),block=state.blocked;if(story.modern(game)&&story.gate(game,block.checkpoint)==='drink'){game.data.kantoStory.drinkAt=now;game.log('무지개시티에서 사 둔 음료수를 경비원에게 건넸다. 노랑시티의 길이 열렸다.','story',null,now);}state.leaguePass ||= ['route-23','victory-road','indigo'].includes(block.checkpoint);game.log(checkpoint(game).name+'에게 통행을 확인받았다.','gate',null,now);return travel(game,id,now,block.position);}
 function snapshot(game,now=Date.now()){
  const state=init(game),here=current(game),levels=range(game);
  const selected=game.data.pendingActions?.find(a=>['travel','world-pass'].includes(a.kind));
- return {active:active(game),location:here.id,name:here.name,levels,map,...journey.snapshot(state,game.random),...(game.platform==='mobile'?require('./step-travel.cjs').snapshot(game,state):{}),position:position(game),checkpoint:checkpoint(game),facing:state.walk?walking.frame(state.walk,state.walk.at+state.walk.duration).direction:'down',walk:active(game)&&state.walk&&now<state.walk.at+state.walk.duration?state.walk:null,pending:selected?.location||null,places:places.map(p=>({id:p.id,name:p.name,x:p.x,y:p.y,activity:p.activity,open:unlocked(game,p),visited:!!state.visited[p.id],current:p.id===here.id,levels:range(game,p),reason:reason(game,p)})),links};
+ return {active:active(game),location:here.id,name:here.name,levels,map,manualTravel:!story.modern(game)||!!game.data.kantoStory.mapAt,...journey.snapshot(state,game.random),...(game.platform==='mobile'&&(!story.modern(game)||game.data.kantoStory.mapAt)?require('./step-travel.cjs').snapshot(game,state):{}),position:position(game),checkpoint:checkpoint(game),facing:state.walk?walking.frame(state.walk,state.walk.at+state.walk.duration).direction:'down',walk:active(game)&&state.walk&&now<state.walk.at+state.walk.duration?state.walk:null,pending:selected?.location||null,places:places.map(p=>({id:p.id,name:p.name,x:p.x,y:p.y,activity:p.activity,open:unlocked(game,p),visited:!!state.visited[p.id],current:p.id===here.id,levels:range(game,p),reason:reason(game,p)})),links};
 }
 function locationsFor(id){return places.filter(p=>[p,...(townRoads[p.id]||[]).map(id=>byId.get(id))].some(q=>(habitats[q.habitat]||[]).some(h=>h.id===id)));}
 module.exports={places,byId,links,townRoads,habitat,active,init,current,range,options,status,travel,snapshot,unlocked,locationsFor,position,checkpoint,passageStatus,pass,advance:(game,now)=>journey.advance(game,init(game),now),encounterEnded:(game,b)=>journey.encounterEnded(init(game),b,game.random)};
