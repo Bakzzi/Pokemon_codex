@@ -199,9 +199,9 @@ async function worldSmokeTest(){
   check(!game.requestAction('world-pass','route-3'),'the actual game rejects passage before the badge');
   game.data.workTokens=250;check(game.tick(Date.now())&&game.data.battle.kind==='wild'&&game.data.workTokens===0,'ordinary adventures continue while a manual story branch is blocked');
   publish(true);await wait(60);await read('WorldMap.close()');
-  check(await read("document.querySelector('.world-local [data-challenge]').dataset.challenge==='0'&&!!document.querySelector('.world-local .gym-trainer')"),'the actual panel shows the current town leader portrait, lineup and action inline');
-  check(await read("document.querySelector('.world-controls>p').textContent==='회색체육관'&&![...document.querySelectorAll('.world-links button')].some(b=>b.textContent==='이곳 살펴보기')"),'the town names its gym without an inspection step');
-  const townSaved=structuredClone(game.data);await read("document.querySelector('.world-local [data-challenge]').click()");await wait(70);
+  check(await read("document.querySelector('.world-local [data-challenge]').dataset.challenge==='0'&&!!document.querySelector('.world-local .gym-trainer')&&!document.getElementById('world-local-gym').open"),'the local gym keeps its original content inside an initially collapsed card');
+  check(await read("document.querySelector('#world-local-gym>summary h2').textContent==='회색체육관'&&document.querySelector('.world-links').children.length===0"),'the town names its gym inside its own border without an inspection button');
+  const townSaved=structuredClone(game.data);await read("document.querySelector('#world-local-gym>summary').click();document.querySelector('.world-local [data-challenge]').click()");await wait(70);
   check(game.data.pendingChallenge?.index===0,'the inline gym button reaches the actual challenge queue through IPC');
   game=new Game(townSaved,Date.now());game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);await read("document.querySelector('.world-guard').click()");
   game.data.battle=null;game.data.pendingBattle=null;game.data.switchUntil=0;game.nextTick=Date.now();

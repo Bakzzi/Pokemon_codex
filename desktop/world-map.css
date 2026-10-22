@@ -6,3 +6,4 @@
 .world-card>p{margin:0}.world-layout{padding-top:12px}
 .world-local .gym{width:100%;margin:0;min-width:0}.world-local .gym-title h3{font-size:15px}.world-local .team{flex-wrap:wrap}.world-local .gym-body{gap:8px}.world-local:empty{display:none}.world-links:empty{display:none}.world-controls>h3{font-size:18px}.world-controls>p:empty{display:none}.panel-frame .world-local .gym{padding:14px}
 .world-layout{grid-template-columns:minmax(0,1fr) minmax(240px,320px)}.panel-frame .world-layout{grid-template-columns:1fr}
+.world-local{display:flex;flex-direction:column;gap:12px}.world-local>.world-event{width:100%;margin:0;min-width:0}.world-local>.world-event>summary{cursor:pointer}.world-local>.world-event>.gym{border:0;background:none;padding:14px 0 0}.world-local>.world-event>summary h2{font-size:16px;margin:0}.world-local>.world-event>summary p{margin-top:8px}.world-local .world-event .gym-body{margin-bottom:12px}

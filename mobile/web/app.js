@@ -51,8 +51,8 @@ window.mobileLifecycle=function(visible,reload=false){
   const drain=()=>{
     if(!active||fatal||!native.foreground()){catchingUp=false;return;}
     try{refreshNative();if(applyReadyUpdate()){catchingUp=false;return;}const n=progression.catchUp(nativeState,Date.now(),10);actions+=n;
-      if(n){notice='잠든 동안의 모험을 정리하는 중…';save();publish();setTimeout(drain,25);}
-      else{if(progression.dirty){save();publish();}catchingUp=false;if(actions)notice='잠든 동안의 모험을 기록했어요.';publish();}
+      if(n){notice='모험 기록을 정리하는 중…';save();publish();setTimeout(drain,25);}
+      else{if(progression.dirty){save();publish();}catchingUp=false;if(actions)notice='';publish();}
     }catch(e){fatal=true;active=false;notice='모험을 처리하지 못했어요. 기존 저장은 보존돼요.';native.reportError(String(e));publish();}
   };drain();
 };
