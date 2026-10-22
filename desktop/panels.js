@@ -306,7 +306,7 @@ function render(){
   if(tab==='challenge'){
     const current=state;state=challengeView(current);
     try{
-      renderBosses();document.dispatchEvent(new CustomEvent('panel-rendered',{detail:state}));
+      renderBosses();renderNursery();document.dispatchEvent(new CustomEvent('panel-rendered',{detail:state}));
       if(state.challengeReadOnly)for(const b of $('kanto-challenges').querySelectorAll('button:not(.badge-slot)'))b.disabled=true;
     }finally{state=current;}
   }else{
@@ -329,7 +329,7 @@ function gender(value){return value==='female'?' ♀':value==='male'?' ♂':' ·
 function parentChoices(){return [$('parent-a').value,$('parent-b').value].map(Number);}
 for(const id of ['parent-a','parent-b'])$(id).onchange=()=>window.buddy.action('daycare-preview',parentChoices());
 $('daycare-start').onclick=()=>window.buddy.action('daycare-start',parentChoices());
-$('daycare-withdraw').onclick=()=>window.buddy.action('daycare-withdraw');
+for(const id of ['daycare-withdraw','daycare-withdraw-local'])$(id).onclick=()=>window.buddy.action('daycare-withdraw');
 function progressCard(title,current,required,description,pokemon){
   const box=node('div','nursery-status');if(pokemon)box.append(img(pokemon));
   const body=node('div');body.append(node('h3','',title),node('p','muted',description));
@@ -359,6 +359,11 @@ function renderNursery(){
   $('daycare-start').textContent=queued?'맡기기 예약됨':waiting||d.egg||d.care?.produced?'다음 알 부탁하기':'맡기기';
   $('daycare-withdraw').disabled=withdrawQueued;$('daycare-withdraw').textContent=withdrawQueued?'데려오기 통화 예약됨':'전화로 데려오기';
   $('daycare-withdraw').hidden=!d.care;
+  $('daycare-withdraw-local').disabled=withdrawQueued;$('daycare-withdraw-local').textContent=withdrawQueued?'데려오기 예약됨':'동료 데려오기';$('daycare-withdraw-local').hidden=!d.care;
+  const phone=$('daycare-phone-status');phone.replaceChildren();
+  if(d.care)phone.append(node('p','',d.care.parents.map(p=>p.name).join(' · ')+' · '+(d.care.produced?'알을 발견했어요.':'알을 기다리는 중 · '+Math.floor(d.care.progress/d.care.required*100)+'%')));
+  if(d.egg)phone.append(node('p','',d.egg.name+'의 알 · 부화 '+Math.floor(d.egg.progress/d.egg.required*100)+'%'));
+  if(!d.care&&!d.egg)phone.append(node('p','muted','아직 맡긴 동료가 없어요.'));
   $('nursery-progress').replaceChildren();
   if(d.care){
     const names=d.care.parents.map(p=>p.name+' '+levelText(state.roster.find(m=>m.uid===p.uid))).join(' · ');

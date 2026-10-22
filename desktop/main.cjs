@@ -219,10 +219,10 @@ async function worldSmokeTest(){
   check(await read("document.getElementById('daycare-start').disabled&&document.getElementById('daycare-location').textContent.includes('5번도로')")&&!game.requestAction('daycare-start',parents),'actual publisher and action admission reject remote Day Care placement');
   await read("document.querySelector('[data-tab=challenge]').click();document.querySelector('.world-marker[aria-label=\"5번도로\"]').click()");await wait(80);finish();if(game.data.kantoWorld.walk)game.data.kantoWorld.walk.at=Date.now()-game.data.kantoWorld.walk.duration-1;publish(true);await wait(70);
   check(await read("!!document.querySelector('.world-local #world-daycare')&&!document.getElementById('world-daycare').open"),'actual map arrival publishes a collapsed local Day Care card');
-  await read("document.querySelector('#world-daycare>summary').click();document.querySelector('#world-daycare>button').click();document.getElementById('daycare-start').click()");await wait(80);
+  await read("document.querySelector('#world-daycare>summary').click();document.getElementById('daycare-start').click()");await wait(80);
   check(JSON.stringify(game.data.daycare?.parents)===JSON.stringify(parents),'the actual local Day Care button boards both partners through IPC');
-  game.data.kantoWorld.location='cerulean';publish(true);await wait(70);
-  check(await read("document.getElementById('daycare-start').disabled&&!document.getElementById('daycare-withdraw').hidden")&&game.data.daycare.parents.length===2,'leaving the Day Care blocks another deposit while retaining boarded partners');
+  game.data.kantoWorld.location='cerulean';publish(true);await wait(70);await read("document.querySelector('[data-tab=daycare]').click()");
+  check(await read("!document.querySelector('#daycare #parent-a')&&!document.getElementById('parent-a').checkVisibility()&&!document.getElementById('daycare-withdraw').hidden")&&game.data.daycare.parents.length===2,'the bag keeps only remote phone status after leaving the local deposit form');
   check(errors.length===0,'the actual main, panel and widget have no renderer errors');
   fs.writeFileSync(path.join(dataDir,'world-main-result.json'),JSON.stringify({ok:true,checks,errors,version:app.getVersion(),statePath:'main snapshot -> publish -> preload -> renderer; panel travel -> IPC -> shared game -> encounter result -> next road'},null,2));app.exit(0);
  }catch(error){fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'world-main-error.txt'),error.stack||String(error));app.exit(1);}

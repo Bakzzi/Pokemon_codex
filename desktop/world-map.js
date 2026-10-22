@@ -6,8 +6,7 @@
  const mapButton=el('button','','지도'),badgeButton=el('button','','배지함');nav.setAttribute('aria-label','지도와 배지함');nav.append(mapButton,badgeButton);
  const caption=el('p','muted'),zoneNav=el('nav','world-regions'),layout=el('div','world-layout'),map=el('div','world-map'),controls=el('div','world-controls'),selected=el('h3'),range=el('p','muted'),note=el('p','muted'),cards=el('div','world-links'),local=el('div','world-local');note.setAttribute('role','status');map.setAttribute('aria-label','길이나 마을을 눌러 레드 이동');map.tabIndex=0;controls.append(selected,range,note,local,cards);layout.append(map,controls);root.append(caption,zoneNav,layout);shell.append(nav,status,root,badges);$('challenge').insertBefore(shell,$('kanto-challenges'));
  const store=el('div','world-content-store');store.hidden=true;store.id='world-content-store';$('challenge').append(store);store.append($('kanto-challenges'),$('johto-challenges'));
- const daycare=el('details','story-board challenge-card'),daycareHeading=el('summary'),daycareNote=el('p','muted'),daycareOpen=el('button','','키우미집 이용하기');daycare.id='world-daycare';daycareHeading.append(el('h2','','키우미집'));daycare.append(daycareHeading,daycareNote,daycareOpen);store.append(daycare);
- daycareOpen.onclick=()=>{document.querySelector('[data-tab=daycare]').click();$('daycare-contact').scrollIntoView({block:'start'});$('parent-a').focus({preventScroll:true});};
+ const daycare=el('details','story-board challenge-card'),daycareHeading=el('summary');daycare.id='world-daycare';daycareHeading.append($('daycare-title'));daycare.append(daycareHeading,$('daycare-contact'));store.append(daycare);
  const dialog=el('dialog','world-place-dialog'),dialogHead=el('div','world-dialog-heading'),title=el('h2'),close=el('button','','지도로'),content=el('div','world-place-content');dialog.id='world-place-dialog';dialogHead.append(title,close);dialog.append(dialogHead,content);document.body.append(dialog);
  let state=null,world=null,zone=null,pane='map',choice=null,shapeKey='',placeKey='',actor,sprite,guard,raf=0,arrival=null,context=null,npcIndex=0,npcKey='',badgeSignature='',contextScroll=0;const markers=new Map(),homes=new WeakMap(),folds=new Map();let mounted=[],inlineMounted=[];
  function showPane(value){pane=value;root.hidden=value!=='map';badges.hidden=value!=='badges';mapButton.setAttribute('aria-selected',String(value==='map'));badgeButton.setAttribute('aria-selected',String(value==='badges'));}
@@ -94,7 +93,6 @@
  }
  function render(s){
   state=s;world=s.johto?.active?s.johtoWorld:s.kantoWorld;if(!world)return;world={...world,active:world.active&&!s.challengeReadOnly};
-  daycareNote.textContent=s.daycare.access.reason;daycareOpen.disabled=!s.daycare.access.atLocation;
   if(world.active&&world.journey)arrival=world.journey.destination;
   const identity=(s.johto?.active?'2:':'1:')+world.location+':'+s.season.startedAt;if(identity!==placeKey){placeKey=identity;if(!arrival)choice=world.location;}
   if(!world.maps)zone=null;else if(!zone||!(zone in world.maps)||arrival&&world.location===arrival)zone=world.zone;

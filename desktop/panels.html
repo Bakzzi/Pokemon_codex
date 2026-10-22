@@ -79,12 +79,17 @@
       <div id="device-current" class="device-current"></div><p class="muted">출전 동료의 경험치는 그대로 · 등록한 한 마리에게만 추가 10%. 교환 진화 대상은 그 모습에서 장치로 한 레벨 오르면 자동 진화해요.</p>
     </div>
   </section>
+  <section id="daycare-phone" class="device-quest daycare-contact" aria-labelledby="daycare-phone-title">
+  <div class="device-heading"><div><span class="kicker">PHONE / DAY CARE</span><h2 id="daycare-phone-title">키우미집에 전화하기</h2></div><img class="device-art" src="assets/items/xtransceiver.png" alt="키우미집에 연락할 전화기"></div>
+  <p>맡긴 동료와 알의 소식을 확인해요. 동료를 맡길 때는 타운맵에서 키우미집을 찾아가세요.</p>
+  <div id="daycare-phone-status"></div><button id="daycare-withdraw" hidden>전화로 데려오기</button>
+  </section>
   <section id="daycare-contact" class="device-quest daycare-contact" aria-labelledby="daycare-title">
-  <div class="device-heading"><div><span class="kicker">DAY CARE</span><h2 id="daycare-title">키우미집</h2></div><img class="device-art" src="assets/items/xtransceiver.png" alt="키우미집에 연락할 전화기"></div>
-  <p>키우미집에 찾아가 두 동료를 맡겨요. 맡긴 뒤에는 전화로 소식을 확인할 수 있어요. 맡긴 동료들은 잠시 배틀을 쉬어요.</p>
+  <h2 id="daycare-title">키우미집</h2>
+  <p>맡길 두 동료를 골라 주세요. 맡긴 동료들은 잠시 배틀을 쉬어요.</p>
   <p id="daycare-location" class="muted" role="status"></p>
   <div class="nursery-layout"><div><div class="nursery-pair"><label>첫 번째 동료<select id="parent-a"><option value="">동료 선택</option></select></label><span>＋</span><label>두 번째 동료<select id="parent-b"><option value="">동료 선택</option></select></label></div>
-  <div id="egg-preview" class="egg-preview"></div><div class="nursery-actions"><button id="daycare-start">맡기기</button><button id="daycare-withdraw" hidden>전화로 데려오기</button></div></div>
+  <div id="egg-preview" class="egg-preview"></div><div class="nursery-actions"><button id="daycare-start">맡기기</button><button id="daycare-withdraw-local" hidden>동료 데려오기</button></div></div>
   <div><div id="nursery-progress"></div><div id="hatch-progress"></div>
   <p class="muted">한 번 맡길 때 알 하나를 얻어요. 모험 걸음은 실제 에이전트 작업량에 따라 쌓여요.<br><br>코딩하는 동안 알을 발견하고, 부화하면 동료 목록에 자동으로 들어와요.<br><br>부모는 그대로 돌아오고, 부화한 포켓몬은 Lv.5부터 따로 자라요. 키우미집에서는 부모의 경험치가 오르지 않아요.</p></div></div>
   </section>
