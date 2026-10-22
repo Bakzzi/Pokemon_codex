@@ -18,10 +18,11 @@ function ready(game,id){
   return !!(e&&s&&game.data.badges.includes('koga')&&!s.completedAt&&!s.wins[e.stage]&&(e.stage===0||s.wins[e.stage-1]));
 }
 function snapshot(game){
-  const s=game.data.mobileStory.silph,unlocked=game.data.badges.includes('koga'),investigated=!!(s.investigatedAt||s.completedAt||s.wins.some(Boolean));
-  return {unlocked,visible:unlocked||investigated,investigated,title:'실프주식회사',sprite:investigated?'assets/logos/team-rocket.png':null,inquiry:'실프주식회사 조사',completed:!!s.completedAt,description:s.completedAt?'로켓단을 물리치고 실프주식회사와 노랑시티에 평화가 돌아왔어요.':investigated?'로켓단이 실프주식회사를 점거했어요. 이곳에서 무슨 일을 꾸미는 걸까요?':'실프주식회사와 연락이 끊겼어요. 노랑시티에서 무슨 일이 벌어진 걸까요?',steps:encounters.map(e=>{
+  const s=game.data.mobileStory.silph,modern=!!game.data.kantoStory&&!game.data.kantoStory.legacy,unlocked=modern?!!game.data.kantoStory.drinkAt:game.data.badges.includes('koga'),investigated=!!(s.investigatedAt||s.completedAt||s.wins.some(Boolean));
+  return {unlocked,visible:unlocked||investigated,investigated,title:'실프주식회사',sprite:investigated?'assets/logos/team-rocket-pixel.svg':null,inquiry:'실프주식회사 조사',completed:!!s.completedAt,description:s.completedAt?'로켓단을 물리치고 실프주식회사와 노랑시티에 평화가 돌아왔어요.':investigated?'로켓단이 실프주식회사를 점거했어요. 이곳에서 무슨 일을 꾸미는 걸까요?':'실프주식회사와 연락이 끊겼어요. 노랑시티에서 무슨 일이 벌어진 걸까요?',steps:encounters.map(e=>{
     const done=!!s.wins[e.stage],revealed=unlocked&&(e.stage===0||!!s.wins[e.stage-1]);
-    return {id:e.id,stage:e.stage,name:revealed?e.name:'???',sprite:e.sprite,done,revealed,levelsKnown:game.challengeLevelsKnown(e.id,done),team:revealed?e.team:[],canChallenge:game.canChallenge(e.id),reason:done?'승리 완료':!unlocked?'독수에게 승리하면 도전할 수 있어요.':e.stage>0&&!s.wins[e.stage-1]?'앞선 상대에게 승리해 주세요.':'도전하기'};
+    const team=modern&&e.stage===0?require('./kanto-journey.cjs').aliases.silph.team:e.team;
+    return {id:e.id,stage:e.stage,name:revealed?e.name:'???',sprite:e.sprite,done,revealed,levelsKnown:game.challengeLevelsKnown(e.id,done),team:revealed?team:[],canChallenge:game.canChallenge(e.id),reason:done?'승리 완료':!unlocked?modern?'노랑시티로 향하는 길을 찾아보세요.':'독수에게 승리하면 도전할 수 있어요.':e.stage>0&&!s.wins[e.stage-1]?'앞선 상대에게 승리해 주세요.':modern&&!game.canChallenge(e.id)?'주변을 더 조사해 보세요.':'도전하기'};
   })};
 }
 module.exports={encounters,byId,init,ready,snapshot};

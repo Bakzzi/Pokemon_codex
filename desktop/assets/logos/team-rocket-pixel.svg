@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges" role="img" aria-label="Team Rocket">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" shape-rendering="crispEdges" role="img" aria-label="Team Rocket">
   <path fill="#171b18" d="M2 1h9v1h2v1h1v5h-1v2h1v2h1v3h-5v-2H9v-2H7v4H2z"/>
   <path fill="#cc3e49" d="M3 2h8v1h2v5h-2v2h1v2h1v2h-2v-2h-1v-2H6v4H3z"/>
   <path fill="#27352b" d="M6 5h4v2H6z"/>

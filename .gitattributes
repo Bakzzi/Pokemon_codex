@@ -9,6 +9,7 @@
 *.vbs text eol=crlf
 *.png binary
 *.gif binary
+*.svg text eol=lf
 
 # Raw upstream files must retain their original bytes for SHA-256 verification.
 reference/pokeapi/raw/** -text

@@ -1,6 +1,6 @@
 'use strict';
 const K=require('./kanto-journey.cjs'),world=require('./kanto-world.cjs');
-const {data,species,balance,wildLevelCap}=require('../desktop/pokemon.cjs');
+const {data,species,balance,wildLevelCap,learnedMoves}=require('../desktop/pokemon.cjs');
 const training=require('../desktop/training-device.cjs'),journal=require('../desktop/journal.cjs');
 const fossilIds=[138,139,140,141];
 const itemNames={'parcel':'오박사의 물건','ss-ticket':'상트안느호 승선권','lift-key':'승강기 열쇠','card-key':'카드키',138:'조개화석',140:'껍질화석'};
@@ -95,7 +95,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
   }
   this.dialogue('kanto-event',n.name,n.sprite,n.pages,'kanto-complete:'+id,now);return true;
  }
- battleBoss(b=this.data.battle){const n=K.nodes.get(b?.kantoNode);if(n)return {...n,kind:'story',intro:n.pages};if(K.modern(this)&&b?.storyId==='tower-grunt-1'){const t=K.aliases.tower;return {...super.battleBoss(b),name:t.name,sprite:t.sprite,team:t.team.map(p=>({...p,moves:require('../desktop/pokemon.cjs').learnedMoves(p.id,p.level).slice(-4)})),intro:['누군가에게 홀린 듯한 무당이 길을 막았다.','배틀로 정신을 차리게 해 주자.']};}return super.battleBoss(b);}
+ battleBoss(b=this.data.battle){const n=K.nodes.get(b?.kantoNode);if(n)return {...n,kind:'story',intro:n.pages};const alias={'tower-grunt-1':'tower','silph-grunt':'silph'}[b?.storyId];if(K.modern(this)&&alias){const t=K.aliases[alias];return {...super.battleBoss(b),name:t.name,sprite:t.sprite,team:t.team.map(p=>({...p,moves:learnedMoves(p.id,p.level).slice(-4)})),...(alias==='tower'?{intro:['누군가에게 홀린 듯한 무당이 길을 막았다.','배틀로 정신을 차리게 해 주자.']}: {})};}return super.battleBoss(b);}
  nextTrainer(now){if(this.autoStarting)this.data.battle.activityTrainer=true;super.nextTrainer(now);if(this.data.battle.activityTrainer)this.data.mobileStory.scene=null;}
  endChallenge(won,now){if(!this.data.battle?.activityTrainer)return super.endChallenge(won,now);const boss=this.battleBoss();this.data.pendingBattle=null;this.log(won?'승부를 마치고 모험으로 돌아왔다.':boss.name+'와의 승부에서 패배했다. 동료들을 회복했다.',won?'info':'loss',null,now);this.restoreWild(now);this.animate('result',{text:won?'모험을 계속해요.':'동료들을 회복했어요. 준비해서 다시 승부해요.'},now);}
  finishTrainerWin(now){

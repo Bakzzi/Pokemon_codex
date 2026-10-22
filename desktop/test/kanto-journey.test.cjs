@@ -23,6 +23,13 @@ test('all 224 original maps are inventoried, including zero-trainer maps, with p
 test('every original ordinary trainer is represented exactly once, including gym rooms and all building floors',()=>{
  const all=[...K.nodes.values()].filter(n=>n.source);for(const t of K.original.trainers){const rows=all.filter(n=>n.source.map===t.map&&n.source.event===t.event),alias=Object.values(K.aliases).some(a=>a.id===t.id);assert.equal(rows.length,alias?0:1,t.id);if(rows[0])assert.deepEqual(rows[0].team.map(({id,level})=>({id,level})),t.team);assert.ok(fs.existsSync(path.resolve(__dirname,'../assets/trainers/battle',t.sprite+'.png')),t.sprite);}
 });
+for(const Type of [PC,Android])test(Type.name+' original story aliases match their map parties and the company is visible before Koga',()=>{
+ const g=start(Type);guide(g);g.data.badges=['brock','misty','surge','erika'];g.data.kantoStory.drinkAt=now;g.data.kantoWorld.location='saffron';
+ const s=g.panelState(now);assert.ok(s.silph.visible&&s.silph.unlocked&&s.silph.steps[0].canChallenge&&s.silph.steps[0].revealed);assert.ok(!g.data.badges.includes('koga'));
+ assert.deepEqual(s.silph.steps[0].team,K.aliases.silph.team);
+ for(const [key,id]of [['hideout','rocket-grunt'],['silph','silph-grunt'],['tower','tower-grunt-1']])assert.deepEqual(g.battleBoss({kind:'trainer',storyId:id,bossIndex:id}).team.map(({id,level})=>({id,level})),K.aliases[key].team);
+ g.data.mobileStory.silph.investigatedAt=now;assert.equal(g.panelState(now).silph.sprite,'assets/logos/team-rocket-pixel.svg');
+});
 test('automatic versus manual trainer encounters follow original wild tables, not a town merged encounter pool',()=>{
  assert.ok(K.original.trainers.filter(t=>t.location==='forest').every(t=>t.automatic));assert.ok(K.original.trainers.filter(t=>t.location==='ss-anne'||t.location.startsWith('gym:')||['silph','hideout','saffron'].includes(t.location)).every(t=>!t.automatic));
  for(const t of K.original.trainers)assert.equal(t.automatic,K.original.maps[t.map].wild,t.id);
