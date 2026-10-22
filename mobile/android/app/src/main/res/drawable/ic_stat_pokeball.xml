@@ -1,0 +1,11 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <!-- White pixels on transparency keep the ball legible in the status bar. -->
+    <path android:fillColor="#FFFFFFFF" android:fillType="evenOdd"
+        android:pathData="M8,2 H16 V3 H19 V5 H21 V8 H22 V16 H21 V19 H19 V21 H16 V22 H8 V21 H5 V19 H3 V16 H2 V8 H3 V5 H5 V3 H8 Z M8,4 H16 V5 H18 V6 H19 V8 H20 V16 H19 V18 H18 V19 H16 V20 H8 V19 H6 V18 H5 V16 H4 V8 H5 V6 H6 V5 H8 Z" />
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M4,11 H8 V13 H4 Z M16,11 H20 V13 H16 Z" />
+    <path android:fillColor="#FFFFFFFF" android:fillType="evenOdd"
+        android:pathData="M10,8 H14 V9 H15 V10 H16 V14 H15 V15 H14 V16 H10 V15 H9 V14 H8 V10 H9 V9 H10 Z M11,10 H13 V11 H14 V13 H13 V14 H11 V13 H10 V11 H11 Z" />
+</vector>

@@ -31,7 +31,7 @@ public final class StepService extends Service implements SensorEventListener {
     static long lifetime(Context c){android.content.SharedPreferences p=c.getSharedPreferences("steps",0);return p.getLong("walkingTotal",p.getLong("total",0));}
     static Notification notification(Context c,long today){
         PendingIntent open=PendingIntent.getActivity(c,0,new Intent(c,MainActivity.class),PendingIntent.FLAG_IMMUTABLE);
-        return new Notification.Builder(c,"walking").setSmallIcon(android.R.drawable.ic_menu_compass).setContentTitle("포켓몬 작은 모험").setContentText("오늘 "+NumberFormat.getIntegerInstance(Locale.KOREA).format(today)+"걸음").setContentIntent(open).setOngoing(true).setOnlyAlertOnce(true).build();
+        return new Notification.Builder(c,"walking").setSmallIcon(R.drawable.ic_stat_pokeball).setContentTitle("포켓몬 작은 모험").setContentText("오늘 "+NumberFormat.getIntegerInstance(Locale.KOREA).format(today)+"걸음").setContentIntent(open).setOngoing(true).setOnlyAlertOnce(true).build();
     }
     static boolean supported(Context c) { return ((SensorManager)c.getSystemService(SENSOR_SERVICE)).getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null; }
     static void start(Context c) {

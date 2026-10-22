@@ -13,7 +13,7 @@ final class UpdateCompletion {
     static Notification notification(Context c){
         c.getSystemService(NotificationManager.class).createNotificationChannel(new NotificationChannel("update-complete","업데이트 완료",NotificationManager.IMPORTANCE_DEFAULT));
         PendingIntent launch=PendingIntent.getActivity(c,0,open(c),PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
-        return new Notification.Builder(c,"update-complete").setSmallIcon(android.R.drawable.stat_sys_download_done).setContentTitle("업데이트 완료").setContentText("눌러서 모험을 이어가세요.").setContentIntent(launch).setAutoCancel(true).build();
+        return new Notification.Builder(c,"update-complete").setSmallIcon(R.drawable.ic_stat_pokeball).setContentTitle("업데이트 완료").setContentText("눌러서 모험을 이어가세요.").setContentIntent(launch).setAutoCancel(true).build();
     }
     static void dismissNotice(Context c){c.getSystemService(NotificationManager.class).cancel(NOTICE_ID);}
     static void reopen(Context c){

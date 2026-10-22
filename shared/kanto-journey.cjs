@@ -127,7 +127,7 @@ for(let i=0;i<gymPlaces.length;i++){
  group.entries=group.entries.slice(0,2);
  if(group.entries.length===1){
   const originalTrainer=nodes.get(group.entries[0]),id='k-gym-'+i+'-trainee';
-  nodes.set(id,{...originalTrainer,id,source:undefined,adaptedFrom:originalTrainer.id,team:structuredClone(originalTrainer.team.slice(-1))});
+  nodes.set(id,{...originalTrainer,id,source:undefined,adaptedFrom:originalTrainer.id,team:originalTrainer.team.slice(-1).map(p=>({...p,moves:[...p.moves]}))});
   group.entries.push(id);
  }
  group.description='두 트레이너와 승부한 뒤 관장에게 도전해요. 한 번 이긴 상대와는 다시 싸우지 않아요.';
