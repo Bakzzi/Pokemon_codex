@@ -175,7 +175,7 @@ async function worldSmokeTest(){
   game.data.battle=null;game.data.pendingBattle=null;game.data.switchUntil=0;game.nextTick=Date.now();game.tick(Date.now());publish(true);await wait(80);
   check(snapshot().location.id==='route-1'&&game.data.kantoWorld.journey.destination==='forest','destination selection starts an itinerary without jumping to the destination');
   for(let i=0;i<9;i++)game.onWildEnd({kind:'wild',location:'route-1'},Date.now());
-  game.data.switchUntil=0;game.nextTick=Date.now();check(!game.advanceTravel(Date.now()),'nine completed encounters cannot leave the road');publish(true);await wait(70);
+  game.data.switchUntil=0;game.nextTick=Date.now();check(!game.advanceTravel(Date.now()),'nine completed encounters cannot leave the road');await wait(game.data.kantoWorld.walk.duration+20);publish(true);await wait(70);
   check(await read("document.querySelector('#kanto-world>p').textContent.includes('9 / 10')"),'the real panel shows the completed road encounters');
   game.newWild(Date.now());game.data.battle.foe.hp=0;game.showFaint(Date.now());
   check(game.panelState().kantoWorld.roadProgress.completed===9,'a knockout animation has not yet counted the tenth encounter');
