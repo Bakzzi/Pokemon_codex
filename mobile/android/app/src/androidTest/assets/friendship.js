@@ -1,10 +1,11 @@
 'use strict';
 (async()=>{
+ globalThis.layoutResult=null;globalThis.layoutError='';
  const checks=[],check=(ok,name)=>{if(!ok)throw Error(name);checks.push(name);},wait=ms=>new Promise(r=>setTimeout(r,ms));
  async function until(fn){for(let i=0;i<100;i++){if(fn())return;await wait(50);}throw Error('Friendship UI timed out');}
  active=false;const now=Date.now();game=new MobileCore.Adventure(new MobileCore.Game({},now).data,now);game.data.mobileStory.onboarding='done';game.data.mobileStory.scene=null;game.data.animation=null;game.data.switchUntil=0;game.nextTick=now;progression=new MobileProgression(game);
  const uid=game.data.activeId,p=game.data.owned[uid],panel=document.getElementById('panel'),doc=panel.contentDocument,battleDoc=document.getElementById('battle').contentDocument;
- openPanel('collection');await until(()=>doc.querySelector('.dex-card[data-id="25"]'));doc.querySelector('.dex-card[data-id="25"]').click();
+ openPanel('collection');await wait(150);await until(()=>doc.querySelector('.dex-card[data-id="25"]'));doc.querySelector('.dex-card[data-id="25"]').click();
  for(const [value,reaction] of [[70,'watch'],[150,'hop'],[255,'heart']]){
   p.happiness=value;publish();await until(()=>doc.querySelector('.friendship-label')?.title==='친밀도 '+value+' / 255');
   const label=doc.querySelector('.friendship-label');check(label.textContent.includes(game.panelState().roster.find(m=>m.uid===uid).friendship.label),'bond stage '+value);
