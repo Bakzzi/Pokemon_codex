@@ -8,7 +8,7 @@
 .badge-slot{display:flex;flex-direction:column;align-items:center;position:relative;min-width:0;padding:5px 3px 8px;border:1px solid transparent;background:none;border-radius:7px}
 .badge-slot:hover:not(:disabled){background:#ffffff06;border-color:#b3bfac30}
 .badge-recess{display:block;position:relative;width:82px;height:82px;margin-bottom:8px}
-.badge-recess>img,.badge-recess>canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}
+.badge-recess>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}
 .badge-edge{filter:brightness(0) invert(.40);transform:translateY(2px);opacity:.8}
 .badge-shadow{filter:brightness(0) drop-shadow(0 -1px 2px #000);opacity:.48;transform:translateY(-1px)}
 .badge-art{filter:drop-shadow(0 3px 2px #121710b0);z-index:2}
@@ -27,4 +27,4 @@
 @media(max-width:750px){.case-inlay{padding:12px 10px 16px}.badge-slots{gap:9px 8px}.badge-recess{width:70px;height:70px}.case-bottom{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.just-earned .badge-art,.just-earned .badge-glint{animation:none}}
 
-.pixel-badge{image-rendering:pixelated;display:inline-block;flex-shrink:0}
+.badge-illustration{image-rendering:auto;display:inline-block;flex-shrink:0}
