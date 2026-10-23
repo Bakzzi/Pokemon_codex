@@ -25,13 +25,14 @@ function useBank(game,executing=false){
  if(queued){queued.useBank=true;return true;}
  const trip=world(game)?.journey;if(!trip||trip.mode!=='steps'||trip.index>=trip.segments.length)return false;
  // Reserve only the cells requested now. Future walks do not silently spend the bank.
- trip.bankCells=Math.min(Math.floor(game.data.mapTravel.bank/cost),trip.segments.length-trip.index);trip.bankLeg=true;return true;
+ const remaining=trip.segments.slice(trip.index).filter(s=>!s.arrival).length;if(!remaining)return false;
+ trip.bankCells=Math.min(Math.floor(game.data.mapTravel.bank/cost),remaining);trip.bankLeg=true;return true;
 }
 function trainerPending(game){return game.movementTrainerNode?.()||null;}
 function bankActive(game){const trip=world(game)?.journey;return game.platform==='mobile'&&!!trip&&(trip.bankLeg||trip.bankCells>0);}
 function segments(map,path,id,blocked){
  const result=path.slice(1).map((p,i)=>({location:map.roads.find(c=>c.x===p.x&&c.y===p.y).place,path:[path[i],p]}));
- if(result.length&&!blocked)result.at(-1).location=id;return result;
+ if(result.length&&!blocked&&result.at(-1).location!==id)result.push({location:id,path:[{...path.at(-1)}],arrival:true});return result;
 }
 function start(game,state,map,result,id,to,name,now){
  state.journey={mode:'steps',destination:id,position:{...to},name,segments:segments(map,result.path,id,result.blocked),index:0,blocked:result.blocked?{location:id,checkpoint:result.blocked,position:{...to},gatePosition:result.gate,at:now}:null};
@@ -42,29 +43,31 @@ function start(game,state,map,result,id,to,name,now){
 }
 function migrate(state){
  const trip=state.journey;if(!trip||trip.mode==='steps')return;
- const cells=trip.segments.slice(trip.index+1).flatMap(s=>s.path.slice(1).map(p=>({location:s.location,path:[p]})));
+ const cells=trip.segments.slice(trip.index+1).flatMap(s=>s.arrival?[{...s,path:[{...s.path.at(-1)}]}]:s.path.slice(1).map(p=>({location:s.location,path:[p]})));
  let from=state.position||trip.segments[trip.index].path.at(-1);
- for(const s of cells){const to=s.path[0];s.path=[from,to];from=to;}
+ for(const s of cells){const to=s.path[0];s.path=s.arrival?[to]:[from,to];from=to;}
  trip.mode='steps';trip.segments=cells;trip.index=0;state.walk=null;
 }
 function advance(game,state,now){
  migrate(state);const trip=state.journey;if(!trip)return false;
  // Every ordinary opponent in the entered area must be resolved before leaving.
  if(trip.bankLeg&&trainerPending(game))return false;
- trip.bankLeg=false;
+ const bankArrival=trip.bankLeg;trip.bankLeg=false;
  if(trip.index<trip.segments.length){
-  const account=game.data.mapTravel,banked=trip.bankCells>0;
-  if(!account||count(account[banked?'bank':'credit'])<cost)return false;
-  const s=trip.segments[trip.index++],end=s.path.at(-1);account[banked?'bank':'credit']-=cost;
-  if(banked){trip.bankCells--;trip.bankLeg=true;}
-  state.walk={from:state.location,to:s.location,destination:trip.destination,path:s.path,at:now,duration:walking.duration(s.path),stepTravel:true};
-  friendship.startTravel(game,state.walk);
-  state.location=s.location;state.position={...end};state.visited[s.location] ||= now;game.holdUntil(now+state.walk.duration);return true;
+  const s=trip.segments[trip.index],account=game.data.mapTravel,charge=s.arrival?0:cost,banked=s.arrival?bankArrival:trip.bankCells>0;
+  if(charge&&(!account||count(account[banked?'bank':'credit'])<charge))return false;
+  trip.index++;const end=s.path.at(-1);if(charge)account[banked?'bank':'credit']-=charge;
+  if(banked){if(charge)trip.bankCells--;trip.bankLeg=true;}
+  if(!s.arrival){
+   state.walk={from:state.location,to:s.location,destination:trip.destination,path:s.path,at:now,duration:walking.duration(s.path),stepTravel:true};
+   friendship.startTravel(game,state.walk);game.holdUntil(now+state.walk.duration);
+  }
+  state.location=s.location;state.position={...end};state.visited[s.location] ||= now;return true;
  }
  state.blocked=trip.blocked;state.journey=null;bankRemainder(game);
  game.log(state.blocked?'길목에 도착했다. 앞을 지키는 사람과 이야기해 보자.':trip.name+'에 도착했다. 주변을 탐험해 보자.','travel',null,now);return true;
 }
 function snapshot(game,state){
- const trip=state.journey,bank=count(game.data.mapTravel?.bank);return {travelMode:'steps',roadProgress:null,movement:{count:Math.floor(bank/cost),remainder:bank%cost,usingBank:!!(trip?.bankLeg||trip?.bankCells>0)},stepProgress:trip?{completed:Math.min(cost,count(game.data.mapTravel?.credit)),required:cost,remainingCells:trip.mode==='steps'?trip.segments.length-trip.index:null}:null};
+ const trip=state.journey,bank=count(game.data.mapTravel?.bank);return {travelMode:'steps',roadProgress:null,movement:{count:Math.floor(bank/cost),remainder:bank%cost,usingBank:!!(trip?.bankLeg||trip?.bankCells>0)},stepProgress:trip?{completed:Math.min(cost,count(game.data.mapTravel?.credit)),required:cost,remainingCells:trip.mode==='steps'?trip.segments.slice(trip.index).filter(s=>!s.arrival).length:null}:null};
 }
 module.exports={cost,observe,hasIntent,beginIntent,bankRemainder,useBank,bankActive,start,migrate,advance,snapshot};

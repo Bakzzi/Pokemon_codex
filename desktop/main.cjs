@@ -246,6 +246,19 @@ async function worldSmokeTest(){
   await read('document.querySelector(".friendship-portrait").click()');
   check(await read('document.querySelector(".friendship-portrait").dataset.reaction==="heart"&&document.querySelector(".friendship-status").textContent.includes("애정을 표현")'),'actual dex portrait reacts without changing the game');
   fs.writeFileSync(path.join(dataDir,'friendship-widget.png'),(await win.webContents.capturePage()).toPNG());
+  game=new Game(townSaved,Date.now());game.data.badges=['brock','misty'];game.data.battle=null;game.data.pendingBattle=null;game.data.mobileStory.scene=null;game.data.pendingActions=[];game.data.switchUntil=0;game.nextTick=Date.now();game.data.workTokens=0;
+  const caveWorld=game.data.kantoWorld;caveWorld.location='cerulean';caveWorld.position={...world.snapshot(game).map.points.cerulean};caveWorld.journey=null;caveWorld.walk=null;caveWorld.blocked=null;caveWorld.roadProgress=null;
+  await openPanel('challenge');publish(true);await wait(80);await read('document.querySelector(".world-marker[aria-label=달맞이산]").click()');await wait(70);
+  check(caveWorld.journey?.segments.some(s=>s.location==='route-4')&&caveWorld.journey.segments.at(-1).location==='mt-moon','real destination click preserves the road before a cave sharing its map cell');
+  game.data.switchUntil=0;game.nextTick=Date.now();check(game.controlTick(Date.now())&&world.current(game).id==='route-4','actual main enters the intermediate road instead of the cave');
+  const caveQuota=caveWorld.roadProgress.required;for(let i=0;i<caveQuota-1;i++)game.onWildEnd({kind:'wild',location:'route-4'},Date.now());
+  game.data.switchUntil=0;game.nextTick=Date.now();check(!game.advanceTravel(Date.now())&&world.current(game).id==='route-4','the shared-cell destination cannot bypass its unfinished road quota');
+  caveWorld.walk.at=Date.now()-caveWorld.walk.duration-1;publish(true);await wait(80);
+  check(await read('document.querySelector("#kanto-world>p").textContent.includes("4번도로 · 야생 만남 '+(caveQuota-1)+' / '+caveQuota+'")'),'real panel shows local road progress while the cave is still the destination');
+  fs.writeFileSync(path.join(dataDir,'road-before-cave.png'),(await panel.webContents.capturePage()).toPNG());
+  game.newWild(Date.now());game.data.battle.foe.hp=0;game.showFaint(Date.now());game.finishBattleEvent(game.data.switchUntil);game.data.switchUntil=0;game.nextTick=Date.now();
+  check(caveWorld.roadProgress.completed===caveQuota&&game.controlTick(Date.now())&&world.current(game).id==='mt-moon','the actual final battle result permits entry into the cave');
+  check(game.data.workTokens===0&&!game.data.pendingChallenge,'road arrival neither spends extra activity nor starts a manual challenge');
   check(errors.length===0,'the actual main, panel and widget have no renderer errors');
   fs.writeFileSync(path.join(dataDir,'world-main-result.json'),JSON.stringify({ok:true,checks,errors,version:app.getVersion(),statePath:'main snapshot -> publish -> preload -> renderer; panel travel -> IPC -> shared game -> encounter result -> next road'},null,2));app.exit(0);
  }catch(error){fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'world-main-error.txt'),error.stack||String(error));app.exit(1);}

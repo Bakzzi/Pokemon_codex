@@ -89,7 +89,7 @@ function forest(){
 }
 test('bank travel completes every ordinary forest trainer without wild encounters, lock actions, duplicate trainers or extra distance charges',()=>{
  const {g,p}=forest(),K=require('../../shared/kanto-journey.cjs'),ids=[...K.nodes.values()].filter(n=>n.automatic&&n.location==='forest').map(n=>n.id);assert.equal(ids.length,5);
- let wilds=0;const spawn=g.newWild.bind(g);g.newWild=(...args)=>{wilds++;return spawn(...args);};const cells=world(g).journey.segments.length;
+ let wilds=0;const spawn=g.newWild.bind(g);g.newWild=(...args)=>{wilds++;return spawn(...args);};const cells=world(g).journey.segments.filter(s=>!s.arrival).length;
  for(let i=0;i<8&&world(g).journey;i++)p.catchUp({steps:40000,lockMillis:0},now,0);
  assert.equal(world(g).journey,null);assert.equal(world(g).location,'forest');assert.ok(ids.every(id=>g.data.kantoStory.cleared[id]));assert.equal(wilds,0);assert.equal(p.lockConsumed,0);assert.equal(g.data.mapTravel.bank,40000-cells*2000);
  assert.equal(g.data.pendingChallenge,null);assert.equal(g.presentation(),null);assert.equal(g.data.badges.length,0);
@@ -98,4 +98,11 @@ test('bank travel completes every ordinary forest trainer without wild encounter
 test('a bank-funded trainer loss stops bank travel instead of retrying forever or skipping the opponent',()=>{
  const {g,p}=forest();for(let i=0;i<10&&world(g).location!=='forest';i++)settle(g);assert.equal(world(g).location,'forest');assert.ok(g.startMovementTrainer(Math.max(now,g.nextTick,g.data.switchUntil)));
  const id=g.data.battle.kantoNode;g.endChallenge(false,now);assert.equal(world(g).journey.bankCells,0);assert.equal(world(g).journey.bankLeg,false);assert.equal(g.data.kantoStory.cleared[id],undefined);assert.equal(p.movementActive(),false);
+});
+test('a shared-cell destination keeps the entered road and charges only actual adjacent cells',()=>{
+ let {g,p}=ready();g.data.badges=['brock','misty'];world(g).location='cerulean';world(g).position={...view(g).map.points.cerulean};
+ assert.ok(g.requestAction('travel','mt-moon',now));const trip=world(g).journey,cells=trip.segments.filter(s=>!s.arrival).length;
+ assert.ok(trip.segments.slice(0,-1).every(s=>s.location==='route-4'));assert.equal(trip.segments.at(-1).arrival,true);
+ p.observe({steps:10000+cells*2000});for(let i=0;i<cells;i++){assert.ok(settle(g));assert.equal(world(g).location,'route-4');}
+ assert.equal(g.data.mapTravel.credit,0);const save=plain(g.data);g=new A(save,now);assert.ok(settle(g));assert.equal(world(g).location,'mt-moon');assert.equal(g.data.mapTravel.credit,0);assert.ok(settle(g));assert.equal(world(g).journey,null);
 });

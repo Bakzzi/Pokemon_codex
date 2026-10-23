@@ -37,16 +37,19 @@ function move(game,state,map,id,to,open,name,now){
   if(last?.location===location)last.path.push(p);
   else segments.push({location,path:last?[last.path.at(-1),p]:[p]});
  }
- const last=segments.at(-1);if(!result.blocked)last.location=id;
+ // An interior marker may share a road cell. Keep that road's itinerary and
+ // encounter quota, then enter the destination without another map step.
+ const last=segments.at(-1);if(!result.blocked&&last.location!==id)segments.push({location:id,path:[{...to}],arrival:true});
  state.journey={destination:id,position:{...to},name,segments,index:0,blocked:result.blocked?{location:id,checkpoint:result.blocked,position:{...to},gatePosition:result.gate,at:now}:null};
  state.blocked=null;enter(game,state,now);return true;
 }
 function enter(game,state,now){
  const trip=state.journey,segment=trip.segments[trip.index],end=segment.path.at(-1);
- state.walk={from:state.location,to:segment.location,destination:trip.destination,path:segment.path,at:now,duration:walking.duration(segment.path)};
- friendship.startTravel(game,state.walk);
+ if(!segment.arrival){
+  state.walk={from:state.location,to:segment.location,destination:trip.destination,path:segment.path,at:now,duration:walking.duration(segment.path)};
+  friendship.startTravel(game,state.walk);game.holdUntil(now+state.walk.duration);
+ }
  state.location=segment.location;state.position={x:end.x,y:end.y};state.visited[state.location] ||= now;state.roadProgress=progress(state,game.random);
- game.holdUntil(now+state.walk.duration);
 }
 function advance(game,state,now){
  friendship.finishTravel(game,state,now);

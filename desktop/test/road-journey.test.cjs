@@ -63,3 +63,28 @@ test('every quota from ten through twenty has an equal-sized draw interval',()=>
  for(let i=0;i<1100;i++){const p=travel.snapshot({location:'route-1'},()=>(i+.5)/1100).roadProgress;counts.set(p.required,(counts.get(p.required)||0)+1);}
  assert.deepEqual([...counts.keys()],[10,11,12,13,14,15,16,17,18,19,20]);assert.ok([...counts.values()].every(n=>n===100));
 });
+for(const [from,to,roads] of [['cerulean','mt-moon',['route-4']],['viridian','forest',['route-2']],['cerulean','sea-cottage',['route-24','route-25']]]){
+ test('a shared-cell destination preserves every intermediate road: '+from+' to '+to,()=>{
+  const g=ready(PC);g.data.badges=['brock','misty'];g.data.kantoWorld.location=from;g.data.kantoWorld.position={...K.snapshot(g,now).map.points[from]};
+  assert.ok(g.requestAction('travel',to,now));assert.deepEqual(g.data.kantoWorld.journey.segments.filter(s=>roads.includes(s.location)).map(s=>s.location),roads);
+  for(const road of roads){
+   for(let i=0;i<12&&K.current(g).id!==road;i++)assert.ok(g.controlTick(clock(g)));
+   assert.equal(K.current(g).id,road);assert.equal(g.wildOptions().location,road);const quota=g.data.kantoWorld.roadProgress.required;
+   for(let i=0;i<quota-1;i++){win(g);assert.equal(g.advanceTravel(clock(g)),false);assert.equal(K.current(g).id,road);}
+   win(g);assert.ok(g.advanceTravel(clock(g)));
+  }
+  finishJourney(g,clock(g));assert.equal(K.current(g).id,to);assert.equal(g.data.pendingChallenge,null);
+ });
+}
+test('retargeting a shared road cell and reloading cannot erase its quota',()=>{
+ let g=ready(PC);g.data.badges=['brock','misty'];g.data.kantoWorld.location='cerulean';g.data.kantoWorld.position={...K.snapshot(g,now).map.points.cerulean};
+ g.requestAction('travel','mt-moon',now);assert.ok(g.controlTick(clock(g)));assert.equal(K.current(g).id,'route-4');for(let i=0;i<3;i++)win(g);
+ const progress=structuredClone(g.data.kantoWorld.roadProgress);g=new PC(structuredClone(g.data),clock(g));
+ assert.ok(g.requestAction('travel',{location:'route-4',position:{...g.data.kantoWorld.position}},clock(g)));assert.ok(g.requestAction('travel','mt-moon',clock(g)));
+ assert.deepEqual(g.data.kantoWorld.roadProgress,progress);assert.equal(g.advanceTravel(clock(g)),false);assert.equal(K.current(g).id,'route-4');
+});
+test('the Kanto revisit preserves the road before a shared-cell cave marker',()=>{
+ const g=ready(PC);g.data.champion=true;g.unlockJohto(now,[25]);g.data.johto.cleared['j-ship']=now;const s=J.init(g);s.location='j-k-cerulean';s.position={...J.maps.kanto.points[s.location]};g.data.switchUntil=0;g.nextTick=now;
+ assert.ok(g.requestAction('travel','j-k-mt-moon',now));assert.ok(g.controlTick(clock(g)));assert.equal(s.location,'j-k-route-4');assert.equal(g.advanceTravel(clock(g)),false);
+ finishJourney(g,clock(g));assert.equal(s.location,'j-k-mt-moon');
+});
