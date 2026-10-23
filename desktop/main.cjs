@@ -205,10 +205,11 @@ async function worldSmokeTest(){
   check(game.data.pendingChallenge?.index===0,'the inline gym button reaches the actual challenge queue through IPC');
   game=new Game(townSaved,Date.now());game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);await read("document.querySelector('.world-guard').click()");
   game.data.battle=null;game.data.pendingBattle=null;game.data.switchUntil=0;game.nextTick=Date.now();
-  const party=JSON.stringify(game.data.owned),tokens=game.data.workTokens;game.data.badges=['brock'];publish(true);await wait(70);
+  const rosterWithoutBond=()=>JSON.stringify(Object.fromEntries(Object.entries(game.data.owned).map(([uid,{happiness,...p}])=>[uid,p])));
+  const party=rosterWithoutBond(),bonds=Object.fromEntries(Object.entries(game.data.owned).map(([uid,p])=>[uid,p.happiness])),tokens=game.data.workTokens;game.data.badges=['brock'];publish(true);await wait(70);
   await read("document.querySelector('[data-world-pass=\"route-3\"]').click()");await wait(80);finish();publish(true);await wait(60);
   check(snapshot().location.id==='route-3','unlocked passage uses the real panel IPC journey');
-  check(JSON.stringify(game.data.owned)===party&&game.data.workTokens===tokens,'movement preserves the roster and banked activity');
+  check(rosterWithoutBond()===party&&Object.entries(game.data.owned).every(([uid,p])=>p.happiness>=bonds[uid])&&game.data.workTokens===tokens,'movement preserves the roster and banked activity while companions gain friendship');
   game.data.workTokens=250;game.tick(Date.now());publish(true);await wait(50);const options=game.wildOptions();
   check(options.habitat.some(p=>p.id===game.data.battle.foe.id)&&game.data.battle.foe.level<=options.maximumLevel,'the reached road uses its own habitat and level range');
   check(snapshot().location.id===game.data.battle.location,'wild encounter identity matches the actual map location');
