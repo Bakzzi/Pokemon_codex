@@ -75,7 +75,7 @@ test('the complete early story uses original trainer counts, one-shot results, f
  const g=start();guide(g);move(g,'route-22');g.challenge('rival-brock',settle(g));win(g);move(g,'forest');clearCase(g,'forest-path');assert.equal(K.cases.find(c=>c.id==='forest-path').entries.length,5);
  for(const id of K.cases.find(c=>c.id==='forest-path').entries)assert.equal(g.challenge(id,settle(g)),false);
  move(g,'pewter');gym(g,0);assert.ok(!g.data.owned[1]);move(g,'route-3');clearCase(g,'route3-path');move(g,'mt-moon');clearCase(g,'moon-path');assert.equal(g.data.kantoStory.fossil,138);assert.ok(K.done(g,'k-moon-duo'));assert.equal(g.chooseFossil(140),false);
- move(g,'cerulean');gym(g,1);assert.ok(!g.data.owned[4]);move(g,'route-24');clearCase(g,'nugget-bridge');move(g,'route-25');clearCase(g,'trainers-route-25');move(g,'sea-cottage');clear(g,'k-bill');assert.equal(g.data.kantoStory.items['ss-ticket'],1);
+ move(g,'cerulean');gym(g,1);assert.ok(!g.data.owned[4]);move(g,'route-24');assert.ok(g.challenge('k-bridge-1',settle(g)));assert.equal(g.data.battle.storyId,'rival-cerulean');win(g);clearCase(g,'nugget-bridge');move(g,'route-25');clearCase(g,'trainers-route-25');move(g,'sea-cottage');clear(g,'k-bill');assert.equal(g.data.kantoStory.items['ss-ticket'],1);
  move(g,'route-24');clear(g,'k-charmander');assert.ok(g.data.starterGifts[4]);move(g,'cerulean');clear(g,'k-robber');move(g,'ss-anne');
  const ship=K.cases.find(c=>c.id==='anne-visit');assert.equal(ship.entries.filter(id=>K.nodes.get(id).trainer).length,16);
  for(const id of ship.entries.filter(id=>id!=='k-captain'))clear(g,id);

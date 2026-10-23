@@ -2,7 +2,7 @@
 const {learnedMoves}=require('../desktop/pokemon.cjs');
 // Short Korean adaptations of Yellow dialogue. Setting-specific references are
 // omitted because these encounters happen at challenge entrances in this game.
-// Text sources: pret/pokeyellow/text/{OaksLab,SSAnne2F,PokemonTower2F,Route22}.asm
+// Text sources: pret/pokeyellow/text/{OaksLab,CeruleanCity,SSAnne2F,PokemonTower2F,Route22}.asm
 // Parties: pret/pokeyellow/data/trainers/parties.asm (Rival1Data / Rival2Data).
 const encounters=[
   {id:'tutorial-green',stage:0,target:null,sprite:'green',team:[[133,5]],
@@ -11,6 +11,10 @@ const encounters=[
   {id:'rival-brock',stage:1,target:0,sprite:'green',team:[[21,9],[133,8]],
     intro:['벌써 체육관에 도전하려고? 너답네!','웅을 만나기 전에 나랑 한판 하자. 피카츄는 얼마나 강해졌어?'],
     win:['흥, 제법이네! 웅한테도 그 실력 보여 봐.','그린이 체육관 앞을 비켰다. 이제 웅에게 도전할 수 있다.'],result:'그린을 이겼어요. 회색시티의 웅에게 도전해 보세요.',loss:['아직 준비가 덜 됐잖아! 동료들이랑 좀 더 연습하고 와.']},
+  {id:'rival-cerulean',stage:1,target:'k-bridge-1',modernOnly:true,sprite:'green',team:[[21,18],[27,15],[19,15],[133,17]],
+    intro:['여기서 또 만나네! 난 강한 포켓몬을 잔뜩 잡았다고!','네 동료들은 얼마나 강해졌는지 한번 보자!'],
+    win:['흥, 제법인데! 난 이수재 집에서 희귀한 포켓몬들을 보고 왔어. 덕분에 도감도 많이 채웠지!','이수재는 PC로 포켓몬을 맡기는 시스템을 만든 사람이야. 너도 쓰고 있잖아? 한번 찾아가 인사해 봐.','그린이 떠났다. 금구슬다리를 건너 25번도로 끝의 이수재 집을 찾아가 보자.'],
+    result:'그린과의 승부를 마쳤어요. 금구슬다리를 건너 이수재를 만나 보세요.',loss:['그 실력으론 아직 멀었어! 동료들을 정비하고 다시 와.']},
   {id:'rival-surge',stage:1,target:2,sprite:'green',team:[[21,19],[19,16],[27,18],[133,20]],
     intro:['어이, 너도 마티스에게 도전하러 왔어?','도감은 좀 채웠어? 난 벌써 40종이나 잡았다고!'],
     win:['흥! 포켓몬을 제법 키웠네! 마티스에게도 그 실력이 통할까?','그린이 갈색시티의 길을 따라 떠났다. 마티스의 체육관으로 가 보자.'],result:'그린을 이겼어요. 갈색시티의 마티스에게 도전해 보세요.',loss:['왜 그래? 정신 좀 차리라고!']},

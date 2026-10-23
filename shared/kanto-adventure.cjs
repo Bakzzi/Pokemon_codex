@@ -13,6 +13,11 @@ function init(g,saved,now){
 function withKanto(Base){return class KantoAdventure extends Base{
  constructor(saved={},now=Date.now(),options={}){
   super(saved,now,options);init(this,saved,now);
+  if(!saved.mobileStory?.rivals?.['rival-cerulean']){
+   const s=this.data.kantoStory,w=this.data.kantoWorld,p=this.rivalProgress('rival-cerulean');
+   const passed=s.legacy||Object.keys(s.cleared).some(id=>id.startsWith('k-bridge-'))||saved.battle?.kantoNode?.startsWith('k-bridge-')||K.done(this,'k-bill')||w?.visited?.['route-25']||w?.visited?.['sea-cottage']||this.data.badges.includes('surge');
+   Object.assign(p,{state:passed?'completed':'unseen',...(passed?{migratedAt:now}:{})});
+  }
   if(K.nodes.has(saved.pendingChallenge?.index)&&this.canChallenge(saved.pendingChallenge.index))this.data.pendingChallenge={...saved.pendingChallenge};
   // A newly introduced gate never closes a road already reached in an old save.
   if(this.data.kantoStory.legacy&&this.data.mobileStory.safari.last&&!this.data.mobileStory.safari.last.returned)this.data.mobileStory.safari.completedAt ||= this.data.mobileStory.safari.last.finishedAt;
@@ -34,6 +39,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
  }
  rivalGate(index){
   if(!K.modern(this))return super.rivalGate(index);
+  if(index==='k-bridge-1')return require('./rivals.cjs').byId.get('rival-cerulean');
   if(index==='k-captain')return require('./rivals.cjs').byId.get('rival-surge');
   if(index==='tower-grunt-1'||index==='silph-duo')return super.rivalGate(index);
   return null;
@@ -41,13 +47,13 @@ function withKanto(Base){return class KantoAdventure extends Base{
  challengeName(id){return K.nodes.get(id)?.name||super.challengeName(id);}
  canChallenge(id){
   if(!this.data.kantoStory)return super.canChallenge(id);
-  if(K.nodes.has(id))return K.ready(this,id)&&(!K.nodes.get(id).automatic||!!this.autoStarting)&&this.rivalProgress(this.rivalGate(id)?.id)?.state!=='retry';
+  if(K.nodes.has(id)){const progress=this.rivalProgress(this.rivalGate(id)?.id);return K.ready(this,id)&&(!K.nodes.get(id).automatic||!!this.autoStarting||progress?.state==='unseen')&&progress?.state!=='retry';}
   if(!K.modern(this))return super.canChallenge(id);
   if(this.presentation())return false;
   const b=this.data.badges,has=id=>b.includes(id),s=this.data.kantoStory,at=this.data.kantoWorld?.location;
   const rivals=require('./rivals.cjs').byId;
   if(rivals.has(id)){
-   const place={'rival-brock':'route-22','rival-surge':'ss-anne','rival-middle':'tower','rival-silph':'saffron','rival-league':'route-22'}[id];if(place&&at!==place)return false;
+   const place={'rival-brock':'route-22','rival-cerulean':'route-24','rival-surge':'ss-anne','rival-middle':'tower','rival-silph':'saffron','rival-league':'route-22'}[id];if(place&&at!==place)return false;
    if(super.canChallenge(id))return true;
    if(this.rivalProgress(id)?.state!=='unseen')return false;
    return id==='rival-brock'&&at==='route-22'&&!!s.mapAt||id==='rival-league'&&at==='route-22'&&b.length>=8;
@@ -181,7 +187,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
  startAutomaticTrainer(id,now=Date.now()){
   const n=K.nodes.get(id),alias=id==='tower-grunt-1'&&['won','completed'].includes(this.rivalProgress('rival-middle')?.state);
   if(!K.modern(this)||this.data.johtoUnlocked||!n?.automatic&&!alias||this.data.workTokens<balance.tokensPerAction||this.presentation()||this.data.battle||this.data.pendingBattle||this.data.suspendedWild||this.data.pendingChallenge||this.data.pendingActions.length||this.seasonDue(now)||now<this.nextTick||now<this.data.switchUntil)return false;
-  if(n&&this.rivalGate(id)&&this.rivalProgress(this.rivalGate(id).id)?.state!=='won')return false;
+  if(n&&this.rivalGate(id)&&!['won','completed'].includes(this.rivalProgress(this.rivalGate(id).id)?.state))return false;
   this.autoStarting=true;let ok;try{ok=this.startChallenge(id,now);}finally{this.autoStarting=false;}if(ok){this.data.workTokens-=balance.tokensPerAction;if(require('./step-travel.cjs').bankActive(this)&&this.data.battle)this.data.battle.movementTrainer=true;}return !!ok;
  }
  movementTrainerNode(){return K.modern(this)&&!this.data.johtoUnlocked?[...K.nodes.values()].find(n=>n.trainer&&n.automatic&&K.ready(this,n.id))?.id:null;}
@@ -213,7 +219,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
   return {...s,kantoStory:k};
  }
  snapshot(now=Date.now()){return {...super.snapshot(now),kantoStory:K.snapshot(this)};}
- rivalState(){const rows=super.rivalState();if(!K.modern(this))return rows;for(const row of rows)if(row.canRetry&&!row.met){const e=require('./rivals.cjs').byId.get(row.id);Object.assign(row,{met:true,name:'그린',sprite:e.sprite,team:e.team});}return rows;}
+ rivalState(){const rows=super.rivalState();if(!K.modern(this))return rows.filter(r=>r.id!=='rival-cerulean');for(const row of rows)if(row.canRetry&&!row.met){const e=require('./rivals.cjs').byId.get(row.id);Object.assign(row,{met:true,name:'그린',sprite:e.sprite,team:e.team});}return rows;}
  offerDevice(now){return (!K.modern(this)||this.data.johtoUnlocked||this.data.kantoWorld.location==='route-15')&&super.offerDevice(now);}
  offerLapras(now){return (!K.modern(this)||this.data.kantoWorld.location==='saffron')&&super.offerLapras(now);}
  offerMansion(now){return (!K.modern(this)||this.data.kantoWorld.location==='mansion')&&super.offerMansion(now);}

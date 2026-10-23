@@ -7,7 +7,9 @@ function ready(e){const old=new Game({},now);old.data.badges=badges.slice(0,coun
 function pages(g,t=now){const s=g.presentation();for(let i=0;i<8&&g.presentation()?.id===s?.id&&g.presentation()?.mode==='dialogue';i++){const p=g.presentation();assert.ok(g.advanceScene(p.id+':'+p.index,t));}}
 function begin(g){pages(g);g.sceneTick(now+3000);g.data.switchUntil=0;g.nextTick=0;}
 function won(g){const b=g.data.battle;b.foeIndex=g.battleBoss().team.length-1;b.foe.hp=0;g.defeatOpponent(now+10000);pages(g,now+11000);g.data.switchUntil=0;g.nextTick=0;}
-for(const e of encounters.slice(1)){
+// These fixtures intentionally exercise pre-map saves. Modern-only encounters
+// have shared PC/Android coverage in desktop/test/bill-introduction.test.cjs.
+for(const e of encounters.slice(1).filter(e=>!e.modernOnly)){
   test(e.id+': target looks open, click intercepts once, victory unlocks only that target',()=>{
     const g=ready(e);assert.equal(g.rivalProgress(e.id).state,'unseen');assert.equal(g.canChallenge(e.target),true);assert.equal(g.canChallenge(e.id),false);
     assert.ok(g.challenge(e.target,now));assert.equal(g.data.battle.storyId,e.id);assert.equal(g.data.battle.kind,'trainer');assert.equal(g.data.pendingChallenge,null);assert.equal(g.captureOpportunity(),null);
