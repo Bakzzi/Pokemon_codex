@@ -54,7 +54,7 @@ function travel(game,id,now,point){
  }
  return journey.move(game,s,map,id,to,place=>unlocked(game,byId.get(place)),p.name,now);
 }
-function checkpoint(game){const s=init(game),b=s.blocked;if(!b)return null;const p=byId.get(b.checkpoint);return {...b,name:'길목의 안내원',sprite:'j-sage',pages:unlocked(game,p)?['길이 열렸어요. 조심히 다녀오세요.']:p.id==='j-route37'?['나무 같은 무언가가 길을 막고 있어요.','금빛시티에서 깨울 방법을 찾아보세요.']:['이 앞의 길은 아직 지나갈 수 없어요.','지금 머무는 마을에서 사람들의 이야기를 들어 보세요.'],canPass:unlocked(game,p)&&unlocked(game,byId.get(b.location)),destination:byId.get(b.location).name};}
+function checkpoint(game){const s=init(game),b=s.blocked;if(!b)return null;const p=byId.get(b.checkpoint);return {...b,name:p.name+' 안내원',sprite:'j-sage',pages:unlocked(game,p)?['길이 열렸어요. 조심히 다녀오세요.']:p.id==='j-route37'?['나무 같은 무언가가 길을 막고 있어요.','금빛시티에서 깨울 방법을 찾아보세요.']:['이 앞의 길은 아직 지나갈 수 없어요.','지금 머무는 마을에서 사람들의 이야기를 들어 보세요.'],canPass:unlocked(game,p)&&unlocked(game,byId.get(b.location)),destination:byId.get(b.location).name};}
 function passageStatus(game,id){const c=checkpoint(game);return !c||c.location!==id||!c.canPass?{state:'invalid',reason:'아직 이 길을 지나갈 수 없어요.'}:null;}
 function pass(game,id,now){if(passageStatus(game,id))return false;const b=init(game).blocked;return travel(game,id,now,b.position);}
 const grouped={'j-lab':'j-newbark','j-early':'j-violet','j-well':'j-azalea','j-tree':'j-route36','j-burned-tower':'j-ecruteak','j-dance':'j-ecruteak','j-rage-lake':'j-rage','j-rocket-hq':'j-mahogany','j-radio-tower':'j-goldenrod','j-bell-tower':'j-ecruteak','j-ship-route':'j-olivine','j-power-plant':'j-k-power-plant','j-kanto-road':'j-k-vermilion'};

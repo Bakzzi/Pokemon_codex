@@ -195,15 +195,15 @@ async function worldSmokeTest(){
   check(await read("!document.querySelector('.world-player').classList.contains('walking')&&Number(document.querySelector('.world-player').dataset.y)===68"),'Red rests at the exact selected position');
   await read("document.querySelector('.world-marker[aria-label=\"3번도로\"]').click()");await wait(90);finish();publish(true);await wait(70);
   check(game.data.kantoWorld.blocked?.location==='route-3'&&snapshot().location.id!=='route-3','the journey stops before a locked road');
-  check(await read("document.getElementById('world-place-dialog').open&&!!document.querySelector('.world-npc')"),'a reached checkpoint opens its character and dialogue');
+  check(await read("!document.querySelector('.world-place-dialog')&&!document.querySelector('.world-guard')&&document.getElementById('world-checkpoint').checkVisibility()&&!document.getElementById('world-checkpoint').open"),'a reached checkpoint stays in its collapsed named card without a popup or map NPC');
   check(!game.requestAction('world-pass','route-3'),'the actual game rejects passage before the badge');
   game.data.workTokens=250;check(game.tick(Date.now())&&game.data.battle.kind==='wild'&&game.data.workTokens===0,'ordinary adventures continue while a manual story branch is blocked');
   publish(true);await wait(60);await read('WorldMap.close()');
   check(await read("document.querySelector('.world-local [data-challenge]').dataset.challenge==='0'&&!!document.querySelector('.world-local .gym-trainer')&&!document.getElementById('world-local-gym').open"),'the local gym keeps its original content inside an initially collapsed card');
-  check(await read("document.querySelector('#world-local-gym>summary h2').textContent==='회색체육관'&&[...document.querySelectorAll('.world-links button')].every(b=>b.textContent==='길목 살펴보기')"),'the town names its gym inside its own border and keeps only an actual checkpoint action');
+  check(await read("document.querySelector('#world-local-gym>summary h2').textContent==='회색체육관'&&document.querySelectorAll('.world-links button').length===0"),'the town names its gym inside its own border and keeps only an actual checkpoint action');
   const townSaved=structuredClone(game.data);await read("document.querySelector('#world-local-gym>summary').click();document.querySelector('.world-local [data-challenge]').click()");await wait(70);
   check(game.data.pendingChallenge?.index===0,'the inline gym button reaches the actual challenge queue through IPC');
-  game=new Game(townSaved,Date.now());game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);await read("document.querySelector('.world-guard').click()");
+  game=new Game(townSaved,Date.now());game.data.switchUntil=0;game.nextTick=Date.now();publish(true);await wait(60);await read("document.querySelector('#world-checkpoint>summary').click()");
   game.data.battle=null;game.data.pendingBattle=null;game.data.switchUntil=0;game.nextTick=Date.now();
   const rosterWithoutBond=()=>JSON.stringify(Object.fromEntries(Object.entries(game.data.owned).map(([uid,{happiness,...p}])=>[uid,p])));
   const party=rosterWithoutBond(),bonds=Object.fromEntries(Object.entries(game.data.owned).map(([uid,p])=>[uid,p.happiness])),tokens=game.data.workTokens;game.data.badges=['brock'];publish(true);await wait(70);

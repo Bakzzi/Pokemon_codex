@@ -267,6 +267,9 @@ public final class MobileTest extends Instrumentation {
                 require("true".equals(js("active=false;game.data.slots[2]===null&&game.data.owned[1]&&document.getElementById('battle').contentDocument.querySelector('#party button[data-slot=\"2\"]').classList.contains('empty')")),"Return restored the removed companion to a slot");
                 result.putInt("backgroundAndReturnChecks",4);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
+            if("inline-checkpoints".equals(arguments.getString("mode"))){
+                result.putString("checkpoints",layoutChecks("inline-checkpoints.js"));screenshot("inline-checkpoints.png");result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("friendship".equals(arguments.getString("mode"))){
                 result.putString("friendship",layoutChecks("friendship.js"));screenshot("friendship.png");result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }

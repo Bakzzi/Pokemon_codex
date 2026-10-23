@@ -122,8 +122,8 @@ function checkpoint(game){
  const league=['route-23','victory-road','indigo'].includes(p.id),road=roadPlaces.has(p.id)&&!roadOpen(game),ready=unlocked(game,p)&&unlocked(game,destination);
  const gate=story.modern(game)&&story.gate(game,p.id);
  if(gate==='drink')return {...block,name:'노랑시티 경비원',sprite:'sailor',pages:game.data.kantoWorld.visited.celadon&&game.data.mobileStory.rescue.completedAt?['목이 말라서 꼼짝하기 싫군요…… 어? 음료수를 주시겠다고요?','무지개시티에서 사 둔 음료수를 건넸다.','정말 고맙습니다! 다른 경비원들에게도 나눠 주죠. 이제 지나가셔도 좋습니다.']:['잠깐! 지금은 지나갈 수 없습니다.','경비원은 목이 마른 듯 지쳐 보인다.'],canPass:!!game.data.kantoWorld.visited.celadon&&!!game.data.mobileStory.rescue.completedAt,destination:destination.name};
- if(gate)return {...block,name:gate.startsWith('snorlax')?'길을 막는 잠만보':gate==='aide'?'터널 입구의 안내원':gate.includes('rival')?'길목의 트레이너':'길목의 안내원',sprite:gate.startsWith('snorlax')?'pokemon:143':gate.includes('rival')?'green':'j-sage',pages:[story.gateText[gate]],canPass:false,destination:destination.name,nearby:gate.startsWith('snorlax')?'snorlax-road':null};
- let name='길목의 안내원',sprite='j-sage',pages;
+ if(gate)return {...block,name:gate.startsWith('snorlax')?'길을 막는 잠만보':gate==='aide'?'터널 입구의 안내원':gate.includes('rival')?'길목의 트레이너':p.name+' 안내원',sprite:gate.startsWith('snorlax')?'pokemon:143':gate.includes('rival')?'green':'j-sage',pages:[story.gateText[gate]],canPass:false,destination:destination.name,nearby:gate.startsWith('snorlax')?'snorlax-road':null};
+ let name=p.id==='saffron'?'노랑시티 경비원':p.name+' 안내원',sprite=p.id==='saffron'?'sailor':'j-sage',pages;
  if(league){name='포켓몬리그 경비원';sprite='j-sage';const earned=badges.filter(b=>game.data.badges.includes(b));pages=['포켓몬리그로 향하는 트레이너인가요? 배지를 확인하겠습니다.',...earned.map(id=>require('../desktop/pokemon.cjs').data.bosses.find(b=>b.id===id).badge+'를 확인했습니다.'),ready?'모든 배지를 확인했습니다. 챔피언로드로 가셔도 좋습니다.':'아직 확인하지 못한 배지가 있습니다. 체육관에서 실력을 증명하고 돌아오세요.'];}
  else if(road){name='길을 막는 잠만보';sprite='pokemon:143';pages=['커다란 포켓몬이 길 한가운데 잠들어 있다.','아무리 불러도 일어나지 않는다. 깨울 방법을 찾아보자.'];}
  else if(p.id==='tower'){name='포켓몬타워의 주민';pages=['탑 안에서 정체를 알 수 없는 기척이 느껴져요.','보이지 않는 존재를 확인할 방법이 필요하겠어요.'];}

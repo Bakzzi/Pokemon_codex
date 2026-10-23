@@ -3,6 +3,11 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const PC=require('../adventure.cjs').Adventure,Android=require('../../mobile/adventure.cjs').Adventure,K=require('../../shared/kanto-world.cjs'),W=require('../../shared/johto-world.cjs'),J=require('../../shared/johto.cjs'),walking=require('../map-walk.js');
 const now=Date.parse('2026-10-22T06:00:00Z');
 const {finishJourney}=require('./helpers/travel-fixture.cjs');
+for(const Type of [PC,Android])test(Type.name+' saved Route 5 checkpoint identifies the Saffron guard and preserves its actual passage gate',()=>{
+ let g=require('./helpers/kanto-fixture.cjs').existing(Type,now,{random:()=>.73});g.data.badges=['brock','misty'];const w=K.init(g),point=K.snapshot(g).map.points.saffron;w.location='route-5';w.blocked={location:'saffron',checkpoint:'saffron',position:{...point},at:now};
+ const checkpoint=K.checkpoint(g);assert.equal(checkpoint.name,'노랑시티 경비원');assert.equal(checkpoint.sprite,'sailor');assert.equal(checkpoint.canPass,false);assert.equal(g.requestAction('world-pass','saffron',now),false);
+ g=new Type(g.data,now);assert.equal(K.checkpoint(g).name,checkpoint.name);g.data.badges=['brock','misty','surge','erika','koga'];assert.equal(K.checkpoint(g).canPass,true);
+});
 function ready(Type=PC){const g=require('./helpers/kanto-fixture.cjs').existing(Type,now,{random:()=>.73});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;return g;}
 for(const Type of [PC,Android])test(Type.name+' approaches blocked roads, preserves activity and passes only after the real prerequisite',()=>{
  const g=ready(Type);g.data.workTokens=2000;const roster=structuredClone(g.data.owned);assert.ok(g.requestAction('travel','route-3',now));const end=finishJourney(g,now),s=g.data.kantoWorld;
