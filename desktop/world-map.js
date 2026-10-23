@@ -36,7 +36,7 @@
   const retry=(state.rivals||[]).find(r=>r.state==='retry'||r.canRetry&&r.state==='unseen'),places={'rival-brock':state.kantoStory&&!state.kantoStory.legacy?'route-22':'pewter','rival-cerulean':'route-24','rival-surge':state.kantoStory&&!state.kantoStory.legacy?'ss-anne':'vermilion','rival-middle':'tower','rival-silph':'saffron','rival-league':state.kantoStory&&!state.kantoStory.legacy?'route-22':'indigo'};
   if(retry&&places[retry.id]===id)add('rival-details','그린과 다시 승부하기');return a;
  }
- function knownNotice(p){return p.notice??(p.open&&activities(p.id).some(a=>a.ready));}
+ function knownNotice(p){return p.guidance||(p.notice??(p.open&&activities(p.id).some(a=>a.ready)));}
  function currentMap(){return world.maps?.[zone]||world.map;}
  function draw(){
   raf=0;if(!world||!actor)return;const ownZone=!world.maps||zone===world.zone,walk=ownZone?world.walk:null,frame=walk?MapWalk.frame(walk,Date.now()):{...world.position,walking:false,direction:world.facing,sprite:{up:1,left:2,right:2}[world.facing]||0};

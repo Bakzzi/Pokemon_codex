@@ -54,6 +54,15 @@ module.exports=async function(h){
   check(await read('document.querySelector(".world-local #kanto-case-trainers-gym-7").checkVisibility()'),'interior opponents become available only after gym entry opens');
   g.data.badges=['brock','misty','surge'];g.data.kantoWorld.location='celadon';h.publish(true);await wait(150);
   check(await read('!document.querySelector("#world-local-gym").textContent.includes("아지트의 로켓단을 모두 물리친 뒤")'),'Erika card follows memo order instead of obsolete hideout prerequisite');
+  g=new Adventure(new Game({},now).data,now);g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.battle=null;g.data.kantoStory.mapAt=now;g.data.badges=['brock','misty'];g.data.kantoWorld.location='cerulean';g.data.kantoWorld.position={...W.snapshot(g).map.points.cerulean};h.setGame(g);h.publish(true);await wait(120);
+  check(await read(`!document.querySelector('.world-marker[aria-label="이수재의 집"]').classList.contains('has-event')`),'unintroduced destination has no guidance marker');
+  g.rivalProgress('rival-cerulean').state='won';h.publish(true);await wait(120);
+  check(g.panelState().kantoWorld.places.find(p=>p.id==='sea-cottage').guidance,'production panel snapshot includes the confirmed errand');
+  check(await read(`document.querySelector('.world-marker[aria-label="이수재의 집"]').textContent==='!'`),'distant story destination shows the existing event marker');
+  check(!W.unlocked(g,W.byId.get('sea-cottage'))&&!g.canChallenge('k-bill'),'marker does not bypass route or event gates');
+  fs.writeFileSync(path.join(h.dataDir,'story-destination.png'),(await h.getPanel().webContents.capturePage()).toPNG());
+  g.data.kantoStory.cleared['k-bill']=now;h.publish(true);await wait(120);
+  check(await read(`!document.querySelector('.world-marker[aria-label="이수재의 집"]').classList.contains('has-event')&&document.querySelector('.world-marker[aria-label="상트안느호"]').textContent==='!'`),'resolved errand clears and next introduced destination is marked');
   check(errors.length===0,'no renderer errors');fs.writeFileSync(path.join(h.dataDir,'migration-main-result.json'),JSON.stringify({ok:true,checks,errors,version:h.app.getVersion()},null,2));h.app.exit(0);
  }catch(e){fs.mkdirSync(h.dataDir,{recursive:true});fs.writeFileSync(path.join(h.dataDir,'migration-main-error.txt'),e.stack||String(e));h.app.exit(1);}
 };
