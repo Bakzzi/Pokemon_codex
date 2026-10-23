@@ -1,0 +1,26 @@
+{
+  "source": "JySzE/Mended-Crystal colored trainer-card badges, based on Pokemon Crystal sprites",
+  "commit": "ce3b95535609cd5db7207c6516c2ce589b5a5123",
+  "files": [
+    {
+      "file": "kanto_badges.png",
+      "url": "https://raw.githubusercontent.com/JySzE/mended-crystal/ce3b95535609cd5db7207c6516c2ce589b5a5123/gfx/trainer_card/kanto_badges.png",
+      "sha256": "de0e62f5741fc929565c54daa1bfa6fbadc88dd666cbf276906976657d2449c4"
+    },
+    {
+      "file": "johto_badges.png",
+      "url": "https://raw.githubusercontent.com/JySzE/mended-crystal/ce3b95535609cd5db7207c6516c2ce589b5a5123/gfx/trainer_card/johto_badges.png",
+      "sha256": "a6352edbb83a08e431600f18b0b2bcaf115ff70138038a3e665150b7fb1a6583"
+    },
+    {
+      "file": "kanto_badges.pal",
+      "url": "https://raw.githubusercontent.com/JySzE/mended-crystal/ce3b95535609cd5db7207c6516c2ce589b5a5123/gfx/trainer_card/kanto_badges.pal",
+      "sha256": "156f38b7b2473aa87c31ae5e6ec92b8961d8828a7a0230d6a17a1db86ea39271"
+    },
+    {
+      "file": "johto_badges.pal",
+      "url": "https://raw.githubusercontent.com/JySzE/mended-crystal/ce3b95535609cd5db7207c6516c2ce589b5a5123/gfx/trainer_card/johto_badges.pal",
+      "sha256": "8a61133a276e0aef9a724d12e9e8c988d4f0260c71e293ec0013466417a90d34"
+    }
+  ]
+}

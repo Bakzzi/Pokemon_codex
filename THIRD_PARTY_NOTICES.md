@@ -101,3 +101,13 @@ ssh2 1.17.0: https://github.com/mscdex/ssh2/tree/v1.17.0 . MIT License. The pack
 
 Electron 44.7.0 — https://www.electronjs.org/
 The portable runtime includes Electron's unchanged LICENSE and LICENSES.chromium.html.
+
+## Colored pixel badges
+
+Trainer-card badge sprite data and matching color palettes are from
+[JySzE/Mended-Crystal](https://github.com/JySzE/mended-crystal/tree/ce3b95535609cd5db7207c6516c2ce589b5a5123/gfx/trainer_card),
+based on Pokémon Crystal graphics. Pokémon assets retain their original
+copyright; they are not covered by this project's MIT code license.
+Pinned source files and hashes are in `desktop/data/badge-sprites/sources.json`.
+`npm run build:badges` decodes these sprites and their palettes without scaling
+or smoothing. Unearned slots use the same silhouettes.

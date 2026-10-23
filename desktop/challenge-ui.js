@@ -3,11 +3,11 @@ globalThis.ChallengeUI=(()=>{
  const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;};
  const badgeSheets=new Map(),kanto=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'],johto=['j-falkner','j-bugsy','j-whitney','j-morty','j-jasmine','j-chuck','j-pryce','j-clair'];
  function badgeImage(source,cls='',alt=''){
-  const id=source.split('/').at(-1).replace(/\.png$/,''),j=johto.indexOf(id),index=j<0?kanto.indexOf(id):j,sheet=j<0?'kanto-pixel':'johto-pixel';
+  const id=source.split('/').at(-1).replace(/\.png$/,''),j=johto.indexOf(id),index=j<0?kanto.indexOf(id):j,sheet=j<0?'kanto-color':'johto-color';
   const canvas=el('canvas',cls+' pixel-badge');canvas.width=16;canvas.height=16;canvas.setAttribute('role','img');canvas.setAttribute('aria-label',alt);canvas.dataset.badgeSprite=id;
   if(index<0)return canvas;
   if(!badgeSheets.has(sheet))badgeSheets.set(sheet,new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=()=>reject(Error('Badge sheet missing: '+sheet));image.src='assets/badges/'+sheet+'.png';}));
-  badgeSheets.get(sheet).then(image=>{const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.drawImage(image,0,0,1,1,0,0,1,1);const key=[...ctx.getImageData(0,0,1,1).data.slice(0,3)];ctx.clearRect(0,0,16,16);ctx.drawImage(image,j<0?index*16:0,j<0?0:index*16,16,16,0,0,16,16);const data=ctx.getImageData(0,0,16,16);for(let i=0;i<data.data.length;i+=4)if(key.every((v,k)=>data.data[i+k]===v))data.data[i+3]=0;ctx.putImageData(data,0,0);canvas.dataset.ready='true';}).catch(console.error);return canvas;
+  badgeSheets.get(sheet).then(image=>{const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.drawImage(image,j<0?index*16:0,j<0?0:index*16,16,16,0,0,16,16);canvas.dataset.ready='true';}).catch(console.error);return canvas;
  }
  function section(id,heading,contents=[]){const d=el('details','story-board challenge-card mobile-challenge-card'),s=el('summary');d.id=id;s.append(...(Array.isArray(heading)?heading:[heading]));d.append(s,...contents);return d;}
  function eventStep({id,number,name,sprite,revealed=true,team,reward,action}){

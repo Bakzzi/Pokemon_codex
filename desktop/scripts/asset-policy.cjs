@@ -7,7 +7,7 @@ function include(file,root){
  if(/^trainers\/portraits\/.*\.png$/i.test(name))return false;
  if(name==='logos/team-rocket.png')return false;
  const face=name.match(/^trainers\/([^/]+)\.png$/i);if(face&&oldPortraits.has(face[1]))return false;
- if(/^badges\/.*\.png$/i.test(name)&&!/^badges\/(?:kanto|johto)-pixel\.png$/.test(name))return false;
+ if(/^badges\/.*\.png$/i.test(name)&&!/^badges\/(?:kanto|johto)-color\.png$/.test(name))return false;
  return true;
 }
 module.exports={include};
