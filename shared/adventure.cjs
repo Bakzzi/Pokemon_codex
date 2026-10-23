@@ -37,10 +37,10 @@ class Adventure extends Engine{
     discovery.restore(this,[...rescue.encounters,...silph.encounters].map(e=>({id:e.id,completed:!!this.data.mobileStory[silph.byId.has(e.id)?'silph':'rescue'].wins[e.stage],starts:[e.name+'에게 도전!']})),now);
     discovery.restore(this,encounters.map(e=>({id:e.id,completed:!!this.rivalProgress(e.id)?.metAt||['won','completed','retry'].includes(this.rivalProgress(e.id)?.state)})),now);
     const story=this.data.mobileStory;
-    if(story.revision<2&&(this.data.trainingDevice.rocketWonAt||this.data.badges.includes('erika')))story.scopeObtainedAt ||= this.data.trainingDevice.rocketWonAt||now;
+    if(story.revision<2&&this.data.trainingDevice.rocketWonAt)story.scopeObtainedAt ||= this.data.trainingDevice.rocketWonAt;
     story.revision=2;
     // Never re-award a newly introduced gift to a save that passed that scene.
-    if(story.laprasResolved===undefined)story.laprasResolved=!!(story.silph.completedAt||story.silph.wins[1]||this.data.badges.includes('sabrina'));
+    if(story.laprasResolved===undefined)story.laprasResolved=false;
     if(story.scene?.next==='rescue-reward')story.scene.name='등나무노인';
     // An event gift cannot fulfill an old ordinary-wild capture reservation.
     delete this.data.captureReservations[131];
@@ -72,15 +72,10 @@ class Adventure extends Engine{
       story.rivals ||= {};
       for(const e of encounters){
         if(story.rivals[e.id])continue;
-        const progressed=e.stage===0?story.onboarding==='done'||story.onboarding==='closing':
-          e.target===8?this.data.champion||this.data.leagueBest>0||this.data.battle?.kind==='trainer'&&Number.isInteger(this.data.battle.bossIndex)&&this.data.battle.bossIndex>=8:
-          typeof e.target==='string'?!!(silph.byId.has(e.target)?story.silph?.completedAt:story.rescue?.completedAt):
-          e.target!==null&&(this.data.badges.includes(['brock','misty','surge','erika','koga'][e.target])||this.data.battle?.kind==='trainer'&&Number.isInteger(this.data.battle.bossIndex)&&this.data.battle.bossIndex>=e.target);
+        const progressed=e.stage===0&&(story.onboarding==='done'||story.onboarding==='closing');
         story.rivals[e.id]={state:progressed?'completed':'unseen',...(progressed?{migratedAt:now}:{})};
       }
     }
-    const middle=story.rivals['rival-middle'];
-    if(story.rescue?.legacy&&middle?.state==='unseen'){middle.state='completed';middle.migratedAt=now;}
     const b=this.data.battle;
     if(rivals.has(b?.storyId)&&!b.rivalResolution)this.rivalProgress(b.storyId).state='active';
   }

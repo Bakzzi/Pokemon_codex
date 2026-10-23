@@ -7,8 +7,7 @@ const entries=[
 ];
 function init(game,now,pending){
   const story=game.data.mobileStory;if(story.mansion)return;
-  const b=game.data.battle,legacy=game.data.badges.includes('blaine')||game.data.champion||pending?.index===6||b?.kind==='trainer'&&Number.isInteger(b.bossIndex)&&b.bossIndex>=6;
-  story.mansion={startedAt:0,wins:0,read:legacy?3:0,keyObtainedAt:legacy?now:0,completedAt:legacy?now:0,legacy:!!legacy};
+  story.mansion={startedAt:0,wins:0,read:0,keyObtainedAt:0,completedAt:0,legacy:false};
 }
 function unlocked(game){return game.data.badges.includes('sabrina');}
 function ready(game){const m=game.data.mobileStory.mansion;return unlocked(game)&&!m.startedAt&&!m.completedAt;}

@@ -22,6 +22,7 @@ async function main(){
     await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));
   for(const name of ['assets','data']){const from=path.join(root,'desktop',name);await fs.cp(from,path.join(appDir,'desktop',name),{recursive:true,filter:file=>name!=='assets'||require('./asset-policy.cjs').include(file,from)});}
   await fs.cp(path.join(root,'shared'),path.join(appDir,'shared'),{recursive:true});
+  await fs.copyFile(path.join(root,'desktop/migration-smoke.cjs'),path.join(appDir,'desktop/migration-smoke.cjs'));
   for(const name of ['world-map.js','world-map.css','map-walk.js'])await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));
   for(const name of ['adventure.cjs','story-presentation.js','story.css','story-panels.css','panel-layout.js','rival-panel.js','rescue-panel.js','exploration-panel.js','kanto-journey-panel.js','league-portraits.js','challenge-ui.js','johto-art.js','johto-panel.js','johto-panel.css','safari-presentation.js','safari-scene.css'])await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));
   for(const name of ['remote-agent.cjs','remote-codex.cjs','known-hosts.cjs','connections.js','connections.css','auto-update.cjs','update-helper.ps1','consumables.cjs','claude-reader.cjs','agent-status.js','window-pinning.cjs','move-access.cjs','region-transfer.cjs'])await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));

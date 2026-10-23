@@ -136,6 +136,7 @@ for(let i=0;i<gymPlaces.length;i++){
  group.description='두 트레이너와 승부한 뒤 관장에게 도전해요. 한 번 이긴 상대와는 다시 싸우지 않아요.';
 }
 function trainersDone(g,caseId){const group=cases.find(c=>c.id===caseId);return !!group&&group.entries.filter(id=>nodes.get(id).trainer).every(id=>done(g,id));}
+function caseDone(g,caseId){const group=cases.find(c=>c.id===caseId);return !!group&&group.entries.every(id=>done(g,id));}
 function originalDone(g,location){if(location.startsWith('gym:'))return trainersDone(g,'trainers-'+location.replace(':','-'));return original.trainers.filter(t=>t.location===location&&!Object.values(aliases).some(a=>a.id===t.id)).every(t=>done(g,sourceNodes.get(t.id)?.id));}
 function fossilBlocked(g,id){const f=g.data.kantoStory?.fossil;return f===138?[140,141].includes(id):f===140?[138,139].includes(id):false;}
 function prerequisite(g,n){
@@ -158,7 +159,7 @@ function prerequisite(g,n){
  if(n.case==='nugget-bridge'&&!has('misty'))return false;
  if(n.case==='nugget-bridge'&&n.id!=='k-bridge-1'&&!win('rival-cerulean'))return false;
  if(n.case==='route3-path'&&!has('brock'))return false;
- if(n.case==='moon-path'&&!done(g,'k-route3-2'))return false;
+ if(n.case==='moon-path'&&!trainersDone(g,'route3-path'))return false;
  if(n.case==='route11-path'&&!has('surge'))return false;
  if(n.case==='route9-path'&&!has('surge'))return false;
  if(n.case==='tunnel-path'&&(!done(g,'k-aide')||!done(g,'k-route9-2')))return false;
@@ -181,7 +182,7 @@ function gate(g,id){
  if(['forest','pewter'].includes(id)&&!win('rival-brock'))return 'early-rival';
  if(id==='pewter'&&!trainersDone(g,'forest-path'))return 'forest';
  if(id==='mt-moon'&&!trainersDone(g,'route3-path'))return 'route3';
- if(['route-4','cerulean','route-24','route-25','sea-cottage'].includes(id)&&!done(g,'k-moon-duo'))return 'moon';
+ if(['route-4','cerulean','route-24','route-25','sea-cottage'].includes(id)&&!caseDone(g,'moon-path'))return 'moon';
  if(['route-5','route-6','vermilion','ss-anne'].includes(id)&&!done(g,'k-robber'))return 'robber';
  if(id==='ss-anne'&&!done(g,'k-bill'))return 'ticket';
  if(id==='diglett'&&!trainersDone(g,'route11-path'))return 'route11';
@@ -192,7 +193,7 @@ function gate(g,id){
  if(id==='route-17'&&!s.roads?.['route-16'])return 'snorlax16';
  if(id==='route-13'&&!s.roads?.['route-12'])return 'snorlax12';
  if(['route-19','seafoam','route-20','cinnabar','mansion','route-21','power-plant'].includes(id)&&!g.data.mobileStory.safari.completedAt)return 'sea';
- if(['route-20'].includes(id)&&!done(g,'k-seafoam-2')&&!has('blaine'))return 'seafoam';
+ if(id==='route-20'&&!done(g,'k-seafoam-2'))return 'seafoam';
  if(['route-23','victory-road','indigo'].includes(id)&&!win('rival-league'))return 'late-rival';
  if(id==='indigo'&&!trainersDone(g,'victory-path'))return 'victory';
  return null;
@@ -200,7 +201,7 @@ function gate(g,id){
 const gateText={map:'오박사의 심부름을 마치고 타운맵을 받아요.', 'early-rival':'22번도로에서 기다리는 그린과 승부해 보세요.',forest:'상록숲의 트레이너들과 승부를 마쳐 주세요.',route3:'3번도로의 트레이너들과 승부를 마쳐 주세요.',moon:'달맞이산에서 출구로 가는 길을 찾아야 해요.',robber:'블루시티에서 달아난 로켓단을 쫓아가 보세요.',ticket:'승선권이 있어야 배에 오를 수 있어요.',route11:'11번도로에서 굴로 향하는 길을 찾아보세요.',aide:'돌산터널은 너무 어두워요. 2번도로 동쪽의 조수에게 길을 물어보세요.',route9:'9번도로의 트레이너들과 승부를 마쳐 주세요.',tunnel:'돌산터널 안에서 출구를 찾아야 해요.',drink:'경비원이 노랑시티로 들어가는 길을 지키고 있어요.',snorlax16:'커다란 포켓몬이 길을 막고 잠들어 있어요.',snorlax12:'커다란 포켓몬이 길을 막고 잠들어 있어요.',sea:'아직 바다를 안전하게 건너는 방법을 몰라요.',seafoam:'쌍둥이섬 안에서 반대편 출구를 찾아야 해요.','late-rival':'22번도로에서 그린이 기다리고 있어요.',victory:'챔피언로드의 마지막 관문을 넘어야 해요.'};
 function moonDescription(g,defeated){
  const cleared=id=>id===defeated||done(g,id),rockets=moon.entries.filter(id=>nodes.get(id).source?.class==='ROCKET');
- if(cleared('k-moon-duo'))return '화석을 노리던 로켓단을 모두 물리쳤어요. 4번도로를 지나 블루시티로 향해요.';
+ if(moon.entries.every(cleared))return '화석을 노리던 로켓단을 모두 물리쳤어요. 4번도로를 지나 블루시티로 향해요.';
  if(cleared('k-fossil-choice'))return '화석을 챙겼어요. 출구 쪽에서 누군가 다가오는 소리가 들려요.';
  if(cleared('k-moon-scientist'))return '화석 앞을 지키던 연구원을 이겼어요. 함께 발견한 화석을 하나씩 나누기로 했어요.';
  if(rockets.every(cleared))return '화석을 노리던 로켓단 조무래기를 물리쳤어요. 동굴 깊은 곳에서 누군가 화석을 지키고 있어요.';
@@ -208,35 +209,32 @@ function moonDescription(g,defeated){
  return '달맞이산 깊은 곳에서 로켓단이 화석을 노리고 있어요. 동굴 안쪽에서 무슨 일이 벌어지는지 살펴보세요.';
 }
 function moonOutline(g,rows=[]){
- const s=g.data.kantoStory,legacy=!!s.legacy,rockets=moon.entries.filter(id=>nodes.get(id).source?.class==='ROCKET'),ids=[...rockets,'k-moon-scientist','k-fossil-choice','k-moon-duo'];
- const past=legacy&&!!(done(g,'k-moon-duo')||g.data.badges.includes('misty')||g.data.kantoWorld?.visited?.['route-4']||g.data.kantoWorld?.visited?.cerulean||g.data.johtoUnlocked),fossils={138:{name:'조개화석',sprite:'helix-fossil'},140:{name:'껍질화석',sprite:'dome-fossil'}},selected=fossils[s.fossil];
+ const s=g.data.kantoStory,readOnly=!!g.data.johtoUnlocked,rockets=moon.entries.filter(id=>nodes.get(id).source?.class==='ROCKET'),ids=[...rockets,'k-moon-scientist','k-fossil-choice','k-moon-duo'];
+ const fossils={138:{name:'조개화석',sprite:'helix-fossil'},140:{name:'껍질화석',sprite:'dome-fossil'}},selected=fossils[s.fossil];
  const entries=ids.map((id,i)=>{
-  const n=nodes.get(id),recorded=done(g,id),revealed=recorded||past||i<rockets.length||id==='k-moon-scientist'&&rockets.every(id=>done(g,id))||id==='k-fossil-choice'&&done(g,'k-moon-scientist')||id==='k-moon-duo'&&done(g,'k-fossil-choice');
+  const n=nodes.get(id),recorded=done(g,id),revealed=recorded||i<rockets.length||id==='k-moon-scientist'&&rockets.every(id=>done(g,id))||id==='k-fossil-choice'&&done(g,'k-moon-scientist')||id==='k-moon-duo'&&done(g,'k-fossil-choice');
   const name=i<rockets.length?'로켓단 조무래기 '+(i+1):id==='k-moon-scientist'?'화석을 지키는 연구원':id==='k-fossil-choice'?selected?selected.name+' 획득':'화석 한 개 선택':'로이·로사';
   const base=rows.find(r=>r.id===id)||{id,ready:false,automatic:false};
-  return {...base,name:revealed?name:'???',sprite:id==='k-fossil-choice'?null:n.sprite,revealed,team:revealed&&n.team?n.team:[],done:recorded,passed:past&&!recorded,readOnly:legacy,levelsKnown:g.challengeLevelsKnown(id,recorded),ready:!legacy&&!!base.ready,reward:id==='k-fossil-choice'&&revealed?{selected:selected?String(s.fossil):null,label:selected?'받은 화석':'두 화석 중 한 개 선택',items:selected?[selected]:Object.values(fossils)}:null};
+  return {...base,name:revealed?name:'???',sprite:id==='k-fossil-choice'?null:n.sprite,revealed,team:revealed&&n.team?n.team:[],done:recorded,readOnly,levelsKnown:g.challengeLevelsKnown(id,recorded),ready:!readOnly&&!!base.ready,reward:id==='k-fossil-choice'&&revealed?{selected:selected?String(s.fossil):null,label:selected?'받은 화석':'두 화석 중 한 개 선택',items:selected?[selected]:Object.values(fossils)}:null};
  });
- return {...moon,title:'달맞이산의 로켓단',ordered:true,historical:legacy&&!ids.some(id=>done(g,id)),passed:past,completed:done(g,'k-moon-duo'),description:legacy&&!done(g,'k-moon-duo')?'달맞이산에서 로켓단과 맞닥뜨리고 화석을 둘러싼 일을 겪는 이야기예요.':moonDescription(g),entries};
+ return {...moon,title:'달맞이산의 로켓단',ordered:true,completed:caseDone(g,'moon-path'),description:moonDescription(g),entries};
 }
 function snapshot(g){
  const s=g.data.kantoStory;if(!s)return null;
  const here=g.data.kantoWorld?.location,groups=[];
  for(const c of cases.filter(c=>c.location===here)){
-  const recorded=c.entries.filter(id=>done(g,id));
-  if(s.legacy?!recorded.length:!(c.id==='melanie'?g.data.badges.includes('misty'):c.id==='route2-aide'?!!g.data.kantoWorld.visited.diglett:c.entries.some(id=>done(g,id)||prerequisite(g,nodes.get(id)))))continue;
-  const ids=s.legacy?recorded:c.entries,completed=c.entries.every(id=>done(g,id));
-  const entries=ids.map(id=>{const n=nodes.get(id),revealed=!!n.trainer||done(g,id)||prerequisite(g,n),known=g.challengeLevelsKnown(id,done(g,id));return {id,name:revealed?n.name:'???',sprite:n.sprite,revealed,team:revealed?n.team||[]:[],levelsKnown:known,done:done(g,id),readOnly:!!s.legacy,ready:!s.legacy&&ready(g,id),automatic:!s.legacy&&!!n.automatic&&g.rivalProgress(g.rivalGate(n.id)?.id)?.state!=='unseen',type:n.type,reason:n.id==='k-bulbasaur'&&!prerequisite(g,n)?'피카츄와 조금 더 친해진 뒤 찾아와 주세요.':n.id==='k-aide'&&!prerequisite(g,n)?'10종 이상 포획하고 디그다의 굴을 건너와 주세요.':'앞선 일을 마치면 진행할 수 있어요.'};});
+  if(!(c.id==='moon-path'||(c.id==='melanie'?g.data.badges.includes('misty'):c.id==='route2-aide'?!!g.data.kantoWorld.visited.diglett:c.entries.some(id=>done(g,id)||prerequisite(g,nodes.get(id))))))continue;
+  const completed=caseDone(g,c.id);
+  const entries=c.entries.map(id=>{const n=nodes.get(id),allowed=prerequisite(g,n),revealed=!!n.trainer||done(g,id)||allowed,known=g.challengeLevelsKnown(id,done(g,id));return {id,name:revealed?n.name:'???',sprite:n.sprite,revealed,team:revealed?n.team||[]:[],levelsKnown:known,done:done(g,id),readOnly:!!g.data.johtoUnlocked,ready:ready(g,id),automatic:allowed&&!!n.automatic&&g.rivalProgress(g.rivalGate(n.id)?.id)?.state!=='unseen',type:n.type,reason:c.id==='moon-path'&&!trainersDone(g,'route3-path')?gateText.route3:n.id==='k-bulbasaur'&&!allowed?'피카츄와 조금 더 친해진 뒤 찾아와 주세요.':n.id==='k-aide'&&!allowed?'10종 이상 포획하고 디그다의 굴을 건너와 주세요.':'앞선 일을 마치면 진행할 수 있어요.'};});
   if(c.id==='moon-path'){
    const important=e=>nodes.get(e.id).source?.class==='ROCKET'||['k-moon-scientist','k-fossil-choice','k-moon-duo'].includes(e.id),storyEntries=entries.filter(important),others=entries.filter(e=>!important(e));
    if(storyEntries.length)groups.push(moonOutline(g,storyEntries));
    if(others.length)groups.push({...c,id:'moon-trainers',title:'달맞이산의 트레이너들',description:others.every(e=>e.done)?'동굴의 트레이너들과 승부를 모두 마쳤어요.':'동굴에서 만난 트레이너들과의 승부예요.',completed:others.every(e=>e.done),entries:others});
   }else{const last=nodes.get(c.entries.at(-1));groups.push({...c,completed,description:completed?(last.source?'이곳의 트레이너들과 승부를 모두 마쳤어요.':last.result):c.description,entries});}
  }
- if(s.legacy&&here==='mt-moon'&&!groups.some(c=>c.id==='moon-path'))groups.unshift(moonOutline(g));
  const context=groups.find(c=>!c.id.startsWith('trainers-')&&c.id!=='moon-trainers');let placeSummary=context?.description||'';
  if(context?.id==='moon-path'){
-  if(context.historical)placeSummary='로켓단이 화석을 노리던 곳이에요.';
-  else if(done(g,'k-moon-duo'))placeSummary='로켓단을 모두 물리쳤어요. 다음은 4번도로 너머 블루시티예요.';
+  if(caseDone(g,'moon-path'))placeSummary='로켓단을 모두 물리쳤어요. 다음은 4번도로 너머 블루시티예요.';
   else placeSummary=moonDescription(g).split('. ')[0]+'.';
  }
  return {mapObtained:!!s.mapAt,dexObtained:!!s.dexAt,guided:modern(g)&&!g.data.johtoUnlocked&&!s.mapAt,fossil:s.fossil,legacy:!!s.legacy,placeSummary,cases:groups};

@@ -13,9 +13,7 @@ const legacySecond={id:'tower-grunt-2',stage:1,name:'로켓단 조무래기 2',s
 function init(game,now){
   const story=game.data.mobileStory;if(!story)return;
   if(story.rescue){if(byId.has(game.data.battle?.storyId))story.rescue.investigatedAt ||= game.data.battle.startedAt||now;return;}
-  // Existing items and opened routes survive this change of reward source.
-  const d=game.data.trainingDevice,legacy=!!(d.fluteObtainedAt||d.snorlaxWonAt||d.legacyRoadAccess||game.data.badges.includes('koga'));
-  story.rescue={revision:1,wins:legacy?[now,now,now]:[0,0,0],completedAt:legacy?now:0,rewardPending:false,legacy};
+  story.rescue={revision:1,wins:[0,0,0],completedAt:0,rewardPending:false,legacy:false};
 }
 function ready(game,id){
   const e=byId.get(id),r=game.data.mobileStory?.rescue;

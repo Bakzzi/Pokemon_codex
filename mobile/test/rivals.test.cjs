@@ -1,6 +1,6 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict');
-const {Adventure}=require('../adventure.cjs'),{Game}=require('../../desktop/game.cjs'),{encounters}=require('../rivals.cjs');
+const {Android:Adventure}=require('../../desktop/test/helpers/story-fixture.cjs'),{Game}=require('../../desktop/game.cjs'),{encounters}=require('../rivals.cjs');
 const now=Date.parse('2026-10-17T10:00:00Z'),badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'];
 const count=e=>typeof e.target==='number'?e.target:e.target==='silph-duo'?5:4;
 function ready(e){const old=new Game({},now);old.data.badges=badges.slice(0,count(e));const g=new Adventure(old.data,now,{random:()=>.5});if(e.target==='silph-duo')g.data.mobileStory.silph.wins[0]=now;return g;}
@@ -50,12 +50,12 @@ test('active rival result is saved and resolved exactly once after restarting on
   const before=g.data.owned[g.data.activeId].xp,scene=structuredClone(g.presentation());g=new Adventure(structuredClone(g.data),now+6000);assert.deepEqual(g.presentation(),scene);pages(g,now+7000);
   assert.equal(g.rivalProgress(e.id).state,'won');assert.equal(g.data.owned[g.data.activeId].xp,before);assert.equal(g.advanceScene(scene.id+':'+scene.index,now+8000),false);
 });
-test('existing earned badges and an active league are preserved without retroactive rival blocks',()=>{
+test('badges and an active league are preserved without inventing rival victories',()=>{
   for(const e of encounters.slice(1)){
     const old=new Game({},now);old.data.badges=badges.slice(0,Math.min(8,count(e)+1));if(e.target===8)old.data.leagueBest=1;
-    const g=new Adventure(old.data,now);assert.equal(g.rivalProgress(e.id).state,'completed');assert.equal(g.presentation(),null);
+    const g=new Adventure(old.data,now);assert.equal(g.rivalProgress(e.id).state,'unseen');assert.equal(g.presentation(),null);
   }
-  const old=new Game({},now);old.data.badges=[...badges];old.challenge(8,now);const g=new Adventure(old.data,now);assert.equal(g.data.battle.bossIndex,8);assert.equal(g.rivalProgress('rival-league').state,'completed');
+  const old=new Game({},now);old.data.badges=[...badges];old.challenge(8,now);const g=new Adventure(old.data,now);assert.equal(g.data.battle.bossIndex,8);assert.equal(g.rivalProgress('rival-league').state,'unseen');
 });
 test('unseen rivals disclose no party or schedule, and monthly resets clear only seasonal gates',()=>{
   const g=ready(encounters[1]);const rows=g.rivalState();assert.ok(rows.slice(1).every(r=>!r.met&&r.team.length===0&&r.name==='???'&&!('target' in r)));

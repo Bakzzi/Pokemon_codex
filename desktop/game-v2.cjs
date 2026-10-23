@@ -125,7 +125,7 @@ class Game {
     this.data.starterGifts ||= {};
     if(oldParty)for(const gift of STARTER_GIFTS){
       const old=Object.values(this.data.owned).find(p=>p.origin==='starter'&&[gift.id,gift.id+1,gift.id+2].includes(p.id));
-      if(old||this.data.badges.includes(gift.badge))this.data.starterGifts[gift.id] ||= old?.obtainedAt||now;
+      if(old)this.data.starterGifts[gift.id] ||= old.obtainedAt||now;
     }
     this.data.partyRevision=1;
     if(saved.version!==2&&saved.family){

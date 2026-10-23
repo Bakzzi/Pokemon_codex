@@ -34,12 +34,12 @@ test('all six cleared positions survive headless actions and another background 
   }
 });
 test('headless lock time starts a queued rival but never skips its dialogue or spends the remaining steps',()=>{
-  const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty'];const g=new c.MobileCore.Adventure(old.data,now);g.data.pendingChallenge={index:2,queuedAt:now};
+  const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty'];const g=new c.MobileCore.Adventure(old.data,now);g.data.kantoWorld.location='ss-anne';for(const n of require('../../shared/kanto-journey.cjs').nodes.values())if(n.location==='ss-anne'&&n.trainer)g.data.kantoStory.cleared[n.id]=now;g.data.pendingChallenge={index:'k-captain',queuedAt:now};
   const r=run({format:1,game:g.data,mobile:{consumed:0}},1000);assert.equal(r.used,1);assert.equal(r.save.game.battle.storyId,'rival-surge');assert.equal(r.save.game.mobileStory.scene.mode,'dialogue');assert.equal(r.save.mobile.lockConsumed,20000);
   assert.equal(run(r.save,1000,now+3600000).used,0);const reopened=new c.MobileCore.Adventure(r.save.game,now+3600000);assert.equal(reopened.presentation().index,0);assert.equal(reopened.data.battle.turn,0);
 });
 test('headless reload preserves the rescue namespace and triggers its rival before the first grunt',()=>{
-  const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika'];const g=new c.MobileCore.Adventure(old.data,now);g.data.pendingChallenge={index:'tower-grunt-1',queuedAt:now};
+  const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika'];const g=new c.MobileCore.Adventure(old.data,now);g.data.kantoWorld.location='tower';g.data.mobileStory.scopeObtainedAt=now;g.data.pendingChallenge={index:'tower-grunt-1',queuedAt:now};
   const r=run({format:1,game:g.data,mobile:{consumed:0}},1000);assert.equal(r.used,1);assert.equal(r.save.game.battle.storyId,'rival-middle');assert.equal(r.save.game.trainingDevice.fluteObtainedAt,null);assert.equal(run(r.save,1000,now+3600000).used,0);
 });
 test('background actions never claim an elder reward before the player advances the saved dialogue',()=>{
@@ -47,10 +47,10 @@ test('background actions never claim an elder reward before the player advances 
   const saved={format:1,game:g.data,mobile:{consumed:0}};assert.equal(run(saved,1000).used,0);const reopened=new c.MobileCore.Adventure(g.data,now+1000);assert.equal(reopened.data.trainingDevice.fluteObtainedAt,null);assert.equal(reopened.presentation().next,'rescue-reward');
 });
 test('headless company queue triggers its hidden rival after the grunt, without advancing dialogue',()=>{
-  const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika','koga'];const g=new c.MobileCore.Adventure(old.data,now);g.data.mobileStory.silph.wins[0]=now;g.data.pendingChallenge={index:'silph-duo',queuedAt:now};
+  const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika','koga'];const g=new c.MobileCore.Adventure(old.data,now);g.data.mobileStory.silph.wins[0]=now;g.data.kantoWorld.location='saffron';g.data.kantoStory.drinkAt=now;g.data.kantoStory.cleared['k-card-key']=now;g.data.pendingChallenge={index:'silph-duo',queuedAt:now};
   const r=run({format:1,game:g.data,mobile:{consumed:0}},1000);assert.equal(r.used,1);assert.equal(r.save.game.battle.storyId,'rival-silph');assert.equal(r.save.game.mobileStory.silph.wins[1],0);assert.equal(run(r.save,1000,now+3600000).used,0);
 });
 test('headless eligibility opens the aide dialogue and preserves the reward until foreground input',()=>{
-  const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika'];const g=new c.MobileCore.Adventure(old.data,now);for(let id=1;id<=50;id++)g.data.caught[id]=now;
+  const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika'];const g=new c.MobileCore.Adventure(old.data,now);g.data.kantoWorld.location='route-15';for(const n of require('../../shared/kanto-journey.cjs').nodes.values())if(n.location==='route-15')g.data.kantoStory.cleared[n.id]=now;for(let id=1;id<=50;id++)g.data.caught[id]=now;
   const r=run({format:1,game:g.data,mobile:{consumed:0}},1000);assert.equal(r.used,1);assert.equal(r.save.game.mobileStory.scene.next,'device-reward');assert.equal(r.save.game.trainingDevice.obtainedAt,null);assert.equal(run(r.save,1000,now+3600000).used,0);
 });

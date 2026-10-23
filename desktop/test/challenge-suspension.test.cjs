@@ -2,7 +2,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {Game}=require('../game.cjs'),battle=require('../battle.cjs');
 const now=Date.parse('2026-10-18T06:00:00Z');
-for(const [platform,Story] of [['desktop',require('../adventure.cjs').Adventure],['mobile',require('../../mobile/adventure.cjs').Adventure]]){
+for(const [platform,Story] of [['desktop',require('./helpers/story-fixture.cjs').PC],['mobile',require('./helpers/story-fixture.cjs').Android]]){
   function fixture(){const g=new Story(new Game({},now).data,now,{random:()=>.73});for(const r of Object.values(g.data.mobileStory.rivals))r.state='won';g.newWild(now-10000);g.data.battle.foe=battle.combatant(19,8,[33,39]);return g;}
   test(platform+': handoff waits for one animation, preserving exact native turn, HP, PP, status and slots across reload',()=>{
     let g=fixture(),wild=g.data.battle;wild.foe.hp-=3;wild.foe.status='paralysis';wild.foe.pp[33]=2;battle.engine(g,wild);

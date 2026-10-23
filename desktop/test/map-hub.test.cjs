@@ -30,7 +30,7 @@ for(const Type of [PC,Android])test(Type.name+' uses the Johto map through the p
  assert.ok(g.requestAction('world-pass','j-azalea',end));finishJourney(g,end);assert.equal(W.init(g).location,'j-azalea');assert.deepEqual(g.wildOptions().habitat,W.habitat(g));assert.equal(g.snapshot(now).location.id,'j-azalea');
 });
 test('completed adventure records outlive the short journal without exposing future opponents',()=>{
- const g=ready();g.data.badges=['brock'];g.data.journal=[];let records=g.panelState(now).adventureRecords;assert.equal(records.length,1);assert.equal(records[0].id,'brock');assert.ok(!JSON.stringify(records).includes('giovanni'));
+ const g=new PC(new (require('../game.cjs').Game)({},now).data,now);g.data.badges=['brock'];g.data.journal=[];let records=g.panelState(now).adventureRecords;assert.equal(records.length,1);assert.equal(records[0].id,'brock');assert.ok(!JSON.stringify(records).includes('giovanni'));
  g.data.champion=true;assert.ok(g.unlockJohto(now,[25]));g.data.johto.cleared['j-sprout-sage-1']=now;records=g.panelState(now).adventureRecords;assert.ok(records.some(r=>r.id==='brock'));assert.ok(records.some(r=>r.id==='j-sprout-sage-1'));assert.ok(!records.some(r=>r.id==='j-red'));
 });
 test('only confirmed dialogue pages are archived once and survive reload',()=>{

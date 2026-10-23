@@ -32,8 +32,8 @@ function move(game,state,map,id,to,open,name,now){
   state.journey={mode:'guided',destination:id,position:{...to},name,segments,index:0,blocked:null};state.blocked=null;state.walk=null;state.guideCredit=0;return true;
  }
  const segments=[];
- for(const p of result.path){
-  const location=map.roads.find(c=>same(c,p)).place,last=segments.at(-1);
+ for(const [i,p] of result.path.entries()){
+  const location=i===0?state.location:map.roads.find(c=>same(c,p)).place,last=segments.at(-1);
   if(last?.location===location)last.path.push(p);
   else segments.push({location,path:last?[last.path.at(-1),p]:[p]});
  }
@@ -59,6 +59,10 @@ function advance(game,state,now){
   if(trip.index<trip.segments.length){if(!(state.guideCredit>0))return false;state.guideCredit--;const segment=trip.segments[trip.index++],end=segment.path.at(-1);state.walk={from:state.location,to:segment.location,destination:trip.destination,path:segment.path,at:now,duration:walking.duration(segment.path),guided:true};friendship.startTravel(game,state.walk);state.location=segment.location;state.position={...end};state.visited[state.location] ||= now;game.holdUntil(now+state.walk.duration);return true;}
   state.journey=null;state.walk=null;return true;
  }
+ // Finishing the distance/quota must not skip an area's unplayed ordinary
+ // opponents. Control-only ticks run before paid battle ticks on both clients.
+ const next=trip.segments[trip.index+(game.platform==='mobile'?0:1)];
+ if(next&&next.location!==state.location&&game.movementTrainerNode?.())return false;
  if(game.platform==='mobile')return steps.advance(game,state,now);
  const leaving=trip.index+1<trip.segments.length||trip.blocked;
  const p=progress(state,game.random);if(leaving&&p&&p.completed<p.required)return false;

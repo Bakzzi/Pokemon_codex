@@ -19,7 +19,7 @@ test('app interval displays steps without granting battles or experience',()=>{
   const after=f.snapshot().game;assert.equal(after.mapTravel.bank,50000);assert.deepEqual({...after,mapTravel:null},{...before,mapTravel:null});assert.equal(f.snapshot().mobile.consumed,0);assert.equal(f.snapshot().mobile.lockConsumed,0);
 });
 for(const kind of ['wild','trainer','capture'])test('save and install immediately during '+kind+' without waiting for the battle or animation',()=>{
-  const f=fixture();f.start();f.run(kind==='trainer'?'game.challenge(0,Date.now())':'game.newWild(Date.now())');
+  const f=fixture();f.start();f.run(kind==='trainer'?"game.data.kantoWorld.location='route-22';game.challenge('rival-brock',Date.now())":'game.newWild(Date.now())');
   if(kind==='capture')f.run('game.data.pendingBattle={kind:"capture",at:Date.now()+60000}');
   f.run('game.nextTick=Date.now()+60000;game.data.switchUntil=game.nextTick');const before=f.snapshot();
   f.calls.length=0;f.status.updateReady=true;f.tick();

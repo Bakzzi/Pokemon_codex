@@ -1,6 +1,6 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict');
-const {Adventure}=require('../adventure.cjs'),{Game}=require('../../desktop/game.cjs');
+const {Android:Adventure}=require('../../desktop/test/helpers/story-fixture.cjs'),{Game}=require('../../desktop/game.cjs');
 const now=Date.parse('2026-10-18T05:00:00Z'),badges=['brock','misty','surge','erika','koga'];
 function ready(n=0){const old=new Game({},now);old.data.badges=badges.slice(0,n);return new Adventure(old.data,now);}
 function settle(g){g.nextTick=0;g.data.switchUntil=0;}

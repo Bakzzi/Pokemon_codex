@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../../desktop/game.cjs'),{Adventure}=require('../adventure.cjs'),Progression=require('../web/progression.js');
+const {Game}=require('../../desktop/game.cjs'),{Android:Adventure}=require('../../desktop/test/helpers/story-fixture.cjs'),Progression=require('../web/progression.js');
 globalThis.MobileCore={nursery:require('../../desktop/daycare.cjs')};
 const now=Date.parse('2026-10-18T06:00:00Z');
 const gameplay=g=>JSON.stringify({...g.data,mapTravel:undefined});

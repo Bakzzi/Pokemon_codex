@@ -154,7 +154,7 @@ async function start(){
       fs.writeFileSync(path.join(dataDir,'widget.png'),(await win.webContents.capturePage()).toPNG());
     }catch(error){console.error(error.message);}
   },3000);
-  if(smoke)await (process.argv.includes('--world-smoke')?worldSmokeTest():process.argv.includes('--johto-smoke')?johtoSmokeTest():process.argv.includes('--safari-smoke')?safariSmokeTest():smokeTest());
+  if(smoke)await (process.argv.includes('--migration-smoke')?require('./migration-smoke.cjs')({app,dataDir,setGame:g=>{game=g;},getGame:()=>game,openPanel,publish,snapshot,getPanel:()=>panel,getWidget:()=>win}):process.argv.includes('--world-smoke')?worldSmokeTest():process.argv.includes('--johto-smoke')?johtoSmokeTest():process.argv.includes('--safari-smoke')?safariSmokeTest():smokeTest());
 }
 async function worldSmokeTest(){
  const assert=require('node:assert/strict'),checks=[],errors=[],world=require('../shared/kanto-world.cjs');

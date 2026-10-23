@@ -1,7 +1,7 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
 const {Game}=require('../game.cjs'),battle=require('../battle.cjs'),{xpAt}=require('../pokemon.cjs');
-const consumers=[['PC',require('../adventure.cjs').Adventure],['Android',require('../../mobile/adventure.cjs').Adventure]];
+const consumers=[['PC',require('./helpers/story-fixture.cjs').PC],['Android',require('./helpers/story-fixture.cjs').Android]];
 const now=Date.parse('2026-10-19T08:30:00Z');
 function ready(g,at=now){g.data.animation=null;g.data.switchUntil=0;g.nextTick=at;}
 function pages(g){let limit=20;while(g.presentation()?.mode==='dialogue'&&limit--){const s=g.presentation();assert.ok(g.advanceScene(s.id+':'+s.index,now));}assert.ok(limit>0);}

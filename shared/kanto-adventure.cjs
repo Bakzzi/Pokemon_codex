@@ -5,22 +5,16 @@ const training=require('../desktop/training-device.cjs'),journal=require('../des
 const fossilIds=[138,139,140,141];
 const itemNames={'parcel':'오박사의 물건','ss-ticket':'상트안느호 승선권','lift-key':'승강기 열쇠','card-key':'카드키',138:'조개화석',140:'껍질화석'};
 function init(g,saved,now){
- if(saved.kantoStory?.revision===1){g.data.kantoStory=JSON.parse(JSON.stringify(saved.kantoStory));return;}
+ if(saved.kantoStory?.revision>=1){g.data.kantoStory=JSON.parse(JSON.stringify(saved.kantoStory));require('./kanto-migration.cjs').restore(g,now);return;}
  const legacy=Object.keys(saved).length>0;
  g.data.kantoStory={revision:1,legacy,cleared:{},roads:{},items:{},fossil:null,startedAt:now,...(legacy?{mapAt:now,dexAt:now,parcelAt:now,deliveredAt:now}: {})};
  if(!legacy){g.data.kantoWorld={revision:1,location:'pallet',position:{...world.snapshot(g).map.points.pallet},visited:{pallet:now}};}
+ require('./kanto-migration.cjs').restore(g,now);
 }
 function withKanto(Base){return class KantoAdventure extends Base{
  constructor(saved={},now=Date.now(),options={}){
   super(saved,now,options);init(this,saved,now);
-  if(!saved.mobileStory?.rivals?.['rival-cerulean']){
-   const s=this.data.kantoStory,w=this.data.kantoWorld,p=this.rivalProgress('rival-cerulean');
-   const passed=s.legacy||Object.keys(s.cleared).some(id=>id.startsWith('k-bridge-'))||saved.battle?.kantoNode?.startsWith('k-bridge-')||K.done(this,'k-bill')||w?.visited?.['route-25']||w?.visited?.['sea-cottage']||this.data.badges.includes('surge');
-   Object.assign(p,{state:passed?'completed':'unseen',...(passed?{migratedAt:now}:{})});
-  }
   if(K.nodes.has(saved.pendingChallenge?.index)&&this.canChallenge(saved.pendingChallenge.index))this.data.pendingChallenge={...saved.pendingChallenge};
-  // A newly introduced gate never closes a road already reached in an old save.
-  if(this.data.kantoStory.legacy&&this.data.mobileStory.safari.last&&!this.data.mobileStory.safari.last.returned)this.data.mobileStory.safari.completedAt ||= this.data.mobileStory.safari.last.finishedAt;
   const scene=this.presentation();if(K.modern(this)&&scene?.kind==='oak'&&scene.next==='rival')scene.pages[3]='먼저 피카츄와 인사해 보렴. 그린도 첫 동료로 이브이를 골랐단다.';
  }
  resetSeason(now){super.resetSeason(now);init(this,{},now);}
@@ -101,7 +95,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
   }
   this.dialogue('kanto-event',n.name,n.sprite,n.pages,'kanto-complete:'+id,now);return true;
  }
- battleBoss(b=this.data.battle){const n=K.nodes.get(b?.kantoNode);if(n)return {...n,kind:'story',intro:n.pages};const alias={'tower-grunt-1':'tower','silph-grunt':'silph'}[b?.storyId];if(K.modern(this)&&alias){const t=K.aliases[alias];return {...super.battleBoss(b),name:t.name,sprite:t.sprite,team:t.team.map(p=>({...p,moves:learnedMoves(p.id,p.level).slice(-4)})),...(alias==='tower'?{intro:['누군가에게 홀린 듯한 무당이 길을 막았다.','배틀로 정신을 차리게 해 주자.']}: {})};}return super.battleBoss(b);}
+ battleBoss(b=this.data.battle){const n=K.nodes.get(b?.kantoNode);if(n)return {...n,kind:'story',intro:n.pages};const saved=this.data.kantoStory?.importedBattle;if(saved&&saved.storyId===b?.storyId&&saved.startedAt===b?.startedAt)return super.battleBoss(b);const alias={'tower-grunt-1':'tower','silph-grunt':'silph'}[b?.storyId];if(K.modern(this)&&alias){const t=K.aliases[alias];return {...super.battleBoss(b),name:t.name,sprite:t.sprite,team:t.team.map(p=>({...p,moves:learnedMoves(p.id,p.level).slice(-4)})),...(alias==='tower'?{intro:['누군가에게 홀린 듯한 무당이 길을 막았다.','배틀로 정신을 차리게 해 주자.']}: {})};}return super.battleBoss(b);}
  nextTrainer(now){
   if(this.autoStarting)this.data.battle.activityTrainer=true;
   super.nextTrainer(now);

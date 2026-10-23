@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const root=path.resolve(__dirname,'../..'),c=vm.createContext({console,structuredClone,TextEncoder,TextDecoder});
 for(const f of ['mobile/android/app/build/generated/gameAssets/web/game.bundle.js','mobile/android/app/build/generated/gameAssets/web/config.js','mobile/web/progression.js','mobile/web/background.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),c);
 const A=c.MobileCore.Adventure,P=c.MobileProgression,now=Date.parse('2026-10-22T06:00:00Z'),plain=x=>JSON.parse(JSON.stringify(x));
-function ready(saved){const g=new A(saved||new c.MobileCore.Game({},now).data,now,{random:()=>.6});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;const p=new P(g);p.resume(now);p.observe({steps:10000});return {g,p};}
+function ready(saved){const g=new A(saved||new c.MobileCore.Game({},now).data,now,{random:()=>.6});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;if(!saved){const K=require('../../shared/kanto-journey.cjs');for(const id of K.cases.find(c=>c.id==='forest-path').entries)g.data.kantoStory.cleared[id]=now;Object.assign(g.rivalProgress('rival-brock'),{state:'won',wonAt:now});}const p=new P(g);p.resume(now);p.observe({steps:10000});return {g,p};}
 const world=g=>g.data.johtoUnlocked?g.data.johtoWorld:g.data.kantoWorld;
 const view=g=>{const s=g.panelState(now);return g.data.johtoUnlocked?s.johtoWorld:s.kantoWorld;};
 const here=g=>plain(view(g).position),next={x:44,y:92};
@@ -100,7 +100,7 @@ test('a bank-funded trainer loss stops bank travel instead of retrying forever o
  const id=g.data.battle.kantoNode;g.endChallenge(false,now);assert.equal(world(g).journey.bankCells,0);assert.equal(world(g).journey.bankLeg,false);assert.equal(g.data.kantoStory.cleared[id],undefined);assert.equal(p.movementActive(),false);
 });
 test('a shared-cell destination keeps the entered road and charges only actual adjacent cells',()=>{
- let {g,p}=ready();g.data.badges=['brock','misty'];world(g).location='cerulean';world(g).position={...view(g).map.points.cerulean};
+ let {g,p}=ready();g.data.badges=['brock','misty'];for(const c of require('../../shared/kanto-journey.cjs').cases.filter(c=>['moon-path','route3-path'].includes(c.id)||c.location==='route-4'))for(const id of c.entries)g.data.kantoStory.cleared[id]=now;world(g).location='cerulean';world(g).position={...view(g).map.points.cerulean};
  assert.ok(g.requestAction('travel','mt-moon',now));const trip=world(g).journey,cells=trip.segments.filter(s=>!s.arrival).length;
  assert.ok(trip.segments.slice(0,-1).every(s=>s.location==='route-4'));assert.equal(trip.segments.at(-1).arrival,true);
  p.observe({steps:10000+cells*2000});for(let i=0;i<cells;i++){assert.ok(settle(g));assert.equal(world(g).location,'route-4');}

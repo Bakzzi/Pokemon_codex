@@ -2,7 +2,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const PC=require('../adventure.cjs').Adventure,Android=require('../../mobile/adventure.cjs').Adventure,{Game}=require('../game.cjs'),nursery=require('../daycare.cjs'),W=require('../../shared/kanto-world.cjs'),JW=require('../../shared/johto-world.cjs'),{finishJourney}=require('./helpers/travel-fixture.cjs');
 const now=Date.parse('2026-10-22T12:00:00Z');
-function fixture(Type){const g=new Type(new Game({},now).data,now,{random:()=>.7});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.badges=['brock','misty'];g.data.switchUntil=0;g.nextTick=now;g.data.kantoWorld.location='cerulean';g.data.kantoWorld.position={...W.snapshot(g,now).map.points.cerulean};return g;}
+function fixture(Type){const g=new Type(new Game({},now).data,now,{random:()=>.7});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.badges=['brock','misty'];g.data.kantoStory.cleared['k-robber']=now;g.data.switchUntil=0;g.nextTick=now;g.data.kantoWorld.location='cerulean';g.data.kantoWorld.position={...W.snapshot(g,now).map.points.cerulean};return g;}
 function parents(g){return [g.addPokemon(1,5,'fixture',now),g.addPokemon(132,5,'fixture',now)];}
 for(const Type of [PC,Android]){
  test(Type.name+' rejects remote Day Care placement through requests and direct calls without changing ownership',()=>{

@@ -95,7 +95,7 @@ test('unselected fossil family is blocked from wilds, reservations and eggs, wit
  const caught=structuredClone(g.data.caught);g.resetSeason(Date.parse('2026-11-01T01:00:00+09:00'));assert.equal(g.data.kantoStory.fossil,null);assert.deepEqual(g.data.caught,caught);assert.equal(g.data.kantoWorld.location,'pallet');assert.equal(Object.keys(g.data.kantoStory.cleared).length,0);
 });
 test('upgrading a pre-journey saved game preserves its active battle, ownership and opened map without starting a new errand',()=>{
- const old=new Game({},now);old.data.badges=['brock','misty','surge','erika','koga','sabrina'];old.newWild(now);const before=structuredClone(old.data),g=new PC(before,now);assert.deepEqual(g.data.battle,before.battle);assert.deepEqual(g.data.owned,before.owned);assert.ok(g.data.kantoStory.legacy&&g.data.kantoStory.mapAt&&g.data.kantoStory.dexAt);assert.equal(g.presentation(),null);
+ const old=new Game({},now);old.data.badges=['brock','misty','surge','erika','koga','sabrina'];old.newWild(now);const before=structuredClone(old.data),g=new PC(before,now);assert.deepEqual(g.data.battle,before.battle);assert.deepEqual(g.data.owned,before.owned);assert.ok(!g.data.kantoStory.legacy&&g.data.kantoStory.mapAt&&g.data.kantoStory.dexAt);assert.equal(g.presentation(),null);
 });
 for(const Type of [PC,Android])test(Type.name+' follows the middle and final story without a circular passage, duplicate trainer or early reward',()=>{
  const g=start(Type);guide(g);g.data.badges=['brock','misty','surge'];g.rivalProgress('rival-brock').state='won';g.rivalProgress('rival-surge').state='won';

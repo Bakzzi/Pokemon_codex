@@ -1,6 +1,6 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict');
-const {Adventure}=require('../adventure.cjs'),{Game}=require('../../desktop/game.cjs'),training=require('../../desktop/training-device.cjs'),silph=require('../silph.cjs'),rescue=require('../rescue.cjs');
+const {Android:Adventure}=require('../../desktop/test/helpers/story-fixture.cjs'),{Game}=require('../../desktop/game.cjs'),training=require('../../desktop/training-device.cjs'),silph=require('../silph.cjs'),rescue=require('../rescue.cjs');
 const now=Date.parse('2026-10-18T02:00:00Z'),badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'];
 function ready(n=5){const old=new Game({},now);old.data.badges=badges.slice(0,n);return new Adventure(old.data,now,{random:()=>.5});}
 function settle(g){g.nextTick=0;g.data.switchUntil=0;}
@@ -33,8 +33,8 @@ test('losing or abandoning company opponents cannot register a stage or bypass t
 test('custom company queue survives reload and intercepts only after the preceding wild battle',()=>{
   let g=ready();g.data.mobileStory.silph.wins[0]=now;g.newWild(now);g.challenge('silph-duo',now+1000);g=new Adventure(structuredClone(g.data),now+2000);assert.equal(g.data.pendingChallenge.index,'silph-duo');g.data.battle=null;g.data.pendingBattle=null;settle(g);g.tick(now+3000);assert.equal(g.data.battle.storyId,'rival-silph');
 });
-test('old Sabrina and active later gym progress stay open, but Koga alone does not skip the new event',()=>{
-  const old=ready(6);delete old.data.mobileStory.silph;delete old.data.mobileStory.rivals['rival-silph'];const loaded=new Adventure(old.data,now+1000);assert.ok(loaded.data.mobileStory.silph.completedAt);assert.equal(loaded.rivalProgress('rival-silph').state,'completed');assert.ok(!loaded.canChallenge(6));assert.ok(loaded.canChallenge('mansion-investigate'));
+test('neither Sabrina nor Koga fabricates unrecorded company or rival wins',()=>{
+  const old=ready(6);delete old.data.mobileStory.silph;delete old.data.mobileStory.rivals['rival-silph'];const loaded=new Adventure(old.data,now+1000);assert.ok(!loaded.data.mobileStory.silph.completedAt);assert.equal(loaded.rivalProgress('rival-silph').state,'unseen');assert.ok(!loaded.canChallenge(6));assert.ok(loaded.canChallenge('mansion-investigate'));
   assert.equal(ready(5).rivalProgress('rival-silph').state,'unseen');
 });
 test('monthly reset clears company and its rival while preserving the lifetime collection',()=>{

@@ -112,8 +112,14 @@ function status(game,id,point){
 function travel(game,id,now,point){
  if(!byId.has(id)||!active(game)||!validPosition(id,point)||game.data.battle||game.data.suspendedWild||story.modern(game)&&!game.data.kantoStory.mapAt&&!game.guiding)return false;
  const state=init(game,now),to=point||map.points[id];
+ // Imported players can already stand beyond a newly enforced story gate.
+ // Let them return through the same blocked area to an open road, while a
+ // destination behind that unfinished gate still remains inaccessible.
+ const retreat=new Set(),owner=map.roads.find(c=>journey.same(c,position(game)))?.place;
+ const missing=new Set([story.gate(game,state.location),story.gate(game,owner)].filter(Boolean));
+ if(missing.size&&unlocked(game,byId.get(id))){for(const p of (walking.route(map,position(game),to)||[]).slice(1)){const place=map.roads.find(c=>journey.same(c,p)).place;if(unlocked(game,byId.get(place)))break;if(!missing.has(story.gate(game,place)))break;retreat.add(place);}}
  const approach=place=>story.modern(game)&&((id==='mt-moon'&&place==='route-4'&&story.trainersDone(game,'route3-path'))||(id==='rock-tunnel'&&place==='route-10'&&story.done(game,'k-aide')&&story.trainersDone(game,'route9-path'))||(id==='seafoam'&&place==='route-20'&&game.data.mobileStory.safari.completedAt));
- const open=place=>(unlocked(game,byId.get(place))||approach(place)||place==='saffron'&&id!=='saffron'&&game.data.badges.includes('misty'))&&(!['route-23','victory-road','indigo'].includes(place)||!!state.leaguePass);
+ const open=place=>(unlocked(game,byId.get(place))||retreat.has(place)||approach(place)||place==='saffron'&&id!=='saffron'&&game.data.badges.includes('misty'))&&(!['route-23','victory-road','indigo'].includes(place)||!!state.leaguePass);
  return journey.move(game,state,map,id,to,open,byId.get(id).name,now);
 }
 function checkpoint(game){

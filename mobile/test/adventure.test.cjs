@@ -1,12 +1,12 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict');
-const {Adventure}=require('../adventure.cjs'),{Game}=require('../../desktop/game.cjs');
+const {Adventure}=require('../adventure.cjs'),{Android:Story}=require('../../desktop/test/helpers/story-fixture.cjs'),{Game}=require('../../desktop/game.cjs');
 const Progression=require('../web/progression.js');
 globalThis.MobileCore={nursery:require('../../desktop/daycare.cjs')};
 const now=Date.parse('2026-10-17T06:00:00Z');
 const tap=(g,t=now)=>{const s=g.presentation();assert.ok(s);assert.ok(g.advanceScene(s.id+':'+s.index,t));};
 function finishDialogue(g,t=now){const id=g.presentation()?.id;for(let i=0;i<10&&g.presentation()?.mode==='dialogue'&&g.presentation().id===id;i++)tap(g,t);}
-function playable(){return new Adventure(new Game({},now).data,now,{random:()=>.5});}
+function playable(){return new Story(new Game({},now).data,now,{random:()=>.5});}
 function rivalBattle(){const g=new Adventure({},now);finishDialogue(g);assert.equal(g.data.battle.storyId,'tutorial-green');finishDialogue(g);assert.equal(g.presentation().mode,'sendout');assert.ok(g.sceneTick(now+3000));return g;}
 test('fresh game waits for taps; walking, clocks and duplicate taps cannot skip Oak',()=>{
   const g=new Adventure({},now),p=new Progression(g),before=JSON.stringify({...g.data,mapTravel:null});p.resume(now);

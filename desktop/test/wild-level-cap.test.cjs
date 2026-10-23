@@ -58,7 +58,7 @@ test('reload preserves existing high-level wilds, suspended wilds, partner XP, a
 });
 
 test('fixed challenge and story encounters retain authored levels independently of ordinary wild caps',()=>{
- for(const Type of [PC,Android]){const g=fixture(Type);g.data.mobileStory.rivals['rival-brock'].state='won';assert.ok(g.startChallenge(0,now));assert.equal(g.data.battle.foe.level,data.bosses[0].team[0].level);
+ for(const Type of [PC,Android]){const g=fixture(Type);g.data.mobileStory.rivals['rival-brock'].state='won';g.data.kantoWorld.location='pewter';for(const n of require('../../shared/kanto-journey.cjs').nodes.values())if(n.case==='forest-path'||n.originalLocation==='gym:0')g.data.kantoStory.cleared[n.id]=now;assert.ok(g.startChallenge(0,now));assert.equal(g.data.battle.foe.level,data.bosses[0].team[0].level);
   const j=johto(Type),node=J.nodes.get('j-red-gyarados');assert.equal(j.wildLevelCap(),3);assert.ok(j.startJohtoBattle(node,now));assert.equal(j.data.battle.foe.level,node.level);assert.equal(j.data.battle.foe.id,130);
  }
 });

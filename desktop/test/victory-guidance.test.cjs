@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const {Game}=require('../game.cjs'),{data}=require('../pokemon.cjs'),battle=require('../battle.cjs');
 const J=require('../../shared/johto.cjs'),text=require('../../shared/johto-dialogue.cjs'),kanto=require('../../shared/trainer-dialogue.cjs');
 const rivals=require('../../shared/rivals.cjs'),rescue=require('../../shared/rescue.cjs'),silph=require('../../shared/silph.cjs'),training=require('../training-device.cjs');
-const consumers=[['PC',require('../adventure.cjs').Adventure],['Android',require('../../mobile/adventure.cjs').Adventure]],now=Date.parse('2026-10-19T09:00:00Z');
+const consumers=[['PC',require('./helpers/story-fixture.cjs').PC],['Android',require('./helpers/story-fixture.cjs').Android]],now=Date.parse('2026-10-19T09:00:00Z');
 function fixture(Type,regional=true){const g=new Type(new Game({},now).data,now,{random:()=>.73});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;if(regional){g.data.champion=true;assert.ok(g.unlockJohto(now,[25]));}return g;}
 function idle(g){g.data.animation=null;g.data.switchUntil=0;g.nextTick=now;}
 function close(g){let limit=20;while(g.presentation()?.mode==='dialogue'&&limit--){const s=g.presentation();assert.ok(g.advanceScene(s.id+':'+s.index,now));}assert.ok(limit>0);}

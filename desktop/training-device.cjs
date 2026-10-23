@@ -16,7 +16,7 @@ function init(game,now=Date.now()){
   const rocket=stamp(saved.rocketWonAt),legacy=!(saved.storyRevision>=2);
   const activeLegacy=legacy&&game.data.battle?.storyId==='rocket-giovanni'?stamp(game.data.battle.startedAt):null;
   const legacyRoadAccess=saved.legacyRoadAccess===true||saved.routeRevision!==1&&(!!stamp(saved.obtainedAt)||['koga','sabrina','blaine','giovanni'].some(id=>game.data.badges.includes(id))||game.data.battle?.kind==='trainer'&&Number.isInteger(game.data.battle.bossIndex)&&game.data.battle.bossIndex>=4);
-  game.data.trainingDevice={storyRevision:3,routeRevision:1,legacyRoadAccess,gruntWonAt:stamp(saved.gruntWonAt)||(legacy?rocket||activeLegacy:null),duoWonAt:stamp(saved.duoWonAt)||(legacy?rocket||activeLegacy:null),rocketWonAt:rocket,fluteObtainedAt:stamp(saved.fluteObtainedAt)||(legacy?rocket:null),snorlaxWonAt:stamp(saved.snorlaxWonAt),obtainedAt:stamp(saved.obtainedAt),learnerUid:game.data.owned[saved.learnerUid]?Number(saved.learnerUid):null};
+  game.data.trainingDevice={storyRevision:3,routeRevision:1,legacyRoadAccess,gruntWonAt:stamp(saved.gruntWonAt)||(legacy?rocket:null),duoWonAt:stamp(saved.duoWonAt)||(legacy?rocket:null),rocketWonAt:rocket,fluteObtainedAt:stamp(saved.fluteObtainedAt)||(legacy?rocket:null),snorlaxWonAt:stamp(saved.snorlaxWonAt),obtainedAt:stamp(saved.obtainedAt),learnerUid:game.data.owned[saved.learnerUid]?Number(saved.learnerUid):null};
   // A badge already earned under the old order keeps its new reward, once.
   if(saved.storyRevision!==3&&game.data.badges.includes('erika'))awardFlute(game,now);
   if(canClaim(game))claim(game,now,false);

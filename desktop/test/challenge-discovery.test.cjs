@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {Game}=require('../game.cjs'),{Adventure:PC}=require('../adventure.cjs'),{Adventure:Android}=require('../../mobile/adventure.cjs');
+const {Game}=require('../game.cjs'),{PC}=require('./helpers/story-fixture.cjs'),{Android}=require('./helpers/story-fixture.cjs');
 const {data}=require('../pokemon.cjs'),J=require('../../shared/johto.cjs');
 const now=Date.parse('2026-10-19T12:30:00Z'),badges=data.bosses.slice(0,8).map(b=>b.id);
 function ready(Type=PC){const g=require('./helpers/kanto-fixture.cjs').existing(Type,now,{random:()=>.73});if(g.data.mobileStory){g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;for(const r of Object.values(g.data.mobileStory.rivals))r.state='won';}idle(g);return g;}

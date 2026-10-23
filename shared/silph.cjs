@@ -10,8 +10,7 @@ const byId=new Map(encounters.map(e=>[e.id,e]));
 function init(game,now){
   const story=game.data.mobileStory;if(!story)return;
   if(story.silph){if(byId.has(game.data.battle?.storyId))story.silph.investigatedAt ||= game.data.battle.startedAt||now;return;}
-  const b=game.data.battle,legacy=game.data.badges.includes('sabrina')||game.data.champion||b?.kind==='trainer'&&Number.isInteger(b.bossIndex)&&b.bossIndex>=5;
-  story.silph={revision:1,wins:legacy?[now,now,now]:[0,0,0],completedAt:legacy?now:0,legacy:!!legacy};
+  story.silph={revision:1,wins:[0,0,0],completedAt:0,legacy:false};
 }
 function ready(game,id){
   const e=byId.get(id),s=game.data.mobileStory?.silph;

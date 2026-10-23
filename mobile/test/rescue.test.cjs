@@ -1,6 +1,6 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict');
-const {Adventure}=require('../adventure.cjs'),{Game}=require('../../desktop/game.cjs'),training=require('../../desktop/training-device.cjs'),rescue=require('../rescue.cjs');
+const {Android:Adventure}=require('../../desktop/test/helpers/story-fixture.cjs'),{Game}=require('../../desktop/game.cjs'),training=require('../../desktop/training-device.cjs'),rescue=require('../rescue.cjs');
 const now=Date.parse('2026-10-17T14:00:00Z');
 function fresh(){return new Adventure(new Game({},now).data,now,{random:()=>.5});}
 function ready(){const g=fresh();g.data.badges=['brock','misty','surge','erika'];g.data.trainingDevice.rocketWonAt=now;return g;}
@@ -43,9 +43,9 @@ test('a saved pending elder reward survives reload and is granted once without r
   assert.equal(g.data.trainingDevice.fluteObtainedAt,null);assert.equal(g.presentation().next,'rescue-reward');pages(g,now+25000);assert.equal(g.data.owned[g.data.activeId].xp,xp);assert.ok(g.data.trainingDevice.fluteObtainedAt);
   g=new Adventure(structuredClone(g.data),now+30000);assert.equal(g.data.journal.filter(j=>j.text==='등나무노인에게 포켓몬피리를 받았다!').length,1);assert.equal(g.canChallenge('tower-grunt-3'),false);
 });
-test('legacy flutes and already opened routes are preserved, while new seasons restart rescue',()=>{
+test('held flutes survive without fabricating tower victories; seasons restart rescue',()=>{
   const old=new Game({},now);old.data.badges=['brock','misty','surge','erika'];assert.equal(training.awardFlute(old,now),true);
-  const g=new Adventure(old.data,now+1000);assert.equal(g.data.trainingDevice.fluteObtainedAt,now);assert.equal(g.data.mobileStory.rescue.legacy,true);assert.equal(g.panelState().rescue.completed,true);assert.equal(g.rivalProgress('rival-middle').state,'completed');
+  const g=new Adventure(old.data,now+1000);assert.equal(g.data.trainingDevice.fluteObtainedAt,now);assert.equal(g.data.mobileStory.rescue.legacy,false);assert.equal(g.panelState().rescue.completed,false);assert.equal(g.rivalProgress('rival-middle').state,'unseen');
   g.data.caught[150]=now;g.resetSeason(Date.parse('2026-11-01T01:00:00Z'));assert.deepEqual(g.data.mobileStory.rescue.wins,[0,0,0]);assert.equal(g.data.trainingDevice.fluteObtainedAt,null);assert.equal(g.data.caught[150],now);assert.equal(g.rivalProgress('rival-middle').state,'unseen');
 });
 test('after rescue and resolving Snorlax, Koga starts normally without a second rival ambush',()=>{
@@ -56,9 +56,9 @@ test('queued rescue challenges are retained through a native-style reload',()=>{
   g=new Adventure(structuredClone(g.data),now+12000);assert.equal(g.data.pendingChallenge.index,'tower-grunt-1');g.data.battle=null;g.data.pendingBattle=null;settle(g);assert.ok(g.tick(now+20000));assert.equal(g.data.battle.storyId,'tower-grunt-1');
 });
 test('desktop game keeps its existing flute award behavior',()=>{const g=new Game({},now);g.data.badges.push('erika');assert.equal(training.awardFlute(g,now),true);assert.equal(g.data.trainingDevice.fluteObtainedAt,now);assert.ok(g.data.journal.some(j=>j.text.startsWith('민화에게 포켓몬피리')));});
-test('an upgraded rival save that already owns the old flute cannot leave an unreachable unseen rival',()=>{
+test('owning an old flute does not invent an unplayed rival victory',()=>{
   const g=ready();delete g.data.mobileStory.rescue;g.data.trainingDevice.fluteObtainedAt=now;g.rivalProgress('rival-middle').state='unseen';const upgraded=new Adventure(g.data,now+1000);
-  assert.equal(upgraded.rivalProgress('rival-middle').state,'completed');assert.ok(upgraded.panelState().rescue.completed);assert.equal(upgraded.data.trainingDevice.fluteObtainedAt,now);
+  assert.equal(upgraded.rivalProgress('rival-middle').state,'unseen');assert.ok(!upgraded.panelState().rescue.completed);assert.equal(upgraded.data.trainingDevice.fluteObtainedAt,now);
 });
 test('the actual turn engine defeats every rescue party and only then opens the elder reward',()=>{
   const g=ready();beatRival(g);const uid=g.addPokemon(150,100,'fixture',now);g.data.slots=[uid,null,null,null,null,null];g.data.activeId=uid;

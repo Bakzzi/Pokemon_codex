@@ -15,7 +15,7 @@ test('fresh desktop tutorial requires manual pages and describes agent activity'
 test('old PC ownership, levels, dex, slots and items survive without replaying the tutorial',()=>{
   const old=new Game({},now),uid=old.addPokemon(143,77,'fixture',now);old.data.slots=[25,null,uid,null,null,null];old.data.inventory={83:9,25:3};old.data.badges=badges.slice(0,6);old.newWild(now);
   const saved=structuredClone(old.data),g=new Adventure(saved,now);for(const key of ['owned','caught','slots','inventory','badges','battle'])assert.deepEqual(g.data[key],saved[key],key);
-  assert.equal(g.presentation(),null);assert.equal(g.data.mobileStory.onboarding,'done');assert.equal(g.data.mobileStory.silph.completedAt,now);
+  assert.equal(g.presentation(),null);assert.equal(g.data.mobileStory.onboarding,'done');assert.equal(g.data.mobileStory.silph.completedAt,0);
 });
 test('desktop and Android share story visibility, gates, teams, collection routes and pending actions',()=>{
   for(let n=0;n<=8;n++){
@@ -55,7 +55,7 @@ for(const Consumer of [Adventure,Mobile])test(Consumer.name+' Safari freezes ord
 
 test('Safari pause permits an explicitly requested trainer challenge',()=>{
   const g=ready(0);g.data.trainingDevice.legacyRoadAccess=true;g.data.mobileStory.rivals['rival-brock'].state='won';g.newWild(now-10000);g.data.switchUntil=0;g.nextTick=now;safari.start(g,now);
-  assert.ok(g.challenge(0,now));assert.ok(g.tick(now));assert.equal(g.data.battle.kind,'trainer');assert.ok(g.data.mobileStory.safari.trip);assert.ok(g.presentation());
+  g.data.kantoWorld.location='pewter';g.rivalProgress('rival-brock').state='won';for(const n of require('../../shared/kanto-journey.cjs').nodes.values())if(n.case==='forest-path'||n.originalLocation==='gym:0')g.data.kantoStory.cleared[n.id]=now;assert.ok(g.challenge(0,now));assert.ok(g.tick(now));assert.equal(g.data.battle.kind,'trainer');assert.ok(g.data.mobileStory.safari.trip);assert.ok(g.presentation());
 });
 test('Safari completion keeps activity beyond the distance limit for ordinary adventures',()=>{
   const g=ready();safari.start(g,now);g.data.mobileStory.safari.trip.steps=1499;counter(g,0,true);counter(g,100);

@@ -16,8 +16,8 @@ test('town map covers every first-region route and all lines connect existing di
 test('new game starts on the first road; badges and actual road/story outcomes open later stretches',()=>{
  const g=ready(),open=id=>world.unlocked(g,world.byId.get(id));assert.equal(world.current(g).id,'route-1');assert.ok(open('forest'));assert.ok(!open('route-3'));
  g.data.badges=badges.slice(0,1);assert.ok(open('route-3'));assert.ok(open('route-25'));assert.ok(!open('route-5'));
- g.data.badges=badges.slice(0,3);assert.ok(open('celadon'));assert.ok(!open('tower'));g.data.mobileStory.scopeObtainedAt=now;assert.ok(open('tower'));
- g.data.badges=badges.slice(0,4);assert.ok(open('route-12'));assert.ok(!open('fuchsia'));g.data.trainingDevice.snorlaxWonAt=now;assert.ok(open('fuchsia'));
+ g.data.badges=badges.slice(0,3);assert.ok(open('celadon'));assert.ok(open('tower'));assert.equal(g.canChallenge('tower-grunt-1'),false);
+ g.data.badges=badges.slice(0,4);assert.ok(open('route-12'));assert.ok(!open('route-13'));g.data.kantoStory.roads['route-12']=now;assert.ok(open('route-13'));
  assert.ok(!open('route-19'));g.data.badges=badges.slice(0,6);assert.ok(open('route-19'));assert.ok(!open('route-23'));
  g.data.badges=[...badges];assert.ok(open('indigo'));assert.ok(!open('cerulean-cave'));g.data.champion=true;assert.ok(open('cerulean-cave'));
 });

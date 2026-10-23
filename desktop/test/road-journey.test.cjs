@@ -8,8 +8,8 @@ function clock(g){return Math.max(now,g.nextTick,g.data.switchUntil||0);}
 function win(g){const t=clock(g);g.newWild(t);const b=g.data.battle;b.foe.hp=0;g.showFaint(t);const result=clock(g);assert.equal(g.data.battle,b);assert.ok(g.tick(result));return b;}
 for(const Type of [PC]){
  test(Type.name+' shared map coordinates do not bypass a gated building or cave',()=>{
-  const g=ready(Type);g.data.badges=['brock','misty','surge'];g.data.kantoWorld.location='lavender';g.data.kantoWorld.position={...K.snapshot(g).map.points.lavender};
-  assert.ok(g.requestAction('travel','tower',now));finishJourney(g,now);assert.equal(K.current(g).id,'lavender');assert.equal(K.checkpoint(g).checkpoint,'tower');assert.equal(K.checkpoint(g).canPass,false);
+  const g=ready(Type);g.data.badges=['brock','misty','surge'];g.data.kantoWorld.location='cerulean';g.data.kantoWorld.position={...K.snapshot(g).map.points.cerulean};
+  assert.ok(g.requestAction('travel','cerulean-cave',now));finishJourney(g,now);assert.equal(K.current(g).id,'cerulean');assert.equal(K.checkpoint(g).checkpoint,'cerulean-cave');assert.equal(K.checkpoint(g).canPass,false);
   g.data.champion=true;g.unlockJohto(clock(g),[25]);g.data.johto.cleared['j-ice-path']=now;const w=J.init(g);w.location='j-ice';w.position={...J.maps.johto.points['j-ice']};g.data.switchUntil=0;g.nextTick=now;
   assert.ok(g.requestAction('travel','j-dragon',now));finishJourney(g,now);assert.equal(J.init(g).location,'j-ice');assert.equal(J.checkpoint(g).checkpoint,'j-dragon');assert.equal(J.checkpoint(g).canPass,false);
  });
@@ -42,7 +42,7 @@ for(const Type of [PC]){
   const quota=J.snapshot(g,now).roadProgress.required;for(let i=0;i<quota-1;i++)win(g);assert.equal(g.advanceTravel(clock(g)),false);assert.equal(g.wildOptions().location,'j-route29');win(g);assert.ok(g.controlTick(clock(g)));assert.equal(J.init(g).location,'j-cherrygrove');
  });
  test(Type.name+' a manual trainer challenge pauses the road journey and restores the same wild encounter',()=>{
-  const g=ready(Type);g.requestAction('travel','pewter',now);for(let i=0;i<3;i++)win(g);g.newWild(clock(g));const b=g.data.battle,trip=structuredClone(g.data.kantoWorld.journey),quota=g.data.kantoWorld.roadProgress.required;assert.ok(g.challenge(0,clock(g)));g.tick(clock(g));
+  const g=ready(require('./helpers/story-fixture.cjs').PC);g.requestAction('travel','pewter',now);for(let i=0;i<3;i++)win(g);g.newWild(clock(g));const b=g.data.battle,trip=structuredClone(g.data.kantoWorld.journey),quota=g.data.kantoWorld.roadProgress.required;assert.ok(g.challenge(0,clock(g)));g.tick(clock(g));
   assert.equal(g.data.suspendedWild,b);assert.deepEqual(g.data.kantoWorld.journey,trip);assert.equal(g.panelState(clock(g)).kantoWorld.roadProgress.completed,3);
   g.data.mobileStory.scene=null;g.restoreWild(clock(g));assert.equal(g.data.battle,b);g.data.battle.foe.hp=0;g.showFaint(clock(g));g.tick(clock(g));assert.equal(g.panelState(clock(g)).kantoWorld.roadProgress.completed,4);assert.equal(g.data.kantoWorld.roadProgress.required,quota);
  });
