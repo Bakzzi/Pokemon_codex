@@ -10,6 +10,12 @@ globalThis.ChallengeUI=(()=>{
   badgeSheets.get(sheet).then(image=>{const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.drawImage(image,0,0,1,1,0,0,1,1);const key=[...ctx.getImageData(0,0,1,1).data.slice(0,3)];ctx.clearRect(0,0,16,16);ctx.drawImage(image,j<0?index*16:0,j<0?0:index*16,16,16,0,0,16,16);const data=ctx.getImageData(0,0,16,16);for(let i=0;i<data.data.length;i+=4)if(key.every((v,k)=>data.data[i+k]===v))data.data[i+3]=0;ctx.putImageData(data,0,0);canvas.dataset.ready='true';}).catch(console.error);return canvas;
  }
  function section(id,heading,contents=[]){const d=el('details','story-board challenge-card mobile-challenge-card'),s=el('summary');d.id=id;s.append(...(Array.isArray(heading)?heading:[heading]));d.append(s,...contents);return d;}
+ function eventStep({id,number,name,sprite,revealed=true,team,reward,action}){
+  const row=el('article','rival-entry'),heading=el('div','rival-heading');row.dataset.storyStep=id;heading.append(el('h3','',(number?number+'. ':'')+name));
+  if(sprite){const image=el('img',revealed?'':'unknown-rival');image.src=sprite.startsWith('pokemon:')?'assets/'+sprite.slice(8)+'.gif':sprite.startsWith('item:')?'assets/items/'+sprite.slice(5)+'.png':'assets/trainers/battle/'+sprite+'.png';image.alt=revealed?name:'아직 만나지 않은 상대';heading.append(image);}row.append(heading);if(team)row.append(team);
+  if(reward){const items=el('div','story-step-reward');items.dataset.reward=reward.selected||'choice';items.append(el('p','muted',reward.label));for(const item of reward.items){const box=el('div'),image=el('img');image.src='assets/items/'+item.sprite+'.png';image.alt=item.name;box.append(image,el('span','',item.name));items.append(box);}row.append(items);}
+  if(action){const button=el('button','',action.label);if(action.challenge)button.dataset.challenge=action.challenge;button.disabled=!!action.disabled;button.onclick=action.run;row.append(button);}return row;
+ }
  function trainerBody({id,heading,team,portrait,unknown=false,league=false}){
   const body=el('div','gym-body'),info=el('div','gym-info'),face=el('div','gym-portrait'+(league?' league-portrait':''));face.dataset.trainer=id;
   if(unknown||!portrait){face.classList.add('unknown');face.textContent='?';face.setAttribute('aria-label','아직 만나지 않은 상대');}
@@ -32,5 +38,5 @@ globalThis.ChallengeUI=(()=>{
   const holder=document.querySelector('#world-badge-host .badge-case,#kanto-gyms .badge-case').cloneNode(true);for(const n of holder.querySelectorAll('[id]'))n.removeAttribute('id');holder.setAttribute('aria-label',region+' 뱃지 홀더');holder.querySelector('.case-heading b').textContent=region;
   const slots=holder.querySelector('.badge-slots');slots.id=id;slots.replaceChildren(badgeSlots(rows,new Set(earned),null,onPick));holder.querySelector('.case-bottom span').textContent=earned.length===8?'여덟 번의 도전, 여덟 개의 증표':earned.length+'개의 증표 · 다음 도전을 기다리는 자리';return holder;
  }
- return {section,trainerBody,trainerCard,badgeSlots,badgeHolder,badgeImage};
+ return {section,eventStep,trainerBody,trainerCard,badgeSlots,badgeHolder,badgeImage};
 })();

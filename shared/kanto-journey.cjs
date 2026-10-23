@@ -207,6 +207,17 @@ function moonDescription(g,defeated){
  if(rockets.some(cleared))return '화석을 노리던 로켓단과 맞붙었어요. 동굴 안쪽에도 로켓단이 남아 있어요.';
  return '달맞이산 깊은 곳에서 로켓단이 화석을 노리고 있어요. 동굴 안쪽에서 무슨 일이 벌어지는지 살펴보세요.';
 }
+function moonOutline(g,rows=[]){
+ const s=g.data.kantoStory,legacy=!!s.legacy,rockets=moon.entries.filter(id=>nodes.get(id).source?.class==='ROCKET'),ids=[...rockets,'k-moon-scientist','k-fossil-choice','k-moon-duo'];
+ const past=legacy&&!!(done(g,'k-moon-duo')||g.data.badges.includes('misty')||g.data.kantoWorld?.visited?.['route-4']||g.data.kantoWorld?.visited?.cerulean||g.data.johtoUnlocked),fossils={138:{name:'조개화석',sprite:'helix-fossil'},140:{name:'껍질화석',sprite:'dome-fossil'}},selected=fossils[s.fossil];
+ const entries=ids.map((id,i)=>{
+  const n=nodes.get(id),recorded=done(g,id),revealed=recorded||past||i<rockets.length||id==='k-moon-scientist'&&rockets.every(id=>done(g,id))||id==='k-fossil-choice'&&done(g,'k-moon-scientist')||id==='k-moon-duo'&&done(g,'k-fossil-choice');
+  const name=i<rockets.length?'로켓단 조무래기 '+(i+1):id==='k-moon-scientist'?'화석을 지키는 연구원':id==='k-fossil-choice'?selected?selected.name+' 획득':'화석 한 개 선택':'로이·로사';
+  const base=rows.find(r=>r.id===id)||{id,ready:false,automatic:false};
+  return {...base,name:revealed?name:'???',sprite:id==='k-fossil-choice'?null:n.sprite,revealed,team:revealed&&n.team?n.team:[],done:recorded,passed:past&&!recorded,readOnly:legacy,levelsKnown:g.challengeLevelsKnown(id,recorded),ready:!legacy&&!!base.ready,reward:id==='k-fossil-choice'&&revealed?{selected:selected?String(s.fossil):null,label:selected?'받은 화석':'두 화석 중 한 개 선택',items:selected?[selected]:Object.values(fossils)}:null};
+ });
+ return {...moon,title:'달맞이산의 로켓단',ordered:true,historical:legacy&&!ids.some(id=>done(g,id)),passed:past,completed:done(g,'k-moon-duo'),description:legacy&&!done(g,'k-moon-duo')?'달맞이산에서 로켓단과 맞닥뜨리고 화석을 둘러싼 일을 겪는 이야기예요.':moonDescription(g),entries};
+}
 function snapshot(g){
  const s=g.data.kantoStory;if(!s)return null;
  const here=g.data.kantoWorld?.location,groups=[];
@@ -217,11 +228,11 @@ function snapshot(g){
   const entries=ids.map(id=>{const n=nodes.get(id),revealed=!!n.trainer||done(g,id)||prerequisite(g,n),known=g.challengeLevelsKnown(id,done(g,id));return {id,name:revealed?n.name:'???',sprite:n.sprite,revealed,team:revealed?n.team||[]:[],levelsKnown:known,done:done(g,id),readOnly:!!s.legacy,ready:!s.legacy&&ready(g,id),automatic:!s.legacy&&!!n.automatic&&g.rivalProgress(g.rivalGate(n.id)?.id)?.state!=='unseen',type:n.type,reason:n.id==='k-bulbasaur'&&!prerequisite(g,n)?'피카츄와 조금 더 친해진 뒤 찾아와 주세요.':n.id==='k-aide'&&!prerequisite(g,n)?'10종 이상 포획하고 디그다의 굴을 건너와 주세요.':'앞선 일을 마치면 진행할 수 있어요.'};});
   if(c.id==='moon-path'){
    const important=e=>nodes.get(e.id).source?.class==='ROCKET'||['k-moon-scientist','k-fossil-choice','k-moon-duo'].includes(e.id),storyEntries=entries.filter(important),others=entries.filter(e=>!important(e));
-   if(storyEntries.length)groups.push({...c,title:'달맞이산의 로켓단',description:moonDescription(g),completed:done(g,'k-moon-duo'),entries:storyEntries});
+   if(storyEntries.length)groups.push(moonOutline(g,storyEntries));
    if(others.length)groups.push({...c,id:'moon-trainers',title:'달맞이산의 트레이너들',description:others.every(e=>e.done)?'동굴의 트레이너들과 승부를 모두 마쳤어요.':'동굴에서 만난 트레이너들과의 승부예요.',completed:others.every(e=>e.done),entries:others});
   }else{const last=nodes.get(c.entries.at(-1));groups.push({...c,completed,description:completed?(last.source?'이곳의 트레이너들과 승부를 모두 마쳤어요.':last.result):c.description,entries});}
  }
- if(s.legacy&&here==='mt-moon'&&!groups.some(c=>c.id==='moon-path'))groups.unshift({id:'moon-path',location:here,title:'달맞이산의 로켓단',description:'화석을 노리던 로켓단이 숨어들었던 동굴이에요. 출구는 4번도로를 거쳐 블루시티로 이어져요.',historical:true,completed:false,entries:[{id:'moon-history',name:'로켓단 조무래기',sprite:'rocket-grunt',revealed:true,team:[],levelsKnown:false,done:false,ready:false,readOnly:true}]});
+ if(s.legacy&&here==='mt-moon'&&!groups.some(c=>c.id==='moon-path'))groups.unshift(moonOutline(g));
  const context=groups.find(c=>!c.id.startsWith('trainers-')&&c.id!=='moon-trainers');let placeSummary=context?.description||'';
  if(context?.id==='moon-path'){
   if(context.historical)placeSummary='로켓단이 화석을 노리던 곳이에요.';
