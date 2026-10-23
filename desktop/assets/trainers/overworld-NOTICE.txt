@@ -7,4 +7,4 @@ Frames are selected and animated in CSS without redrawing or modifying the sourc
 These images are not covered by the project's MIT license.
 
 gate-guard.png: unchanged 144x32 policeman sheet from the original FRLG sources.
-Pinned URL and SHA-256 are recorded in gate-guard-source.json. The map selects the original standing frame; no pixels are redrawn.
+Pinned URL and SHA-256 are recorded in gate-guard-source.json. The inline NPC card selects the original standing frame; no pixels are redrawn.

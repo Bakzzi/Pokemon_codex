@@ -8,9 +8,9 @@
  const doc=document.getElementById('panel').contentDocument;openPanel('challenge');await wait(150);await until(()=>doc.getElementById('world-checkpoint')?.querySelector('h2')?.textContent==='노랑시티 경비원');
  check(!doc.querySelector('.world-place-dialog')&&!doc.querySelector('dialog[open]'),'no map popup on arrival');
  check(!doc.querySelector('.world-guard')&&doc.querySelectorAll('.world-player').length===1,'only Red is added to the map');
- check(doc.getElementById('world-daycare')?.checkVisibility()&&doc.getElementById('world-checkpoint').checkVisibility(),'Route 5 keeps the Day Care and guard as separate local cards');
+ doc.querySelector('#world-daycare>summary').click();await until(()=>doc.querySelector('.daycare-portrait')?.naturalWidth>0);check(doc.getElementById('world-daycare')?.checkVisibility()&&doc.getElementById('world-checkpoint').checkVisibility()&&doc.querySelector('.daycare-portrait').checkVisibility(),'Route 5 shows the Day Care staff sprite inside its separate local card');doc.querySelector('#world-daycare>summary').click();
  check(!doc.getElementById('world-checkpoint').open,'named guard card starts collapsed');
- doc.querySelector('#world-checkpoint>summary').click();check(doc.querySelector('.world-npc-dialogue').textContent.includes('핑크배지'),'guard dialogue appears inside the card');
+ doc.querySelector('#world-checkpoint>summary').click();await until(()=>doc.querySelector('.world-npc')?.naturalWidth>0);check(doc.querySelector('.world-npc-dialogue').textContent.includes('핑크배지')&&doc.querySelector('.world-npc').src.endsWith('/trainers/gate-guard.png')&&getComputedStyle(doc.querySelector('.world-npc')).objectFit==='cover','guard dialogue and original policeman frame appear inside the card');
  check(!doc.querySelector('[data-world-pass=saffron]'),'missing prerequisites never expose passage');
  const progress=()=>JSON.stringify([game.data.owned,game.data.slots,game.data.badges,game.data.caught,game.data.inventory,game.data.workTokens,game.data.outputTokens,game.data.battle]);
  const saved=progress();publish();await wait(150);check(doc.getElementById('world-checkpoint').open&&progress()===saved,'refresh preserves an expanded card without mutating progress');

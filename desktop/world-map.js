@@ -51,7 +51,8 @@
  }
  function checkpointCard(){
   const c=world.checkpoint,section=fold(ChallengeUI.section('world-checkpoint',el('h2','',c.name)),'checkpoint:'+c.checkpoint+':'+c.location),body=el('div','world-checkpoint-body'),image=el('img','world-npc'),speech=el('div','world-npc-dialogue');
-  image.src=c.sprite.startsWith('pokemon:')?'assets/'+c.sprite.slice(8)+'.gif':'assets/trainers/battle/'+c.sprite+'.png';image.alt=c.name;
+  const overworld=c.sprite.startsWith('overworld:');image.classList.toggle('world-overworld',overworld);
+  image.src=overworld?'assets/trainers/'+c.sprite.slice(10)+'.png':c.sprite.startsWith('pokemon:')?'assets/'+c.sprite.slice(8)+'.gif':'assets/trainers/battle/'+c.sprite+'.png';image.alt=c.name;
   for(const page of c.pages)speech.append(el('p','',page));body.append(image,speech);
   if(c.canPass){const b=button('통과하기',()=>{arrival=c.location;window.buddy.action('world-pass',c.location);});b.dataset.worldPass=c.location;body.append(b);}
   section.append(body);return section;
