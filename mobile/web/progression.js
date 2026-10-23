@@ -31,6 +31,13 @@
       return changed;
     }
     observe(totals){if(Number.isSafeInteger(totals.lockEpoch))this.game.lockEpoch=totals.lockEpoch;if(this.game.recordTravelSteps?.(totals.steps))this.dirty=true;}
+    automaticSceneTick(now){
+      const g=this.game,s=g.presentation?.();
+      if(!g.data.battle?.activityTrainer||!s?.automatic||!['trainer-intro','sendout'].includes(s.mode))return false;
+      // No player is watching during catch-up. Finish only this timed visual;
+      // never tap through manual dialogue or charge an extra battle action.
+      s.at=Math.min(s.at,now-s.duration);const changed=g.sceneTick(now);if(changed)this.dirty=true;return changed;
+    }
     movementActive(){const d=this.game.data,w=d.johtoUnlocked?d.johtoWorld:d.kantoWorld;return !!d.battle?.movementTrainer||!d.battle&&!d.pendingBattle&&!!(w?.journey?.bankLeg||w?.journey?.bankCells>0);}
     movementTick(now){
       const g=this.game,d=g.data;if(!this.movementActive()||g.presentation?.()||d.battle&&!d.battle.movementTrainer)return false;
@@ -68,6 +75,7 @@
       const available=(n,cost,cursor)=>Number.isSafeInteger(n)&&n>=cursor?Math.floor((n-cursor)/cost):0;
       const g=this.game;let used=0,moves=0,travelTurns=0;this.moreMovement=false;
       for(;used<maxActions;used++){
+        if(moves<512&&this.automaticSceneTick(now)){moves++;used--;continue;}
         if(this.movementActive()){
           if(travelTurns>=128){this.moreMovement=true;break;}
           this.skipWaits(now);
@@ -91,6 +99,7 @@
         this.lockConsumed+=20000;
       }
       while(moves<512){
+        if(this.automaticSceneTick(now)){moves++;continue;}
         if(this.movementActive()){
           if(travelTurns>=128){this.moreMovement=true;break;}
           this.skipWaits(now);if(this.movementTick(now)){travelTurns++;continue;}

@@ -88,6 +88,25 @@ public final class MobileTest extends Instrumentation {
             Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);
             if("inspect".equals(arguments.getString("mode"))){Thread.sleep(5000);result.putString("diagnostic",js("(()=>{try{return JSON.stringify({document:document.readyState,ready:typeof ready,game:typeof game,active:typeof active,phase:typeof active!=='undefined'?active:null,party:document.getElementById('battle')?.contentDocument.querySelectorAll('#party button').length,call:(()=>{try{window.mobileLifecycle(true);return 'ok'}catch(e){return e.stack}})()})}catch(e){return e.stack}})()"));finish(Activity.RESULT_OK,result);return;}
             waitReady();Thread.sleep(1500);
+            if("automatic-trainers".equals(arguments.getString("mode"))){
+                int checks=0;
+                for(String id:new String[]{"k-forest-1","k-route3-1","k-route11-1"}){
+                    String location=id.startsWith("k-forest")?"forest":id.startsWith("k-route3")?"route-3":"route-11";
+                    String init="game=new MobileCore.Adventure({},Date.now());game.data.mobileStory.onboarding='done';game.data.mobileStory.scene=null;game.data.kantoStory.mapAt=Date.now();game.data.kantoStory.dexAt=Date.now();game.rivalProgress('rival-brock').state='won';game.data.badges=['brock','misty','surge'];game.data.kantoWorld.location="+JSONObject.quote(location)+";game.data.switchUntil=0;game.nextTick=Date.now();progression=new MobileProgression(game);progression.resume(Date.now());active=true;catchingUp=false;game.data.workTokens=250;game.startAutomaticTrainer("+JSONObject.quote(id)+",Date.now());publish();";
+                    require("true".equals(js(init+"game.data.battle?.kantoNode==="+JSONObject.quote(id)+"&&game.presentation()?.mode==='trainer-intro'")),"Automatic trainer did not start: "+id);
+                    String portrait="(()=>{const p=document.getElementById('story-portrait'),s=game.presentation(),boss=game.battleBoss();return s?.mode==='trainer-intro'&&s.automatic&&p.dataset.sprite===boss.sprite&&p.src.endsWith('/assets/trainers/battle/'+boss.sprite+'.png')&&p.naturalWidth>0&&!document.getElementById('story-scene').hidden&&document.getElementById('story-next').disabled&&document.getElementById('story-hint').textContent===''&&game.data.battle.turn===0&&game.data.workTokens===0})()";
+                    long imageDeadline=SystemClock.elapsedRealtime()+1000;String shown;
+                    do{shown=js(portrait);if("true".equals(shown))break;Thread.sleep(50);}while(SystemClock.elapsedRealtime()<imageDeadline);
+                    if(!"true".equals(shown))screenshot("automatic-trainer-failed.png");
+                    require("true".equals(shown),"Actual WebView trainer sprite missing for "+id+": "+js("JSON.stringify({scene:game.presentation(),boss:game.battleBoss().sprite,sprite:document.getElementById('story-portrait').dataset.sprite,src:document.getElementById('story-portrait').src,width:document.getElementById('story-portrait').naturalWidth,hidden:document.getElementById('story-scene').hidden,disabled:document.getElementById('story-next').disabled,hint:document.getElementById('story-hint').textContent,automaticRenderer:StoryPresentation.create.toString().includes('scene.automatic'),turn:game.data.battle?.turn,work:game.data.workTokens})"));checks++;
+                    if(id.equals("k-route3-1"))screenshot("automatic-road-trainer.png");
+                    long sendDeadline=SystemClock.elapsedRealtime()+2500;while(!"true".equals(js("game.presentation()?.mode==='sendout'"))&&SystemClock.elapsedRealtime()<sendDeadline)Thread.sleep(50);
+                    require("true".equals(js("game.presentation()?.mode==='sendout'&&game.presentation().sprite===game.battleBoss().sprite&&game.data.battle.turn===0")),"Portrait did not precede timed sendout for "+id);checks++;
+                    Thread.sleep(3000);
+                    require("true".equals(js("game.presentation()===null&&game.data.battle.turn===0&&game.data.workTokens===0&&progression.lockConsumed===0")),"Timed visuals stalled or spent an action for "+id);checks++;
+                }
+                result.putInt("automaticTrainerChecks",checks);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("walking-live".equals(arguments.getString("mode"))){
                 StepService service=StepService.instance;require(service!=null,"Step service missing");
                 js("game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);game.data.mobileStory.onboarding='done';game.data.mobileStory.scene=null;game.nextTick=0;game.data.switchUntil=0;refreshNative();progression=new MobileProgression(game,{consumed:nativeState.steps,lockConsumed:nativeState.lockMillis});progression.observe(nativeState);progression.resume(Date.now());active=true;catchingUp=false;save();publish()");

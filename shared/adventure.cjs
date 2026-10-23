@@ -52,7 +52,7 @@ class Adventure extends Engine{
     if(this.platform==='mobile'&&scene?.kind==='safari'&&scene.pages)scene.pages=scene.pages.map(text=>text==='걸어서 탐험하고 돌아오면 어떤 동료를 만났는지 살펴보렴. 몬스터볼 30개로 1,500걸음 동안 다녀올 수 있어.'?'폰을 잠근 동안 탐험하고 돌아오면 어떤 동료를 만났는지 살펴보렴. 몬스터볼 30개로 다녀올 수 있어.':text);
     if(b?.kind==='trainer'&&scene?.mode==='dialogue'){
       const boss=this.battleBoss(b);
-      if(scene.next==='sendout'&&scene.pages?.[0]===boss.name+'의 도전!')scene.pages=trainerDialogue.intro(boss,this.data.champion);
+      if(!scene.automatic&&scene.next==='sendout'&&scene.pages?.[0]===boss.name+'의 도전!')scene.pages=trainerDialogue.intro(boss,this.data.champion);
       if(scene.next==='win'&&!boss.ghost&&trainerDialogue.hasVictory(boss)){scene.pages=trainerDialogue.victory(boss,this.data.champion,this);scene.index=Math.min(scene.index,scene.pages.length-1);}
       if(scene.next==='loss'&&scene.pages?.[0]==='동료들과 더 성장해서 다시 만나자!')scene.pages=trainerDialogue.defeat(boss);
     }
@@ -312,6 +312,12 @@ class Adventure extends Engine{
   }
   sceneTick(now){
     const s=this.presentation();
+    if(s?.mode==='trainer-intro'&&s.automatic){
+      if(now<s.at+s.duration)return false;
+      const story=this.data.mobileStory;
+      story.scene={id:++story.serial,mode:'sendout',kind:'sendout',automatic:true,at:now,duration:2700,name:s.name,sprite:s.sprite};
+      this.data.animation=null;return true;
+    }
     if(s?.mode!=='sendout'||now<s.at+s.duration)return false;
     this.data.mobileStory.scene=null;this.data.animation=null;
     this.holdUntil(now+650);return true;

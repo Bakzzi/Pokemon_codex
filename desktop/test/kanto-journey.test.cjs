@@ -4,7 +4,7 @@ const PC=require('../adventure.cjs').Adventure,Android=require('../../mobile/adv
 const {Game}=require('../game.cjs'),{finishJourney}=require('./helpers/travel-fixture.cjs');
 const now=Date.parse('2026-10-22T09:00:00Z');
 function settle(g){const t=Math.max(now,g.nextTick,g.data.switchUntil||0);g.data.switchUntil=0;g.nextTick=t;return t;}
-function pages(g){for(let i=0;i<30&&g.presentation()?.mode==='dialogue';i++){const s=g.presentation();if(s.awaitChoice)break;assert.ok(g.advanceScene(s.id+':'+s.index,settle(g)));}if(g.presentation()?.mode==='sendout')g.sceneTick(g.presentation().at+3000);}
+function pages(g){for(let i=0;i<30&&g.presentation()?.mode==='dialogue';i++){const s=g.presentation();if(s.awaitChoice)break;assert.ok(g.advanceScene(s.id+':'+s.index,settle(g)));}if(g.presentation()?.mode==='trainer-intro')g.sceneTick(g.presentation().at+g.presentation().duration);if(g.presentation()?.mode==='sendout')g.sceneTick(g.presentation().at+3000);}
 function win(g){for(let i=0;i<40&&g.data.battle?.kind==='trainer';i++){pages(g);const b=g.data.battle;b.foe.hp=0;g.defeatOpponent(settle(g));pages(g);}settle(g);}
 function start(Type=PC){const g=new Type({},now,{random:()=>.7});pages(g);assert.equal(g.data.battle.storyId,'tutorial-green');win(g);pages(g);assert.equal(g.data.mobileStory.onboarding,'done');return g;}
 function guide(g){for(let i=0;i<200&&!g.data.kantoStory.mapAt;i++){pages(g);if(g.data.kantoStory.mapAt)break;g.data.workTokens=250;g.tick(settle(g));}assert.ok(g.data.kantoStory.mapAt);assert.equal(g.data.kantoWorld.location,'pallet');}
@@ -56,7 +56,7 @@ for(const Type of [PC,Android])test(Type.name+' reducing gym visits preserves ol
  g.data.badges=['brock','misty','surge'];g=new Type(structuredClone(g.data),settle(g));assert.ok(K.done(g,node.id));assert.equal(g.canChallenge(2),false);assert.ok(K.cases.find(c=>c.id==='trainers-gym-2').entries.every(id=>!g.canChallenge(id)));
 });
 for(const Type of [PC,Android])test(Type.name+' ordinary automatic trainers cost activity, never pause for taps and stay defeated after reload',()=>{
- let g=start(Type);guide(g);g.rivalProgress('rival-brock').state='won';move(g,'forest');g.data.workTokens=0;assert.equal(g.tick(settle(g)),false);g.data.workTokens=250;assert.ok(g.tick(settle(g)));const id=g.data.battle.kantoNode;assert.ok(g.data.battle.activityTrainer);assert.equal(g.data.workTokens,0);assert.equal(g.presentation(),null);
+ let g=start(Type);guide(g);g.rivalProgress('rival-brock').state='won';move(g,'forest');g.data.workTokens=0;assert.equal(g.tick(settle(g)),false);g.data.workTokens=250;assert.ok(g.tick(settle(g)));const id=g.data.battle.kantoNode;assert.ok(g.data.battle.activityTrainer);assert.equal(g.data.workTokens,0);assert.equal(g.presentation().mode,'trainer-intro');assert.equal(g.presentation().sprite,K.nodes.get(id).sprite);pages(g);
  const turn=g.data.battle.turn;assert.equal(g.tick(settle(g)),false);assert.equal(g.data.battle.turn,turn);g.data.workTokens=250;assert.ok(g.tick(settle(g)));assert.equal(g.data.workTokens,0);win(g);assert.ok(K.done(g,id));assert.equal(g.presentation(),null);g=new Type(structuredClone(g.data),settle(g));g.data.workTokens=250;assert.ok(g.tick(settle(g)));assert.notEqual(g.data.battle.kantoNode,id);
  g.endChallenge(false,settle(g));assert.equal(g.presentation(),null);assert.equal(g.data.battle,null);
 });

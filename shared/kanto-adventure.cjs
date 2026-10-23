@@ -96,8 +96,13 @@ function withKanto(Base){return class KantoAdventure extends Base{
   this.dialogue('kanto-event',n.name,n.sprite,n.pages,'kanto-complete:'+id,now);return true;
  }
  battleBoss(b=this.data.battle){const n=K.nodes.get(b?.kantoNode);if(n)return {...n,kind:'story',intro:n.pages};const alias={'tower-grunt-1':'tower','silph-grunt':'silph'}[b?.storyId];if(K.modern(this)&&alias){const t=K.aliases[alias];return {...super.battleBoss(b),name:t.name,sprite:t.sprite,team:t.team.map(p=>({...p,moves:learnedMoves(p.id,p.level).slice(-4)})),...(alias==='tower'?{intro:['누군가에게 홀린 듯한 무당이 길을 막았다.','배틀로 정신을 차리게 해 주자.']}: {})};}return super.battleBoss(b);}
- nextTrainer(now){if(this.autoStarting)this.data.battle.activityTrainer=true;super.nextTrainer(now);if(this.data.battle.activityTrainer)this.data.mobileStory.scene=null;}
- endChallenge(won,now){if(!this.data.battle?.activityTrainer)return super.endChallenge(won,now);const boss=this.battleBoss();if(!won&&this.data.battle.movementTrainer){const trip=this.data.kantoWorld.journey;if(trip){trip.bankCells=0;trip.bankLeg=false;}}this.data.pendingBattle=null;this.log(won?'승부를 마치고 모험으로 돌아왔다.':boss.name+'와의 승부에서 패배했다. 동료들을 회복했다.',won?'info':'loss',null,now);this.restoreWild(now);this.animate('result',{text:won?'모험을 계속해요.':'동료들을 회복했어요. 준비해서 다시 승부해요.'},now);}
+ nextTrainer(now){
+  if(this.autoStarting)this.data.battle.activityTrainer=true;
+  super.nextTrainer(now);
+  const b=this.data.battle,s=this.presentation();
+  if(b.activityTrainer&&b.foeIndex===0&&s){s.mode='trainer-intro';s.automatic=true;s.duration=1800;s.pages=[s.name+'의 도전!'];}
+ }
+ endChallenge(won,now){if(!this.data.battle?.activityTrainer)return super.endChallenge(won,now);const boss=this.battleBoss();if(this.presentation()?.automatic)this.data.mobileStory.scene=null;if(!won&&this.data.battle.movementTrainer){const trip=this.data.kantoWorld.journey;if(trip){trip.bankCells=0;trip.bankLeg=false;}}this.data.pendingBattle=null;this.log(won?'승부를 마치고 모험으로 돌아왔다.':boss.name+'와의 승부에서 패배했다. 동료들을 회복했다.',won?'info':'loss',null,now);this.restoreWild(now);this.animate('result',{text:won?'모험을 계속해요.':'동료들을 회복했어요. 준비해서 다시 승부해요.'},now);}
  finishTrainerWin(now){
   const b=this.data.battle,n=K.nodes.get(b?.kantoNode);
   if(K.modern(this)&&training.rocketOrder.includes(b?.storyId)){

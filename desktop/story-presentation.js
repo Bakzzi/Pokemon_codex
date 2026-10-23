@@ -14,7 +14,7 @@ globalThis.StoryPresentation={create({document:doc=document,advance,choose=value
     $('story-name').textContent=scene.name;$('story-portrait').dataset.sprite=scene.sprite;
     $('story-portrait').src=scene.sprite.startsWith('pokemon:')?'assets/'+scene.sprite.slice(8)+'.gif':scene.sprite.startsWith('item:')?'assets/items/'+scene.sprite.slice(5)+'.png':'assets/trainers/battle/'+scene.sprite+'.png';
     root.dataset.revealed=String(scene.kind!=='ghost'||scene.index>0||scene.next==='win'||scene.next==='loss');$('story-portrait').alt=scene.name;
-    button.disabled=sendout||!!scene.awaitChoice;$('story-hint').textContent=sendout||scene.awaitChoice?'':'눌러서 계속 ▼';
+    button.disabled=sendout||!!scene.automatic||!!scene.awaitChoice;$('story-hint').textContent=sendout||scene.automatic||scene.awaitChoice?'':'눌러서 계속 ▼';
     if(!sendout)$('story-text').textContent=scene.pages[scene.index];
     button.onclick=()=>advance(page);if(key===page)return;key=page;clearInterval(timer);timer=0;
     if(sendout){

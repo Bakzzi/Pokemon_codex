@@ -223,6 +223,17 @@ async function worldSmokeTest(){
   check(JSON.stringify(game.data.daycare?.parents)===JSON.stringify(parents),'the actual local Day Care button boards both partners through IPC');
   game.data.kantoWorld.location='cerulean';publish(true);await wait(70);await read("document.querySelector('[data-tab=daycare]').click()");
   check(await read("!document.querySelector('#daycare #parent-a')&&!document.getElementById('parent-a').checkVisibility()&&!document.getElementById('daycare-phone')&&!document.getElementById('daycare-withdraw')")&&game.data.daycare.parents.length===2,'the bag has no Day Care phone and leaving preserves boarded partners');
+  const trainers=require('../shared/kanto-journey.cjs');
+  for(const id of ['k-forest-1','k-route3-1','k-route11-1']){
+   const now=Date.now(),n=trainers.nodes.get(id);game.data=new Game({},now).data;game.data.mobileStory.onboarding='done';game.data.mobileStory.scene=null;game.data.kantoStory.mapAt=now;game.data.kantoStory.dexAt=now;game.rivalProgress('rival-brock').state='won';game.data.badges=['brock','misty','surge'];game.data.kantoWorld.location=n.location;game.data.workTokens=250;game.data.switchUntil=0;game.nextTick=now;
+   check(game.startAutomaticTrainer(id,now)&&game.presentation().sprite===n.sprite&&game.data.workTokens===0,'the actual '+id+' automatic encounter starts its own trainer portrait');publish(true);await wait(120);
+   check(await win.webContents.executeJavaScript('(()=>{const r=document.getElementById("story-scene"),p=document.getElementById("story-portrait");return !r.hidden&&r.dataset.mode==="trainer-intro"&&p.dataset.sprite==='+JSON.stringify(n.sprite)+'&&p.naturalWidth>0&&getComputedStyle(p).imageRendering==="pixelated"&&document.getElementById("story-next").disabled&&document.getElementById("story-hint").textContent===""})()'),'main snapshot and IPC publish the exact '+id+' sprite without a manual tap');
+   fs.writeFileSync(path.join(dataDir,'trainer-'+id+'.png'),(await win.webContents.capturePage()).toPNG());
+   game.presentation().at=Date.now()-1800;game.sceneTick(Date.now());publish(true);await wait(80);
+   check(await win.webContents.executeJavaScript('document.getElementById("story-scene").dataset.mode==="sendout"')&&game.data.battle.turn===0&&game.data.workTokens===0,'the '+id+' portrait precedes sendout without an attack or another action');
+   game.presentation().at=Date.now()-2700;game.sceneTick(Date.now());publish(true);await wait(60);
+   check(await win.webContents.executeJavaScript('document.getElementById("story-scene").hidden')&&game.data.battle.turn===0,'the '+id+' timed sendout releases the battle automatically');
+  }
   check(errors.length===0,'the actual main, panel and widget have no renderer errors');
   fs.writeFileSync(path.join(dataDir,'world-main-result.json'),JSON.stringify({ok:true,checks,errors,version:app.getVersion(),statePath:'main snapshot -> publish -> preload -> renderer; panel travel -> IPC -> shared game -> encounter result -> next road'},null,2));app.exit(0);
  }catch(error){fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'world-main-error.txt'),error.stack||String(error));app.exit(1);}
