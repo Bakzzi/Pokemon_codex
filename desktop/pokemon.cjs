@@ -68,7 +68,7 @@ function captureBonus(id,caught={}){
 function wildDistribution(maxGeneration,partnerLevel,{champion=false,caught={},minimumLevel=0,maximumLevel=100,additions=[],excluded=[],habitat=null}={}){
   const local=habitat&&new Map(habitat.map(p=>[p.id,p.weight]));
   const all=data.pokemon.filter(p=>(!local||local.has(p.id))&&!excluded.includes(p.id)&&wildEligible(p,maxGeneration,Math.min(partnerLevel,maximumLevel))),baseRates=encounterChances(),common=all.filter(p=>rarity(p)==='common');
-  if(!all.length)throw new Error('No eligible wild Pokemon in this habitat');
+  if(!all.length){if(local)return {pokemon:[],rates:Object.fromEntries(Object.keys(baseRates).map(k=>[k,0])),baseRates,extraTotal:0,additions:additions.map(b=>({...b,eligible:false,base:0,chance:0}))};throw new Error('No eligible wild Pokemon in this habitat');}
   const pokemon=all.map(p=>({id:p.id,tier:rarity(p),base:0,chance:0})),byId=new Map(pokemon.map(p=>[p.id,p])),bonus=championBonus(minimumLevel);
   for(const [tier,rate] of Object.entries(baseRates)){
     const preferred=all.filter(p=>rarity(p)===tier),fallback=common.length?common:all.filter(p=>!p.legendary&&!p.mythical),pool=preferred.length?preferred:fallback.length?fallback:all;
@@ -96,6 +96,7 @@ function wildDistribution(maxGeneration,partnerLevel,{champion=false,caught={},m
 }
 function pickWild(maxGeneration,random=Math.random,partnerLevel=100,options={}){
   const {pokemon,rates}=wildDistribution(maxGeneration,partnerLevel,options);
+  if(!pokemon.length)return null;
   let category=random(),tier='common';for(const [name,rate] of Object.entries(rates)){category-=rate;if(category<0){tier=name;break;}}
   const pool=pokemon.filter(p=>p.tier===tier&&p.chance>0);let draw=random()*rates[tier];
   for(const p of pool){draw-=p.chance;if(draw<0)return p.id;}return pool.at(-1).id;

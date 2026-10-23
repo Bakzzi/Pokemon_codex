@@ -2,5535 +2,10319 @@
   "azalea-town": [
     {
       "id": 10,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 11,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 12,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 13,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 14,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 15,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 21,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 22,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.3611111111111111,
+        "23": 0.3611111111111111,
+        "24": 0.2777777777777778
+      }
     },
     {
       "id": 23,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 24,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.5,
+        "23": 0.5
+      }
     },
     {
       "id": 102,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "22": 30,
+        "23": 30,
+        "24": 30
+      }
     },
     {
       "id": 190,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "22": 20,
+        "23": 20,
+        "24": 20
+      }
     },
     {
       "id": 204,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "24": 60
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     },
     {
       "id": 214,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "24": 30
+      }
     }
   ],
   "bell-tower": [
     {
       "id": 19,
-      "weight": 5280
+      "weight": 5280,
+      "methods": {
+        "1": 5280
+      }
     },
     {
       "id": 20,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 92,
-      "weight": 1920
+      "weight": 1920,
+      "methods": {
+        "1": 1920
+      }
     },
     {
       "id": 93,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 250,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "blackthorn-city": [
     {
       "id": 60,
-      "weight": 480
+      "weight": 480,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 240
+      }
     },
     {
       "id": 61,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.09375,
+        "3": 0.40625,
+        "4": 0.5
+      }
     },
     {
       "id": 129,
-      "weight": 720
+      "weight": 720,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60,
+        "5": 300
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.3541666666666667,
+        "3": 0.14583333333333334,
+        "4": 0.08333333333333333,
+        "5": 0.4166666666666667
+      }
     }
   ],
   "burned-tower": [
     {
       "id": 19,
-      "weight": 405
+      "weight": 405,
+      "methods": {
+        "1": 405
+      }
     },
     {
       "id": 20,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 41,
-      "weight": 70
+      "weight": 70,
+      "methods": {
+        "1": 70
+      }
     },
     {
       "id": 42,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 109,
-      "weight": 459
+      "weight": 459,
+      "methods": {
+        "1": 459
+      }
     },
     {
       "id": 110,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 126,
-      "weight": 50
+      "weight": 50,
+      "methods": {
+        "1": 50
+      }
     }
   ],
   "celadon-city": [
     {
       "id": 88,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "5": 270
+      }
     },
     {
       "id": 89,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 133,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 137,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "cerulean-cave": [
     {
       "id": 28,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 42,
-      "weight": 220
+      "weight": 220,
+      "methods": {
+        "1": 220
+      }
     },
     {
       "id": 44,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 47,
-      "weight": 111
+      "weight": 111,
+      "methods": {
+        "1": 111
+      }
     },
     {
       "id": 49,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 54,
-      "weight": 139
+      "weight": 139,
+      "methods": {
+        "4": 9,
+        "5": 130
+      }
     },
     {
       "id": 55,
-      "weight": 70
+      "weight": 70,
+      "methods": {
+        "5": 70
+      }
     },
     {
       "id": 57,
-      "weight": 22
+      "weight": 22,
+      "methods": {
+        "1": 22
+      }
     },
     {
       "id": 60,
-      "weight": 500
+      "weight": 500,
+      "methods": {
+        "3": 340,
+        "4": 160
+      }
     },
     {
       "id": 61,
-      "weight": 160
+      "weight": 160,
+      "methods": {
+        "4": 160
+      }
     },
     {
       "id": 64,
-      "weight": 72
+      "weight": 72,
+      "methods": {
+        "1": 72
+      }
     },
     {
       "id": 67,
-      "weight": 80
+      "weight": 80,
+      "methods": {
+        "1": 80
+      }
     },
     {
       "id": 70,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 75,
-      "weight": 45
+      "weight": 45,
+      "methods": {
+        "1": 45
+      }
     },
     {
       "id": 79,
-      "weight": 139
+      "weight": 139,
+      "methods": {
+        "4": 9,
+        "5": 130
+      }
     },
     {
       "id": 80,
-      "weight": 70
+      "weight": 70,
+      "methods": {
+        "5": 70
+      }
     },
     {
       "id": 82,
-      "weight": 80
+      "weight": 80,
+      "methods": {
+        "1": 80
+      }
     },
     {
       "id": 101,
-      "weight": 26
+      "weight": 26,
+      "methods": {
+        "1": 26
+      }
     },
     {
       "id": 108,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 111,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 112,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 113,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 118,
-      "weight": 260
+      "weight": 260,
+      "methods": {
+        "3": 180,
+        "4": 80
+      }
     },
     {
       "id": 119,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "4": 120
+      }
     },
     {
       "id": 129,
-      "weight": 680
+      "weight": 680,
+      "methods": {
+        "2": 600,
+        "3": 80
+      }
     },
     {
       "id": 130,
-      "weight": 62
+      "weight": 62,
+      "methods": {
+        "4": 62
+      }
     },
     {
       "id": 132,
-      "weight": 124
+      "weight": 124,
+      "methods": {
+        "1": 124
+      }
     },
     {
       "id": 139,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     },
     {
       "id": 141,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     },
     {
       "id": 147,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     },
     {
       "id": 148,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     },
     {
       "id": 149,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     },
     {
       "id": 150,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 151,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "cerulean-city": [
     {
       "id": 118,
-      "weight": 720
+      "weight": 720,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 210,
+        "5": 270
+      }
     },
     {
       "id": 119,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "4": 30,
+        "5": 30
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     }
   ],
   "cherrygrove-city": [
     {
       "id": 72,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "5": 270
+      }
     },
     {
       "id": 73,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 98,
-      "weight": 1080
+      "weight": 1080,
+      "methods": {
+        "2": 45,
+        "3": 495,
+        "4": 540
+      }
     },
     {
       "id": 99,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "4": 90
+      }
     },
     {
       "id": 120,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 129,
-      "weight": 570
+      "weight": 570,
+      "methods": {
+        "2": 255,
+        "3": 315
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.4473684210526316,
+        "3": 0.5526315789473685
+      }
     },
     {
       "id": 222,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "3": 60,
+        "4": 180
+      }
     }
   ],
   "cianwood-city": [
     {
       "id": 72,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "5": 270
+      }
     },
     {
       "id": 73,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 98,
-      "weight": 1350
+      "weight": 1350,
+      "methods": {
+        "2": 45,
+        "3": 495,
+        "4": 540,
+        "6": 270
+      }
     },
     {
       "id": 99,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "4": 90
+      }
     },
     {
       "id": 120,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 129,
-      "weight": 570
+      "weight": 570,
+      "methods": {
+        "2": 255,
+        "3": 315
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.4473684210526316,
+        "3": 0.5526315789473685
+      }
     },
     {
       "id": 213,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "6": 30
+      }
     },
     {
       "id": 222,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "3": 60,
+        "4": 180
+      }
     }
   ],
   "cinnabar-island": [
     {
       "id": 72,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 45,
+        "3": 105,
+        "5": 270
+      }
     },
     {
       "id": 73,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "4": 60,
+        "5": 30
+      }
     },
     {
       "id": 90,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 129,
-      "weight": 360
+      "weight": 360,
+      "methods": {
+        "2": 255,
+        "3": 105
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.7083333333333334,
+        "3": 0.2916666666666667
+      }
     },
     {
       "id": 138,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 139,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 140,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 141,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 142,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 170,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "3": 60,
+        "4": 120
+      }
     },
     {
       "id": 171,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "4": 30
+      }
     }
   ],
   "dark-cave": [
     {
       "id": 41,
-      "weight": 400
+      "weight": 400,
+      "methods": {
+        "1": 400
+      }
     },
     {
       "id": 42,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     },
     {
       "id": 74,
-      "weight": 570
+      "weight": 570,
+      "methods": {
+        "1": 570
+      }
     },
     {
       "id": 75,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 98,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "6": 270
+      }
     },
     {
       "id": 99,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "6": 1
+      }
     },
     {
       "id": 118,
-      "weight": 900
+      "weight": 900,
+      "methods": {
+        "2": 90,
+        "3": 390,
+        "4": 420
+      }
     },
     {
       "id": 119,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "4": 60
+      }
     },
     {
       "id": 129,
-      "weight": 1440
+      "weight": 1440,
+      "methods": {
+        "2": 510,
+        "3": 210,
+        "4": 120,
+        "5": 600
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.3541666666666667,
+        "3": 0.14583333333333334,
+        "4": 0.08333333333333333,
+        "5": 0.4166666666666667
+      }
     },
     {
       "id": 202,
-      "weight": 45
+      "weight": 45,
+      "methods": {
+        "1": 45
+      }
     },
     {
       "id": 206,
-      "weight": 125
+      "weight": 125,
+      "methods": {
+        "1": 125
+      }
     },
     {
       "id": 213,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "6": 30
+      }
     },
     {
       "id": 216,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 217,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     }
   ],
   "digletts-cave": [
     {
       "id": 50,
-      "weight": 450
+      "weight": 450,
+      "methods": {
+        "1": 450
+      }
     },
     {
       "id": 51,
-      "weight": 50
+      "weight": 50,
+      "methods": {
+        "1": 50
+      }
     }
   ],
   "dragons-den": [
     {
       "id": 129,
-      "weight": 1020
+      "weight": 1020,
+      "methods": {
+        "2": 300,
+        "3": 270,
+        "4": 180,
+        "5": 270
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.29411764705882354,
+        "3": 0.2647058823529412,
+        "4": 0.17647058823529413,
+        "5": 0.2647058823529412
+      }
     },
     {
       "id": 147,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "3": 30,
+        "4": 90,
+        "5": 30
+      }
     },
     {
       "id": 148,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "4": 30
+      }
     },
     {
       "id": 149,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "4": 1
+      }
     }
   ],
   "ecruteak-city": [
     {
       "id": 60,
-      "weight": 750
+      "weight": 750,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 240,
+        "5": 270
+      }
     },
     {
       "id": 61,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     }
   ],
   "fuchsia-city": [
     {
       "id": 129,
-      "weight": 1080
+      "weight": 1080,
+      "methods": {
+        "2": 300,
+        "3": 270,
+        "4": 210,
+        "5": 300
+      }
     },
     {
       "id": 130,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     }
   ],
   "ice-path": [
     {
       "id": 41,
-      "weight": 320
+      "weight": 320,
+      "methods": {
+        "1": 320
+      }
     },
     {
       "id": 42,
-      "weight": 1392
+      "weight": 1392,
+      "methods": {
+        "1": 1392
+      }
     },
     {
       "id": 124,
-      "weight": 192
+      "weight": 192,
+      "methods": {
+        "1": 192
+      }
     },
     {
       "id": 215,
-      "weight": 16
+      "weight": 16,
+      "methods": {
+        "1": 16
+      }
     },
     {
       "id": 220,
-      "weight": 1280
+      "weight": 1280,
+      "methods": {
+        "1": 1280
+      }
     },
     {
       "id": 221,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 225,
-      "weight": 400
+      "weight": 400,
+      "methods": {
+        "1": 400
+      }
     }
   ],
   "ilex-forest": [
     {
       "id": 10,
-      "weight": 365
+      "weight": 365,
+      "methods": {
+        "1": 170,
+        "22": 65,
+        "23": 65,
+        "24": 65
+      }
     },
     {
       "id": 11,
-      "weight": 135
+      "weight": 135,
+      "methods": {
+        "1": 100,
+        "22": 15,
+        "23": 15,
+        "24": 5
+      }
     },
     {
       "id": 12,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "22": 10,
+        "23": 10,
+        "24": 5
+      }
     },
     {
       "id": 13,
-      "weight": 365
+      "weight": 365,
+      "methods": {
+        "1": 170,
+        "22": 65,
+        "23": 65,
+        "24": 65
+      }
     },
     {
       "id": 14,
-      "weight": 115
+      "weight": 115,
+      "methods": {
+        "1": 80,
+        "22": 15,
+        "23": 15,
+        "24": 5
+      }
     },
     {
       "id": 15,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "22": 10,
+        "23": 10,
+        "24": 5
+      }
     },
     {
       "id": 16,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 17,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 41,
-      "weight": 70
+      "weight": 70,
+      "methods": {
+        "1": 70
+      }
     },
     {
       "id": 42,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 43,
-      "weight": 170
+      "weight": 170,
+      "methods": {
+        "1": 170
+      }
     },
     {
       "id": 44,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 46,
-      "weight": 85
+      "weight": 85,
+      "methods": {
+        "1": 85
+      }
     },
     {
       "id": 47,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 48,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 49,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 54,
-      "weight": 280
+      "weight": 280,
+      "methods": {
+        "1": 10,
+        "5": 270
+      }
     },
     {
       "id": 55,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 60,
-      "weight": 480
+      "weight": 480,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 240
+      }
     },
     {
       "id": 61,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.09375,
+        "3": 0.40625,
+        "4": 0.5
+      }
     },
     {
       "id": 102,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "22": 30,
+        "23": 30,
+        "24": 30
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 163,
-      "weight": 165
+      "weight": 165,
+      "methods": {
+        "1": 5,
+        "22": 50,
+        "23": 50,
+        "24": 60
+      }
     },
     {
       "id": 164,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "22": 10,
+        "23": 10
+      }
     },
     {
       "id": 204,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "22": 30,
+        "23": 30,
+        "24": 60
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.25,
+        "23": 0.25,
+        "24": 0.5
+      }
     },
     {
       "id": 251,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-29": [
     {
       "id": 16,
-      "weight": 320
+      "weight": 320,
+      "methods": {
+        "1": 320
+      }
     },
     {
       "id": 17,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 19,
-      "weight": 105
+      "weight": 105,
+      "methods": {
+        "1": 105
+      }
     },
     {
       "id": 20,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 21,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "22": 160,
+        "23": 160,
+        "24": 100
+      }
     },
     {
       "id": 22,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.38095238095238093,
+        "23": 0.38095238095238093,
+        "24": 0.23809523809523808
+      }
     },
     {
       "id": 102,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "22": 20,
+        "23": 20,
+        "24": 20
+      }
     },
     {
       "id": 161,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 162,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 163,
-      "weight": 375
+      "weight": 375,
+      "methods": {
+        "1": 225,
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 164,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.6,
+        "22": 0.13333333333333333,
+        "23": 0.13333333333333333,
+        "24": 0.13333333333333333
+      }
     },
     {
       "id": 165,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 166,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.5,
+        "23": 0.5
+      }
     },
     {
       "id": 167,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 168,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.5,
+        "23": 0.5
+      }
     },
     {
       "id": 187,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 188,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 189,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 190,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "22": 40,
+        "23": 40,
+        "24": 40
+      }
     },
     {
       "id": 204,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "24": 30
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     },
     {
       "id": 214,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "24": 60
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-30": [
     {
       "id": 10,
-      "weight": 185
+      "weight": 185,
+      "methods": {
+        "1": 185
+      }
     },
     {
       "id": 11,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     },
     {
       "id": 12,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 13,
-      "weight": 95
+      "weight": 95,
+      "methods": {
+        "1": 95
+      }
     },
     {
       "id": 14,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     },
     {
       "id": 15,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 16,
-      "weight": 200
+      "weight": 200,
+      "methods": {
+        "1": 200
+      }
     },
     {
       "id": 17,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 19,
-      "weight": 80
+      "weight": 80,
+      "methods": {
+        "1": 80
+      }
     },
     {
       "id": 20,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 21,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "22": 160,
+        "23": 160,
+        "24": 100
+      }
     },
     {
       "id": 22,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.38095238095238093,
+        "23": 0.38095238095238093,
+        "24": 0.23809523809523808
+      }
     },
     {
       "id": 41,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 42,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 60,
-      "weight": 770
+      "weight": 770,
+      "methods": {
+        "1": 20,
+        "2": 45,
+        "3": 195,
+        "4": 240,
+        "5": 270
+      }
     },
     {
       "id": 61,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 102,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "22": 20,
+        "23": 20,
+        "24": 20
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 163,
-      "weight": 285
+      "weight": 285,
+      "methods": {
+        "1": 135,
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 164,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.47368421052631576,
+        "22": 0.17543859649122806,
+        "23": 0.17543859649122806,
+        "24": 0.17543859649122806
+      }
     },
     {
       "id": 165,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 60,
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 166,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.6666666666666666,
+        "22": 0.16666666666666666,
+        "23": 0.16666666666666666
+      }
     },
     {
       "id": 167,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 60,
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 168,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.6666666666666666,
+        "22": 0.16666666666666666,
+        "23": 0.16666666666666666
+      }
     },
     {
       "id": 187,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 188,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 189,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 190,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "22": 40,
+        "23": 40,
+        "24": 40
+      }
     },
     {
       "id": 204,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "24": 30
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     },
     {
       "id": 214,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "24": 60
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-31": [
     {
       "id": 10,
-      "weight": 170
+      "weight": 170,
+      "methods": {
+        "1": 170
+      }
     },
     {
       "id": 11,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 12,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 13,
-      "weight": 75
+      "weight": 75,
+      "methods": {
+        "1": 75
+      }
     },
     {
       "id": 14,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     },
     {
       "id": 15,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 16,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "1": 150
+      }
     },
     {
       "id": 17,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 19,
-      "weight": 80
+      "weight": 80,
+      "methods": {
+        "1": 80
+      }
     },
     {
       "id": 20,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 21,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "22": 160,
+        "23": 160,
+        "24": 100
+      }
     },
     {
       "id": 22,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.38095238095238093,
+        "23": 0.38095238095238093,
+        "24": 0.23809523809523808
+      }
     },
     {
       "id": 41,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 42,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 60,
-      "weight": 780
+      "weight": 780,
+      "methods": {
+        "1": 30,
+        "2": 45,
+        "3": 195,
+        "4": 240,
+        "5": 270
+      }
     },
     {
       "id": 61,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 69,
-      "weight": 140
+      "weight": 140,
+      "methods": {
+        "1": 140
+      }
     },
     {
       "id": 70,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 92,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 93,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 102,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "22": 20,
+        "23": 20,
+        "24": 20
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 163,
-      "weight": 210
+      "weight": 210,
+      "methods": {
+        "1": 60,
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 164,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.2857142857142857,
+        "22": 0.23809523809523808,
+        "23": 0.23809523809523808,
+        "24": 0.23809523809523808
+      }
     },
     {
       "id": 165,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 60,
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 166,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.6666666666666666,
+        "22": 0.16666666666666666,
+        "23": 0.16666666666666666
+      }
     },
     {
       "id": 167,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 60,
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 168,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.6666666666666666,
+        "22": 0.16666666666666666,
+        "23": 0.16666666666666666
+      }
     },
     {
       "id": 187,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 188,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 189,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 190,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "22": 40,
+        "23": 40,
+        "24": 40
+      }
     },
     {
       "id": 204,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "24": 30
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     },
     {
       "id": 214,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "24": 60
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-32": [
     {
       "id": 16,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 17,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 19,
-      "weight": 210
+      "weight": 210,
+      "methods": {
+        "1": 210
+      }
     },
     {
       "id": 20,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 21,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "22": 160,
+        "23": 160,
+        "24": 100
+      }
     },
     {
       "id": 22,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.38095238095238093,
+        "23": 0.38095238095238093,
+        "24": 0.23809523809523808
+      }
     },
     {
       "id": 23,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "1": 150,
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 24,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.8333333333333334,
+        "22": 0.08333333333333333,
+        "23": 0.08333333333333333
+      }
     },
     {
       "id": 41,
-      "weight": 22
+      "weight": 22,
+      "methods": {
+        "1": 22
+      }
     },
     {
       "id": 42,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 69,
-      "weight": 220
+      "weight": 220,
+      "methods": {
+        "1": 220
+      }
     },
     {
       "id": 70,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 72,
-      "weight": 630
+      "weight": 630,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 210,
+        "5": 180
+      }
     },
     {
       "id": 73,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 92,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 93,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 102,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "22": 20,
+        "23": 20,
+        "24": 20
+      }
     },
     {
       "id": 129,
-      "weight": 675
+      "weight": 675,
+      "methods": {
+        "2": 510,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.7555555555555555,
+        "3": 0.15555555555555556,
+        "4": 0.08888888888888889
+      }
     },
     {
       "id": 163,
-      "weight": 185
+      "weight": 185,
+      "methods": {
+        "1": 5,
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 164,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.02702702702702703,
+        "22": 0.35135135135135137,
+        "23": 0.35135135135135137,
+        "24": 0.2702702702702703
+      }
     },
     {
       "id": 179,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 180,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 181,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 187,
-      "weight": 70
+      "weight": 70,
+      "methods": {
+        "1": 70
+      }
     },
     {
       "id": 188,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 189,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 190,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "22": 40,
+        "23": 40,
+        "24": 40
+      }
     },
     {
       "id": 194,
-      "weight": 108
+      "weight": 108,
+      "methods": {
+        "1": 108
+      }
     },
     {
       "id": 195,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "5": 90
+      }
     },
     {
       "id": 204,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "24": 30
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     },
     {
       "id": 211,
-      "weight": 570
+      "weight": 570,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 330
+      }
     },
     {
       "id": 214,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "24": 60
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-33": [
     {
       "id": 19,
-      "weight": 300
+      "weight": 300,
+      "methods": {
+        "1": 300
+      }
     },
     {
       "id": 20,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 21,
-      "weight": 740
+      "weight": 740,
+      "methods": {
+        "1": 140,
+        "22": 225,
+        "23": 225,
+        "24": 150
+      }
     },
     {
       "id": 22,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.1891891891891892,
+        "22": 0.30405405405405406,
+        "23": 0.30405405405405406,
+        "24": 0.20270270270270271
+      }
     },
     {
       "id": 23,
-      "weight": 130
+      "weight": 130,
+      "methods": {
+        "1": 100,
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 24,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.7692307692307693,
+        "22": 0.11538461538461539,
+        "23": 0.11538461538461539
+      }
     },
     {
       "id": 41,
-      "weight": 130
+      "weight": 130,
+      "methods": {
+        "1": 130
+      }
     },
     {
       "id": 42,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 74,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 75,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 187,
-      "weight": 170
+      "weight": 170,
+      "methods": {
+        "1": 170
+      }
     },
     {
       "id": 188,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 189,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 190,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 60,
+        "23": 60,
+        "24": 60
+      }
     },
     {
       "id": 214,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "24": 90
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-34": [
     {
       "id": 10,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 11,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 12,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 13,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 14,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 15,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 16,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 17,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 19,
-      "weight": 160
+      "weight": 160,
+      "methods": {
+        "1": 160
+      }
     },
     {
       "id": 20,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 39,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 63,
-      "weight": 50
+      "weight": 50,
+      "methods": {
+        "1": 50
+      }
     },
     {
       "id": 64,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 72,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "5": 270
+      }
     },
     {
       "id": 73,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 96,
-      "weight": 130
+      "weight": 130,
+      "methods": {
+        "1": 130
+      }
     },
     {
       "id": 97,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 98,
-      "weight": 1080
+      "weight": 1080,
+      "methods": {
+        "2": 45,
+        "3": 495,
+        "4": 540
+      }
     },
     {
       "id": 99,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "4": 90
+      }
     },
     {
       "id": 102,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 120,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 129,
-      "weight": 570
+      "weight": 570,
+      "methods": {
+        "2": 255,
+        "3": 315
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.4473684210526316,
+        "3": 0.5526315789473685
+      }
     },
     {
       "id": 132,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     },
     {
       "id": 163,
-      "weight": 170
+      "weight": 170,
+      "methods": {
+        "1": 20,
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 164,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.11764705882352941,
+        "22": 0.29411764705882354,
+        "23": 0.29411764705882354,
+        "24": 0.29411764705882354
+      }
     },
     {
       "id": 165,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 166,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.5,
+        "23": 0.5
+      }
     },
     {
       "id": 167,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 168,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.5,
+        "23": 0.5
+      }
     },
     {
       "id": 204,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "24": 90
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     },
     {
       "id": 209,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 210,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 222,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "3": 60,
+        "4": 180
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-35": [
     {
       "id": 10,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 11,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 12,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 13,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 14,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 15,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 16,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 17,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 29,
-      "weight": 330
+      "weight": 330,
+      "methods": {
+        "1": 330
+      }
     },
     {
       "id": 30,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 32,
-      "weight": 330
+      "weight": 330,
+      "methods": {
+        "1": 330
+      }
     },
     {
       "id": 33,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 39,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 52,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 53,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 54,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "5": 270
+      }
     },
     {
       "id": 55,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 58,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 60,
-      "weight": 480
+      "weight": 480,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 240
+      }
     },
     {
       "id": 61,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.09375,
+        "3": 0.40625,
+        "4": 0.5
+      }
     },
     {
       "id": 63,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     },
     {
       "id": 64,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 96,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "1": 150
+      }
     },
     {
       "id": 97,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 102,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 132,
-      "weight": 61
+      "weight": 61,
+      "methods": {
+        "1": 61
+      }
     },
     {
       "id": 163,
-      "weight": 195
+      "weight": 195,
+      "methods": {
+        "1": 45,
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 164,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.23076923076923078,
+        "22": 0.2564102564102564,
+        "23": 0.2564102564102564,
+        "24": 0.2564102564102564
+      }
     },
     {
       "id": 165,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 166,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.5,
+        "23": 0.5
+      }
     },
     {
       "id": 167,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 168,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.5,
+        "23": 0.5
+      }
     },
     {
       "id": 193,
-      "weight": 159
+      "weight": 159,
+      "methods": {
+        "1": 159
+      }
     },
     {
       "id": 204,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "24": 90
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     },
     {
       "id": 209,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 210,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-36": [
     {
       "id": 10,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 11,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 12,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 13,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 14,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 15,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 16,
-      "weight": 200
+      "weight": 200,
+      "methods": {
+        "1": 200
+      }
     },
     {
       "id": 17,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 29,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "1": 180
+      }
     },
     {
       "id": 30,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 32,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "1": 180
+      }
     },
     {
       "id": 33,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 37,
-      "weight": 35
+      "weight": 35,
+      "methods": {
+        "1": 35
+      }
     },
     {
       "id": 58,
-      "weight": 55
+      "weight": 55,
+      "methods": {
+        "1": 55
+      }
     },
     {
       "id": 69,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 70,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 92,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 93,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 102,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 163,
-      "weight": 245
+      "weight": 245,
+      "methods": {
+        "1": 95,
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 164,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.3877551020408163,
+        "22": 0.20408163265306123,
+        "23": 0.20408163265306123,
+        "24": 0.20408163265306123
+      }
     },
     {
       "id": 165,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 30,
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 166,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.5,
+        "22": 0.25,
+        "23": 0.25
+      }
     },
     {
       "id": 167,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 30,
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 168,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.5,
+        "22": 0.25,
+        "23": 0.25
+      }
     },
     {
       "id": 204,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "24": 90
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     },
     {
       "id": 234,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-37": [
     {
       "id": 10,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 11,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 12,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 13,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 14,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 15,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 16,
-      "weight": 255
+      "weight": 255,
+      "methods": {
+        "1": 255
+      }
     },
     {
       "id": 17,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 37,
-      "weight": 35
+      "weight": 35,
+      "methods": {
+        "1": 35
+      }
     },
     {
       "id": 58,
-      "weight": 115
+      "weight": 115,
+      "methods": {
+        "1": 115
+      }
     },
     {
       "id": 102,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 163,
-      "weight": 280
+      "weight": 280,
+      "methods": {
+        "1": 130,
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 164,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 165,
-      "weight": 70
+      "weight": 70,
+      "methods": {
+        "1": 40,
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 166,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.5714285714285714,
+        "22": 0.21428571428571427,
+        "23": 0.21428571428571427
+      }
     },
     {
       "id": 167,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 70,
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 168,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 204,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "24": 90
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     },
     {
       "id": 234,
-      "weight": 220
+      "weight": 220,
+      "methods": {
+        "1": 220
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-38": [
     {
       "id": 10,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 11,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 12,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 13,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 14,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 15,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 17,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 19,
-      "weight": 190
+      "weight": 190,
+      "methods": {
+        "1": 190
+      }
     },
     {
       "id": 20,
-      "weight": 330
+      "weight": 330,
+      "methods": {
+        "1": 330
+      }
     },
     {
       "id": 52,
-      "weight": 110
+      "weight": 110,
+      "methods": {
+        "1": 110
+      }
     },
     {
       "id": 53,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 81,
-      "weight": 220
+      "weight": 220,
+      "methods": {
+        "1": 220
+      }
     },
     {
       "id": 82,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 83,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 102,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 128,
-      "weight": 44
+      "weight": 44,
+      "methods": {
+        "1": 44
+      }
     },
     {
       "id": 163,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 164,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 165,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 166,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.5,
+        "23": 0.5
+      }
     },
     {
       "id": 167,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 168,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.5,
+        "23": 0.5
+      }
     },
     {
       "id": 204,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "24": 90
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     },
     {
       "id": 209,
-      "weight": 66
+      "weight": 66,
+      "methods": {
+        "1": 66
+      }
     },
     {
       "id": 210,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 241,
-      "weight": 50
+      "weight": 50,
+      "methods": {
+        "1": 50
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-39": [
     {
       "id": 10,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 11,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 12,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 13,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 14,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 15,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 17,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 19,
-      "weight": 190
+      "weight": 190,
+      "methods": {
+        "1": 190
+      }
     },
     {
       "id": 20,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "1": 270
+      }
     },
     {
       "id": 52,
-      "weight": 110
+      "weight": 110,
+      "methods": {
+        "1": 110
+      }
     },
     {
       "id": 53,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 81,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "1": 180
+      }
     },
     {
       "id": 82,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 83,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 102,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 128,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 163,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 164,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 165,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 166,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.5,
+        "23": 0.5
+      }
     },
     {
       "id": 167,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 168,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.5,
+        "23": 0.5
+      }
     },
     {
       "id": 204,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "24": 90
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     },
     {
       "id": 241,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-42": [
     {
       "id": 19,
-      "weight": 70
+      "weight": 70,
+      "methods": {
+        "1": 70
+      }
     },
     {
       "id": 20,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 21,
-      "weight": 800
+      "weight": 800,
+      "methods": {
+        "1": 200,
+        "22": 225,
+        "23": 225,
+        "24": 150
+      }
     },
     {
       "id": 22,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 23,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 60,
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 24,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 41,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 42,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 56,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     },
     {
       "id": 57,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 118,
-      "weight": 720
+      "weight": 720,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 210,
+        "5": 270
+      }
     },
     {
       "id": 119,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "4": 30,
+        "5": 30
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 179,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 180,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 181,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 183,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 184,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 190,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 60,
+        "23": 60,
+        "24": 60
+      }
     },
     {
       "id": 214,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "24": 90
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-43": [
     {
       "id": 17,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "1": 150
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 20,
-      "weight": 35
+      "weight": 35,
+      "methods": {
+        "1": 35
+      }
     },
     {
       "id": 21,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "22": 160,
+        "23": 160,
+        "24": 100
+      }
     },
     {
       "id": 22,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.38095238095238093,
+        "23": 0.38095238095238093,
+        "24": 0.23809523809523808
+      }
     },
     {
       "id": 48,
-      "weight": 110
+      "weight": 110,
+      "methods": {
+        "1": 80,
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 49,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 60,
-      "weight": 480
+      "weight": 480,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 240
+      }
     },
     {
       "id": 61,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.09375,
+        "3": 0.40625,
+        "4": 0.5
+      }
     },
     {
       "id": 83,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 102,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "22": 20,
+        "23": 20,
+        "24": 20
+      }
     },
     {
       "id": 129,
-      "weight": 720
+      "weight": 720,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60,
+        "5": 300
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.3541666666666667,
+        "3": 0.14583333333333334,
+        "4": 0.08333333333333333,
+        "5": 0.4166666666666667
+      }
     },
     {
       "id": 161,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 162,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 163,
-      "weight": 210
+      "weight": 210,
+      "methods": {
+        "1": 30,
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 164,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 179,
-      "weight": 50
+      "weight": 50,
+      "methods": {
+        "1": 50
+      }
     },
     {
       "id": 180,
-      "weight": 200
+      "weight": 200,
+      "methods": {
+        "1": 200
+      }
     },
     {
       "id": 181,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 190,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "22": 40,
+        "23": 40,
+        "24": 40
+      }
     },
     {
       "id": 203,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "1": 180
+      }
     },
     {
       "id": 204,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "24": 30
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     },
     {
       "id": 214,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "24": 60
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-44": [
     {
       "id": 21,
-      "weight": 630
+      "weight": 630,
+      "methods": {
+        "22": 240,
+        "23": 240,
+        "24": 150
+      }
     },
     {
       "id": 22,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.38095238095238093,
+        "23": 0.38095238095238093,
+        "24": 0.23809523809523808
+      }
     },
     {
       "id": 60,
-      "weight": 760
+      "weight": 760,
+      "methods": {
+        "1": 30,
+        "2": 45,
+        "3": 195,
+        "4": 220,
+        "5": 270
+      }
     },
     {
       "id": 61,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 10,
+        "5": 30
+      }
     },
     {
       "id": 69,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 70,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 108,
-      "weight": 110
+      "weight": 110,
+      "methods": {
+        "1": 110
+      }
     },
     {
       "id": 114,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "1": 150
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 190,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 60,
+        "23": 60,
+        "24": 60
+      }
     },
     {
       "id": 214,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "24": 90
+      }
     },
     {
       "id": 223,
-      "weight": 380
+      "weight": 380,
+      "methods": {
+        "2": 30,
+        "3": 130,
+        "4": 220
+      }
     },
     {
       "id": 224,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.07894736842105263,
+        "3": 0.34210526315789475,
+        "4": 0.5789473684210527
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-45": [
     {
       "id": 21,
-      "weight": 630
+      "weight": 630,
+      "methods": {
+        "22": 240,
+        "23": 240,
+        "24": 150
+      }
     },
     {
       "id": 22,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.38095238095238093,
+        "23": 0.38095238095238093,
+        "24": 0.23809523809523808
+      }
     },
     {
       "id": 74,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "1": 150
+      }
     },
     {
       "id": 75,
-      "weight": 205
+      "weight": 205,
+      "methods": {
+        "1": 205
+      }
     },
     {
       "id": 129,
-      "weight": 1050
+      "weight": 1050,
+      "methods": {
+        "2": 300,
+        "3": 270,
+        "4": 180,
+        "5": 300
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.2857142857142857,
+        "3": 0.2571428571428571,
+        "4": 0.17142857142857143,
+        "5": 0.2857142857142857
+      }
     },
     {
       "id": 147,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 148,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "4": 30
+      }
     },
     {
       "id": 149,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "4": 1
+      }
     },
     {
       "id": 190,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 60,
+        "23": 60,
+        "24": 60
+      }
     },
     {
       "id": 207,
-      "weight": 80
+      "weight": 80,
+      "methods": {
+        "1": 80
+      }
     },
     {
       "id": 214,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "24": 90
+      }
     },
     {
       "id": 216,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 217,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 227,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 231,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 232,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-route-46": [
     {
       "id": 19,
-      "weight": 265
+      "weight": 265,
+      "methods": {
+        "1": 265
+      }
     },
     {
       "id": 20,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 21,
-      "weight": 830
+      "weight": 830,
+      "methods": {
+        "1": 200,
+        "22": 240,
+        "23": 240,
+        "24": 150
+      }
     },
     {
       "id": 22,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.24096385542168675,
+        "22": 0.2891566265060241,
+        "23": 0.2891566265060241,
+        "24": 0.18072289156626506
+      }
     },
     {
       "id": 39,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 74,
-      "weight": 400
+      "weight": 400,
+      "methods": {
+        "1": 400
+      }
     },
     {
       "id": 75,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 190,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 60,
+        "23": 60,
+        "24": 60
+      }
     },
     {
       "id": 214,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "24": 90
+      }
     },
     {
       "id": 231,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 232,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "johto-sea-route-40": [
     {
       "id": 72,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "5": 270
+      }
     },
     {
       "id": 73,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 98,
-      "weight": 1350
+      "weight": 1350,
+      "methods": {
+        "2": 45,
+        "3": 495,
+        "4": 540,
+        "6": 270
+      }
     },
     {
       "id": 99,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "4": 90
+      }
     },
     {
       "id": 120,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 129,
-      "weight": 570
+      "weight": 570,
+      "methods": {
+        "2": 255,
+        "3": 315
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.4473684210526316,
+        "3": 0.5526315789473685
+      }
     },
     {
       "id": 213,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "6": 30
+      }
     },
     {
       "id": 222,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "3": 60,
+        "4": 180
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     }
   ],
   "johto-sea-route-41": [
     {
       "id": 72,
-      "weight": 340
+      "weight": 340,
+      "methods": {
+        "2": 45,
+        "3": 105,
+        "5": 190
+      }
     },
     {
       "id": 73,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "4": 60,
+        "5": 90
+      }
     },
     {
       "id": 90,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 129,
-      "weight": 360
+      "weight": 360,
+      "methods": {
+        "2": 255,
+        "3": 105
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.7083333333333334,
+        "3": 0.2916666666666667
+      }
     },
     {
       "id": 170,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "3": 60,
+        "4": 120
+      }
     },
     {
       "id": 171,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "4": 30
+      }
     },
     {
       "id": 226,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "5": 20
+      }
     },
     {
       "id": 243,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     },
     {
       "id": 244,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     },
     {
       "id": 245,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     }
   ],
   "kanto-power-plant": [
     {
       "id": 25,
-      "weight": 50
+      "weight": 50,
+      "methods": {
+        "1": 50
+      }
     },
     {
       "id": 81,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 82,
-      "weight": 45
+      "weight": 45,
+      "methods": {
+        "1": 45
+      }
     },
     {
       "id": 88,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 89,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 100,
-      "weight": 80
+      "weight": 80,
+      "methods": {
+        "1": 80
+      }
     },
     {
       "id": 101,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 125,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 145,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "kanto-route-1": [
     {
       "id": 16,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "1": 270
+      }
     },
     {
       "id": 17,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 19,
-      "weight": 340
+      "weight": 340,
+      "methods": {
+        "1": 340
+      }
     },
     {
       "id": 20,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 161,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "1": 120
+      }
     },
     {
       "id": 162,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 163,
-      "weight": 135
+      "weight": 135,
+      "methods": {
+        "1": 135
+      }
     },
     {
       "id": 164,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "kanto-route-10": [
     {
       "id": 20,
-      "weight": 190
+      "weight": 190,
+      "methods": {
+        "1": 190
+      }
     },
     {
       "id": 21,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "1": 180
+      }
     },
     {
       "id": 22,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 41,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 42,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 48,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 49,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 100,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "1": 270
+      }
     },
     {
       "id": 101,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 105,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 118,
-      "weight": 720
+      "weight": 720,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 210,
+        "5": 270
+      }
     },
     {
       "id": 119,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "4": 30,
+        "5": 30
+      }
     },
     {
       "id": 125,
-      "weight": 55
+      "weight": 55,
+      "methods": {
+        "1": 55
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 195,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     }
   ],
   "kanto-route-11": [
     {
       "id": 17,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 19,
-      "weight": 70
+      "weight": 70,
+      "methods": {
+        "1": 70
+      }
     },
     {
       "id": 20,
-      "weight": 65
+      "weight": 65,
+      "methods": {
+        "1": 65
+      }
     },
     {
       "id": 52,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 53,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 81,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 82,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 96,
-      "weight": 110
+      "weight": 110,
+      "methods": {
+        "1": 110
+      }
     },
     {
       "id": 97,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     },
     {
       "id": 164,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 187,
-      "weight": 70
+      "weight": 70,
+      "methods": {
+        "1": 70
+      }
     },
     {
       "id": 188,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 189,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "kanto-route-12": [
     {
       "id": 72,
-      "weight": 630
+      "weight": 630,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 210,
+        "5": 180
+      }
     },
     {
       "id": 73,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 195,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "5": 90
+      }
     },
     {
       "id": 211,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "4": 30
+      }
     }
   ],
   "kanto-route-13": [
     {
       "id": 17,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "1": 120
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 30,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 33,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 48,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 49,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 72,
-      "weight": 630
+      "weight": 630,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 210,
+        "5": 180
+      }
     },
     {
       "id": 73,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 113,
-      "weight": 9
+      "weight": 9,
+      "methods": {
+        "1": 9
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 164,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 187,
-      "weight": 106
+      "weight": 106,
+      "methods": {
+        "1": 106
+      }
     },
     {
       "id": 188,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 189,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 195,
-      "weight": 175
+      "weight": 175,
+      "methods": {
+        "1": 85,
+        "5": 90
+      }
     },
     {
       "id": 211,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "4": 30
+      }
     }
   ],
   "kanto-route-14": [
     {
       "id": 17,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "1": 120
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 30,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 33,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 48,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 49,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 113,
-      "weight": 9
+      "weight": 9,
+      "methods": {
+        "1": 9
+      }
     },
     {
       "id": 127,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 164,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 187,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 188,
-      "weight": 46
+      "weight": 46,
+      "methods": {
+        "1": 46
+      }
     },
     {
       "id": 189,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 195,
-      "weight": 85
+      "weight": 85,
+      "methods": {
+        "1": 85
+      }
     }
   ],
   "kanto-route-15": [
     {
       "id": 17,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "1": 120
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 30,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 33,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 48,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 49,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 113,
-      "weight": 9
+      "weight": 9,
+      "methods": {
+        "1": 9
+      }
     },
     {
       "id": 164,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 187,
-      "weight": 106
+      "weight": 106,
+      "methods": {
+        "1": 106
+      }
     },
     {
       "id": 188,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 189,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 195,
-      "weight": 85
+      "weight": 85,
+      "methods": {
+        "1": 85
+      }
     }
   ],
   "kanto-route-16": [
     {
       "id": 22,
-      "weight": 245
+      "weight": 245,
+      "methods": {
+        "1": 245
+      }
     },
     {
       "id": 88,
-      "weight": 540
+      "weight": 540,
+      "methods": {
+        "1": 540
+      }
     },
     {
       "id": 89,
-      "weight": 45
+      "weight": 45,
+      "methods": {
+        "1": 45
+      }
     },
     {
       "id": 198,
-      "weight": 35
+      "weight": 35,
+      "methods": {
+        "1": 35
+      }
     },
     {
       "id": 218,
-      "weight": 35
+      "weight": 35,
+      "methods": {
+        "1": 35
+      }
     },
     {
       "id": 219,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "kanto-route-17": [
     {
       "id": 22,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 88,
-      "weight": 470
+      "weight": 470,
+      "methods": {
+        "1": 470
+      }
     },
     {
       "id": 89,
-      "weight": 65
+      "weight": 65,
+      "methods": {
+        "1": 65
+      }
     },
     {
       "id": 218,
-      "weight": 125
+      "weight": 125,
+      "methods": {
+        "1": 125
+      }
     },
     {
       "id": 219,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "kanto-route-18": [
     {
       "id": 22,
-      "weight": 245
+      "weight": 245,
+      "methods": {
+        "1": 245
+      }
     },
     {
       "id": 88,
-      "weight": 555
+      "weight": 555,
+      "methods": {
+        "1": 555
+      }
     },
     {
       "id": 89,
-      "weight": 45
+      "weight": 45,
+      "methods": {
+        "1": 45
+      }
     },
     {
       "id": 198,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 218,
-      "weight": 35
+      "weight": 35,
+      "methods": {
+        "1": 35
+      }
     },
     {
       "id": 219,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "kanto-route-2": [
     {
       "id": 10,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "1": 120
+      }
     },
     {
       "id": 11,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 12,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 13,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 14,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 15,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 16,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "1": 180
+      }
     },
     {
       "id": 17,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 25,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 163,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "1": 180
+      }
     },
     {
       "id": 164,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 165,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 166,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 167,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 168,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     }
   ],
   "kanto-route-22": [
     {
       "id": 19,
-      "weight": 430
+      "weight": 430,
+      "methods": {
+        "1": 430
+      }
     },
     {
       "id": 20,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 21,
-      "weight": 300
+      "weight": 300,
+      "methods": {
+        "1": 300
+      }
     },
     {
       "id": 22,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 60,
-      "weight": 790
+      "weight": 790,
+      "methods": {
+        "1": 40,
+        "2": 45,
+        "3": 195,
+        "4": 240,
+        "5": 270
+      }
     },
     {
       "id": 61,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 77,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 78,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 84,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 85,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     }
   ],
   "kanto-route-23": [
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 21,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 22,
-      "weight": 65
+      "weight": 65,
+      "methods": {
+        "1": 65
+      }
     },
     {
       "id": 23,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 24,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 27,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 28,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 30,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 33,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 54,
-      "weight": 105
+      "weight": 105,
+      "methods": {
+        "4": 5,
+        "5": 100
+      }
     },
     {
       "id": 55,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "4": 0.047619047619047616,
+        "5": 0.9523809523809523
+      }
     },
     {
       "id": 56,
-      "weight": 80
+      "weight": 80,
+      "methods": {
+        "1": 80
+      }
     },
     {
       "id": 57,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 60,
-      "weight": 320
+      "weight": 320,
+      "methods": {
+        "3": 170,
+        "4": 150
+      }
     },
     {
       "id": 61,
-      "weight": 110
+      "weight": 110,
+      "methods": {
+        "4": 110
+      }
     },
     {
       "id": 79,
-      "weight": 105
+      "weight": 105,
+      "methods": {
+        "4": 5,
+        "5": 100
+      }
     },
     {
       "id": 80,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "4": 0.047619047619047616,
+        "5": 0.9523809523809523
+      }
     },
     {
       "id": 118,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "3": 90
+      }
     },
     {
       "id": 119,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "3": 1
+      }
     },
     {
       "id": 129,
-      "weight": 340
+      "weight": 340,
+      "methods": {
+        "2": 300,
+        "3": 40
+      }
     },
     {
       "id": 130,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "4": 30
+      }
     }
   ],
   "kanto-route-24": [
     {
       "id": 10,
-      "weight": 110
+      "weight": 110,
+      "methods": {
+        "1": 110
+      }
     },
     {
       "id": 11,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 12,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 43,
-      "weight": 110
+      "weight": 110,
+      "methods": {
+        "1": 110
+      }
     },
     {
       "id": 44,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 48,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 49,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 63,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "1": 150
+      }
     },
     {
       "id": 64,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 69,
-      "weight": 215
+      "weight": 215,
+      "methods": {
+        "1": 215
+      }
     },
     {
       "id": 70,
-      "weight": 80
+      "weight": 80,
+      "methods": {
+        "1": 80
+      }
     },
     {
       "id": 118,
-      "weight": 720
+      "weight": 720,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 210,
+        "5": 270
+      }
     },
     {
       "id": 119,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "4": 30,
+        "5": 30
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 191,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     }
   ],
   "kanto-route-25": [
     {
       "id": 10,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 11,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 12,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 16,
-      "weight": 220
+      "weight": 220,
+      "methods": {
+        "1": 220
+      }
     },
     {
       "id": 17,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 43,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     },
     {
       "id": 44,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 48,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "1": 120
+      }
     },
     {
       "id": 49,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 63,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 64,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 69,
-      "weight": 145
+      "weight": 145,
+      "methods": {
+        "1": 145
+      }
     },
     {
       "id": 70,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 118,
-      "weight": 720
+      "weight": 720,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 210,
+        "5": 270
+      }
     },
     {
       "id": 119,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "4": 30,
+        "5": 30
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 163,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 164,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     }
   ],
   "kanto-route-26": [
     {
       "id": 10,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 11,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 12,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 13,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 14,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 15,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 20,
-      "weight": 248
+      "weight": 248,
+      "methods": {
+        "1": 248
+      }
     },
     {
       "id": 23,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 24,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     },
     {
       "id": 28,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "1": 150
+      }
     },
     {
       "id": 72,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 45,
+        "3": 105,
+        "5": 270
+      }
     },
     {
       "id": 73,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "4": 60,
+        "5": 30
+      }
     },
     {
       "id": 77,
-      "weight": 160
+      "weight": 160,
+      "methods": {
+        "1": 160
+      }
     },
     {
       "id": 78,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 84,
-      "weight": 230
+      "weight": 230,
+      "methods": {
+        "1": 230
+      }
     },
     {
       "id": 85,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 90,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 102,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 129,
-      "weight": 360
+      "weight": 360,
+      "methods": {
+        "2": 255,
+        "3": 105
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.7083333333333334,
+        "3": 0.2916666666666667
+      }
     },
     {
       "id": 163,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 164,
-      "weight": 50
+      "weight": 50,
+      "methods": {
+        "1": 50
+      }
     },
     {
       "id": 170,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "3": 60,
+        "4": 120
+      }
     },
     {
       "id": 171,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "4": 30
+      }
     },
     {
       "id": 195,
-      "weight": 27
+      "weight": 27,
+      "methods": {
+        "1": 27
+      }
     },
     {
       "id": 204,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "24": 90
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     }
   ],
   "kanto-route-27": [
     {
       "id": 10,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 11,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 12,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 13,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 14,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 15,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 20,
-      "weight": 190
+      "weight": 190,
+      "methods": {
+        "1": 190
+      }
     },
     {
       "id": 23,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 24,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "1": 150
+      }
     },
     {
       "id": 28,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 72,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 45,
+        "3": 105,
+        "5": 270
+      }
     },
     {
       "id": 73,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "4": 60,
+        "5": 30
+      }
     },
     {
       "id": 77,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 78,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 84,
-      "weight": 280
+      "weight": 280,
+      "methods": {
+        "1": 280
+      }
     },
     {
       "id": 85,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 90,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 102,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 129,
-      "weight": 360
+      "weight": 360,
+      "methods": {
+        "2": 255,
+        "3": 105
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.7083333333333334,
+        "3": 0.2916666666666667
+      }
     },
     {
       "id": 163,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 164,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 170,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "3": 60,
+        "4": 120
+      }
     },
     {
       "id": 171,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "4": 30
+      }
     },
     {
       "id": 195,
-      "weight": 165
+      "weight": 165,
+      "methods": {
+        "1": 165
+      }
     },
     {
       "id": 204,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "24": 90
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     }
   ],
   "kanto-route-28": [
     {
       "id": 24,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 42,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 60,
-      "weight": 750
+      "weight": 750,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 240,
+        "5": 270
+      }
     },
     {
       "id": 61,
-      "weight": 70
+      "weight": 70,
+      "methods": {
+        "1": 40,
+        "5": 30
+      }
     },
     {
       "id": 77,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 78,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 84,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 85,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 114,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "1": 270
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 215,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 217,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 232,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     }
   ],
   "kanto-route-3": [
     {
       "id": 19,
-      "weight": 350
+      "weight": 350,
+      "methods": {
+        "1": 350
+      }
     },
     {
       "id": 20,
-      "weight": 50
+      "weight": 50,
+      "methods": {
+        "1": 50
+      }
     },
     {
       "id": 21,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 22,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 23,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 24,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     },
     {
       "id": 35,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 39,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 41,
-      "weight": 70
+      "weight": 70,
+      "methods": {
+        "1": 70
+      }
     },
     {
       "id": 42,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "kanto-route-4": [
     {
       "id": 19,
-      "weight": 350
+      "weight": 350,
+      "methods": {
+        "1": 350
+      }
     },
     {
       "id": 20,
-      "weight": 50
+      "weight": 50,
+      "methods": {
+        "1": 50
+      }
     },
     {
       "id": 21,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 22,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 23,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 24,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     },
     {
       "id": 35,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 39,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 41,
-      "weight": 70
+      "weight": 70,
+      "methods": {
+        "1": 70
+      }
     },
     {
       "id": 42,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 118,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "5": 270
+      }
     },
     {
       "id": 119,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     }
   ],
   "kanto-route-5": [
     {
       "id": 16,
-      "weight": 260
+      "weight": 260,
+      "methods": {
+        "1": 260
+      }
     },
     {
       "id": 17,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 39,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 43,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     },
     {
       "id": 44,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 52,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 53,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 63,
-      "weight": 105
+      "weight": 105,
+      "methods": {
+        "1": 105
+      }
     },
     {
       "id": 64,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 69,
-      "weight": 160
+      "weight": 160,
+      "methods": {
+        "1": 160
+      }
     },
     {
       "id": 70,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 163,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 164,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 209,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 210,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "kanto-route-6": [
     {
       "id": 16,
-      "weight": 160
+      "weight": 160,
+      "methods": {
+        "1": 160
+      }
     },
     {
       "id": 17,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 19,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 20,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     },
     {
       "id": 39,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 43,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     },
     {
       "id": 44,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 52,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 53,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 54,
-      "weight": 280
+      "weight": 280,
+      "methods": {
+        "1": 10,
+        "5": 270
+      }
     },
     {
       "id": 55,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 60,
-      "weight": 480
+      "weight": 480,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 240
+      }
     },
     {
       "id": 61,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.09375,
+        "3": 0.40625,
+        "4": 0.5
+      }
     },
     {
       "id": 63,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 64,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 69,
-      "weight": 160
+      "weight": 160,
+      "methods": {
+        "1": 160
+      }
     },
     {
       "id": 70,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 81,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "1": 120
+      }
     },
     {
       "id": 82,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 96,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 97,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 209,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 210,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     }
   ],
   "kanto-route-7": [
     {
       "id": 19,
-      "weight": 170
+      "weight": 170,
+      "methods": {
+        "1": 170
+      }
     },
     {
       "id": 20,
-      "weight": 80
+      "weight": 80,
+      "methods": {
+        "1": 80
+      }
     },
     {
       "id": 21,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "1": 180
+      }
     },
     {
       "id": 22,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 37,
-      "weight": 65
+      "weight": 65,
+      "methods": {
+        "1": 65
+      }
     },
     {
       "id": 39,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 52,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "1": 120
+      }
     },
     {
       "id": 53,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     },
     {
       "id": 58,
-      "weight": 65
+      "weight": 65,
+      "methods": {
+        "1": 65
+      }
     },
     {
       "id": 63,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 64,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 106,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 107,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 198,
-      "weight": 95
+      "weight": 95,
+      "methods": {
+        "1": 95
+      }
     },
     {
       "id": 209,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 210,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 228,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 229,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "kanto-route-8": [
     {
       "id": 17,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 19,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 20,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 37,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     },
     {
       "id": 39,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 52,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "1": 120
+      }
     },
     {
       "id": 53,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 58,
-      "weight": 45
+      "weight": 45,
+      "methods": {
+        "1": 45
+      }
     },
     {
       "id": 63,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "1": 180
+      }
     },
     {
       "id": 64,
-      "weight": 45
+      "weight": 45,
+      "methods": {
+        "1": 45
+      }
     },
     {
       "id": 93,
-      "weight": 70
+      "weight": 70,
+      "methods": {
+        "1": 70
+      }
     },
     {
       "id": 164,
-      "weight": 80
+      "weight": 80,
+      "methods": {
+        "1": 80
+      }
     },
     {
       "id": 209,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 210,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "kanto-route-9": [
     {
       "id": 19,
-      "weight": 380
+      "weight": 380,
+      "methods": {
+        "1": 380
+      }
     },
     {
       "id": 20,
-      "weight": 170
+      "weight": 170,
+      "methods": {
+        "1": 170
+      }
     },
     {
       "id": 21,
-      "weight": 140
+      "weight": 140,
+      "methods": {
+        "1": 140
+      }
     },
     {
       "id": 22,
-      "weight": 50
+      "weight": 50,
+      "methods": {
+        "1": 50
+      }
     },
     {
       "id": 41,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 42,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 48,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 49,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 56,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     },
     {
       "id": 57,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 105,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 118,
-      "weight": 720
+      "weight": 720,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 210,
+        "5": 270
+      }
     },
     {
       "id": 119,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "4": 30,
+        "5": 30
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     }
   ],
   "kanto-sea-route-19": [
     {
       "id": 72,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "5": 270
+      }
     },
     {
       "id": 73,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 98,
-      "weight": 1080
+      "weight": 1080,
+      "methods": {
+        "2": 45,
+        "3": 495,
+        "4": 540
+      }
     },
     {
       "id": 99,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "4": 90
+      }
     },
     {
       "id": 120,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 129,
-      "weight": 570
+      "weight": 570,
+      "methods": {
+        "2": 255,
+        "3": 315
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.4473684210526316,
+        "3": 0.5526315789473685
+      }
     },
     {
       "id": 222,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "3": 60,
+        "4": 180
+      }
     }
   ],
   "kanto-sea-route-20": [
     {
       "id": 72,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 45,
+        "3": 105,
+        "5": 270
+      }
     },
     {
       "id": 73,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "4": 60,
+        "5": 30
+      }
     },
     {
       "id": 90,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 129,
-      "weight": 360
+      "weight": 360,
+      "methods": {
+        "2": 255,
+        "3": 105
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.7083333333333334,
+        "3": 0.2916666666666667
+      }
     },
     {
       "id": 170,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "3": 60,
+        "4": 120
+      }
     },
     {
       "id": 171,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "4": 30
+      }
     }
   ],
   "kanto-sea-route-21": [
     {
       "id": 19,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     },
     {
       "id": 20,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 72,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 45,
+        "3": 105,
+        "5": 270
+      }
     },
     {
       "id": 73,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "4": 60,
+        "5": 30
+      }
     },
     {
       "id": 90,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 114,
-      "weight": 720
+      "weight": 720,
+      "methods": {
+        "1": 720
+      }
     },
     {
       "id": 122,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 129,
-      "weight": 360
+      "weight": 360,
+      "methods": {
+        "2": 255,
+        "3": 105
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.7083333333333334,
+        "3": 0.2916666666666667
+      }
     },
     {
       "id": 149,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     },
     {
       "id": 170,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "3": 60,
+        "4": 120
+      }
     },
     {
       "id": 171,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "4": 30
+      }
     }
   ],
   "kanto-victory-road-1": [
     {
       "id": 28,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 42,
-      "weight": 330
+      "weight": 330,
+      "methods": {
+        "1": 330
+      }
     },
     {
       "id": 75,
-      "weight": 510
+      "weight": 510,
+      "methods": {
+        "1": 510
+      }
     },
     {
       "id": 95,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "1": 270
+      }
     },
     {
       "id": 111,
-      "weight": 210
+      "weight": 210,
+      "methods": {
+        "1": 210
+      }
     },
     {
       "id": 112,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 217,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 232,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     }
   ],
   "kanto-victory-road-2": [
     {
       "id": 24,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 28,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 41,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     },
     {
       "id": 42,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 57,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 66,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "1": 120
+      }
     },
     {
       "id": 67,
-      "weight": 45
+      "weight": 45,
+      "methods": {
+        "1": 45
+      }
     },
     {
       "id": 74,
-      "weight": 285
+      "weight": 285,
+      "methods": {
+        "1": 285
+      }
     },
     {
       "id": 75,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 78,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 95,
-      "weight": 190
+      "weight": 190,
+      "methods": {
+        "1": 190
+      }
     },
     {
       "id": 105,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 146,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "lake-of-rage": [
     {
       "id": 10,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 11,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 12,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 13,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 14,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 15,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "22": 5,
+        "23": 5,
+        "24": 5
+      }
     },
     {
       "id": 48,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "22": 15,
+        "23": 15
+      }
     },
     {
       "id": 49,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.5,
+        "23": 0.5
+      }
     },
     {
       "id": 102,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "22": 50,
+        "23": 50,
+        "24": 50
+      }
     },
     {
       "id": 129,
-      "weight": 1050
+      "weight": 1050,
+      "methods": {
+        "2": 300,
+        "3": 270,
+        "4": 210,
+        "5": 270
+      }
     },
     {
       "id": 130,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "3": 30,
+        "4": 90,
+        "5": 30
+      }
     },
     {
       "id": 163,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "22": 65,
+        "23": 65,
+        "24": 50
+      }
     },
     {
       "id": 164,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "22": 0.3611111111111111,
+        "23": 0.3611111111111111,
+        "24": 0.2777777777777778
+      }
     },
     {
       "id": 204,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "24": 90
+      }
     },
     {
       "id": 205,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "24": 1
+      }
     }
   ],
   "mt-moon": [
     {
       "id": 27,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 28,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 35,
-      "weight": 45
+      "weight": 45,
+      "methods": {
+        "1": 45
+      }
     },
     {
       "id": 41,
-      "weight": 170
+      "weight": 170,
+      "methods": {
+        "1": 170
+      }
     },
     {
       "id": 42,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 46,
-      "weight": 50
+      "weight": 50,
+      "methods": {
+        "1": 50
+      }
     },
     {
       "id": 47,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 74,
-      "weight": 170
+      "weight": 170,
+      "methods": {
+        "1": 170
+      }
     },
     {
       "id": 75,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "mt-mortar": [
     {
       "id": 19,
-      "weight": 258
+      "weight": 258,
+      "methods": {
+        "1": 258
+      }
     },
     {
       "id": 20,
-      "weight": 140
+      "weight": 140,
+      "methods": {
+        "1": 140
+      }
     },
     {
       "id": 41,
-      "weight": 600
+      "weight": 600,
+      "methods": {
+        "1": 600
+      }
     },
     {
       "id": 42,
-      "weight": 140
+      "weight": 140,
+      "methods": {
+        "1": 140
+      }
     },
     {
       "id": 66,
-      "weight": 310
+      "weight": 310,
+      "methods": {
+        "1": 310
+      }
     },
     {
       "id": 67,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "1": 120
+      }
     },
     {
       "id": 74,
-      "weight": 360
+      "weight": 360,
+      "methods": {
+        "1": 360
+      }
     },
     {
       "id": 75,
-      "weight": 150
+      "weight": 150,
+      "methods": {
+        "1": 150
+      }
     },
     {
       "id": 118,
-      "weight": 2190
+      "weight": 2190,
+      "methods": {
+        "2": 135,
+        "3": 585,
+        "4": 630,
+        "5": 840
+      }
     },
     {
       "id": 119,
-      "weight": 200
+      "weight": 200,
+      "methods": {
+        "4": 90,
+        "5": 110
+      }
     },
     {
       "id": 129,
-      "weight": 1260
+      "weight": 1260,
+      "methods": {
+        "2": 765,
+        "3": 315,
+        "4": 180
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 183,
-      "weight": 272
+      "weight": 272,
+      "methods": {
+        "1": 122,
+        "5": 150
+      }
     },
     {
       "id": 184,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.4485294117647059,
+        "5": 0.5514705882352942
+      }
     },
     {
       "id": 237,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "mt-silver": [
     {
       "id": 24,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 42,
-      "weight": 375
+      "weight": 375,
+      "methods": {
+        "1": 375
+      }
     },
     {
       "id": 47,
-      "weight": 45
+      "weight": 45,
+      "methods": {
+        "1": 45
+      }
     },
     {
       "id": 55,
-      "weight": 255
+      "weight": 255,
+      "methods": {
+        "1": 225,
+        "5": 30
+      }
     },
     {
       "id": 60,
-      "weight": 510
+      "weight": 510,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 240,
+        "5": 30
+      }
     },
     {
       "id": 61,
-      "weight": 310
+      "weight": 310,
+      "methods": {
+        "1": 40,
+        "5": 270
+      }
     },
     {
       "id": 67,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 75,
-      "weight": 210
+      "weight": 210,
+      "methods": {
+        "1": 210
+      }
     },
     {
       "id": 77,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 78,
-      "weight": 80
+      "weight": 80,
+      "methods": {
+        "1": 80
+      }
     },
     {
       "id": 84,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 85,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 95,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "1": 270
+      }
     },
     {
       "id": 114,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "1": 270
+      }
     },
     {
       "id": 118,
-      "weight": 480
+      "weight": 480,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 210,
+        "5": 30
+      }
     },
     {
       "id": 119,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "4": 30,
+        "5": 240
+      }
     },
     {
       "id": 126,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 129,
-      "weight": 840
+      "weight": 840,
+      "methods": {
+        "2": 510,
+        "3": 210,
+        "4": 120
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 195,
-      "weight": 250
+      "weight": 250,
+      "methods": {
+        "1": 250
+      }
     },
     {
       "id": 200,
-      "weight": 25
+      "weight": 25,
+      "methods": {
+        "1": 25
+      }
     },
     {
       "id": 215,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 217,
-      "weight": 310
+      "weight": 310,
+      "methods": {
+        "1": 310
+      }
     },
     {
       "id": 232,
-      "weight": 160
+      "weight": 160,
+      "methods": {
+        "1": 160
+      }
     },
     {
       "id": 246,
-      "weight": 88
+      "weight": 88,
+      "methods": {
+        "1": 88
+      }
     },
     {
       "id": 247,
-      "weight": 2
+      "weight": 2,
+      "methods": {
+        "1": 2
+      }
     },
     {
       "id": 248,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "national-park": [
     {
       "id": 10,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     },
     {
       "id": 11,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 12,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 13,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     },
     {
       "id": 14,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 15,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 16,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     },
     {
       "id": 17,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 29,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 30,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 32,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 33,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 48,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     },
     {
       "id": 49,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 54,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 55,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 123,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 163,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "1": 240
+      }
     },
     {
       "id": 164,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 165,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 166,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 167,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 168,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 191,
-      "weight": 70
+      "weight": 70,
+      "methods": {
+        "1": 70
+      }
     }
   ],
   "new-bark-town": [
     {
       "id": 72,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 45,
+        "3": 105,
+        "5": 270
+      }
     },
     {
       "id": 73,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "4": 60,
+        "5": 30
+      }
     },
     {
       "id": 90,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 129,
-      "weight": 360
+      "weight": 360,
+      "methods": {
+        "2": 255,
+        "3": 105
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.7083333333333334,
+        "3": 0.2916666666666667
+      }
     },
     {
       "id": 170,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "3": 60,
+        "4": 120
+      }
     },
     {
       "id": 171,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "4": 30
+      }
     }
   ],
   "olivine-city": [
     {
       "id": 72,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "5": 270
+      }
     },
     {
       "id": 73,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 98,
-      "weight": 1080
+      "weight": 1080,
+      "methods": {
+        "2": 45,
+        "3": 495,
+        "4": 540
+      }
     },
     {
       "id": 99,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "4": 90
+      }
     },
     {
       "id": 120,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 129,
-      "weight": 570
+      "weight": 570,
+      "methods": {
+        "2": 255,
+        "3": 315
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.4473684210526316,
+        "3": 0.5526315789473685
+      }
     },
     {
       "id": 222,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "3": 60,
+        "4": 180
+      }
     }
   ],
   "pallet-town": [
     {
       "id": 72,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 45,
+        "3": 105,
+        "5": 270
+      }
     },
     {
       "id": 73,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "4": 60,
+        "5": 30
+      }
     },
     {
       "id": 90,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 129,
-      "weight": 360
+      "weight": 360,
+      "methods": {
+        "2": 255,
+        "3": 105
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.7083333333333334,
+        "3": 0.2916666666666667
+      }
     },
     {
       "id": 170,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "3": 60,
+        "4": 120
+      }
     },
     {
       "id": 171,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "4": 30
+      }
     }
   ],
   "pokemon-mansion": [
     {
       "id": 19,
-      "weight": 190
+      "weight": 190,
+      "methods": {
+        "1": 190
+      }
     },
     {
       "id": 20,
-      "weight": 370
+      "weight": 370,
+      "methods": {
+        "1": 370
+      }
     },
     {
       "id": 37,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 58,
-      "weight": 80
+      "weight": 80,
+      "methods": {
+        "1": 80
+      }
     },
     {
       "id": 88,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "1": 270
+      }
     },
     {
       "id": 89,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 109,
-      "weight": 140
+      "weight": 140,
+      "methods": {
+        "1": 140
+      }
     },
     {
       "id": 110,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 126,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 132,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     }
   ],
   "pokemon-tower": [
     {
       "id": 92,
-      "weight": 1304
+      "weight": 1304,
+      "methods": {
+        "1": 1304
+      }
     },
     {
       "id": 93,
-      "weight": 89
+      "weight": 89,
+      "methods": {
+        "1": 89
+      }
     },
     {
       "id": 104,
-      "weight": 107
+      "weight": 107,
+      "methods": {
+        "1": 107
+      }
     },
     {
       "id": 105,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "rock-tunnel": [
     {
       "id": 41,
-      "weight": 160
+      "weight": 160,
+      "methods": {
+        "1": 160
+      }
     },
     {
       "id": 42,
-      "weight": 5
+      "weight": 5,
+      "methods": {
+        "1": 5
+      }
     },
     {
       "id": 66,
-      "weight": 80
+      "weight": 80,
+      "methods": {
+        "1": 80
+      }
     },
     {
       "id": 67,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     },
     {
       "id": 74,
-      "weight": 320
+      "weight": 320,
+      "methods": {
+        "1": 320
+      }
     },
     {
       "id": 75,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 93,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 95,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 104,
-      "weight": 250
+      "weight": 250,
+      "methods": {
+        "1": 250
+      }
     },
     {
       "id": 105,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     },
     {
       "id": 115,
-      "weight": 20
+      "weight": 20,
+      "methods": {
+        "1": 20
+      }
     }
   ],
   "ruins-of-alph": [
     {
       "id": 60,
-      "weight": 480
+      "weight": 480,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 240
+      }
     },
     {
       "id": 61,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.09375,
+        "3": 0.40625,
+        "4": 0.5
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     },
     {
       "id": 177,
-      "weight": 450
+      "weight": 450,
+      "methods": {
+        "1": 450
+      }
     },
     {
       "id": 178,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 194,
-      "weight": 190
+      "weight": 190,
+      "methods": {
+        "1": 10,
+        "5": 180
+      }
     },
     {
       "id": 195,
-      "weight": 130
+      "weight": 130,
+      "methods": {
+        "1": 10,
+        "5": 120
+      }
     },
     {
       "id": 201,
-      "weight": 1200
+      "weight": 1200,
+      "methods": {
+        "1": 1200
+      }
     },
     {
       "id": 235,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "1": 30
+      }
     }
   ],
   "seafoam-islands": [
     {
       "id": 41,
-      "weight": 371
+      "weight": 371,
+      "methods": {
+        "1": 371
+      }
     },
     {
       "id": 42,
-      "weight": 189
+      "weight": 189,
+      "methods": {
+        "1": 189
+      }
     },
     {
       "id": 54,
-      "weight": 181
+      "weight": 181,
+      "methods": {
+        "1": 165,
+        "4": 8,
+        "5": 8
+      }
     },
     {
       "id": 55,
-      "weight": 47
+      "weight": 47,
+      "methods": {
+        "1": 45,
+        "5": 2
+      }
     },
     {
       "id": 60,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "3": 100
+      }
     },
     {
       "id": 61,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "3": 1
+      }
     },
     {
       "id": 72,
-      "weight": 140
+      "weight": 140,
+      "methods": {
+        "5": 140
+      }
     },
     {
       "id": 73,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     },
     {
       "id": 79,
-      "weight": 210
+      "weight": 210,
+      "methods": {
+        "1": 194,
+        "4": 8,
+        "5": 8
+      }
     },
     {
       "id": 80,
-      "weight": 48
+      "weight": 48,
+      "methods": {
+        "1": 46,
+        "5": 2
+      }
     },
     {
       "id": 86,
-      "weight": 530
+      "weight": 530,
+      "methods": {
+        "1": 290,
+        "5": 240
+      }
     },
     {
       "id": 87,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 40,
+        "5": 20
+      }
     },
     {
       "id": 98,
-      "weight": 585
+      "weight": 585,
+      "methods": {
+        "1": 125,
+        "3": 160,
+        "4": 240,
+        "5": 60
+      }
     },
     {
       "id": 99,
-      "weight": 75
+      "weight": 75,
+      "methods": {
+        "1": 35,
+        "4": 40
+      }
     },
     {
       "id": 116,
-      "weight": 380
+      "weight": 380,
+      "methods": {
+        "3": 160,
+        "4": 160,
+        "5": 60
+      }
     },
     {
       "id": 117,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "3": 0.42105263157894735,
+        "4": 0.42105263157894735,
+        "5": 0.15789473684210525
+      }
     },
     {
       "id": 118,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "3": 100
+      }
     },
     {
       "id": 119,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "3": 1
+      }
     },
     {
       "id": 120,
-      "weight": 140
+      "weight": 140,
+      "methods": {
+        "4": 80,
+        "5": 60
+      }
     },
     {
       "id": 124,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 129,
-      "weight": 680
+      "weight": 680,
+      "methods": {
+        "2": 600,
+        "3": 80
+      }
     },
     {
       "id": 130,
-      "weight": 64
+      "weight": 64,
+      "methods": {
+        "4": 64
+      }
     },
     {
       "id": 144,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "slowpoke-well": [
     {
       "id": 41,
-      "weight": 495
+      "weight": 495,
+      "methods": {
+        "1": 495
+      }
     },
     {
       "id": 42,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 79,
-      "weight": 660
+      "weight": 660,
+      "methods": {
+        "1": 90,
+        "5": 570
+      }
     },
     {
       "id": 80,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 118,
-      "weight": 900
+      "weight": 900,
+      "methods": {
+        "2": 90,
+        "3": 390,
+        "4": 420
+      }
     },
     {
       "id": 119,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "4": 60
+      }
     },
     {
       "id": 129,
-      "weight": 840
+      "weight": 840,
+      "methods": {
+        "2": 510,
+        "3": 210,
+        "4": 120
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     }
   ],
   "sprout-tower": [
     {
       "id": 19,
-      "weight": 1290
+      "weight": 1290,
+      "methods": {
+        "1": 1290
+      }
     },
     {
       "id": 20,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 92,
-      "weight": 510
+      "weight": 510,
+      "methods": {
+        "1": 510
+      }
     },
     {
       "id": 93,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     }
   ],
   "ss-anne": [
     {
       "id": 54,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "4": 1
+      }
     },
     {
       "id": 55,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "4": 1
+      }
     },
     {
       "id": 72,
-      "weight": 200
+      "weight": 200,
+      "methods": {
+        "5": 200
+      }
     },
     {
       "id": 73,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     },
     {
       "id": 79,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "4": 1
+      }
     },
     {
       "id": 80,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "4": 1
+      }
     },
     {
       "id": 90,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "4": 40
+      }
     },
     {
       "id": 98,
-      "weight": 124
+      "weight": 124,
+      "methods": {
+        "3": 80,
+        "4": 44
+      }
     },
     {
       "id": 99,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "3": 0.6451612903225806,
+        "4": 0.3548387096774194
+      }
     },
     {
       "id": 116,
-      "weight": 124
+      "weight": 124,
+      "methods": {
+        "3": 80,
+        "4": 44
+      }
     },
     {
       "id": 117,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "3": 0.6451612903225806,
+        "4": 0.3548387096774194
+      }
     },
     {
       "id": 120,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "4": 40
+      }
     },
     {
       "id": 129,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "2": 200,
+        "3": 40
+      }
     },
     {
       "id": 130,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "4": 30
+      }
     }
   ],
   "tohjo-falls": [
     {
       "id": 19,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 20,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     },
     {
       "id": 41,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     },
     {
       "id": 42,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "1": 60
+      }
     },
     {
       "id": 79,
-      "weight": 135
+      "weight": 135,
+      "methods": {
+        "1": 45,
+        "5": 90
+      }
     },
     {
       "id": 80,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 0.3333333333333333,
+        "5": 0.6666666666666666
+      }
     },
     {
       "id": 118,
-      "weight": 630
+      "weight": 630,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 210,
+        "5": 180
+      }
     },
     {
       "id": 119,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "4": 30,
+        "5": 30
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     }
   ],
   "union-cave": [
     {
       "id": 19,
-      "weight": 190
+      "weight": 190,
+      "methods": {
+        "1": 190
+      }
     },
     {
       "id": 20,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "1": 90
+      }
     },
     {
       "id": 27,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "1": 120
+      }
     },
     {
       "id": 28,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 41,
-      "weight": 475
+      "weight": 475,
+      "methods": {
+        "1": 475
+      }
     },
     {
       "id": 42,
-      "weight": 130
+      "weight": 130,
+      "methods": {
+        "1": 130
+      }
     },
     {
       "id": 72,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "5": 180
+      }
     },
     {
       "id": 73,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 74,
-      "weight": 335
+      "weight": 335,
+      "methods": {
+        "1": 335
+      }
     },
     {
       "id": 75,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 95,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "1": 100
+      }
     },
     {
       "id": 98,
-      "weight": 1080
+      "weight": 1080,
+      "methods": {
+        "2": 45,
+        "3": 495,
+        "4": 540
+      }
     },
     {
       "id": 99,
-      "weight": 90
+      "weight": 90,
+      "methods": {
+        "4": 90
+      }
     },
     {
       "id": 118,
-      "weight": 900
+      "weight": 900,
+      "methods": {
+        "2": 90,
+        "3": 390,
+        "4": 420
+      }
     },
     {
       "id": 119,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "4": 60
+      }
     },
     {
       "id": 120,
-      "weight": 120
+      "weight": 120,
+      "methods": {
+        "3": 30,
+        "4": 90
+      }
     },
     {
       "id": 129,
-      "weight": 1410
+      "weight": 1410,
+      "methods": {
+        "2": 765,
+        "3": 525,
+        "4": 120
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.5425531914893617,
+        "3": 0.3723404255319149,
+        "4": 0.0851063829787234
+      }
     },
     {
       "id": 131,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     },
     {
       "id": 194,
-      "weight": 400
+      "weight": 400,
+      "methods": {
+        "1": 40,
+        "5": 360
+      }
     },
     {
       "id": 195,
-      "weight": 350
+      "weight": 350,
+      "methods": {
+        "1": 20,
+        "5": 330
+      }
     },
     {
       "id": 222,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "3": 60,
+        "4": 180
+      }
     }
   ],
   "vermilion-city": [
     {
       "id": 72,
-      "weight": 840
+      "weight": 840,
+      "methods": {
+        "2": 90,
+        "3": 210,
+        "5": 540
+      }
     },
     {
       "id": 73,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "4": 120,
+        "5": 60
+      }
     },
     {
       "id": 90,
-      "weight": 240
+      "weight": 240,
+      "methods": {
+        "3": 60,
+        "4": 180
+      }
     },
     {
       "id": 129,
-      "weight": 720
+      "weight": 720,
+      "methods": {
+        "2": 510,
+        "3": 210
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.7083333333333334,
+        "3": 0.2916666666666667
+      }
     },
     {
       "id": 170,
-      "weight": 360
+      "weight": 360,
+      "methods": {
+        "3": 120,
+        "4": 240
+      }
     },
     {
       "id": 171,
-      "weight": 60
+      "weight": 60,
+      "methods": {
+        "4": 60
+      }
     }
   ],
   "violet-city": [
     {
       "id": 60,
-      "weight": 750
+      "weight": 750,
+      "methods": {
+        "2": 45,
+        "3": 195,
+        "4": 240,
+        "5": 270
+      }
     },
     {
       "id": 61,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     },
     {
       "id": 129,
-      "weight": 420
+      "weight": 420,
+      "methods": {
+        "2": 255,
+        "3": 105,
+        "4": 60
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.6071428571428571,
+        "3": 0.25,
+        "4": 0.14285714285714285
+      }
     }
   ],
   "viridian-city": [
     {
       "id": 60,
-      "weight": 270
+      "weight": 270,
+      "methods": {
+        "5": 270
+      }
     },
     {
       "id": 61,
-      "weight": 30
+      "weight": 30,
+      "methods": {
+        "5": 30
+      }
     }
   ],
   "viridian-forest": [
     {
       "id": 10,
-      "weight": 130
+      "weight": 130,
+      "methods": {
+        "1": 130
+      }
     },
     {
       "id": 11,
-      "weight": 40
+      "weight": 40,
+      "methods": {
+        "1": 40
+      }
     },
     {
       "id": 12,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 13,
-      "weight": 80
+      "weight": 80,
+      "methods": {
+        "1": 80
+      }
     },
     {
       "id": 14,
-      "weight": 15
+      "weight": 15,
+      "methods": {
+        "1": 15
+      }
     },
     {
       "id": 15,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 16,
-      "weight": 24
+      "weight": 24,
+      "methods": {
+        "1": 24
+      }
     },
     {
       "id": 17,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 18,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 25,
-      "weight": 10
+      "weight": 10,
+      "methods": {
+        "1": 10
+      }
     }
   ],
   "whirl-islands": [
     {
       "id": 41,
-      "weight": 600
+      "weight": 600,
+      "methods": {
+        "1": 600
+      }
     },
     {
       "id": 42,
-      "weight": 115
+      "weight": 115,
+      "methods": {
+        "1": 115
+      }
     },
     {
       "id": 72,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "5": 180
+      }
     },
     {
       "id": 73,
-      "weight": 110
+      "weight": 110,
+      "methods": {
+        "5": 110
+      }
     },
     {
       "id": 86,
-      "weight": 335
+      "weight": 335,
+      "methods": {
+        "1": 335
+      }
     },
     {
       "id": 87,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "1": 1
+      }
     },
     {
       "id": 98,
-      "weight": 1940
+      "weight": 1940,
+      "methods": {
+        "1": 950,
+        "2": 135,
+        "3": 495,
+        "4": 360
+      }
     },
     {
       "id": 99,
-      "weight": 180
+      "weight": 180,
+      "methods": {
+        "4": 180
+      }
     },
     {
       "id": 116,
-      "weight": 960
+      "weight": 960,
+      "methods": {
+        "3": 90,
+        "4": 270,
+        "5": 600
+      }
     },
     {
       "id": 117,
-      "weight": 100
+      "weight": 100,
+      "methods": {
+        "4": 90,
+        "5": 10
+      }
     },
     {
       "id": 129,
-      "weight": 1080
+      "weight": 1080,
+      "methods": {
+        "2": 765,
+        "3": 315
+      }
     },
     {
       "id": 130,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "2": 0.7083333333333334,
+        "3": 0.2916666666666667
+      }
     },
     {
       "id": 249,
-      "weight": 1
+      "weight": 1,
+      "methods": {
+        "5": 1
+      }
     }
   ]
 }

@@ -52,6 +52,7 @@ add('j-ice-path','얼음샛길','dialogue',['j-radio-final'],{sprite:'pokemon:22
 add('j-dragon-den','용의 굴','dialogue',['j-clair'],{sprite:'j-sage',pages:['용의 굴 장로가 동료와 함께했던 모험에 대해 물었다.','포켓몬은 함께 걷는 친구라고 대답했다. 장로가 조용히 미소 지었다.'],gift:147,level:15});
 add('j-victory-road','챔피언로드','dialogue',['j-dragon-den'],{sprite:'j-silver',pages:['긴 동굴을 지나 리그로 향하는 출구에 도착했다.','너와 동료들이 걸어온 길을 돌아보며 마지막 준비를 마쳤다.']});
 const extras=group('j-side','모험 중 전해진 소식','지금 찾아갈 수 있는 사람들과 장소의 소식이에요.',['j-arrival']);
+step(extras,'j-fishing-rod','32번도로의 낚시꾼','dialogue',['j-falkner'],{item:'fishing-rod',sprite:'fisherman',pages:['물가에서 낚시를 해 본 적 있니? 이 낚싯대를 써 보렴.','이제 물가에서도 야생 포켓몬을 만날 수 있을 거야.'],rewardText:'낚싯대를 받았어요. 물가에서 새로운 포켓몬을 만나 보세요.'});
 step(extras,'j-togepi','공박사의 조수','egg',['j-falkner'],{egg:175,sprite:'j-scientist',pages:['공박사가 맡긴 알이야. 네가 동료들과 함께 돌봐 주겠니?']});
 step(extras,'j-odd-egg','34번도로의 키우미집','odd-egg',['j-ilex'],{repeatEgg:true,sprite:'j-sage',pages:['키우미집에서 신기한 알을 맡아 달라는 연락이 왔다.','어떤 포켓몬이 나올지는 부화할 때까지 알 수 없다.']});
 step(extras,'j-ruins','알프의유적','dialogue',['j-falkner'],{sprite:'j-scientist',pages:['흩어진 석판을 맞추자 벽화가 모습을 드러냈다.','유적 안에서 낯선 문자처럼 생긴 포켓몬의 기척이 느껴진다.']});
@@ -103,6 +104,7 @@ function done(game,id){return !!game.data.johto?.cleared[id];}
 function nativeDex(game){return data.pokemon.filter(p=>p.generation===2&&!!game.data.caught[p.id]).length;}
 function available(game,n){
  if(!active(game)||!n||!n.requires.every(id=>done(game,id)))return false;
+ if(n.id==='j-fishing-rod'&&game.data.johtoWorld?.location!=='j-route32')return false;
  if(n.type==='league')return false; // The five stages are entered through the league only.
  if(n.type==='rival')return game.data.johto.rivals[n.id]?.state==='retry';
  if(n.needsBeasts&&![243,244,245].every(id=>game.data.caught[id]))return false;

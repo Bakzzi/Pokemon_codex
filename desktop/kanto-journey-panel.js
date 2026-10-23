@@ -1,6 +1,7 @@
 'use strict';
 (()=>{
  const root=document.createElement('section');root.id='kanto-journey-cases';document.getElementById('kanto-challenges').append(root);
+ itemSprites['kanto-fishing-rod']='old-rod';itemSprites['j-fishing-rod']='old-rod';
  const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;};let signature='';
  for(const [id,sprite]of Object.entries({parcel:'parcel','ss-ticket':'ss-ticket','lift-key':'lift-key','card-key':'card-key',138:'helix-fossil',140:'dome-fossil'}))itemSprites['kanto-'+id]=sprite;
  document.addEventListener('panel-rendered',({detail:s})=>{

@@ -7,7 +7,9 @@ const storyText=require('./johto-dialogue.cjs');
 const discovery=require('./challenge-discovery.cjs');
 const world=require('./johto-world.cjs');
 const oddEgg=[172,173,174,236,238,239,240];
+const aquatic=require('./local-habitats.cjs'),habitatData=require('./johto-habitats.json');
 const itemNames={'squirt-bottle':'꼬부기물뿌리개','secret-potion':'비전신약','clear-bell':'크리스탈방울','silver-wing':'은빛날개','rainbow-wing':'무지갯빛날개','ss-ticket':'승선티켓','machine-part':'기계부품','expansion-card':'라디오 확장카드','gs-ball':'GS볼','red-scale':'빨간비늘'};
+itemNames['fishing-rod']='낚싯대';
 function withJohto(Base){return class JohtoAdventure extends Base{
  constructor(saved={},now=Date.now(),options={}){
   super(saved,now,options);
@@ -195,12 +197,13 @@ function withJohto(Base){return class JohtoAdventure extends Base{
     const nearby=world.locationsFor(p.id).slice(0,3).map(p=>p.name).join(' · '),text=current?'현재 '+(current*100).toFixed(2)+'% 확률로 야생에서 출현.':nearby?nearby+'에서 만날 수 있어요.':'다른 도로에서도 찾아보세요.';
     routes.unshift({kind:'wild',chance:current,minimumLevel:wildMinimum(species.get(p.id)),text:open?text:hint,...(J.specialIds.includes(p.id)&&open?{note:this.data.caught[p.id]?'포획을 마쳐 추가 출현 보너스가 종료됐어요.':'모험을 진행할수록 포획에 성공할 때까지 더 자주 만날 수 있어요.'}:{})});
    }
+   if(wild&&!aquatic.waterAccess(this)&&aquatic.waterOnly(habitatData,p.id)){const r=routes.find(r=>r.kind==='wild');r.note=[aquatic.waterHint,r.note].filter(Boolean).join(' ');}
    const event=[...J.nodes.values()].some(n=>n.gift===p.id||n.egg===p.id||n.pokemon===p.id)||oddEgg.includes(p.id);
    if(event&&!routes.some(r=>r.kind==='event'))routes.push({kind:'event',text:'모험 중 특별한 만남으로 동료가 될 수 있어요.'});
    if(wild||p.id>=152||J.routeGates.has(p.id)){const labels={wild:'야생',event:'이벤트',hatch:'부화',evolution:'진화',starter:'스타팅'};p.acquisition={...original,wildAllowed:wild,routes,summary:[...new Set(routes.map(r=>r.kind==='evolution'&&r.special?'특수진화':labels[r.kind]))].join(' · '),note:wild?'야생 확률은 플레이 중 야생 1회에 만날 확률이에요. 포획 성공률과는 달라요.':routes.every(r=>r.kind==='evolution')?'진화로만 얻을 수 있어요.':'일반 야생에서는 출현하지 않아요.'};}
    else if(event)p.acquisition={...original,routes};
   }
-  const items=Object.keys(this.data.johto.items).map(key=>({id:'j-'+key,name:itemNames[key],count:1}));
+  const items=Object.keys(this.data.johto.items).map(key=>({id:'j-'+key,name:key==='fishing-rod'?'낚싯대':itemNames[key],count:1}));
   return {...s,johtoWorld:world.snapshot(this,now),challengeHistory:{1:{badges:[...this.data.badges],champion:this.data.champion,leagueBest:this.data.leagueBest,gymAccess:Array(8).fill(false)}},johto:J.snapshot(this),inventory:[...s.inventory,...items]};
  }
 };}

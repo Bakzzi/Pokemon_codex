@@ -60,7 +60,7 @@
  function localGym(p){
   if(!world.active||!p?.current||world.walk||world.maps&&zone!==world.zone)return null;
   if(state.johto?.active){const row=[...state.johto.gyms,...state.johto.kantoGyms].find(r=>world.locations[r.id]===p.id);if(!row)return null;return {row,card:document.querySelector('[data-challenge="'+row.id+'"]')?.closest('.gym')};}
-  if(!p.activity?.startsWith('gym:'))return null;const i=Number(p.activity.slice(4));return {row:state.bosses[i],card:$('gyms').children[i]};
+  if(!p.activity?.startsWith('gym:'))return null;const i=Number(p.activity.slice(4));return {row:state.bosses[i],card:document.querySelector('#gyms [data-challenge="'+i+'"]')?.closest('.gym')};
  }
  function renderChoice(){
   if(!world)return;const p=world.places.find(p=>p.id===choice)||world.places.find(p=>p.id===world.location);choice=p.id;selected.textContent=p.name;range.textContent=p.current?'현재 머무는 곳':p.visited?'다녀온 곳':'';

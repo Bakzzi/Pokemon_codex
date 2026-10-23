@@ -183,14 +183,15 @@ function renderBosses(){
   syncDisclosure('gym-details',state.bosses.slice(0,8).every(b=>state.badges.includes(b.id)));
   renderStory();
   renderSpecialEncounters();
-  const busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.challengeReadOnly,state.badges,state.bosses.map(b=>[b.revealed,b.levelsKnown]),state.gymAccess,state.trainingDevice.routeOpen,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.johtoUnlockPreview,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
+  const modern=state.kantoStory&&!state.kantoStory.legacy,busy=state.battle?.kind==='trainer',queued=state.pendingChallenge,signature=JSON.stringify([state.challengeReadOnly,state.badges,state.bosses.map(b=>[b.revealed,b.levelsKnown]),state.gymAccess,state.gymEntry,state.trainingDevice.routeOpen,state.battle,queued,state.champion,state.leagueBest,state.johtoUnlocked,state.johtoDeferred,state.johtoUnlockPreview,state.kantoCaughtCount,state.encounterBonus]);if(signature===bossSignature)return;bossSignature=signature;
   $('badges').textContent='뱃지 '+state.badges.length+' / 8';
   renderBadgeCase();
   $('gyms').replaceChildren(...state.bosses.slice(0,8).map((boss,i)=>{
+    const entry=state.gymEntry?.[i];if(modern&&entry&&!entry.open){const card=node('article','gym gym-closed'),b=node('button','','지금은 들어갈 수 없어요.');card.dataset.closedGym=boss.id;card.append(node('p','muted',entry.reason));b.dataset.challenge=i;b.disabled=true;card.append(b);return card;}
     const done=state.badges.includes(boss.id),card=ChallengeUI.trainerCard({id:boss.id,done,title:(i+1)+'. '+gymLocations[boss.id]+' 체육관 관장 '+boss.name,badge:{name:boss.badge,src:'assets/badges/'+boss.id+'.png'},team:trainerTeam(boss),portrait:{name:boss.name,src:'assets/trainers/battle/'+boss.id+'.png',crop:trainerFaces[boss.id]},unknown:boss.revealed===false});
-    const rocketLocked=i===3&&!state.trainingDevice.rocketWonAt,roadLocked=i===4&&!state.trainingDevice.routeOpen;
-    if(i===3&&!done)card.append(node('p','muted',rocketLocked?'민화는 무지개시티에 숨어든 로켓단 때문에 골머리를 앓고 있어요. 아지트의 로켓단을 모두 물리친 뒤 도전해 주세요.':'로켓단 문제가 해결됐어요. 민화가 체육관에서 도전을 기다리고 있어요.'));
-    const b=node('button','',done?'뱃지 획득 완료':queued?.index===i?'도전 예약됨':rocketLocked?'로켓단 아지트 격파 시 해금':roadLocked?'길을 막는 잠만보 해결 시 해금':i>state.badges.length?'앞선 체육관 뱃지가 필요해요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||!!queued||!state.gymAccess[i];b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;
+    const rocketLocked=!modern&&i===3&&!state.trainingDevice.rocketWonAt,roadLocked=!modern&&i===4&&!state.trainingDevice.routeOpen;
+    if(i===3&&!done)card.append(node('p','muted',modern?'민화가 체육관에서 도전을 기다리고 있어요.':rocketLocked?'민화는 무지개시티에 숨어든 로켓단 때문에 골머리를 앓고 있어요. 아지트의 로켓단을 모두 물리친 뒤 도전해 주세요.':'로켓단 문제가 해결됐어요. 민화가 체육관에서 도전을 기다리고 있어요.'));
+    const b=node('button','',done?'뱃지 획득 완료':queued?.index===i?'도전 예약됨':rocketLocked?'로켓단 아지트 격파 시 해금':roadLocked?'길을 막는 잠만보 해결 시 해금':modern&&!state.gymAccess[i]?'체육관 트레이너들과 먼저 승부해 주세요.':!modern&&i>state.badges.length?'앞선 체육관 뱃지가 필요해요':'도전하기');b.dataset.challenge=i;b.disabled=done||busy||!!queued||!state.gymAccess[i];b.onclick=()=>window.buddy.action('challenge',i);card.append(b);return card;
   }));
   $('ongoing').hidden=!busy&&!queued;
   if(queued){$('ongoing').replaceChildren(node('span','',queued.name+' 도전 예약 · '+(state.battle?'진행 중인 동작이 끝나면 시작해요.':'마지막 연출이 끝나면 시작해요.')));const b=node('button','','예약 취소');b.dataset.cancelChallenge='';b.onclick=()=>window.buddy.action('challenge-cancel');$('ongoing').append(b);}

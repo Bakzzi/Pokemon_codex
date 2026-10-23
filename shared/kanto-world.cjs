@@ -4,7 +4,7 @@ const habitats=require('./kanto-habitats.json');
 const map=require('./kanto-map.json');
 const walking=require('../desktop/map-walk.js');
 const journey=require('./world-travel.cjs');
-const {merge}=require('./local-habitats.cjs');
+const {merge,accessible,waterAccess}=require('./local-habitats.cjs');
 const story=require('./kanto-journey.cjs');
 const badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovanni'];
 // id, name, map x/y, required badges, local range, habitat, activity/card
@@ -63,7 +63,7 @@ const places=rows.map(([id,name,x,y,stage,min,max,habitat,activity])=>({id,name,
 const byId=new Map(places.map(p=>[p.id,p]));
 const townRoads={pallet:['route-1','route-21'],viridian:['route-1','route-2','route-22'],pewter:['route-2','route-3'],cerulean:['route-4','route-5','route-9','route-24'],vermilion:['route-6','route-11'],lavender:['route-8','route-10','route-12'],celadon:['route-7','route-16'],fuchsia:['route-15','route-18','route-19'],saffron:['route-5','route-6','route-7','route-8'],cinnabar:['route-20','route-21'],indigo:['route-23','victory-road']};
 function sources(game,p){return [p,...(townRoads[p.id]||[]).map(id=>byId.get(id)).filter(q=>unlocked(game,q))];}
-function habitat(game,p=current(game)){return merge([...new Set(sources(game,p).map(q=>q.habitat))].map(key=>habitats[key]));}
+function habitat(game,p=current(game)){return merge([...new Set(sources(game,p).map(q=>q.habitat))].map(key=>accessible(habitats[key],waterAccess(game))));}
 const roadPlaces=new Set(['route-13','route-14','route-15','route-17','route-18','fuchsia','safari']);
 const links=[['pallet','route-1','viridian','route-2','forest','pewter','route-3','mt-moon','route-4','cerulean','route-9','rock-tunnel','route-10','lavender','route-8','route-7','celadon','route-16','route-17','route-18','fuchsia','route-15','route-14','route-13','route-12','route-11','vermilion','route-6','saffron','route-5','cerulean','route-24','route-25','sea-cottage'],['viridian','route-22','route-23','victory-road','indigo'],['fuchsia','route-19','seafoam','route-20','cinnabar','route-21','pallet'],['celadon','saffron','lavender'],['route-10','power-plant'],['forest','diglett','route-11'],['vermilion','ss-anne'],['fuchsia','safari'],['cinnabar','mansion'],['cerulean','cerulean-cave']];
 function active(game){return !game.data.johtoUnlocked;}

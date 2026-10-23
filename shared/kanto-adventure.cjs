@@ -4,6 +4,7 @@ const {data,species,balance,wildLevelCap,learnedMoves}=require('../desktop/pokem
 const training=require('../desktop/training-device.cjs'),journal=require('../desktop/journal.cjs');
 const fossilIds=[138,139,140,141];
 const itemNames={'parcel':'오박사의 물건','ss-ticket':'상트안느호 승선권','lift-key':'승강기 열쇠','card-key':'카드키',138:'조개화석',140:'껍질화석'};
+itemNames['fishing-rod']='낚싯대';
 function init(g,saved,now){
  if(saved.kantoStory?.revision>=1){g.data.kantoStory=JSON.parse(JSON.stringify(saved.kantoStory));require('./kanto-migration.cjs').restore(g,now);return;}
  const legacy=Object.keys(saved).length>0;
@@ -39,6 +40,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
   return null;
  }
  challengeName(id){return K.nodes.get(id)?.name||super.challengeName(id);}
+ trainerRevealed(boss){return K.modern(this)&&boss?.id==='giovanni'&&K.gymEntry(this,7).open||super.trainerRevealed(boss);}
  canChallenge(id){
   if(!this.data.kantoStory)return super.canChallenge(id);
   if(K.nodes.has(id)){const progress=this.rivalProgress(this.rivalGate(id)?.id);return K.ready(this,id)&&(!K.nodes.get(id).automatic||!!this.autoStarting||progress?.state==='unseen')&&progress?.state!=='retry';}
@@ -64,10 +66,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
   if(require('./silph.cjs').byId.has(id))return at==='saffron'&&!!s.drinkAt&&!this.data.mobileStory.silph.wins[require('./silph.cjs').byId.get(id).stage]&&!!this.data.mobileStory.silph.wins[require('./silph.cjs').byId.get(id).stage-1]&&!(this.rivalGate(id)&&this.rivalProgress(this.rivalGate(id).id)?.state==='retry');
   if(require('./rescue.cjs').byId.has(id)&&(!this.data.mobileStory.scopeObtainedAt||at!=='tower'))return false;
   if(Number.isInteger(id)&&id>=0&&id<8){
-   const previous=K.order.slice(0,K.order.indexOf(id));
-   return !has(data.bosses[id].id)&&previous.every(i=>has(data.bosses[i].id))&&K.originalDone(this,'gym:'+id)&&at===({0:'pewter',1:'cerulean',2:'vermilion',3:'celadon',4:'fuchsia',5:'saffron',6:'cinnabar',7:'viridian'}[id])&&
-    (id!==0||K.trainersDone(this,'forest-path'))&&(id!==1||K.done(this,'k-moon-duo'))&&(id!==2||K.done(this,'k-captain'))&&
-    (id!==4||Object.keys(s.roads).some(r=>s.roads[r]))&&(id!==5||!!this.data.mobileStory.silph.completedAt)&&(id!==6||!!this.data.mobileStory.mansion.completedAt);
+   return !has(data.bosses[id].id)&&K.gymEntry(this,id).open&&K.originalDone(this,'gym:'+id)&&at===({0:'pewter',1:'cerulean',2:'vermilion',3:'celadon',4:'fuchsia',5:'saffron',6:'cinnabar',7:'viridian'}[id]);
   }
   if(id===8&&(!K.trainersDone(this,'victory-path')||at!=='indigo'))return false;
   return super.canChallenge(id);
@@ -199,6 +198,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
  panelState(now=Date.now()){
   const s=super.panelState(now),k=K.snapshot(this);if(!k)return s;
   if(K.modern(this)){
+   s.gymEntry=Array.from({length:8},(_,i)=>K.gymEntry(this,i));
    s.mobileGymHints={};
    if(!K.done(this,'k-captain'))s.mobileGymHints[2]='상트안느호에서 선장을 만나 보세요.';
    if(!this.data.mobileStory.silph.completedAt)s.mobileGymHints[5]='실프주식회사 사건 해결 시 해금';

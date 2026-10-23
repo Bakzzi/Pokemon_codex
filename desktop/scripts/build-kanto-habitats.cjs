@@ -11,10 +11,10 @@ for(const e of csv('encounters')){
  const pool=pools[areas.get(e.location_area_id)],slot=slots.get(e.encounter_slot_id);
  // Walking, rods and surfing only; gifts, trades and static encounters are not wild slots.
  if(!pool||!['3','10','11'].includes(e.version_id)||+slot.encounter_method_id>5||+e.pokemon_id>151)continue;
- const id=+e.pokemon_id,p=pool.get(id)||{id,weight:0};p.weight+=+slot.rarity||1;pool.set(id,p);
+ const id=+e.pokemon_id,method=slot.encounter_method_id,weight=+slot.rarity||1,p=pool.get(id)||{id,weight:0,methods:{}};p.weight+=weight;p.methods[method]=(p.methods[method]||0)+weight;pool.set(id,p);
 }
 // Existing game availability is retained for species whose original habitat
-// was a gift, trade or an evolved form. No new item/HM system is introduced.
+// was a gift, trade or an evolved form. Aquatic supplements retain water access.
 const supplements={
  'viridian-forest':[12,15], 'kanto-route-2':[122], 'kanto-route-11':[97],
  'kanto-route-23':[18], 'kanto-route-21':[149], 'kanto-route-17':[53], 'kanto-route-14':[97,127],
@@ -24,7 +24,7 @@ const supplements={
 };
 // The marine habitat's identifier includes "sea" in the source data.
 supplements['kanto-sea-route-21']=supplements['kanto-route-21'];delete supplements['kanto-route-21'];
-for(const [name,ids] of Object.entries(supplements))for(const id of ids)if(!pools[name].has(id))pools[name].set(id,{id,weight:1});
+for(const [name,ids] of Object.entries(supplements))for(const id of ids)if(!pools[name].has(id))pools[name].set(id,{id,weight:1,methods:{[[139,141,147,148,149].includes(id)?5:1]:1}});
 const result=Object.fromEntries(Object.entries(pools).map(([name,pool])=>[name,[...pool.values()].sort((a,b)=>a.id-b.id)]));
 fs.writeFileSync(path.join(root,'shared/kanto-habitats.json'),JSON.stringify(result,null,2)+'\n');
 console.log('Prepared '+Object.keys(result).length+' local habitats from pinned encounter data.');

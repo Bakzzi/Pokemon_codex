@@ -2,6 +2,7 @@
 const {data,species,wildDistribution,wildEligible,wildMinimum}=require('./pokemon.cjs');
 const nursery=require('./daycare.cjs');
 const world=require('../shared/kanto-world.cjs');
+const aquatic=require('../shared/local-habitats.cjs'),habitatData=require('../shared/kanto-habitats.json');
 const parents=new Map(),breedingCache=new Map();
 for(const p of data.pokemon)for(const rule of p.evolutions){
   if(!parents.has(rule.to))parents.set(rule.to,[]);
@@ -39,6 +40,7 @@ function collectionHints(game){
       if([144,145,146,150].includes(p.id))bonus.push('챔피언 달성');
       let note=bonus.length?(game.data.caught[p.id]?'포획을 마쳐 추가 출현 보너스가 종료됐어요.':bonus.join(' 또는 ')+' 시 포획에 성공할 때까지 출현 확률이 올라요.'):'';
       if(p.id===151)note='No.1~150을 모두 등록하면 출현 확률이 올라요.';
+      if(!aquatic.waterAccess(game)&&aquatic.waterOnly(habitatData,p.id))note=[aquatic.waterHint,note].filter(Boolean).join(' ');
       if(local&&chance===0&&minimum>options.maximumLevel)note=[note,'출현하려면 서식지의 야생 레벨 상한이 Lv.'+minimum+' 이상이어야 해요.'].filter(Boolean).join(' ');
       else if(local&&chance===0&&activeLevel<minimum)note=[note,'출전 동료 Lv.'+minimum+'부터 만날 수 있어요.'].filter(Boolean).join(' ');
       routes.push({kind:'wild',text,chance,minimumLevel:minimum,...(note?{note}:{})});

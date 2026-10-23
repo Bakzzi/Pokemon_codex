@@ -544,10 +544,11 @@ class Game {
     if(this.data.activeId===uid)this.animate('switch',{from,to,fromPokemon,toPokemon:this.snapshot(now).hero,text:species.get(to).name+'로 진화했다!'},now);return true;
   }
   newWild(now){
+    const hero=this.data.owned[this.data.activeId],options=this.wildOptions(),id=pickWild(this.maxGeneration(),this.random,hero.level,options),p=species.get(id);
+    if(!p)return false;
     this.data.manualSelection=false;
     this.data.pendingBattle=null;
     this.data.captureAnimation=null;
-    const hero=this.data.owned[this.data.activeId],options=this.wildOptions(),id=pickWild(this.maxGeneration(),this.random,hero.level,options),p=species.get(id);
     const low=options.minimumEncounterLevel===undefined?Math.max(wildMinimum(p),hero.level-5):Math.max(wildMinimum(p),options.minimumEncounterLevel);
     const high=options.minimumEncounterLevel===undefined?Math.min(options.maximumLevel,hero.level+5):options.maximumLevel;
     const level=options.minimumEncounterLevel===undefined?Math.max(wildMinimum(p),Math.min(options.maximumLevel,hero.level-5+Math.floor(this.random()*11))):low+Math.floor(this.random()*(Math.max(low,high)-low+1));
@@ -771,7 +772,7 @@ class Game {
     if(!b&&!this.data.manualSelection&&this.switchToLowest('balance',now))return true;
     if(b?.activityTrainer||b?.kind!=='trainer'&&!b?.storyId){
       if(this.data.workTokens<balance.tokensPerAction)return false;this.data.workTokens-=balance.tokensPerAction;
-      if(!b){this.newWild(now);return true;}
+      if(!b){if(this.newWild(now)===false){this.data.workTokens+=balance.tokensPerAction;return false;}return true;}
     }
     if(!b.party[this.data.activeId]){const p=this.data.owned[this.data.activeId];b.party[p.uid]=this.memberCombatant(p);battleEngine.invalidate(b);}
     const previousHero=this.data.activeId,fromPokemon=this.snapshot(now).hero,partyBefore=Object.fromEntries(Object.entries(b.party).map(([uid,p])=>[uid,healthView(p)])),heroBefore=partyBefore[previousHero],foeBefore=healthView(b.foe),action=battleEngine.step(this,b);b.turn++;

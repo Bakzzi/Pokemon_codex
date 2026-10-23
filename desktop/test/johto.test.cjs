@@ -72,6 +72,8 @@ test('all story nodes have legal original parties and resolvable prerequisites',
 
 test('the complete route from Elm through Mt Silver is reachable using actual challenge and dialogue transitions',()=>{
  const g=fixture();let at=now,passes=0;
+ // This transaction fixture does not walk the map; visit the local fishing NPC explicitly.
+ g.data.johtoWorld.location='j-route32';
  for(const p of data.pokemon)g.data.caught[p.id]=now;
  while(passes++<150){
   const next=[...J.nodes.values()].find(n=>n.type!=='league'&&n.type!=='rival'&&!J.done(g,n.id)&&!(n.type==='league-start'&&g.data.johto.champion)&&g.canChallenge(n.id));
@@ -188,7 +190,7 @@ test('queued regional challenge survives reload and hands off only at a safe bou
 test('event cards reveal only reached steps and do not fill the optional news list with future placeholders',()=>{
  const g=fixture();let s=J.snapshot(g);assert.ok(!s.cards.some(c=>c.id==='j-side'));assert.ok(!s.cards.flatMap(c=>c.steps).some(r=>r.title==='???'||r.id==='j-arrival'));
  assert.match(s.cards.find(c=>c.id==='j-early').description,/비상.*장로의 인정/);
- clear(g,['j-falkner']);s=J.snapshot(g);const side=s.cards.find(c=>c.id==='j-side');assert.deepEqual(side.steps.map(r=>r.id),['j-togepi','j-ruins']);
+ clear(g,['j-falkner']);s=J.snapshot(g);const side=s.cards.find(c=>c.id==='j-side');assert.deepEqual(side.steps.map(r=>r.id),['j-fishing-rod','j-togepi','j-ruins']);
  assert.ok(side.steps.every(r=>r.revealed&&r.title!=='???'));assert.deepEqual(s.cards.find(c=>c.id==='j-well').steps.map(r=>r.id),['j-well-grunt']);
  clear(g,['j-well-grunt']);assert.deepEqual(J.snapshot(g).cards.find(c=>c.id==='j-well').steps.map(r=>r.id),['j-well-grunt','j-well-boss']);
  clear(g,['j-well-boss']);assert.match(J.snapshot(g).cards.find(c=>c.id==='j-well').description,/야돈.*돌아/);

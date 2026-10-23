@@ -62,10 +62,10 @@ test('later badges do not grant a gift or resolve its unplayed conversation',()=
   const g=ready(6);assert.equal(g.data.mobileStory.laprasResolved,false);assert.equal(g.offerLapras(now),false);assert.ok(!g.registeredThisSeason(131));
 });
 test('mansion begins after Sabrina, queues behind wild battle, and does not reveal future diary pages',()=>{
-  const locked=ready(5);assert.ok(!locked.canChallenge('mansion-investigate'));const g=ready(6);assert.ok(!g.canChallenge(6));assert.ok(g.panelState(now).mansion.visible);assert.deepEqual(g.panelState(now).mansion.entries,[]);g.newWild(now);assert.ok(g.challenge('mansion-investigate',now));assert.equal(g.data.pendingChallenge.index,'mansion-investigate');g.data.battle=null;settle(g);g.tick(now+1000);assert.equal(g.presentation().next,'mansion-begin');assert.ok(!g.data.mobileStory.mansion.startedAt);pages(g);assert.ok(g.data.mobileStory.mansion.startedAt);
+  const locked=ready(5);assert.ok(!locked.canChallenge('mansion-investigate'));const g=ready(6);assert.ok(!g.canChallenge(6));assert.ok(g.panelState(now).mansion.visible);assert.deepEqual(g.panelState(now).mansion.entries,[]);g.data.kantoWorld.location='mansion';g.newWild(now);assert.ok(g.challenge('mansion-investigate',now));assert.equal(g.data.pendingChallenge.index,'mansion-investigate');g.data.battle=null;settle(g);g.tick(now+1000);assert.equal(g.presentation().next,'mansion-begin');assert.ok(!g.data.mobileStory.mansion.startedAt);pages(g);assert.ok(g.data.mobileStory.mansion.startedAt);
 });
 test('mansion clues require actual wild results and its final key waits for the last tapped page',()=>{
-  const g=ready(6);g.challenge('mansion-investigate',now);pages(g);settle(g);
+  const g=ready(6);g.data.kantoWorld.location='mansion';g.challenge('mansion-investigate',now);pages(g);settle(g);
   for(let i=1;i<=6;i++){
     g.newWild(now+i*10000);g.data.battle.foe.hp=0;g.defeatOpponent(now+i*10000);assert.equal(g.data.mobileStory.mansion.wins,i);settle(g);
     if(i%2){assert.equal(g.offerMansion(now+i*10000),false);continue;}
@@ -74,7 +74,7 @@ test('mansion clues require actual wild results and its final key waits for the 
   }
 });
 test('new clues never interrupt a pending battle or a deliberately queued challenge',()=>{
-  const g=ready(6);g.data.mobileStory.mansion.startedAt=now;g.data.mobileStory.mansion.wins=2;g.newWild(now);assert.equal(g.offerMansion(now),false);g.data.battle=null;g.data.pendingChallenge={index:'safari-start'};assert.equal(g.offerMansion(now),false);g.data.pendingChallenge=null;settle(g);assert.ok(g.offerMansion(now));
+  const g=ready(6);g.data.mobileStory.mansion.startedAt=now;g.data.mobileStory.mansion.wins=2;g.data.kantoWorld.location='mansion';g.newWild(now);assert.equal(g.offerMansion(now),false);g.data.battle=null;g.data.pendingChallenge={index:'safari-start'};assert.equal(g.offerMansion(now),false);g.data.pendingChallenge=null;settle(g);assert.ok(g.offerMansion(now));
 });
 test('active Blaine battles are preserved but a queue cannot fabricate mansion completion',()=>{
   for(const queued of [false,true]){const old=new Game({},now);old.data.badges=badges.slice(0,6);if(queued)old.data.pendingChallenge={index:6,queuedAt:now};else old.challenge(6,now);const before=structuredClone(old.data.battle);const g=new Adventure(old.data,now+1000);assert.ok(!g.data.mobileStory.mansion.completedAt);if(queued){g.tick(now+10000);assert.equal(g.data.pendingChallenge,null);}else assert.deepEqual(g.data.battle,before);}

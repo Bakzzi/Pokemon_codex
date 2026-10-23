@@ -10,6 +10,9 @@ function add(id,location,title,description,entries){
  const group={id,location,title,description,entries:[]};cases.push(group);
  for(const row of entries){const n={case:id,location,sprite:'scientist',type:'dialogue',...row};if(n.party)n.team=n.party.map(([id,level])=>({id,level,moves:learnedMoves(id,level).slice(-4)}));nodes.set(n.id,n);group.entries.push(n.id);}
 }
+add('fishing-guru','vermilion','갈색시티의 낚시꾼','물가에서 낚시꾼이 이야기를 나누고 있어요.',[
+ {id:'k-fishing-rod',name:'낚시꾼과 이야기하기',sprite:'fisherman',item:'fishing-rod',pages:['너도 낚시에 관심이 있니? 이 낚싯대를 가져가렴.','이제 물가에서도 야생 포켓몬을 만날 수 있단다.'],result:'낚싯대를 받았어요. 물가에서 새로운 포켓몬을 만나 보세요.'}
+]);
 add('forest-path','forest','상록숲을 지나서','숲길에서 만난 트레이너들이 승부를 걸어왔어요. 동료와 함께 회색시티로 향해요.',[
  {id:'k-forest-1',name:'곤충채집 소년',sprite:'bug-catcher',party:[[10,7],[10,7]],pages:['숲에서 찾은 포켓몬들이야! 네 동료도 보여 줘!'],result:'숲 안쪽에도 트레이너가 있어요. 길을 따라가 보세요.'},
  {id:'k-forest-2',name:'곤충채집 소년',sprite:'bug-catcher',party:[[11,6],[10,6],[11,6]],pages:['진화한 포켓몬의 힘을 보여 주겠어!'],result:'숲의 출구가 가까워졌어요.'},
@@ -139,6 +142,15 @@ function trainersDone(g,caseId){const group=cases.find(c=>c.id===caseId);return 
 function caseDone(g,caseId){const group=cases.find(c=>c.id===caseId);return !!group&&group.entries.every(id=>done(g,id));}
 function originalDone(g,location){if(location.startsWith('gym:'))return trainersDone(g,'trainers-'+location.replace(':','-'));return original.trainers.filter(t=>t.location===location&&!Object.values(aliases).some(a=>a.id===t.id)).every(t=>done(g,sourceNodes.get(t.id)?.id));}
 function fossilBlocked(g,id){const f=g.data.kantoStory?.fossil;return f===138?[140,141].includes(id):f===140?[138,139].includes(id):false;}
+function gymEntry(g,index){
+ const has=id=>g.data.badges.includes(id),previous=order.slice(0,order.indexOf(index));
+ if(has(badges[index]))return {open:true,reason:''};
+ if(index===7&&!previous.every(i=>has(badges[i])))return {open:false,reason:'상록체육관은 문이 닫혀 있어요. 관장은 자리를 비운 것 같아요.'};
+ if(!previous.every(i=>has(badges[i])))return {open:false,reason:'앞선 체육관에서 실력을 증명한 뒤 찾아오세요.'};
+ const blocked={0:!trainersDone(g,'forest-path'),1:!done(g,'k-moon-duo'),2:!done(g,'k-captain'),4:!Object.values(g.data.kantoStory?.roads||{}).some(Boolean),5:!g.data.mobileStory?.silph?.completedAt,6:!g.data.mobileStory?.mansion?.completedAt};
+ const reasons={0:'상록숲의 트레이너들과 승부를 마쳐 주세요.',1:'달맞이산에서 출구로 가는 길을 찾아야 해요.',2:'나무가 체육관 입구를 막고 있어요. 상트안느호의 선장을 만나 보세요.',4:'연분홍시티로 향하는 길을 먼저 열어야 해요.',5:'로켓단 때문에 체육관에 들어갈 수 없어요. 실프주식회사를 살펴보세요.',6:'홍련체육관의 문이 잠겨 있어요. 저택에서 열쇠를 찾아보세요.'};
+ return {open:!blocked[index],reason:blocked[index]?reasons[index]:''};
+}
 function prerequisite(g,n){
  const s=g.data.kantoStory,b=g.data.badges,has=id=>b.includes(id),win=id=>['won','completed'].includes(g.rivalProgress(id)?.state);
  const at=id=>!!g.data.kantoWorld?.visited[id];
@@ -169,7 +181,7 @@ function prerequisite(g,n){
  if(n.originalLocation==='silph')return !!s.drinkAt&&!!g.data.mobileStory.silph.wins[0];
  if(n.originalLocation==='tower')return !!g.data.mobileStory.rescue.wins[0];
  if(n.originalLocation==='mansion')return !!g.data.mobileStory.mansion.startedAt;
- if(n.originalLocation?.startsWith('gym:'))return !has(badges[Number(n.originalLocation.slice(4))])&&cases.find(c=>c.id===n.case).entries.includes(n.id);
+ if(n.originalLocation?.startsWith('gym:')){const i=Number(n.originalLocation.slice(4));return !has(badges[i])&&gymEntry(g,i).open&&cases.find(c=>c.id===n.case).entries.includes(n.id);}
  if(n.trainer&&!n.id.startsWith('k-bridge-'))return true;
  const list=cases.find(c=>c.id===n.case).entries,index=list.indexOf(n.id);
  return index===0||done(g,list[index-1]);
@@ -223,6 +235,7 @@ function snapshot(g){
  const s=g.data.kantoStory;if(!s)return null;
  const here=g.data.kantoWorld?.location,groups=[];
  for(const c of cases.filter(c=>c.location===here)){
+  if(c.id.startsWith('trainers-gym-')&&!gymEntry(g,Number(c.id.slice(13))).open)continue;
   if(!(c.id==='moon-path'||(c.id==='melanie'?g.data.badges.includes('misty'):c.id==='route2-aide'?!!g.data.kantoWorld.visited.diglett:c.entries.some(id=>done(g,id)||prerequisite(g,nodes.get(id))))))continue;
   const completed=caseDone(g,c.id);
   const entries=c.entries.map(id=>{const n=nodes.get(id),allowed=prerequisite(g,n),revealed=!!n.trainer||done(g,id)||allowed,known=g.challengeLevelsKnown(id,done(g,id));return {id,name:revealed?n.name:'???',sprite:n.sprite,revealed,team:revealed?n.team||[]:[],levelsKnown:known,done:done(g,id),readOnly:!!g.data.johtoUnlocked,ready:ready(g,id),automatic:allowed&&!!n.automatic&&g.rivalProgress(g.rivalGate(n.id)?.id)?.state!=='unseen',type:n.type,reason:c.id==='moon-path'&&!trainersDone(g,'route3-path')?gateText.route3:n.id==='k-bulbasaur'&&!allowed?'피카츄와 조금 더 친해진 뒤 찾아와 주세요.':n.id==='k-aide'&&!allowed?'10종 이상 포획하고 디그다의 굴을 건너와 주세요.':'앞선 일을 마치면 진행할 수 있어요.'};});
@@ -239,4 +252,4 @@ function snapshot(g){
  }
  return {mapObtained:!!s.mapAt,dexObtained:!!s.dexAt,guided:modern(g)&&!g.data.johtoUnlocked&&!s.mapAt,fossil:s.fossil,legacy:!!s.legacy,placeSummary,cases:groups};
 }
-module.exports={nodes,cases,order,badges,modern,done,ready,prerequisite,gate,gateText,snapshot,moonDescription,fossilBlocked,trainersDone,originalDone,original,aliases};
+module.exports={gymEntry,nodes,cases,order,badges,modern,done,ready,prerequisite,gate,gateText,snapshot,moonDescription,fossilBlocked,trainersDone,originalDone,original,aliases};

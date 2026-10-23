@@ -222,6 +222,12 @@
       "url": "https://raw.githubusercontent.com/pret/pokecrystal/5c877ef55197039c9676e8e3eec6d254b1c40fe8/gfx/trainer_card/badges.png",
       "bytes": 517,
       "sha256": "d89bf9193198261a887296d81b5ead91471a26a769c998b380d055bb070832db"
+    },
+    {
+      "file": "desktop/assets/items/old-rod.png",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/97a7832d307311c0e1c6ea9035308bf80cc94f81/sprites/items/old-rod.png",
+      "bytes": 358,
+      "sha256": "623ce54423bac4c4d318b095840dbe59cf90ee117d2ce1f8cbcb4598a86b9f6c"
     }
   ]
 }
