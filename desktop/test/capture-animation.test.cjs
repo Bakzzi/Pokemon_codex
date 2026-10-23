@@ -72,7 +72,7 @@ test('successful capture keeps injured HP, status, level, collection and rewards
   assert.equal(g.data.battle,null);assert.equal(g.data.pendingBattle,null);assert.deepEqual(g.data.captureAnimation,c);
   assert.equal(after.hero.currentHp,after.hero.maxHp);assert.ok(!after.hero.status);assert.equal(after.caughtCount,before.caughtCount+1);
   assert.ok(after.level>before.level);assert.ok(after.xp>before.xp);assert.equal(after.battles,before.battles+1);
-  assert.equal(g.data.owned[25].happiness,before.owned[25].happiness+3);assert.ok(moves.every(id=>g.data.owned[25].moves.includes(id)));
+  assert.equal(g.data.owned[25].happiness,before.owned[25].happiness+5*(after.level-before.level));assert.ok(moves.every(id=>g.data.owned[25].moves.includes(id)));
   assert.equal(g.data.owned[19].ability,foe.ability);assert.equal(g.data.owned[19].gender,foe.gender);
   assert.equal(g.data.journal.filter(e=>e.kind==='catch'&&e.id===19).length,1);
   for(const uid of [1,4,7])assert.deepEqual(g.data.owned[uid],before.owned[uid]);

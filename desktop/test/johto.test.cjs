@@ -227,7 +227,7 @@ test('trade evolutions need their individual device level and consume the correc
 
 test('friendship targets do not activate from friendship gain without leveling, or change to the other time window later',()=>{
  const g=fixture(),uid=g.addPokemon(133,15,'fixture',now),p=g.data.owned[uid];p.happiness=219;g.gainXp(uid,1,now);
- assert.ok(p.happiness>=220);assert.ok(g.evolutions(uid,now).filter(e=>e.happiness).every(e=>!e.ready));
+ assert.equal(p.happiness,219);assert.ok(g.evolutions(uid,now).filter(e=>e.happiness).every(e=>!e.ready));
  const night=Date.parse('2026-10-19T15:00:00Z');g.gainXp(uid,xpAt(133,16)-p.xp,night);
  assert.ok(g.evolutions(uid,now+86400000).find(e=>e.to===197).ready);assert.equal(g.evolutions(uid,now+86400000).find(e=>e.to===196).ready,false);
 });

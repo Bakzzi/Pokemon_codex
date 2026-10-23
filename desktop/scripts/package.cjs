@@ -18,7 +18,7 @@ async function main(){
     await fs.rename(path.join(target,'electron.exe'),path.join(target,'PokemonCodex.exe'));
   }
   const appDir=path.join(target,'resources/app');await fs.mkdir(path.join(appDir,'desktop'),{recursive:true});
-  for(const name of ['main.cjs','preload.cjs','game.cjs','game-v2.cjs','battle.cjs','battle-ai.cjs','training-device.cjs','capture-animation.js','move-effects.js','battle-pacing.js','battle-ui.css','badge-case.css','journal.cjs','daycare.cjs','season.cjs','pokemon.cjs','acquisition.cjs','window-placement.cjs','codex-reader.cjs','store.cjs','index.html','widget.css','renderer.js','panels.html','panels.css','panels.js'])
+  for(const name of ['main.cjs','preload.cjs','game.cjs','game-v2.cjs','battle.cjs','battle-ai.cjs','training-device.cjs','capture-animation.js','move-effects.js','battle-pacing.js','battle-ui.css','badge-case.css','journal.cjs','daycare.cjs','season.cjs','pokemon.cjs','acquisition.cjs','window-placement.cjs','codex-reader.cjs','store.cjs','index.html','widget.css','friendship.css','friendship-ui.js','renderer.js','panels.html','panels.css','panels.js'])
     await fs.copyFile(path.join(root,'desktop',name),path.join(appDir,'desktop',name));
   for(const name of ['assets','data']){const from=path.join(root,'desktop',name);await fs.cp(from,path.join(appDir,'desktop',name),{recursive:true,filter:file=>name!=='assets'||require('./asset-policy.cjs').include(file,from)});}
   await fs.cp(path.join(root,'shared'),path.join(appDir,'shared'),{recursive:true});

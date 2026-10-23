@@ -1,0 +1,15 @@
+.friendship-touch{-webkit-app-region:no-drag;cursor:pointer;touch-action:manipulation}
+.friendship-touch[aria-disabled=true]{cursor:default}
+.friendship-touch:focus-visible{outline:1px solid #c9dcab;outline-offset:3px;border-radius:8px}
+.friendship-portrait{display:block;position:relative;width:100%;padding:0;border:0;background:transparent;color:inherit}
+.friendship-portrait:hover{background:transparent}
+.friendship-portrait .portrait{display:block;margin:auto}
+.friendship-status{min-height:2.8em;margin:3px 0 9px;font-size:11px;line-height:1.4;color:var(--muted,#a2b29e)}
+.friendship-label{margin:8px 0;color:#d5dfb4;font-size:11px;line-height:1.6}
+.friendship-label b{font-weight:600;margin-right:6px}
+.friendship-heart{display:none;position:absolute;pointer-events:none;left:calc(50% - 12px);top:4px;width:24px;height:21px;background:#ef8d9f;image-rendering:pixelated;clip-path:polygon(12.5% 0,37.5% 0,50% 14.3%,62.5% 0,87.5% 0,87.5% 14.3%,100% 14.3%,100% 57.1%,87.5% 57.1%,87.5% 71.4%,75% 71.4%,75% 85.7%,62.5% 85.7%,62.5% 100%,37.5% 100%,37.5% 85.7%,25% 85.7%,25% 71.4%,12.5% 71.4%,12.5% 57.1%,0 57.1%,0 14.3%,12.5% 14.3%)}
+.friendship-reacting[data-reaction=hop],.friendship-reacting[data-reaction=heart]{animation:friendship-hop .65s steps(5,end) 2}
+.friendship-reacting[data-reaction=heart]>.friendship-heart{display:block;animation:friendship-love 1.8s steps(9,end) both}
+@keyframes friendship-hop{0%,100%{translate:0 0}35%,55%{translate:0 -7px}75%{translate:0 -2px}}
+@keyframes friendship-love{0%{translate:0 2px;opacity:0}20%{opacity:1}80%{opacity:1}100%{translate:0 -20px;opacity:0}}
+@media(prefers-reduced-motion:reduce){.friendship-reacting{animation:none!important}.friendship-reacting[data-reaction=heart]>.friendship-heart{animation:none;opacity:1}}

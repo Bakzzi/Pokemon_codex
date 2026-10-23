@@ -1,4 +1,5 @@
 'use strict';
+const friendship=require('../shared/friendship.cjs');
 // Pinned simulator: @pkmn/sim 0.10.11, Gen III rules, entirely offline.
 const {Battle,Dex}=require('@pkmn/sim');
 const ai=require('./battle-ai.cjs');
@@ -271,7 +272,12 @@ function protocol(sim,lines,records=false){
   return records?output:output.map(message=>message.text);
 }
 function sync(game,b,sim){
-  for(const mon of sim.p1.pokemon)b.party[Number(mon.name.slice(1))]=readMon(mon);
+  for(const mon of sim.p1.pokemon){
+    const uid=Number(mon.name.slice(1)),p=game.data.owned[uid];
+    // Charge once on the actual native alive -> fainted transition, including residual damage.
+    if(p&&b.party[uid]?.hp>0&&(mon.fainted||mon.hp<=0)){friendship.faint(p);mon.happiness=p.happiness;}
+    b.party[uid]=readMon(mon);
+  }
   const current=sim.p1.active[0];if(current.hp>0&&!current.fainted){game.data.activeId=Number(current.name.slice(1));if(b.pendingSwitch===game.data.activeId)delete b.pendingSwitch;}
   const foe=sim.p2.active[0];b.foe=readMon(foe);
   b.field={weather:sim.field.weather,turn:sim.turn};

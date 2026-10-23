@@ -1,6 +1,7 @@
 'use strict';
 // Mobile map distance is independent of battle activity and lock-time credits.
 const walking=require('../desktop/map-walk.js'),cost=2000;
+const friendship=require('./friendship.cjs');
 const valid=n=>Number.isSafeInteger(n)&&n>=0;
 function world(game){return game.data.johtoUnlocked?game.data.johtoWorld:game.data.kantoWorld;}
 function hasIntent(game){return !!world(game)?.journey||game.data.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind));}
@@ -57,6 +58,7 @@ function advance(game,state,now){
   const s=trip.segments[trip.index++],end=s.path.at(-1);account[banked?'bank':'credit']-=cost;
   if(banked){trip.bankCells--;trip.bankLeg=true;}
   state.walk={from:state.location,to:s.location,destination:trip.destination,path:s.path,at:now,duration:walking.duration(s.path),stepTravel:true};
+  friendship.startTravel(game,state.walk);
   state.location=s.location;state.position={...end};state.visited[s.location] ||= now;game.holdUntil(now+state.walk.duration);return true;
  }
  state.blocked=trip.blocked;state.journey=null;bankRemainder(game);

@@ -234,6 +234,17 @@ async function worldSmokeTest(){
    game.presentation().at=Date.now()-2700;game.sceneTick(Date.now());publish(true);await wait(60);
    check(await win.webContents.executeJavaScript('document.getElementById("story-scene").hidden')&&game.data.battle.turn===0,'the '+id+' timed sendout releases the battle automatically');
   }
+  game.data.mobileStory.scene=null;game.data.battle=null;game.data.pendingBattle=null;game.data.animation=null;game.data.switchUntil=0;game.data.workTokens=0;
+  const friend=game.data.owned[game.data.activeId];friend.happiness=255;const friendshipBefore=JSON.stringify(game.data.owned);publish(true);await wait(100);
+  check(snapshot().hero.friendship.value===255,'actual main snapshot exposes individual friendship');
+  await win.webContents.executeJavaScript('document.getElementById("hero").click()');await wait(60);
+  check(await win.webContents.executeJavaScript('document.getElementById("hero").dataset.reaction==="heart"&&getComputedStyle(document.querySelector("#hero>.friendship-heart")).display!=="none"'),'actual widget shows the cosmetic pixel heart');
+  check(JSON.stringify(game.data.owned)===friendshipBefore&&game.data.workTokens===0,'touching the actual widget spends no activity and grants no friendship or XP');
+  await openPanel('collection');publish(true);await wait(80);await read('document.querySelector('+JSON.stringify('.dex-card[data-id="'+friend.id+'"]')+').click()');
+  check(await read('document.querySelector(".friendship-label").title==="친밀도 255 / 255"'),'actual panel receives the same bond through IPC');
+  await read('document.querySelector(".friendship-portrait").click()');
+  check(await read('document.querySelector(".friendship-portrait").dataset.reaction==="heart"&&document.querySelector(".friendship-status").textContent.includes("애정을 표현")'),'actual dex portrait reacts without changing the game');
+  fs.writeFileSync(path.join(dataDir,'friendship-widget.png'),(await win.webContents.capturePage()).toPNG());
   check(errors.length===0,'the actual main, panel and widget have no renderer errors');
   fs.writeFileSync(path.join(dataDir,'world-main-result.json'),JSON.stringify({ok:true,checks,errors,version:app.getVersion(),statePath:'main snapshot -> publish -> preload -> renderer; panel travel -> IPC -> shared game -> encounter result -> next road'},null,2));app.exit(0);
  }catch(error){fs.mkdirSync(dataDir,{recursive:true});fs.writeFileSync(path.join(dataDir,'world-main-error.txt'),error.stack||String(error));app.exit(1);}

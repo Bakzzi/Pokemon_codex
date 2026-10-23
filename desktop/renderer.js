@@ -4,6 +4,9 @@ const levelText=p=>'Lv.'+p.level;
 let serial=0,current=null,switching=false,captureRaf=0,moveRaf=0,faintRaf=0,switchRaf=0,playingMove=null,playingSwitch=null,speechTimer=0;
 const storyPresentation=StoryPresentation.create({advance:key=>window.buddy.action('scene-next',key)});
 const safariPresentation=SafariPresentation.create({});
+let friendshipResponse=null;
+const friendshipTouch=FriendshipUI.create($('hero'),{describe:(text,until,uid)=>{friendshipResponse={text,until,uid};if(current)renderSpeech(current);}});
+function canGreet(s){const now=Date.now();return !s.scene&&!SafariPresentation.eligible(s)&&s.hero.hp>0&&!(s.capture&&CaptureAnimation.captureFrame(s.capture,now).locked)&&!(s.animation&&now>=s.animation.at&&now<s.animation.at+BattlePacing.duration(s.animation));}
 for(const action of ['pin','compact','hide','close'])$(action).onclick=()=>window.buddy.action(action);
 for(const b of document.querySelectorAll('[data-panel]'))b.onclick=()=>window.buddy.action('panel',b.dataset.panel);
 function sprite(element,p){
@@ -147,8 +150,8 @@ function renderSpeech(s){
   let event=capture?.leadIn&&now<capture.at?capture.leadIn:s.animation,text='',speaker='scene',expires=0;
   const actionActive=event&&now>=event.at&&now-event.at<BattlePacing.duration(event);
   const quiet=s.workTokens<250&&s.battle?.kind!=='trainer'&&!actionActive&&!f?.locked;
-  const checking=quiet&&(s.phase==='unknown'||!s.demo&&s.source?.connected===false);
-  const waiting=quiet&&!checking&&(s.phase==='idle'||s.phase==='done');
+  let checking=quiet&&(s.phase==='unknown'||!s.demo&&s.source?.connected===false);
+  let waiting=quiet&&!checking&&(s.phase==='idle'||s.phase==='done');
   if(checking)text='작업 상태 확인 중..';
   else if(waiting)text='작업 대기중..';
   else if(capture&&now>=capture.at&&(f.locked||s.animation?.kind==='capture'))text=f.text;
@@ -173,6 +176,7 @@ function renderSpeech(s){
       if(causes.length){text=causes.map(c=>c.text).join(' ');speaker=causes.every(c=>c.side===causes[0].side)?causes[0].side:'scene';}
     }
   }else text=s.battle?.kind==='trainer'?s.battle.boss+'에게 도전 중':s.battle?'다음 작업과 함께 배틀을 이어가요':'오늘은 어떤 포켓몬을 만날까?';
+  if(friendshipResponse?.uid===s.hero.uid&&now<friendshipResponse.until&&canGreet(s)){text=friendshipResponse.text;speaker='hero';expires=friendshipResponse.until;waiting=false;checking=false;}
   const itemIcon=$('speech-item');itemIcon.hidden=!(actionActive&&event.kind==='item');if(!itemIcon.hidden)itemIcon.src='assets/items/'+event.item.identifier+'.png';
   const bubble=$('speech');bubble.dataset.speaker=speaker;bubble.classList.toggle('waiting',waiting||checking);$('speech-text').textContent=text;
   bubble.title=!waiting&&!checking&&event?.detail?[...new Set([text,...event.detail.split(' · ').filter(line=>!text.includes(line))])].join(' '):text;
@@ -198,7 +202,7 @@ function renderPartyStatus(s){
 }
 window.buddy.onState(s=>{
   storyPresentation.render(s);document.querySelector('.scene').classList.toggle('story-active',!!s.scene);
-  current=s;document.body.classList.toggle('compact',s.compact);document.documentElement.style.setProperty('--accent',s.accent);
+  current=s;friendshipTouch.render(s.hero,canGreet(s));if(!canGreet(s)||friendshipResponse?.uid!==s.hero.uid)friendshipResponse=null;document.body.classList.toggle('compact',s.compact);document.documentElement.style.setProperty('--accent',s.accent);
   const agent=AgentStatus.presentation(s.source);$('agent-label').textContent=agent.label;$('agent-label').title=AgentStatus.name+'\n'+agent.detail;
   $('pin').setAttribute('aria-pressed',String(s.pinned));$('compact').title=s.compact?'상태창 펼치기':'작게 보기';
   $('hero-name').textContent=s.hero.name;$('level').textContent=s.level;renderHeroHealth(s);

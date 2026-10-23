@@ -124,7 +124,11 @@ function renderDex(){
     for(const [i,m] of members.entries()){const o=node('option','',(i+1)+'번째 동료 · '+levelText(m)+gender(m.gender)+(m.origin==='hatch'?' · 부화':''));o.value=m.uid;select.append(o);}select.value=memberUid;
     select.onchange=()=>{memberUid=Number(select.value);detailSignature='';render();};root.append(select);
   }
+  const portrait=root.querySelector('.portrait'),touch=node('button','friendship-portrait'),response=node('p','friendship-status');
+  portrait.replaceWith(touch);touch.append(portrait);touch.after(response);response.setAttribute('role','status');
+  const bond=FriendshipUI.create(touch,{status:response});bond.render(member);
   root.append(node('p','muted',levelText(member)+gender(member.gender)));
+  const friendshipLabel=node('p','friendship-label');friendshipLabel.append(node('b','','친밀도'),document.createTextNode(member.friendship.label));friendshipLabel.title='친밀도 '+member.friendship.value+' / '+member.friendship.max;root.append(friendshipLabel);
   const queuedSelect=state.pendingActions.some(a=>a.kind==='select'&&a.uid===member.uid);
   const deploy=node('button','deploy',queuedSelect?'출전 예약됨':state.hero.uid===member.uid?'현재 출전 중':member.boarded?'데려온 뒤 출전 예약':'이 포켓몬 출전');deploy.disabled=queuedSelect||state.hero.uid===member.uid;deploy.onclick=()=>window.buddy.action('select',member.uid);root.append(deploy);
   if(state.trainingDevice.obtained){

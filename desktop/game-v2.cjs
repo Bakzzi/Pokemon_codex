@@ -1,4 +1,5 @@
 'use strict';
+const friendship=require('../shared/friendship.cjs');
 const {monthOf,levelOf}=require('./season.cjs');
 const {data:db,species,moves,xpAt,levelAt,learnedMoves,view,pickWild,rarity,balance,wildMinimum,wildLevelCap,wildEligible,statsAt,encounterChances,championBonus,milestoneBonuses,captureBonus,wildDistribution}=require('./pokemon.cjs');
 const battleEngine=require('./battle.cjs');
@@ -97,6 +98,7 @@ class Game {
     journal.init(this.data,now);
     const changedMoves=new Set();
     for(const [uid,p] of Object.entries(this.data.owned)){
+      friendship.init(p);
       const previousMoves=JSON.stringify(p.moves);
       p.uid=Number(uid);p.gender=p.gender||nursery.genderFor(p.id,this.random);
       if(!Number.isInteger(p.formEntryLevel)||p.formEntryLevel<1||p.formEntryLevel>p.level)p.formEntryLevel=p.level;
@@ -647,8 +649,9 @@ class Game {
     const p=this.data.owned[uid],before=p.level;if(gained<=0)return 0;
     const actual=Math.max(0,Math.min(gained,xpAt(p.id,100)-p.xp));
     journal.increment(this.data,'xp',actual);
-    p.xp+=actual;p.level=levelAt(p.id,p.xp);p.happiness=Math.min(255,p.happiness+3);
+    p.xp+=actual;p.level=levelAt(p.id,p.xp);
     if(p.level>before){
+      friendship.levelUp(p,p.level-before);
       p.lastLevelUpAt=now;
       const hour=new Date(now+9*3600000).getUTCHours(),day=hour>=4&&hour<18;
       p.friendshipEvolutionTargets=species.get(p.id).evolutions.filter(e=>e.trigger===1&&e.happiness&&p.happiness>=e.happiness&&(!e.time||(e.time==='day'?day:!day))).map(e=>e.to);
@@ -811,11 +814,11 @@ class Game {
     const uncertain=[...this.sessions.values()].some(s=>s.phase==='working'&&now-s.at>=600000);
     const phase=active.length?'working':uncertain?'unknown':recent&&now-recent.at<16000?recent.phase:'idle',available=[this.limits.primary,this.limits.secondary].filter(Boolean);
     const limits=[300,10080].map(minutes=>{const l=available.find(x=>x.minutes===minutes),fresh=l&&l.resetsAt*1000>now;return {label:minutes===300?'5시간':'주간',left:fresh?Math.round(100-l.used):null,resetsAt:fresh?l.resetsAt:null};});
-    return {season:{...this.data.season,nextResetAt:monthOf(now).end,pending:this.seasonDue(now)},trainingDevice:training.snapshot(this),pendingActions:this.pendingActions(now),experienceBoost:this.experienceBoost(),version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,...healthView(hero||{hp:maxHp,maxHp,shiny:p.shiny}),status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,...healthView(b.foe),status:b.foe.status}:null,slots:this.data.slots.map(uid=>uid===null?{uid:null,id:null,name:'빈칸',empty:true,selected:false,boarded:false,fainted:false}:{...view(this.data.owned[uid].id),uid,empty:false,shiny:!!this.data.owned[uid].shiny,level:this.data.owned[uid].level,...experienceView(this.data.owned[uid]),selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0}),battle:b?{kind:b.kind,storyId:b.storyId||null,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?this.battleBoss(b).name:null,foeIndex:b.kind==='trainer'?Math.min(b.foeIndex,this.battleBoss(b).team.length-1):b.foeIndex,teamSize:b.kind==='trainer'?this.battleBoss(b).team.length:null}:null,pendingChallenge:this.data.pendingChallenge?{...this.data.pendingChallenge,name:this.challengeName(this.data.pendingChallenge.index)}:null,animation:this.data.animation,capture:this.data.captureAnimation||null,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
+    return {season:{...this.data.season,nextResetAt:monthOf(now).end,pending:this.seasonDue(now)},trainingDevice:training.snapshot(this),pendingActions:this.pendingActions(now),experienceBoost:this.experienceBoost(),version:2,phase,active:active.length,hero:{...view(p.id),uid:p.uid,level:p.level,friendship:friendship.snapshot(p),...healthView(hero||{hp:maxHp,maxHp,shiny:p.shiny}),status:hero?.status},level:p.level,accent:view(p.id).accent,xp:p.xp,expCurrent:p.xp-floor,expRequired:next-floor,progress:p.level===100?1:(p.xp-floor)/(next-floor),foe:b?{...view(b.foe.id),level:b.foe.level,...healthView(b.foe),status:b.foe.status}:null,slots:this.data.slots.map(uid=>uid===null?{uid:null,id:null,name:'빈칸',empty:true,selected:false,boarded:false,fainted:false}:{...view(this.data.owned[uid].id),uid,empty:false,shiny:!!this.data.owned[uid].shiny,level:this.data.owned[uid].level,...experienceView(this.data.owned[uid]),selected:uid===p.uid,boarded:this.isBoarded(uid),fainted:!!b&&b.party[uid]?.hp<=0}),battle:b?{kind:b.kind,storyId:b.storyId||null,turn:b.turn,captureAttempts:b.captureAttempts,boss:b.kind==='trainer'?this.battleBoss(b).name:null,foeIndex:b.kind==='trainer'?Math.min(b.foeIndex,this.battleBoss(b).team.length-1):b.foeIndex,teamSize:b.kind==='trainer'?this.battleBoss(b).team.length:null}:null,pendingChallenge:this.data.pendingChallenge?{...this.data.pendingChallenge,name:this.challengeName(this.data.pendingChallenge.index)}:null,animation:this.data.animation,capture:this.data.captureAnimation||null,limits,outputTokens:this.data.outputTokens,workTokens:this.data.workTokens,generation:this.maxGeneration(),caughtCount:Object.keys(this.data.caught).filter(id=>Number(id)<=(this.maxGeneration()===1?151:251)).length,seenCount:Object.keys(this.data.seen).length,badges:this.data.badges,champion:this.data.champion,battles:this.data.battles,evolution:this.evolutions(p.uid,now),month:monthOf(now).key};
   }
   panelState(now=Date.now()){
     const hints=collectionHints(this);
-    const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,shiny:!!p.shiny,level:p.level,xp:p.xp,...experienceView(p),gender:p.gender,origin:p.origin,boarded:this.isBoarded(p.uid),moves:moveAccess.catalog(p).map(entry=>moveDetails(p,entry)),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
+    const roster=Object.values(this.data.owned).map(p=>({...view(p.id),uid:p.uid,shiny:!!p.shiny,level:p.level,xp:p.xp,...experienceView(p),gender:p.gender,origin:p.origin,friendship:friendship.snapshot(p),boarded:this.isBoarded(p.uid),moves:moveAccess.catalog(p).map(entry=>moveDetails(p,entry)),ability:db.abilities.find(a=>a.id===p.ability)?.name,evolutions:this.evolutions(p.uid,now)}));
     return {...this.snapshot(now),roster,daycare:nursery.snapshot(this,now),johtoUnlocked:this.maxGeneration()===2,johtoDeferred:this.data.johtoDeferred,johtoUnlockPreview:this.johtoUnlockPreview(),
       kantoCaughtCount:this.kantoCaughtCount(),
       encounterBonus:this.encounterBonus(),
