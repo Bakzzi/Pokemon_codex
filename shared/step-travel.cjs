@@ -1,11 +1,21 @@
 'use strict';
 // Mobile map distance is independent of battle activity and lock-time credits.
-const walking=require('../desktop/map-walk.js'),cost=2000;
+const walking=require('../desktop/map-walk.js'),cost=2000,dailyInterval=24*60*60*1000;
 const friendship=require('./friendship.cjs');
 const valid=n=>Number.isSafeInteger(n)&&n>=0;
 function world(game){return game.data.johtoUnlocked?game.data.johtoWorld:game.data.kantoWorld;}
 function hasIntent(game){return !!world(game)?.journey||game.data.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind));}
 const count=n=>valid(n)?n:0;
+function accrueTime(game,now){
+ if(game.platform!=='mobile'||!valid(now))return false;
+ const a=game.data.mapTravel ||= {credit:0,bank:0};
+ // Start at first observation of this feature, without retroactive save-age credit.
+ if(!valid(a.dailyAt)){a.dailyAt=now;return true;}
+ if(now<a.dailyAt+dailyInterval)return false;
+ const days=Math.floor((now-a.dailyAt)/dailyInterval);
+ a.bank=Math.min(Number.MAX_SAFE_INTEGER,count(a.bank)+days*cost);
+ a.dailyAt+=days*dailyInterval;return true;
+}
 function bankRemainder(game){const a=game.data.mapTravel;if(!a)return false;const credit=count(a.credit);a.bank=Math.min(Number.MAX_SAFE_INTEGER,count(a.bank)+credit);a.credit=0;return credit>0;}
 function beginIntent(game,previous){if(game.platform==='mobile'&&!previous&&hasIntent(game))bankRemainder(game);}
 function observe(game,total){
@@ -17,7 +27,7 @@ function observe(game,total){
  const moving=hasIntent(game),credit=moving?Math.min(Number.MAX_SAFE_INTEGER,count(saved?.credit)+delta):0;
  const bank=Math.min(Number.MAX_SAFE_INTEGER,count(saved?.bank)+(moving?0:count(saved?.credit)+delta));
  if(saved?.observed===total&&saved.credit===credit&&saved.bank===bank)return false;
- game.data.mapTravel={observed:total,credit,bank};return true;
+ game.data.mapTravel={...saved,observed:total,credit,bank};return true;
 }
 function useBank(game,executing=false){
  if(game.platform!=='mobile'||count(game.data.mapTravel?.bank)<cost)return false;
@@ -70,4 +80,4 @@ function advance(game,state,now){
 function snapshot(game,state){
  const trip=state.journey,bank=count(game.data.mapTravel?.bank);return {travelMode:'steps',roadProgress:null,movement:{count:Math.floor(bank/cost),remainder:bank%cost,usingBank:!!(trip?.bankLeg||trip?.bankCells>0)},stepProgress:trip?{completed:Math.min(cost,count(game.data.mapTravel?.credit)),required:cost,remainingCells:trip.mode==='steps'?trip.segments.slice(trip.index).filter(s=>!s.arrival).length:null}:null};
 }
-module.exports={cost,observe,hasIntent,beginIntent,bankRemainder,useBank,bankActive,start,migrate,advance,snapshot};
+module.exports={cost,dailyInterval,accrueTime,observe,hasIntent,beginIntent,bankRemainder,useBank,bankActive,start,migrate,advance,snapshot};

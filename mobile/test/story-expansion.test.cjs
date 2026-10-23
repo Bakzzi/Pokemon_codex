@@ -83,7 +83,7 @@ test('new leagues preserve the rival Eevee line through Champion while active ol
   const g=ready(8);g.rivalProgress('rival-league').state='won';g.challenge(8,now);assert.equal(g.data.battle.mobileLeagueRevision,1);g.data.battle.bossIndex=12;assert.deepEqual(g.battleBoss().team,champion.team);assert.equal(g.battleBoss().team.at(-1).id,135);g.data.leagueBest=4;assert.deepEqual(g.panelState(now).bosses[12].team,champion.team);
   delete g.data.battle.mobileLeagueRevision;const loaded=new Adventure(structuredClone(g.data),now+1000);assert.equal(loaded.battleBoss().team.at(-1).id,6);assert.equal(loaded.panelState(now).bosses[12].team.at(-1).id,6);
 });
-function depart(random=()=>0){const g=ready(5,random);assert.ok(g.challenge('safari-start',now));pages(g);settle(g);const p=new Progression(g);p.resume(now);return {g,p};}
+function depart(random=()=>0){const g=ready(5,random);assert.ok(g.challenge('safari-start',now));pages(g);settle(g);const p=new Progression(g);p.resume(now);p.dirty=false;return {g,p};}
 test('safari takes lock actions only while unlocked foreground adventure rests',()=>{
   const {g,p}=depart();assert.equal(p.live(now),false);assert.equal(g.data.battle,null);assert.equal(g.data.mobileStory.safari.trip.steps,0);assert.equal(p.catchUp({steps:0,lockMillis:18000},now),0);const battle=structuredClone(g.data.battle),xp=g.data.owned[g.data.activeId].xp;assert.equal(p.catchUp({steps:0,lockMillis:100000},now),5);assert.deepEqual(g.data.battle,battle);assert.equal(g.data.owned[g.data.activeId].xp,xp);assert.equal(g.data.mobileStory.safari.trip.steps,50);assert.equal(g.data.mobileStory.safari.trip.caught.length,1);assert.equal(g.data.slots.filter(x=>x!==null).length,1);
 });

@@ -4,7 +4,7 @@ const {Game}=require('../../desktop/game.cjs'),{Android:Adventure}=require('../.
 globalThis.MobileCore={nursery:require('../../desktop/daycare.cjs')};
 const now=Date.parse('2026-10-18T06:00:00Z');
 const gameplay=g=>JSON.stringify({...g.data,mapTravel:undefined});
-function fixture(){const g=new Adventure(new Game({},now).data,now,{random:()=>.7}),p=new Progression(g);p.resume(now);return {g,p};}
+function fixture(){const g=new Adventure(new Game({},now).data,now,{random:()=>.7}),p=new Progression(g);p.resume(now);p.dirty=false;return {g,p};}
 test('an old saved tutorial updates the activity explanation without skipping a page',()=>{
   for(const text of ['앱을 켜 두면 자동으로 모험한단다. 꺼 둔 동안에는 10걸음마다 모험이 이어지지.','10걸음마다 동료와 모험한단다. 폰을 잠그면 10초마다 한 번 더 모험하지. 앱을 켜고 걸어도 모험을 지켜볼 수 있어.']){
     const old=new Adventure({},now);old.presentation().pages[2]=text;old.presentation().index=2;

@@ -14,7 +14,7 @@
       this.game.data.workTokens=0;
     }
     pause(now){if(!this.foreground)return;this.foreground=false;this.pausedAt=now;this.game.data.workTokens=0;}
-    resume(now){if(this.foreground)return;this.shift(Math.max(0,now-(this.pausedAt||now)));this.foreground=true;this.pausedAt=0;}
+    resume(now){this.accrueTravel(now);if(this.foreground)return;this.shift(Math.max(0,now-(this.pausedAt||now)));this.foreground=true;this.pausedAt=0;}
     shift(delta){
       const g=this.game,d=g.data;g.nextTick+=delta;if(d.switchUntil)d.switchUntil+=delta;
       if(g.presentation?.())g.presentation().at+=delta;
@@ -31,6 +31,7 @@
       return changed;
     }
     observe(totals){if(Number.isSafeInteger(totals.lockEpoch))this.game.lockEpoch=totals.lockEpoch;if(this.game.recordTravelSteps?.(totals.steps))this.dirty=true;}
+    accrueTravel(now){if(this.game.recordTravelTime?.(now))this.dirty=true;}
     automaticSceneTick(now){
       const g=this.game,s=g.presentation?.();
       if(!g.data.battle?.activityTrainer||!s?.automatic||!['trainer-intro','sendout'].includes(s.mode))return false;
@@ -61,6 +62,7 @@
     live(now,totals={}){
       if(!this.foreground)return false;
       this.observe(totals);
+      this.accrueTravel(now);
       const g=this.game,b=g.data.battle;
       if(g.presentation?.())return g.sceneTick(now)||this.dirty;
       if(this.movementTick(now))return true;
@@ -72,6 +74,7 @@
     catchUp(total,now,maxActions=100){
       const steps=typeof total==='object'?total.steps:total,locked=typeof total==='object'?total.lockMillis:0;
       this.observe(typeof total==='object'?total:{steps});
+      this.accrueTravel(now);
       const available=(n,cost,cursor)=>Number.isSafeInteger(n)&&n>=cursor?Math.floor((n-cursor)/cost):0;
       const g=this.game;let used=0,moves=0,travelTurns=0;this.moreMovement=false;
       for(;used<maxActions;used++){

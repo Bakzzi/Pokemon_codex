@@ -41,6 +41,17 @@ final class BackgroundChecks {
         ledger.mode(false,650);service.recordSample(65,700,now,now);await(runner,store,60000);service.recordSample(75,800,now,now);await(runner,store,60000);
         prefs.edit().putLong("lockMillis",80000).commit();runner.request();await(runner,store,80000);
         check("UI retained".equals(new JSONObject(store.read()).getJSONObject("game").getString("fixtureMarker")),"UI change lost after handoff");
-        Bundle result=new Bundle();result.putString("result","passed");result.putInt("backgroundChecks",12);result.putLong("lockConsumed",consumed(store));result.putBoolean("noActivityCreated",!MainActivity.visible);context.getSystemService(NotificationManager.class).cancel(7);runner.closeWhenIdle();runner.barrier().get(10,TimeUnit.SECONDS);return result;
+        // A due grant must wake the native runner even with unchanged sensor/lock counters.
+        store.claimUi(owner);JSONObject daily=new JSONObject(store.read()),account=daily.getJSONObject("game").getJSONObject("mapTravel");
+        long dailyAt=System.currentTimeMillis()-2*86400000L-1000,bank=account.getLong("bank");account.put("dailyAt",dailyAt);
+        check(!BackgroundAdventure.dailyMovementDue(account,dailyAt+86400000L-1),"Daily reward triggered early");
+        check(BackgroundAdventure.dailyMovementDue(account,dailyAt+86400000L),"Daily reward missing at boundary");
+        check(!BackgroundAdventure.dailyMovementDue(account,dailyAt-1),"Clock rollback grants a reward");
+        check(store.saveUi(owner,daily.toString()),"Daily fixture save failed");store.releaseUi(owner);before=gameplay(store);
+        runner.request();runner.barrier().get(45,TimeUnit.SECONDS);JSONObject paid=new JSONObject(store.read()).getJSONObject("game").getJSONObject("mapTravel");
+        check(paid.getLong("bank")==bank+4000&&paid.getLong("dailyAt")==dailyAt+2*86400000L,"Daily bank or remainder incorrect");
+        check(consumed(store)==80000&&before.equals(gameplay(store)),"Daily grant advanced ordinary gameplay");
+        runner.request();runner.barrier().get(45,TimeUnit.SECONDS);check(new JSONObject(store.read()).getJSONObject("game").getJSONObject("mapTravel").getLong("bank")==bank+4000,"Daily grant replayed");
+        Bundle result=new Bundle();result.putString("result","passed");result.putInt("backgroundChecks",18);result.putLong("lockConsumed",consumed(store));result.putBoolean("noActivityCreated",!MainActivity.visible);context.getSystemService(NotificationManager.class).cancel(7);runner.closeWhenIdle();runner.barrier().get(10,TimeUnit.SECONDS);return result;
     }
 }

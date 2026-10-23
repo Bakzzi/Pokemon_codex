@@ -8,6 +8,7 @@
 .world-local #daycare-contact{border:0;margin:0;padding:12px 0 0;background:none;min-width:0}.world-local .nursery-layout{grid-template-columns:minmax(0,1fr)}.world-local .nursery-pair{flex-direction:column;align-items:stretch}.world-local .nursery-pair label{width:100%;min-width:0}.world-local .nursery-pair select{width:100%;min-width:0;max-width:100%}
 .world-map{margin:0 auto}
 .world-movement{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin:0 0 14px}.world-movement p{margin:0}.world-movement button{padding:8px 12px}
+.world-movement-note{flex-basis:100%;font-size:12px}
 
 .world-checkpoint-body{display:grid;grid-template-columns:56px minmax(0,1fr);gap:10px;padding-top:14px;align-items:start}.world-checkpoint-body .world-npc{width:56px;height:56px;margin:0;image-rendering:pixelated}.world-checkpoint-body .world-npc-dialogue{min-height:0;border:0;border-left:2px solid #647958;border-radius:0;padding:0 0 0 12px;margin:0;background:none;font-size:12px;line-height:1.8}.world-checkpoint-body .world-npc-dialogue p{margin:0 0 9px}.world-checkpoint-body .world-npc-dialogue p:last-child{margin-bottom:0}.world-checkpoint-body>button{grid-column:1/-1;width:100%}.world-badge-detail{border:1px solid var(--line,#485e43);border-radius:8px;padding:14px;line-height:1.7;margin:12px 0}
 

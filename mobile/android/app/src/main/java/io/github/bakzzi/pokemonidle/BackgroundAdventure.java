@@ -27,6 +27,11 @@ final class BackgroundAdventure {
     void request(){requested.set(true);if(!queued.compareAndSet(false,true))return;worker.execute(this::drain);}
     private long total(){return context.getSharedPreferences("steps",0).getLong("total",0);}
     private long locked(){return context.getSharedPreferences("steps",0).getLong("lockMillis",0);}
+    static boolean dailyMovementDue(JSONObject distance,long now){
+        if(distance==null||distance.isNull("dailyAt"))return true;
+        long at=distance.optLong("dailyAt",-1);
+        return at<0||now>=at&&now-at>=86400000L;
+    }
     private boolean available(JSONObject save){
         JSONObject mobile=save.optJSONObject("mobile"),game=save.optJSONObject("game");
         if(locked()-(mobile==null?0:mobile.optLong("lockConsumed",0))>=20000)return true;
@@ -36,7 +41,7 @@ final class BackgroundAdventure {
         boolean moving=trip!=null;
         JSONArray pending=game.optJSONArray("pendingActions");
         if(pending!=null)for(int i=0;i<pending.length();i++){JSONObject a=pending.optJSONObject(i);if(a!=null&&(a.optString("kind").equals("travel")||a.optString("kind").equals("world-pass")))moving=true;}
-        return distance==null||distance.isNull("observed")||total()>distance.optLong("observed",total())
+        return dailyMovementDue(distance,System.currentTimeMillis())||distance.isNull("observed")||total()>distance.optLong("observed",total())
             ||battle!=null&&battle.optBoolean("movementTrainer")
             ||trip!=null&&(trip.optBoolean("bankLeg")||trip.optInt("bankCells")>0)
             ||moving&&distance.optLong("credit",0)>=2000;

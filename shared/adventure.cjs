@@ -89,6 +89,7 @@ class Adventure extends Engine{
   advanceTravel(now){return world.active(this)&&world.advance(this,now);}
   onWildEnd(b,now){if(world.active(this))world.encounterEnded(this,b);}
   recordTravelSteps(total){return require('./step-travel.cjs').observe(this,total);}
+  recordTravelTime(now){return require('./step-travel.cjs').accrueTime(this,now);}
   requestAction(kind,value,now=Date.now()){
     if(kind==='travel-bank')return require('./step-travel.cjs').useBank(this);
     if(this.platform!=='mobile'||!['travel','world-pass'].includes(kind))return super.requestAction(kind,value,now);
