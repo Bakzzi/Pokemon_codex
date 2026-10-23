@@ -65,6 +65,7 @@
  function renderChoice(){
   if(!world)return;const p=world.places.find(p=>p.id===choice)||world.places.find(p=>p.id===world.location);choice=p.id;selected.textContent=p.name;range.textContent=p.current?'현재 머무는 곳':p.visited?'다녀온 곳':'';
   note.textContent=state.challengeReadOnly?'이전 모험은 모험 기록에서 볼 수 있어요.':world.pending?'진행 중인 배틀이 끝나면 이동해요.':world.journey?world.journey.name+'로 모험 중 · '+(world.travelMode==='steps'?'한 칸마다 2,000걸음씩 이동해요.':'지나치는 도로의 풀숲에서 야생 포켓몬을 만날 수 있어요!'):world.walk?'레드가 길을 따라 이동하고 있어요.':'지나치는 도로의 풀숲에서 야생 포켓몬을 만날 수 있어요!';
+  if(p.current&&!state.johto?.active&&!state.challengeReadOnly&&!world.pending&&!world.journey&&!world.walk&&state.kantoStory?.placeSummary)note.textContent=state.kantoStory.placeSummary;
   movement.hidden=!world.movement||!world.active;
   if(world.movement){movementCount.textContent='이동 '+world.movement.count.toLocaleString('ko-KR')+'개 · '+world.movement.remainder.toLocaleString('ko-KR')+' / 2,000걸음';movementUse.disabled=world.movement.count<1||!world.journey&&!world.pending||world.movement.usingBank;movementUse.textContent=world.movement.usingBank?'이동 중':'이동 자원 사용';if(world.movement.usingBank)note.textContent='이동 자원을 사용해 길을 지나가요. 트레이너와는 승부해요.';}
   restoreInline();local.replaceChildren();const gym=localGym(p);note.hidden=!!gym&&!world.pending&&!world.journey;

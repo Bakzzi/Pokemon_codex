@@ -1,0 +1,30 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const PC=require('../adventure.cjs').Adventure,Android=require('../../mobile/adventure.cjs').Adventure,K=require('../../shared/kanto-journey.cjs'),D=require('../../shared/kanto-dialogue.cjs'),{Game}=require('../game.cjs');
+const now=Date.parse('2026-10-23T08:00:00Z'),moon=K.cases.find(c=>c.id==='moon-path'),rockets=moon.entries.filter(id=>K.nodes.get(id).source?.class==='ROCKET');
+function ready(Type){const g=new Type({},now,{random:()=>.7});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.kantoStory.mapAt=now;g.data.kantoStory.dexAt=now;g.data.kantoStory.cleared['k-route3-2']=now;g.data.badges=['brock'];g.data.kantoWorld.location='mt-moon';g.data.kantoWorld.position={...g.panelState(now).kantoWorld.map.points['mt-moon']};g.data.switchUntil=0;g.nextTick=now;g.data.workTokens=1000;return g;}
+for(const Type of [PC,Android]){
+ test(Type.name+' separates the Mt Moon Rocket incident from ordinary cave opponents without changing source parties or revealing later identities',()=>{
+  const g=ready(Type),s=g.panelState(now).kantoStory,story=s.cases.find(c=>c.id==='moon-path'),ordinary=s.cases.find(c=>c.id==='moon-trainers');assert.equal(story.title,'달맞이산의 로켓단');assert.ok(s.placeSummary.includes('로켓단'));assert.equal(rockets.length,3);assert.ok(rockets.every(id=>story.entries.some(e=>e.id===id)));assert.ok(ordinary.entries.every(e=>K.nodes.get(e.id).source.class!=='ROCKET'));assert.equal(new Set([...story.entries,...ordinary.entries].map(e=>e.id)).size,moon.entries.length);
+  const duo=story.entries.find(e=>e.id==='k-moon-duo');assert.equal(duo.name,'???');assert.equal(duo.revealed,false);assert.equal(duo.ready,false);assert.equal(duo.team.length,0);
+  for(const id of rockets){const n=K.nodes.get(id),source=K.original.trainers.find(t=>t.map===n.source.map&&t.event===n.source.event);assert.equal(n.sprite,source.sprite);assert.deepEqual(n.team.map(({id,level})=>({id,level})),source.team);}
+  assert.ok(!K.nodes.get('k-moon-grunt').pages.join(' ').includes('로켓단'));assert.ok(!K.nodes.get('k-moon-grunt').result.includes('로켓단'));
+ });
+ test(Type.name+' shows actual Rocket battle results in the persistent location story without repeating combat or rewards',()=>{
+  const g=ready(Type),id=rockets[0];assert.ok(g.startAutomaticTrainer(id,now));const b=g.data.battle;assert.equal(g.presentation().sprite,'rocket-grunt');g.sceneTick(now+1800);g.sceneTick(now+4500);g.data.switchUntil=0;g.nextTick=now+5000;b.foeIndex=g.battleBoss(b).team.length-1;b.foe.hp=0;g.defeatOpponent(now+5000);assert.ok(K.done(g,id));assert.equal(g.data.battle,null);assert.match(g.data.animation.text,/로켓단/);assert.match(g.panelState(now+5000).kantoStory.placeSummary,/맞붙었어요/);assert.equal(g.data.workTokens,750);
+  const loaded=new Type(structuredClone(g.data),now+5001),state=loaded.panelState(now+5001).kantoStory,entry=state.cases.find(c=>c.id==='moon-path').entries.find(e=>e.id===id);assert.ok(entry.done);assert.equal(entry.ready,false);assert.equal(loaded.startAutomaticTrainer(id,now+10000),false);assert.ok(state.placeSummary.includes('로켓단'));
+ });
+ test(Type.name+' completed Rocket incidents stay visible and use an ending after reload and revisiting the cave',()=>{
+  let g=ready(Type);for(const id of moon.entries)g.data.kantoStory.cleared[id]=now;g.data.kantoStory.fossil=138;const before=structuredClone(g.data);let s=g.panelState(now).kantoStory,card=s.cases.find(c=>c.id==='moon-path');assert.ok(card.completed);assert.ok(card.entries.every(e=>e.done&&!e.ready));assert.match(s.placeSummary,/모두 물리쳤어요/);assert.match(s.placeSummary,/블루시티/);assert.ok(!s.placeSummary.includes('찾고 있어요'));assert.deepEqual(g.data,before);
+  g=new Type(structuredClone(g.data),now+1);g.data.kantoWorld.location='route-4';assert.ok(!g.panelState(now+1).kantoStory.cases.some(c=>c.id==='moon-path'));g.data.kantoWorld.location='mt-moon';s=g.panelState(now+2).kantoStory;assert.ok(s.cases.find(c=>c.id==='moon-path').completed);assert.equal(g.data.kantoStory.fossil,138);
+ });
+ test(Type.name+' old saves get local Rocket lore without fabricated victories, lineups, gifts, challenges or resets',()=>{
+  const old=new Game({},now);old.data.badges=['brock','misty'];const g=new Type(old.data,now);g.data.kantoWorld.location='mt-moon';const before=structuredClone(g.data),s=K.snapshot(g),card=s.cases.find(c=>c.id==='moon-path');assert.ok(s.legacy);assert.ok(card.historical);assert.equal(card.completed,false);assert.match(s.placeSummary,/ロケット|로켓단/);assert.ok(!s.placeSummary.includes('물리쳤어요'));assert.equal(card.entries.length,1);assert.equal(card.entries[0].sprite,'rocket-grunt');assert.ok(card.entries.every(e=>e.readOnly&&!e.ready&&!e.done&&e.team.length===0));assert.deepEqual(g.data,before);assert.deepEqual(Object.keys(g.data.kantoStory.cleared),[]);
+ });
+ test(Type.name+' old saves retain actual recorded incidents as read-only history and never lose them behind the legacy flag',()=>{
+  const g=ready(Type);g.data.kantoStory.legacy=true;for(const id of rockets)g.data.kantoStory.cleared[id]=now;g.data.kantoStory.cleared['k-moon-duo']=now;const before=structuredClone(g.data),s=K.snapshot(g),card=s.cases.find(c=>c.id==='moon-path');assert.ok(card.completed);assert.ok(!card.historical);assert.ok(card.entries.every(e=>e.readOnly&&e.done&&!e.ready));assert.ok(!card.entries.some(e=>e.id==='k-fossil-choice'));assert.match(s.placeSummary,/모두 물리쳤어요/);assert.deepEqual(g.data,before);
+ });
+ test(Type.name+' ordinary cave victories cannot claim to have defeated Rockets or reveal a fossil reward early',()=>{
+  const g=ready(Type);assert.ok(!D.result(g,K.nodes.get('k-moon-grunt')).includes('로켓단'));g.data.kantoStory.cleared['k-moon-grunt']=now;assert.ok(!K.moonDescription(g).includes('맞붙었어요'));for(const id of rockets)g.data.kantoStory.cleared[id]=now;assert.match(K.moonDescription(g),/조무래기를 물리쳤어요/);assert.ok(!K.moonDescription(g).includes('로이'));g.data.kantoStory.cleared['k-moon-scientist']=now;assert.match(K.moonDescription(g),/하나씩 나누기로/);assert.equal(g.data.kantoStory.items[138],undefined);
+ });
+}

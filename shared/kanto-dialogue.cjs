@@ -16,6 +16,7 @@ const endings={
 const forward={'forest-path':'상록숲을 통과했어요. 회색시티의 체육관을 찾아가 보세요.','route3-path':'달맞이산 입구로 향해요.','moon-path':'연구원이 화석 하나를 골라도 좋다고 해요.','anne-visit':'선장실을 찾아가 보세요.','route11-path':'디그다의 굴을 건너 보세요.','route9-path':'돌산터널 입구로 향해요.','tunnel-path':'돌산터널을 빠져나왔어요. 보라타운으로 향해요.','victory-path':'챔피언로드를 통과했어요. 석영고원에서 리그에 도전해 보세요.','trainers-hideout':'조무래기들이 떠난 곳을 살펴보세요.','trainers-silph':'닫힌 사무실로 가는 방법을 찾아보세요.'};
 function result(g,boss){
  if(!K.modern(g))return null;
+ if(boss.case==='moon-path'&&boss.source?.class==='ROCKET')return K.moonDescription(g,boss.id);
  if(boss.source||boss.adaptedFrom){const group=K.cases.find(c=>c.id===boss.case),remaining=group.entries.filter(id=>K.nodes.get(id).trainer&&id!==boss.id&&!K.done(g,id)).length;if(remaining)return '아직 이곳에서 기다리는 트레이너가 있어요.';if(boss.originalLocation?.startsWith('gym:'))return '관장에게 도전할 준비가 됐어요.';return forward[boss.case]||'이곳의 트레이너들과 승부를 마쳤어요.';}
  return endings[boss.id]?.at(-1)||null;
 }

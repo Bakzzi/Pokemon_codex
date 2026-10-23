@@ -102,6 +102,9 @@ const moon=cases.find(c=>c.id==='moon-path'),moonScientist=original.trainers.fin
 bind(nodes.get('k-moon-scientist'),moonScientist);
 const moonRows=populate('moon-path','mt-moon',['k-moon-trainer','k-moon-grunt'],t=>t!==moonScientist);
 moon.entries=[...moonRows,'k-moon-scientist','k-fossil-choice','k-moon-duo'];
+// Original map bindings may change an authored placeholder's trainer class.
+// Keep story text attached to the actual Rocket opponents, not their old slot.
+for(const id of moonRows){const n=nodes.get(id);if(n.source.class==='ROCKET'){n.pages=['이 동굴의 화석은 로켓단이 가져가겠다!'];n.result='화석을 노리던 로켓단 조무래기를 물리쳤어요.';}else{n.pages=[n.name+'이 승부를 걸어왔다!'];n.result='동굴 안쪽으로 향해요.';}}
 const bridgeOrder=['k-npc-route24-7','k-npc-route24-6','k-npc-route24-5','k-npc-route24-4','k-npc-route24-3','k-npc-route24-1'];
 for(const [i,id]of bridgeOrder.entries())bind(nodes.get(i<5?'k-bridge-'+(i+1):'k-bridge-rocket'),original.trainers.find(t=>t.id===id));
 populate('anne-visit','ss-anne',['k-anne-1','k-anne-2']);
@@ -195,8 +198,36 @@ function gate(g,id){
  return null;
 }
 const gateText={map:'오박사의 심부름을 마치고 타운맵을 받아요.', 'early-rival':'22번도로에서 기다리는 그린과 승부해 보세요.',forest:'상록숲의 트레이너들과 승부를 마쳐 주세요.',route3:'3번도로의 트레이너들과 승부를 마쳐 주세요.',moon:'달맞이산에서 출구로 가는 길을 찾아야 해요.',robber:'블루시티에서 달아난 로켓단을 쫓아가 보세요.',ticket:'승선권이 있어야 배에 오를 수 있어요.',route11:'11번도로에서 굴로 향하는 길을 찾아보세요.',aide:'돌산터널은 너무 어두워요. 2번도로 동쪽의 조수에게 길을 물어보세요.',route9:'9번도로의 트레이너들과 승부를 마쳐 주세요.',tunnel:'돌산터널 안에서 출구를 찾아야 해요.',drink:'경비원이 노랑시티로 들어가는 길을 지키고 있어요.',snorlax16:'커다란 포켓몬이 길을 막고 잠들어 있어요.',snorlax12:'커다란 포켓몬이 길을 막고 잠들어 있어요.',sea:'아직 바다를 안전하게 건너는 방법을 몰라요.',seafoam:'쌍둥이섬 안에서 반대편 출구를 찾아야 해요.','late-rival':'22번도로에서 그린이 기다리고 있어요.',victory:'챔피언로드의 마지막 관문을 넘어야 해요.'};
+function moonDescription(g,defeated){
+ const cleared=id=>id===defeated||done(g,id),rockets=moon.entries.filter(id=>nodes.get(id).source?.class==='ROCKET');
+ if(cleared('k-moon-duo'))return '화석을 노리던 로켓단을 모두 물리쳤어요. 4번도로를 지나 블루시티로 향해요.';
+ if(cleared('k-fossil-choice'))return '화석을 챙겼어요. 출구 쪽에서 누군가 다가오는 소리가 들려요.';
+ if(cleared('k-moon-scientist'))return '화석 앞을 지키던 연구원을 이겼어요. 함께 발견한 화석을 하나씩 나누기로 했어요.';
+ if(rockets.every(cleared))return '화석을 노리던 로켓단 조무래기를 물리쳤어요. 동굴 깊은 곳에서 누군가 화석을 지키고 있어요.';
+ if(rockets.some(cleared))return '화석을 노리던 로켓단과 맞붙었어요. 동굴 안쪽에도 로켓단이 남아 있어요.';
+ return '달맞이산 깊은 곳에서 로켓단이 화석을 노리고 있어요. 동굴 안쪽에서 무슨 일이 벌어지는지 살펴보세요.';
+}
 function snapshot(g){
  const s=g.data.kantoStory;if(!s)return null;
- return {mapObtained:!!s.mapAt,dexObtained:!!s.dexAt,guided:modern(g)&&!g.data.johtoUnlocked&&!s.mapAt,fossil:s.fossil,legacy:!!s.legacy,cases:s.legacy?[]:cases.filter(c=>c.location===g.data.kantoWorld?.location&&(c.id==='melanie'?g.data.badges.includes('misty'):c.id==='route2-aide'?!!g.data.kantoWorld.visited.diglett:c.entries.some(id=>done(g,id)||prerequisite(g,nodes.get(id))))).map(c=>({...c,entries:c.entries.map(id=>{const n=nodes.get(id),revealed=!!n.trainer||done(g,id)||prerequisite(g,n),known=g.challengeLevelsKnown(id,done(g,id));return {id,name:revealed?n.name:'???',sprite:n.sprite,revealed,team:revealed?n.team||[]:[],levelsKnown:known,done:done(g,id),ready:ready(g,id),automatic:!!n.automatic&&g.rivalProgress(g.rivalGate(n.id)?.id)?.state!=='unseen',type:n.type,reason:n.id==='k-bulbasaur'&&!prerequisite(g,n)?'피카츄와 조금 더 친해진 뒤 찾아와 주세요.':n.id==='k-aide'&&!prerequisite(g,n)?'10종 이상 포획하고 디그다의 굴을 건너와 주세요.':'앞선 일을 마치면 진행할 수 있어요.'};})}))};
+ const here=g.data.kantoWorld?.location,groups=[];
+ for(const c of cases.filter(c=>c.location===here)){
+  const recorded=c.entries.filter(id=>done(g,id));
+  if(s.legacy?!recorded.length:!(c.id==='melanie'?g.data.badges.includes('misty'):c.id==='route2-aide'?!!g.data.kantoWorld.visited.diglett:c.entries.some(id=>done(g,id)||prerequisite(g,nodes.get(id)))))continue;
+  const ids=s.legacy?recorded:c.entries,completed=c.entries.every(id=>done(g,id));
+  const entries=ids.map(id=>{const n=nodes.get(id),revealed=!!n.trainer||done(g,id)||prerequisite(g,n),known=g.challengeLevelsKnown(id,done(g,id));return {id,name:revealed?n.name:'???',sprite:n.sprite,revealed,team:revealed?n.team||[]:[],levelsKnown:known,done:done(g,id),readOnly:!!s.legacy,ready:!s.legacy&&ready(g,id),automatic:!s.legacy&&!!n.automatic&&g.rivalProgress(g.rivalGate(n.id)?.id)?.state!=='unseen',type:n.type,reason:n.id==='k-bulbasaur'&&!prerequisite(g,n)?'피카츄와 조금 더 친해진 뒤 찾아와 주세요.':n.id==='k-aide'&&!prerequisite(g,n)?'10종 이상 포획하고 디그다의 굴을 건너와 주세요.':'앞선 일을 마치면 진행할 수 있어요.'};});
+  if(c.id==='moon-path'){
+   const important=e=>nodes.get(e.id).source?.class==='ROCKET'||['k-moon-scientist','k-fossil-choice','k-moon-duo'].includes(e.id),storyEntries=entries.filter(important),others=entries.filter(e=>!important(e));
+   if(storyEntries.length)groups.push({...c,title:'달맞이산의 로켓단',description:moonDescription(g),completed:done(g,'k-moon-duo'),entries:storyEntries});
+   if(others.length)groups.push({...c,id:'moon-trainers',title:'달맞이산의 트레이너들',description:others.every(e=>e.done)?'동굴의 트레이너들과 승부를 모두 마쳤어요.':'동굴에서 만난 트레이너들과의 승부예요.',completed:others.every(e=>e.done),entries:others});
+  }else{const last=nodes.get(c.entries.at(-1));groups.push({...c,completed,description:completed?(last.source?'이곳의 트레이너들과 승부를 모두 마쳤어요.':last.result):c.description,entries});}
+ }
+ if(s.legacy&&here==='mt-moon'&&!groups.some(c=>c.id==='moon-path'))groups.unshift({id:'moon-path',location:here,title:'달맞이산의 로켓단',description:'화석을 노리던 로켓단이 숨어들었던 동굴이에요. 출구는 4번도로를 거쳐 블루시티로 이어져요.',historical:true,completed:false,entries:[{id:'moon-history',name:'로켓단 조무래기',sprite:'rocket-grunt',revealed:true,team:[],levelsKnown:false,done:false,ready:false,readOnly:true}]});
+ const context=groups.find(c=>!c.id.startsWith('trainers-')&&c.id!=='moon-trainers');let placeSummary=context?.description||'';
+ if(context?.id==='moon-path'){
+  if(context.historical)placeSummary='로켓단이 화석을 노리던 곳이에요.';
+  else if(done(g,'k-moon-duo'))placeSummary='로켓단을 모두 물리쳤어요. 다음은 4번도로 너머 블루시티예요.';
+  else placeSummary=moonDescription(g).split('. ')[0]+'.';
+ }
+ return {mapObtained:!!s.mapAt,dexObtained:!!s.dexAt,guided:modern(g)&&!g.data.johtoUnlocked&&!s.mapAt,fossil:s.fossil,legacy:!!s.legacy,placeSummary,cases:groups};
 }
-module.exports={nodes,cases,order,badges,modern,done,ready,prerequisite,gate,gateText,snapshot,fossilBlocked,trainersDone,originalDone,original,aliases};
+module.exports={nodes,cases,order,badges,modern,done,ready,prerequisite,gate,gateText,snapshot,moonDescription,fossilBlocked,trainersDone,originalDone,original,aliases};
