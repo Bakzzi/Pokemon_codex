@@ -1,0 +1,47 @@
+{
+  "version": "0.3.136",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "dd16f01664b1a6e2361b7dd2a0f82bf5546ba1e8",
+  "sourceTag": "v0.3.136",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.136",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0"
+  },
+  "validation": {
+    "nodeTestsPassed": 828,
+    "actualMainFlowChecksPassed": 12,
+    "liveSaveCloneImportChecksPassed": 2,
+    "runtimeErrors": 0,
+    "updateManifestFilesMatched": 1347,
+    "archiveFilesVerified": 1348,
+    "exactArchiveStagedByInstalledUpdater": "0.3.135"
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.136-portable.zip",
+    "bytes": 161605759,
+    "sha256": "0de69fa0797f060b6c0fa702f53a89bde6a541139df707eb64b3a9f57c87294b"
+  },
+  "automaticUpdates": {
+    "supportedFrom": "0.3.65",
+    "channel": "stable/latest",
+    "updaterUnchanged": true
+  },
+  "retention": {
+    "latest": "0.3.136",
+    "previousKnownGood": "0.3.135",
+    "additionalPinned": [
+      "0.3.83"
+    ],
+    "additionalRecovery": [
+      "0.3.89"
+    ],
+    "additionalUnconfirmedUse": [
+      "0.3.119"
+    ]
+  }
+}
