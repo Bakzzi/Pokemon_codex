@@ -19,3 +19,4 @@ reference/kanto-map/** -text
 reference/johto-map/** -text
 desktop/data/kanto-trainer-source/** -text
 desktop/data/kanto-story-parties.asm -text
+desktop/data/badge-sprites/*.pal -text
