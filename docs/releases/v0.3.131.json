@@ -1,7 +1,7 @@
 {
   "version": "0.3.131",
   "platform": "windows-x64-portable",
-  "sourceCommit": "db545842b37bb0b555e27c3831c81f06b2b8515b",
+  "sourceCommit": "2dfdab008f52beaa0d4c9f582b0b0dd77d5cdc46",
   "sourceTag": "v0.3.131",
   "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.131",
   "build": {
@@ -23,8 +23,8 @@
   },
   "artifact": {
     "name": "Pokemon-Codex-0.3.131-portable.zip",
-    "bytes": 161599385,
-    "sha256": "c747789736898966953b6150dc6e78723cf2b611ce437ad443c0f6445b64b9bc"
+    "bytes": 161599584,
+    "sha256": "1c87ce1d056011f3275d72c1b30b74898f2bd030955f107dbc4d73dff61977e5"
   },
   "automaticUpdates": {
     "supportedFrom": "0.3.65",
