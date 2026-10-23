@@ -48,3 +48,11 @@
 .hp-row .health i[data-health=low]{background:#d76855}
 .hp-number{text-align:right;font:10px/11px Consolas,monospace;margin-top:2px}
 @media(prefers-reduced-motion:reduce){.health i{transition:none}.speech.waiting .waiting-ball{animation:none}}
+/* Reuse the redundant identity row's 30px for expanded desktop battle space. */
+body:not(.battle-frame):not(.compact) .identity h1,body:not(.battle-frame):not(.compact) .identity>.level{display:none}
+body:not(.battle-frame):not(.compact) .scene{height:215px}
+body:not(.battle-frame):not(.compact) .card{height:161px}
+body:not(.battle-frame):not(.compact) #attack-fx{top:17px}
+body:not(.battle-frame):not(.compact) #ball-fx{top:75px}
+body:not(.battle-frame):not(.compact) #switch-flash{top:51px}
+body:not(.battle-frame):not(.compact) #switch-beam{top:86px}
