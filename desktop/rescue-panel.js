@@ -20,6 +20,9 @@
       const card=document.getElementById(id);card.hidden=!known;if(!known)card.open=false;
     }
     for(const [index,known] of [[3,s.discovery?.rocket],[4,s.discovery?.road]]){
+      // Map-era gym admission is authoritative; discovering a later incident
+      // must not relock the gym that introduces it.
+      if(s.kantoStory&&!s.kantoStory.legacy)continue;
       const button=document.querySelector('[data-challenge="'+index+'"]');if(!button)continue;
       const note=button.parentElement.querySelector(':scope > p.muted');
       if(known||s.badges.includes(s.bosses[index].id)){

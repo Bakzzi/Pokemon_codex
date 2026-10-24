@@ -48,13 +48,13 @@ test('story opponents and scripted wild encounters reveal only after starting th
 test('regional gyms, revisits, league and story encounters share independent discovery records',()=>{
  for(const Type of [PC,Android]){let g=regional(Type),p=g.panelState(now).johto;
   assert.ok(p.gyms.every(b=>!b.levelsKnown));assert.ok(p.league.every(b=>!b.levelsKnown));assert.ok(p.cards.flatMap(c=>c.steps).filter(r=>r.team.length).every(r=>!r.levelsKnown));
-  assert.ok(g.challenge('j-sprout-sage-1',now));assert.ok(g.panelState(now).johto.cards.find(c=>c.id==='j-early').steps[0].levelsKnown);idle(g);
+  g.data.johtoWorld.location='j-violet';assert.ok(g.challenge('j-sprout-sage-1',now));assert.ok(g.panelState(now).johto.cards.find(c=>c.id==='j-early').steps[0].levelsKnown);idle(g);
   for(const n of J.nodes.values())if(!['league','league-start'].includes(n.type))g.data.johto.cleared[n.id]=now;
   for(const n of [...J.gyms,...J.revisits])delete g.data.johto.cleared[n.id];
   assert.ok(g.challenge('j-falkner',now));assert.ok(g.panelState(now).johto.gyms[0].levelsKnown);idle(g);
-  for(const n of J.gyms)g.data.johto.cleared[n.id]=now;assert.ok(g.challenge('j-league',now));
+  for(const n of J.gyms)g.data.johto.cleared[n.id]=now;g.data.johtoWorld.location='j-k-indigo';assert.ok(g.challenge('j-league',now));
   assert.deepEqual(g.panelState(now).johto.league.map(n=>n.levelsKnown),[true,false,false,false,false]);idle(g);
-  assert.ok(g.challenge('j-k-surge',now));assert.ok(g.panelState(now).johto.kantoGyms[0].levelsKnown);assert.ok(!g.panelState(now).johto.kantoGyms[1].levelsKnown);
+  g.data.johtoWorld.location='j-k-vermilion';assert.ok(g.challenge('j-k-surge',now));assert.ok(g.panelState(now).johto.kantoGyms[0].levelsKnown);assert.ok(!g.panelState(now).johto.kantoGyms[1].levelsKnown);
   g.data.journal=[];g=new Type(g.data,now+1);assert.ok(g.panelState(now).johto.kantoGyms[0].levelsKnown);
  }
 });

@@ -28,15 +28,22 @@ function geometry(zone){
  for(const [id,p]of Object.entries(points))if(!owners.has(key(p))){owners.set(key(p),id);queue.push(p);}
  for(let i=0;i<queue.length;i++){const p=queue[i];for(const [dx,dy]of [[0,-8],[8,0],[0,8],[-8,0]]){const next=cells.get((p.x+dx)+','+(p.y+dy));if(next&&!owners.has(key(next))){owners.set(key(next),owners.get(key(p)));queue.push(next);}}}
  for(const p of roads)p.place=owners.get(key(p));
+ // Route 44 reaches the Ice Path entrance at the town-map junction.
+ // Entering Blackthorn itself still requires completing Ice Path.
+ roads.find(p=>journey.same(p,points["j-blackthorn"])).place="j-route44";
  return {image:original.image,width:original.width,height:original.height,points,roads};
 }
 const maps={johto:geometry('johto'),kanto:geometry('kanto')};
 function init(game,now=Date.now()){
- if(game.data.johtoWorld?.revision===1&&byId.has(game.data.johtoWorld.location)){journey.init(game.data.johtoWorld,game.random);return game.data.johtoWorld;}
+ const saved=game.data.johtoWorld;
+ if([1,2].includes(saved?.revision)&&byId.has(saved.location)){
+  if(saved.revision===1){if(saved.journey)saved.journey.revalidate=true;saved.revision=2;}
+  journey.init(saved,game.random);return saved;
+ }
  const location=J.done(game,'j-ship')?'j-k-vermilion':J.done(game,'j-clair')?'j-blackthorn':J.done(game,'j-jasmine')?'j-mahogany':J.done(game,'j-morty')?'j-olivine':J.done(game,'j-sudowoodo')?'j-ecruteak':J.done(game,'j-ilex')?'j-goldenrod':J.done(game,'j-falkner')?'j-azalea':'j-newbark';
- game.data.johtoWorld={revision:1,location,position:{...byId.get(location).point},visited:{[location]:now}};journey.init(game.data.johtoWorld,game.random);return game.data.johtoWorld;
+ game.data.johtoWorld={revision:2,location,position:{...byId.get(location).point},visited:{[location]:now}};journey.init(game.data.johtoWorld,game.random);return game.data.johtoWorld;
 }
-function unlocked(game,p){return !!p&&(!p.requires||J.done(game,p.requires));}
+function unlocked(game,p){return !!p&&(!p.requires||J.done(game,p.requires))&&(p.id!=='j-k-diglett'||J.done(game,'j-k-snorlax'));}
 function status(game,id,point){if(!J.active(game)||!byId.has(id))return {state:'invalid',reason:'지금 모험 중인 지방의 장소를 선택해 주세요.'};const p=byId.get(id),map=maps[p.zone];if(point&&!map.roads.some(c=>c.place===id&&journey.same(c,point))&&!journey.same(point,p.point))return {state:'invalid',reason:'지도에 표시된 길을 선택해 주세요.'};const s=init(game);if(s.journey?.destination===id&&journey.same(s.journey.position,point||p.point))return {state:'done',reason:'이곳으로 모험하고 있어요.'};if(s.location===id&&journey.same(s.position,point||p.point)&&!s.blocked&&!s.journey)return {state:'done',reason:'지금 탐험 중이에요.'};return null;}
 function travel(game,id,now,point){
  if(status(game,id,point)?.state==='invalid'||game.data.battle||game.data.suspendedWild)return false;
@@ -54,10 +61,25 @@ function travel(game,id,now,point){
  }
  return journey.move(game,s,map,id,to,place=>unlocked(game,byId.get(place)),p.name,now);
 }
-function checkpoint(game){const s=init(game),b=s.blocked;if(!b)return null;const p=byId.get(b.checkpoint);return {...b,name:p.name+' 안내원',sprite:'j-sage',pages:unlocked(game,p)?['길이 열렸어요. 조심히 다녀오세요.']:p.id==='j-route37'?['나무 같은 무언가가 길을 막고 있어요.','금빛시티에서 깨울 방법을 찾아보세요.']:['이 앞의 길은 아직 지나갈 수 없어요.','지금 머무는 마을에서 사람들의 이야기를 들어 보세요.'],canPass:unlocked(game,p)&&unlocked(game,byId.get(b.location)),destination:byId.get(b.location).name};}
+function checkpoint(game){const s=init(game),b=s.blocked;if(!b)return null;const p=byId.get(b.checkpoint);if(p.id==='j-k-diglett'&&!J.done(game,'j-k-snorlax'))return {...b,name:'디그다의굴 앞의 잠만보',sprite:'pokemon:143',pages:['커다란 잠만보가 굴 입구를 막고 깊이 잠들어 있어요.','잠만보를 깨우면 굴을 지날 수 있을 것 같아요.'],canPass:false,destination:byId.get(b.location).name};return {...b,name:p.name+' 안내원',sprite:'j-sage',pages:unlocked(game,p)?['길이 열렸어요. 조심히 다녀오세요.']:p.id==='j-route37'?['나무 같은 무언가가 길을 막고 있어요.','금빛시티에서 깨울 방법을 찾아보세요.']:['이 앞의 길은 아직 지나갈 수 없어요.','지금 머무는 마을에서 사람들의 이야기를 들어 보세요.'],canPass:unlocked(game,p)&&unlocked(game,byId.get(b.location)),destination:byId.get(b.location).name};}
+function advance(game,now){
+ const s=init(game),old=s.journey;
+ if(old?.revalidate){
+  // Replan at a safe boundary, preserving the current encounter, road quota,
+  // walking balance and only the bank spending the player already requested.
+  if(!journey.ready(game,now))return false;
+  if(!travel(game,old.destination,now,old.position))return false;
+  if(s.journey?.mode==='steps'){
+   s.journey.bankCells=Math.min(old.bankCells||0,s.journey.segments.filter(p=>!p.arrival).length);
+   s.journey.bankLeg=!!old.bankLeg;
+  }
+  return true;
+ }
+ return journey.advance(game,s,now);
+}
 function passageStatus(game,id){const c=checkpoint(game);return !c||c.location!==id||!c.canPass?{state:'invalid',reason:'아직 이 길을 지나갈 수 없어요.'}:null;}
 function pass(game,id,now){if(passageStatus(game,id))return false;const b=init(game).blocked;return travel(game,id,now,b.position);}
-const grouped={'j-lab':'j-newbark','j-early':'j-violet','j-well':'j-azalea','j-tree':'j-route36','j-burned-tower':'j-ecruteak','j-dance':'j-ecruteak','j-rage-lake':'j-rage','j-rocket-hq':'j-mahogany','j-radio-tower':'j-goldenrod','j-bell-tower':'j-ecruteak','j-ship-route':'j-olivine','j-power-plant':'j-k-power-plant','j-kanto-road':'j-k-vermilion'};
+const grouped={'j-lab':'j-newbark','j-early':'j-violet','j-well':'j-azalea','j-tree':'j-route36','j-burned-tower':'j-ecruteak','j-dance':'j-ecruteak','j-rage-lake':'j-rage','j-rocket-hq':'j-mahogany','j-radio-tower':'j-goldenrod','j-bell-tower':'j-ecruteak','j-ship-route':'j-olivine','j-power-plant':'j-k-power-plant','j-kanto-road':'j-k-route-11'};
 const local={'j-falkner':'j-violet','j-bugsy':'j-azalea','j-whitney':'j-goldenrod','j-morty':'j-ecruteak','j-chuck':'j-cianwood','j-jasmine':'j-olivine','j-pryce':'j-mahogany','j-clair':'j-blackthorn','j-ilex':'j-ilex','j-ice-path':'j-ice','j-dragon-den':'j-dragon','j-victory-road':'j-newbark','j-league':'j-k-indigo','j-togepi':'j-violet','j-odd-egg':'j-route34','j-ruins':'j-ruins','j-eusine':'j-cianwood','j-shuckle':'j-cianwood','j-kiyo':'j-mortar','j-bill':'j-goldenrod','j-park':'j-park','j-lighthouse':'j-olivine','j-medicine':'j-cianwood','j-amphy':'j-olivine','j-rainbow':'j-ecruteak','j-silver-wing':'j-k-pewter','j-red':'j-silver','j-gs-ball':'j-goldenrod','j-shrine':'j-ilex','j-k-surge':'j-k-vermilion','j-k-sabrina':'j-k-saffron','j-k-misty':'j-k-cerulean','j-k-erika':'j-k-celadon','j-k-janine':'j-k-fuchsia','j-k-brock':'j-k-pewter','j-k-blaine':'j-k-seafoam','j-k-blue':'j-k-viridian'};
 function locationFor(id){const n=J.nodes.get(id);return id==='j-fishing-rod'?'j-route32':local[id]||grouped[n?.group]||(n?.target?locationFor(n.target):null);}
 function snapshot(game,now=Date.now()){
@@ -65,4 +87,4 @@ function snapshot(game,now=Date.now()){
  const s=init(game),current=byId.get(s.location),map=maps[current.zone],pending=game.data.pendingActions?.find(a=>['travel','world-pass'].includes(a.kind));
  return {active:true,location:s.location,name:current.name,zone:current.zone,map,maps,...journey.snapshot(s,game.random),...(game.platform==='mobile'?require('./step-travel.cjs').snapshot(game,s):{}),position:s.position,levels:{max:game.wildLevelCap()},walk:s.walk&&now<s.walk.at+s.walk.duration?s.walk:null,facing:s.walk?walking.frame(s.walk,s.walk.at+s.walk.duration).direction:'down',pending:pending?.location||null,checkpoint:checkpoint(game),locations:Object.fromEntries([...J.nodes.keys()].map(id=>[id,locationFor(id)])),places:places.map(p=>({id:p.id,guidance:guidance.has(p.id),name:p.name,zone:p.zone,current:p.id===s.location,open:unlocked(game,p),visited:!!s.visited[p.id],levels:{max:game.wildLevelCap()},notice:[...J.nodes.values()].some(n=>locationFor(n.id)===p.id&&J.available(game,n))}))};
 }
-module.exports={init,travel,status,checkpoint,passageStatus,pass,locationFor,snapshot,maps,places,byId,townRoads,habitat,poolNames,locationsFor,advance:(game,now)=>journey.advance(game,init(game),now),encounterEnded:(game,b)=>journey.encounterEnded(init(game),b,game.random)};
+module.exports={init,travel,status,checkpoint,passageStatus,pass,locationFor,snapshot,maps,places,byId,townRoads,habitat,poolNames,locationsFor,advance,encounterEnded:(game,b)=>journey.encounterEnded(init(game),b,game.random)};

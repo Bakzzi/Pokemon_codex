@@ -37,7 +37,7 @@ for(const [name,Type] of consumers){
  test(name+': Johto challenges also select their counter before trainer dialogue and first sendout',()=>{
   const g=new Type(new Game({},now).data,now,{random:()=>.73});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.champion=true;
   const old=g.addPokemon(129,5,'fixture',now);assert.ok(g.unlockJohto(now,[129,25]));g.data.activeId=old;g.data.owned[old].moves=[150];g.data.owned[25].moves=[84];
-  g.data.johto.cleared['j-sprout']=now;ready(g);assert.ok(g.challenge('j-falkner',now));const b=g.data.battle,before=structuredClone(b.party);
+  g.data.johto.cleared['j-sprout']=now;g.data.johtoWorld.location='j-violet';ready(g);assert.ok(g.challenge('j-falkner',now));const b=g.data.battle,before=structuredClone(b.party);
   assert.equal(g.data.activeId,25);assert.equal(b.matchupPending,undefined);assert.equal(b.pendingSwitch,undefined);pages(g);
   assert.equal(g.presentation().mode,'sendout');assert.equal(g.snapshot(now).hero.id,25);assert.deepEqual(b.party,before);assert.equal(battle.engine(g,b).p1.active[0].name,'u25');
  });

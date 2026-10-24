@@ -160,16 +160,15 @@ function snapshot(game){
   const expanded=g.id==='j-rage-lake'&&done(game,'j-red-gyarados');
   return {id:g.id,title:expanded?'분노의 호수와 황토마을':g.title,description:completed?caseEndings[g.id]:expanded?'호수에 흘러들던 이상한 전파가 황토마을의 수상한 가게로 이어져요. 전파의 근원을 찾아보세요.':g.description,done:completed,steps:visible.map(n=>row(n))};
  }).filter(g=>g.steps.length);
- const preparation=id=>{const n=nodes.get(id);return !done(game,id)&&n.requires.every(r=>done(game,r))?{...row(n),description:preparationNotes[id]}:null;};
  const gymRows=gyms.map(n=>{
-  const r=row(n),gate=n.id==='j-whitney'?'j-ilex':n.id==='j-clair'?done(game,n.id)?'j-dragon-den':'j-ice-path':null;
-  if(gate)r.preparation=preparation(gate);
+  const r=row(n);
   if(n.id==='j-falkner'&&!done(game,'j-sprout'))r.hint='모다피탑에서 장로의 인정을 받아 주세요.';
   return r;
  });
  const latest=[...rivalNodes].reverse().find(n=>s.rivals[n.id]?.state);
- const special=['j-rainbow','j-gs-ball','j-shrine','j-red'].map(id=>nodes.get(id)).filter(n=>n.requires.every(id=>done(game,id))||done(game,n.id)).filter(n=>!n.needsDex||available(game,n)||done(game,n.id)).map(row);
+ // These events belong to their own map locations, not a future gym's card.
+ const special=[...Object.keys(preparationNotes),'j-rainbow','j-gs-ball','j-shrine','j-red'].map(id=>nodes.get(id)).filter(n=>n.requires.every(id=>done(game,id))||done(game,n.id)).filter(n=>!n.needsDex||available(game,n)||done(game,n.id)).map(n=>({...row(n),description:preparationNotes[n.id]}));
  const leagueIndex=game.data.battle?.johtoLeague?game.data.battle.foeStage:0;
- return {active:active(game),region:s.champion&&done(game,'j-ship')?'성도 · 관동 재방문':'성도 지방',badges:gyms.filter(n=>done(game,n.id)&&(n.id!=='j-clair'||done(game,'j-dragon-den'))).map(n=>n.id),kantoBadges:revisits.filter(n=>done(game,n.id)).map(n=>n.id),champion:s.champion,completed:done(game,'j-red'),gyms:gymRows,kantoGyms:done(game,'j-ship')?revisits.map(row):[],league:league.map((n,i)=>{const shown=i<4||s.champion||leagueIndex>=4;return {...row(n),revealed:shown,name:shown?n.name:'???',portrait:shown?n.portrait:null,sprite:shown?n.sprite:null,team:shown?n.team:[]};}),leagueReady:available(game,nodes.get('j-league')),leaguePreparation:preparation('j-victory-road'),leagueBest:s.leagueBest,cards,special,rival:latest?{...row(latest),name:'실버',team:rivalTeam(game,latest),state:s.rivals[latest.id].state,canChallenge:s.rivals[latest.id].state==='retry'}:null,nativeCaught:nativeDex(game)};
+ return {active:active(game),region:s.champion&&done(game,'j-ship')?'성도 · 관동 재방문':'성도 지방',badges:gyms.filter(n=>done(game,n.id)&&(n.id!=='j-clair'||done(game,'j-dragon-den'))).map(n=>n.id),kantoBadges:revisits.filter(n=>done(game,n.id)).map(n=>n.id),champion:s.champion,completed:done(game,'j-red'),gyms:gymRows,kantoGyms:done(game,'j-ship')?revisits.map(row):[],league:league.map((n,i)=>{const shown=i<4||s.champion||leagueIndex>=4;return {...row(n),revealed:shown,name:shown?n.name:'???',portrait:shown?n.portrait:null,sprite:shown?n.sprite:null,team:shown?n.team:[]};}),leagueReady:available(game,nodes.get('j-league')),leagueBest:s.leagueBest,cards,special,rival:latest?{...row(latest),name:'실버',team:rivalTeam(game,latest),state:s.rivals[latest.id].state,canChallenge:s.rivals[latest.id].state==='retry'}:null,nativeCaught:nativeDex(game)};
 }
 module.exports={nodes,groups,gyms,revisits,league,rivalNodes,starterFamilies,eventSpecies,specialIds,routeGates,noWild,team,active,init,done,available,battleBoss,rivalTeam,wildExclusions,bonuses,nativeDex,snapshot};

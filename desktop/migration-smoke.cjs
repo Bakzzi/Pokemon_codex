@@ -4,7 +4,7 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 const {Adventure}=require('./adventure.cjs'),{Game}=require('./game.cjs'),K=require('../shared/kanto-journey.cjs'),W=require('../shared/kanto-world.cjs');
 module.exports=async function(h){
  const checks=[],errors=[],wait=ms=>new Promise(r=>setTimeout(r,ms)),check=(ok,label)=>{assert.ok(ok,label);checks.push(label);};
- const read=code=>h.getPanel().webContents.executeJavaScript(code);
+ const read=async code=>{try{return await h.getPanel().webContents.executeJavaScript(code);}catch(e){throw new Error(code+'\n'+e.message);}};
  try{
   const now=Date.now(),old=new Adventure(new Game({},now).data,now);old.data.badges=['brock','misty'];
   Object.assign(old.data.kantoStory,{revision:1,legacy:true,cleared:{},fossil:null});Object.assign(old.data.kantoWorld,{location:'mt-moon',position:{...W.snapshot(old).map.points['mt-moon']},visited:{cerulean:now,'mt-moon':now}});
@@ -54,6 +54,12 @@ module.exports=async function(h){
   check(await read('document.querySelector(".world-local #kanto-case-trainers-gym-7").checkVisibility()'),'interior opponents become available only after gym entry opens');
   g.data.badges=['brock','misty','surge'];g.data.kantoWorld.location='celadon';h.publish(true);await wait(150);
   check(await read('!document.querySelector("#world-local-gym").textContent.includes("아지트의 로켓단을 모두 물리친 뒤")'),'Erika card follows memo order instead of obsolete hideout prerequisite');
+  for(const id of K.cases.find(c=>c.id==='trainers-gym-3').entries)g.data.kantoStory.cleared[id]=now;
+  h.publish(true);await wait(120);
+  await read('document.querySelector("#world-local-gym").open=true');
+  check(await read(`document.querySelector('.world-local [data-challenge="3"]').checkVisibility()&&!document.querySelector('.world-local [data-challenge="3"]').disabled`),'eligible Erika challenge is visibly enabled before earning her badge');
+  await read(`document.querySelector('.world-local [data-challenge="3"]').click()`);await wait(120);
+  check(h.getGame().data.battle?.bossIndex===3,'Erika challenge starts through actual panel IPC');
   g=new Adventure(new Game({},now).data,now);g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.battle=null;g.data.kantoStory.mapAt=now;g.data.badges=['brock','misty'];g.data.kantoWorld.location='cerulean';g.data.kantoWorld.position={...W.snapshot(g).map.points.cerulean};h.setGame(g);h.publish(true);await wait(120);
   check(await read(`!document.querySelector('.world-marker[aria-label="이수재의 집"]').classList.contains('has-event')`),'unintroduced destination has no guidance marker');
   g.rivalProgress('rival-cerulean').state='won';h.publish(true);await wait(120);
@@ -63,6 +69,15 @@ module.exports=async function(h){
   fs.writeFileSync(path.join(h.dataDir,'story-destination.png'),(await h.getPanel().webContents.capturePage()).toPNG());
   g.data.kantoStory.cleared['k-bill']=now;h.publish(true);await wait(120);
   check(await read(`!document.querySelector('.world-marker[aria-label="이수재의 집"]').classList.contains('has-event')&&document.querySelector('.world-marker[aria-label="상트안느호"]').textContent==='!'`),'resolved errand clears and next introduced destination is marked');
+  const JW=require('../shared/johto-world.cjs');
+  for(const [id,pre]of [['j-ilex','j-bugsy'],['j-ice-path','j-radio-final'],['j-dragon-den','j-clair'],['j-victory-road','j-dragon-den']]){
+   const old=new Game({},now);old.data.champion=true;g=new Adventure(old.data,now);check(g.unlockJohto(now,[25]),'regional UI fixture starts '+id);
+   g.data.johto.cleared[pre]=now;const location=JW.locationFor(id);Object.assign(g.data.johtoWorld,{location,position:{...JW.byId.get(location).point}});g.nextTick=Date.now();g.data.switchUntil=0;g.data.animation=null;
+   h.setGame(g);h.publish(true);await wait(150);await read('for(const d of document.querySelectorAll(".world-local details"))d.open=true');
+   check(await read(`(()=>{const b=document.querySelector('.world-local [data-challenge="${id}"]');return b?.checkVisibility()&&!b.disabled})()`),'local event has an enabled visible action '+id);
+   await read(`document.querySelector('.world-local [data-challenge="${id}"]').click()`);await wait(120);
+   check(!!h.getGame().presentation(),'local event starts through actual IPC '+id);
+  }
   check(errors.length===0,'no renderer errors');fs.writeFileSync(path.join(h.dataDir,'migration-main-result.json'),JSON.stringify({ok:true,checks,errors,version:h.app.getVersion()},null,2));h.app.exit(0);
- }catch(e){fs.mkdirSync(h.dataDir,{recursive:true});fs.writeFileSync(path.join(h.dataDir,'migration-main-error.txt'),e.stack||String(e));h.app.exit(1);}
+ }catch(e){fs.mkdirSync(h.dataDir,{recursive:true});fs.writeFileSync(path.join(h.dataDir,'migration-main-error.txt'),JSON.stringify({error:e.stack||String(e),checks,errors},null,2));h.app.exit(1);}
 };

@@ -2,6 +2,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {Game}=require('../game.cjs'),{data}=require('../pokemon.cjs'),battle=require('../battle.cjs');
 const J=require('../../shared/johto.cjs'),text=require('../../shared/johto-dialogue.cjs'),kanto=require('../../shared/trainer-dialogue.cjs');
+const W=require('../../shared/johto-world.cjs');
 const rivals=require('../../shared/rivals.cjs'),rescue=require('../../shared/rescue.cjs'),silph=require('../../shared/silph.cjs'),training=require('../training-device.cjs');
 const consumers=[['PC',require('./helpers/story-fixture.cjs').PC],['Android',require('./helpers/story-fixture.cjs').Android]],now=Date.parse('2026-10-19T09:00:00Z');
 function fixture(Type,regional=true){const g=new Type(new Game({},now).data,now,{random:()=>.73});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;if(regional){g.data.champion=true;assert.ok(g.unlockJohto(now,[25]));}return g;}
@@ -26,13 +27,13 @@ for(const [name,Type] of consumers){
    const g=fixture(Type),b=victory(g,id),xp=g.data.owned[g.data.activeId].xp;assert.match(g.presentation().pages.join(' '),new RegExp(place));assert.equal(J.done(g,id),false,id);assert.equal(g.data.owned[g.data.activeId].xp,xp);
    const saved=structuredClone(g.data);saved.mobileStory.scene.pages=['승리했다!','동료들의 믿음직한 모습이 눈에 들어온다.'];saved.mobileStory.scene.index=1;
    const loaded=new Type(saved,now+1);assert.doesNotMatch(loaded.presentation().pages.join(' '),/믿음직한 모습/);assert.match(loaded.presentation().pages.join(' '),new RegExp(place));assert.equal(loaded.data.owned[loaded.data.activeId].xp,xp);
-   close(loaded);assert.ok(J.done(loaded,id),id);assert.ok(loaded.canChallenge(next),id+' -> '+next);assert.ok(loaded.data.owned[loaded.data.activeId].xp>xp);assert.notEqual(loaded.data.battle,b);
+   close(loaded);assert.ok(J.done(loaded,id),id);loaded.data.johtoWorld.location=W.locationFor(next);assert.ok(loaded.canChallenge(next),id+' -> '+next);assert.ok(loaded.data.owned[loaded.data.activeId].xp>xp);assert.notEqual(loaded.data.battle,b);
   }
  });
  test(name+': Clair sends the player to the Dragon Den; the badge and gift arrive when that event actually finishes',()=>{
   const g=fixture(Type);victory(g,'j-clair');assert.match(g.presentation().pages.join(' '),/용의 굴/);close(g);assert.ok(!J.snapshot(g).badges.includes('j-clair'));
-  assert.match(g.data.animation.text,/용의 굴/);idle(g);assert.ok(g.challenge('j-dragon-den',now));assert.equal(Object.values(g.data.owned).filter(p=>p.id===147).length,0);close(g);
-  assert.ok(J.snapshot(g).badges.includes('j-clair'));assert.equal(Object.values(g.data.owned).filter(p=>p.id===147).length,1);assert.match(g.data.animation.text,/챔피언로드/);assert.ok(g.canChallenge('j-victory-road'));
+  assert.match(g.data.animation.text,/용의 굴/);g.data.johtoWorld.location=W.locationFor('j-dragon-den');idle(g);assert.ok(g.challenge('j-dragon-den',now));assert.equal(Object.values(g.data.owned).filter(p=>p.id===147).length,0);close(g);
+  assert.ok(J.snapshot(g).badges.includes('j-clair'));assert.equal(Object.values(g.data.owned).filter(p=>p.id===147).length,1);assert.match(g.data.animation.text,/챔피언로드/);g.data.johtoWorld.location=W.locationFor('j-victory-road');assert.ok(g.canChallenge('j-victory-road'));
  });
  test(name+': a Kanto win keeps its earned partner notice and the next destination, with no duplicate award on reload',()=>{
   let g=fixture(Type,false);for(const p of Object.values(g.data.mobileStory.rivals))p.state='won';idle(g);assert.ok(g.challenge(0,now));g.data.mobileStory.scene=null;

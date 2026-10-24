@@ -51,10 +51,11 @@ function enter(game,state,now){
  }
  state.location=segment.location;state.position={x:end.x,y:end.y};state.visited[state.location] ||= now;state.roadProgress=progress(state,game.random);
 }
+function ready(game,now){return !game.seasonDue?.(now)&&!game.data.battle&&!game.data.suspendedWild&&!game.data.pendingBattle&&!game.data.pendingChallenge&&!game.presentation?.()&&now>=game.nextTick&&now>=game.data.switchUntil&&!game.data.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind));}
 function advance(game,state,now){
  friendship.finishTravel(game,state,now);
  const trip=state.journey;
- if(!trip||game.seasonDue?.(now)||game.data.battle||game.data.suspendedWild||game.data.pendingBattle||game.data.pendingChallenge||game.presentation?.()||now<game.nextTick||now<game.data.switchUntil||game.data.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind)))return false;
+ if(!trip||!ready(game,now))return false;
  if(trip.mode==='guided'){
   if(trip.index<trip.segments.length){if(!(state.guideCredit>0))return false;state.guideCredit--;const segment=trip.segments[trip.index++],end=segment.path.at(-1);state.walk={from:state.location,to:segment.location,destination:trip.destination,path:segment.path,at:now,duration:walking.duration(segment.path),guided:true};friendship.startTravel(game,state.walk);state.location=segment.location;state.position={...end};state.visited[state.location] ||= now;game.holdUntil(now+state.walk.duration);return true;}
   state.journey=null;state.walk=null;return true;
@@ -77,4 +78,4 @@ function encounterEnded(state,b,random){
 function snapshot(state,random){
  const p=progress(state,random);return {roadProgress:p?{...p}:null,journey:state.journey?{destination:state.journey.destination,name:state.journey.name}:null};
 }
-module.exports={init:progress,same,plan,move,advance,encounterEnded,snapshot,isRoad};
+module.exports={init:progress,same,plan,move,ready,advance,encounterEnded,snapshot,isRoad};

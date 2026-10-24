@@ -18,7 +18,7 @@ globalThis.JohtoPanel=(()=>{
   const title=(index!==undefined?(index+1)+'. ':'')+(row.location?row.location+' 체육관 관장 ':'')+row.name;
   const card=ChallengeUI.trainerCard({id:row.id,title,team:trainerTeam(row),portrait:portrait(row),unknown:row.revealed===false,done:row.done,league,badge:row.badge?{name:row.badge,src:badgePath(row)}:null});
   if(!league)card.append(button(row.done&&row.badge?{...row,hint:'뱃지 획득 완료'}:row,s));
-  if(row.preparation)card.append(el('p','muted',row.preparation.description),button(row.preparation,s));return card;
+  return card;
  }
  function badgePath(row){const key=row.id.startsWith('j-k-')?row.id.slice(4):row.id;return 'assets/badges/'+(key==='janine'?'koga':key==='blue'?'giovanni':key)+'.png';}
  function badgeCase(rows,earned,id){
@@ -36,14 +36,13 @@ globalThis.JohtoPanel=(()=>{
     if(row.sprite){const image=el('img',row.revealed?'':'unknown-rival');image.src=path(row.sprite);image.alt=row.revealed?row.name:'아직 만나지 않은 상대';head.append(image);}item.append(head);
     if(row.revealed&&row.team?.length)item.append(trainerTeam(row));item.append(button(row,s));d.append(item);
    }return d;}
-  function specialCard(row){const d=disclosure(row.id+'-event',row.title,row.done?'이곳에서 함께했던 모험이 기록에 남아 있어요.':'동료와 함께 주변을 살펴보세요.');
+  function specialCard(row){const d=disclosure(row.id+'-event',row.title,row.done?'이곳에서 함께했던 모험이 기록에 남아 있어요.':row.description||'동료와 함께 주변을 살펴보세요.');
    const entry=el('article','rival-entry'),head=el('div','rival-heading');head.append(el('h3','',row.title));if(row.sprite){const image=el('img');image.src=path(row.sprite);image.alt=row.title;head.append(image);}entry.append(head);if(row.team?.length)entry.append(trainerTeam(row));entry.append(button(row,s));d.append(entry);return d;
   }
   const postgame=new Set(['j-ship-route','j-power-plant','j-kanto-road']);
   for(const card of j.cards.filter(c=>!postgame.has(c.id)))root.append(eventCard(card));
   for(const row of j.special.filter(r=>!['j-red','j-gs-ball','j-shrine'].includes(r.id)))root.append(specialCard(row));
   const league=disclosure('johto-league','사천왕, 그리고 챔피언','뱃지 8개를 모으면 도전할 수 있어요. 사천왕부터 챔피언까지 다섯 경기를 이어서 치러요.',false,{kicker:'POKÉMON LEAGUE'});
-  if(j.leaguePreparation)league.append(el('p','muted',j.leaguePreparation.description),button(j.leaguePreparation,s));
   const start=button({id:'j-league',canChallenge:j.leagueReady,button:j.champion?'리그 재도전':'리그 도전',hint:'성도의 뱃지를 모두 모아 주세요.'},s);start.className='challenge-start';league.append(start);
   const leaders=el('div','league-team');for(const [i,row]of j.league.entries())leaders.append(battleCard({...row,name:(i===4?'챔피언 ':'')+row.name},s,undefined,true));league.append(leaders,el('p','muted',j.champion?'성도 챔피언 · 미포획 포켓몬과 만날 기회가 늘었어요.':'동료와 함께 마지막 도전을 준비하세요.'));root.append(league);
   if(j.kantoGyms.length){const d=disclosure('johto-kanto-gyms','관동 체육관 재방문','시간이 흐른 관동에서 익숙한 얼굴들과 새로운 관장을 만나요.',j.kantoBadges.length===8,{count:'뱃지 '+j.kantoBadges.length+' / 8'}),list=el('div','gym-grid');d.append(badgeCase(j.kantoGyms,j.kantoBadges,'johto-kanto-badge-slots'));j.kantoGyms.forEach((row,i)=>list.append(battleCard(row,s,i)));d.append(list);root.append(d);}

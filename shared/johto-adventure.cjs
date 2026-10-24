@@ -39,7 +39,7 @@ function withJohto(Base){return class JohtoAdventure extends Base{
  challengeName(id){return J.nodes.get(id)?.title||super.challengeName(id);}
  canChallenge(id){
   if(!J.nodes.has(id))return J.active(this)?false:super.canChallenge(id);
-  return !this.presentation()&&J.available(this,J.nodes.get(id));
+  return J.active(this)&&!this.presentation()&&world.init(this).location===world.locationFor(id)&&J.available(this,J.nodes.get(id));
  }
  challenge(id,now=Date.now()){
   if(!J.nodes.has(id))return J.active(this)?false:super.challenge(id,now);
