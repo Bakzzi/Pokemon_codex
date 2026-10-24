@@ -1,10 +1,10 @@
 (function(root){
  'use strict';
  const key=p=>p.x+','+p.y;
- function route(map,from,to){
+ function route(map,from,to,cross=()=>true){
   const cells=new Map(map.roads.map(p=>[key(p),p])),start=key(from),end=key(to);if(!cells.has(start)||!cells.has(end))return null;
   const queue=[start],parents=new Map([[start,null]]);let found=false;
-  for(let i=0;i<queue.length;i++){const id=queue[i];if(id===end){found=true;break;}const p=cells.get(id);for(const [dx,dy] of [[0,-8],[8,0],[0,8],[-8,0]]){const next=(p.x+dx)+','+(p.y+dy);if(cells.has(next)&&!parents.has(next)){parents.set(next,id);queue.push(next);}}}
+  for(let i=0;i<queue.length;i++){const id=queue[i];if(id===end){found=true;break;}const p=cells.get(id);for(const [dx,dy] of [[0,-8],[8,0],[0,8],[-8,0]]){const next=(p.x+dx)+','+(p.y+dy);if(cells.has(next)&&!parents.has(next)&&cross(p,cells.get(next))){parents.set(next,id);queue.push(next);}}}
   if(!found)return null;const result=[];for(let id=end;id!==null;id=parents.get(id)){const p=cells.get(id);result.push({x:p.x,y:p.y});}return result.reverse();
  }
  function duration(path){return Math.max(180,Math.min(6000,(path.length-1)*140));}

@@ -45,7 +45,7 @@ function segments(map,path,id,blocked){
  if(result.length&&!blocked&&result.at(-1).location!==id)result.push({location:id,path:[{...path.at(-1)}],arrival:true});return result;
 }
 function start(game,state,map,result,id,to,name,now){
- state.journey={mode:'steps',destination:id,position:{...to},name,segments:segments(map,result.path,id,result.blocked),index:0,blocked:result.blocked?{location:id,checkpoint:result.blocked,position:{...to},gatePosition:result.gate,at:now}:null};
+ state.journey={mode:'steps',destination:id,position:{...to},name,segments:segments(map,result.path,id,result.blocked),index:0,blocked:result.blocked?{location:id,checkpoint:result.blocked,position:{...to},gatePosition:result.gate,edgeFrom:result.edgeFrom,at:now}:null};
  state.walk=null;state.blocked=null;
  // An interior sharing the current map cell has no additional map distance.
  if(!state.journey.segments.length&&!result.blocked){state.location=id;state.position={...to};state.visited[id] ||= now;}

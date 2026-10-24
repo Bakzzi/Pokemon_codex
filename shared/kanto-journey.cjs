@@ -92,7 +92,7 @@ add('victory-path','victory-road','마지막 관문','리그로 향하는 트레
 function modern(g){return !!g.data.kantoStory&&!g.data.kantoStory.legacy;}
 function done(g,id){return !!g.data.kantoStory?.cleared[id];}
 const original=require('./kanto-trainers.json'),used=new Set(),sourceNodes=new Map();
-function bind(n,t){used.add(t.id);sourceNodes.set(t.id,n);Object.assign(n,{name:t.name,sprite:t.sprite,team:t.team.map(p=>({...p,moves:learnedMoves(p.id,p.level).slice(-4)})),trainer:true,automatic:t.automatic,source:{map:t.map,event:t.event,class:t.class,partyIndex:t.partyIndex}});}
+function bind(n,t){used.add(t.id);sourceNodes.set(t.id,n);Object.assign(n,{name:t.name,sprite:t.sprite,team:t.team.map(p=>({...p,moves:learnedMoves(p.id,p.level).slice(-4)})),trainer:true,automatic:t.automatic,source:{map:t.map,event:t.event,x:t.x,y:t.y,class:t.class,partyIndex:t.partyIndex}});}
 function populate(caseId,location,battleIds,filter=()=>true){
  const group=cases.find(c=>c.id===caseId),records=original.trainers.filter(t=>t.location===location&&filter(t)),battle=[];
  for(let i=0;i<records.length;i++){const t=records[i],id=battleIds[i]||t.id;let n=nodes.get(id);if(!n){n={id,case:caseId,location:group.location,type:'dialogue',pages:[t.name+'이 승부를 걸어왔다!'],result:group.title+'에서 승부를 마쳤어요.'};nodes.set(id,n);}bind(n,t);battle.push(id);}
@@ -142,6 +142,15 @@ function trainersDone(g,caseId){const group=cases.find(c=>c.id===caseId);return 
 function caseDone(g,caseId){const group=cases.find(c=>c.id===caseId);return !!group&&group.entries.every(id=>done(g,id));}
 function originalDone(g,location){if(location.startsWith('gym:'))return trainersDone(g,'trainers-'+location.replace(':','-'));return original.trainers.filter(t=>t.location===location&&!Object.values(aliases).some(a=>a.id===t.id)).every(t=>done(g,sourceNodes.get(t.id)?.id));}
 function fossilBlocked(g,id){const f=g.data.kantoStory?.fossil;return f===138?[140,141].includes(id):f===140?[138,139].includes(id):false;}
+function trainerAccess(g,n){
+ const p=n.source,surf=!!g.data.mobileStory?.safari?.completedAt;
+ // Pinned Yellow object coordinates distinguish shore-only opponents and
+ // the opposite sides of caves. Keep parties and one-time IDs unchanged.
+ if(p?.map==='Route4')return surf;
+ if(p?.map==='Route10')return p.y===44?surf:p.y<30||trainersDone(g,'tunnel-path');
+ if(p?.map==='Route20')return surf&&(p.x>=58||done(g,'k-seafoam-2'));
+ return true;
+}
 function gymEntry(g,index){
  const has=id=>g.data.badges.includes(id),previous=order.slice(0,order.indexOf(index));
  if(has(badges[index]))return {open:true,reason:''};
@@ -154,6 +163,7 @@ function gymEntry(g,index){
 function prerequisite(g,n){
  const s=g.data.kantoStory,b=g.data.badges,has=id=>b.includes(id),win=id=>['won','completed'].includes(g.rivalProgress(id)?.state);
  const at=id=>!!g.data.kantoWorld?.visited[id];
+ if(n.trainer&&!trainerAccess(g,n))return false;
  if(n.id==='k-bulbasaur')return has('misty')&&!g.data.starterGifts[1]&&Object.values(g.data.owned).some(p=>[25,26].includes(p.id)&&p.happiness>=147);
  if(n.id==='k-charmander')return done(g,'k-bill')&&!g.data.starterGifts[4];
  if(n.id==='k-squirtle')return has('surge')&&!g.data.starterGifts[7];
@@ -203,7 +213,8 @@ function gate(g,id){
  if(['route-10','lavender','tower','route-8','route-7','celadon'].includes(id)&&!trainersDone(g,'tunnel-path'))return 'tunnel';
  if(id==='saffron'&&!s.drinkAt)return 'drink';
  if(id==='route-17'&&!s.roads?.['route-16'])return 'snorlax16';
- if(id==='route-13'&&!s.roads?.['route-12'])return 'snorlax12';
+ // Route 12's Snorlax blocks a crossing, not the whole of Route 13. The map
+ // checks that edge so the player can approach from Fuchsia as well.
  if(['route-19','seafoam','route-20','cinnabar','mansion','route-21','power-plant'].includes(id)&&!g.data.mobileStory.safari.completedAt)return 'sea';
  if(id==='route-20'&&!done(g,'k-seafoam-2'))return 'seafoam';
  if(['route-23','victory-road','indigo'].includes(id)&&!win('rival-league'))return 'late-rival';
@@ -243,7 +254,7 @@ function snapshot(g){
    const important=e=>nodes.get(e.id).source?.class==='ROCKET'||['k-moon-scientist','k-fossil-choice','k-moon-duo'].includes(e.id),storyEntries=entries.filter(important),others=entries.filter(e=>!important(e));
    if(storyEntries.length)groups.push(moonOutline(g,storyEntries));
    if(others.length)groups.push({...c,id:'moon-trainers',title:'달맞이산의 트레이너들',description:others.every(e=>e.done)?'동굴의 트레이너들과 승부를 모두 마쳤어요.':'동굴에서 만난 트레이너들과의 승부예요.',completed:others.every(e=>e.done),entries:others});
-  }else{const last=nodes.get(c.entries.at(-1));groups.push({...c,completed,description:completed?(last.source?'이곳의 트레이너들과 승부를 모두 마쳤어요.':last.result):c.description,entries});}
+  }else{const last=nodes.get(c.entries.at(-1));groups.push({...c,completed,description:c.id==='tower-rumor'?towerDescription(g):completed?(last.source?'이곳의 트레이너들과 승부를 모두 마쳤어요.':last.result):c.description,entries});}
  }
  const context=groups.find(c=>!c.id.startsWith('trainers-')&&c.id!=='moon-trainers');let placeSummary=context?.description||'';
  if(context?.id==='moon-path'){
@@ -252,4 +263,11 @@ function snapshot(g){
  }
  return {mapObtained:!!s.mapAt,dexObtained:!!s.dexAt,guided:modern(g)&&!g.data.johtoUnlocked&&!s.mapAt,fossil:s.fossil,legacy:!!s.legacy,placeSummary,cases:groups};
 }
-module.exports={gymEntry,nodes,cases,order,badges,modern,done,ready,prerequisite,gate,gateText,snapshot,moonDescription,fossilBlocked,trainersDone,originalDone,original,aliases};
+function towerDescription(g){
+ const m=g.data.mobileStory;
+ if(m.rescue.completedAt)return '어미 텅구리의 영혼이 안식을 찾고, 등나무노인도 무사히 돌아왔어요.';
+ if(m.rescue.wins[1])return '어미 텅구리의 영혼이 안식을 찾았어요. 위층에 붙잡힌 사람을 구하러 가요.';
+ if(m.scopeObtainedAt)return '실프스코프로 유령의 정체를 확인할 수 있어요. 탑 위층을 살펴보세요.';
+ return done(g,'k-tower-visit')?'유령의 정체를 확인할 방법을 찾아야겠어요.':'탑 위쪽에서 알 수 없는 기척이 느껴져요.';
+}
+module.exports={gymEntry,nodes,cases,order,badges,modern,done,ready,prerequisite,gate,gateText,snapshot,moonDescription,fossilBlocked,trainerAccess,trainersDone,originalDone,original,aliases};

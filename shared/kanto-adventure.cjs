@@ -125,7 +125,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
   const road=b?.storyId==='road-snorlax'&&(b.roadLocation||this.data.kantoWorld?.location);
   const mansionWins=this.data.mobileStory.mansion.wins;super.defeatOpponent(now,captured);
   if(K.modern(this)&&this.data.kantoWorld.location!=='mansion')this.data.mobileStory.mansion.wins=mansionWins;
-  if(road&&K.modern(this)&&this.data.battle!==b){this.data.kantoStory.roads[road] ||= now;this.log(road.replace('route-','')+'번도로의 길이 열렸다.','story',143,now);}
+  if(road&&K.modern(this)&&this.data.battle!==b){this.data.kantoStory.roads[road] ||= now;(this.data.kantoStory.roadCaptures ||= {})[road] ||= captured;this.log(road.replace('route-','')+'번도로의 길이 열렸다.','story',143,now);}
  }
  completeKantoNode(id,now){
   const n=K.nodes.get(id),s=this.data.kantoStory;if(!n||K.done(this,id))return false;
@@ -207,6 +207,13 @@ function withKanto(Base){return class KantoAdventure extends Base{
    s.discovery.rocket=this.data.badges.includes('erika');
    if(s.rescue?.steps[0])Object.assign(s.rescue.steps[0],{name:s.rescue.steps[0].revealed?K.aliases.tower.name:'???',sprite:K.aliases.tower.sprite,team:s.rescue.steps[0].revealed?K.aliases.tower.team:[]});
    for(const r of s.trainingDevice.steps)r.available=this.canChallenge(r.id);
+   const road=this.data.kantoWorld.location;
+   if(['route-12','route-16'].includes(road)){
+    const row=s.trainingDevice.steps.find(r=>r.id==='road-snorlax');row.done=!!this.data.kantoStory.roads[road];
+    // A catch on the other road does not resolve this sleeping Pokemon. Older
+    // saves without a per-road catch result retain a neutral completion label.
+    s.trainingDevice.snorlaxCaught=row.done?(this.data.kantoStory.roadCaptures?.[road]??null):false;
+   }
    for(const p of s.collection.filter(p=>fossilIds.includes(p.id))){const blocked=K.fossilBlocked(this,p.id);p.acquisition={wildAllowed:false,routes:blocked?[]:[{kind:p.id===139||p.id===141?'evolution':'event',text:p.id===139?'No.138 암나이트 · Lv.40 레벨업 시 자동진화':p.id===141?'No.140 투구 · Lv.40 레벨업 시 자동진화':'모험 중 특별한 만남으로 동료가 될 수 있어요.'}],summary:blocked?'이번 모험에서 선택하지 않은 계열':p.id===139||p.id===141?'진화':'이벤트',note:blocked?'다음 시즌에 다른 화석을 선택할 수 있어요.':'일반 야생에서는 출현하지 않아요.'};}
   }
   s.inventory.push(...Object.entries(this.data.kantoStory.items).map(([id,count])=>({id:'kanto-'+id,name:itemNames[id]||id,count})));

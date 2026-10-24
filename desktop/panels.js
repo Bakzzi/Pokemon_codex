@@ -238,8 +238,8 @@ function renderStory(){
   syncDisclosure('rocket-hideout',d.rocketCompleted===3);
   const road=d.steps.find(s=>s.id==='road-snorlax');syncDisclosure('snorlax-road',!!road.done);
   const signature=JSON.stringify([d.requirements,d.steps,d.rocketUnlocked,busy,state.battle?.storyId,queued?.index,d.fluteObtained,d.snorlaxCaught]);if(signature===storySignature)return;storySignature=signature;
-  $('rocket-intro').textContent=d.rocketCompleted===3?'로켓단을 모두 물리쳐 무지개시티에 평화가 돌아왔어요. 민화도 한시름 놓았겠어요.':d.rocketUnlocked?'오렌지배지를 확인한 민화가 도움을 부탁했어요. “게임코너 지하의 로켓단을 물리쳐 주세요. 모두 해결되면 체육관에서 도전을 받을게요.”':'민화는 게임코너 지하에 숨어든 로켓단 때문에 골머리를 앓고 있어요. “오렌지배지가 있다면 당신의 실력을 믿고 아지트 조사를 부탁하고 싶어요.”';
-  $('snorlax-intro').textContent=road.done?(d.snorlaxCaught?'잠만보를 깨워 함께 모험하기로 했어요. 연분홍시티로 향하는 길도 활짝 열렸어요.':'잠만보를 물리쳐 연분홍시티로 향하는 길이 열렸어요. 이제 길을 지나갈 수 있어요.'):'연분홍시티로 향하는 길목에 잠만보가 깊이 잠들어 있어요. 아무리 불러도 일어나지 않네요. 깨울 방법을 찾아야겠어요.';
+  $('rocket-intro').textContent=d.rocketCompleted===3?'로켓단을 모두 물리쳐 무지개시티에 평화가 돌아왔어요. 민화도 한시름 놓았겠어요.':state.kantoStory&&!state.kantoStory.legacy?'체육관에서 실력을 확인한 민화가 부탁했어요. “게임코너 지하에서 로켓단이 수상한 일을 벌이고 있어요. 함께 무지개시티를 지켜 주세요.”':d.rocketUnlocked?'민화가 게임코너 지하의 로켓단을 조사해 달라고 부탁했어요.':'민화는 게임코너 지하에 숨어든 로켓단 때문에 골머리를 앓고 있어요.';
+  $('snorlax-intro').textContent=road.done?(d.snorlaxCaught?'잠만보를 깨워 함께 모험하기로 했어요. 연분홍시티로 향하는 길도 활짝 열렸어요.':d.snorlaxCaught===null?'잠만보가 막고 있던 길이 열렸어요. 이제 길을 지나갈 수 있어요.':'잠만보를 물리쳐 연분홍시티로 향하는 길이 열렸어요. 이제 길을 지나갈 수 있어요.'):'연분홍시티로 향하는 길목에 잠만보가 깊이 잠들어 있어요. 아무리 불러도 일어나지 않네요. 깨울 방법을 찾아야겠어요.';
   $('rocket-steps').replaceChildren(...d.requirements.map(r=>{
     const row=node('li','rocket-step'+(r.done?' done':'')),info=node('div','rocket-step-info');row.dataset.requirement=r.id;info.append(node('b','',r.name));row.append(info,storyArtwork(r));
     const step=d.steps.find(s=>s.id===r.id);
@@ -248,7 +248,7 @@ function renderStory(){
     const b=node('button','',ongoing?'배틀 중':reserved?'도전 예약됨':step.done?'승리 완료':'도전하기');b.dataset.story=step.id;b.disabled=ongoing||busy||!!queued||!step.available;b.onclick=()=>window.buddy.action('challenge',step.id);row.append(b);return row;
   }));
   const body=node('div','snorlax-body'),ongoing=state.battle?.storyId===road.id,reserved=queued?.index===road.id;
-  const b=node('button','',ongoing?'배틀 중':reserved?'피리 사용 예약됨':road.done&&d.snorlaxCaught?'포획 완료':!d.fluteObtained?'깨울 방법이 필요해요':road.done?'다시 포켓몬피리 사용':'포켓몬피리 사용');b.dataset.story=road.id;b.disabled=ongoing||!!queued||!road.available;b.title=busy&&road.available?'현재 관장 배틀이 끝난 뒤 사용하도록 예약해요.':'';b.onclick=()=>window.buddy.action('challenge',road.id);
+  const b=node('button','',ongoing?'배틀 중':reserved?'피리 사용 예약됨':road.done&&d.snorlaxCaught?'포획 완료':road.done&&!road.available?'길 열림':!d.fluteObtained?'깨울 방법이 필요해요':road.done?'다시 포켓몬피리 사용':'포켓몬피리 사용');b.dataset.story=road.id;b.disabled=ongoing||!!queued||!road.available;b.title=busy&&road.available?'현재 관장 배틀이 끝난 뒤 사용하도록 예약해요.':'';b.onclick=()=>window.buddy.action('challenge',road.id);
   body.append(node('b','','잠만보 · Lv.'+(road.levelsKnown?road.team[0].level:'??')),node('p','muted',d.fluteObtained?'포켓몬피리 · 보유 중':'깊이 잠들어 있어 길을 지나갈 수 없어요.'),b);$('snorlax-encounter').replaceChildren(img(143,'snorlax-sprite'),body);
 }
 function renderDevice(){

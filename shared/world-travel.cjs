@@ -11,19 +11,22 @@ function progress(state,random=Math.random){
  const required=Number.isInteger(saved?.required)&&saved.required>=minimum&&saved.required<=maximum?saved.required:minimum+Math.min(maximum-minimum,Math.max(0,Math.floor(random()*(maximum-minimum+1))));
  return state.roadProgress={location:state.location,completed:Math.max(0,Math.min(required,Math.floor(saved?.completed)||0)),required};
 }
-function plan(map,from,to,open){
- const safe={...map,roads:map.roads.filter(p=>same(p,from)||open(p.place))};
- let path=walking.route(safe,from,to);if(path)return {path,blocked:null};
- path=walking.route(map,from,to);if(!path)return null;
- const index=path.findIndex((p,i)=>i>0&&!open(map.roads.find(c=>same(c,p)).place));
+function plan(map,from,to,open,cross=()=>true){
+ const safe={...map,roads:map.roads.filter(p=>same(p,from)||open(p.place,p))};
+ const direct=walking.route(map,from,to);
+ // Approach a physical roadblock from this side instead of silently walking
+ // around the whole region to reach its other side.
+ let path=direct?.some((p,i)=>i>0&&!cross(direct[i-1],p))?null:walking.route(safe,from,to,cross);if(path)return {path,blocked:null};
+ path=direct;if(!path)return null;
+ const index=path.findIndex((p,i)=>i>0&&(!open(map.roads.find(c=>same(c,p)).place,p)||!cross(path[i-1],p)));
  if(index<0)return null;
- const gate=map.roads.find(c=>same(c,path[index]));return {path:path.slice(0,index),blocked:gate.place,gate:{x:gate.x,y:gate.y}};
+ const gate=map.roads.find(c=>same(c,path[index]));return {path:path.slice(0,index),blocked:gate.place,gate:{x:gate.x,y:gate.y},edgeFrom:path[index-1]};
 }
-function move(game,state,map,id,to,open,name,now){
- const result=plan(map,state.position||map.points[state.location],to,open);if(!result)return false;
+function move(game,state,map,id,to,open,name,now,cross){
+ const result=plan(map,state.position||map.points[state.location],to,open,cross);if(!result)return false;
  friendship.finishTravel(game,state,now);
  // A town and its interior can share one map pixel while having different gates.
- if(!result.blocked&&!open(id)){result.blocked=id;result.gate={...to};}
+ if(!result.blocked&&!open(id,to)){result.blocked=id;result.gate={...to};}
  const guided=!!game.data.kantoStory&&!game.data.kantoStory.legacy&&!game.data.kantoStory.mapAt&&!game.data.johtoUnlocked;
  if(game.platform==='mobile'&&!guided)return steps.start(game,state,map,result,id,to,name,now);
  if(guided){
@@ -40,7 +43,7 @@ function move(game,state,map,id,to,open,name,now){
  // An interior marker may share a road cell. Keep that road's itinerary and
  // encounter quota, then enter the destination without another map step.
  const last=segments.at(-1);if(!result.blocked&&last.location!==id)segments.push({location:id,path:[{...to}],arrival:true});
- state.journey={destination:id,position:{...to},name,segments,index:0,blocked:result.blocked?{location:id,checkpoint:result.blocked,position:{...to},gatePosition:result.gate,at:now}:null};
+ state.journey={destination:id,position:{...to},name,segments,index:0,blocked:result.blocked?{location:id,checkpoint:result.blocked,position:{...to},gatePosition:result.gate,edgeFrom:result.edgeFrom,at:now}:null};
  state.blocked=null;enter(game,state,now);return true;
 }
 function enter(game,state,now){
