@@ -1,0 +1,54 @@
+{
+  "version": "0.3.142",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "d64845de14a11370b754288bb8588d68c12b20b8",
+  "sourceTag": "v0.3.142",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.142",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0"
+  },
+  "validation": {
+    "nodeTestsPassed": 881,
+    "storyFlowChecksPerConsumer": 3494,
+    "storyFlowUsesControlledCombatOutcomes": true,
+    "negativeScenariosPerConsumer": 16,
+    "nativePcCheckpointReplaysPassed": 6,
+    "finalNativePcAdditionalReplayPassed": 1,
+    "nativeReplaysUseUnmodifiedCombat": true,
+    "nativeReplaysUseAcceleratedClockAndTokenInput": true,
+    "packagedStoryButtonsChecked": 171,
+    "runtimeErrors": 0,
+    "updateManifestFilesMatched": 1368,
+    "archiveFilesVerified": 1369,
+    "exactArchiveStagedByInstalledUpdater": "0.3.141",
+    "normalSpeedAnimationRetested": false
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.142-portable.zip",
+    "bytes": 164593760,
+    "sha256": "b67128f5e0c1bb42b0c7ae0208caba8816cb73c9bf3d67582bd701d9f5fdec0d"
+  },
+  "automaticUpdates": {
+    "supportedFrom": "0.3.65",
+    "channel": "stable/latest",
+    "updaterUnchanged": true
+  },
+  "retention": {
+    "latest": "0.3.142",
+    "previousKnownGood": "0.3.141",
+    "additionalPinned": [
+      "0.3.83"
+    ],
+    "additionalRecovery": [
+      "0.3.89"
+    ],
+    "additionalUnconfirmedUse": [
+      "0.3.119"
+    ]
+  }
+}
