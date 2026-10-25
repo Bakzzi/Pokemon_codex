@@ -5,6 +5,9 @@ function finishJourney(game,now){
  let clock=now;
  for(let i=0;i<300;i++){
   const state=game.data.johtoUnlocked?game.data.johtoWorld:game.data.kantoWorld;
+  // A surprise story encounter pauses this helper too. Its caller must choose
+  // to continue the dialogue/battle explicitly; never simulate that as travel.
+  if(game.presentation()&&!game.presentation().automatic)return clock;
   if(!state.journey&&!game.data.pendingActions.some(a=>['travel','world-pass'].includes(a.kind)))return clock;
   clock=Math.max(clock,game.nextTick,game.data.switchUntil||0);
   if(game.platform==='mobile'){if(!Number.isSafeInteger(game.data.mapTravel?.observed))game.recordTravelSteps(0);game.recordTravelSteps(game.data.mapTravel.observed+2000);}

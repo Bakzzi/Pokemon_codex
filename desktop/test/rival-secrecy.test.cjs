@@ -10,7 +10,7 @@ for(const [platform,Type]of [['PC',PC],['Android',Android]])for(const late of [f
  test(platform+' '+id+': checkpoints and destination hints never announce an unseen rival, including existing blocked saves',()=>{
   let g=fixture(Type,late);Object.assign(g.data.kantoWorld,{location:late?'route-22':'route-2',position:late?{x:28,y:84}:{x:44,y:76},blocked:{location:destination,checkpoint,position:W.snapshot(g).map.points[destination]}});
   for(let i=0;i<2;i++){
-   const c=W.checkpoint(g);assert.ok(c);assert.equal(c.sprite,'overworld:gate-guard');assert.equal(c.canPass,false);assert.doesNotMatch(c.name+' '+c.pages.join(' '),/그린|라이벌|길목의 트레이너/);assert.match(c.pages.join(' '),/22번도로/);
+   assert.equal(W.checkpoint(g),null,'never invent an NPC to announce an unseen rival');
    assert.doesNotMatch(W.snapshot(g).places.find(p=>p.id===destination).reason,/그린|라이벌/);hidden(g,id);assert.equal(g.rivalProgress(id).state,'unseen');g=new Type(structuredClone(g.data),now+1);
   }
  });

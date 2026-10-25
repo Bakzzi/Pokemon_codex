@@ -19,16 +19,13 @@
       if(button){button.disabled=true;button.textContent=text;button.dataset.rivalLock=index;}
     }
     const key=JSON.stringify([s.rivals,s.battle?.kind,s.pendingChallenge,s.scene?.id]);if(signature===key)return;signature=key;
-    const rivals=(s.rivals||[]).filter(e=>e.stage>0),e=rivals.find(e=>e.state==='active')||rivals.find(e=>e.state==='retry')||rivals.find(e=>e.id===s.pendingChallenge?.index)||rivals.find(e=>e.canRetry);
-    const undiscovered=!!e&&!e.met;
-    title.textContent=undiscovered?'서쪽 길':'라이벌 매치';description.textContent=undiscovered?'포켓몬리그로 이어지는 길이에요. 동료와 함께 둘러보세요.':'어릴 때부터 함께 자란 친구이자 라이벌, 그린. 모험길에서 다시 만나 서로 얼마나 강해졌는지 겨뤄요.';
-    head.hidden=undiscovered;currentId=e?.id||null;if(undiscovered)image.removeAttribute('src');else image.src='assets/trainers/battle/'+(e?.sprite||'green')+'.png';lineup.replaceChildren();
+    const rivals=(s.rivals||[]).filter(e=>e.stage>0&&e.met),e=rivals.find(e=>e.state==='active')||rivals.find(e=>e.state==='retry')||rivals.find(e=>e.id===s.pendingChallenge?.index);
+    currentId=e?.id||null;image.src='assets/trainers/battle/'+(e?.sprite||'green')+'.png';lineup.replaceChildren();
     if(e){if(e.met&&e.team?.length)lineup.append(trainerTeam(e));button.dataset.rivalChallenge=e.id;}
     else delete button.dataset.rivalChallenge;
     const queued=!!e&&s.pendingChallenge?.index===e.id,busy=s.battle?.kind==='trainer';
-    status.textContent=undiscovered?(queued?'진행 중인 동작이 끝나면 길을 따라가요.':''):queued?'진행 중인 동작이 끝나면 그린과 다시 승부해요.':e?.state==='active'?'그린과 승부하고 있어요.':e?'동료를 준비하고 그린에게 다시 도전해 보세요.':'그린과 다시 만날 날을 기다리고 있어요.';
-    status.hidden=undiscovered&&!queued;
-    button.textContent=undiscovered?(queued?'이동 예약됨':'길을 따라가기'):queued?'재도전 예약됨':e?.state==='active'?'배틀 중':'그린에게 재도전';
+    status.textContent=queued?'진행 중인 동작이 끝나면 그린과 다시 승부해요.':e?.state==='active'?'그린과 승부하고 있어요.':e?'동료를 준비하고 그린에게 다시 도전해 보세요.':'그린과 다시 만날 날을 기다리고 있어요.';
+    button.textContent=queued?'재도전 예약됨':e?.state==='active'?'배틀 중':'그린에게 재도전';
     button.disabled=!e?.canRetry||busy||!!s.pendingChallenge||!!s.scene;
   });
 })();

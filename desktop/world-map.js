@@ -34,8 +34,8 @@
   if(id==='safari'&&state.safari?.visible)add('safari-details','사파리존',state.safari.canStart);
   if(id==='mansion'&&state.mansion?.visible)add('mansion-details','폐저택 조사',state.mansion.canStart);
   if(id==='indigo'){add('pokemon-league','포켓몬리그',state.badges.length>=8);if(state.champion&&!state.johtoUnlocked)add('johto-choice','다음 지방으로');}
-  const retry=(state.rivals||[]).find(r=>r.state==='retry'||r.canRetry&&r.state==='unseen'),places={'rival-brock':state.kantoStory&&!state.kantoStory.legacy?'route-22':'pewter','rival-cerulean':'route-24','rival-surge':state.kantoStory&&!state.kantoStory.legacy?'ss-anne':'vermilion','rival-middle':'tower','rival-silph':'saffron','rival-league':state.kantoStory&&!state.kantoStory.legacy?'route-22':'indigo'};
-  if(retry&&places[retry.id]===id)add('rival-details',retry.met?'그린과 다시 승부하기':'서쪽 길');return a;
+  const retry=(state.rivals||[]).find(r=>r.state==='retry'),places={'rival-brock':state.kantoStory&&!state.kantoStory.legacy?'route-22':'pewter','rival-cerulean':'route-24','rival-surge':state.kantoStory&&!state.kantoStory.legacy?'ss-anne':'vermilion','rival-middle':'tower','rival-silph':'saffron','rival-league':state.kantoStory&&!state.kantoStory.legacy?'route-22':'indigo'};
+  if(retry&&places[retry.id]===id)add('rival-details','그린과 다시 승부하기');return a;
  }
  function knownNotice(p){return p.guidance||(p.notice??(p.open&&activities(p.id).some(a=>a.ready)));}
  function currentMap(){return world.maps?.[zone]||world.map;}

@@ -177,7 +177,6 @@ function prerequisite(g,n){
  if(n.id==='k-fossil-restore')return !!s.fossil;
  if(n.id==='k-tower-visit')return !g.data.mobileStory.scopeObtainedAt;
  if(n.case==='anne-visit'&&!done(g,'k-bill'))return false;
- if(n.case==='forest-path'&&!win('rival-brock'))return false;
  if(n.case==='nugget-bridge'&&!has('misty'))return false;
  if(n.case==='nugget-bridge'&&n.id!=='k-bridge-1'&&!win('rival-cerulean'))return false;
  if(n.case==='route3-path'&&!has('brock'))return false;
@@ -201,7 +200,6 @@ function gate(g,id){
  if(!modern(g))return null;
  const b=g.data.badges,has=id=>b.includes(id),win=id=>['won','completed'].includes(g.rivalProgress(id)?.state),s=g.data.kantoStory;
  if(!s.mapAt&&!['pallet','route-1','viridian'].includes(id))return 'map';
- if(['forest','pewter'].includes(id)&&!win('rival-brock'))return 'early-rival';
  if(id==='pewter'&&!trainersDone(g,'forest-path'))return 'forest';
  if(id==='mt-moon'&&!trainersDone(g,'route3-path'))return 'route3';
  if(['route-4','cerulean','route-24','route-25','sea-cottage'].includes(id)&&!caseDone(g,'moon-path'))return 'moon';
@@ -221,7 +219,7 @@ function gate(g,id){
  if(id==='indigo'&&!trainersDone(g,'victory-path'))return 'victory';
  return null;
 }
-const gateText={map:'오박사의 심부름을 마치고 타운맵을 받아요.', 'early-rival':'상록시티 서쪽의 22번도로도 둘러보세요.',forest:'상록숲의 트레이너들과 승부를 마쳐 주세요.',route3:'3번도로의 트레이너들과 승부를 마쳐 주세요.',moon:'달맞이산에서 출구로 가는 길을 찾아야 해요.',robber:'블루시티에서 달아난 로켓단을 쫓아가 보세요.',ticket:'승선권이 있어야 배에 오를 수 있어요.',route11:'11번도로에서 굴로 향하는 길을 찾아보세요.',aide:'돌산터널은 너무 어두워요. 2번도로 동쪽의 조수에게 길을 물어보세요.',route9:'9번도로의 트레이너들과 승부를 마쳐 주세요.',tunnel:'돌산터널 안에서 출구를 찾아야 해요.',drink:'경비원이 노랑시티로 들어가는 길을 지키고 있어요.',snorlax16:'커다란 포켓몬이 길을 막고 잠들어 있어요.',snorlax12:'커다란 포켓몬이 길을 막고 잠들어 있어요.',sea:'아직 바다를 안전하게 건너는 방법을 몰라요.',seafoam:'쌍둥이섬 안에서 반대편 출구를 찾아야 해요.','late-rival':'포켓몬리그로 가려면 먼저 22번도로를 지나야 해요.',victory:'챔피언로드의 마지막 관문을 넘어야 해요.'};
+const gateText={map:'오박사의 심부름을 마치고 타운맵을 받아요.', forest:'상록숲의 트레이너들과 승부를 마쳐 주세요.',route3:'3번도로의 트레이너들과 승부를 마쳐 주세요.',moon:'달맞이산에서 출구로 가는 길을 찾아야 해요.',robber:'블루시티에서 달아난 로켓단을 쫓아가 보세요.',ticket:'승선권이 있어야 배에 오를 수 있어요.',route11:'11번도로에서 굴로 향하는 길을 찾아보세요.',aide:'돌산터널은 너무 어두워요. 2번도로 동쪽의 조수에게 길을 물어보세요.',route9:'9번도로의 트레이너들과 승부를 마쳐 주세요.',tunnel:'돌산터널 안에서 출구를 찾아야 해요.',drink:'경비원이 노랑시티로 들어가는 길을 지키고 있어요.',snorlax16:'커다란 포켓몬이 길을 막고 잠들어 있어요.',snorlax12:'커다란 포켓몬이 길을 막고 잠들어 있어요.',sea:'아직 바다를 안전하게 건너는 방법을 몰라요.',seafoam:'쌍둥이섬 안에서 반대편 출구를 찾아야 해요.','late-rival':'포켓몬리그로 가려면 먼저 22번도로를 지나야 해요.',victory:'챔피언로드의 마지막 관문을 넘어야 해요.'};
 function moonDescription(g,defeated){
  const cleared=id=>id===defeated||done(g,id),rockets=moon.entries.filter(id=>nodes.get(id).source?.class==='ROCKET');
  if(moon.entries.every(cleared))return '화석을 노리던 로켓단을 모두 물리쳤어요. 4번도로를 지나 블루시티로 향해요.';

@@ -17,6 +17,9 @@ function withKanto(Base){return class KantoAdventure extends Base{
   super(saved,now,options);
   if(this.seasonResetOnLoad)saved=this.data;
   init(this,saved,now);
+  // Older builds incorrectly stopped the northern road for an optional rival.
+  // Replan only the old destination at a safe boundary; preserve its encounter.
+  if(K.modern(this)&&this.data.kantoWorld.blocked?.checkpoint==='forest')this.data.kantoWorld.blocked.revalidate=true;
   if(K.nodes.has(saved.pendingChallenge?.index)&&this.canChallenge(saved.pendingChallenge.index))this.data.pendingChallenge={...saved.pendingChallenge};
   const scene=this.presentation();if(K.modern(this)&&scene?.kind==='oak'&&scene.next==='rival')scene.pages[3]='먼저 피카츄와 인사해 보렴. 그린도 첫 동료로 이브이를 골랐단다.';
  }
@@ -54,7 +57,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
    const place={'rival-brock':'route-22','rival-cerulean':'route-24','rival-surge':'ss-anne','rival-middle':'tower','rival-silph':'saffron','rival-league':'route-22'}[id];if(place&&at!==place)return false;
    if(super.canChallenge(id))return true;
    if(this.rivalProgress(id)?.state!=='unseen')return false;
-   return id==='rival-brock'&&at==='route-22'&&!!s.mapAt||id==='rival-league'&&at==='route-22'&&b.length>=8;
+   return id==='rival-brock'&&at==='route-22'&&!!s.mapAt&&!has('brock')||id==='rival-league'&&at==='route-22'&&b.length>=8;
   }
   if(id==='safari-start')return has('koga')&&at==='safari'&&super.canChallenge(id);
   if(id==='road-snorlax')return ['route-12','route-16'].includes(at)&&!!this.data.trainingDevice.fluteObtainedAt&&(!s.roads[at]||this.captureRequested(143));
@@ -178,7 +181,15 @@ function withKanto(Base){return class KantoAdventure extends Base{
   if(this.data.workTokens<balance.tokensPerAction)return false;
   this.data.workTokens-=balance.tokensPerAction;w.guideCredit=(w.guideCredit||0)+1;return world.advance(this,now);
  }
- controlTick(now=Date.now()){return this.guideTick(now)||super.controlTick(now);}
+ routeRivalTick(now){
+  if(!K.modern(this)||this.data.johtoUnlocked||!this.data.kantoStory.mapAt||!this.storySafe(now)||this.data.suspendedWild)return false;
+  const w=this.data.kantoWorld;if(w.location!=='route-22'||w.walk&&now<w.walk.at+w.walk.duration)return false;
+  // Crossing this road reveals the encounter itself, never a preview card.
+  // The opening dialogue still waits for the player; background work cannot tap it.
+  const id=this.data.badges.length>=8?'rival-league':!this.data.badges.includes('brock')?'rival-brock':null;
+  return !!id&&this.rivalProgress(id)?.state==='unseen'&&this.startChallenge(id,now);
+ }
+ controlTick(now=Date.now()){return this.guideTick(now)||this.routeRivalTick(now)||super.controlTick(now);}
  startAutomaticTrainer(id,now=Date.now()){
   const n=K.nodes.get(id),alias=id==='tower-grunt-1'&&['won','completed'].includes(this.rivalProgress('rival-middle')?.state);
   if(!K.modern(this)||this.data.johtoUnlocked||!n?.automatic&&!alias||this.data.workTokens<balance.tokensPerAction||this.presentation()||this.data.battle||this.data.pendingBattle||this.data.suspendedWild||this.data.pendingChallenge||this.seasonDue(now)||now<this.nextTick||now<this.data.switchUntil)return false;
@@ -191,7 +202,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
  movementTrainerNode(){return K.modern(this)&&!this.data.johtoUnlocked?[...K.nodes.values()].find(n=>n.trainer&&n.automatic&&K.ready(this,n.id))?.id:null;}
  startMovementTrainer(now){const steps=require('./step-travel.cjs'),id=steps.trainerPending(this);if(!id||!steps.bankActive(this))return false;this.data.workTokens=balance.tokensPerAction;try{return this.startAutomaticTrainer(id,now);}finally{this.data.workTokens=0;}}
  tick(now=Date.now()){
-  if(this.guideTick(now))return true;
+  if(this.guideTick(now)||this.routeRivalTick(now))return true;
   // A guided cell spends an activity action, rather than starting wild combat.
   if(K.modern(this)&&!this.data.johtoUnlocked&&!this.data.kantoStory.mapAt&&this.data.mobileStory.onboarding==='done'&&!this.data.battle&&!this.data.pendingBattle)return false;
   if(!this.data.mobileStory.safari.trip){

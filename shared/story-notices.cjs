@@ -10,7 +10,7 @@ function kanto(game){
  const won=id=>game.rivalProgress(id)?.state==='won';
  const add=(introduced,place,resolved)=>{if(introduced&&!resolved)out.add(place);};
  const group=id=>K.trainersDone(game,id);
- add(won('rival-brock')||group('forest-path'),'pewter',badge('brock'));
+ add(group('forest-path'),'pewter',badge('brock'));
  add(badge('brock')||group('route3-path'),'mt-moon',done('k-moon-duo'));
  add(badge('brock')||done('k-moon-duo'),'cerulean',badge('misty'));
  add(badge('misty'),'route-24',done('k-bridge-rocket'));
