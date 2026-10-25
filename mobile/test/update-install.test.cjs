@@ -16,7 +16,16 @@ function fixture(){
 test('app interval displays steps without granting battles or experience',()=>{
   const f=fixture();f.start();const before=f.snapshot().game;
   for(const steps of [9,10,20,50000]){f.status.steps=steps;f.tick();f.advance(10000);}
-  const after=f.snapshot().game;assert.equal(after.mapTravel.bank,50000);assert.deepEqual({...after,mapTravel:null},{...before,mapTravel:null});assert.equal(f.snapshot().mobile.consumed,0);assert.equal(f.snapshot().mobile.lockConsumed,0);
+  const after=f.snapshot().game;assert.equal(after.mapTravel.bank,before.mapTravel.bank+50000);assert.deepEqual({...after,mapTravel:null},{...before,mapTravel:null});assert.equal(f.snapshot().mobile.consumed,0);assert.equal(f.snapshot().mobile.lockConsumed,0);
+});
+test('opening the app grants one movement compensation and preserves its receipt through reload and full reset',()=>{
+ const f=fixture();f.start();let s=f.stored();assert.equal(s.game.mapTravel.bank,2000);assert.equal(s.mobile.movementFixRewardClaimed,true);assert.equal(f.run('notice'),'업데이트 보상으로 이동 자원 1개를 받았어요.');
+ f.start();f.run('mobileLifecycle(true,true)');s=f.stored();assert.equal(s.game.mapTravel.bank,2000);assert.equal(s.game.journal.filter(e=>e.text==='업데이트 보상으로 이동 자원 1개를 받았다!').length,1);
+ f.run('$("reset-open").onclick();$("reset-accept").onclick();');f.start();f.run('mobileLifecycle(true,true)');s=f.snapshot();assert.equal(s.mobile.movementFixRewardClaimed,true);assert.equal(s.game.mapTravel.bank,0);assert.equal(s.game.journal.some(e=>e.text==='업데이트 보상으로 이동 자원 1개를 받았다!'),false);
+});
+test('a failed compensation save cannot persist either half of the grant and retry pays exactly once',()=>{
+ const f=fixture();f.setSaveOk(false);f.start();assert.equal(f.snapshot().fatal,true);assert.equal(f.stored().mobile.movementFixRewardClaimed,undefined);assert.equal(f.stored().game.mapTravel,undefined);
+ f.setSaveOk(true);f.run('fatal=false;mobileLifecycle(true,true)');assert.equal(f.stored().game.mapTravel.bank,2000);assert.equal(f.stored().mobile.movementFixRewardClaimed,true);f.run('mobileLifecycle(true,true)');assert.equal(f.stored().game.mapTravel.bank,2000);
 });
 for(const kind of ['wild','trainer','capture'])test('save and install immediately during '+kind+' without waiting for the battle or animation',()=>{
   const f=fixture();f.start();f.run(kind==='trainer'?"game.data.kantoWorld.location='route-22';game.challenge('rival-brock',Date.now())":'game.newWild(Date.now())');

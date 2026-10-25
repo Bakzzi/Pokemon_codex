@@ -6,6 +6,7 @@
       this.game=core;this.consumed=Number.isSafeInteger(saved.consumed)?saved.consumed:0;
       this.dirty=false;
       this.lockConsumed=Number.isSafeInteger(saved.lockConsumed)?saved.lockConsumed:0;
+      this.movementFixRewardClaimed=saved.movementFixRewardClaimed===true;
       // Preserve the legacy step cursor for save compatibility; steps never buy actions.
       this.foreground=false;this.pausedAt=Number.isFinite(saved.pausedAt)?saved.pausedAt:0;
       // Game recreates nextTick at launch. Restore its old clock before shifting
@@ -32,6 +33,15 @@
     }
     observe(totals){if(Number.isSafeInteger(totals.lockEpoch))this.game.lockEpoch=totals.lockEpoch;if(this.game.recordTravelSteps?.(totals.steps))this.dirty=true;}
     accrueTravel(now){if(this.game.recordTravelTime?.(now))this.dirty=true;}
+    claimMovementFixReward(now){
+      if(this.game.platform!=='mobile'||this.movementFixRewardClaimed||!Number.isSafeInteger(now)||now<0)return false;
+      const distance=this.game.data.mapTravel ||= {credit:0,bank:0};
+      const bank=Number.isSafeInteger(distance.bank)&&distance.bank>=0?distance.bank:0;
+      // The resource and its receipt are persisted in the same atomic save.
+      distance.bank=Math.min(Number.MAX_SAFE_INTEGER,bank+2000);
+      this.movementFixRewardClaimed=true;this.dirty=true;
+      this.game.log('업데이트 보상으로 이동 자원 1개를 받았다!','item',null,now);return true;
+    }
     automaticSceneTick(now){
       const g=this.game,s=g.presentation?.();
       if(!g.data.battle?.activityTrainer||!s?.automatic||!['trainer-intro','sendout'].includes(s.mode))return false;
@@ -114,7 +124,7 @@
       }
       return used;
     }
-    checkpoint(){return {consumed:this.consumed,lockConsumed:this.lockConsumed,pausedAt:this.pausedAt,nextTick:this.game.nextTick};}
+    checkpoint(){return {consumed:this.consumed,lockConsumed:this.lockConsumed,pausedAt:this.pausedAt,nextTick:this.game.nextTick,movementFixRewardClaimed:this.movementFixRewardClaimed};}
   }
   root.MobileProgression=Progression;if(typeof module==='object')module.exports=Progression;
 })(globalThis);

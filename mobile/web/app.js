@@ -46,6 +46,7 @@ window.mobileLifecycle=function(visible,reload=false){
   if(fatal)return;const now=Date.now();
   if(!visible){active=false;progression.pause(now);save();return;}
   if(reload){active=false;try{saved=JSON.parse(native.load());game=new MobileCore.Adventure(saved.game||{},now);progression=new MobileProgression(game,saved.mobile);}catch(e){fatal=true;notice='저장을 읽지 못했어요. 기존 데이터는 보존돼요.';native.reportError(String(e));publish();return;}}
+  if(progression.claimMovementFixReward(now)){notice='업데이트 보상으로 이동 자원 1개를 받았어요.';if(!save()){publish();return;}}
   refreshNative();if(applyReadyUpdate())return;
   updatePaused=false;active=true;progression.resume(now);
   catchingUp=true;let actions=0;
