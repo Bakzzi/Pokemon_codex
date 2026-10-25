@@ -38,12 +38,13 @@ final class BackgroundAdventure {
         if(game==null)return false;
         JSONObject map=game.optJSONObject(game.optBoolean("johtoUnlocked")?"johtoWorld":"kantoWorld"),distance=game.optJSONObject("mapTravel");
         JSONObject trip=map==null?null:map.optJSONObject("journey"),battle=game.optJSONObject("battle");
-        boolean moving=trip!=null;
+        boolean moving=trip!=null,bankRequested=false;
         JSONArray pending=game.optJSONArray("pendingActions");
-        if(pending!=null)for(int i=0;i<pending.length();i++){JSONObject a=pending.optJSONObject(i);if(a!=null&&(a.optString("kind").equals("travel")||a.optString("kind").equals("world-pass")))moving=true;}
+        if(pending!=null)for(int i=0;i<pending.length();i++){JSONObject a=pending.optJSONObject(i);if(a!=null&&(a.optString("kind").equals("travel")||a.optString("kind").equals("world-pass"))){moving=true;bankRequested|=a.optBoolean("useBank");}}
         return dailyMovementDue(distance,System.currentTimeMillis())||distance.isNull("observed")||total()>distance.optLong("observed",total())
             ||battle!=null&&battle.optBoolean("movementTrainer")
             ||trip!=null&&(trip.optBoolean("bankLeg")||trip.optInt("bankCells")>0)
+            ||bankRequested
             ||moving&&distance.optLong("credit",0)>=2000;
     }
     private void drain(){

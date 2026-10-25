@@ -32,20 +32,39 @@ function observe(game,total){
 function useBank(game,executing=false){
  if(game.platform!=='mobile'||count(game.data.mapTravel?.bank)<cost)return false;
  const queued=!executing&&game.data.pendingActions?.find(a=>['travel','world-pass'].includes(a.kind));
- if(queued){queued.useBank=true;return true;}
+ if(queued){if(queued.useBank)return false;queued.useBank=true;queued.departFrom=world(game)?.location;return true;}
  const trip=world(game)?.journey;if(!trip||trip.mode!=='steps'||trip.index>=trip.segments.length)return false;
+ if(!executing&&bankActive(game))return false;
  // Reserve only the cells requested now. Future walks do not silently spend the bank.
  const remaining=trip.segments.slice(trip.index).filter(s=>!s.arrival).length;if(!remaining)return false;
- trip.bankCells=Math.min(Math.floor(game.data.mapTravel.bank/cost),remaining);trip.bankLeg=true;return true;
+ trip.bankCells=Math.min(Math.floor(game.data.mapTravel.bank/cost),remaining);trip.bankLeg=true;trip.departFrom=world(game).location;return true;
 }
-function trainerPending(game){return game.movementTrainerNode?.()||null;}
+function bankRequest(game){return game.platform==='mobile'&&game.data.pendingActions?.find(a=>['travel','world-pass'].includes(a.kind)&&a.useBank);}
+function departing(game){const w=world(game),request=bankRequest(game);return game.platform==='mobile'&&((request?.departFrom===w?.location)||(bankActive(game)&&w.journey.departFrom===w.location));}
+function trainerPending(game){return departing(game)?null:game.movementTrainerNode?.()||null;}
 function bankActive(game){const trip=world(game)?.journey;return game.platform==='mobile'&&!!trip&&(trip.bankLeg||trip.bankCells>0);}
-function segments(map,path,id,blocked){
- const result=path.slice(1).map((p,i)=>({location:map.roads.find(c=>c.x===p.x&&c.y===p.y).place,path:[path[i],p]}));
+function handoff(game,now){
+ const request=bankRequest(game),d=game.data,b=d.battle;
+ if(!request&&!bankActive(game)||!b||b.kind!=='wild'||b.storyId||d.pendingChallenge||d.suspendedWild||game.presentation?.()||now<game.nextTick||now<d.switchUntil)return false;
+ if(request&&['invalid','done'].includes(game.actionStatus(request,now).state))return false;
+ // Finish outcomes already committed by the last attack or ball. Never turn a
+ // successful capture/knockout into an escape, or buy another attack for free.
+ if(d.pendingBattle&&d.pendingBattle.kind!=='capture'||b.foe.hp<=0||b.party[d.activeId]?.hp<=0)return game.tick(now);
+ d.pendingBattle=null;d.battle=null;d.captureAnimation=null;
+ game.log('성공적으로 도망쳤다!','flee',b.foe.id,now);
+ game.animate('result',{text:'성공적으로 도망쳤다!'},now);return true;
+}
+function segments(map,path,id,blocked,current){
+ const result=[];
+ for(const [i,p]of path.entries()){
+  if(i)result.push({location:map.roads.find(c=>c.x===p.x&&c.y===p.y).place,path:[path[i-1],p]});
+  const transit=map.transits?.find(t=>t.x===p.x&&t.y===p.y);
+  if(transit&&(result.at(-1)?.location||current)!==transit.location)result.push({location:transit.location,path:[{...p}],arrival:true});
+ }
  if(result.length&&!blocked&&result.at(-1).location!==id)result.push({location:id,path:[{...path.at(-1)}],arrival:true});return result;
 }
 function start(game,state,map,result,id,to,name,now){
- state.journey={mode:'steps',destination:id,position:{...to},name,segments:segments(map,result.path,id,result.blocked),index:0,blocked:result.blocked?{location:id,checkpoint:result.blocked,position:{...to},gatePosition:result.gate,edgeFrom:result.edgeFrom,at:now}:null};
+ state.journey={mode:'steps',destination:id,position:{...to},name,segments:segments(map,result.path,id,result.blocked,state.location),index:0,blocked:result.blocked?{location:id,checkpoint:result.blocked,position:{...to},gatePosition:result.gate,edgeFrom:result.edgeFrom,at:now}:null};
  state.walk=null;state.blocked=null;
  // An interior sharing the current map cell has no additional map distance.
  if(!state.journey.segments.length&&!result.blocked){state.location=id;state.position={...to};state.visited[id] ||= now;}
@@ -72,12 +91,16 @@ function advance(game,state,now){
    state.walk={from:state.location,to:s.location,destination:trip.destination,path:s.path,at:now,duration:walking.duration(s.path),stepTravel:true};
    friendship.startTravel(game,state.walk);game.holdUntil(now+state.walk.duration);
   }
-  state.location=s.location;state.position={...end};state.visited[s.location] ||= now;return true;
+  state.location=s.location;state.position={...end};state.visited[s.location] ||= now;
+  if(trip.departFrom!==state.location)delete trip.departFrom;return true;
  }
  state.blocked=trip.blocked;state.journey=null;bankRemainder(game);
  game.log(state.blocked?'길목에 도착했다. 앞을 지키는 사람과 이야기해 보자.':trip.name+'에 도착했다. 주변을 탐험해 보자.','travel',null,now);return true;
 }
 function snapshot(game,state){
- const trip=state.journey,bank=count(game.data.mapTravel?.bank);return {travelMode:'steps',roadProgress:null,movement:{count:Math.floor(bank/cost),remainder:bank%cost,usingBank:!!(trip?.bankLeg||trip?.bankCells>0)},stepProgress:trip?{completed:Math.min(cost,count(game.data.mapTravel?.credit)),required:cost,remainingCells:trip.mode==='steps'?trip.segments.slice(trip.index).filter(s=>!s.arrival).length:null}:null};
+ const trip=state.journey,bank=count(game.data.mapTravel?.bank),queued=game.data.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind)&&a.useBank)||false;
+ const usingBank=queued||!!(trip?.bankLeg||trip?.bankCells>0),remaining=trip?.mode==='steps'?trip.segments.slice(trip.index).filter(s=>!s.arrival).length:null;
+ const phase=queued?'queued':game.data.battle?.movementTrainer?'trainer':usingBank&&trainerPending(game)?'trainer-wait':usingBank?'moving':null;
+ return {travelMode:'steps',roadProgress:null,movement:{count:Math.floor(bank/cost),remainder:bank%cost,usingBank,phase},stepProgress:trip&&remaining!==0&&!usingBank?{completed:Math.min(cost,count(game.data.mapTravel?.credit)),required:cost,remainingCells:remaining}:null};
 }
-module.exports={cost,dailyInterval,accrueTime,observe,hasIntent,beginIntent,bankRemainder,useBank,bankActive,start,migrate,advance,snapshot};
+module.exports={cost,dailyInterval,accrueTime,observe,hasIntent,beginIntent,bankRemainder,useBank,bankActive,bankRequest,departing,trainerPending,handoff,start,migrate,advance,snapshot};

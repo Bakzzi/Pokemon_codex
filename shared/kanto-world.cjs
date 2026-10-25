@@ -97,14 +97,14 @@ function reason(game,p){
  return '이곳을 탐험할 방법을 먼저 찾아야 해요.';
 }
 function init(game,now=Date.now()){
- if([1,2].includes(game.data.kantoWorld?.revision)&&byId.has(game.data.kantoWorld.location)){
+ if([1,2,3].includes(game.data.kantoWorld?.revision)&&byId.has(game.data.kantoWorld.location)){
   const s=game.data.kantoWorld;
-  if(s.revision===1){if(s.journey)s.journey.revalidate=true;if(s.blocked)s.blocked.revalidate=true;s.revision=2;}
+  if(s.revision<3){if(s.journey)s.journey.revalidate=true;if(s.blocked)s.blocked.revalidate=true;s.revision=3;}
   journey.init(s,game.random);return s;
  }
  const defaults=['route-1','route-3','route-5','route-9',roadOpen(game)?'route-15':'route-12','saffron','route-19','route-21','route-23','cerulean-cave'];
  const location=defaults[reachedStage(game)];
- game.data.kantoWorld={revision:2,location,visited:{[location]:now}};journey.init(game.data.kantoWorld,game.random);return game.data.kantoWorld;
+ game.data.kantoWorld={revision:3,location,visited:{[location]:now}};journey.init(game.data.kantoWorld,game.random);return game.data.kantoWorld;
 }
 function current(game){return byId.get(init(game).location);}
 function range(game,p=current(game)){
@@ -136,8 +136,13 @@ function travel(game,id,now,point){
  const retreat=new Set(),owner=map.roads.find(c=>journey.same(c,position(game)))?.place;
  const missing=new Set([story.gate(game,state.location),story.gate(game,owner)].filter(Boolean));
  if(missing.size&&unlocked(game,byId.get(id))){for(const p of (walking.route(map,position(game),to)||[]).slice(1)){const place=map.roads.find(c=>journey.same(c,p)).place;if(unlocked(game,byId.get(place)))break;if(!missing.has(story.gate(game,place)))break;retreat.add(place);}}
- const open=(place,point)=>(unlocked(game,byId.get(place),point)||retreat.has(place)||place==='saffron'&&id!=='saffron'&&game.data.badges.includes('misty'))&&(!['route-23','victory-road','indigo'].includes(place)||!!state.leaguePass);
- return journey.move(game,state,map,id,to,open,byId.get(id).name,now,(a,b)=>!crossingGate(game,a,b));
+ const forest=story.modern(game)&&!story.trainersDone(game,'forest-path');
+ const passesForest=forest&&(walking.route(map,position(game),to)||[]).some(p=>journey.same(p,map.points.forest));
+ // The forest shares a road cell on the town map, but its ordinary opponents
+ // are part of passing through. Visiting it adds no distance or manual event.
+ const routeMap=passesForest?{...map,transits:[{location:'forest',...map.points.forest}]}:map;
+ const open=(place,point)=>(unlocked(game,byId.get(place),point)||retreat.has(place)||place==='pewter'&&passesForest&&story.gate(game,place)==='forest'||place==='saffron'&&id!=='saffron'&&game.data.badges.includes('misty'))&&(!['route-23','victory-road','indigo'].includes(place)||!!state.leaguePass);
+ return journey.move(game,state,routeMap,id,to,open,byId.get(id).name,now,(a,b)=>!crossingGate(game,a,b));
 }
 function advance(game,now){
  const s=init(game),old=s.journey,block=old?.blocked||s.blocked;
@@ -145,7 +150,7 @@ function advance(game,now){
  if(old?.revalidate||s.blocked?.revalidate||newlyOpen){
   if(!journey.ready(game,now))return false;
   if(!travel(game,old?.destination||block.location,now,old?.position||block.position))return false;
-  if(s.journey?.mode==='steps'&&old){s.journey.bankCells=Math.min(old.bankCells||0,s.journey.segments.filter(p=>!p.arrival).length);s.journey.bankLeg=!!old.bankLeg;}
+  if(s.journey?.mode==='steps'&&old){s.journey.bankCells=Math.min(old.bankCells||0,s.journey.segments.filter(p=>!p.arrival).length);s.journey.bankLeg=!!old.bankLeg;if(old.departFrom===s.location)s.journey.departFrom=old.departFrom;}
   return true;
  }
  return journey.advance(game,s,now);

@@ -12,15 +12,17 @@ function progress(state,random=Math.random){
  return state.roadProgress={location:state.location,completed:Math.max(0,Math.min(required,Math.floor(saved?.completed)||0)),required};
 }
 function plan(map,from,to,open,cross=()=>true){
- const safe={...map,roads:map.roads.filter(p=>same(p,from)||open(p.place,p))};
+ const transit=p=>map.transits?.find(t=>same(t,p));
+ const cellOpen=p=>open(p.place,p)&&(!transit(p)||open(transit(p).location,p));
+ const safe={...map,roads:map.roads.filter(p=>same(p,from)||cellOpen(p))};
  const direct=walking.route(map,from,to);
  // Approach a physical roadblock from this side instead of silently walking
  // around the whole region to reach its other side.
  let path=direct?.some((p,i)=>i>0&&!cross(direct[i-1],p))?null:walking.route(safe,from,to,cross);if(path)return {path,blocked:null};
  path=direct;if(!path)return null;
- const index=path.findIndex((p,i)=>i>0&&(!open(map.roads.find(c=>same(c,p)).place,p)||!cross(path[i-1],p)));
+ const index=path.findIndex((p,i)=>i>0&&(!cellOpen(map.roads.find(c=>same(c,p)))||!cross(path[i-1],p)));
  if(index<0)return null;
- const gate=map.roads.find(c=>same(c,path[index]));return {path:path.slice(0,index),blocked:gate.place,gate:{x:gate.x,y:gate.y},edgeFrom:path[index-1]};
+ const gate=map.roads.find(c=>same(c,path[index])),entry=transit(gate);return {path:path.slice(0,index),blocked:entry&&!open(entry.location,gate)?entry.location:gate.place,gate:{x:gate.x,y:gate.y},edgeFrom:path[index-1]};
 }
 function move(game,state,map,id,to,open,name,now,cross){
  const result=plan(map,state.position||map.points[state.location],to,open,cross);if(!result)return false;
@@ -39,6 +41,8 @@ function move(game,state,map,id,to,open,name,now,cross){
   const location=i===0?state.location:map.roads.find(c=>same(c,p)).place,last=segments.at(-1);
   if(last?.location===location)last.path.push(p);
   else segments.push({location,path:last?[last.path.at(-1),p]:[p]});
+  const transit=map.transits?.find(t=>same(t,p));
+  if(transit&&segments.at(-1).location!==transit.location)segments.push({location:transit.location,path:[{...p}],arrival:true});
  }
  // An interior marker may share a road cell. Keep that road's itinerary and
  // encounter quota, then enter the destination without another map step.
@@ -66,7 +70,7 @@ function advance(game,state,now){
  // Finishing the distance/quota must not skip an area's unplayed ordinary
  // opponents. Control-only ticks run before paid battle ticks on both clients.
  const next=trip.segments[trip.index+(game.platform==='mobile'?0:1)];
- if(next&&next.location!==state.location&&game.movementTrainerNode?.())return false;
+ if(next&&next.location!==state.location&&(game.platform==='mobile'?steps.trainerPending(game):game.movementTrainerNode?.()))return false;
  if(game.platform==='mobile')return steps.advance(game,state,now);
  const leaving=trip.index+1<trip.segments.length||trip.blocked;
  const p=progress(state,game.random);if(leaving&&p&&p.completed<p.required)return false;

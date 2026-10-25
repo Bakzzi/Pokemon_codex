@@ -1,5 +1,7 @@
 # Verified releases and automatic completion
 
+- User correction (2026-10-25): explicit Android movement-bank use leaves the current ordinary wild battle with `성공적으로 도망쳤다!` after its current presentation. Finish an already-decided capture/knockout result first. Remaining ordinary trainers at the departure location stay uncleared for the next visit; do not force them before departure. Entered areas still resolve their ordinary trainers during bank travel. Never flee a story/trainer challenge, invent trainer wins, charge a lock-time action for the handoff, or charge a cell twice. Waiting unrelated action reservations must not block ordinary trainers. Preserve these rules through saved queues and reloads.
+
 ## Shared game parity
 
 - User instruction (2026-10-22): depositing parents at the Day Care requires being stationary at its actual map location: Kanto Route 5 or Johto Route 34, including Route 5 during the Kanto revisit. Enforce this in direct placement, action admission/execution and both UIs, not just the button. A queued deposit must not execute after leaving. Keep existing boarded parents, egg progress and remote status/withdrawal intact; show the local facility beneath the map and share PC/Android behavior.

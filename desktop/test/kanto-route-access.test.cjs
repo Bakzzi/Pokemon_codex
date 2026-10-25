@@ -17,6 +17,17 @@ function move(g,id){assert.ok(g.requestAction('travel',id,clock(g)));return fini
 const trainers=map=>[...K.nodes.values()].filter(n=>n.source?.map===map);
 for(const Type of [PC,Android]){
  const platform=Type===PC?'PC':'Android';
+ test(platform+': choosing Pewter traverses the forest interior and defeats its ordinary trainers before continuing',()=>{
+  const g=fixture(Type,'viridian',0);assert.ok(g.requestAction('evolve',{id:25,to:26},now));
+  move(g,'pewter');assert.equal(g.data.kantoWorld.location,'pewter');assert.equal(g.data.kantoWorld.blocked,null);
+  assert.ok(K.trainersDone(g,'forest-path'));assert.equal(g.data.pendingActions.length,1);assert.equal(g.data.pendingActions[0].kind,'evolve');
+  assert.equal(g.data.owned[25].id,25);assert.equal(g.data.badges.length,0);
+ });
+ test(platform+': the forest transit never bypasses the early manual rival gate',()=>{
+  const g=fixture(Type,'viridian',0);g.rivalProgress('rival-brock').state='unseen';move(g,'pewter');
+  assert.notEqual(g.data.kantoWorld.location,'pewter');assert.notEqual(g.data.kantoWorld.location,'forest');assert.equal(g.data.kantoWorld.blocked.checkpoint,'forest');
+  assert.equal(K.trainersDone(g,'forest-path'),false);assert.equal(g.rivalProgress('rival-brock').state,'unseen');
+ });
  test(platform+': one destination selection clears Route 3 and reaches Moon entrance without its exit or shore trainer',()=>{
   const g=fixture(Type,'pewter',1);move(g,'mt-moon');
   assert.equal(g.data.kantoWorld.location,'mt-moon');assert.equal(g.data.kantoWorld.blocked,null);assert.ok(K.trainersDone(g,'route3-path'));

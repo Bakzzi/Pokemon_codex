@@ -39,9 +39,11 @@
       // never tap through manual dialogue or charge an extra battle action.
       s.at=Math.min(s.at,now-s.duration);const changed=g.sceneTick(now);if(changed)this.dirty=true;return changed;
     }
-    movementActive(){const d=this.game.data,w=d.johtoUnlocked?d.johtoWorld:d.kantoWorld;return !!d.battle?.movementTrainer||!d.battle&&!d.pendingBattle&&!!(w?.journey?.bankLeg||w?.journey?.bankCells>0);}
+    movementActive(){const d=this.game.data,w=d.johtoUnlocked?d.johtoWorld:d.kantoWorld,bank=!!(w?.journey?.bankLeg||w?.journey?.bankCells>0||d.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind)&&a.useBank));return !!d.battle?.movementTrainer||bank&&(!d.battle||d.battle.kind==='wild'&&!d.battle.storyId)&&!d.pendingChallenge&&!d.suspendedWild;}
     movementTick(now){
-      const g=this.game,d=g.data;if(!this.movementActive()||g.presentation?.()||d.battle&&!d.battle.movementTrainer)return false;
+      const g=this.game,d=g.data;if(!this.movementActive()||g.presentation?.())return false;
+      if(g.handoffTravel?.(now)){this.dirty=true;return true;}
+      if(d.battle&&!d.battle.movementTrainer)return false;
       const changed=d.battle?.movementTrainer?this.step(now):g.startMovementTrainer?.(now);
       if(changed)this.dirty=true;return !!changed;
     }
@@ -53,6 +55,7 @@
     }
     mapTick(now){
       const g=this.game,d=g.data,w=d.johtoUnlocked?d.johtoWorld:d.kantoWorld;
+      if(g.handoffTravel?.(now)){this.dirty=true;return true;}
       if(g.platform!=='mobile'||!w?.journey&&!d.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind))||d.battle||d.pendingBattle||d.suspendedWild||d.pendingChallenge||g.presentation?.())return false;
       const walk=w?.walk,end=walk&&walk.at+walk.duration;
       // Fast-forward only the map's short arrival animation, never a battle result.

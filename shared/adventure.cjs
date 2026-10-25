@@ -100,7 +100,8 @@ class Adventure extends Engine{
   }
   executeAction(a,now){const ok=super.executeAction(a,now);if(ok&&a.useBank&&this.platform==='mobile')require('./step-travel.cjs').useBank(this,true);return ok;}
   cancelAction(id,now=Date.now(),reason){const ok=super.cancelAction(id,now,reason);if(ok&&reason!=='새 선택으로 변경'&&this.platform==='mobile'&&!require('./step-travel.cjs').hasIntent(this))require('./step-travel.cjs').bankRemainder(this);return ok;}
-  controlTick(now=Date.now()){return super.controlTick(now)||this.advanceTravel(now);}
+  handoffTravel(now){return require('./step-travel.cjs').handoff(this,now);}
+  controlTick(now=Date.now()){return this.handoffTravel(now)||super.controlTick(now)||this.advanceTravel(now);}
   canReserveCapture(id){return id!==131&&super.canReserveCapture(id);}
   canReceiveFlute(){const r=this.data.mobileStory?.rescue;return !!(r?.completedAt&&r.wins.every(Boolean));}
   fluteRewardText(){return '등나무노인에게 포켓몬피리를 받았다!';}

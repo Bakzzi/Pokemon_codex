@@ -72,6 +72,7 @@ function advance(game,now){
   if(s.journey?.mode==='steps'){
    s.journey.bankCells=Math.min(old.bankCells||0,s.journey.segments.filter(p=>!p.arrival).length);
    s.journey.bankLeg=!!old.bankLeg;
+   if(old.departFrom===s.location)s.journey.departFrom=old.departFrom;
   }
   return true;
  }

@@ -181,12 +181,15 @@ function withKanto(Base){return class KantoAdventure extends Base{
  controlTick(now=Date.now()){return this.guideTick(now)||super.controlTick(now);}
  startAutomaticTrainer(id,now=Date.now()){
   const n=K.nodes.get(id),alias=id==='tower-grunt-1'&&['won','completed'].includes(this.rivalProgress('rival-middle')?.state);
-  if(!K.modern(this)||this.data.johtoUnlocked||!n?.automatic&&!alias||this.data.workTokens<balance.tokensPerAction||this.presentation()||this.data.battle||this.data.pendingBattle||this.data.suspendedWild||this.data.pendingChallenge||this.data.pendingActions.length||this.seasonDue(now)||now<this.nextTick||now<this.data.switchUntil)return false;
+  if(!K.modern(this)||this.data.johtoUnlocked||!n?.automatic&&!alias||this.data.workTokens<balance.tokensPerAction||this.presentation()||this.data.battle||this.data.pendingBattle||this.data.suspendedWild||this.data.pendingChallenge||this.seasonDue(now)||now<this.nextTick||now<this.data.switchUntil)return false;
+  // Ready actions run first; an unrelated reservation still awaiting its item
+  // or partner must not prevent the road's mandatory trainer from starting.
+  if(this.data.pendingActions.some(a=>this.actionStatus(a,now).state!=='waiting'))return false;
   if(n&&this.rivalGate(id)&&!['won','completed'].includes(this.rivalProgress(this.rivalGate(id).id)?.state))return false;
   this.autoStarting=true;let ok;try{ok=this.startChallenge(id,now);}finally{this.autoStarting=false;}if(ok){this.data.workTokens-=balance.tokensPerAction;if(require('./step-travel.cjs').bankActive(this)&&this.data.battle)this.data.battle.movementTrainer=true;}return !!ok;
  }
  movementTrainerNode(){return K.modern(this)&&!this.data.johtoUnlocked?[...K.nodes.values()].find(n=>n.trainer&&n.automatic&&K.ready(this,n.id))?.id:null;}
- startMovementTrainer(now){const id=this.movementTrainerNode();if(!id||!require('./step-travel.cjs').bankActive(this))return false;this.data.workTokens=balance.tokensPerAction;try{return this.startAutomaticTrainer(id,now);}finally{this.data.workTokens=0;}}
+ startMovementTrainer(now){const steps=require('./step-travel.cjs'),id=steps.trainerPending(this);if(!id||!steps.bankActive(this))return false;this.data.workTokens=balance.tokensPerAction;try{return this.startAutomaticTrainer(id,now);}finally{this.data.workTokens=0;}}
  tick(now=Date.now()){
   if(this.guideTick(now))return true;
   // A guided cell spends an activity action, rather than starting wild combat.

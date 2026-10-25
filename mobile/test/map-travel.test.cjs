@@ -75,10 +75,9 @@ test('a planned 4,000-step journey banks the extra 3,000 steps, without automati
  p.catchUp({steps:17000,lockMillis:0},now,0);assert.equal(world(g).journey,null);assert.equal(g.data.mapTravel.bank,3000);assert.equal(view(g).movement.count,1);assert.equal(view(g).movement.remainder,1000);
  g.requestAction('travel','pewter',Math.max(now,g.nextTick));assert.equal(g.advanceTravel(Math.max(now,g.nextTick)),false);assert.equal(g.data.mapTravel.bank,3000);
 });
-test('bank use survives a queued journey and reload, waits for the current wild result, and never double charges a cell',()=>{
+test('bank use survives a queued journey and reload, escapes the current wild, and never double charges a cell',()=>{
  let {g,p}=ready();p.observe({steps:20000});g.newWild(now);const battle=g.data.battle;choose(g);assert.ok(g.requestAction('travel-bank',undefined,now));assert.ok(g.data.pendingActions[0].useBank);
- g=new A(plain(g.data),now);p=new P(g);assert.ok(g.data.pendingActions[0].useBank);const start=here(g);p.catchUp({steps:20000,lockMillis:0},now,0);assert.deepEqual(here(g),start);assert.equal(g.data.mapTravel.bank,10000);
- g.data.battle.foe.hp=0;g.showFaint(now);g.tick(Math.max(g.nextTick,g.data.switchUntil));for(let i=0;i<3&&g.data.pendingActions.length;i++)settle(g);
+ g=new A(plain(g.data),now);p=new P(g);assert.ok(g.data.pendingActions[0].useBank);p.catchUp({steps:20000,lockMillis:0},now,0);assert.ok(g.data.journal.some(e=>e.text==='성공적으로 도망쳤다!'));
  p.catchUp({steps:20000,lockMillis:0},Math.max(now,g.nextTick),0);assert.deepEqual(here(g),next);assert.equal(g.data.mapTravel.bank,8000);const saved=plain(g.data);
  g=new A(saved,now);p=new P(g);p.catchUp({steps:20000,lockMillis:0},Math.max(now,g.nextTick),0);assert.equal(g.data.mapTravel.bank,8000);assert.equal(g.data.battle,null);assert.equal(p.lockConsumed,0);assert.equal(battle.kind,'wild');
 });
@@ -87,6 +86,54 @@ function forest(){
  g.data.kantoWorld.location='viridian';g.data.kantoWorld.position={...g.panelState(now).kantoWorld.map.points.viridian};g.gainXp(25,1000000,now);g.data.switchUntil=0;g.nextTick=now;
  const p=new P(g);p.observe({steps:0});p.observe({steps:40000});assert.ok(g.requestAction('travel','forest',now));assert.ok(g.requestAction('travel-bank',undefined,now));return {g,p};
 }
+test('an unavailable evolution reservation cannot stall bank-funded trainers, including after reload',()=>{
+ let {g,p}=forest();assert.ok(g.requestAction('evolve',{id:25,to:26},now));g=new A(plain(g.data),now,{random:()=>.6});p=new P(g);
+ for(let i=0;i<8&&world(g).journey;i++)p.catchUp({steps:40000,lockMillis:0},now,0);
+ assert.equal(world(g).journey,null);assert.equal(world(g).location,'forest');assert.equal(g.data.mapTravel.bank,36000);assert.equal(p.lockConsumed,0);
+ assert.equal(g.data.pendingActions.length,1);assert.equal(g.data.pendingActions[0].kind,'evolve');assert.equal(g.data.owned[25].id,25);
+});
+test('direct bank travel to Pewter visits the forest, resolves its opponents, and pays only four physical cells',()=>{
+ const {g,p}=forest();world(g).journey=null;g.requestAction('travel','pewter',now);g.requestAction('travel-bank',undefined,now);
+ assert.ok(world(g).journey.segments.some(s=>s.location==='forest'&&s.arrival));
+ for(let i=0;i<8&&world(g).journey;i++)p.catchUp({steps:40000,lockMillis:0},now,0);
+ assert.equal(world(g).journey,null);assert.equal(world(g).location,'pewter');assert.equal(world(g).blocked,null);assert.equal(g.data.mapTravel.bank,32000);
+ assert.ok(require('../../shared/kanto-journey.cjs').trainersDone(g,'forest-path'));assert.equal(p.lockConsumed,0);
+});
+test('bank departure defers current-location opponents without clearing them, and revisiting still encounters them',()=>{
+ let {g,p}=forest();world(g).journey=null;world(g).location='forest';world(g).position={...view(g).map.points.forest};
+ const id=g.movementTrainerNode();assert.ok(id);g.requestAction('travel','viridian',now);g.requestAction('travel-bank',undefined,now);
+ g=new A(plain(g.data),now,{random:()=>.6});p=new P(g);p.catchUp({steps:40000,lockMillis:0},now,0);
+ assert.equal(world(g).location,'viridian');assert.equal(world(g).journey,null);assert.equal(g.data.kantoStory.cleared[id],undefined);assert.equal(g.data.mapTravel.bank,36000);assert.equal(g.data.battle,null);
+ g.requestAction('travel','forest',Math.max(now,g.nextTick,g.data.switchUntil));g.requestAction('travel-bank',undefined,now);
+ for(let i=0;i<8&&world(g).journey;i++)p.catchUp({steps:40000,lockMillis:0},now,0);
+ assert.ok(g.data.kantoStory.cleared[id]);assert.equal(g.data.mapTravel.bank,32000);assert.equal(p.lockConsumed,0);
+});
+test('bank escape waits for a visible attack, needs no new lock activity, and grants no battle rewards',()=>{
+ const {g,p}=ready();p.observe({steps:20000});g.newWild(now);g.animate('attack',{text:'fixture',actor:'hero'},now);const end=g.nextTick,xp=g.data.owned[25].xp,caught=plain(g.data.caught),battles=plain(g.data.battles);
+ choose(g);g.requestAction('travel-bank',undefined,now);const q=view(g);assert.equal(q.movement.phase,'queued');assert.equal(q.movement.usingBank,true);
+ p.live(end-1,{steps:20000,lockMillis:0});assert.ok(g.data.battle);assert.equal(g.data.mapTravel.bank,10000);
+ for(let t=end;t<end+20000;t+=250)p.live(t,{steps:20000,lockMillis:0});
+ assert.equal(g.data.battle,null);assert.deepEqual(here(g),next);assert.equal(g.data.mapTravel.bank,8000);assert.equal(g.data.owned[25].xp,xp);assert.deepEqual(plain(g.data.caught),caught);assert.deepEqual(plain(g.data.battles),battles);assert.equal(p.lockConsumed,0);
+ assert.equal(g.data.journal.filter(e=>e.kind==='flee').length,1);
+});
+test('an already-decided capture is awarded before bank departure instead of discarded as an escape',()=>{
+ const {g,p}=ready();p.observe({steps:20000});g.newWild(now);const b=g.data.battle;b.foe.id=19;b.foe.hp=1;g.random=()=>0;assert.equal(g.capture(now),true);assert.equal(g.data.pendingBattle.kind,'capture-result');
+ choose(g);g.requestAction('travel-bank',undefined,now);p.catchUp({steps:20000,lockMillis:0},now,0);
+ assert.ok(g.data.caught[19]);assert.equal(Object.values(g.data.owned).filter(p=>p.id===19).length,1);assert.deepEqual(here(g),next);assert.equal(g.data.mapTravel.bank,8000);assert.equal(g.data.journal.some(e=>e.kind==='flee'),false);assert.equal(p.lockConsumed,0);
+});
+test('an already-decided knockout resolves before bank departure and cannot be awarded twice after reload',()=>{
+ let {g,p}=ready();p.observe({steps:20000});g.newWild(now);g.data.battle.foe.hp=0;g.showFaint(now);choose(g);g.requestAction('travel-bank',undefined,now);const xp=g.data.owned[25].xp;
+ p.catchUp({steps:20000,lockMillis:0},now,0);assert.ok(g.data.owned[25].xp>xp);assert.deepEqual(here(g),next);assert.equal(g.data.journal.some(e=>e.kind==='flee'),false);const earned=g.data.owned[25].xp;
+ g=new A(plain(g.data),now);p=new P(g);p.catchUp({steps:20000,lockMillis:0},now,0);assert.equal(g.data.owned[25].xp,earned);assert.equal(g.data.mapTravel.bank,8000);
+});
+test('bank travel does not flee manual challenges or reveal their result',()=>{
+ const {g,p}=ready();p.observe({steps:20000});g.newWild(now);g.data.battle.storyId='road-snorlax';const b=g.data.battle;choose(g);g.requestAction('travel-bank',undefined,now);
+ const start=here(g);p.catchUp({steps:20000,lockMillis:0},now,0);assert.equal(g.data.battle,b);assert.deepEqual(here(g),start);assert.equal(g.data.mapTravel.bank,10000);assert.equal(g.data.journal.some(e=>e.kind==='flee'),false);
+});
+test('bank travel at the destination shows trainer progress instead of zero-step movement progress',()=>{
+ const {g}=forest();for(let i=0;i<10&&world(g).location!=='forest';i++)settle(g);assert.equal(view(g).stepProgress,null);assert.equal(view(g).movement.phase,'trainer-wait');
+ assert.ok(g.startMovementTrainer(Math.max(now,g.nextTick,g.data.switchUntil)));assert.equal(view(g).movement.phase,'trainer');assert.equal(view(g).stepProgress,null);
+});
 test('bank travel completes every ordinary forest trainer without wild encounters, lock actions, duplicate trainers or extra distance charges',()=>{
  const {g,p}=forest(),K=require('../../shared/kanto-journey.cjs'),ids=[...K.nodes.values()].filter(n=>n.automatic&&n.location==='forest').map(n=>n.id);assert.equal(ids.length,5);
  let wilds=0;const spawn=g.newWild.bind(g);g.newWild=(...args)=>{wilds++;return spawn(...args);};const cells=world(g).journey.segments.filter(s=>!s.arrival).length;
