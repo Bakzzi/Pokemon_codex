@@ -13,6 +13,7 @@ itemNames['fishing-rod']='낚싯대';
 function withJohto(Base){return class JohtoAdventure extends Base{
  constructor(saved={},now=Date.now(),options={}){
   super(saved,now,options);
+  if(this.seasonResetOnLoad)saved=this.data;
   if(J.active(this)||saved.johto)J.init(this,saved.pendingChallenge);
   this.prepareJohtoJourney(now);
   if(J.active(this))world.init(this,now);

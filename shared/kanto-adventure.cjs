@@ -14,7 +14,9 @@ function init(g,saved,now){
 }
 function withKanto(Base){return class KantoAdventure extends Base{
  constructor(saved={},now=Date.now(),options={}){
-  super(saved,now,options);init(this,saved,now);
+  super(saved,now,options);
+  if(this.seasonResetOnLoad)saved=this.data;
+  init(this,saved,now);
   if(K.nodes.has(saved.pendingChallenge?.index)&&this.canChallenge(saved.pendingChallenge.index))this.data.pendingChallenge={...saved.pendingChallenge};
   const scene=this.presentation();if(K.modern(this)&&scene?.kind==='oak'&&scene.next==='rival')scene.pages[3]='먼저 피카츄와 인사해 보렴. 그린도 첫 동료로 이브이를 골랐단다.';
  }

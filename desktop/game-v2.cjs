@@ -71,7 +71,7 @@ function freshData(saved={}){
 }
 class Game {
   constructor(saved={},now=Date.now(),{random=Math.random}={}){
-    this.random=random;this.sessions=new Map();this.limits={};this.lastEvent=0;this.nextTick=now;
+    this.random=random;this.sessions=new Map();this.limits={};this.lastEvent=0;this.nextTick=now;this.seasonResetOnLoad=false;
     this.data=saved.version===2?JSON.parse(JSON.stringify(saved)):freshData(saved);
     discovery.init(this.data);
     const month=monthOf(now);
@@ -152,6 +152,7 @@ class Game {
       // An offline success was already rolled: register it before starting over.
       if(this.data.pendingBattle?.kind==='capture-result')this.finishCapture(this.data.pendingBattle,now);
       this.resetSeason(now);
+      this.seasonResetOnLoad=true;
     }
   }
   maxGeneration(){return this.data.champion&&this.data.johtoUnlocked?2:1;}

@@ -26,6 +26,8 @@ function portrait(boss){return boss.sprite||rivals.get(boss.id)?.sprite||storyEn
 class Adventure extends Engine{
   constructor(saved={},now=Date.now(),options={}){
     super(saved,now,options);
+    // Later constructor layers must restore the new season, not the expired input.
+    if(this.seasonResetOnLoad)saved=this.data;
     this.platform=options.platform||'mobile';
     if(!this.data.mobileStory){
       // Any pre-existing game is a migration, including one at the first level.
@@ -45,7 +47,7 @@ class Adventure extends Engine{
     // An event gift cannot fulfill an old ordinary-wild capture reservation.
     delete this.data.captureReservations[131];
     const pending=saved.pendingChallenge;
-    if((rivals.has(pending?.index)&&this.rivalProgress(pending.index)?.state==='retry')||(storyEncounter(pending?.index)||['safari-start','mansion-investigate'].includes(pending?.index)||pending?.index===6)&&this.canChallenge(pending.index))this.data.pendingChallenge={...pending};
+    if((rivals.has(pending?.index)||storyEncounter(pending?.index)||['safari-start','mansion-investigate'].includes(pending?.index)||pending?.index===6)&&this.canChallenge(pending.index))this.data.pendingChallenge={...pending};
     const scene=story.scene,b=this.data.battle;
     world.init(this,now);
     if(this.platform==='mobile'&&scene?.kind==='oak'&&scene.pages)scene.pages=scene.pages.map(text=>['앱을 켜 두면 자동으로 모험한단다. 꺼 둔 동안에는 10걸음마다 모험이 이어지지.','폰을 잠그면 10초마다 모험한단다. 잠근 동안 10걸음을 걸으면 한 번 더 모험하지. 도전 배틀은 직접 지켜볼 수 있어.','10걸음마다 동료와 모험한단다. 폰을 잠그면 10초마다 한 번 더 모험하지. 앱을 켜고 걸어도 모험을 지켜볼 수 있어.','10걸음마다 동료와 모험한단다. 폰을 잠그면 20초마다 한 번 더 모험하지. 앱을 켜고 걸어도 모험을 지켜볼 수 있어.'].includes(text)?oakIntro[2]:text);
