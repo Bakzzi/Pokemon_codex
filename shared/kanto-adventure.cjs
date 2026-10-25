@@ -41,7 +41,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
   if(index==='tower-grunt-1'||index==='silph-duo')return super.rivalGate(index);
   return null;
  }
- challengeName(id){return K.nodes.get(id)?.name||super.challengeName(id);}
+ challengeName(id){if(require('./rivals.cjs').byId.has(id)&&this.rivalProgress(id)?.state==='unseen')return '길을 따라가기';return K.nodes.get(id)?.name||super.challengeName(id);}
  trainerRevealed(boss){return K.modern(this)&&boss?.id==='giovanni'&&K.gymEntry(this,7).open||super.trainerRevealed(boss);}
  canChallenge(id){
   if(!this.data.kantoStory)return super.canChallenge(id);
@@ -225,7 +225,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
   return {...s,kantoStory:k};
  }
  snapshot(now=Date.now()){return {...super.snapshot(now),kantoStory:K.snapshot(this)};}
- rivalState(){const rows=super.rivalState();if(!K.modern(this))return rows.filter(r=>r.id!=='rival-cerulean');for(const row of rows)if(row.canRetry&&!row.met){const e=require('./rivals.cjs').byId.get(row.id);Object.assign(row,{met:true,name:'그린',sprite:e.sprite,team:e.team});}return rows;}
+ rivalState(){const rows=super.rivalState();return K.modern(this)?rows:rows.filter(r=>r.id!=='rival-cerulean');}
  offerDevice(now){return (!K.modern(this)||this.data.johtoUnlocked||this.data.kantoWorld.location==='route-15')&&super.offerDevice(now);}
  offerLapras(now){return (!K.modern(this)||this.data.kantoWorld.location==='saffron')&&super.offerLapras(now);}
  offerMansion(now){return (!K.modern(this)||this.data.kantoWorld.location==='mansion')&&super.offerMansion(now);}
