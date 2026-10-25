@@ -61,7 +61,7 @@
  function localGym(p){
   if(!world.active||!p?.current||world.walk||world.maps&&zone!==world.zone)return null;
   if(state.johto?.active){const row=[...state.johto.gyms,...state.johto.kantoGyms].find(r=>world.locations[r.id]===p.id);if(!row)return null;return {row,card:document.querySelector('[data-challenge="'+row.id+'"]')?.closest('.gym')};}
-  if(!p.activity?.startsWith('gym:'))return null;const i=Number(p.activity.slice(4));return {row:state.bosses[i],card:document.querySelector('#gyms [data-challenge="'+i+'"]')?.closest('.gym')};
+  if(!p.activity?.startsWith('gym:'))return null;const i=Number(p.activity.slice(4));return {row:state.bosses[i],trainersKey:'kanto-case-trainers-gym-'+i,card:document.querySelector('#gyms [data-challenge="'+i+'"]')?.closest('.gym')};
  }
  function renderChoice(){
   if(!world)return;const p=world.places.find(p=>p.id===choice)||world.places.find(p=>p.id===world.location);choice=p.id;selected.textContent=p.name;range.textContent=p.current?'현재 머무는 곳':p.visited?'다녀온 곳':'';
@@ -71,8 +71,12 @@
   if(world.movement){const m=world.movement;movementCount.textContent='이동 '+m.count.toLocaleString('ko-KR')+'개 · '+m.remainder.toLocaleString('ko-KR')+' / 2,000걸음';movementUse.disabled=m.count<1||!world.journey&&!world.pending||m.usingBank;movementUse.textContent=m.phase==='queued'?'이동 준비 중':m.phase?.startsWith('trainer')?'트레이너와 승부 중':m.usingBank?'이동 중':'이동 자원 사용';if(m.usingBank)note.textContent=m.phase==='queued'?'진행 중인 동작을 마치고 이동해요.':m.phase?.startsWith('trainer')?'길에서 만난 트레이너와 승부하고 있어요.':'이동 자원으로 길을 지나가요.';}
   restoreInline();local.replaceChildren();const gym=localGym(p);note.hidden=!!gym&&!world.pending&&!world.journey;
   const entries=world.active&&p.current&&!world.walk?activities(p.id).filter(a=>a.gym===undefined&&!['johto-gym-details','johto-kanto-gyms'].includes(a.key)):[];
-  if(gym?.card){range.textContent='';const heading=gym.card.querySelector('.gym-title h3');if(heading)heading.textContent='관장 '+gym.row.name;const title=p.name.replace(/(?:시티|마을|섬)$/,'')+'체육관',section=fold(ChallengeUI.section('world-local-gym',el('h2','',title)),'gym:'+gym.row.id);local.append(section);mount(gym.card,section,true);}
-  for(const entry of entries){prepareEntry(entry,p.id);if(entry.node.tagName==='DETAILS'){fold(entry.node,entry.key);mount(entry.node,local);}else{const section=fold(ChallengeUI.section('world-local-'+entry.key,el('h2','',entry.title)),entry.key);local.append(section);mount(entry.node,section,true);}}
+  const trainers=gym?.card&&entries.find(entry=>entry.key===gym.trainersKey);
+  if(gym?.card){range.textContent='';const heading=gym.card.querySelector('.gym-title h3');if(heading)heading.textContent='관장 '+gym.row.name;const title=p.name.replace(/(?:시티|마을|섬)$/,'')+'체육관',section=fold(ChallengeUI.section('world-local-gym',el('h2','',title)),'gym:'+gym.row.id);local.append(section);
+   if(trainers)for(const row of [...trainers.node.children].filter(n=>n.tagName!=='SUMMARY'))mount(row,section);
+   mount(gym.card,section);
+  }
+  for(const entry of entries.filter(entry=>entry!==trainers)){prepareEntry(entry,p.id);if(entry.node.tagName==='DETAILS'){fold(entry.node,entry.key);mount(entry.node,local);}else{const section=fold(ChallengeUI.section('world-local-'+entry.key,el('h2','',entry.title)),entry.key);local.append(section);mount(entry.node,section,true);}}
   cards.replaceChildren();if(world.active&&p.current&&!world.walk&&world.checkpoint&&(!world.maps||zone===world.zone))local.append(checkpointCard());
   const eventPoints=new Map();for(const p of world.places){const point=currentMap().points[p.id];if(!point||!world.active||!knownNotice(p))continue;const key=point.x+','+point.y,list=eventPoints.get(key)||[];list.push(p);eventPoints.set(key,list);}
   for(const list of eventPoints.values())list.sort((a,b)=>Number(!!b.guidance)-Number(!!a.guidance)||Number(b.current)-Number(a.current));
