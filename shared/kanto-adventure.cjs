@@ -67,7 +67,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
    const place={'rival-brock':'route-22','rival-cerulean':'route-24','rival-surge':'ss-anne','rival-middle':'tower','rival-silph':'saffron','rival-league':'route-22'}[id];if(place&&at!==place)return false;
    if(super.canChallenge(id))return true;
    if(this.rivalProgress(id)?.state!=='unseen')return false;
-   return id==='rival-brock'&&at==='route-22'&&!!s.mapAt&&!has('brock')||id==='rival-league'&&at==='route-22'&&b.length>=8;
+   return id==='rival-brock'&&at==='route-22'&&!!s.mapAt&&!has('brock')||id==='rival-league'&&at==='route-22'&&b.length>=8||id==='rival-cerulean'&&at==='route-24'&&!!s.mapAt&&has('misty');
   }
   if(id==='safari-start')return has('koga')&&at==='safari'&&super.canChallenge(id);
   if(id==='road-snorlax')return ['route-12','route-16'].includes(at)&&!!this.data.trainingDevice.fluteObtainedAt&&(!s.roads[at]||this.captureRequested(143));
@@ -196,7 +196,11 @@ function withKanto(Base){return class KantoAdventure extends Base{
  }
  routeRivalTick(now){
   if(!K.modern(this)||this.data.johtoUnlocked||!this.data.kantoStory.mapAt||!this.storySafe(now)||this.data.suspendedWild)return false;
-  const w=this.data.kantoWorld;if(w.location!=='route-22'||w.walk&&now<w.walk.at+w.walk.duration)return false;
+  const w=this.data.kantoWorld;if(w.walk&&now<w.walk.at+w.walk.duration)return false;
+  // No ordinary trainer card is needed to enter the bridge encounter. Arrival
+  // only opens Green's saved dialogue; it never advances a page or battle turn.
+  if(w.location==='route-24')return this.rivalProgress('rival-cerulean')?.state==='unseen'&&this.startChallenge('rival-cerulean',now);
+  if(w.location!=='route-22')return false;
   // Crossing this road reveals the encounter itself, never a preview card.
   // The opening dialogue still waits for the player; background work cannot tap it.
   const id=this.data.badges.length>=8?'rival-league':!this.data.badges.includes('brock')?'rival-brock':null;

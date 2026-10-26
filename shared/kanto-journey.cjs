@@ -32,7 +32,7 @@ add('moon-path','mt-moon','달맞이산의 화석','동굴 안에서 로켓단�
 add('melanie','cerulean','보살핌이 필요한 동료','멜라니가 포켓몬을 돌보고 있어요. 피카츄와 함께 인사해 보세요.',[
  {id:'k-bulbasaur',name:'멜라니와 이야기하기',gift:1,level:10,pages:['이 이상해씨를 돌보고 있었어. 믿을 만한 트레이너에게 맡기고 싶어.','피카츄가 널 참 좋아하는구나. 이 아이도 함께 데려가 줄래?'],result:'멜라니에게 이상해씨를 받았어요.'}
 ]);
-add('nugget-bridge','route-24','금구슬다리의 승부','다리 위 트레이너 다섯 명이 승부를 기다리고 있어요. 한 명씩 이겨 길을 건너요.',[
+add('nugget-bridge','route-24','금구슬다리','다리 건너편에서 만난 사람들과 이야기를 나눠 보세요.',[
  ...[[[10,14],[13,14]],[[16,14],[29,14]],[[19,14],[23,14],[41,14]],[[16,16],[29,16]],[[56,18]]].map((party,i)=>({id:'k-bridge-'+(i+1),name:'다리의 트레이너 '+(i+1),sprite:i%2?'lass':'youngster',party,pages:[(i+1)+'번째 상대는 나야! 여기까지 온 실력을 보여 줘!'],result:i===4?'다섯 명을 모두 이겼어요. 다리 끝의 남자가 손짓해요.':'다음 트레이너에게 다가가 보세요.'})),
  {id:'k-bridge-rocket',name:'다리 끝의 남자',sprite:'rocket-grunt',party:[[23,15],[41,15]],pages:['다섯 명을 전부 이기다니! 로켓단에 들어올 생각 없나?','거절한다고? 그렇다면 실력으로 이야기하자!'],result:'다리를 건넜어요. 25번도로 끝의 이수재를 만나 보세요.'},
  {id:'k-charmander',name:'트레이너와 이야기하기',sprite:'youngster',gift:4,level:10,pages:['내가 이 파이리를 제대로 돌보지 못했어.','이수재에게 가는 길도 잘 헤쳐 왔구나. 너라면 이 아이를 맡길 수 있겠어.'],result:'파이리가 동료가 됐어요.'}
@@ -262,14 +262,15 @@ function snapshot(g){
  const s=g.data.kantoStory;if(!s)return null;
  const here=g.data.kantoWorld?.location,groups=[];
  for(const c of cases.filter(c=>c.location===here)){
+  // Ambient opponents still exist in the encounter ledger and travel gates,
+  // but are not errands for the player to select, before or after a victory.
+  const visible=c.entries.filter(id=>!nodes.get(id).automatic);if(!visible.length)continue;
   if(c.id.startsWith('trainers-gym-')&&!gymEntry(g,Number(c.id.slice(13))).open)continue;
-  if(!(c.id==='moon-path'||(c.id==='melanie'?g.data.badges.includes('misty'):c.id==='route2-aide'?!!g.data.kantoWorld.visited.diglett:c.entries.some(id=>done(g,id)||prerequisite(g,nodes.get(id))))))continue;
-  const completed=caseDone(g,c.id);
-  const entries=c.entries.map(id=>{const n=nodes.get(id),allowed=prerequisite(g,n),revealed=!!n.trainer||done(g,id)||allowed,known=g.challengeLevelsKnown(id,done(g,id));return {id,name:revealed?n.name:'???',sprite:n.sprite,revealed,team:revealed?n.team||[]:[],levelsKnown:known,done:done(g,id),readOnly:!!g.data.johtoUnlocked,ready:ready(g,id),automatic:allowed&&!!n.automatic&&g.rivalProgress(g.rivalGate(n.id)?.id)?.state!=='unseen',type:n.type,reason:c.id==='moon-path'&&!trainersDone(g,'route3-path')?gateText.route3:n.id==='k-bulbasaur'&&!allowed?'피카츄와 조금 더 친해진 뒤 찾아와 주세요.':n.id==='k-aide'&&!allowed?'10종 이상 포획하고 디그다의 굴을 건너와 주세요.':'앞선 일을 마치면 진행할 수 있어요.'};});
+  if(!(c.id==='moon-path'||(c.id==='melanie'?g.data.badges.includes('misty'):c.id==='route2-aide'?!!g.data.kantoWorld.visited.diglett:visible.some(id=>done(g,id)||prerequisite(g,nodes.get(id))))))continue;
+  const completed=visible.every(id=>done(g,id));
+  const entries=visible.map(id=>{const n=nodes.get(id),allowed=prerequisite(g,n),revealed=!!n.trainer||done(g,id)||allowed,known=g.challengeLevelsKnown(id,done(g,id));return {id,name:revealed?n.name:'???',sprite:n.sprite,revealed,team:revealed?n.team||[]:[],levelsKnown:known,done:done(g,id),readOnly:!!g.data.johtoUnlocked,ready:ready(g,id),automatic:false,type:n.type,reason:c.id==='moon-path'&&!trainersDone(g,'route3-path')?gateText.route3:n.id==='k-bulbasaur'&&!allowed?'피카츄와 조금 더 친해진 뒤 찾아와 주세요.':n.id==='k-aide'&&!allowed?'10종 이상 포획하고 디그다의 굴을 건너와 주세요.':'앞선 일을 마치면 진행할 수 있어요.'};});
   if(c.id==='moon-path'){
-   const important=e=>nodes.get(e.id).source?.class==='ROCKET'||['k-moon-scientist','k-fossil-choice','k-moon-duo'].includes(e.id),storyEntries=entries.filter(important),others=entries.filter(e=>!important(e));
-   if(storyEntries.length)groups.push(moonOutline(g,storyEntries));
-   if(others.length)groups.push({...c,id:'moon-trainers',title:'달맞이산의 트레이너들',description:others.every(e=>e.done)?'동굴의 트레이너들과 승부를 모두 마쳤어요.':'동굴에서 만난 트레이너들과의 승부예요.',completed:others.every(e=>e.done),entries:others});
+   groups.push(moonOutline(g,entries));
   }else{const last=nodes.get(c.entries.at(-1));groups.push({...c,completed,description:c.id==='tower-rumor'?towerDescription(g):completed?(last.source?'이곳의 트레이너들과 승부를 모두 마쳤어요.':last.result):c.description,entries});}
  }
  const context=groups.find(c=>!c.id.startsWith('trainers-')&&c.id!=='moon-trainers');let placeSummary=context?.description||'';
