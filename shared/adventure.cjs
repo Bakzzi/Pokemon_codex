@@ -61,6 +61,7 @@ class Adventure extends Engine{
     if(scene?.next==='rival-win'&&rivals.has(b?.storyId)){scene.pages=rivals.get(b.storyId).win;scene.index=Math.min(scene.index,scene.pages.length-1);}
     if(scene?.next==='sendout'||scene?.mode==='sendout')this.prepareTrainerLead();
   }
+  experienceDivisor(){return this.platform==='mobile'?3:super.experienceDivisor();}
   resetSeason(now){
     // The base constructor can roll the season before platform is initialized.
     const story=this.data.mobileStory,distance=this.data.mapTravel;
@@ -371,4 +372,4 @@ class Adventure extends Engine{
     return {...s,kantoWorld:world.snapshot(this,now),adventureRecords:require('./adventure-records.cjs').list(this),dialogueMemories:this.data.dialogueMemories||[],inventory:[...s.inventory,...items],scene:this.presentation(),activityMode:this.platform==='desktop'?'tokens':'locked',onboarding:story?.onboarding!=='done',discovery,rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this),silph:silph.snapshot(this),safari:{...safari.snapshot(this),canStart:this.canChallenge('safari-start')},mansion:{...mansion.snapshot(this),canStart:this.canChallenge('mansion-investigate')},mobileGymHints:hints};
   }
 }
-module.exports={Adventure:require('./johto-adventure.cjs').withJohto(require('./kanto-adventure.cjs').withKanto(Adventure))};
+module.exports={Adventure:require('./trainer-sequence.cjs').withTrainerSequence(require('./johto-adventure.cjs').withJohto(require('./kanto-adventure.cjs').withKanto(Adventure)))};

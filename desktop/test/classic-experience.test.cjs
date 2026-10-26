@@ -15,9 +15,9 @@ test('all 251 species use verified FRLG experience yields and original growth gr
 test('a lower-level opponent yields less XP, independent of the recipient level',()=>{
   for(const ownLevel of [5,20,50,99]){
     const g=fixture(Game,ownLevel),before=g.data.owned[25].xp;
-    assert.equal(g.awardXp({id:16,level:5},false,now),39);
-    assert.equal(g.awardXp({id:16,level:10},false,now),78);
-    assert.equal(g.data.owned[25].xp-before,117);
+    assert.equal(g.awardXp({id:16,level:5},false,now),19);
+    assert.equal(g.awardXp({id:16,level:10},false,now),39);
+    assert.equal(g.data.owned[25].xp-before,58);
   }
 });
 test('the original growth curve makes the same low-level victory fill less of later levels',()=>{
@@ -25,18 +25,19 @@ test('the original growth curve makes the same low-level victory fill less of la
   assert.equal(early,91);assert.equal(later,7651);assert.ok(39/later<39/early);
 });
 test('trainer XP uses original integer rounding before the existing collection bonus',()=>{
-  const g=fixture();assert.equal(g.awardXp({id:16,level:2},true,now),22);
+  const g=fixture();assert.equal(g.awardXp({id:16,level:2},true,now),11);
   for(let id=1;id<=50;id++)g.data.caught[id]=now;
-  assert.equal(g.awardXp({id:16,level:2},true,now+1),33);
+  assert.equal(g.awardXp({id:16,level:2},true,now+1),16);
 });
-test('PC and Android consume the same classic awards without rewriting saved XP',()=>{
+test('PC halves and Android thirds classic awards without rewriting saved XP',()=>{
   const types=[require('../adventure.cjs').Adventure,require('../../mobile/adventure.cjs').Adventure];
-  for(const Type of types){
+  for(const [index,Type] of types.entries()){
+    const expected=index===0?68:45;
     let g=fixture(Type,20);g.data.owned[25].xp+=300;const before=structuredClone(g.data.owned);
     g=new Type(g.data,now+1);assert.deepEqual(g.data.owned,before);
-    assert.equal(g.awardXp({id:122,level:7},false,now+2),136);
-    assert.equal(g.data.owned[25].xp-before[25].xp,136);
+    assert.equal(g.awardXp({id:122,level:7},false,now+2),expected);
+    assert.equal(g.data.owned[25].xp-before[25].xp,expected);
     const saved=structuredClone(g.data);g=new Type(saved,now+3);
-    assert.deepEqual(g.data.owned,saved.owned);assert.equal(g.data.adventure.totals.xp,136);
+    assert.deepEqual(g.data.owned,saved.owned);assert.equal(g.data.adventure.totals.xp,expected);
   }
 });

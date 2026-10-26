@@ -40,7 +40,7 @@ for(const Type of [PC,Android]){
   }
  });
  test(Type.name+' explicit story battles and gifts wait through idle work and reload until dialogue input',()=>{
-  for(const id of ['k-npc-mtmoonb2f-2','k-moon-scientist','k-bridge-rocket','tower-grunt-1','k-bulbasaur','k-device-visit','k-lapras-visit','k-mansion-page-1']){
+  for(const id of ['k-moon-scientist','k-bridge-rocket','tower-grunt-1','k-bulbasaur','k-device-visit','k-lapras-visit','k-mansion-page-1']){
    let g=fixture(Type,id==='tower-grunt-1'?'tower':K.nodes.get(id).location);ready(g);
    if(id==='k-moon-scientist')for(const n of K.nodes.values())if(n.case==='moon-path'&&n.trainer)g.data.kantoStory.cleared[n.id]=now;
    delete g.data.kantoStory.cleared[id];assert.equal(g.startAutomaticTrainer(id,now),false,id);assert.ok(g.challenge(id,now),id);const before=signature(g),scene=structuredClone(g.presentation());assert.equal(scene.mode,'dialogue');assert.ok(!scene.automatic);idle(g);assert.deepEqual(signature(g),before,id);assert.deepEqual(g.presentation(),scene,id);

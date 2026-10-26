@@ -91,6 +91,9 @@
       const available=(n,cost,cursor)=>Number.isSafeInteger(n)&&n>=cursor?Math.floor((n-cursor)/cost):0;
       const g=this.game;let used=0,moves=0,travelTurns=0;this.moreMovement=false;
       for(;used<maxActions;used++){
+        // Explicit local trainer runs are foreground challenges, including
+        // their result-to-next-opponent pause. Lock time cannot continue them.
+        if(g.data.trainerSequence)break;
         if(moves<512&&this.automaticSceneTick(now)){moves++;used--;continue;}
         if(this.movementActive()){
           if(travelTurns>=128){this.moreMovement=true;break;}
@@ -115,6 +118,7 @@
         this.lockConsumed+=20000;
       }
       while(moves<512){
+        if(g.data.trainerSequence)break;
         if(this.automaticSceneTick(now)){moves++;continue;}
         if(this.movementActive()){
           if(travelTurns>=128){this.moreMovement=true;break;}

@@ -3,7 +3,9 @@
 // Kanto map/gate layer. Full consumers and imported saves are exercised by
 // kanto-journey and kanto-migration tests, without this fixture.
 const Shared=require('../../../shared/adventure.cjs').Adventure;
-const Story=Object.getPrototypeOf(Object.getPrototypeOf(Shared));
+let Story=Shared;
+while(Story&&!Object.hasOwn(Story.prototype,'startRival'))Story=Object.getPrototypeOf(Story);
+if(!Story)throw Error('Story transaction layer not found');
 const Android=require('../../../shared/johto-adventure.cjs').withJohto(Story);
 const Desktop=require('../../adventure.cjs').Adventure;
 class PC extends Android {

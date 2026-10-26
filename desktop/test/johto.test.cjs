@@ -8,7 +8,7 @@ const now=Date.parse('2026-10-19T06:00:00Z');
 function visit(g,id){const w=W.init(g),place=W.locationFor(id);assert.ok(place,id);w.location=place;w.position={...W.byId.get(place).point};w.visited[place]=now;}
 function fixture(Type=Adventure){const old=new Game({},now);old.data.champion=true;const g=new Type(old.data,now,{random:()=>.73});assert.ok(g.unlockJohto(now,[25]));visit(g,'j-sprout');return g;}
 function idle(g,at=now){g.data.animation=null;g.data.switchUntil=0;g.nextTick=at;return at;}
-function pages(g,at=now){let limit=50;while(g.presentation()?.mode==='dialogue'&&limit--){const s=g.presentation();assert.ok(g.advanceScene(s.id+':'+s.index,at));}assert.ok(limit>0);if(g.presentation()?.mode==='sendout')g.sceneTick(at+3000);}
+function pages(g,at=now){let limit=50;while(g.presentation()?.mode==='dialogue'&&limit--){const s=g.presentation();assert.ok(g.advanceScene(s.id+':'+s.index,at));}assert.ok(limit>0);while(g.presentation()?.automatic||g.presentation()?.mode==='sendout'){const scene=g.presentation();assert.ok(g.sceneTick(Math.max(at,scene.at+scene.duration)));}}
 function win(g,at=now){let limit=100;while(g.data.battle?.johtoId&&limit--){pages(g,at);const b=g.data.battle;b.foe.hp=0;g.defeatOpponent(at);pages(g,at);at+=10000;}assert.ok(limit>0);idle(g,at);return at;}
 function clear(g,ids){for(const id of ids)g.data.johto.cleared[id]=now;}
 const towerTraining=['j-sprout-sage-1','j-sprout-sage-2'];

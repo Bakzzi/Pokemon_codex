@@ -47,7 +47,7 @@ test('multiple levels still evolve once, level 100 grants no fresh proof, and ol
   const {g,uid}=fixture(64,99);boundary(g,uid);g.awardXp(combatant(150,100),false,now);assert.equal(g.data.owned[uid].id,65);assert.equal(g.data.owned[uid].level,100);assert.equal(g.data.journal.filter(e=>e.kind==='evolution').length,1);
   const capped=fixture(64,100);capped.g.awardXp(combatant(150,100),false,now);assert.equal(capped.g.data.owned[capped.uid].id,64);assert.equal(capped.g.data.owned[capped.uid].deviceLevelUp,undefined);
   const legacy=fixture(64,80),loaded=new Game(legacy.g.data,now);assert.equal(loaded.evolutions(legacy.uid)[0].ready,false);assert.equal(loaded.data.pendingActions.length,0);
-  const multi=fixture(64,16);boundary(multi.g,multi.uid);for(let id=1;id<=151;id++)multi.g.data.caught[id]=now;multi.g.awardXp(combatant(150,100),true,now);assert.equal(multi.g.data.owned[multi.uid].id,65);assert.ok(multi.g.data.owned[multi.uid].level>17);assert.equal(multi.g.data.journal.filter(e=>e.kind==='evolution').length,1);
+  const multi=fixture(64,16);boundary(multi.g,multi.uid);for(let id=1;id<=251;id++)multi.g.data.caught[id]=now;multi.g.awardXp(combatant(150,100),true,now);assert.equal(multi.g.data.owned[multi.uid].id,65);assert.ok(multi.g.data.owned[multi.uid].level>17);assert.equal(multi.g.data.journal.filter(e=>e.kind==='evolution').length,1);
 });
 
 test('a full action queue retains automatic evolution until room is available, including a saved restart',()=>{

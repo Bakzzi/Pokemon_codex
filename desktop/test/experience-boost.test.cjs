@@ -34,10 +34,10 @@ test('Gen II registrations count while locked; invalid, duplicate-ID and false e
 test('wild and trainer XP add the collection bonus once, only to the active individual, with whole-number rounding',()=>{
   for(const count of [4,75,151])for(const trainer of [false,true]){
     const g=fixture(count),sibling=g.addPokemon(25,5,'hatch',now),before=structuredClone(g.data.owned),foe=combatant(19,20);
-    const base=trainer?243:162,expected=base+Math.floor(base*count/100);
+    const base=trainer?243:162,expected=Math.floor((base+Math.floor(base*count/100))/2);
     assert.equal(g.awardXp(foe,trainer,now),expected);assert.equal(g.data.owned[25].xp-before[25].xp,expected);
     assert.equal(g.data.adventure.totals.xp,expected);for(const uid of [1,4,7,sibling])assert.deepEqual(g.data.owned[uid],before[uid]);
-    if(count===151)assert.equal(expected,base+Math.floor(base*151/100));
+    if(count===151)assert.equal(expected,Math.floor((base+Math.floor(base*151/100))/2));
   }
 });
 
@@ -45,9 +45,9 @@ test('the newly captured 151st species affects XP only after the success animati
   const g=fixture(151);delete g.data.caught[19];g.newWild(now);g.data.battle.foe=combatant(19,10,[150]);g.data.battle.foe.hp=g.data.battle.foe.maxHp*.2;g.random=()=>0;
   const xp=g.data.owned[25].xp;assert.equal(g.experienceBoost().count,150);assert.ok(g.capture(now));const c=g.data.captureAnimation,end=c.at+captureTiming(c).duration;
   assert.equal(g.tick(end-1),false);assert.equal(g.data.owned[25].xp,xp);assert.equal(g.snapshot(end-1).experienceBoost.count,150);
-  assert.ok(g.tick(end));const base=Math.floor(species.get(19).baseExperience*10/7);assert.equal(g.data.owned[25].xp-xp,base+Math.floor(base*151/100));
-  assert.equal(g.experienceBoost().count,151);assert.equal(g.data.adventure.totals.xp,base+Math.floor(base*151/100));assert.equal(g.tick(end+1),false);
-  const reloaded=new Game(g.data,end+2);assert.equal(reloaded.data.owned[25].xp-xp,base+Math.floor(base*151/100));assert.equal(reloaded.experienceBoost().multiplier,2.51);
+  assert.ok(g.tick(end));const base=Math.floor(species.get(19).baseExperience*10/7);assert.equal(g.data.owned[25].xp-xp,Math.floor((base+Math.floor(base*151/100))/2));
+  assert.equal(g.experienceBoost().count,151);assert.equal(g.data.adventure.totals.xp,Math.floor((base+Math.floor(base*151/100))/2));assert.equal(g.tick(end+1),false);
+  const reloaded=new Game(g.data,end+2);assert.equal(reloaded.data.owned[25].xp-xp,Math.floor((base+Math.floor(base*151/100))/2));assert.equal(reloaded.experienceBoost().multiplier,2.51);
 });
 
 test('boosted XP still stops at level 100 and journal totals count only the amount actually received',()=>{
@@ -59,6 +59,6 @@ test('boosted XP still stops at level 100 and journal totals count only the amou
 test('older saved XP is preserved and receives no retroactive collection reward on restart',()=>{
   const g=fixture(75),before=structuredClone(g.data.owned),reloaded=new Game(g.data,now+1);
   assert.deepEqual(reloaded.data.owned,before);assert.equal(reloaded.data.adventure.totals.xp,0);assert.equal(reloaded.experienceBoost().count,75);
-  const foe=combatant(19,20),base=Math.floor(species.get(19).baseExperience*20/7),expected=base+Math.floor(base*75/100);
+  const foe=combatant(19,20),base=Math.floor(species.get(19).baseExperience*20/7),expected=Math.floor((base+Math.floor(base*75/100))/2);
   reloaded.awardXp(foe,false,now+2);assert.equal(reloaded.data.owned[25].xp-before[25].xp,expected);
 });

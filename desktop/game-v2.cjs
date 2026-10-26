@@ -661,13 +661,16 @@ class Game {
       const mon=this.data.battle?.party[p.uid];if(mon){const fresh=combatant(p.id,p.level,p.moves),diff=fresh.maxHp-mon.maxHp;mon.level=p.level;mon.stats=fresh.stats;mon.maxHp=fresh.maxHp;mon.hp=mon.hp>0?Math.min(mon.maxHp,mon.hp+diff):0;mon.moves=[...p.moves];for(const id of p.moves)if(mon.pp[id]===undefined)mon.pp[id]=moves.get(id).pp;}
     }return actual;
   }
+  experienceDivisor(){return 2;}
   awardXp(foe,trainer,now){
     // Classic unscaled XP: only the defeated species/level determine the base.
     // Round before the trainer bonus, as in the original integer calculation.
     let base=Math.max(1,Math.floor(species.get(foe.id).baseExperience*foe.level/7));
     if(trainer)base+=Math.floor(base/2);
     const boost=this.experienceBoost();
-    const gained=base+Math.floor(base*boost.percent/100);
+    // Slow future rewards after the original formula and collection bonus.
+    // Saved XP/growth tables stay intact; device XP is 10% of this final award.
+    const gained=Math.max(1,Math.floor((base+Math.floor(base*boost.percent/100))/this.experienceDivisor()));
     this.gainXp(this.data.activeId,gained,now);
     const uid=this.data.trainingDevice.learnerUid,p=this.data.owned[uid];
     if(training.has(this)&&p&&uid!==this.data.activeId&&!this.isBoarded(uid)&&species.get(p.id).generation<=this.maxGeneration()&&!(this.data.battle?.party[uid]?.hp<=0)){
