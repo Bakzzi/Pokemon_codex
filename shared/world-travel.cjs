@@ -83,6 +83,6 @@ function encounterEnded(state,b,random){
  b.travelCounted=true;const p=progress(state,random);p.completed=Math.min(p.required,p.completed+1);return true;
 }
 function snapshot(state,random){
- const p=progress(state,random);return {roadProgress:p?{...p}:null,journey:state.journey?{destination:state.journey.destination,name:state.journey.name}:null};
+ const p=progress(state,random);return {roadProgress:p?{...p}:null,journey:state.journey?{destination:state.journey.destination,name:state.journey.name}:null,blocked:!!state.blocked};
 }
 module.exports={init:progress,same,plan,move,ready,advance,encounterEnded,snapshot,isRoad};

@@ -102,7 +102,7 @@
   }
   if(!choice||!geometry.points[choice])choice=geometry.points[world.location]?world.location:world.places.find(p=>geometry.points[p.id])?.id;
   renderBadges();renderChoice();status.replaceChildren();status.hidden=!s.pendingChallenge&&s.battle?.kind!=='trainer';if(!status.hidden)status.append(el('span','',s.pendingChallenge?s.pendingChallenge.name+' · 도전 예약':s.battle.boss+'와 배틀 중'),button(s.pendingChallenge?'예약 취소':'배틀 보기',()=>window.buddy.action(s.pendingChallenge?'challenge-cancel':'story-open')));
-  if(arrival&&!world.journey&&!world.walk&&!world.pending&&(world.checkpoint||world.location===arrival)){arrival=null;choice=world.location;renderChoice();}
+  if(arrival&&!world.journey&&!world.walk&&!world.pending&&(world.blocked||world.checkpoint||world.location===arrival)){arrival=null;choice=world.location;renderChoice();}
  }
  document.addEventListener('panel-rendered',({detail:s})=>render(s));
  globalThis.WorldMap={beforeRender:restore,pick,badge(id){const slot=document.querySelector('[data-badge="'+id+'"]');if(slot){showPane('badges');badgeInfo.textContent=slot.getAttribute('aria-label');badgeInfo.hidden=false;}},show(){showPane('map');},close(){badgeInfo.hidden=true;}};

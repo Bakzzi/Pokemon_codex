@@ -97,14 +97,14 @@ function reason(game,p){
  return '이곳을 탐험할 방법을 먼저 찾아야 해요.';
 }
 function init(game,now=Date.now()){
- if([1,2,3].includes(game.data.kantoWorld?.revision)&&byId.has(game.data.kantoWorld.location)){
+ if([1,2,3,4].includes(game.data.kantoWorld?.revision)&&byId.has(game.data.kantoWorld.location)){
   const s=game.data.kantoWorld;
-  if(s.revision<3){if(s.journey)s.journey.revalidate=true;if(s.blocked)s.blocked.revalidate=true;s.revision=3;}
+  if(s.revision<4){if(s.journey)s.journey.revalidate=true;if(s.blocked)s.blocked.revalidate=true;s.revision=4;}
   journey.init(s,game.random);return s;
  }
  const defaults=['route-1','route-3','route-5','route-9',roadOpen(game)?'route-15':'route-12','saffron','route-19','route-21','route-23','cerulean-cave'];
  const location=defaults[reachedStage(game)];
- game.data.kantoWorld={revision:3,location,visited:{[location]:now}};journey.init(game.data.kantoWorld,game.random);return game.data.kantoWorld;
+ game.data.kantoWorld={revision:4,location,visited:{[location]:now}};journey.init(game.data.kantoWorld,game.random);return game.data.kantoWorld;
 }
 function current(game){return byId.get(init(game).location);}
 function range(game,p=current(game)){
@@ -159,7 +159,9 @@ function checkpoint(game){
  const state=init(game),block=state.blocked;if(!block)return null;
  const p=byId.get(block.checkpoint),destination=byId.get(block.location);if(!p||!destination)return null;
  const league=['route-23','victory-road','indigo'].includes(p.id),road=roadPlaces.has(p.id)&&!roadOpen(game),rule=story.modern(game)&&(crossingGate(game,block.edgeFrom,block.gatePosition)||gate(game,p.id,block.gatePosition)),ready=!rule&&unlocked(game,p,block.gatePosition)&&unlocked(game,destination,block.position);
- if(story.modern(game)&&(p.id==='forest'&&!rule||rule==='late-rival'))return null;
+ // The bridge incident already has its own local card. Do not invent a second
+ // guide or advertise the encounter through a checkpoint popup.
+ if(story.modern(game)&&(p.id==='forest'&&!rule||rule==='late-rival'||rule==='bridge'))return null;
  if(rule==='drink')return {...block,name:'노랑시티 경비원',sprite:'overworld:gate-guard',pages:game.data.kantoWorld.visited.celadon&&game.data.mobileStory.rescue.completedAt?['목이 말라서 꼼짝하기 싫군요…… 어? 음료수를 주시겠다고요?','무지개시티에서 사 둔 음료수를 건넸다.','정말 고맙습니다! 다른 경비원들에게도 나눠 주죠. 이제 지나가셔도 좋습니다.']:['잠깐! 지금은 지나갈 수 없습니다.','경비원은 목이 마른 듯 지쳐 보인다.'],canPass:!!game.data.kantoWorld.visited.celadon&&!!game.data.mobileStory.rescue.completedAt,destination:destination.name};
  if(rule)return {...block,name:rule.startsWith('snorlax')?'길을 막는 잠만보':rule==='aide'?'터널 입구의 안내원':p.name+' 안내원',sprite:rule.startsWith('snorlax')?'pokemon:143':rule.includes('rival')?'overworld:gate-guard':'j-sage',pages:[story.gateText[rule]],canPass:false,destination:destination.name,nearby:rule.startsWith('snorlax')?'snorlax-road':null};
  let name=p.id==='saffron'?'노랑시티 경비원':p.name+' 안내원',sprite=p.id==='saffron'?'overworld:gate-guard':'gentleman',pages;
