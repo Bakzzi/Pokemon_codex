@@ -90,9 +90,24 @@ add('victory-path','victory-road','마지막 관문','리그로 향하는 트레
  {id:'k-victory-2',name:'출구의 트레이너',sprite:'cooltrainer',party:[[2,42],[8,42],[5,42],[6,42]],pages:['이 길의 끝은 석영고원이야. 서로 준비가 됐는지 확인하자!'],result:'챔피언로드를 통과했어요. 석영고원에서 리그에 도전해 보세요.'}
 ]);
 function modern(g){return !!g.data.kantoStory&&!g.data.kantoStory.legacy;}
-function done(g,id){return !!g.data.kantoStory?.cleared[id];}
+function done(g,id){
+ const n=nodes.get(id),s=g.data.mobileStory;
+ if(n?.offer==='Lapras')return !!s?.laprasResolved;
+ if(n?.offer==='Device')return !!g.data.trainingDevice?.obtainedAt;
+ if(n?.offer==='Mansion')return (s?.mansion?.read||0)>=n.page;
+ return !!g.data.kantoStory?.cleared[id];
+}
+add('silph-employee','saffron','실프주식회사 직원','직원이 당신에게 이야기를 건네요.',[
+ {id:'k-lapras-visit',name:'직원과 이야기하기',offer:'Lapras',result:'직원에게 맡은 동료와 함께 모험해요.'}
+]);
+add('route15-aide','route-15','오박사의 조수','조수가 도감 연구 이야기를 듣고 싶어 해요.',[
+ {id:'k-device-visit',name:'조수와 이야기하기',offer:'Device',result:'조수에게 연구를 도운 답례를 받았어요.'}
+]);
+add('mansion-journal','mansion','저택의 연구일지','저택에서 발견한 기록을 읽어 보세요.',[1,2,3].map(page=>({id:'k-mansion-page-'+page,name:'연구일지 '+page+'장 읽기',sprite:'item:journal',offer:'Mansion',page,result:'저택에 남겨진 기록을 확인했어요.'})));
 const original=require('./kanto-trainers.json'),used=new Set(),sourceNodes=new Map();
-function bind(n,t){used.add(t.id);sourceNodes.set(t.id,n);Object.assign(n,{name:t.name,sprite:t.sprite,team:t.team.map(p=>({...p,moves:learnedMoves(p.id,p.level).slice(-4)})),trainer:true,automatic:t.automatic,source:{map:t.map,event:t.event,x:t.x,y:t.y,class:t.class,partyIndex:t.partyIndex}});}
+// Wild-map membership describes ordinary encounters, not permission to play
+// a story incident. Rockets and the fossil guardian always require a click.
+function bind(n,t){used.add(t.id);sourceNodes.set(t.id,n);Object.assign(n,{name:t.name,sprite:t.sprite,team:t.team.map(p=>({...p,moves:learnedMoves(p.id,p.level).slice(-4)})),trainer:true,automatic:!!t.automatic&&t.class!=='ROCKET'&&n.id!=='k-moon-scientist'&&!t.location.startsWith('gym:'),source:{map:t.map,event:t.event,x:t.x,y:t.y,class:t.class,partyIndex:t.partyIndex}});}
 function populate(caseId,location,battleIds,filter=()=>true){
  const group=cases.find(c=>c.id===caseId),records=original.trainers.filter(t=>t.location===location&&filter(t)),battle=[];
  for(let i=0;i<records.length;i++){const t=records[i],id=battleIds[i]||t.id;let n=nodes.get(id);if(!n){n={id,case:caseId,location:group.location,type:'dialogue',pages:[t.name+'이 승부를 걸어왔다!'],result:group.title+'에서 승부를 마쳤어요.'};nodes.set(id,n);}bind(n,t);battle.push(id);}
@@ -163,6 +178,9 @@ function gymEntry(g,index){
 function prerequisite(g,n){
  const s=g.data.kantoStory,b=g.data.badges,has=id=>b.includes(id),win=id=>['won','completed'].includes(g.rivalProgress(id)?.state);
  const at=id=>!!g.data.kantoWorld?.visited[id];
+ if(n.offer==='Lapras')return !g.data.mobileStory.laprasResolved&&g.rivalProgress('rival-silph')?.state==='won'&&!!g.data.mobileStory.silph.wins[0];
+ if(n.offer==='Device')return !g.data.trainingDevice.obtainedAt&&g.deviceReady();
+ if(n.offer==='Mansion'){const m=g.data.mobileStory.mansion;return !!m.startedAt&&!m.completedAt&&m.read===n.page-1&&m.wins>=n.page*2;}
  if(n.trainer&&!trainerAccess(g,n))return false;
  if(n.id==='k-bulbasaur')return has('misty')&&!g.data.starterGifts[1]&&Object.values(g.data.owned).some(p=>[25,26].includes(p.id)&&p.happiness>=147);
  if(n.id==='k-charmander')return done(g,'k-bill')&&!g.data.starterGifts[4];

@@ -44,7 +44,7 @@ test('device requires Erika and 50 unique lifetime Kanto registrations; it waits
   const g=ready(3);register(g,50);assert.equal(g.offerDevice(now),false);g.data.badges.push('erika');register(g,49);assert.equal(g.offerDevice(now),false);
   g.addPokemon(49,5,'duplicate',now);assert.equal(g.kantoCaughtCount(),49);g.data.caught[152]=now;assert.equal(g.offerDevice(now),false);g.data.caught[50]=now;
   assert.equal(training.claim(g,now),false);g.data.switchUntil=now+5000;assert.equal(g.offerDevice(now),false);settle(g);g.newWild(now);assert.equal(g.offerDevice(now),false);g.data.battle=null;settle(g);
-  assert.ok(g.tick(now+10000));assert.equal(g.presentation().next,'device-reward');assert.ok(!training.has(g));const loaded=new Adventure(structuredClone(g.data),now+11000);assert.ok(!training.has(loaded));pages(loaded,now+12000);assert.ok(training.has(loaded));assert.equal(loaded.data.trainingDevice.snorlaxWonAt,null);assert.ok(!loaded.canChallenge(4));
+  assert.equal(g.tick(now+10000),false);assert.equal(g.presentation(),null);assert.ok(g.offerDevice(now+10000));assert.equal(g.presentation().next,'device-reward');assert.ok(!training.has(g));const loaded=new Adventure(structuredClone(g.data),now+11000);assert.ok(!training.has(loaded));pages(loaded,now+12000);assert.ok(training.has(loaded));assert.equal(loaded.data.trainingDevice.snorlaxWonAt,null);assert.ok(!loaded.canChallenge(4));
   const again=new Adventure(structuredClone(loaded.data),now+13000);settle(again);assert.ok(!again.offerDevice(now+14000));assert.equal(again.data.journal.filter(e=>e.kind==='device').length,1);
 });
 test('an eligible upgrade never silently grants a device before the aide dialogue; owned devices survive',()=>{

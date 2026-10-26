@@ -121,7 +121,7 @@ class Adventure extends Engine{
   canReceiveTrainingDevice(){return this.acceptingDevice===true&&this.deviceReady();}
   trainingDeviceRewardText(){return '오박사의 조수에게 학습장치를 받았다!';}
   offerDevice(now){
-    if(this.data.mobileStory?.onboarding!=='done'||this.seasonDue(now)||training.has(this)||!this.deviceReady()||this.data.battle||this.data.pendingBattle||now<this.data.switchUntil||now<this.nextTick)return false;
+    if(training.has(this)||!this.deviceReady()||!this.storySafe(now))return false;
     this.dialogue('aide','오박사의 조수','scientist',['오박사님께 네 모험 이야기를 들었어. 벌써 다양한 포켓몬을 기록했구나!','연구를 도와준 답례로 학습장치를 줄게. 동료를 키우는 데 도움이 될 거야.'],'device-reward',now);return true;
   }
   rivalGate(index){return encounters.find(e=>e.target!==null&&e.target===index);}
@@ -332,7 +332,9 @@ class Adventure extends Engine{
     // Exploring spends its own activity. Keep banked wild work and the paused
     // opponent intact; explicit challenges and the monthly rollover still run.
     if(this.data.mobileStory.safari.trip&&!this.data.pendingChallenge&&b?.kind!=='trainer'&&!b?.storyId&&!this.seasonDue(now))return this.controlTick(now);
-    return this.offerLapras(now)||this.offerMansion(now)||this.offerDevice(now)||super.tick(now);
+    // NPC conversations and discovered records are explicit local actions.
+    // Idle work may advance ordinary combat, never accept a story invitation.
+    return super.tick(now);
   }
   actionStatus(a,now=Date.now()){
     if(a.kind==='travel'){const status=this.travelStatus(a.location,a.position);if(status)return status;}

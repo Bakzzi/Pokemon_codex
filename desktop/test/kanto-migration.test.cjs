@@ -36,9 +36,10 @@ for(const Type of [PC,Android]){
   assert.ok(g.requestAction('travel','route-3',clock(g)));finishJourney(g,clock(g));assert.equal(W.current(g).id,'route-3');
   for(const id of route3.entries){g.data.workTokens=250;assert.ok(g.startAutomaticTrainer(id,clock(g)),id);win(g);g=new Type(structuredClone(g.data),clock(g));assert.ok(K.done(g,id));assert.equal(g.startAutomaticTrainer(id,clock(g)),false);}
   assert.ok(g.requestAction('travel','mt-moon',clock(g)));finishJourney(g,clock(g));assert.equal(W.current(g).id,'mt-moon');assert.equal(K.gate(g,'cerulean'),'moon');
-  const battles=moon.entries.filter(id=>K.nodes.get(id).automatic);
+  const battles=moon.entries.filter(id=>K.nodes.get(id).trainer);
   assert.equal(battles.length,K.original.trainers.filter(t=>t.location==='mt-moon').length);
-  for(const id of battles){g.data.workTokens=250;assert.ok(g.startAutomaticTrainer(id,clock(g)),id);pages(g);g=new Type(structuredClone(g.data),clock(g));win(g);assert.ok(K.done(g,id));assert.equal(K.gate(g,'cerulean'),'moon');}
+  assert.equal(battles.filter(id=>K.nodes.get(id).automatic).length,7);
+  for(const id of battles){g.data.workTokens=250;if(K.nodes.get(id).automatic)assert.ok(g.startAutomaticTrainer(id,clock(g)),id);else{assert.equal(g.startAutomaticTrainer(id,clock(g)),false,id);assert.ok(g.challenge(id,clock(g)),id);}pages(g);g=new Type(structuredClone(g.data),clock(g));win(g);assert.ok(K.done(g,id));assert.equal(K.gate(g,'cerulean'),'moon');}
   assert.ok(g.challenge('k-fossil-choice',clock(g)));pages(g);assert.ok(g.presentation().awaitChoice);g=new Type(structuredClone(g.data),clock(g));assert.equal(g.data.kantoStory.fossil,null);assert.ok(g.chooseFossil(140,clock(g)));assert.equal(g.chooseFossil(138,clock(g)),false);
   assert.equal(g.data.kantoStory.items[140],1);assert.equal(g.data.kantoStory.items[138],undefined);assert.equal(K.gate(g,'cerulean'),'moon');
   assert.ok(g.challenge('k-moon-duo',clock(g)));win(g);g=new Type(structuredClone(g.data),clock(g));assert.equal(K.gate(g,'cerulean'),null);assert.ok(g.panelState(clock(g)).kantoStory.cases.find(c=>c.id==='moon-path').completed);
