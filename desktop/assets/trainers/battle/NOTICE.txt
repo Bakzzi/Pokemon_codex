@@ -17,3 +17,9 @@ no MIT license or original-game provenance is claimed for this asset.
 Additional ordinary trainer front sprites are unmodified original FireRed/LeafGreen artwork from the pinned pret/pokefirered revision recorded in desktop/data/kanto-story-sources.json. Original rights remain with Pokemon / Nintendo / Creatures / GAME FREAK.
 
 Professor Elm now uses the original Crystal 16x16 overworld frame. The original 16x96 sprite sheet is retained unmodified; the UI clips its first frame. Pinned source: desktop/data/kanto-story-sources.json.
+NPC portraits captain, fishing-guru and bill are original FireRed/LeafGreen
+overworld front frames from pret/pokefirered. Officer Jenny and Melanie use
+their original Yellow overworld frames from pret/pokeyellow. Source sheets,
+pinned URLs and SHA-256 hashes are in reference/npc-portraits/manifest.json.
+Rebuild with desktop/scripts/build-npc-portraits.ps1. Frames are not redrawn.
+

@@ -1,0 +1,45 @@
+{
+  "description": "Original NPC front frames; build with desktop/scripts/build-npc-portraits.ps1",
+  "sprites": [
+    {
+      "id": "captain",
+      "file": "captain.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/object_events/pics/people/captain.png",
+      "sha256": "78960a60d6676cf04d2f5ec7bda91bccfbd774502cad8102f8641b5384c4fe82",
+      "width": 16,
+      "height": 32
+    },
+    {
+      "id": "fishing-guru",
+      "file": "fishing-guru.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/object_events/pics/people/fisher.png",
+      "sha256": "3f12b3a006f7e3cb2b76cb6afe8fda3fedadd2cfa51d70d1489e78133e82eaf9",
+      "width": 16,
+      "height": 32
+    },
+    {
+      "id": "officer-jenny",
+      "file": "officer-jenny.png",
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/gfx/sprites/officer_jenny.png",
+      "sha256": "fce7c067d8e47f722de1b489c4a32dae6a37ce608ea08735e47b9b76d0c7b620",
+      "width": 16,
+      "height": 16
+    },
+    {
+      "id": "bill",
+      "file": "bill.png",
+      "url": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/object_events/pics/people/bill.png",
+      "sha256": "e7c34d2705c008c1cce64cd09ad6ba5e7967c8b788d4227c744162b533753ffc",
+      "width": 16,
+      "height": 32
+    },
+    {
+      "id": "melanie",
+      "file": "melanie.png",
+      "url": "https://raw.githubusercontent.com/pret/pokeyellow/b6696f24b3be84fe64cf702f5a15ba40c66b7f39/gfx/sprites/girl.png",
+      "sha256": "991e313b3f55ac2156020347cceb0bd309201999a9afa32d45e60aea3235ac69",
+      "width": 16,
+      "height": 16
+    }
+  ]
+}

@@ -8,10 +8,10 @@ const badges=['brock','misty','surge','erika','koga','sabrina','blaine','giovann
 const cases=[],nodes=new Map();
 function add(id,location,title,description,entries){
  const group={id,location,title,description,entries:[]};cases.push(group);
- for(const row of entries){const n={case:id,location,sprite:'scientist',type:'dialogue',...row};if(n.party)n.team=n.party.map(([id,level])=>({id,level,moves:learnedMoves(id,level).slice(-4)}));nodes.set(n.id,n);group.entries.push(n.id);}
+ for(const row of entries){const n={case:id,location,sprite:null,type:'dialogue',...row};if(n.party)n.team=n.party.map(([id,level])=>({id,level,moves:learnedMoves(id,level).slice(-4)}));nodes.set(n.id,n);group.entries.push(n.id);}
 }
 add('fishing-guru','vermilion','갈색시티의 낚시꾼','물가에서 낚시꾼이 이야기를 나누고 있어요.',[
- {id:'k-fishing-rod',name:'낚시꾼과 이야기하기',sprite:'fisherman',item:'fishing-rod',pages:['너도 낚시에 관심이 있니? 이 낚싯대를 가져가렴.','이제 물가에서도 야생 포켓몬을 만날 수 있단다.'],result:'낚싯대를 받았어요. 물가에서 새로운 포켓몬을 만나 보세요.'}
+ {id:'k-fishing-rod',name:'낚시꾼과 이야기하기',sprite:'fishing-guru',item:'fishing-rod',confirm:'낚싯대 받기',pages:['너도 낚시에 관심이 있니? 이 낚싯대를 가져가렴.','이제 물가에서도 야생 포켓몬을 만날 수 있단다.'],result:'낚싯대를 받았어요. 물가에서 새로운 포켓몬을 만나 보세요.'}
 ]);
 add('forest-path','forest','상록숲을 지나서','숲길에서 만난 트레이너들이 승부를 걸어왔어요. 동료와 함께 회색시티로 향해요.',[
  {id:'k-forest-1',name:'곤충채집 소년',sprite:'bug-catcher',party:[[10,7],[10,7]],pages:['숲에서 찾은 포켓몬들이야! 네 동료도 보여 줘!'],result:'숲 안쪽에도 트레이너가 있어요. 길을 따라가 보세요.'},
@@ -26,11 +26,11 @@ add('moon-path','mt-moon','달맞이산의 화석','동굴 안에서 로켓단�
  {id:'k-moon-trainer',name:'등산가',sprite:'hiker',party:[[74,10],[74,10],[95,10]],pages:['달맞이산은 처음인가? 동굴에서도 방심하면 안 되지!'],result:'동굴 깊은 곳에서 소란이 들려요.'},
  {id:'k-moon-grunt',name:'로켓단 조무래기',sprite:'rocket-grunt',party:[[27,11],[19,11],[41,11]],pages:['희귀한 화석은 전부 로켓단 차지다! 비켜!'],result:'로켓단을 물리쳤어요. 화석 앞에 누군가 남아 있어요.'},
  {id:'k-moon-scientist',name:'화석을 지키는 연구원',sprite:'super-nerd',party:[[88,12],[100,12],[109,12]],pages:['이 화석들은 내가 먼저 발견했어! 승부로 정하자!'],result:'연구원이 화석 하나를 골라도 좋다고 해요.'},
- {id:'k-fossil-choice',name:'화석 고르기',type:'choice',pages:['둘 다 가져가면 안 되지. 하나는 네가, 하나는 내가 갖자.','어느 화석을 가져갈까? 선택하지 않은 화석은 연구원이 가져간다.'],result:'화석을 소중히 챙겼어요. 출구로 향해요.'},
+ {id:'k-fossil-choice',sprite:'super-nerd',name:'화석 고르기',type:'choice',pages:['둘 다 가져가면 안 되지. 하나는 네가, 하나는 내가 갖자.','어느 화석을 가져갈까? 선택하지 않은 화석은 연구원이 가져간다.'],result:'화석을 소중히 챙겼어요. 출구로 향해요.'},
  {id:'k-moon-duo',name:'로이·로사',sprite:'rocket-duo',party:[[23,14],[52,14],[109,14]],pages:['그 화석, 우리가 가져가겠어!','로켓단의 앞길을 막은 대가를 치르게 해 주지!'],result:'로이·로사를 물리쳤어요. 4번도로를 지나 블루시티로 향해요.'}
 ]);
 add('melanie','cerulean','보살핌이 필요한 동료','멜라니가 포켓몬을 돌보고 있어요. 피카츄와 함께 인사해 보세요.',[
- {id:'k-bulbasaur',name:'멜라니와 이야기하기',gift:1,level:10,pages:['이 이상해씨를 돌보고 있었어. 믿을 만한 트레이너에게 맡기고 싶어.','피카츄가 널 참 좋아하는구나. 이 아이도 함께 데려가 줄래?'],result:'멜라니에게 이상해씨를 받았어요.'}
+ {id:'k-bulbasaur',name:'멜라니와 이야기하기',sprite:'melanie',confirm:'이상해씨 데려가기',gift:1,level:10,pages:['이 이상해씨를 돌보고 있었어. 믿을 만한 트레이너에게 맡기고 싶어.','피카츄가 널 참 좋아하는구나. 이 아이도 함께 데려가 줄래?'],result:'멜라니에게 이상해씨를 받았어요.'}
 ]);
 add('nugget-bridge','route-24','금구슬다리','다리 건너편에서 만난 사람들과 이야기를 나눠 보세요.',[
  ...[[[10,14],[13,14]],[[16,14],[29,14]],[[19,14],[23,14],[41,14]],[[16,16],[29,16]],[[56,18]]].map((party,i)=>({id:'k-bridge-'+(i+1),name:'다리의 트레이너 '+(i+1),sprite:i%2?'lass':'youngster',party,pages:[(i+1)+'번째 상대는 나야! 여기까지 온 실력을 보여 줘!'],result:i===4?'다섯 명을 모두 이겼어요. 다리 끝의 남자가 손짓해요.':'다음 트레이너에게 다가가 보세요.'})),
@@ -38,7 +38,7 @@ add('nugget-bridge','route-24','금구슬다리','다리 건너편에서 만난 
  {id:'k-charmander',name:'트레이너와 이야기하기',sprite:'youngster',gift:4,level:10,pages:['내가 이 파이리를 제대로 돌보지 못했어.','이수재에게 가는 길도 잘 헤쳐 왔구나. 너라면 이 아이를 맡길 수 있겠어.'],result:'파이리가 동료가 됐어요.'}
 ]);
 add('bill-visit','sea-cottage','이수재의 초대','25번도로 끝의 집에서 포켓몬 연구가 이수재를 만날 수 있어요.',[
- {id:'k-bill',name:'이수재와 이야기하기',pages:['나는 포켓몬을 연구하는 이수재야. 여기까지 와 줘서 고마워!','갈색시티 항구에 상트안느호가 와 있어. 이 승선권으로 배 안을 구경해 봐.'],item:'ss-ticket',result:'상트안느호 승선권을 받았어요. 블루시티를 거쳐 갈색시티로 향해요.'}
+ {id:'k-bill',name:'이수재와 이야기하기',sprite:'bill',confirm:'승선권 받기',pages:['나는 포켓몬을 연구하는 이수재야. 여기까지 와 줘서 고마워!','갈색시티 항구에 상트안느호가 와 있어. 이 승선권으로 배 안을 구경해 봐.'],item:'ss-ticket',result:'상트안느호 승선권을 받았어요. 블루시티를 거쳐 갈색시티로 향해요.'}
 ]);
 add('robbed-house','cerulean','도둑맞은 집','집을 어지럽힌 로켓단이 뒤쪽 길로 달아났어요. 주민을 도와주세요.',[
  {id:'k-robber',name:'도망친 로켓단',sprite:'rocket-grunt',party:[[66,17],[96,17]],pages:['난 아무 짓도 안 했어!','끝까지 쫓아오겠다면 상대해 주지!'],result:'도망친 로켓단을 물리쳤어요. 5번도로와 지하통로를 지나 갈색시티로 향해요.'}
@@ -46,17 +46,17 @@ add('robbed-house','cerulean','도둑맞은 집','집을 어지럽힌 로켓단�
 add('anne-visit','ss-anne','상트안느호','승선권을 확인받고 배에 올랐어요. 선내 트레이너들과 인사하고 선장을 찾아가 보세요.',[
  {id:'k-anne-1',name:'갑판의 선원',sprite:'sailor',party:[[66,18],[90,18]],pages:['바다 사나이의 배틀을 보여 주지!'],result:'선실 쪽으로 더 들어가 보세요.'},
  {id:'k-anne-2',name:'선실의 신사',sprite:'gentleman',party:[[58,18],[58,18]],pages:['먼 길을 떠나는 데는 좋은 동료가 필요하지. 너희의 실력을 보겠네.'],result:'선장실로 향하는 계단을 찾았어요.'},
- {id:'k-captain',name:'선장 찾아가기',sprite:'sailor',pages:['으으, 멀미가 심하구나. 등을 좀 두드려 주겠니?','고맙다! 한결 나아졌어. 갈색체육관 앞길도 지나갈 수 있도록 선원에게 이야기해 두마.'],result:'선장을 도왔어요. 갈색체육관으로 가는 길이 열렸어요.'}
+ {id:'k-captain',name:'선장 찾아가기',sprite:'captain',pages:['으으, 멀미가 심하구나. 등을 좀 두드려 주겠니?','고맙다! 한결 나아졌어. 갈색체육관 앞길도 지나갈 수 있도록 선원에게 이야기해 두마.'],result:'선장을 도왔어요. 갈색체육관으로 가는 길이 열렸어요.'}
 ]);
 add('vermilion-police','vermilion','경찰관의 부탁','경찰관이 새 보금자리를 찾는 포켓몬을 돌보고 있어요.',[
- {id:'k-squirtle',name:'경찰관과 이야기하기',gift:7,level:10,pages:['마티스를 이겼다며? 믿을 만한 트레이너구나.','이 꼬부기를 부탁해도 될까? 네 모험에 함께하면 좋겠어.'],result:'경찰관에게 꼬부기를 받았어요.'}
+ {id:'k-squirtle',name:'경찰관과 이야기하기',sprite:'officer-jenny',confirm:'꼬부기 데려가기',gift:7,level:10,pages:['마티스를 이겼다며? 믿을 만한 트레이너구나.','이 꼬부기를 부탁해도 될까? 네 모험에 함께하면 좋겠어.'],result:'경찰관에게 꼬부기를 받았어요.'}
 ]);
 add('route11-path','route-11','디그다의 굴로','도로의 트레이너들과 겨루며 디그다의 굴 입구를 찾아요.',[
  {id:'k-route11-1',name:'도로의 트레이너',sprite:'youngster',party:[[23,21]],pages:['갈색시티에서 왔어? 한판 해 보자!'],result:'동쪽 길을 더 살펴보세요.'},
  {id:'k-route11-2',name:'도로의 트레이너',sprite:'youngster',party:[[27,19],[41,19]],pages:['굴로 가기 전에 승부다!'],result:'디그다의 굴을 지나면 2번도로 동쪽으로 나갈 수 있어요.'}
 ]);
 add('route2-aide','route-2','오박사의 조수','굴을 건너온 쪽에서 오박사의 조수가 도감 연구를 하고 있어요.',[
- {id:'k-aide',name:'조수와 이야기하기',pages:['오박사님의 조수야. 포획한 포켓몬을 도감에 기록하고 있니?','열 종류가 넘는구나! 돌산터널은 아주 어두워. 안전하게 통과할 수 있도록 길을 알려 줄게.'],result:'조수의 안내를 받았어요. 돌산터널을 통과할 수 있어요.'}
+ {id:'k-aide',sprite:'scientist',name:'조수와 이야기하기',pages:['오박사님의 조수야. 포획한 포켓몬을 도감에 기록하고 있니?','열 종류가 넘는구나! 돌산터널은 아주 어두워. 안전하게 통과할 수 있도록 길을 알려 줄게.'],result:'조수의 안내를 받았어요. 돌산터널을 통과할 수 있어요.'}
 ]);
 add('route9-path','route-9','돌산터널로 가는 길','바위가 많은 길을 지나 보라타운으로 향해요.',[
  {id:'k-route9-1',name:'도로의 트레이너',sprite:'lass',party:[[43,18],[69,18],[43,18],[69,18]],pages:['터널로 가는 길이야? 그 전에 승부하자!'],result:'돌산터널 입구가 가까워졌어요.'},
@@ -70,17 +70,17 @@ add('tower-rumor','tower','탑 안의 기척','탑 위쪽에서 알 수 없는 �
  {id:'k-tower-visit',name:'탑 안을 살펴보기',pages:['계단 위에서 정체를 알 수 없는 유령이 길을 막았다.','지금은 다가갈 수 없다. 무지개시티에서 단서를 찾아보자.'],result:'유령의 정체를 확인할 방법을 찾아야겠어요.'}
 ]);
 add('hideout-key','celadon','아지트의 승강기','지하 통로 끝에서 승강기를 움직일 열쇠를 찾았어요.',[
- {id:'k-lift-key',name:'남겨진 열쇠 확인하기',pages:['조무래기가 떠난 자리에서 작은 열쇠를 주웠다.','승강기 열쇠다. 아지트 안쪽으로 내려갈 수 있겠다.'],item:'lift-key',result:'승강기가 움직이기 시작했어요. 아지트 안쪽을 조사해 보세요.'}
+ {id:'k-lift-key',sprite:'item:lift-key',name:'남겨진 열쇠 확인하기',pages:['조무래기가 떠난 자리에서 작은 열쇠를 주웠다.','승강기 열쇠다. 아지트 안쪽으로 내려갈 수 있겠다.'],item:'lift-key',result:'승강기가 움직이기 시작했어요. 아지트 안쪽을 조사해 보세요.'}
 ]);
 add('silph-key','saffron','닫힌 사무실','로켓단이 막고 있던 통로에서 카드키를 발견했어요.',[
- {id:'k-card-key',name:'카드키 확인하기',pages:['바닥에 떨어진 카드키를 주웠다.','잠긴 문에 대자 잠금이 풀렸다. 회사 안쪽으로 더 들어가 보자.'],item:'card-key',result:'닫힌 사무실의 문이 열렸어요.'}
+ {id:'k-card-key',sprite:'item:card-key',name:'카드키 확인하기',pages:['바닥에 떨어진 카드키를 주웠다.','잠긴 문에 대자 잠금이 풀렸다. 회사 안쪽으로 더 들어가 보자.'],item:'card-key',result:'닫힌 사무실의 문이 열렸어요.'}
 ]);
 add('seafoam-crossing','seafoam','쌍둥이섬의 물길','동굴 안의 거센 물살 때문에 반대편으로 나가기 어려워요. 흐름이 잦아드는 길을 찾아보세요.',[
  {id:'k-seafoam-1',name:'동굴의 물길 살펴보기',pages:['바위 사이로 물이 갈라져 흐르고 있다.','동료와 함께 물살이 약한 쪽을 찾아 천천히 건너갔다.'],result:'동굴 안쪽으로 이동할 수 있어요.'},
  {id:'k-seafoam-2',name:'반대편 출구 찾기',pages:['멀리서 빛이 들어온다. 물살도 한결 잔잔해졌다.','바위 사이의 길을 따라 반대편 출구에 도착했다.'],result:'쌍둥이섬을 통과했어요. 20번수로를 지나 홍련섬으로 향해요.'}
 ]);
 add('fossil-lab','cinnabar','홍련섬의 연구소','오래된 화석을 연구하는 곳이에요. 가지고 온 화석을 맡겨 보세요.',[
- {id:'k-fossil-restore',name:'화석 연구원과 이야기하기',pages:['달맞이산에서 가져온 화석이구나! 복원해 보겠네.','아주 오래전 살던 포켓몬이 다시 눈을 떴어. 소중히 돌봐 주게.'],result:'화석에서 깨어난 포켓몬이 동료가 됐어요.'}
+ {id:'k-fossil-restore',sprite:'scientist',name:'화석 연구원과 이야기하기',pages:['달맞이산에서 가져온 화석이구나! 복원해 보겠네.','아주 오래전 살던 포켓몬이 다시 눈을 떴어. 소중히 돌봐 주게.'],result:'화석에서 깨어난 포켓몬이 동료가 됐어요.'}
 ]);
 add('power-survey','power-plant','발길이 끊긴 발전소','버려진 시설에 전기 포켓몬들이 모여 있어요. 주변을 천천히 살펴보세요.',[
  {id:'k-power-survey',name:'발전소 둘러보기',pages:['멈춰 선 발전기 사이로 포켓몬들이 오가고 있다.','사람이 떠난 뒤 이곳은 전기 포켓몬들의 보금자리가 된 모양이다.'],result:'무인발전소를 둘러봤어요. 이곳에서 모험을 계속할 수 있어요.'}
@@ -98,10 +98,10 @@ function done(g,id){
  return !!g.data.kantoStory?.cleared[id];
 }
 add('silph-employee','saffron','실프주식회사 직원','직원이 당신에게 이야기를 건네요.',[
- {id:'k-lapras-visit',name:'직원과 이야기하기',offer:'Lapras',result:'직원에게 맡은 동료와 함께 모험해요.'}
+ {id:'k-lapras-visit',sprite:'scientist',name:'직원과 이야기하기',offer:'Lapras',result:'직원에게 맡은 동료와 함께 모험해요.'}
 ]);
 add('route15-aide','route-15','오박사의 조수','조수가 도감 연구 이야기를 듣고 싶어 해요.',[
- {id:'k-device-visit',name:'조수와 이야기하기',offer:'Device',result:'조수에게 연구를 도운 답례를 받았어요.'}
+ {id:'k-device-visit',sprite:'scientist',name:'조수와 이야기하기',offer:'Device',result:'조수에게 연구를 도운 답례를 받았어요.'}
 ]);
 add('mansion-journal','mansion','저택의 연구일지','저택에서 발견한 기록을 읽어 보세요.',[1,2,3].map(page=>({id:'k-mansion-page-'+page,name:'연구일지 '+page+'장 읽기',sprite:'item:journal',offer:'Mansion',page,result:'저택에 남겨진 기록을 확인했어요.'})));
 const original=require('./kanto-trainers.json'),used=new Set(),sourceNodes=new Map();
@@ -275,7 +275,7 @@ function snapshot(g){
   if(c.id.startsWith('trainers-gym-')&&!gymEntry(g,Number(c.id.slice(13))).open)continue;
   if(!(c.id==='moon-path'||c.id==='bill-visit'||(c.id==='melanie'?g.data.badges.includes('misty'):c.id==='route2-aide'?!!g.data.kantoWorld.visited.diglett:visible.some(id=>done(g,id)||prerequisite(g,nodes.get(id))))))continue;
   const completed=visible.every(id=>done(g,id));
-  const entries=visible.map(id=>{const n=nodes.get(id),allowed=prerequisite(g,n),revealed=!!n.trainer||done(g,id)||allowed,known=g.challengeLevelsKnown(id,done(g,id));return {id,name:revealed?n.name:'???',sprite:n.sprite,revealed,team:revealed?n.team||[]:[],levelsKnown:known,done:done(g,id),readOnly:!!g.data.johtoUnlocked,ready:ready(g,id),automatic:false,type:n.type,reason:c.id==='moon-path'&&!trainersDone(g,'route3-path')?gateText.route3:n.id==='k-bulbasaur'&&!allowed?'피카츄와 조금 더 친해진 뒤 찾아와 주세요.':n.id==='k-aide'&&!allowed?'10종 이상 포획하고 디그다의 굴을 건너와 주세요.':'앞선 일을 마치면 진행할 수 있어요.'};});
+  const entries=visible.map(id=>{const n=nodes.get(id),allowed=prerequisite(g,n),revealed=!!n.trainer||done(g,id)||allowed,known=g.challengeLevelsKnown(id,done(g,id));return {id,name:revealed?n.name:'???',sprite:n.sprite,revealed,team:revealed?n.team||[]:[],levelsKnown:known,done:done(g,id),reviewable:!!(done(g,id)&&!n.team&&n.pages&&n.sprite&&!n.sprite.startsWith('item:')),readOnly:!!g.data.johtoUnlocked,ready:ready(g,id),automatic:false,type:n.type,reason:c.id==='moon-path'&&!trainersDone(g,'route3-path')?gateText.route3:n.id==='k-bulbasaur'&&!allowed?'피카츄와 조금 더 친해진 뒤 찾아와 주세요.':n.id==='k-aide'&&!allowed?'10종 이상 포획하고 디그다의 굴을 건너와 주세요.':'앞선 일을 마치면 진행할 수 있어요.'};});
   // A previously reached house must not become an empty screen when a save
   // crossed an unfinished incident. Explain the missing step without granting it.
   if(c.id==='bill-visit'){

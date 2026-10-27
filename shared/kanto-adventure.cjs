@@ -22,6 +22,10 @@ function withKanto(Base){return class KantoAdventure extends Base{
   if(K.modern(this)&&this.data.kantoWorld.blocked?.checkpoint==='forest')this.data.kantoWorld.blocked.revalidate=true;
   if(K.nodes.has(saved.pendingChallenge?.index)&&this.canChallenge(saved.pendingChallenge.index))this.data.pendingChallenge={...saved.pendingChallenge};
   const scene=this.presentation();if(K.modern(this)&&scene?.kind==='oak'&&scene.next==='rival')scene.pages[3]='먼저 피카츄와 인사해 보렴. 그린도 첫 동료로 이브이를 골랐단다.';
+  // Saved conversations retain their page and reward boundary, but use the
+  // current NPC identity rather than a formerly shared placeholder portrait.
+  const node=K.nodes.get(scene?.next?.replace(/^kanto-complete:/,''));
+  if(node&&scene.kind==='kanto-event'){scene.sprite=node.sprite;scene.confirm=node.confirm;}
   this.restoreManualEncounter(now);
  }
  restoreManualEncounter(now){
@@ -107,7 +111,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
    const party=Object.fromEntries(this.data.slots.filter(uid=>uid!==null&&!this.isBoarded(uid)).map(uid=>[uid,this.memberCombatant(this.data.owned[uid])]));
    this.data.battle={kind:'trainer',bossIndex:id,storyId:id,kantoNode:id,foeIndex:0,party,turn:0,startedAt:now};this.nextTrainer(now);this.log(n.name+'에게 도전!','challenge',null,now);return true;
   }
-  this.dialogue('kanto-event',n.name,n.sprite,n.pages,'kanto-complete:'+id,now);return true;
+  this.dialogue('kanto-event',n.name,n.sprite,n.pages,'kanto-complete:'+id,now);this.presentation().confirm=n.confirm;return true;
  }
  battleBoss(b=this.data.battle){const n=K.nodes.get(b?.kantoNode);if(n)return {...n,kind:'story',intro:n.pages};const saved=this.data.kantoStory?.importedBattle;if(saved&&saved.storyId===b?.storyId&&saved.startedAt===b?.startedAt)return super.battleBoss(b);const alias={'tower-grunt-1':'tower','silph-grunt':'silph'}[b?.storyId];if(K.modern(this)&&alias){const t=K.aliases[alias];return {...super.battleBoss(b),name:t.name,sprite:t.sprite,team:t.team.map(p=>({...p,moves:learnedMoves(p.id,p.level).slice(-4)})),...(alias==='tower'?{intro:['누군가에게 홀린 듯한 무당이 길을 막았다.','배틀로 정신을 차리게 해 주자.']}: {})};}return super.battleBoss(b);}
  nextTrainer(now){
@@ -142,24 +146,31 @@ function withKanto(Base){return class KantoAdventure extends Base{
   if(K.modern(this)&&this.data.kantoWorld.location!=='mansion')this.data.mobileStory.mansion.wins=mansionWins;
   if(road&&K.modern(this)&&this.data.battle!==b){this.data.kantoStory.roads[road] ||= now;(this.data.kantoStory.roadCaptures ||= {})[road] ||= captured;this.log(road.replace('route-','')+'번도로의 길이 열렸다.','story',143,now);}
  }
- completeKantoNode(id,now){
+ completeKantoNode(id,now,confirmedScene){
   const n=K.nodes.get(id),s=this.data.kantoStory;if(!n||K.done(this,id))return false;
+  if(confirmedScene!==this.presentation()||confirmedScene?.next!=='kanto-complete:'+id||confirmedScene.index!==confirmedScene.pages.length-1||this.data.kantoWorld?.location!==n.location)return false;
   // Conditions are rechecked at the persisted confirmation boundary.
   if(!K.prerequisite(this,n))return false;
   if(id==='k-fossil-choice')return false;
   if(n.gift){if(this.data.starterGifts[n.gift])return false;this.addPokemon(n.gift,n.level,'gift',now);this.data.starterGifts[n.gift]=now;}
   if(id==='k-fossil-restore'){if(!s.fossil||K.fossilBlocked(this,s.fossil))return false;this.addPokemon(s.fossil,30,'fossil',now);delete s.items[s.fossil];}
   if(n.item)s.items[n.item]=1;
-  s.cleared[id]=now;this.log(n.result,n.gift?'gift':n.item?'item':'story',n.gift||null,now);this.animate('result',{text:n.result},now);return true;
+  require('./adventure-records.cjs').remember(this,confirmedScene,now);
+  (s.dialogueConfirmations ||= {})[id]={at:now,scene:confirmedScene.id};
+  this.data.mobileStory.scene=null;s.cleared[id]=now;this.log(n.result,n.gift?'gift':n.item?'item':'story',n.gift||null,now);this.animate('result',{text:n.result},now);return true;
  }
  advanceScene(key,now=Date.now()){
   const scene=this.presentation();if(!scene||scene.mode!=='dialogue'||key!==scene.id+':'+scene.index)return super.advanceScene(key,now);
+  if(scene.next==='close-recollection'){
+   if(scene.index+1<scene.pages.length)scene.index++;else this.data.mobileStory.scene=null;
+   return true;
+  }
   if(scene.next==='kanto-resume'){
    this.data.mobileStory.scene=null;this.holdUntil(now+650);return true;
   }
   if(scene.next?.startsWith('kanto-complete:')&&scene.index===scene.pages.length-1){
    const id=scene.next.slice(15);if(id==='k-fossil-choice'){scene.choices=[{value:138,label:'조개화석'},{value:140,label:'껍질화석'}];scene.awaitChoice=true;return true;}
-   require('./adventure-records.cjs').remember(this,scene,now);this.data.mobileStory.scene=null;return this.completeKantoNode(id,now);
+   return this.completeKantoNode(id,now,scene);
   }
   if(scene.next?.startsWith('kanto-guide:')&&scene.index===scene.pages.length-1){
    const event=scene.next.slice(12),s=this.data.kantoStory;require('./adventure-records.cjs').remember(this,scene,now);this.data.mobileStory.scene=null;
@@ -181,7 +192,12 @@ function withKanto(Base){return class KantoAdventure extends Base{
   for(const p of fossilIds)if(K.fossilBlocked(this,p))delete this.data.captureReservations[p];
   this.log(itemNames[id]+'을 골랐다. 다른 화석은 연구원이 가져갔다.','item',null,now);this.animate('result',{text:itemNames[id]+'을 챙겼어요.'},now);return true;
  }
- requestAction(kind,value,now=Date.now()){return kind==='fossil-choice'?this.chooseFossil(value,now):super.requestAction(kind,value,now);}
+ reviewKantoNpc(id,now){
+  const n=K.nodes.get(id);
+  if(!n||n.team||!n.pages||!n.sprite||n.sprite.startsWith('item:')||!K.done(this,id)||this.data.johtoUnlocked||this.data.kantoWorld?.location!==n.location||this.presentation()||this.data.battle?.kind==='trainer'||this.data.pendingChallenge)return false;
+  this.dialogue('recollection',n.name+' · 지난 대화',n.sprite,n.pages,'close-recollection',now);return true;
+ }
+ requestAction(kind,value,now=Date.now()){return kind==='npc-review'?this.reviewKantoNpc(value,now):kind==='fossil-choice'?this.chooseFossil(value,now):super.requestAction(kind,value,now);}
  guideTick(now){
   const s=this.data.kantoStory;if(!K.modern(this)||this.data.johtoUnlocked||s.mapAt||this.data.mobileStory.onboarding!=='done'||this.presentation()||this.data.battle||this.data.suspendedWild||this.data.pendingBattle||this.data.pendingChallenge||this.data.pendingActions.length||this.seasonDue(now)||now<this.nextTick||now<this.data.switchUntil)return false;
   const here=world.current(this).id;

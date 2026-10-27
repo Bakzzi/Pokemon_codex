@@ -11,12 +11,16 @@ globalThis.StoryPresentation={create({document:doc=document,advance,choose=value
     const page=scene.id+':'+(scene.index||0),sendout=scene.mode==='sendout';
     root.dataset.mode=scene.mode;root.dataset.kind=scene.kind;root.dataset.gift=String(scene.kind==='oak'&&scene.next==='rival'&&scene.index>=2);
     if(root.dataset.gift==='true')$('story-hero').src='assets/'+state.hero.id+'.gif';
-    $('story-name').textContent=scene.name;$('story-portrait').dataset.sprite=scene.sprite;
-    $('story-portrait').src=scene.sprite.startsWith('pokemon:')?'assets/'+scene.sprite.slice(8)+'.gif':scene.sprite.startsWith('item:')?'assets/items/'+scene.sprite.slice(5)+'.png':'assets/trainers/battle/'+scene.sprite+'.png';
+    $('story-name').textContent=scene.name;$('story-portrait').dataset.sprite=scene.sprite||'';
+    $('story-portrait').hidden=!scene.sprite;
+    if(scene.sprite)$('story-portrait').src=scene.sprite.startsWith('pokemon:')?'assets/'+scene.sprite.slice(8)+'.gif':scene.sprite.startsWith('item:')?'assets/items/'+scene.sprite.slice(5)+'.png':'assets/trainers/battle/'+scene.sprite+'.png';
+    else $('story-portrait').removeAttribute('src');
     root.dataset.revealed=String(scene.kind!=='ghost'||scene.index>0||scene.next==='win'||scene.next==='loss');$('story-portrait').alt=scene.name;
-    button.disabled=sendout||!!scene.automatic||!!scene.awaitChoice;$('story-hint').textContent=sendout||scene.automatic||scene.awaitChoice?'':'눌러서 계속 ▼';
+    button.disabled=sendout||!!scene.automatic||!!scene.awaitChoice;$('story-hint').textContent=sendout||scene.automatic||scene.awaitChoice?'':scene.index===scene.pages.length-1&&scene.confirm?scene.confirm+' ▼':'눌러서 계속 ▼';
     if(!sendout)$('story-text').textContent=scene.pages[scene.index];
-    button.onclick=()=>advance(page);if(key===page)return;key=page;clearInterval(timer);timer=0;
+    // One double-click or held Enter must not silently accept the next page.
+    button.onkeydown=e=>{if(e.repeat&&(e.key==='Enter'||e.key===' '))e.preventDefault();};
+    button.onclick=e=>{if(e.detail>1)return;advance(page);};if(key===page)return;key=page;clearInterval(timer);timer=0;
     if(sendout){
       $('story-hero').src='assets/'+state.hero.id+'.gif';$('story-foe').src='assets/'+state.foe.id+'.gif';
       const draw=()=>{if(current.scene?.id!==scene.id){clearInterval(timer);timer=0;return;}

@@ -24,7 +24,7 @@ for(const Type of [PC,Android]){
  });
  test(Type.name+' manual rod reward requires arrival and dialogue completion, persists, and resets seasonally',()=>{
   let g=ready(Type);g.data.kantoWorld.location='route-22';assert.equal(g.challenge('k-fishing-rod',now),false);
-  g.data.kantoWorld.location='vermilion';assert.ok(g.challenge('k-fishing-rod',now));assert.equal(H.waterAccess(g),false);const scene=g.presentation();assert.equal(scene.sprite,'fisherman');
+  g.data.kantoWorld.location='vermilion';assert.ok(g.challenge('k-fishing-rod',now));assert.equal(H.waterAccess(g),false);const scene=g.presentation();assert.equal(scene.sprite,'fishing-guru');
   g=new Type(structuredClone(g.data),now);assert.equal(H.waterAccess(g),false);pages(g);assert.ok(H.waterAccess(g));assert.equal(g.data.kantoStory.items['fishing-rod'],1);assert.equal(g.canChallenge('k-fishing-rod'),false);
   assert.equal(g.panelState(now).inventory.find(p=>p.id==='kanto-fishing-rod').name,'낚싯대');assert.equal(K.unlocked(g,K.byId.get('route-19')),false,'rod does not open sea travel');
   g=new Type(structuredClone(g.data),now);assert.ok(H.waterAccess(g));g.resetSeason(now+32*86400000);assert.equal(H.waterAccess(g),false);
