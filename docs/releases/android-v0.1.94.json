@@ -1,0 +1,91 @@
+{
+  "version": "0.1.94",
+  "versionCode": 96,
+  "platform": "android",
+  "channel": "android-preview",
+  "sourceCommit": "abb88585d069c0b0514e77f56b079f65d1d1f78f",
+  "sourceTag": "android-v0.1.94",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/android-v0.1.94",
+  "package": "io.github.bakzzi.pokemonidle",
+  "minSdk": 31,
+  "targetSdk": 36,
+  "artifact": "Pokemon-Idle-0.1.94.apk",
+  "bytes": 11841048,
+  "sha256": "ddc256899d84dd09338b60a59ea8e3faecb516a6e72881f5dd92aa1ae930ab50",
+  "signingCertificateSha256": "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+  "toolchain": {
+    "node": "22.11.0",
+    "gradle": "8.13",
+    "agp": "8.13.0",
+    "compileSdk": 36,
+    "buildTools": "36.1.0",
+    "javaScriptEngine": "androidx.javascriptengine:javascriptengine:1.1.1",
+    "dependencyLockfile": "mobile/android/app/gradle.lockfile"
+  },
+  "validation": {
+    "releaseBuild": "passed",
+    "apkSignatureVerified": true,
+    "embeddedBundleSha256": "198e1115f6d2674ab6f82fcff6e309b20c6251938052da717f7f9f4723421544",
+    "embeddedFilesMatched": 466,
+    "nativeAnimatedSpriteFilesMatched": 252,
+    "nodeTestsPassed": 997,
+    "embeddedApkUiScenariosPassed": 5,
+    "embeddedApkChecksUseElectronWithNativeBridgeFixture": true,
+    "nativeRuntimeRetested": false,
+    "physicalDeviceVerified": false
+  },
+  "retention": {
+    "latestAndroid": "0.1.94",
+    "previousAndroid": "0.1.93"
+  },
+  "activity": {
+    "lockedMillisecondsPerAction": 20000,
+    "walkingRewardsEnabled": false,
+    "stepsOnlyForMapMovement": true,
+    "legacyWalkingCreditAwards": false,
+    "todayAndLifetimeStepsPreserved": true,
+    "unlockedIdleAdventure": false,
+    "foregroundChallenges": true,
+    "safariUsesLockTime": true
+  },
+  "mapTravel": {
+    "recordedStepsPerCell": 2000,
+    "countsLockedTime": false,
+    "countsBattles": false,
+    "separateFromBattleActivity": true,
+    "partialDistancePersists": true,
+    "pcMovementUnchanged": true,
+    "bankSurplusAndIdleSteps": true,
+    "explicitBankUse": true,
+    "bankPersistsAcrossSeasons": true,
+    "bankTravelSkipsWildBattles": true,
+    "bankTravelResolvesUnclearedAutomaticTrainers": true,
+    "bankDepartureEscapesOrdinaryWild": true,
+    "bankDepartureDefersCurrentLocationTrainers": true
+  },
+  "notification": {
+    "expandedOnly": true,
+    "partnerSlot": 1,
+    "animatedOriginalSprite": true,
+    "currentLevelExperiencePercent": true,
+    "emptySlotPreserved": true,
+    "readOnly": true
+  },
+  "compensation": {
+    "movementResources": 1,
+    "claim": "first foreground launch",
+    "receiptPersistsAcrossSeasonAndFullReset": true,
+    "atomicWithBank": true
+  },
+  "growth": {
+    "futureExperienceDivisor": 3,
+    "savedExperiencePreserved": true,
+    "deviceSharePercent": 10
+  },
+  "trainerSequence": {
+    "explicitStart": true,
+    "manualBranchesPreserved": true,
+    "activityCost": 0,
+    "backgroundPaused": true
+  }
+}
