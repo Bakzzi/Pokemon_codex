@@ -13,8 +13,8 @@ function fixture(){
   const run=code=>vm.runInContext(code,c);
   return {status,calls,timers,run,tick:()=>intervals[0](),start:()=>run('mobileLifecycle(true)'),snapshot:()=>JSON.parse(run('JSON.stringify({game:game.data,mobile:progression.checkpoint(),active,catchingUp,updatePaused,fatal})')),stored:()=>stored,setSaveOk:value=>{saveOk=value;},advance:ms=>{now+=ms;}};
 }
-test('app interval displays steps without granting battles or experience',()=>{
-  const f=fixture();f.start();const before=f.snapshot().game;
+test('parked app displays and banks steps without granting battles or experience',()=>{
+  const f=fixture();f.run("game.requestAction('story-travel',false)");f.start();const before=f.snapshot().game;
   for(const steps of [9,10,20,50000]){f.status.steps=steps;f.tick();f.advance(10000);}
   const after=f.snapshot().game;assert.equal(after.mapTravel.bank,before.mapTravel.bank+50000);assert.deepEqual({...after,mapTravel:null},{...before,mapTravel:null});assert.equal(f.snapshot().mobile.consumed,0);assert.equal(f.snapshot().mobile.lockConsumed,0);
 });

@@ -4,7 +4,7 @@ const PC=require('../adventure.cjs').Adventure,Android=require('../../mobile/adv
 globalThis.MobileCore={nursery:require('../daycare.cjs')};
 const now=Date.parse('2026-10-26T05:00:00Z');
 function fixture(Type,location){
- const g=new Type({},now,{random:()=>.7});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.kantoStory.mapAt=now;g.data.kantoStory.dexAt=now;g.data.kantoWorld.location=location;g.data.kantoWorld.visited[location]=now;g.nextTick=now;g.data.switchUntil=0;return g;
+ const g=new Type({},now,{storyAuto:false,random:()=>.7});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.kantoStory.mapAt=now;g.data.kantoStory.dexAt=now;g.data.kantoWorld.location=location;g.data.kantoWorld.visited[location]=now;g.nextTick=now;g.data.switchUntil=0;return g;
 }
 function ready(g){
  for(const n of K.nodes.values())if(n.automatic)g.data.kantoStory.cleared[n.id]=now;

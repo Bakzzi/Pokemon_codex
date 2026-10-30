@@ -2,7 +2,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),PC=require('../adventure.cjs').Adventure,Android=require('../../mobile/adventure.cjs').Adventure,K=require('../../shared/kanto-world.cjs'),W=require('../../shared/johto-world.cjs'),J=require('../../shared/johto.cjs');
 const {wildDistribution,wildEligible,xpAt,data}=require('../pokemon.cjs'),raw=require('../../shared/kanto-habitats.json'),now=Date.parse('2026-10-22T06:00:00Z'),ids=p=>p.map(p=>p.id).sort((a,b)=>a-b);
 test('localizing second-region encounters preserves an obtainable habitat for every previously legal wild species',()=>{for(const p of data.pokemon.filter(p=>wildEligible(p,2,100)&&!J.noWild.has(p.id)))assert.ok(W.locationsFor(p.id).length,p.name);});
-function ready(Type){const g=require('./helpers/kanto-fixture.cjs').existing(Type,now,{random:()=>.6});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;return g;}
+function ready(Type){const g=require('./helpers/kanto-fixture.cjs').existing(Type,now,{storyAuto:false,random:()=>.6});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.switchUntil=0;g.nextTick=now;return g;}
 for(const Type of [PC,Android]){
  test(Type.name+' towns mix adjacent reachable roads while each road keeps its own species',()=>{
   const g=ready(Type);g.data.kantoWorld.location='viridian';const expected=new Set(['kanto-route-1','kanto-route-2','kanto-route-22'].flatMap(k=>ids(raw[k])));

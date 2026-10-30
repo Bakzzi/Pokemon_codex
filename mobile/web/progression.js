@@ -66,6 +66,7 @@
     mapTick(now){
       const g=this.game,d=g.data,w=d.johtoUnlocked?d.johtoWorld:d.kantoWorld;
       if(g.handoffTravel?.(now)){this.dirty=true;return true;}
+      if(g.platform==='mobile'&&g.storyTravelTick?.(now)){this.dirty=true;return true;}
       if(g.platform!=='mobile'||!w?.journey&&!d.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind))||d.battle||d.pendingBattle||d.suspendedWild||d.pendingChallenge||g.presentation?.())return false;
       const walk=w?.walk,end=walk&&walk.at+walk.duration;
       // Fast-forward only the map's short arrival animation, never a battle result.

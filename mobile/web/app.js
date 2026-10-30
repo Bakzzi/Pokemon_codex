@@ -15,7 +15,7 @@ function action(action,value){
   let ok=true;
   try{
     if(['travel','world-pass','travel-bank','fossil-choice'].includes(action))refreshNative();
-    if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass','travel-bank','fossil-choice','npc-review'].includes(action))ok=game.requestAction(action,value);
+    if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass','travel-bank','fossil-choice','npc-review','story-travel'].includes(action))ok=game.requestAction(action,value);
     else if(action==='action-cancel')ok=game.cancelAction(value);
     else if(action==='capture-reserve')ok=game.reserveCapture(value,1);
     else if(action==='capture-cancel')ok=game.reserveCapture(value,0);

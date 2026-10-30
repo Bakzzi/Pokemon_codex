@@ -109,7 +109,7 @@ async function start(){
       if(action==='remote-key-file'&&panel){
         dialog.showOpenDialog(panel,{title:'SSH 개인키 선택',properties:['openFile']}).then(result=>{if(!result.canceled&&panel&&!panel.isDestroyed())panel.webContents.send('key-file',result.filePaths[0]);}).catch(()=>{});
       }
-      if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass','fossil-choice','npc-review'].includes(action))result=game.requestAction(action,value);
+      if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass','fossil-choice','npc-review','story-travel'].includes(action))result=game.requestAction(action,value);
       if(action==='action-cancel')result=game.cancelAction(value);
       if(action==='capture-reserve')result=game.reserveCapture(value,1);
       if(action==='capture-cancel')result=game.reserveCapture(value,0);

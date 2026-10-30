@@ -372,4 +372,4 @@ class Adventure extends Engine{
     return {...s,kantoWorld:world.snapshot(this,now),adventureRecords:require('./adventure-records.cjs').list(this),dialogueMemories:this.data.dialogueMemories||[],inventory:[...s.inventory,...items],scene:this.presentation(),activityMode:this.platform==='desktop'?'tokens':'locked',onboarding:story?.onboarding!=='done',discovery,rivals:this.rivalState(),rivalLocks:locks,rescue:rescue.snapshot(this),silph:silph.snapshot(this),safari:{...safari.snapshot(this),canStart:this.canChallenge('safari-start')},mansion:{...mansion.snapshot(this),canStart:this.canChallenge('mansion-investigate')},mobileGymHints:hints};
   }
 }
-module.exports={Adventure:require('./trainer-sequence.cjs').withTrainerSequence(require('./johto-adventure.cjs').withJohto(require('./kanto-adventure.cjs').withKanto(Adventure)))};
+module.exports={Adventure:require('./story-travel.cjs').withStoryTravel(require('./trainer-sequence.cjs').withTrainerSequence(require('./johto-adventure.cjs').withJohto(require('./kanto-adventure.cjs').withKanto(Adventure))))};

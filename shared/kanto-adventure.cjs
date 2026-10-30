@@ -203,7 +203,7 @@ function withKanto(Base){return class KantoAdventure extends Base{
   const here=world.current(this).id;
   if(here==='viridian'&&!s.parcelAt){this.dialogue('kanto-event','상록시티 상점 주인','gentleman',['태초마을의 오박사님을 아니? 부탁하신 물건이 막 도착했어.','박사님께 이 물건을 전해 주겠니?'],'kanto-guide:parcel',now);return true;}
   if(here==='pallet'&&s.parcelAt&&!s.deliveredAt){this.dialogue('oak','오박사','oak',['수고했다! 내가 부탁한 물건이구나.','이제 포켓몬 도감과 몬스터볼을 주마. 만난 포켓몬을 기록하고 새 동료를 데려와 보렴.'],'kanto-guide:deliver',now);return true;}
-  if(here==='pallet'&&s.deliveredAt){this.dialogue('kanto-event','그린의 누나','lass',['그린은 벌써 떠났어. 너도 여행을 시작하는구나.','이 타운맵을 가져가. 가고 싶은 곳을 고르면 길을 찾아갈 수 있을 거야.'],'kanto-guide:map',now);return true;}
+  if(here==='pallet'&&s.deliveredAt){this.dialogue('kanto-event','그린의 누나','lass',['그린은 벌써 떠났어. 너도 여행을 시작하는구나.','이 타운맵을 가져가. 모험할 길은 알아서 따라갈 거야. 잠시 멈추고 가고 싶은 곳을 골라도 돼.'],'kanto-guide:map',now);return true;}
   const target=s.parcelAt?'pallet':'viridian',w=this.data.kantoWorld;
   if(!w.journey){this.guiding=true;try{world.travel(this,target,now);}finally{this.guiding=false;}return true;}
   if(w.journey.index>=w.journey.segments.length)return world.advance(this,now);

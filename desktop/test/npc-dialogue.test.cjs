@@ -2,7 +2,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const PC=require('../adventure.cjs').Adventure,Android=require('../../mobile/adventure.cjs').Adventure,K=require('../../shared/kanto-journey.cjs');
 const now=Date.parse('2026-10-27T09:00:00Z');
-function ready(Type){const g=new Type({},now,{random:()=>.6});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.kantoStory.mapAt=now;g.data.kantoStory.dexAt=now;g.data.kantoWorld.location='vermilion';g.data.badges=['brock','misty','surge'];g.data.switchUntil=0;g.nextTick=now;return g;}
+function ready(Type){const g=new Type({},now,{storyAuto:false,random:()=>.6});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.kantoStory.mapAt=now;g.data.kantoStory.dexAt=now;g.data.kantoWorld.location='vermilion';g.data.badges=['brock','misty','surge'];g.data.switchUntil=0;g.nextTick=now;return g;}
 function rewardState(g){return structuredClone({owned:g.data.owned,items:g.data.kantoStory.items,cleared:g.data.kantoStory.cleared,confirmations:g.data.kantoStory.dialogueConfirmations,memories:g.data.dialogueMemories});}
 for(const [label,Type]of [['PC',PC],['Android',Android]]){
  test(label+' each local NPC remains manual through idle work, reload and unrelated completion',()=>{

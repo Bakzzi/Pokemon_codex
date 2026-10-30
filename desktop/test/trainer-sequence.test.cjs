@@ -5,7 +5,7 @@ const K=require('../../shared/kanto-journey.cjs'),J=require('../../shared/johto.
 const Progression=require('../../mobile/web/progression.js');globalThis.MobileCore={nursery:require('../daycare.cjs')};
 const now=Date.parse('2026-10-26T08:00:00Z');
 function fixture(Type,place='ss-anne'){
- const g=new Type({},now,{random:()=>.6});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.kantoStory.mapAt=now;g.data.kantoStory.dexAt=now;g.data.kantoStory.cleared['k-bill']=now;g.data.kantoWorld.location=place;g.gainXp(25,1000000,now);g.nextTick=now;g.data.switchUntil=0;g.data.workTokens=0;return g;
+ const g=new Type({},now,{storyAuto:false,random:()=>.6});g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.kantoStory.mapAt=now;g.data.kantoStory.dexAt=now;g.data.kantoStory.cleared['k-bill']=now;g.data.kantoWorld.location=place;g.gainXp(25,1000000,now);g.nextTick=now;g.data.switchUntil=0;g.data.workTokens=0;return g;
 }
 function intro(g,at){while(g.presentation()?.automatic){const s=g.presentation();at=Math.max(at,s.at+s.duration);assert.ok(g.sceneTick(at));}return Math.max(at,g.nextTick,g.data.switchUntil);}
 function win(g,at){at=intro(g,at);const b=g.data.battle;b.foeIndex=g.battleBoss().team.length-1;b.foe.hp=0;g.defeatOpponent(at);return g.data.switchUntil;}
