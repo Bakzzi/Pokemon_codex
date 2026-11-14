@@ -36,6 +36,7 @@ final class NotificationPartner {
     static RemoteViews view(Context c,String steps,State state) {
         RemoteViews view=new RemoteViews(c.getPackageName(),R.layout.notification_partner);
         view.setTextViewText(R.id.notification_partner_steps,steps);
+        view.setTextViewText(R.id.notification_partner_usage,"오늘 폰 사용 "+StepService.usageLabel(StepService.usageToday(c)));
         view.setTextViewText(R.id.notification_partner_name,state.id==0?"1번 슬롯이 비어 있어요":state.name+" · Lv."+state.level);
         view.setTextViewText(R.id.notification_partner_xp,"경험치 "+state.percent+"%");
         view.setViewVisibility(R.id.notification_partner_xp,state.id==0?View.GONE:View.VISIBLE);

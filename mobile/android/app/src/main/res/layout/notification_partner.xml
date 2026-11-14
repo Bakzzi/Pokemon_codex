@@ -16,6 +16,10 @@
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="6dp" android:textStyle="bold"
             android:textAppearance="@android:style/TextAppearance.Material.Notification.Title"/>
+        <TextView android:id="@+id/notification_partner_usage"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textAppearance="@android:style/TextAppearance.Material.Notification"/>
         <TextView android:id="@+id/notification_partner_xp"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="2dp"

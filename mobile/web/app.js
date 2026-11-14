@@ -4,6 +4,7 @@ let saved,game,progression,active=false,catchingUp=false,updatePaused=false,read
 try{saved=JSON.parse(native.load());game=new MobileCore.Adventure(saved.game||{});progression=new MobileProgression(game,saved.mobile);}catch(e){fatal=true;notice='저장을 읽지 못했어요. 기존 데이터는 보존돼요. 앱을 다시 열어 주세요.';$('app-notice').textContent=notice;native.reportError(String(e));}
 function save(){if(fatal)return false;const ok=native.save(JSON.stringify({format:1,game:game.data,mobile:progression.checkpoint(),savedAt:Date.now()}));if(!ok){fatal=true;active=false;notice='진행을 저장하지 못해 모험을 멈췄어요. 저장 공간을 확인해 주세요.';}if(ok)progression.dirty=false;lastSave=Date.now();return ok;}
 function snapshot(){return {...game.panelState(),phase:'working',source:{connected:true},compact:false,pinned:false,demo:false,notice,remote:{connections:[]}};}
+function formatUsage(millis){const minutes=Math.floor((Number.isFinite(millis)&&millis>0?millis:0)/60000);return Math.floor(minutes/60).toLocaleString('ko-KR')+'시간 '+minutes%60+'분';}
 function publish(){if(fatal){$('app-notice').textContent=notice;return;}const s=snapshot();for(const id of ['battle','panel'])$(id).contentWindow.postMessage({type:'state',state:s},location.origin);renderScene(s);$('app-notice').textContent=notice;}
 function openPanel(tab){panelTab=tab;panelDetail=false;$('back').textContent='‹ 모험으로';$('adventure').hidden=true;$('panel-wrap').hidden=false;$('panel').contentWindow.postMessage({type:'tab',tab},location.origin);publish();}
 function back(){if($('reset-confirm').open){$('reset-confirm').close();return true;}if($('settings').open){$('settings').close();return true;}if(!$('panel-wrap').hidden){if(panelDetail){panelDetail=false;$('back').textContent='‹ 모험으로';$('panel').contentWindow.postMessage({type:'dex-back'},location.origin);return true;}$('adventure').hidden=false;$('panel-wrap').hidden=true;return true;}return false;}
@@ -36,7 +37,13 @@ function refreshNative(){
   const toggle=$('steps-toggle');toggle.setAttribute('aria-checked',String(!!nativeState.stepsEnabled));toggle.disabled=!nativeState.sensorSupported&&!nativeState.stepsEnabled;$('steps-toggle-state').textContent=nativeState.stepsEnabled?'켜짐':'꺼짐';
   $('sensor-status').textContent=nativeState.sensor+(nativeState.monitorError?' '+nativeState.monitorError:'')+(nativeState.backgroundError?' '+nativeState.backgroundError:'');$('walk-status').textContent='모험의 발걸음';
   $('walk-today').textContent=(nativeState.todaySteps||0).toLocaleString('ko-KR')+'걸음';
+  $('walk-month').textContent=(nativeState.monthlySteps||0).toLocaleString('ko-KR')+'걸음';
+  const monthlySince=/^\d{4}-\d{2}-\d{2}$/.test(nativeState.monthlySince||'')?nativeState.monthlySince:'';
+  $('walk-month-note').hidden=!monthlySince;$('walk-month-note').textContent=monthlySince?'이번 달은 '+monthlySince.slice(5).split('-').map(Number).join('/')+'부터 집계해요.':'';
   $('walk-total').textContent=(nativeState.lifetimeSteps||0).toLocaleString('ko-KR')+'걸음';
+  $('usage-today').textContent=formatUsage(nativeState.usageTodayMillis);$('usage-month').textContent=formatUsage(nativeState.usageMonthlyMillis);$('usage-total').textContent=formatUsage(nativeState.usageMillis);
+  const usageSince=/^\d{4}-\d{2}-\d{2}$/.test(nativeState.usageSince||'')?nativeState.usageSince:'';
+  $('usage-note').hidden=!usageSince;$('usage-note').textContent=usageSince?'오늘·이번 달 사용 시간은 '+usageSince.slice(5).split('-').map(Number).join('/')+'부터 집계해요.':'';
   const bank=game.data.mapTravel?.bank||0;$('walk-movement').textContent='이동 '+Math.floor(bank/2000).toLocaleString('ko-KR')+'개 · '+(bank%2000).toLocaleString('ko-KR')+' / 2,000걸음';
   $('walk-note').textContent=nativeState.tracking?'걸음은 지도 이동에 사용해요. 폰을 사용하는 동안 20초마다 모험해요.':'폰을 사용하는 동안 20초마다 모험해요. 걸음 기록을 켜면 지도에서 이동할 수 있어요.';
   $('update-status').textContent=nativeState.update;$('update-confirm').hidden=!nativeState.pendingInstall;$('install-permission').hidden=nativeState.canInstall;
