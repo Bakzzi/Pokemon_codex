@@ -63,8 +63,9 @@
       s.at=Math.min(s.at,now-s.duration);const changed=g.sceneTick(now);if(changed)this.dirty=true;return changed;
     }
     movementActive(){const d=this.game.data,w=d.johtoUnlocked?d.johtoWorld:d.kantoWorld,bank=!!(w?.journey?.bankLeg||w?.journey?.bankCells>0||d.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind)&&a.useBank));return !!d.battle?.movementTrainer||bank&&(!d.battle||d.battle.kind==='wild'&&!d.battle.storyId)&&!d.pendingChallenge&&!d.suspendedWild;}
-    movementTick(now){
+    movementTick(now,canGrow=true){
       const g=this.game,d=g.data;if(!this.movementActive()||g.presentation?.())return false;
+      if(!canGrow&&(!d.battle||d.battle.kind!=='wild'||d.pendingBattle||d.battle.foe.hp<=0||d.battle.party[d.activeId]?.hp<=0))return false;
       if(g.handoffTravel?.(now)){this.dirty=true;return true;}
       if(d.battle&&!d.battle.movementTrainer)return false;
       const changed=d.battle?.movementTrainer?this.step(now):g.startMovementTrainer?.(now);
@@ -76,8 +77,9 @@
       if(g.data.pendingBattle)g.data.pendingBattle.at=Math.min(g.data.pendingBattle.at,now);
       for(const e of [g.data.animation,g.data.captureAnimation])if(e){e.at=Math.min(e.at,now-86400000);if(e.leadIn)e.leadIn.at=Math.min(e.leadIn.at,now-86400000);}
     }
-    mapTick(now){
+    mapTick(now,canGrow=true){
       const g=this.game,d=g.data,w=d.johtoUnlocked?d.johtoWorld:d.kantoWorld;
+      if(!canGrow&&d.battle&&(d.battle.kind!=='wild'||d.pendingBattle||d.battle.foe.hp<=0||d.battle.party[d.activeId]?.hp<=0))return false;
       if(g.handoffTravel?.(now)){this.dirty=true;return true;}
       if(g.platform==='mobile'&&g.storyTravelTick?.(now)){this.dirty=true;return true;}
       if(g.platform!=='mobile'||!w?.journey&&!d.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind))||d.battle||d.pendingBattle||d.suspendedWild||d.pendingChallenge||g.presentation?.())return false;
@@ -113,13 +115,13 @@
           if(this.challengeTick(now))this.dirty=true;
           break;
         }
-        if((active||this.movementActive())&&moves<512&&this.automaticSceneTick(now)){moves++;used--;continue;}
+        if(active&&moves<512&&this.automaticSceneTick(now)){moves++;used--;continue;}
         if(this.movementActive()){
           if(travelTurns>=128){this.moreMovement=true;break;}
-          this.skipWaits(now);
-          if(this.movementTick(now)){travelTurns++;used--;continue;}
+          if(active||!g.data.battle)this.skipWaits(now);
+          if(this.movementTick(now,active)){travelTurns++;used--;continue;}
         }
-        if(moves<512&&this.mapTick(now)){moves++;used--;continue;}
+        if(moves<512&&this.mapTick(now,active)){moves++;used--;continue;}
         if(!active||!available(usage,20000,this.usageConsumed))break;
         // Manual dialogue must preserve every unspent lock-time action.
         if(g.presentation?.()||!g.data.battle?.activityTrainer&&(g.data.battle?.kind==='trainer'||g.data.battle?.storyId))break;
@@ -134,12 +136,12 @@
       }
       while(moves<512){
         if(g.data.trainerSequence)break;
-        if((active||this.movementActive())&&this.automaticSceneTick(now)){moves++;continue;}
+        if(active&&this.automaticSceneTick(now)){moves++;continue;}
         if(this.movementActive()){
           if(travelTurns>=128){this.moreMovement=true;break;}
-          this.skipWaits(now);if(this.movementTick(now)){travelTurns++;continue;}
+          if(active||!g.data.battle)this.skipWaits(now);if(this.movementTick(now,active)){travelTurns++;continue;}
         }
-        if(!this.mapTick(now))break;moves++;
+        if(!this.mapTick(now,active))break;moves++;
       }
       return used;
     }

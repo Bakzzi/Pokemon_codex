@@ -130,6 +130,19 @@ test('bank travel does not flee manual challenges or reveal their result',()=>{
  const {g,p}=ready();p.observe({steps:20000});g.newWild(now);g.data.battle.storyId='road-snorlax';const b=g.data.battle;choose(g);g.requestAction('travel-bank',undefined,now);
  const start=here(g);p.catchUp({steps:20000,usageActive:true,usageMillis:0},now,0);assert.equal(g.data.battle,b);assert.deepEqual(here(g),start);assert.equal(g.data.mapTravel.bank,10000);assert.equal(g.data.journal.some(e=>e.kind==='flee'),false);
 });
+test('locked bank travel stops its trainer battle and preserves XP and its activity balance',()=>{
+ const {g,p}=forest();for(let i=0;i<10&&world(g).location!=='forest';i++)settle(g);
+ const at=Math.max(now,g.nextTick,g.data.switchUntil||0);assert.ok(g.startMovementTrainer(at));
+ const before=JSON.stringify(g.data.battle),xp=g.data.owned[g.data.activeId].xp;p.pause(at);
+ p.catchUp({steps:g.data.mapTravel.observed,usageActive:false,usageMillis:999999},at+3600000);
+ assert.equal(JSON.stringify(g.data.battle),before);assert.equal(g.data.owned[g.data.activeId].xp,xp);assert.equal(p.usageConsumed,0);
+});
+test('locked bank travel does not award an already-decided capture before the phone is used again',()=>{
+ const {g,p}=ready();p.observe({steps:20000});g.newWild(now);g.data.battle.foe.id=19;g.data.battle.foe.hp=1;g.random=()=>0;g.capture(now);
+ choose(g);g.requestAction('travel-bank',undefined,now);p.pause(now);const caught=plain(g.data.caught),xp=g.data.owned[g.data.activeId].xp;
+ p.catchUp({steps:20000,usageActive:false,usageMillis:999999},now+3600000,0);
+ assert.deepEqual(plain(g.data.caught),caught);assert.equal(g.data.owned[g.data.activeId].xp,xp);assert.ok(g.data.pendingBattle);
+});
 test('bank travel at the destination shows trainer progress instead of zero-step movement progress',()=>{
  const {g}=forest();for(let i=0;i<10&&world(g).location!=='forest';i++)settle(g);assert.equal(view(g).stepProgress,null);assert.equal(view(g).movement.phase,'trainer-wait');
  assert.ok(g.startMovementTrainer(Math.max(now,g.nextTick,g.data.switchUntil)));assert.equal(view(g).movement.phase,'trainer');assert.equal(view(g).stepProgress,null);
