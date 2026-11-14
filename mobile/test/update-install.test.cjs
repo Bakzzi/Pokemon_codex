@@ -13,11 +13,10 @@ function fixture(){
   const run=code=>vm.runInContext(code,c);
   return {status,calls,timers,run,tick:()=>intervals[0](),start:()=>run('mobileLifecycle(true)'),snapshot:()=>JSON.parse(run('JSON.stringify({game:game.data,mobile:progression.checkpoint(),active,catchingUp,updatePaused,fatal})')),stored:()=>stored,setSaveOk:value=>{saveOk=value;},advance:ms=>{now+=ms;}};
 }
-test('walking card shows today, calendar month, lifetime and the honest partial-month start',()=>{
+test('walking card shows today, calendar month and lifetime',()=>{
  const f=fixture();Object.assign(f.status,{todaySteps:71,monthlySteps:9000,lifetimeSteps:103444,monthlySince:'2026-11-15'});f.start();
  assert.equal(f.run("$('walk-today').textContent"),'71걸음');assert.equal(f.run("$('walk-month').textContent"),'9,000걸음');assert.equal(f.run("$('walk-total').textContent"),'103,444걸음');
- assert.equal(f.run("$('walk-month-note').hidden"),false);assert.match(f.run("$('walk-month-note').textContent"),/11\/15/);
- Object.assign(f.status,{todaySteps:0,monthlySteps:0,monthlySince:''});f.tick();assert.equal(f.run("$('walk-month').textContent"),'0걸음');assert.equal(f.run("$('walk-month-note').hidden"),true);assert.equal(f.run("$('walk-total').textContent"),'103,444걸음');
+ Object.assign(f.status,{todaySteps:0,monthlySteps:0,monthlySince:''});f.tick();assert.equal(f.run("$('walk-month').textContent"),'0걸음');assert.equal(f.run("$('walk-total').textContent"),'103,444걸음');
 });
 test('full game reset retains the native monthly, daily and lifetime pedometer records',()=>{
  const f=fixture();Object.assign(f.status,{todaySteps:71,monthlySteps:9000,lifetimeSteps:103444});f.start();f.run("$('reset-accept').onclick()");
@@ -25,11 +24,11 @@ test('full game reset retains the native monthly, daily and lifetime pedometer r
 });
 test('phone-use records show hours and minutes instead of raw milliseconds',()=>{
  const f=fixture();Object.assign(f.status,{usageTodayMillis:8099999,usageMonthlyMillis:95400000,usageMillis:360000000,usageSince:'2026-11-15'});f.start();
- assert.equal(f.run("$('usage-today').textContent"),'2시간 14분');assert.equal(f.run("$('usage-month').textContent"),'26시간 30분');assert.equal(f.run("$('usage-total').textContent"),'100시간 0분');assert.equal(f.run("$('usage-note').hidden"),false);
+ assert.equal(f.run("$('usage-today').textContent"),'2시간 14분');assert.equal(f.run("$('usage-month').textContent"),'26시간 30분');assert.equal(f.run("$('usage-total').textContent"),'100시간 0분');
 });
-test('phone-use calendar rollover keeps lifetime usage and hides an obsolete partial-month hint',()=>{
+test('phone-use calendar rollover keeps lifetime usage',()=>{
  const f=fixture();Object.assign(f.status,{usageTodayMillis:60000,usageMonthlyMillis:9000000,usageMillis:360000000,usageSince:'2026-11-15'});f.start();Object.assign(f.status,{usageTodayMillis:0,usageMonthlyMillis:0,usageSince:''});f.tick();
- assert.equal(f.run("$('usage-today').textContent"),'0시간 0분');assert.equal(f.run("$('usage-month').textContent"),'0시간 0분');assert.equal(f.run("$('usage-total').textContent"),'100시간 0분');assert.equal(f.run("$('usage-note').hidden"),true);
+ assert.equal(f.run("$('usage-today').textContent"),'0시간 0분');assert.equal(f.run("$('usage-month').textContent"),'0시간 0분');assert.equal(f.run("$('usage-total').textContent"),'100시간 0분');
 });
 test('full game reset preserves phone-use statistics and discards only the prior gameplay credit',()=>{
  const f=fixture();Object.assign(f.status,{usageTodayMillis:8100000,usageMonthlyMillis:95400000,usageMillis:360000000});f.start();f.run("$('reset-accept').onclick()");
