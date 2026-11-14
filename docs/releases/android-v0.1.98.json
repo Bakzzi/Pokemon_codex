@@ -1,0 +1,77 @@
+{
+  "version": "0.1.98",
+  "versionCode": 100,
+  "platform": "android",
+  "channel": "android-preview",
+  "sourceCommit": "b41cac38d42b28d1afb55b5ccdc52a173eca83b4",
+  "sourceTag": "android-v0.1.98",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/android-v0.1.98",
+  "package": "io.github.bakzzi.pokemonidle",
+  "minSdk": 31,
+  "targetSdk": 36,
+  "artifact": "Pokemon-Idle-0.1.98.apk",
+  "bytes": 11845844,
+  "sha256": "f3cb52616994ccfcbc222470d0972feed8b38c63d4f5d1008abbde956b079029",
+  "signingCertificateSha256": "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+  "toolchain": {
+    "node": "22.11.0",
+    "gradle": "8.13",
+    "agp": "8.13.0",
+    "compileSdk": 36,
+    "buildTools": "36.1.0",
+    "javaScriptEngine": "androidx.javascriptengine:javascriptengine:1.1.1",
+    "dependencyLockfile": "mobile/android/app/gradle.lockfile"
+  },
+  "validation": {
+    "releaseBuild": "passed",
+    "lintRelease": "passed",
+    "targetedUiTestsPassed": 18,
+    "embeddedApkUiScenariosPassed": 8,
+    "embeddedApkChecksUseElectronWithNativeBridgeFixture": true,
+    "embeddedFilesMatched": 466,
+    "nativeAnimatedSpriteFilesMatched": 252,
+    "embeddedBundleSha256": "574279e978873cfef5e09f3fb301f483d07e842558437616cdb32edb77d2db2d",
+    "apkSignatureVerified": true,
+    "nativeAccountingUnchangedFrom": "0.1.97",
+    "physicalDeviceVerified": false
+  },
+  "activity": {
+    "phoneUseMillisecondsPerAction": 20000,
+    "foregroundAppOrUnlockedPhone": true,
+    "otherAppUseRunsStartedChallenges": true,
+    "lockedGrowthEnabled": false,
+    "legacyLockBalanceAwards": false,
+    "walkingRewardsEnabled": false,
+    "manualDialogueAndChoices": true
+  },
+  "mapTravel": {
+    "recordedStepsPerCell": 2000,
+    "movementResourceIntervalHours": 12,
+    "explicitBankUse": true,
+    "independentOfBattleActivity": true
+  },
+  "retention": {
+    "latestAndroid": "0.1.98",
+    "previousAndroid": "0.1.97"
+  },
+  "records": {
+    "walking": [
+      "today",
+      "calendar-month",
+      "lifetime"
+    ],
+    "phoneUse": [
+      "today",
+      "calendar-month",
+      "lifetime"
+    ],
+    "phoneUseFormat": "hours and whole minutes",
+    "calendarTimezone": "device-local",
+    "legacyWalkingMonth": "retain internal metadata; no in-game migration explanation",
+    "legacyUsagePeriods": "retain internal metadata; no in-game migration explanation",
+    "dailyReset": "local midnight",
+    "monthlyReset": "local first day of month",
+    "resetDoesNotChangeMovementOrGameplayCredit": true,
+    "expandedNotification": "today/monthly steps plus today phone-use time"
+  }
+}
