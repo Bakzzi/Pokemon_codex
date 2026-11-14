@@ -1,0 +1,58 @@
+{
+  "version": "0.1.96",
+  "versionCode": 98,
+  "platform": "android",
+  "channel": "android-preview",
+  "sourceCommit": "a98447cd42a69803732760ac3bd498959026fd63",
+  "sourceTag": "android-v0.1.96",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/android-v0.1.96",
+  "package": "io.github.bakzzi.pokemonidle",
+  "minSdk": 31,
+  "targetSdk": 36,
+  "artifact": "Pokemon-Idle-0.1.96.apk",
+  "bytes": 11842356,
+  "sha256": "63bc6702142419e02eef9aee2a11a1f0377493cee9e61203631748f86dac878f",
+  "signingCertificateSha256": "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+  "toolchain": {
+    "node": "22.11.0",
+    "gradle": "8.13",
+    "agp": "8.13.0",
+    "compileSdk": 36,
+    "buildTools": "36.1.0",
+    "javaScriptEngine": "androidx.javascriptengine:javascriptengine:1.1.1",
+    "dependencyLockfile": "mobile/android/app/gradle.lockfile"
+  },
+  "validation": {
+    "releaseBuild": "passed",
+    "lintRelease": "passed",
+    "instrumentationApkBuild": "passed",
+    "nodeTestsPassed": 997,
+    "javaLedgerSuitesPassed": 4,
+    "embeddedApkUiScenariosPassed": 9,
+    "embeddedApkChecksUseElectronWithNativeBridgeFixture": true,
+    "embeddedFilesMatched": 466,
+    "nativeAnimatedSpriteFilesMatched": 252,
+    "embeddedBundleSha256": "574279e978873cfef5e09f3fb301f483d07e842558437616cdb32edb77d2db2d",
+    "apkSignatureVerified": true,
+    "physicalDeviceVerified": false
+  },
+  "activity": {
+    "phoneUseMillisecondsPerAction": 20000,
+    "foregroundAppOrUnlockedPhone": true,
+    "otherAppUseRunsStartedChallenges": true,
+    "lockedGrowthEnabled": false,
+    "legacyLockBalanceAwards": false,
+    "walkingRewardsEnabled": false,
+    "manualDialogueAndChoices": true
+  },
+  "mapTravel": {
+    "recordedStepsPerCell": 2000,
+    "movementResourceIntervalHours": 12,
+    "explicitBankUse": true,
+    "independentOfBattleActivity": true
+  },
+  "retention": {
+    "latestAndroid": "0.1.96",
+    "previousAndroid": "0.1.95"
+  }
+}
