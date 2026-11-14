@@ -16,7 +16,7 @@ function fixture(){
 test('parked app displays and banks steps without granting battles or experience',()=>{
   const f=fixture();f.run("game.requestAction('story-travel',false)");f.start();const before=f.snapshot().game;
   for(const steps of [9,10,20,50000]){f.status.steps=steps;f.tick();f.advance(10000);}
-  const after=f.snapshot().game;assert.equal(after.mapTravel.bank,before.mapTravel.bank+50000);assert.deepEqual({...after,mapTravel:null},{...before,mapTravel:null});assert.equal(f.snapshot().mobile.consumed,0);assert.equal(f.snapshot().mobile.lockConsumed,0);
+  const after=f.snapshot().game;assert.equal(after.mapTravel.bank,before.mapTravel.bank+50000);assert.deepEqual({...after,mapTravel:null},{...before,mapTravel:null});assert.equal(f.snapshot().mobile.consumed,0);assert.equal(f.snapshot().mobile.usageConsumed,0);
 });
 test('opening the app grants one movement compensation and preserves its receipt through reload and full reset',()=>{
  const f=fixture();f.start();let s=f.stored();assert.equal(s.game.mapTravel.bank,2000);assert.equal(s.mobile.movementFixRewardClaimed,true);assert.equal(f.run('notice'),'업데이트 보상으로 이동 자원 1개를 받았어요.');
@@ -38,8 +38,8 @@ test('a ready update takes priority even when the foreground game is not active'
   const f=fixture();f.run('active=false');f.status.updateReady=true;f.tick();assert.deepEqual(f.calls,['save','install']);
 });
 test('a ready update stops queued lock catch-up before another action is spent',()=>{
-  const f=fixture();f.status.lockMillis=10000000;f.start();const consumed=f.snapshot().mobile.consumed;assert.ok(f.timers.length);
-  f.status.updateReady=true;f.timers.shift()();assert.equal(f.snapshot().mobile.consumed,consumed);assert.equal(f.stored().mobile.consumed,consumed);assert.equal(f.calls.at(-1),'install');
+  const f=fixture();f.status.usageActive=true;f.status.usageMillis=10000000;f.start();const consumed=f.snapshot().mobile.usageConsumed;assert.ok(f.timers.length);
+  f.status.updateReady=true;f.timers.shift()();assert.equal(f.snapshot().mobile.usageConsumed,consumed);assert.equal(f.stored().mobile.usageConsumed,consumed);assert.equal(f.calls.at(-1),'install');
 });
 test('failed atomic save prevents installation and further game actions',()=>{
   const f=fixture();f.start();f.setSaveOk(false);f.status.updateReady=true;f.calls.length=0;f.tick();assert.deepEqual(f.calls,['save']);assert.equal(f.snapshot().fatal,true);f.tick();assert.deepEqual(f.calls,['save']);
@@ -59,10 +59,10 @@ test('native resume reloads the saved background result before continuing the UI
   assert.equal(f.snapshot().game.fixtureMarker,'background result');assert.equal(f.snapshot().mobile.consumed,40);
 });
 test('reset requires a separate confirmation, discards progress and old walking rewards, then persists Oak',()=>{
-  const f=fixture();f.status.steps=3210;f.status.lockMillis=654321;f.run('game.addPokemon(150,80,"fixture",Date.now());game.data.badges=["brock"];game.data.inventory[83]=4;save();');const before=f.stored();
+  const f=fixture();f.status.steps=3210;f.status.usageMillis=654321;f.run('game.addPokemon(150,80,"fixture",Date.now());game.data.badges=["brock"];game.data.inventory[83]=4;save();');const before=f.stored();
   f.run('$("reset-open").onclick()');assert.equal(f.run('$("reset-confirm").open'),true);assert.deepEqual(f.stored(),before);
   f.run('$("reset-cancel").onclick()');assert.deepEqual(f.stored(),before);
   f.run('$("reset-open").onclick();$("reset-accept").onclick()');const s=f.stored();
-  assert.equal(Object.keys(s.game.owned).length,1);assert.deepEqual(Object.keys(s.game.caught),['25']);assert.deepEqual(s.game.badges,[]);assert.deepEqual(s.game.inventory,{});assert.equal(s.mobile.consumed,3210);assert.equal(s.mobile.lockConsumed,654321);assert.equal(s.game.mobileStory.scene.sprite,'oak');assert.equal(f.run('$("reset-confirm").open'),false);
+  assert.equal(Object.keys(s.game.owned).length,1);assert.deepEqual(Object.keys(s.game.caught),['25']);assert.deepEqual(s.game.badges,[]);assert.deepEqual(s.game.inventory,{});assert.equal(s.mobile.consumed,3210);assert.equal(s.mobile.usageConsumed,654321);assert.equal(s.game.mobileStory.scene.sprite,'oak');assert.equal(f.run('$("reset-confirm").open'),false);
   f.run('mobileLifecycle(true,true)');assert.equal(f.snapshot().game.mobileStory.scene.sprite,'oak');assert.equal(f.snapshot().mobile.consumed,3210);
 });

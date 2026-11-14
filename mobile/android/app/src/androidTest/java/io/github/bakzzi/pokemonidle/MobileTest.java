@@ -103,18 +103,18 @@ public final class MobileTest extends Instrumentation {
                     long sendDeadline=SystemClock.elapsedRealtime()+2500;while(!"true".equals(js("game.presentation()?.mode==='sendout'"))&&SystemClock.elapsedRealtime()<sendDeadline)Thread.sleep(50);
                     require("true".equals(js("game.presentation()?.mode==='sendout'&&game.presentation().sprite===game.battleBoss().sprite&&game.data.battle.turn===0")),"Portrait did not precede timed sendout for "+id);checks++;
                     Thread.sleep(3000);
-                    require("true".equals(js("game.presentation()===null&&game.data.battle.turn===0&&game.data.workTokens===0&&progression.lockConsumed===0")),"Timed visuals stalled or spent an action for "+id);checks++;
+                    require("true".equals(js("game.presentation()===null&&game.data.battle.turn===0&&game.data.workTokens===0&&progression.usageConsumed===0")),"Timed visuals stalled or spent an action for "+id);checks++;
                 }
                 result.putInt("automaticTrainerChecks",checks);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
             if("walking-live".equals(arguments.getString("mode"))){
                 StepService service=StepService.instance;require(service!=null,"Step service missing");
-                js("game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);game.data.mobileStory.onboarding='done';game.data.mobileStory.scene=null;game.nextTick=0;game.data.switchUntil=0;refreshNative();progression=new MobileProgression(game,{consumed:nativeState.steps,lockConsumed:nativeState.lockMillis});progression.observe(nativeState);progression.resume(Date.now());active=true;catchingUp=false;save();publish()");
+                js("game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);game.data.mobileStory.onboarding='done';game.data.mobileStory.scene=null;game.nextTick=0;game.data.switchUntil=0;refreshNative();progression=new MobileProgression(game,{consumed:nativeState.steps,usageConsumed:nativeState.usageMillis});progression.observe(nativeState);progression.resume(Date.now());active=true;catchingUp=false;save();publish()");
                 long base=SystemClock.elapsedRealtimeNanos(),time=System.currentTimeMillis();
                 String before=js("JSON.stringify({...game.data,mapTravel:null})");
                 runOnMainSync(()->{service.recordSample(100,base,time,time);service.recordSample(110,base+1,time,time);});Thread.sleep(750);
                 require(before.equals(js("JSON.stringify({...game.data,mapTravel:null})")),"Ten steps awarded a game action");
-                require("true".equals(js("game.data.battle===null&&progression.lockConsumed===0")),"Walking started a battle or used lock time");
+                require("true".equals(js("game.data.battle===null&&progression.usageConsumed===0")),"Walking started a battle or used lock time");
                 require("true".equals(js("globalThis.mapBefore=JSON.stringify(game.panelState().kantoWorld.position);game.requestAction('travel',{location:'route-1',position:{x:44,y:92}},Date.now())")),"Map journey was not accepted");
                 runOnMainSync(()->service.recordSample(2109,base+2,time,time));Thread.sleep(750);
                 require("true".equals(js("JSON.stringify(game.panelState().kantoWorld.position)===mapBefore&&game.data.mapTravel.credit===1999")),"Map moved before 2000 new steps");
@@ -122,12 +122,12 @@ public final class MobileTest extends Instrumentation {
                 long end=SystemClock.elapsedRealtime()+10000;
                 while(!"true".equals(js("JSON.stringify(game.panelState().kantoWorld.position)!==mapBefore"))&&SystemClock.elapsedRealtime()<end)Thread.sleep(100);
                 require("true".equals(js("game.panelState().kantoWorld.position.x===44&&game.panelState().kantoWorld.position.y===92&&game.data.mapTravel.credit===0")),"2000 steps did not move exactly one map cell");
-                require("true".equals(js("game.data.battle===null&&progression.lockConsumed===0&&Object.values(game.data.owned).every(p=>p.level===5)")),"Map walking granted a battle or levels");
+                require("true".equals(js("game.data.battle===null&&progression.usageConsumed===0&&Object.values(game.data.owned).every(p=>p.level===5)")),"Map walking granted a battle or levels");
                 Thread.sleep(750);runOnMainSync(()->service.recordSample(2110,base+3,time,time));Thread.sleep(500);
                 require("true".equals(js("game.data.mapTravel.credit===0&&game.data.battle===null")),"Walking sample replayed");
                 require(MainActivity.visible&&!StepService.locked(getTargetContext()),"Fixture was not unlocked and foreground");
                 runOnMainSync(()->service.recordSample(7110,base+4,time,time));Thread.sleep(1000);
-                require("true".equals(js("game.data.mapTravel.bank===5010&&game.data.battle===null&&progression.lockConsumed===0")),"Surplus walking did not bank without battle actions");
+                require("true".equals(js("game.data.mapTravel.bank===5010&&game.data.battle===null&&progression.usageConsumed===0")),"Surplus walking did not bank without battle actions");
                 require("true".equals(js("game.requestAction('travel',{location:'viridian',position:{x:44,y:84}},Date.now())&&game.requestAction('travel-bank',null,Date.now())")),"Stored movement could not be selected");
                 Thread.sleep(1500);require("true".equals(js("game.panelState().kantoWorld.position.y===84&&game.data.mapTravel.bank===3010&&game.data.mapTravel.credit===0")),"Bank travel did not spend exactly one move without new steps");
                 screenshot("walking-map-only.png");result.putInt("foregroundMovementOnlyChecks",10);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
@@ -142,18 +142,18 @@ public final class MobileTest extends Instrumentation {
                 activity.getApplication().registerActivityLifecycleCallbacks(lockLifecycle);
                 require(StepService.instance!=null,"Lock monitor did not start without step permission");
                 require(!getTargetContext().getSharedPreferences("steps",0).getBoolean("enabled",false),"Expected sensor-free fixture");
-                js("game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);refreshNative();progression=new MobileProgression(game,{consumed:nativeState.steps,lockConsumed:nativeState.lockMillis});progression.resume(Date.now());active=true;save();publish()");
+                js("game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);refreshNative();progression=new MobileProgression(game,{consumed:nativeState.steps,usageConsumed:nativeState.usageMillis});progression.resume(Date.now());active=true;save();publish()");
                 String unchanged=js("JSON.stringify(game.data)");Thread.sleep(11000);require(unchanged.equals(js("JSON.stringify(game.data)")),"Unlocked foreground generated adventure actions");
                 runOnMainSync(()->activity.startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));
                 for(int i=0;i<100&&AdventureStore.get(getTargetContext()).backgroundSnapshot()==null;i++)Thread.sleep(50);
-                require(!MainActivity.visible,"App did not leave foreground");long baseline=getTargetContext().getSharedPreferences("steps",0).getLong("lockMillis",0);
+                require(!MainActivity.visible,"App did not leave foreground");long baseline=getTargetContext().getSharedPreferences("steps",0).getLong("usageMillis",0);
                 String homeGame=new JSONObject(readSave()).getJSONObject("game").toString();Thread.sleep(11000);
                 require(homeGame.equals(new JSONObject(readSave()).getJSONObject("game").toString()),"Using another app generated adventure actions");
-                require(baseline==getTargetContext().getSharedPreferences("steps",0).getLong("lockMillis",0),"Unlocked home time was counted");
+                require(baseline==getTargetContext().getSharedPreferences("steps",0).getLong("usageMillis",0),"Unlocked home time was counted");
                 try(InputStream cmd=new ParcelFileDescriptor.AutoCloseInputStream(getUiAutomation().executeShellCommand("input keyevent KEYCODE_SLEEP"))){cmd.readAllBytes();}
                 BackgroundAdventure runner=BackgroundAdventure.get(getTargetContext());JSONObject lockedSave=null;long end=SystemClock.elapsedRealtime()+45000;
-                do{Thread.sleep(500);runner.barrier().get(35,TimeUnit.SECONDS);lockedSave=new JSONObject(readSave());}while(lockedSave.getJSONObject("mobile").optLong("lockConsumed",0)<baseline+20000&&SystemClock.elapsedRealtime()<end);
-                require(lockedSave.getJSONObject("mobile").getLong("lockConsumed")>=baseline+20000,"Lock time did not produce a background action");
+                do{Thread.sleep(500);runner.barrier().get(35,TimeUnit.SECONDS);lockedSave=new JSONObject(readSave());}while(lockedSave.getJSONObject("mobile").optLong("usageConsumed",0)<baseline+20000&&SystemClock.elapsedRealtime()<end);
+                require(lockedSave.getJSONObject("mobile").getLong("usageConsumed")>=baseline+20000,"Lock time did not produce a background action");
                 require(!lockedSave.getJSONObject("game").isNull("battle"),"Headless lock action did not create an encounter");
                 require(lockedSave.getJSONObject("mobile").getLong("consumed")==0,"Time action spent steps");
                 try(InputStream cmd=new ParcelFileDescriptor.AutoCloseInputStream(getUiAutomation().executeShellCommand("input keyevent KEYCODE_WAKEUP"))){cmd.readAllBytes();}
@@ -161,7 +161,7 @@ public final class MobileTest extends Instrumentation {
                 try(InputStream cmd=new ParcelFileDescriptor.AutoCloseInputStream(getUiAutomation().executeShellCommand("am start -W -n io.github.bakzzi.pokemonidle/.MainActivity"))){cmd.readAllBytes();}
                 for(int i=0;i<100&&resumedActivity==null;i++)Thread.sleep(50);require(resumedActivity!=null&&MainActivity.visible,"App did not resume after unlock");
                 activity=resumedActivity;activity.getApplication().unregisterActivityLifecycleCallbacks(lockLifecycle);web=(WebView)field.get(activity);Thread.sleep(1000);waitReady();
-                require("true".equals(js("progression.lockConsumed>=20000&&!catchingUp")),"UI did not reload background lock cursor");
+                require("true".equals(js("progression.usageConsumed>=20000&&!catchingUp")),"UI did not reload background lock cursor");
                 String afterUnlock=js("JSON.stringify(game.data)");Thread.sleep(11000);require(afterUnlock.equals(js("JSON.stringify(game.data)")),"Wild battle continued while unlocked");
                 require("true".equals(js("game.data.mobileStory.rivals['rival-brock'].state='won';game.data.pendingBattle=null;game.data.battle=null;game.newWild(Date.now()-10000);game.nextTick=Date.now();game.data.switchUntil=Date.now();globalThis.pausedFoe=JSON.stringify(game.data.battle.foe);action('challenge',0);true")),"Challenge request failed");
                 Thread.sleep(1500);require("true".equals(js("game.data.battle.kind==='trainer'&&JSON.stringify(game.data.suspendedWild.foe)===pausedFoe&&!!game.presentation()")),"Foreground challenge did not suspend wild encounter");
@@ -211,15 +211,15 @@ public final class MobileTest extends Instrumentation {
                 activity.getApplication().registerActivityLifecycleCallbacks(lifecycle);
                 runOnMainSync(()->activity.startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));Thread.sleep(800);require(!MainActivity.visible,"Activity did not pause for Safari");
                 AdventureStore safariStore=AdventureStore.get(getTargetContext());for(int i=0;i<100&&safariStore.backgroundSnapshot()==null;i++)Thread.sleep(50);require(safariStore.backgroundSnapshot()!=null,"Safari UI save ownership was not released");
-                getTargetContext().getSharedPreferences("steps",0).edit().putLong("lockMillis",3000000).commit();BackgroundAdventure runner=BackgroundAdventure.get(getTargetContext());runner.request();
+                getTargetContext().getSharedPreferences("steps",0).edit().putLong("usageMillis",3000000).commit();BackgroundAdventure runner=BackgroundAdventure.get(getTargetContext());runner.request();
                 long deadline=SystemClock.elapsedRealtime()+45000;JSONObject safariSave;
-                do{runner.barrier().get(45,TimeUnit.SECONDS);safariSave=new JSONObject(readSave());if(safariSave.getJSONObject("mobile").getLong("lockConsumed")==3000000)break;Thread.sleep(50);}while(SystemClock.elapsedRealtime()<deadline);
-                require(safariSave.getJSONObject("mobile").getLong("lockConsumed")==3000000,"Safari did not consume recorded steps");
+                do{runner.barrier().get(45,TimeUnit.SECONDS);safariSave=new JSONObject(readSave());if(safariSave.getJSONObject("mobile").getLong("usageConsumed")==3000000)break;Thread.sleep(50);}while(SystemClock.elapsedRealtime()<deadline);
+                require(safariSave.getJSONObject("mobile").getLong("usageConsumed")==3000000,"Safari did not consume recorded steps");
                 JSONObject safari=safariSave.getJSONObject("game").getJSONObject("mobileStory").getJSONObject("safari");require(safari.isNull("trip"),"Safari did not return in the headless engine");require(safari.getJSONObject("last").getJSONArray("encounters").length()==30,"Safari headless encounters were not persisted");
                 try(InputStream launch=new ParcelFileDescriptor.AutoCloseInputStream(getUiAutomation().executeShellCommand("am start -W -n io.github.bakzzi.pokemonidle/.MainActivity"))){String output=new String(launch.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8);require(output.contains("Status: ok"),"Safari return launch failed");}
                 for(int i=0;i<100&&resumedActivity==null;i++)Thread.sleep(50);require(resumedActivity!=null,"Safari activity did not resume");
                 activity=resumedActivity;activity.getApplication().unregisterActivityLifecycleCallbacks(lifecycle);web=(WebView)field.get(activity);waitReady();Thread.sleep(500);
-                require("true".equals(js("active=false;progression.lockConsumed===3000000&&!game.data.mobileStory.safari.trip&&game.data.mobileStory.safari.last.encounters.length===30")),"UI did not reload Safari results");
+                require("true".equals(js("active=false;progression.usageConsumed===3000000&&!game.data.mobileStory.safari.trip&&game.data.mobileStory.safari.last.encounters.length===30")),"UI did not reload Safari results");
                 result.putInt("backgroundSafariChecks",5);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
             if("discovery".equals(arguments.getString("mode"))){
@@ -254,11 +254,11 @@ public final class MobileTest extends Instrumentation {
                 result.putString("slots",layoutChecks("slot-retention.js"));screenshot("slot-retention.png");
                 runOnMainSync(()->activity.startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));Thread.sleep(800);require(!MainActivity.visible,"Activity did not pause");
                 AdventureStore slotStore=AdventureStore.get(getTargetContext());for(int i=0;i<100&&slotStore.backgroundSnapshot()==null;i++)Thread.sleep(50);require(slotStore.backgroundSnapshot()!=null,"UI save ownership was not released");
-                long target=new JSONObject(readSave()).getJSONObject("mobile").getLong("lockConsumed")+80000;
-                getTargetContext().getSharedPreferences("steps",0).edit().putLong("lockMillis",target).commit();BackgroundAdventure runner=BackgroundAdventure.get(getTargetContext());runner.request();
+                long target=new JSONObject(readSave()).getJSONObject("mobile").getLong("usageConsumed")+80000;
+                getTargetContext().getSharedPreferences("steps",0).edit().putLong("usageMillis",target).commit();BackgroundAdventure runner=BackgroundAdventure.get(getTargetContext());runner.request();
                 long deadline=SystemClock.elapsedRealtime()+45000;JSONObject savedSlots;
-                do{runner.barrier().get(45,TimeUnit.SECONDS);savedSlots=new JSONObject(readSave());if(savedSlots.getJSONObject("mobile").getLong("lockConsumed")==target)break;Thread.sleep(50);}while(SystemClock.elapsedRealtime()<deadline);
-                require(savedSlots.getJSONObject("mobile").getLong("lockConsumed")==target,"Background fixture did not finish: "+savedSlots.getJSONObject("mobile")+" target="+target);
+                do{runner.barrier().get(45,TimeUnit.SECONDS);savedSlots=new JSONObject(readSave());if(savedSlots.getJSONObject("mobile").getLong("usageConsumed")==target)break;Thread.sleep(50);}while(SystemClock.elapsedRealtime()<deadline);
+                require(savedSlots.getJSONObject("mobile").getLong("usageConsumed")==target,"Background fixture did not finish: "+savedSlots.getJSONObject("mobile")+" target="+target);
                 require(savedSlots.getJSONObject("game").getJSONArray("slots").isNull(2),"Background refilled slot three");require(savedSlots.getJSONObject("game").getJSONObject("owned").has("1"),"Removed companion was lost");
                 // Return through the system launcher identity, like a user opening
                 // the app; an app starting itself from the background can be denied.
@@ -277,15 +277,15 @@ public final class MobileTest extends Instrumentation {
                 result.putString("moves",layoutChecks("move-details.js"));screenshot("move-details.png");result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
             if("background-return".equals(arguments.getString("mode"))){
-                require("true".equals(js("active=false;progression.pause(Date.now());save();progression.lockConsumed===40&&game.data.fixtureMarker==='UI retained'")),"UI did not load completed background results");
+                require("true".equals(js("active=false;progression.pause(Date.now());save();progression.usageConsumed===40&&game.data.fixtureMarker==='UI retained'")),"UI did not load completed background results");
                 String current=readSave();JSONObject stale=new JSONObject(current);stale.getJSONObject("mobile").put("consumed",0);Field loaded=MainActivity.class.getDeclaredField("uiLoaded");loaded.setAccessible(true);loaded.set(activity,false);
                 require("true".equals(js("Android.save("+JSONObject.quote(stale.toString())+")")),"Unloaded UI save was not ignored");require(current.equals(readSave()),"A timer saved stale UI data before resume reload");js("Android.load()");
                 runOnMainSync(()->activity.startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));Thread.sleep(800);require(!MainActivity.visible,"Activity did not leave foreground");
                 getTargetContext().getSharedPreferences("steps",0).edit().putLong("total",50).commit();BackgroundAdventure runner=BackgroundAdventure.get(getTargetContext());runner.request();runner.barrier().get(45,TimeUnit.SECONDS);
                 require(new JSONObject(readSave()).getJSONObject("mobile").getLong("consumed")==50,"No action completed while Activity was paused");
                 runOnMainSync(()->getTargetContext().startActivity(new Intent(getTargetContext(),MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));Thread.sleep(1000);
-                require("true".equals(js("progression.lockConsumed===50&&game.data.fixtureMarker==='UI retained'")),"Foreground return lost background progress");
-                js("active=false;mobileLifecycle(true,true);active=false");require("true".equals(js("progression.lockConsumed===50")),"Foreground paid walking actions again");
+                require("true".equals(js("progression.usageConsumed===50&&game.data.fixtureMarker==='UI retained'")),"Foreground return lost background progress");
+                js("active=false;mobileLifecycle(true,true);active=false");require("true".equals(js("progression.usageConsumed===50")),"Foreground paid walking actions again");
                 result.putInt("returnChecks",5);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
             if("update-immediate".equals(arguments.getString("mode"))){
@@ -306,7 +306,7 @@ public final class MobileTest extends Instrumentation {
                 require("true".equals(js("['battle','panel'].every(id=>!document.getElementById(id).contentDocument.body.textContent.includes('momozzing'))")),"Credits still appear outside Settings");
                 require("true".equals(js("document.documentElement.scrollWidth<=innerWidth&&document.querySelector('.walk-card').getBoundingClientRect().right<=innerWidth")),"Walking card overflows");screenshot("walking-card.png");
                 js("document.getElementById('settings-open').click()");require("true".equals(js("document.getElementById('settings').querySelector('.credit').checkVisibility()&&document.getElementById('settings').textContent.includes('모모찡 · momozzing')")),"Settings credit missing");js("document.getElementById('settings-close').click()");
-                require("true".equals(js("(()=>{const n=Date.now(),old=n-3600000,g=new MobileCore.Game({},old),reopened=new MobileCore.Game(JSON.parse(JSON.stringify(g.data)),n),p=new MobileProgression(reopened,{consumed:0,pausedAt:old});p.resume(n);return reopened.nextTick<=n&&p.catchUp({steps:0,lockMillis:20000},n+10000)===1&&!!reopened.data.battle})()")),"Reopened game waits through offline time again");
+                require("true".equals(js("(()=>{const n=Date.now(),old=n-3600000,g=new MobileCore.Game({},old),reopened=new MobileCore.Game(JSON.parse(JSON.stringify(g.data)),n),p=new MobileProgression(reopened,{consumed:0,pausedAt:old});p.resume(n);return reopened.nextTick<=n&&p.catchUp({steps:0,usageMillis:20000},n+10000)===1&&!!reopened.data.battle})()")),"Reopened game waits through offline time again");
                 NotificationManager nm=getTargetContext().getSystemService(NotificationManager.class);nm.createNotificationChannel(new NotificationChannel("walking","걸음 모험",NotificationManager.IMPORTANCE_LOW));
                 nm.notify(7,StepService.notification(getTargetContext(),StepService.today(getTargetContext())));Thread.sleep(200);
                 walkingNotification(nm,"오늘 234걸음");
@@ -364,7 +364,7 @@ public final class MobileTest extends Instrumentation {
                 result.putString("screenshot",screenshot.getAbsolutePath());result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
             if("preserved".equals(arguments.getString("mode"))){
-                JSONObject save=new JSONObject(readSave());require(save.getJSONObject("mobile").getLong("lockConsumed")>=2000000,"Consumed step cursor lost");require(getTargetContext().getSharedPreferences("verify",0).getString("marker","").equals("preserved"),"Native data lost");result.putString("preserved","passed");
+                JSONObject save=new JSONObject(readSave());require(save.getJSONObject("mobile").getLong("usageConsumed")>=2000000,"Consumed step cursor lost");require(getTargetContext().getSharedPreferences("verify",0).getString("marker","").equals("preserved"),"Native data lost");result.putString("preserved","passed");
             }else{
                 require("true".equals(js("document.getElementById('battle').contentDocument.querySelectorAll('#party button').length===6")),"Party missing");
                 require("true".equals(js("document.getElementById('battle').contentDocument.getElementById('hero-image').naturalWidth>0")),"Sprite failed");
@@ -380,13 +380,13 @@ public final class MobileTest extends Instrumentation {
                 runOnMainSync(()->getTargetContext().startActivity(new Intent(getTargetContext(),MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));
                 Thread.sleep(500);
                 require("false".equals(js("Android.save('not-json')")),"Invalid save accepted");
-                long target=new JSONObject(readSave()).getJSONObject("mobile").getLong("lockConsumed")+2000000;
+                long target=new JSONObject(readSave()).getJSONObject("mobile").getLong("usageConsumed")+2000000;
                 // Feed a recorded total fixture; this is not evidence of real walking.
-                getTargetContext().getSharedPreferences("steps",0).edit().putLong("lockMillis",target).commit();js("window.mobileLifecycle(true)");Thread.sleep(2500);
-                require("true".equals(js("progression.lockConsumed==="+target)),"Offline steps not processed");
+                getTargetContext().getSharedPreferences("steps",0).edit().putLong("usageMillis",target).commit();js("window.mobileLifecycle(true)");Thread.sleep(2500);
+                require("true".equals(js("progression.usageConsumed==="+target)),"Offline steps not processed");
                 js("active=false;progression.pause(Date.now());save()");
-                JSONObject save=new JSONObject(readSave());require(save.getJSONObject("mobile").getLong("lockConsumed")==target,"Cursor not saved atomically");
-                js("window.mobileLifecycle(true)");Thread.sleep(300);require("true".equals(js("progression.lockConsumed==="+target)),"Step replay");
+                JSONObject save=new JSONObject(readSave());require(save.getJSONObject("mobile").getLong("usageConsumed")==target,"Cursor not saved atomically");
+                js("window.mobileLifecycle(true)");Thread.sleep(300);require("true".equals(js("progression.usageConsumed==="+target)),"Step replay");
                 js("active=false;progression.pause(Date.now());save()");
                 getTargetContext().getSharedPreferences("verify",0).edit().putString("marker","preserved").commit();
                 result.putString("ui_progression","passed");
@@ -395,7 +395,7 @@ public final class MobileTest extends Instrumentation {
                     try(InputStream in=getContext().getAssets().open("update.apk");OutputStream out=new FileOutputStream(apk)){byte[] b=new byte[65536];for(int n;(n=in.read(b))!=-1;)out.write(b,0,n);}
                     android.content.pm.PackageInfo info=getTargetContext().getPackageManager().getPackageArchiveInfo(apk.getAbsolutePath(),0);
                     JSONObject manifest=new JSONObject().put("versionCode",info.getLongVersionCode()).put("bytes",apk.length()).put("sha256",Updater.sha256(apk));
-                    JSONObject bad=new JSONObject(manifest.toString()).put("sha256","0".repeat(64));boolean rejected=false;try{updater.validate(apk,bad);}catch(SecurityException expected){rejected=true;}require(rejected,"Corrupt update accepted");require(new JSONObject(readSave()).getJSONObject("mobile").getLong("lockConsumed")==target,"Rejected update damaged save");
+                    JSONObject bad=new JSONObject(manifest.toString()).put("sha256","0".repeat(64));boolean rejected=false;try{updater.validate(apk,bad);}catch(SecurityException expected){rejected=true;}require(rejected,"Corrupt update accepted");require(new JSONObject(readSave()).getJSONObject("mobile").getLong("usageConsumed")==target,"Rejected update damaged save");
                     updater.validate(apk,manifest);
                     Field candidate=Updater.class.getDeclaredField("candidate");candidate.setAccessible(true);candidate.set(updater,apk);
                     Field expected=Updater.class.getDeclaredField("expected");expected.setAccessible(true);expected.set(updater,manifest);

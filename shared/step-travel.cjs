@@ -1,6 +1,6 @@
 'use strict';
 // Mobile map distance is independent of battle activity and lock-time credits.
-const walking=require('../desktop/map-walk.js'),cost=2000,dailyInterval=24*60*60*1000;
+const walking=require('../desktop/map-walk.js'),cost=2000,dailyInterval=12*60*60*1000;
 const friendship=require('./friendship.cjs');
 const valid=n=>Number.isSafeInteger(n)&&n>=0;
 function world(game){return game.data.johtoUnlocked?game.data.johtoWorld:game.data.kantoWorld;}

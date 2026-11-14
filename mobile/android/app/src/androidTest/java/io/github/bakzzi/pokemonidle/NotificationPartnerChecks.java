@@ -16,7 +16,7 @@ import java.util.*;
 final class NotificationPartnerChecks {
     private static void require(boolean ok,String message){if(!ok)throw new AssertionError(message);}
     private static String save(int id,int level,long xp,boolean empty)throws Exception {
-        return new JSONObject().put("format",1).put("mobile",new JSONObject().put("consumed",0).put("lockConsumed",0))
+        return new JSONObject().put("format",1).put("mobile",new JSONObject().put("consumed",0).put("usageConsumed",0))
             .put("game",new JSONObject().put("activeId","other").put("slots",new JSONArray().put(empty?JSONObject.NULL:"first").put("other"))
                 .put("owned",new JSONObject().put("first",new JSONObject().put("id",id).put("level",level).put("xp",xp))
                     .put("other",new JSONObject().put("id",25).put("level",40).put("xp",64000)))).toString();

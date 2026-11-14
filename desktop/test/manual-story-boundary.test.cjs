@@ -67,6 +67,6 @@ test('headless lock and movement credit never tap a rival or manual story, inclu
   if(kind==='rival')assert.ok(g.routeRivalTick(now));
   else if(kind==='gift'){g.data.kantoWorld.location='route-15';assert.ok(g.challenge('k-device-visit',now));}
   else{assert.ok(g.challenge('k-npc-mtmoonb2f-2',now));if(kind==='repaired'){g.data.battle.activityTrainer=true;g.data.battle.movementTrainer=true;g.data.mobileStory.scene=null;g=new Android(structuredClone(g.data),now);}if(kind==='victory'){pages(g);g.sceneTick(now+503000);g.data.battle.foeIndex=g.battleBoss().team.length-1;g.data.battle.foe.hp=0;g.defeatOpponent(now+504000);}}
-  const before=signature(g),scene=structuredClone(g.presentation()),p=new P(g);p.pause(now);assert.equal(p.catchUp({steps:40000,lockMillis:86400000},now+600000),0,kind);assert.deepEqual(signature(g),before,kind);assert.deepEqual(g.presentation(),scene,kind);assert.equal(p.lockConsumed,0);
+  const before=signature(g),scene=structuredClone(g.presentation()),p=new P(g);p.pause(now);assert.equal(p.catchUp({steps:40000,usageActive:false,usageMillis:86400000},now+600000),0,kind);assert.deepEqual(signature(g),before,kind);assert.deepEqual(g.presentation(),scene,kind);assert.equal(p.usageConsumed,0);
  }
 });

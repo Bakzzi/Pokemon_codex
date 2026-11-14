@@ -20,7 +20,7 @@ for(const Type of [PC,Android]){
   const scene=structuredClone(g.presentation());assert.equal(g.data.battle.storyId,'rival-cerulean');assert.ok(!scene.automatic);
   for(let i=1;i<=5;i++){g.data.workTokens=1000;g.controlTick(now+i*10000);g.tick(now+i*10000);}assert.deepEqual(g.presentation(),scene);assert.equal(g.data.battle.turn,0);
   g=new Type(structuredClone(g.data),now+60000);assert.deepEqual(g.presentation(),scene);
-  if(Type===Android){const p=new P(g);p.pause(now+60000);assert.equal(p.catchUp({steps:12000,lockMillis:86400000},now+70000),0);assert.deepEqual(g.presentation(),scene);assert.equal(p.lockConsumed,0);}
+  if(Type===Android){const p=new P(g);p.pause(now+60000);assert.equal(p.catchUp({steps:12000,usageActive:true,usageMillis:86400000},now+70000),0);assert.deepEqual(g.presentation(),scene);assert.equal(p.usageConsumed,0);}
   assert.ok(!K.snapshot(g).cases.flatMap(c=>c.entries).some(e=>K.nodes.get(e.id).automatic));
  });
 }

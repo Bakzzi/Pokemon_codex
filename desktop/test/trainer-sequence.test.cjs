@@ -54,14 +54,23 @@ for(const [label,Type] of [['PC',PC],['Android',Android]]){
 test('every special dialogue, choice, gift, leader and ordinary automatic encounter is outside the manual sequence',()=>{
  const g=fixture(PC);for(const id of ['k-captain','k-bill','k-fossil-choice','k-moon-scientist','k-bridge-rocket','k-robber','k-bulbasaur','k-lapras-visit','k-lift-key','k-mansion-page-1','k-forest-1','rocket-grunt','rocket-giovanni',0,8])assert.ok(!sequence.plan(g,id),id);
 });
-test('Android background catch-up cannot advance an explicit run, including the gap between trainers',()=>{
+test('Android locked catch-up cannot advance an explicit run, including the gap between trainers',()=>{
  for(const phase of ['intro','combat','between','queued']){
   let g=fixture(Android);assert.ok(g.challenge('k-anne-1',now));let at=now;
   if(phase==='combat')at=intro(g,at);
   if(['between','queued'].includes(phase))at=win(g,at);
   if(phase==='queued'){g.data.pendingChallenge={index:g.data.trainerSequence.current,queuedAt:at};delete g.data.trainerSequence.waiting;}
   g=new Android(structuredClone(g.data),at,{random:()=>.6});const before=JSON.stringify(g.data),p=new Progression(g);
-  assert.equal(p.catchUp({steps:0,lockMillis:86400000},at+60000),0,phase);
-  assert.equal(p.lockConsumed,0);assert.equal(JSON.stringify(g.data.battle),JSON.stringify(JSON.parse(before).battle));assert.deepEqual(g.data.kantoStory.cleared,JSON.parse(before).kantoStory.cleared);
+  assert.equal(p.catchUp({steps:0,usageActive:false,usageMillis:86400000},at+60000),0,phase);
+  assert.equal(p.usageConsumed,0);assert.equal(JSON.stringify(g.data.battle),JSON.stringify(JSON.parse(before).battle));assert.deepEqual(g.data.kantoStory.cleared,JSON.parse(before).kantoStory.cleared);
  }
+});
+test('Android other-app phone use continues all ordinary ship trainers and stops at its manual branch',()=>{
+ const g=fixture(Android),p=new Progression(g);let at=now;assert.ok(g.challenge('k-anne-1',at));p.observe({usageMillis:0},at);
+ for(let i=0;g.data.trainerSequence&&i<2500;i++){
+  at=Math.max(at+500,g.nextTick,g.data.switchUntil||0);
+  p.catchUp({steps:0,usageActive:true,usageMillis:at-now},at);
+ }
+ assert.equal(g.data.trainerSequence,undefined);assert.equal(g.data.battle,null);assert.ok(!K.done(g,'k-captain'));
+ assert.equal(p.usageConsumed,0);assert.equal(g.data.workTokens,0);
 });

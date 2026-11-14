@@ -76,7 +76,7 @@ for(const [name,Type]of [['PC',PC],['Android',Android]])test(name+' Johto main i
 });
 test('Android background itinerary selection consumes neither lock-time actions nor saved movement',()=>{
  const g=fixture(Android),Progression=require('../../mobile/web/progression.js'),p=new Progression(g);g.recordTravelSteps(0);g.data.mapTravel.bank=8000;
- assert.equal(p.catchUp({steps:0,lockMillis:0},now),0);assert.ok(g.data.kantoWorld.journey);assert.equal(p.lockConsumed,0);assert.equal(g.data.mapTravel.bank,8000);
+ assert.equal(p.catchUp({steps:0,usageActive:true,usageMillis:0},now),0);assert.ok(g.data.kantoWorld.journey);assert.equal(p.usageConsumed,0);assert.equal(g.data.mapTravel.bank,8000);
 });
 test('already-reached unchecked entrances recover their manual checkpoint instead of hiding the required action',()=>{
  for(const Type of [PC,Android])for(const target of ['saffron','route-23']){

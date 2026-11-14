@@ -6,6 +6,8 @@
       this.game=core;this.consumed=Number.isSafeInteger(saved.consumed)?saved.consumed:0;
       this.dirty=false;
       this.lockConsumed=Number.isSafeInteger(saved.lockConsumed)?saved.lockConsumed:0;
+      this.usageConsumed=Number.isSafeInteger(saved.usageConsumed)?saved.usageConsumed:0;
+      this.usageAt=saved.usageAt;this.usageMillis=saved.usageMillis;
       this.movementFixRewardClaimed=saved.movementFixRewardClaimed===true;
       // Preserve the legacy step cursor for save compatibility; steps never buy actions.
       this.foreground=false;this.pausedAt=Number.isFinite(saved.pausedAt)?saved.pausedAt:0;
@@ -15,7 +17,7 @@
       this.game.data.workTokens=0;
     }
     pause(now){if(!this.foreground)return;this.foreground=false;this.pausedAt=now;this.game.data.workTokens=0;}
-    resume(now){this.accrueTravel(now);if(this.foreground)return;this.shift(Math.max(0,now-(this.pausedAt||now)));this.foreground=true;this.pausedAt=0;}
+    resume(now){this.accrueTravel(now);if(this.foreground)return;if(!Number.isSafeInteger(this.usageAt))this.shift(Math.max(0,now-(this.pausedAt||now)));this.foreground=true;this.pausedAt=0;}
     shift(delta){
       const g=this.game,d=g.data;g.nextTick+=delta;if(d.switchUntil)d.switchUntil+=delta;
       if(g.presentation?.())g.presentation().at+=delta;
@@ -31,7 +33,18 @@
       if(changed)root.MobileCore.nursery.advance(g,250,now);
       return changed;
     }
-    observe(totals){if(Number.isSafeInteger(totals.lockEpoch))this.game.lockEpoch=totals.lockEpoch;if(this.game.recordTravelSteps?.(totals.steps))this.dirty=true;}
+    observe(totals,now){
+      if(Number.isSafeInteger(now)&&Number.isSafeInteger(totals.usageMillis)&&totals.usageMillis>=0){
+        if(!this.foreground&&!Number.isSafeInteger(this.usageAt)&&this.pausedAt>0)this.shift(Math.max(0,now-this.pausedAt));
+        if(!this.foreground&&Number.isSafeInteger(this.usageAt)&&Number.isSafeInteger(this.usageMillis)&&now>=this.usageAt&&totals.usageMillis>=this.usageMillis){
+          // Freeze presentation/turn waits for the portion actually spent locked.
+          this.shift(Math.max(0,now-this.usageAt-(totals.usageMillis-this.usageMillis)));
+        }
+        this.usageAt=now;this.usageMillis=totals.usageMillis;
+        if(this.game.data.battle)delete this.game.data.battle.resumeAfterLock;
+      }
+      if(this.game.recordTravelSteps?.(totals.steps))this.dirty=true;
+    }
     accrueTravel(now){if(this.game.recordTravelTime?.(now))this.dirty=true;}
     claimMovementFixReward(now){
       if(this.game.platform!=='mobile'||this.movementFixRewardClaimed||!Number.isSafeInteger(now)||now<0)return false;
@@ -75,52 +88,53 @@
     }
     live(now,totals={}){
       if(!this.foreground)return false;
-      this.observe(totals);
+      this.observe(totals,now);
       this.accrueTravel(now);
       const g=this.game,b=g.data.battle;
       if(g.presentation?.())return g.sceneTick(now)||this.dirty;
       if(this.movementTick(now))return true;
       if(!b?.activityTrainer&&(b?.kind==='trainer'||b?.storyId))return this.step(now)||this.dirty;
       if(g.controlTick(now))return true;
-      // Recorded steps can move the map, but cannot progress an ordinary battle.
+      if(Number.isSafeInteger(totals.usageMillis)&&totals.usageMillis-this.usageConsumed>=20000){
+        if(g.activityStep?.(now)||this.step(now)){this.usageConsumed+=20000;this.dirty=true;return true;}
+      }
       return this.dirty;
     }
     catchUp(total,now,maxActions=100){
-      const steps=typeof total==='object'?total.steps:total,locked=typeof total==='object'?total.lockMillis:0;
-      this.observe(typeof total==='object'?total:{steps});
+      const steps=typeof total==='object'?total.steps:total,usage=typeof total==='object'?total.usageMillis:0;
+      const active=total?.usageActive===true;
+      this.observe(typeof total==='object'?total:{steps},now);
       this.accrueTravel(now);
       const available=(n,cost,cursor)=>Number.isSafeInteger(n)&&n>=cursor?Math.floor((n-cursor)/cost):0;
       const g=this.game;let used=0,moves=0,travelTurns=0;this.moreMovement=false;
       for(;used<maxActions;used++){
-        // Explicit local trainer runs are foreground challenges, including
-        // their result-to-next-opponent pause. Lock time cannot continue them.
-        if(g.data.trainerSequence)break;
-        if(moves<512&&this.automaticSceneTick(now)){moves++;used--;continue;}
+        if(!active&&g.data.trainerSequence)break;
+        if(active&&(g.data.trainerSequence||!g.data.battle?.activityTrainer&&(g.data.battle?.kind==='trainer'||g.data.battle?.storyId))){
+          if(this.challengeTick(now))this.dirty=true;
+          break;
+        }
+        if((active||this.movementActive())&&moves<512&&this.automaticSceneTick(now)){moves++;used--;continue;}
         if(this.movementActive()){
           if(travelTurns>=128){this.moreMovement=true;break;}
           this.skipWaits(now);
           if(this.movementTick(now)){travelTurns++;used--;continue;}
         }
         if(moves<512&&this.mapTick(now)){moves++;used--;continue;}
-        if(!available(locked,20000,this.lockConsumed))break;
+        if(!active||!available(usage,20000,this.usageConsumed))break;
         // Manual dialogue must preserve every unspent lock-time action.
         if(g.presentation?.()||!g.data.battle?.activityTrainer&&(g.data.battle?.kind==='trainer'||g.data.battle?.storyId))break;
-        if(g.data.battle?.resumeAfterLock!==undefined){
-          if(g.lockEpoch<=g.data.battle.resumeAfterLock)break;
-          delete g.data.battle.resumeAfterLock;
-        }
-        if(g.activityStep?.(now)){this.lockConsumed+=20000;continue;}
+        if(g.activityStep?.(now)){this.usageConsumed+=20000;continue;}
         // Consume recorded activity immediately, never simulate a future calendar.
         // Only presentation waits are skipped; every game transition still uses tick().
         this.skipWaits(now);
         const world=g.data.johtoUnlocked?g.data.johtoWorld:g.data.kantoWorld;
         if(!g.data.battle&&(g.data.pendingActions.some(a=>['travel','world-pass'].includes(a.kind))||world?.journey&&!g.data.pendingChallenge)&&g.controlTick(now)){used--;continue;}
         if(!this.step(now))break;
-        this.lockConsumed+=20000;
+        this.usageConsumed+=20000;
       }
       while(moves<512){
         if(g.data.trainerSequence)break;
-        if(this.automaticSceneTick(now)){moves++;continue;}
+        if((active||this.movementActive())&&this.automaticSceneTick(now)){moves++;continue;}
         if(this.movementActive()){
           if(travelTurns>=128){this.moreMovement=true;break;}
           this.skipWaits(now);if(this.movementTick(now)){travelTurns++;continue;}
@@ -129,7 +143,8 @@
       }
       return used;
     }
-    checkpoint(){return {consumed:this.consumed,lockConsumed:this.lockConsumed,pausedAt:this.pausedAt,nextTick:this.game.nextTick,movementFixRewardClaimed:this.movementFixRewardClaimed};}
+    challengeTick(now){const g=this.game;if(g.presentation?.())return g.sceneTick(now);return this.step(now)||g.controlTick(now);}
+    checkpoint(){return {consumed:this.consumed,lockConsumed:this.lockConsumed,usageConsumed:this.usageConsumed,usageAt:this.usageAt,usageMillis:this.usageMillis,pausedAt:this.pausedAt,nextTick:this.game.nextTick,movementFixRewardClaimed:this.movementFixRewardClaimed};}
   }
   root.MobileProgression=Progression;if(typeof module==='object')module.exports=Progression;
 })(globalThis);
