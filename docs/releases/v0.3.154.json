@@ -1,0 +1,48 @@
+{
+  "version": "0.3.154",
+  "platform": "windows-x64-portable",
+  "sourceCommit": "eff9dbd6cbea663363bcdf46dc2e13ef95654b80",
+  "sourceTag": "v0.3.154",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/v0.3.154",
+  "build": {
+    "commands": [
+      "npm.cmd ci",
+      "npm.cmd run package"
+    ],
+    "nodeUsed": "22.11.0",
+    "electron": "44.7.0"
+  },
+  "validation": {
+    "nodeTestsPassed": 1006,
+    "packagedNativeIpcScenariosPassed": 8,
+    "packagedNativeChecksUseIsolatedSaveAndControlledClock": true,
+    "fullBodyNpcSpritesVerified": 8,
+    "updateManifestFilesMatched": 1389,
+    "archiveFilesVerified": 1390,
+    "exactArchiveStagedByInstalledUpdater": "0.3.153"
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.154-portable.zip",
+    "bytes": 164635431,
+    "sha256": "1d8c117637ca3b4c135846b573bc2f7f1b23f42b2c3f0ebbf7663c98cf7fbba5"
+  },
+  "automaticUpdates": {
+    "supportedFrom": "0.3.65",
+    "channel": "stable/latest",
+    "updaterUnchanged": true
+  },
+  "retention": {
+    "latest": "0.3.154",
+    "previousKnownGood": "0.3.153"
+  },
+  "growth": {
+    "futureExperienceDivisor": 2,
+    "savedExperiencePreserved": true,
+    "deviceSharePercent": 10
+  },
+  "trainerSequence": {
+    "explicitStart": true,
+    "manualBranchesPreserved": true,
+    "activityCost": 0
+  }
+}
