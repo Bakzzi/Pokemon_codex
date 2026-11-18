@@ -28,7 +28,7 @@ test('a banked blocked journey charges only four reachable cells and retains eve
 });
 test('cancelling a queued paid journey returns partial walking credit and never spends the reserved bank',()=>{
  const {g,p}=fixture();p.observe({steps:5000});g.newWild(now);assert.ok(g.requestAction('travel','pewter',now));p.observe({steps:5777});assert.ok(g.requestAction('travel-bank',null,now));const id=g.data.pendingActions.find(a=>a.kind==='travel').id;assert.equal(balance(g),5777);
- assert.ok(g.cancelAction(id,now));assert.equal(g.data.mapTravel.bank,5777);assert.equal(g.data.mapTravel.credit,0);p.catchUp({steps:5777,usageActive:true,usageMillis:0},now,0);assert.equal(g.data.mapTravel.bank,5777);assert.ok(g.data.battle);assert.equal(g.data.journal.some(e=>e.kind==='flee'),false);
+ assert.ok(g.cancelAction(id,now));assert.equal(g.data.mapTravel.bank,5777);assert.equal(g.data.mapTravel.credit,0);p.catchUp({steps:5777,usageActive:true,usageMillis:0},now,0);assert.equal(g.data.mapTravel.bank,5777);assert.equal(g.data.battle,null);assert.equal(g.data.journal.filter(e=>e.kind==='flee').length,1);
 });
 test('bank travel reaches the surprise encounter once and background reload never spends remaining cells or advances its dialogue',()=>{
  const {g,p}=fixture();g.rivalProgress('rival-brock').state='unseen';p.observe({steps:7000});assert.ok(g.requestAction('travel',{location:'route-22',position:{x:28,y:84}},now));assert.ok(g.requestAction('travel-bank',null,now));

@@ -5,7 +5,7 @@ Source: https://github.com/pret/pokefirered/tree/master/graphics/trainers/front_
 File mapping: original-files.json. Images are not covered by the project's MIT license.
 Scientist (Oak's aide presentation): scientist_front_pic.png from the same original source; background made transparent without redrawing.
 
-Mr. Fuji: original FRLG overworld sprite, first 16x32 front frame without redrawing.
+Historical Mr. Fuji overworld source, retained for provenance; current UI uses the full-body frame in trainers/npc.
 Source: https://github.com/pret/pokefirered/blob/master/graphics/object_events/pics/people/mr_fuji.png
 
 Jessie and James GBA battle sprite: Monicaccina (formerly Ody-chan).
@@ -16,10 +16,15 @@ no MIT license or original-game provenance is claimed for this asset.
 
 Additional ordinary trainer front sprites are unmodified original FireRed/LeafGreen artwork from the pinned pret/pokefirered revision recorded in desktop/data/kanto-story-sources.json. Original rights remain with Pokemon / Nintendo / Creatures / GAME FREAK.
 
-Professor Elm now uses the original Crystal 16x16 overworld frame. The original 16x96 sprite sheet is retained unmodified; the UI clips its first frame. Pinned source: desktop/data/kanto-story-sources.json.
-NPC portraits captain, fishing-guru and bill are original FireRed/LeafGreen
-overworld front frames from pret/pokefirered. Officer Jenny and Melanie use
-their original Yellow overworld frames from pret/pokeyellow. Source sheets,
-pinned URLs and SHA-256 hashes are in reference/npc-portraits/manifest.json.
-Rebuild with desktop/scripts/build-npc-portraits.ps1. Frames are not redrawn.
-
+Full-body NPC portraits now use unchanged source images under trainers/npc.
+Frame coordinates, source URLs, artists and hashes: trainers/npc/sources.json.
+The shared npc-portraits.js renders the selected pixel frame in cards and dialogue.
+Bill and Mr. Fuji: original FireRed/LeafGreen Fame Checker portraits.
+Fishing Guru: original Gen III Fisherman class. Gate guards: original Gen II Officer class.
+Professor Elm: fan sprite by kyledove, mirrored by Pokemon Showdown.
+Officer Jenny: fan sprite by Silver, https://spritedatabase.net/custom/170 .
+Melanie: fan sprite by MechanicalApe464, https://www.deviantart.com/mechanicalape464/art/Melanie-818141363 .
+Captain class: Eeveeee1999, hand correction by QuilChess; alternate pose idea by Bloodless.
+https://www.deviantart.com/eeveeee1999/art/Captain-Trainer-Class-837872801
+Fan artwork remains its artists' work and is not covered by this project's MIT code license.
+Validate original bytes with node desktop/scripts/check-npc-portraits.cjs.

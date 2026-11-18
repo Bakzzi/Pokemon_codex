@@ -43,8 +43,12 @@ function bankRequest(game){return game.platform==='mobile'&&game.data.pendingAct
 function departing(game){const w=world(game),request=bankRequest(game);return game.platform==='mobile'&&((request?.departFrom===w?.location)||(bankActive(game)&&w.journey.departFrom===w.location));}
 function trainerPending(game){return departing(game)?null:game.movementTrainerNode?.()||null;}
 function bankActive(game){const trip=world(game)?.journey;return game.platform==='mobile'&&!!trip&&(trip.bankLeg||trip.bankCells>0);}
-function handoff(game,now){
+function handoff(game,now,immediate=false){
  const request=bankRequest(game),d=game.data,b=d.battle;
+ const committed=d.pendingBattle&&d.pendingBattle.kind!=='capture'||b&&(b.foe.hp<=0||b.party[d.activeId]?.hp<=0);
+ if(immediate&&(request||bankActive(game))&&b?.kind==='wild'&&!b.storyId&&!committed&&!d.pendingChallenge&&!d.suspendedWild&&!game.presentation?.()){
+  d.animation=null;game.nextTick=now;d.switchUntil=now;
+ }
  if(!request&&!bankActive(game)||!b||b.kind!=='wild'||b.storyId||d.pendingChallenge||d.suspendedWild||game.presentation?.()||now<game.nextTick||now<d.switchUntil)return false;
  if(request&&['invalid','done'].includes(game.actionStatus(request,now).state))return false;
  // Finish outcomes already committed by the last attack or ball. Never turn a
@@ -53,6 +57,17 @@ function handoff(game,now){
  d.pendingBattle=null;d.battle=null;d.captureAnimation=null;
  game.log('성공적으로 도망쳤다!','flee',b.foe.id,now);
  game.animate('result',{text:'성공적으로 도망쳤다!'},now);return true;
+}
+function requestBank(game,now){
+ if(!useBank(game))return false;
+ // Explicit input reacts immediately; never fast-forward a decided outcome
+ // or a trainer/story battle merely to make map travel look quicker.
+ if(handoff(game,now,true)){
+  if(game.data.animation?.text==='성공적으로 도망쳤다!'){
+   game.data.animation.duration=350;game.nextTick=now+350;game.data.switchUntil=now+350;
+  }
+ }
+ return true;
 }
 function segments(map,path,id,blocked,current){
  const result=[];
@@ -103,4 +118,4 @@ function snapshot(game,state){
  const phase=queued?'queued':game.data.battle?.movementTrainer?'trainer':usingBank&&trainerPending(game)?'trainer-wait':usingBank?'moving':null;
  return {travelMode:'steps',roadProgress:null,movement:{count:Math.floor(bank/cost),remainder:bank%cost,usingBank,phase},stepProgress:trip&&remaining!==0&&!usingBank?{completed:Math.min(cost,count(game.data.mapTravel?.credit)),required:cost,remainingCells:remaining}:null};
 }
-module.exports={cost,dailyInterval,accrueTime,observe,hasIntent,beginIntent,bankRemainder,useBank,bankActive,bankRequest,departing,trainerPending,handoff,start,migrate,advance,snapshot};
+module.exports={cost,dailyInterval,accrueTime,observe,hasIntent,beginIntent,bankRemainder,useBank,requestBank,bankActive,bankRequest,departing,trainerPending,handoff,start,migrate,advance,snapshot};

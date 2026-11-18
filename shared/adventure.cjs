@@ -94,14 +94,23 @@ class Adventure extends Engine{
   recordTravelSteps(total){return require('./step-travel.cjs').observe(this,total);}
   recordTravelTime(now){return require('./step-travel.cjs').accrueTime(this,now);}
   requestAction(kind,value,now=Date.now()){
-    if(kind==='travel-bank')return require('./step-travel.cjs').useBank(this);
+    if(kind==='travel-bank'){
+      const steps=require('./step-travel.cjs');
+      if(value!==undefined&&value!==null){
+        const target=typeof value==='string'?{location:value}:value;
+        if(this.platform!=='mobile'||steps.bankActive(this)||steps.bankRequest(this)||(this.data.mapTravel?.bank||0)<steps.cost||!target||typeof target.location!=='string')return false;
+        const status=this.travelStatus(target.location,target.position);if(status&&['invalid','done'].includes(status.state))return false;
+        if(!this.requestAction('travel',value,now))return false;
+      }
+      return steps.requestBank(this,now);
+    }
     if(this.platform!=='mobile'||!['travel','world-pass'].includes(kind))return super.requestAction(kind,value,now);
     const steps=require('./step-travel.cjs'),before=steps.hasIntent(this),ok=super.requestAction(kind,value,now);
     if(ok)steps.beginIntent(this,before);return ok;
   }
   executeAction(a,now){const ok=super.executeAction(a,now);if(ok&&a.useBank&&this.platform==='mobile')require('./step-travel.cjs').useBank(this,true);return ok;}
   cancelAction(id,now=Date.now(),reason){const ok=super.cancelAction(id,now,reason);if(ok&&reason!=='새 선택으로 변경'&&this.platform==='mobile'&&!require('./step-travel.cjs').hasIntent(this))require('./step-travel.cjs').bankRemainder(this);return ok;}
-  handoffTravel(now){return require('./step-travel.cjs').handoff(this,now);}
+  handoffTravel(now,immediate=false){return require('./step-travel.cjs').handoff(this,now,immediate);}
   controlTick(now=Date.now()){return this.handoffTravel(now)||super.controlTick(now)||this.advanceTravel(now);}
   canReserveCapture(id){return id!==131&&super.canReserveCapture(id);}
   canReceiveFlute(){const r=this.data.mobileStory?.rescue;return !!(r?.completedAt&&r.wins.every(Boolean));}

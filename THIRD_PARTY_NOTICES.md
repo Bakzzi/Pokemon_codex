@@ -97,6 +97,22 @@ Original Generation II trainer sprites are mirrored by Pokemon Showdown. Officia
 
 ssh2 1.17.0: https://github.com/mscdex/ssh2/tree/v1.17.0 . MIT License. The package and dependency licenses are retained in the portable runtime under resources/app/node_modules. Exact versions and integrity hashes are pinned in package-lock.json. Only explicitly configured SSH endpoints are contacted; no third-party relay service is used.
 
+## Full-body NPC pixel portraits
+
+NPC cards and dialogue use the unchanged source files listed in
+`desktop/assets/trainers/npc/sources.json`. Bill and Mr. Fuji use original FRLG
+Fame Checker portraits; Fishing Guru and gate guards use the original Fisherman
+and Officer class sprites. Professor Elm is by kyledove; Officer Jenny is by
+Silver; Melanie is by MechanicalApe464. The Captain class is by Eeveeee1999 with
+hand correction by QuilChess and an alternate pose idea by Bloodless. Exact
+artist pages, source hashes and frame coordinates are retained in that manifest.
+These sprites remain their original rights holders' artwork and are not licensed
+by this project's MIT code license. `desktop/npc-portraits.js` renders their pixel
+frames without redrawing them. Historical overworld sources remain in `reference`.
+
+Map facility icons are unchanged PokeAPI sprite mirrors, with source URLs and
+hashes in `desktop/assets/items/map-facility-sources.json`.
+
 ## Electron runtime
 
 Electron 44.7.0 — https://www.electronjs.org/

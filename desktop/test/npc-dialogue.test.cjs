@@ -24,9 +24,10 @@ for(const [label,Type]of [['PC',PC],['Android',Android]]){
   assert.ok(g.advanceScene(g.presentation().id+':1',now));const before=rewardState(g);g=new Type(structuredClone(g.data),now+1);assert.deepEqual(rewardState(g),before);
  });
 }
-test('NPC portraits are distinct pinned original frames; ordinary class art is unchanged',()=>{
- const root=path.resolve(__dirname,'../..'),manifest=require('../../reference/npc-portraits/manifest.json');
- for(const s of manifest.sprites){const bytes=fs.readFileSync(path.join(root,'reference/npc-portraits',s.file));assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),s.sha256);const out=fs.readFileSync(path.join(root,'desktop/assets/trainers/battle',s.id+'.png'));assert.equal(out.readUInt32BE(16),32);assert.equal(out.readUInt32BE(20),32);}
+test('all eight NPCs use pinned full-body sprite frames while ordinary class art is unchanged',()=>{
+ const root=path.resolve(__dirname,'../..'),manifest=require('../assets/trainers/npc/sources.json'),{frames}=require('../npc-portraits.js');
+ assert.equal(manifest.sprites.length,8);
+ for(const s of manifest.sprites){const bytes=fs.readFileSync(path.join(root,'desktop/assets/trainers/npc',s.file));assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),s.sha256);assert.deepEqual(frames[s.id].frame,s.frame);assert.ok(s.frame[2]>=24&&s.frame[3]>=32);}
  for(const [id,sprite]of Object.entries({'k-fishing-rod':'fishing-guru','k-squirtle':'officer-jenny','k-captain':'captain','k-bill':'bill','k-bulbasaur':'melanie'}))assert.equal(K.nodes.get(id).sprite,sprite);
  assert.equal(K.nodes.get('k-seafoam-1').sprite,null);assert.equal(K.nodes.get('k-lift-key').sprite,'item:lift-key');
  assert.ok([...K.nodes.values()].some(n=>n.trainer&&n.sprite==='sailor'));assert.ok([...K.nodes.values()].some(n=>n.trainer&&n.sprite==='fisherman'));

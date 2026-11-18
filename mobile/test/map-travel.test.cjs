@@ -108,11 +108,12 @@ test('bank departure defers current-location opponents without clearing them, an
  for(let i=0;i<8&&world(g).journey;i++)p.catchUp({steps:40000,usageActive:true,usageMillis:0},now,0);
  assert.ok(g.data.kantoStory.cleared[id]);assert.equal(g.data.mapTravel.bank,32000);assert.equal(p.usageConsumed,0);
 });
-test('bank escape waits for a visible attack, needs no new lock activity, and grants no battle rewards',()=>{
+test('explicit bank escape interrupts an undecided wild attack promptly without battle rewards or extra activity',()=>{
  const {g,p}=ready();p.observe({steps:20000});g.newWild(now);g.animate('attack',{text:'fixture',actor:'hero'},now);const end=g.nextTick,xp=g.data.owned[25].xp,caught=plain(g.data.caught),battles=plain(g.data.battles);
  choose(g);g.requestAction('travel-bank',undefined,now);const q=view(g);assert.equal(q.movement.phase,'queued');assert.equal(q.movement.usingBank,true);
- p.live(end-1,{steps:20000,usageActive:true,usageMillis:0});assert.ok(g.data.battle);assert.equal(g.data.mapTravel.bank,10000);
- for(let t=end;t<end+20000;t+=250)p.live(t,{steps:20000,usageActive:true,usageMillis:0});
+ assert.equal(g.data.battle,null);assert.equal(g.data.animation.kind,'result');assert.equal(g.data.animation.text,'성공적으로 도망쳤다!');assert.equal(g.data.animation.duration,350);assert.ok(g.nextTick<end);
+ p.live(now+349,{steps:20000,usageActive:true,usageMillis:0});assert.equal(g.data.mapTravel.bank,10000);
+ for(let t=now+350;t<end+20000;t+=250)p.live(t,{steps:20000,usageActive:true,usageMillis:0});
  assert.equal(g.data.battle,null);assert.deepEqual(here(g),next);assert.equal(g.data.mapTravel.bank,8000);assert.equal(g.data.owned[25].xp,xp);assert.deepEqual(plain(g.data.caught),caught);assert.deepEqual(plain(g.data.battles),battles);assert.equal(p.usageConsumed,0);
  assert.equal(g.data.journal.filter(e=>e.kind==='flee').length,1);
 });

@@ -13,7 +13,7 @@ globalThis.StoryPresentation={create({document:doc=document,advance,choose=value
     if(root.dataset.gift==='true')$('story-hero').src='assets/'+state.hero.id+'.gif';
     $('story-name').textContent=scene.name;$('story-portrait').dataset.sprite=scene.sprite||'';
     $('story-portrait').hidden=!scene.sprite;
-    if(scene.sprite)$('story-portrait').src=scene.sprite.startsWith('pokemon:')?'assets/'+scene.sprite.slice(8)+'.gif':scene.sprite.startsWith('item:')?'assets/items/'+scene.sprite.slice(5)+'.png':'assets/trainers/battle/'+scene.sprite+'.png';
+    if(scene.sprite){const src=scene.sprite.startsWith('pokemon:')?'assets/'+scene.sprite.slice(8)+'.gif':scene.sprite.startsWith('item:')?'assets/items/'+scene.sprite.slice(5)+'.png':'assets/trainers/battle/'+scene.sprite+'.png';NpcPortraits.set($('story-portrait'),scene.sprite,src);}
     else $('story-portrait').removeAttribute('src');
     root.dataset.revealed=String(scene.kind!=='ghost'||scene.index>0||scene.next==='win'||scene.next==='loss');$('story-portrait').alt=scene.name;
     button.disabled=sendout||!!scene.automatic||!!scene.awaitChoice;$('story-hint').textContent=sendout||scene.automatic||scene.awaitChoice?'':scene.index===scene.pages.length-1&&scene.confirm?scene.confirm+' ▼':'눌러서 계속 ▼';

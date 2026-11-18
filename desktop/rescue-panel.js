@@ -7,7 +7,7 @@
   document.addEventListener('panel-rendered',({detail:s})=>{
     const r=s[stateKey];details.hidden=!r?.visible;if(details.hidden){details.open=false;signature='';title.textContent='';note.textContent='';image.hidden=true;image.removeAttribute('src');list.replaceChildren();return;}
     const key=JSON.stringify([r,s.battle?.kind,s.pendingChallenge,s.scene?.id,s.rivalLocks]);if(signature===key)return;signature=key;
-    title.textContent=r.title;image.hidden=!r.sprite;if(r.sprite){image.src=r.sprite;image.alt=r.title;}else{image.removeAttribute('src');image.alt='';}
+    title.textContent=r.title;image.hidden=!r.sprite;if(r.sprite){NpcPortraits.set(image,r.sprite,r.sprite);image.alt=r.title;}else{image.removeAttribute('src');image.alt='';}
     note.textContent=r.description;list.replaceChildren();
     const steps=r.investigated?r.steps:[{...r.steps[0],name:r.inquiry,sprite:null,revealed:false}];
     for(const step of steps){const row=ChallengeUI.eventStep({id:step.id,number:r.investigated?step.stage+1:null,name:step.name,sprite:step.sprite,revealed:step.revealed,team:step.revealed?trainerTeam(step):null,action:{challenge:step.id,label:s.pendingChallenge?.index===step.id?'도전 예약됨':s.rivalLocks?.[step.id]||(!r.investigated&&step.canChallenge?'조사하기':step.reason),disabled:!step.canChallenge||s.battle?.kind==='trainer'||!!s.pendingChallenge||!!s.scene,run:()=>window.buddy.action('challenge',step.id)}});row.dataset[stateKey]=step.id;list.append(row);}

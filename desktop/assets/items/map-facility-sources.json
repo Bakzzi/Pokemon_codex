@@ -1,0 +1,17 @@
+{
+  "description": "Original pixel icons for previously visited map facilities",
+  "sprites": [
+    {
+      "id": "lucky-egg",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lucky-egg.png",
+      "bytes": 213,
+      "sha256": "be843ff952bdb84df930fe22e8100d3f064a48ad3a1f69c599c553e323f40539"
+    },
+    {
+      "id": "safari-ball",
+      "url": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/safari-ball.png",
+      "bytes": 305,
+      "sha256": "8abfba292d69c952da4ce9a9d5a0bfa6d7e075a01e8ea137b6e36b7168772fc9"
+    }
+  ]
+}

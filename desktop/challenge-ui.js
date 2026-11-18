@@ -8,14 +8,14 @@ globalThis.ChallengeUI=(()=>{
  function section(id,heading,contents=[]){const d=el('details','story-board challenge-card mobile-challenge-card'),s=el('summary');d.id=id;s.append(...(Array.isArray(heading)?heading:[heading]));d.append(s,...contents);return d;}
  function eventStep({id,number,name,sprite,revealed=true,team,reward,action}){
   const row=el('article','rival-entry'),heading=el('div','rival-heading');row.dataset.storyStep=id;heading.append(el('h3','',(number?number+'. ':'')+name));
-  if(sprite){const image=el('img',revealed?'':'unknown-rival');image.src=sprite.startsWith('pokemon:')?'assets/'+sprite.slice(8)+'.gif':sprite.startsWith('item:')?'assets/items/'+sprite.slice(5)+'.png':'assets/trainers/battle/'+sprite+'.png';image.alt=revealed?name:'아직 만나지 않은 상대';heading.append(image);}row.append(heading);if(team)row.append(team);
+  if(sprite){const image=el('img',revealed?'':'unknown-rival'),src=sprite.startsWith('pokemon:')?'assets/'+sprite.slice(8)+'.gif':sprite.startsWith('item:')?'assets/items/'+sprite.slice(5)+'.png':'assets/trainers/battle/'+sprite+'.png';NpcPortraits.set(image,sprite,src);image.alt=revealed?name:'아직 만나지 않은 상대';heading.append(image);}row.append(heading);if(team)row.append(team);
   if(reward){const items=el('div','story-step-reward');items.dataset.reward=reward.selected||'choice';items.append(el('p','muted',reward.label));for(const item of reward.items){const box=el('div'),image=el('img');image.src='assets/items/'+item.sprite+'.png';image.alt=item.name;box.append(image,el('span','',item.name));items.append(box);}row.append(items);}
   if(action){const button=el('button','',action.label);if(action.challenge)button.dataset.challenge=action.challenge;button.disabled=!!action.disabled;button.onclick=action.run;row.append(button);}return row;
  }
  function trainerBody({id,heading,team,portrait,unknown=false,league=false}){
   const body=el('div','gym-body'),info=el('div','gym-info'),face=el('div','gym-portrait'+(league?' league-portrait':''));face.dataset.trainer=id;
   if(unknown||!portrait){face.classList.add('unknown');face.textContent='?';face.setAttribute('aria-label','아직 만나지 않은 상대');}
-  else{const image=el('img','gym-trainer'),[width,x,y,size]=portrait.crop;image.src=portrait.src;image.alt=portrait.name+' · 도트';image.draggable=false;image.style.width=width/size*100+'%';image.style.left=-x/size*100+'%';image.style.top=-y/size*100+'%';face.append(image);}
+  else{const image=el('img','gym-trainer'),[width,x,y,size]=portrait.crop;image.alt=portrait.name+' · 도트';image.draggable=false;if(NpcPortraits.has(portrait.src)){NpcPortraits.set(image,portrait.src,portrait.src);face.classList.add('npc-full-body');}else{image.src=portrait.src;image.style.width=width/size*100+'%';image.style.left=-x/size*100+'%';image.style.top=-y/size*100+'%';}face.append(image);}
   info.append(...(Array.isArray(heading)?heading:[heading]));if(team)info.append(team);body.append(info,face);return body;
  }
  function trainerCard({id,title,badge,team,portrait,unknown=false,done=false,league=false}){

@@ -1,0 +1,140 @@
+{
+  "description": "Unchanged original source images; selected full-body frames rendered by desktop/npc-portraits.js",
+  "sprites": [
+    {
+      "id": "bill",
+      "file": "bill.png",
+      "frame": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "background": [
+        0,
+        0
+      ],
+      "source": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/fame_checker/bill.png",
+      "creditSource": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/fame_checker/bill.png",
+      "artist": "Pokemon / Nintendo / Creatures / GAME FREAK",
+      "sha256": "5aca10aacd406fca0f9f800c55d2e28884b8694f2b5c12bbd9f3986883412bd9"
+    },
+    {
+      "id": "mr-fuji",
+      "file": "mr-fuji.png",
+      "frame": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "background": [
+        0,
+        0
+      ],
+      "source": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/fame_checker/mr_fuji.png",
+      "creditSource": "https://raw.githubusercontent.com/pret/pokefirered/ce6406d8c2eaf46d543c8a2606de0c3cb1951982/graphics/fame_checker/mr_fuji.png",
+      "artist": "Pokemon / Nintendo / Creatures / GAME FREAK",
+      "sha256": "b29702c16d0f851fd48d6fb420eb1bd9f49199049adefd2fa29e979a3e0fde10"
+    },
+    {
+      "id": "j-elm",
+      "file": "j-elm.png",
+      "frame": [
+        0,
+        0,
+        80,
+        80
+      ],
+      "background": null,
+      "source": "https://play.pokemonshowdown.com/sprites/trainers/elm.png",
+      "creditSource": "https://play.pokemonshowdown.com/sprites/trainers/?view=sprites&filter=credited",
+      "artist": "kyledove",
+      "sha256": "3f9167ae6ced3f2d4a90175c22f5c9f7fd466b472e97742159f7fd0d76ad140a"
+    },
+    {
+      "id": "officer-jenny",
+      "file": "officer-jenny.gif",
+      "frame": [
+        85,
+        172,
+        43,
+        64
+      ],
+      "background": [
+        0,
+        0
+      ],
+      "source": "https://spritedatabase.net/customs_edits/JennyCustom.gif",
+      "creditSource": "https://spritedatabase.net/custom/170",
+      "artist": "Silver",
+      "sha256": "1d2975602b934a23f9f5afaa70e7c80c2cc6d7a4e0f60dbd36b7b45c76180bd9"
+    },
+    {
+      "id": "melanie",
+      "file": "melanie.png",
+      "frame": [
+        16,
+        15,
+        68,
+        58
+      ],
+      "background": [
+        1,
+        1
+      ],
+      "source": "https://www.deviantart.com/mechanicalape464/art/Melanie-818141363",
+      "creditSource": "https://www.deviantart.com/mechanicalape464/art/Melanie-818141363",
+      "artist": "MechanicalApe464",
+      "sha256": "116ea007715bc518175159f2f8b1960a34582a456c3c863760a5f3d128992964"
+    },
+    {
+      "id": "fishing-guru",
+      "file": "fishing-guru.png",
+      "frame": [
+        0,
+        0,
+        80,
+        80
+      ],
+      "background": null,
+      "source": "https://play.pokemonshowdown.com/sprites/trainers/fisherman-gen3.png",
+      "creditSource": "https://play.pokemonshowdown.com/sprites/trainers/fisherman-gen3.png",
+      "artist": "Pokemon / Nintendo / Creatures / GAME FREAK",
+      "sha256": "c96f27d8f844a2d1bac793aaacf7fd93875ad91e08e9331a1aef00042f39f242"
+    },
+    {
+      "id": "gate-guard",
+      "file": "gate-guard.png",
+      "frame": [
+        0,
+        0,
+        80,
+        80
+      ],
+      "background": null,
+      "source": "https://play.pokemonshowdown.com/sprites/trainers/officer-gen2.png",
+      "creditSource": "https://play.pokemonshowdown.com/sprites/trainers/officer-gen2.png",
+      "artist": "Pokemon / Nintendo / Creatures / GAME FREAK",
+      "sha256": "bb684cf52fc97a4819aa9254247cd2f49f6a08e596db978f6a5616e41dc6cbcf"
+    },
+    {
+      "id": "captain",
+      "file": "captain.png",
+      "frame": [
+        58,
+        1,
+        54,
+        56
+      ],
+      "background": [
+        60,
+        1
+      ],
+      "source": "https://www.deviantart.com/eeveeee1999/art/Captain-Trainer-Class-837872801",
+      "creditSource": "https://www.deviantart.com/eeveeee1999/art/Captain-Trainer-Class-837872801",
+      "artist": "Eeveeee1999; hand correction QuilChess; alternate pose idea Bloodless",
+      "sha256": "2b5a67d580dde6b518f7a0264170e8122fd3d00ab362e66b0f61d4938a34397a"
+    }
+  ]
+}

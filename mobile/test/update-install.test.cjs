@@ -5,11 +5,11 @@ const {Game}=require('../../desktop/game.cjs');
 function fixture(){
   let now=Date.parse('2026-10-17T06:00:00Z'),stored={format:1,game:new Game({},Date.parse('2026-10-17T06:00:00Z')).data,mobile:{consumed:0}},saveOk=true;const calls=[],timers=[],intervals=[],elements=new Map();
   const status={steps:0,stepsEnabled:false,sensorSupported:false,tracking:false,sensor:'',update:'',updateReady:false,installing:false,pendingInstall:false,canInstall:true};
-  const element=id=>{if(!elements.has(id))elements.set(id,{hidden:false,open:false,style:{},dataset:{},clientWidth:380,contentWindow:{postMessage(){}},setAttribute(){},showModal(){this.open=true;},close(){this.open=false;}});return elements.get(id);};
+  const element=id=>{if(!elements.has(id))elements.set(id,{hidden:false,open:false,style:{},dataset:{},clientWidth:380,contentWindow:{postMessage(){}},setAttribute(name,value){this[name]=value;},getAttribute(name){return this[name]??null;},removeAttribute(name){delete this[name];},showModal(){this.open=true;},close(){this.open=false;}});return elements.get(id);};
   const native={load:()=>JSON.stringify(stored||{}),save:text=>{calls.push('save');if(saveOk)stored=JSON.parse(text);return saveOk;},foreground:()=>true,status:()=>JSON.stringify(status),ready(){},reportError(){},installUpdate(){calls.push('install');status.updateReady=false;status.installing=true;}};
   const c=vm.createContext({console,TextEncoder,TextDecoder,structuredClone,Date:class extends Date{static now(){return now;}},Android:native,MobileConfig:{name:'fixture',stepsPerAction:10},document:{getElementById:element},location:{origin:'https://game.pokemon.local'},setInterval:fn=>intervals.push(fn),setTimeout:fn=>timers.push(fn),clearTimeout(){},clearInterval(){},addEventListener(){}});
   vm.runInContext('window=globalThis',c);
-  for(const file of ['mobile/android/app/build/generated/gameAssets/web/game.bundle.js','mobile/web/progression.js','desktop/story-presentation.js','mobile/web/story-ui.js','mobile/web/app.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),c);
+  for(const file of ['mobile/android/app/build/generated/gameAssets/web/game.bundle.js','mobile/web/progression.js','desktop/npc-portraits.js','desktop/story-presentation.js','mobile/web/story-ui.js','mobile/web/app.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),c);
   const run=code=>vm.runInContext(code,c);
   return {status,calls,timers,run,tick:()=>intervals[0](),start:()=>run('mobileLifecycle(true)'),snapshot:()=>JSON.parse(run('JSON.stringify({game:game.data,mobile:progression.checkpoint(),active,catchingUp,updatePaused,fatal})')),stored:()=>stored,setSaveOk:value=>{saveOk=value;},advance:ms=>{now+=ms;}};
 }
