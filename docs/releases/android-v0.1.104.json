@@ -1,0 +1,50 @@
+{
+    "version":  "0.1.104",
+    "versionCode":  106,
+    "platform":  "android",
+    "channel":  "android-preview",
+    "sourceCommit":  "a99222ccb6985c19bc7bca31537dd7d7933aca90",
+    "sourceTag":  "android-v0.1.104",
+    "release":  "https://github.com/Bakzzi/Pokemon_codex/releases/tag/android-v0.1.104",
+    "package":  "io.github.bakzzi.pokemonidle",
+    "minSdk":  31,
+    "targetSdk":  36,
+    "artifact":  "Pokemon-Idle-0.1.104.apk",
+    "bytes":  11877586,
+    "sha256":  "9d0b1894e5299f154ed8840970445b825eb98ae7f18fe6d9418b893f1d07309e",
+    "signingCertificateSha256":  "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+    "build":  {
+                  "commands":  [
+                                   "npm.cmd run mobile:bundle",
+                                   "gradle --offline --no-daemon assembleRelease lintRelease -x bundleGame"
+                               ],
+                  "buildTools":  "36.1.0",
+                  "node":  "22.11.0",
+                  "gradle":  "8.13",
+                  "agp":  "8.13.0"
+              },
+    "validation":  {
+                       "embeddedFilesMatched":  479,
+                       "lintRelease":  "passed",
+                       "nodeTestsPassed":  1020,
+                       "githubDownloadSha256Matched":  true,
+                       "apkSignatureVerified":  true,
+                       "actionsDuringChallengeAndTurn":  "passed",
+                       "packagedChromiumUiWithAndroidBridgeFixture":  {
+                                                                          "apkSha256":  "9d0b1894e5299f154ed8840970445b825eb98ae7f18fe6d9418b893f1d07309e",
+                                                                          "labels":  [
+                                                                                         0,
+                                                                                         6,
+                                                                                         26,
+                                                                                         27
+                                                                                     ],
+                                                                          "afterReload":  27,
+                                                                          "passed":  true
+                                                                      }
+                   },
+    "retention":  {
+                      "previousLocalTest":  "0.1.100",
+                      "publicLatest":  "0.1.104",
+                      "previousPublic":  "0.1.103"
+                  }
+}
