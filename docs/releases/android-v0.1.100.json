@@ -1,0 +1,42 @@
+{
+    "version":  "0.1.100",
+    "versionCode":  102,
+    "platform":  "android",
+    "channel":  "local-validation",
+    "sourceCommit":  "34b583499240e6443faf0ceab531b05e1c8bb02b",
+    "package":  "io.github.bakzzi.pokemonidle",
+    "minSdk":  31,
+    "targetSdk":  36,
+    "artifact":  "Pokemon-Idle-0.1.100.apk",
+    "bytes":  11873002,
+    "sha256":  "ed39d4a10ff25b4342c978f7feb0d4c52820225f500fca96d5883f287d12d773",
+    "signingCertificateSha256":  "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+    "build":  {
+                  "command":  "npm.cmd run mobile:build",
+                  "node":  "22.11.0",
+                  "gradle":  "8.13",
+                  "agp":  "8.13.0",
+                  "buildTools":  "36.1.0",
+                  "androidJavaScriptEngine":  "1.1.1"
+              },
+    "validation":  {
+                       "nodeTestsPassed":  1007,
+                       "touchLedgerChecks":  "passed",
+                       "lintRelease":  "passed",
+                       "assembleRelease":  "passed",
+                       "apkSignatureVerified":  true,
+                       "embeddedFilesMatched":  479,
+                       "bundleSha256":  "5d9656b4a9fde8a7dd1d7b616b61c9ba29dc45c758abb52a4542d8e207052ba2",
+                       "emulatorApi":  34,
+                       "settingsAndCrossAppInteractionChecks":  6,
+                       "foregroundMovementChecks":  5,
+                       "headlessChecks":  18,
+                       "recordAndNotificationChecks":  7,
+                       "physicalDeviceVerified":  false
+                   },
+    "retention":  {
+                      "localTest":  "0.1.100",
+                      "publicLatest":  "0.1.99",
+                      "previousPublic":  "0.1.98"
+                  }
+}
