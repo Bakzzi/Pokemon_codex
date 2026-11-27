@@ -8,6 +8,7 @@
       this.dirty=false;
       this.lockConsumed=Number.isSafeInteger(saved.lockConsumed)?saved.lockConsumed:0;
       this.usageConsumed=Number.isSafeInteger(saved.usageConsumed)&&saved.usageConsumed>=0?saved.usageConsumed:0;
+      this.usageBonusConsumed=Number.isSafeInteger(saved.usageBonusConsumed)&&saved.usageBonusConsumed>=0?saved.usageBonusConsumed:0;
       this.usageAt=saved.usageAt;this.usageMillis=saved.usageMillis;
       this.movementFixRewardClaimed=saved.movementFixRewardClaimed===true;
       // Preserve the legacy step cursor for save compatibility; steps never buy actions.
@@ -18,7 +19,7 @@
       this.game.data.workTokens=0;
     }
     pause(now){if(!this.foreground)return;this.foreground=false;this.pausedAt=now;this.game.data.workTokens=0;}
-    resume(now){this.accrueTravel(now);if(this.foreground)return;if(!Number.isSafeInteger(this.usageAt))this.shift(Math.max(0,now-(this.pausedAt||now)));this.foreground=true;this.pausedAt=0;}
+    resume(now){if(this.foreground)return;if(!Number.isSafeInteger(this.usageAt))this.shift(Math.max(0,now-(this.pausedAt||now)));this.foreground=true;this.pausedAt=0;}
     shift(delta){
       const g=this.game,d=g.data;g.nextTick+=delta;if(d.switchUntil)d.switchUntil+=delta;
       if(g.presentation?.())g.presentation().at+=delta;
@@ -41,8 +42,14 @@
       if(--account.bonusActions===0&&d.pendingBattle)account.finishBonusTurn=true;
       this.dirty=true;
     }
-    usageActions(total){
-      return Number.isSafeInteger(total)&&total>=this.usageConsumed?Math.floor((total-this.usageConsumed)/usageMillisPerAction):0;
+    usageActions(total,bonuses){
+      const timed=Number.isSafeInteger(total)&&total>=this.usageConsumed?Math.floor((total-this.usageConsumed)/usageMillisPerAction):0;
+      const earned=Number.isSafeInteger(bonuses)&&bonuses>=this.usageBonusConsumed?bonuses-this.usageBonusConsumed:0;
+      return Math.min(Number.MAX_SAFE_INTEGER,timed+earned);
+    }
+    spendUsageAction(total){
+      if(this.usageActions(total)>0)this.usageConsumed+=usageMillisPerAction;
+      else this.usageBonusConsumed++;
     }
     observe(totals,now){
       if(Number.isSafeInteger(now)&&Number.isSafeInteger(totals.usageMillis)&&totals.usageMillis>=0){
@@ -56,7 +63,6 @@
       }
       if(this.game.recordTravelTouches?.(totals.touches))this.dirty=true;
     }
-    accrueTravel(now){if(this.game.recordTravelTime?.(now))this.dirty=true;}
     claimMovementFixReward(now){
       if(this.game.platform!=='mobile'||this.movementFixRewardClaimed||!Number.isSafeInteger(now)||now<0)return false;
       const distance=this.game.data.mapTravel ||= {credit:0,bank:0};
@@ -102,7 +108,6 @@
     live(now,totals={}){
       if(!this.foreground)return false;
       this.observe(totals,now);
-      this.accrueTravel(now);
       const g=this.game,b=g.data.battle;
       if(g.automaticStoryTick?.(now)){this.dirty=true;return true;}
       if(g.presentation?.())return g.sceneTick(now)||this.dirty;
@@ -118,15 +123,14 @@
         if(g.activityStep?.(now)){this.spendBonusAction();return true;}
         return this.step(now,true)||this.dirty;
       }
-      if(this.usageActions(totals.usageMillis)>0){
-        if(g.activityStep?.(now)||this.step(now)){this.usageConsumed+=usageMillisPerAction;this.dirty=true;return true;}
+      if(this.usageActions(totals.usageMillis,totals.usageBonusActions)>0){
+        if(g.activityStep?.(now)||this.step(now)){this.spendUsageAction(totals.usageMillis);this.dirty=true;return true;}
       }
       return this.dirty;
     }
     catchUp(totals,now,maxActions=100){
-      const usage=totals?.usageMillis,active=totals?.usageActive===true;
+      const usage=totals?.usageMillis,bonuses=totals?.usageBonusActions,active=totals?.usageActive===true;
       this.observe(totals??{},now);
-      this.accrueTravel(now);
       const g=this.game;let used=0,moves=0,travelTurns=0;this.moreMovement=false;
       for(;used<maxActions;used++){
         if(active&&g.automaticStoryTick?.(now)){this.dirty=true;break;}
@@ -142,17 +146,17 @@
           if(this.movementTick(now,active)){travelTurns++;used--;continue;}
         }
         if(moves<512&&this.mapTick(now,active)){moves++;used--;continue;}
-        if(!active||!this.usageActions(usage))break;
+        if(!active||!this.usageActions(usage,bonuses))break;
         // Presentation and choices never spend phone-use actions.
         if(g.presentation?.()||!g.data.battle?.activityTrainer&&(g.data.battle?.kind==='trainer'||g.data.battle?.storyId))break;
-        if(g.activityStep?.(now)){this.usageConsumed+=usageMillisPerAction;continue;}
+        if(g.activityStep?.(now)){this.spendUsageAction(usage);continue;}
         // Consume recorded activity immediately, never simulate a future calendar.
         // Only presentation waits are skipped; every game transition still uses tick().
         this.skipWaits(now);
         const world=g.data.johtoUnlocked?g.data.johtoWorld:g.data.kantoWorld;
         if(!g.data.battle&&(g.data.pendingActions.some(a=>['travel','world-pass'].includes(a.kind))||world?.journey&&!g.data.pendingChallenge)&&g.controlTick(now)){used--;continue;}
         if(!this.step(now))break;
-        this.usageConsumed+=usageMillisPerAction;
+        this.spendUsageAction(usage);
       }
       while(moves<512){
         if(g.data.trainerSequence)break;
@@ -166,7 +170,7 @@
       return used;
     }
     challengeTick(now){const g=this.game;if(g.presentation?.())return g.sceneTick(now);return this.step(now)||g.controlTick(now);}
-    checkpoint(){return {consumed:this.consumed,lockConsumed:this.lockConsumed,usageConsumed:this.usageConsumed,usageAt:this.usageAt,usageMillis:this.usageMillis,pausedAt:this.pausedAt,nextTick:this.game.nextTick,movementFixRewardClaimed:this.movementFixRewardClaimed,storyPending:!!this.game.storyWorkPending?.()};}
+    checkpoint(){return {consumed:this.consumed,lockConsumed:this.lockConsumed,usageConsumed:this.usageConsumed,usageBonusConsumed:this.usageBonusConsumed,usageAt:this.usageAt,usageMillis:this.usageMillis,pausedAt:this.pausedAt,nextTick:this.game.nextTick,movementFixRewardClaimed:this.movementFixRewardClaimed,storyPending:!!this.game.storyWorkPending?.()};}
   }
   root.MobileProgression=Progression;if(typeof module==='object')module.exports=Progression;
 })(globalThis);

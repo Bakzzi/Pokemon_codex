@@ -1,6 +1,6 @@
 'use strict';
 // Mobile map distance is independent of battle activity and lock-time credits.
-const walking=require('../desktop/map-walk.js'),cost=2000,dailyInterval=12*60*60*1000;
+const walking=require('../desktop/map-walk.js'),cost=2000;
 // Keep the saved distance scale so earned resources and partial routes survive upgrades.
 const touchesPerCell=1000,unitsPerTouch=cost/touchesPerCell;
 const actionsPerResource=20;
@@ -9,16 +9,6 @@ const valid=n=>Number.isSafeInteger(n)&&n>=0;
 function world(game){return game.data.johtoUnlocked?game.data.johtoWorld:game.data.kantoWorld;}
 function hasIntent(game){return !!world(game)?.journey||game.data.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind));}
 const count=n=>valid(n)?n:0;
-function accrueTime(game,now){
- if(game.platform!=='mobile'||!valid(now))return false;
- const a=game.data.mapTravel ||= {credit:0,bank:0};
- // Start at first observation of this feature, without retroactive save-age credit.
- if(!valid(a.dailyAt)){a.dailyAt=now;return true;}
- if(now<a.dailyAt+dailyInterval)return false;
- const days=Math.floor((now-a.dailyAt)/dailyInterval);
- a.bank=Math.min(Number.MAX_SAFE_INTEGER,count(a.bank)+days*cost);
- a.dailyAt+=days*dailyInterval;return true;
-}
 function bankRemainder(game){const a=game.data.mapTravel;if(!a)return false;const credit=count(a.credit);a.bank=Math.min(Number.MAX_SAFE_INTEGER,count(a.bank)+credit);a.credit=0;return credit>0;}
 function beginIntent(game,previous){if(game.platform==='mobile'&&!previous&&hasIntent(game))bankRemainder(game);}
 function observe(game,total){
@@ -134,4 +124,4 @@ function snapshot(game,state){
  const phase=queued?'queued':game.data.battle?.movementTrainer?'trainer':usingBank&&trainerPending(game)?'trainer-wait':usingBank?'moving':null;
  return {travelMode:'touches',roadProgress:null,movement:{count:Math.floor(bank/cost),remainder:Math.floor(bank%cost/unitsPerTouch),required:touchesPerCell,usingBank,phase},touchProgress:trip&&remaining!==0&&!usingBank?{completed:Math.floor(Math.min(cost,count(game.data.mapTravel?.credit))/unitsPerTouch),required:touchesPerCell,remainingCells:remaining}:null};
 }
-module.exports={cost,touchesPerCell,dailyInterval,accrueTime,observe,hasIntent,beginIntent,bankRemainder,useBank,requestBank,bankActive,bankRequest,actionWallet,exchangeForActions,departing,trainerPending,handoff,start,migrate,advance,snapshot};
+module.exports={cost,touchesPerCell,observe,hasIntent,beginIntent,bankRemainder,useBank,requestBank,bankActive,bankRequest,actionWallet,exchangeForActions,departing,trainerPending,handoff,start,migrate,advance,snapshot};

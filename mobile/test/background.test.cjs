@@ -14,6 +14,22 @@ test('headless lock rewards start at twenty seconds and persist their exact curs
   let r=run(initial,{steps:0,usageActive:true,usageMillis:20000});assert.equal(r.used,1);assert.equal(r.save.mobile.usageConsumed,20000);assert.equal(r.save.mobile.consumed,0);
   assert.equal(run(r.save,{steps:0,usageActive:true,usageMillis:39999}).used,0);r=run(r.save,{steps:0,usageActive:true,usageMillis:40000});assert.equal(r.used,1);assert.equal(r.save.mobile.usageConsumed,40000);assert.equal(run(r.save,{steps:0,usageActive:true,usageMillis:40000}).used,0);
 });
+test('headless play spends the hourly bonus after regular time and never replays it', () => {
+  const initial = playable();
+  const active = { touches: 0, usageActive: true, usageMillis: 20000, usageBonusActions: 1 };
+  const paused = run(initial, { ...active, usageActive: false });
+  assert.equal(paused.used, 0);
+  const regular = JSON.parse(c.MobileBackground.run(JSON.stringify(paused.save || initial), active, now, 1));
+  assert.equal(regular.used, 1);
+  assert.equal(regular.save.mobile.usageConsumed, 20000);
+  assert.equal(regular.save.mobile.usageBonusConsumed, 0);
+
+  const bonus = run(regular.save, active);
+  assert.equal(bonus.used, 1);
+  assert.equal(bonus.save.mobile.usageConsumed, 20000);
+  assert.equal(bonus.save.mobile.usageBonusConsumed, 1);
+  assert.equal(run(bonus.save, active).used, 0);
+});
 test('background checkpoints pay once, preserve remainders and resume without a long wait',()=>{
   let r=run(playable(),25);assert.equal(r.used,2);assert.equal(r.save.mobile.usageConsumed,40000);assert.equal(run(r.save,29).used,0);
   r=run(r.save,35,now+100000);assert.equal(r.used,1);assert.equal(r.save.mobile.usageConsumed,60000);

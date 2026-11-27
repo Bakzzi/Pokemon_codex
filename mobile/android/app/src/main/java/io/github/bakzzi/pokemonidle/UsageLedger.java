@@ -5,18 +5,27 @@ import java.time.ZoneId;
 
 /** Observed phone-use time only; never infer time across service restarts. */
 public final class UsageLedger {
+    private static final long HOUR_MILLIS=3600000L;
     public long totalMillis, lastElapsed=-1, lastBoot=-1;
+    public long bonusActions;
+    private long streakRemainder;
     public long todayMillis, monthMillis;
     public String day="",month="",monthSince="";
     public boolean monthPartial;
     public boolean active;
-    public void start(boolean active,long elapsed,long boot){this.active=active;lastElapsed=elapsed;lastBoot=boot;}
+    public void start(boolean active,long elapsed,long boot){this.active=active;lastElapsed=elapsed;lastBoot=boot;streakRemainder=0;}
     public void sample(boolean active,long elapsed,long boot){
         if(elapsed<0)return;
         if(this.active&&boot>=0&&boot==lastBoot&&lastElapsed>=0&&elapsed>=lastElapsed){
-            totalMillis+=Math.min(elapsed-lastElapsed,Long.MAX_VALUE-totalMillis);
-        }
-        start(active,elapsed,boot);
+            long delta=elapsed-lastElapsed;
+            totalMillis+=Math.min(delta,Long.MAX_VALUE-totalMillis);
+            long remainder=streakRemainder+delta%HOUR_MILLIS;
+            long earned=delta/HOUR_MILLIS+remainder/HOUR_MILLIS;
+            bonusActions+=Math.min(earned,Long.MAX_VALUE-bonusActions);
+            streakRemainder=remainder%HOUR_MILLIS;
+        }else streakRemainder=0;
+        if(!active)streakRemainder=0;
+        this.active=active;lastElapsed=elapsed;lastBoot=boot;
     }
     public void rollover(long now,ZoneId zone){
         String current=WalkingCounter.dayKey(now,zone),currentMonth=WalkingCounter.monthKey(now,zone);

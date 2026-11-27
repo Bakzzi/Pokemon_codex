@@ -38,7 +38,7 @@ function renderActionWallet(){
   $('move-stock').textContent=stock.toLocaleString('ko-KR')+'개';
   $('exchange-actions').disabled=available===0;
   $('exchange-cost').textContent=stock>0&&available===0?'이동에 사용 중':'이동 자원 1개 사용';
-  const actions=remaining+progression.usageActions(nativeState.usageMillis);
+  const actions=remaining+progression.usageActions(nativeState.usageMillis,nativeState.usageBonusActions);
   $('remaining-actions').textContent='남은 행동 '+actions.toLocaleString('ko-KR')+'회';
 }
 function refreshNative(){

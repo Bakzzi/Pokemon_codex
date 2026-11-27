@@ -35,6 +35,8 @@ test('time earned during a story challenge and movement exchange share one live 
  f.run("$('exchange-actions').onclick()");assert.equal(f.run("$('remaining-actions').textContent"),'남은 행동 26회');
  f.run('mobileLifecycle(true,true)');assert.equal(f.run("$('remaining-actions').textContent"),'남은 행동 26회');
  f.status.usageMillis=140000;f.tick();assert.equal(f.run("$('remaining-actions').textContent"),'남은 행동 27회');
+ f.status.usageBonusActions=1;f.tick();assert.equal(f.run("$('remaining-actions').textContent"),'남은 행동 28회');
+ f.run('mobileLifecycle(true,true)');assert.equal(f.run("$('remaining-actions').textContent"),'남은 행동 28회');
 });
 test('the touch guide opens from the home card and confirms actual service state after returning',()=>{
  const f=fixture();f.start();assert.equal(f.run("$('touch-status').textContent"),'터치 기록 · 꺼짐');
@@ -68,8 +70,9 @@ test('phone-use calendar rollover keeps lifetime usage',()=>{
  assert.equal(f.run("$('usage-today').textContent"),'0시간 0분');assert.equal(f.run("$('usage-month').textContent"),'0시간 0분');assert.equal(f.run("$('usage-total').textContent"),'100시간 0분');
 });
 test('full game reset preserves phone-use statistics and discards only the prior gameplay credit',()=>{
- const f=fixture();Object.assign(f.status,{usageTodayMillis:8100000,usageMonthlyMillis:95400000,usageMillis:360000000});f.start();f.run("$('reset-accept').onclick()");
+ const f=fixture();Object.assign(f.status,{usageTodayMillis:8100000,usageMonthlyMillis:95400000,usageMillis:360000000,usageBonusActions:3});f.start();f.run("$('reset-accept').onclick()");
  assert.equal(f.run("$('usage-today').textContent"),'2시간 15분');assert.equal(f.run("$('usage-month').textContent"),'26시간 30분');assert.equal(f.run("$('usage-total').textContent"),'100시간 0분');assert.equal(f.stored().mobile.usageConsumed,360000000);
+ assert.equal(f.stored().mobile.usageBonusConsumed,3);assert.equal(f.run("$('remaining-actions').textContent"),'남은 행동 0회');
 });
 test('parked app displays and banks touches without granting battles or experience',()=>{
   const f=fixture();f.run("game.requestAction('story-travel',false)");f.start();const before=f.snapshot().game;

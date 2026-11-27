@@ -41,7 +41,7 @@ public final class StepService extends Service {
     private boolean clockRegistered;
     static boolean locked(Context c){return !c.getSystemService(PowerManager.class).isInteractive()||c.getSystemService(KeyguardManager.class).isKeyguardLocked();}
     static boolean usingPhone(Context c){return c.getSystemService(PowerManager.class).isInteractive()&&(!c.getSystemService(KeyguardManager.class).isKeyguardLocked()||MainActivity.visible);}
-    static void sampleUsage(){StepService s=instance;if(s!=null)s.recordLock(locked(s),SystemClock.elapsedRealtime());}
+    static void sampleUsage(){StepService s=instance;if(s!=null)s.recordLock(null);}
     static long usageToday(Context c){android.content.SharedPreferences p=c.getSharedPreferences("steps",0);return WalkingCounter.dayKey(System.currentTimeMillis(),ZoneId.systemDefault()).equals(p.getString("usageDay",""))?p.getLong("usageTodayMillis",0):0;}
     static long usageMonthly(Context c){android.content.SharedPreferences p=c.getSharedPreferences("steps",0);return WalkingCounter.monthKey(System.currentTimeMillis(),ZoneId.systemDefault()).equals(p.getString("usageMonth",""))?p.getLong("usageMonthMillis",0):0;}
     static String usageSince(Context c){android.content.SharedPreferences p=c.getSharedPreferences("steps",0);return p.getBoolean("usageMonthPartial",false)&&WalkingCounter.monthKey(System.currentTimeMillis(),ZoneId.systemDefault()).equals(p.getString("usageMonth",""))?p.getString("usageMonthSince",""):"";}
@@ -66,7 +66,7 @@ public final class StepService extends Service {
         super.onCreate();prefs=getSharedPreferences("steps",0);
         boot=Settings.Global.getInt(getContentResolver(),Settings.Global.BOOT_COUNT,-1);
         locks=new LockLedger();locks.totalMillis=prefs.getLong("lockMillis",0);locks.start(locked(this),SystemClock.elapsedRealtime(),boot);
-        usage=new UsageLedger();usage.totalMillis=prefs.getLong("usageMillis",0);usage.day=prefs.getString("usageDay","");usage.todayMillis=prefs.getLong("usageTodayMillis",0);usage.month=prefs.getString("usageMonth","");usage.monthMillis=prefs.getLong("usageMonthMillis",0);usage.monthSince=prefs.getString("usageMonthSince","");usage.monthPartial=prefs.getBoolean("usageMonthPartial",false);usage.rollover(System.currentTimeMillis(),ZoneId.systemDefault());usage.start(usingPhone(this),SystemClock.elapsedRealtime(),boot);
+        usage=new UsageLedger();usage.totalMillis=prefs.getLong("usageMillis",0);usage.bonusActions=prefs.getLong("usageBonusActions",0);usage.day=prefs.getString("usageDay","");usage.todayMillis=prefs.getLong("usageTodayMillis",0);usage.month=prefs.getString("usageMonth","");usage.monthMillis=prefs.getLong("usageMonthMillis",0);usage.monthSince=prefs.getString("usageMonthSince","");usage.monthPartial=prefs.getBoolean("usageMonthPartial",false);usage.rollover(System.currentTimeMillis(),ZoneId.systemDefault());usage.start(usingPhone(this),SystemClock.elapsedRealtime(),boot);
         lockEpoch=prefs.getLong("lockEpoch",0)+(locks.locked?1:0);
         NotificationManager nm=getSystemService(NotificationManager.class);
         nm.createNotificationChannel(new NotificationChannel("walking","모험 기록",NotificationManager.IMPORTANCE_LOW));
@@ -78,15 +78,17 @@ public final class StepService extends Service {
         clockRegistered=true;scheduleMidnight();clock.postDelayed(pulse,10000);BackgroundAdventure.get(this).request();
     }
     synchronized void changeMode(boolean foreground) { observeLock(null); }
-    private synchronized void observeLock(Boolean forced){recordLock(forced==null?locked(this):forced,SystemClock.elapsedRealtime());clock.removeCallbacks(pulse);clock.postDelayed(pulse,usage.active?1000:10000);}
-    synchronized void recordLock(boolean locked,long elapsed){
+    private synchronized void observeLock(Boolean forced){recordLock(forced);clock.removeCallbacks(pulse);clock.postDelayed(pulse,usage.active?1000:10000);}
+    private synchronized void recordLock(Boolean forced){
+        boolean locked=forced==null?locked(this):forced;
+        long elapsed=SystemClock.elapsedRealtime();
         if(locked&&!locks.locked)lockEpoch++;
         long oldMinute=usage.todayMillis/60000;
-        locks.sample(locked,elapsed,boot);usage.sample(!locked||usingPhone(this),elapsed,boot,System.currentTimeMillis(),ZoneId.systemDefault());persist();if(oldMinute!=usage.todayMillis/60000)queueNotification();BackgroundAdventure.get(this).request();
+        locks.sample(locked,elapsed,boot);usage.sample(forced==null?usingPhone(this):!forced,elapsed,boot,System.currentTimeMillis(),ZoneId.systemDefault());persist();if(oldMinute!=usage.todayMillis/60000)queueNotification();BackgroundAdventure.get(this).request();
     }
     private void scheduleMidnight(){clock.removeCallbacks(midnight);clock.postDelayed(midnight,Math.max(1000,WalkingCounter.nextMidnight(System.currentTimeMillis(),ZoneId.systemDefault())-System.currentTimeMillis()));}
     private synchronized void refreshClock(){long now=System.currentTimeMillis();usage.rollover(now,ZoneId.systemDefault());persist();queueNotification();scheduleMidnight();}
-    private void persist(){prefs.edit().putLong("lockMillis",locks.totalMillis).putLong("lockEpoch",lockEpoch).putLong("usageMillis",usage.totalMillis).putString("usageDay",usage.day).putLong("usageTodayMillis",usage.todayMillis).putString("usageMonth",usage.month).putLong("usageMonthMillis",usage.monthMillis).putString("usageMonthSince",usage.monthSince).putBoolean("usageMonthPartial",usage.monthPartial).commit();}
+    private void persist(){prefs.edit().putLong("lockMillis",locks.totalMillis).putLong("lockEpoch",lockEpoch).putLong("usageMillis",usage.totalMillis).putLong("usageBonusActions",usage.bonusActions).putString("usageDay",usage.day).putLong("usageTodayMillis",usage.todayMillis).putString("usageMonth",usage.month).putLong("usageMonthMillis",usage.monthMillis).putString("usageMonthSince",usage.monthSince).putBoolean("usageMonthPartial",usage.monthPartial).commit();}
     @Override public int onStartCommand(Intent i,int f,int id) { observeLock(null);return START_STICKY; }
     @Override public void onDestroy() { observeLock(null);instance=null;clock.removeCallbacksAndMessages(null);notificationWorker.shutdown();if(clockRegistered)unregisterReceiver(dateChanged);super.onDestroy(); }
     @Override public IBinder onBind(Intent intent) { return null; }

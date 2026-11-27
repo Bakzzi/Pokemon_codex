@@ -94,7 +94,7 @@ public final class MainActivity extends Activity {
                     .put("touches",TouchService.total(MainActivity.this)).put("todayTouches",TouchService.today(MainActivity.this))
                     .put("monthlyTouches",TouchService.monthly(MainActivity.this)).put("touchTracking",TouchService.enabled(MainActivity.this))
                     .put("lockMillis",p.getLong("lockMillis",0)).put("lockEpoch",p.getLong("lockEpoch",0))
-                    .put("usageMillis",p.getLong("usageMillis",0)).put("usageActive",StepService.usingPhone(MainActivity.this))
+                    .put("usageMillis",p.getLong("usageMillis",0)).put("usageBonusActions",p.getLong("usageBonusActions",0)).put("usageActive",StepService.usingPhone(MainActivity.this))
                     .put("usageTodayMillis",StepService.usageToday(MainActivity.this)).put("usageMonthlyMillis",StepService.usageMonthly(MainActivity.this))
                     .put("monitorError",p.getString("monitorError","")).put("backgroundError",p.getString("backgroundError",""))
                     .put("versionName",updater.installedName).put("versionCode",updater.installedCode)

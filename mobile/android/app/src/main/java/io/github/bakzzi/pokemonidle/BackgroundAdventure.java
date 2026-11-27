@@ -26,15 +26,12 @@ final class BackgroundAdventure {
     private BackgroundAdventure(Context c){context=c;store=AdventureStore.get(c);}
     void request(){requested.set(true);if(!queued.compareAndSet(false,true))return;worker.execute(this::drain);}
     private long usage(){return context.getSharedPreferences("steps",0).getLong("usageMillis",0);}
-    static boolean dailyMovementDue(JSONObject distance,long now){
-        if(distance==null||distance.isNull("dailyAt"))return true;
-        long at=distance.optLong("dailyAt",-1);
-        return at<0||now>=at&&now-at>=43200000L;
-    }
+    private long usageBonus(){return context.getSharedPreferences("steps",0).getLong("usageBonusActions",0);}
     private boolean available(JSONObject save){
         JSONObject mobile=save.optJSONObject("mobile"),game=save.optJSONObject("game");
         boolean active=StepService.usingPhone(context);
-        if(active&&usage()-(mobile==null?0:mobile.optLong("usageConsumed",0))>=20000)return true;
+        if(active&&(usage()-(mobile==null?0:mobile.optLong("usageConsumed",0))>=20000
+            ||usageBonus()>(mobile==null?0:mobile.optLong("usageBonusConsumed",0))))return true;
         if(game==null)return false;
         JSONObject map=game.optJSONObject(game.optLong("johtoUnlocked",0)>0?"johtoWorld":"kantoWorld"),distance=game.optJSONObject("mapTravel");
         JSONObject trip=map==null?null:map.optJSONObject("journey"),battle=game.optJSONObject("battle");
@@ -43,11 +40,11 @@ final class BackgroundAdventure {
         boolean moving=trip!=null,bankRequested=false;
         JSONArray pending=game.optJSONArray("pendingActions");
         if(pending!=null)for(int i=0;i<pending.length();i++){JSONObject a=pending.optJSONObject(i);if(a!=null&&(a.optString("kind").equals("travel")||a.optString("kind").equals("world-pass"))){moving=true;bankRequested|=a.optBoolean("useBank");}}
-        return dailyMovementDue(distance,System.currentTimeMillis())||TouchService.total(context)>distance.optLong("touchesObserved",0)
+        return TouchService.total(context)>(distance==null?0:distance.optLong("touchesObserved",0))
             ||battle!=null&&battle.optBoolean("movementTrainer")
             ||trip!=null&&(trip.optBoolean("bankLeg")||trip.optInt("bankCells")>0)
             ||bankRequested
-            ||moving&&distance.optLong("credit",0)>=2000;
+            ||moving&&distance!=null&&distance.optLong("credit",0)>=2000;
     }
     private void drain(){
         boolean retry=false;PowerManager.WakeLock wake=null;busy=true;requested.set(false);
@@ -63,7 +60,7 @@ final class BackgroundAdventure {
             for(int batch=0;batch<32;batch++){
                 before=store.backgroundSnapshot();if(before==null)break;
                 long count=TouchService.total(context),now=System.currentTimeMillis();
-                String code="MobileBackground.run("+JSONObject.quote(before.raw)+",{touches:"+count+",usageMillis:"+usage()+",usageActive:"+StepService.usingPhone(context)+"},"+now+")";
+                String code="MobileBackground.run("+JSONObject.quote(before.raw)+",{touches:"+count+",usageMillis:"+usage()+",usageBonusActions:"+usageBonus()+",usageActive:"+StepService.usingPhone(context)+"},"+now+")";
                 JSONObject result=new JSONObject(isolate.evaluateJavaScriptAsync(code).get(30,TimeUnit.SECONDS));
                 if(result.getInt("used")==0&&!result.optBoolean("changed"))break;
                 if(!store.commitBackground(before,result.getJSONObject("save").toString()))break;

@@ -22,9 +22,12 @@ final class BackgroundChecks {
         return state.toString();
     }
     private static void await(BackgroundAdventure runner,AdventureStore store,long expected)throws Exception{
+        await(runner,store,"usageConsumed",expected);
+    }
+    private static void await(BackgroundAdventure runner,AdventureStore store,String cursor,long expected)throws Exception{
         long end=SystemClock.elapsedRealtime()+45000;
-        do{runner.barrier().get(45,TimeUnit.SECONDS);if(consumed(store)==expected)return;Thread.sleep(50);}while(SystemClock.elapsedRealtime()<end);
-        check(false,"Paid cursor differs: "+store.read());
+        do{runner.barrier().get(45,TimeUnit.SECONDS);if(new JSONObject(store.read()).getJSONObject("mobile").optLong(cursor,0)==expected)return;Thread.sleep(50);}while(SystemClock.elapsedRealtime()<end);
+        check(false,"Paid cursor differs for "+cursor+": "+store.read());
     }
     private static void awaitTouches(BackgroundAdventure runner,AdventureStore store,long expected)throws Exception{
         long end=SystemClock.elapsedRealtime()+15000;
@@ -40,12 +43,12 @@ final class BackgroundChecks {
         AdventureStore store=AdventureStore.get(context);Object owner=new Object();store.claimUi(owner);
         // An existing adventure: a fresh installation now waits for its first dialogue.
         check(store.saveUi(owner,"{\"format\":1,\"game\":{\"version\":1},\"mobile\":{\"consumed\":0},\"savedAt\":0}"),"Fixture save failed");store.releaseUi(owner);
-        android.content.SharedPreferences prefs=context.getSharedPreferences("steps",0);prefs.edit().putLong("usageMillis",0).putLong("lockEpoch",0).commit();
+        android.content.SharedPreferences prefs=context.getSharedPreferences("steps",0);prefs.edit().putLong("usageMillis",0).putLong("usageBonusActions",0).putLong("lockEpoch",0).commit();
         SharedPreferences touches=TouchService.preferences(context);
-        touches.edit().putLong("total",0).commit();
+        touches.edit().putLong("total",1).commit();
         context.getSystemService(NotificationManager.class).createNotificationChannel(new NotificationChannel("walking","모험 기록",NotificationManager.IMPORTANCE_LOW));
         BackgroundAdventure runner=BackgroundAdventure.get(context);
-        runner.request();awaitTouches(runner,store,0);
+        runner.request();awaitTouches(runner,store,1);
         // The legacy loader regenerates version-one saves with automatic travel enabled.
         // Use the migrated save to represent a player without an active destination.
         store.claimUi(owner);
@@ -53,6 +56,7 @@ final class BackgroundChecks {
         JSONObject game=stationary.getJSONObject("game");
         game.put("storyTravel",new JSONObject().put("enabled",false));
         game.getJSONObject("kantoWorld").remove("journey");
+        game.getJSONObject("mapTravel").put("credit",0).put("bank",2);
         check(store.saveUi(owner,stationary.toString()),"Stationary fixture save failed");
         store.releaseUi(owner);
         touches.edit().putLong("total",9).commit();runner.request();awaitTouches(runner,store,9);
@@ -70,17 +74,17 @@ final class BackgroundChecks {
         touches.edit().putLong("total",65).commit();runner.request();awaitTouches(runner,store,65);touches.edit().putLong("total",75).commit();runner.request();awaitTouches(runner,store,75);
         prefs.edit().putLong("usageMillis",80000).commit();runner.request();await(runner,store,80000);
         check("UI retained".equals(new JSONObject(store.read()).getJSONObject("game").getString("fixtureMarker")),"UI change lost after handoff");
-        // A due grant must wake the native runner even with unchanged touch/lock counters.
+        // An old timestamp must not grant distance, even when enough time has passed.
         store.claimUi(owner);JSONObject daily=new JSONObject(store.read()),account=daily.getJSONObject("game").getJSONObject("mapTravel");
         long dailyAt=System.currentTimeMillis()-2*43200000L-1000,bank=account.getLong("bank");account.put("dailyAt",dailyAt);
-        check(!BackgroundAdventure.dailyMovementDue(account,dailyAt+43200000L-1),"Daily reward triggered early");
-        check(BackgroundAdventure.dailyMovementDue(account,dailyAt+43200000L),"Daily reward missing at boundary");
-        check(!BackgroundAdventure.dailyMovementDue(account,dailyAt-1),"Clock rollback grants a reward");
         check(store.saveUi(owner,daily.toString()),"Daily fixture save failed");store.releaseUi(owner);before=gameplay(store);
         runner.request();runner.barrier().get(45,TimeUnit.SECONDS);JSONObject paid=new JSONObject(store.read()).getJSONObject("game").getJSONObject("mapTravel");
-        check(paid.getLong("bank")==bank+4000&&paid.getLong("dailyAt")==dailyAt+2*43200000L,"Daily bank or remainder incorrect");
-        check(consumed(store)==80000&&before.equals(gameplay(store)),"Daily grant advanced ordinary gameplay");
-        runner.request();runner.barrier().get(45,TimeUnit.SECONDS);check(new JSONObject(store.read()).getJSONObject("game").getJSONObject("mapTravel").getLong("bank")==bank+4000,"Daily grant replayed");
+        check(paid.getLong("bank")==bank&&paid.getLong("dailyAt")==dailyAt,"Old timer changed banked movement");
+        check(consumed(store)==80000&&before.equals(gameplay(store)),"Old timer advanced gameplay");
+        // A new earned bonus alone must wake the native runner and be spent once.
+        prefs.edit().putLong("usageBonusActions",1).commit();runner.request();await(runner,store,"usageBonusConsumed",1);
+        check(consumed(store)==80000&&movement(store).getLong("bank")==bank,"Bonus spent regular time or banked movement");
+        before=gameplay(store);runner.request();runner.barrier().get(45,TimeUnit.SECONDS);check(before.equals(gameplay(store)),"Bonus advanced gameplay twice");
         Bundle result=new Bundle();result.putString("result","passed");result.putInt("backgroundChecks",18);result.putLong("usageConsumed",consumed(store));result.putBoolean("noActivityCreated",!MainActivity.visible);context.getSystemService(NotificationManager.class).cancel(7);runner.closeWhenIdle();runner.barrier().get(10,TimeUnit.SECONDS);return result;
     }
 }
