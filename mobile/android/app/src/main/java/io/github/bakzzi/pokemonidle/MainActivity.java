@@ -104,10 +104,17 @@ public final class MainActivity extends Activity {
             } catch(JSONException e){throw new IllegalStateException(e);}
         }
         @JavascriptInterface public void openAccessibilitySettings(){
+            openSettings(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS),"휴대폰 설정에서 접근성 메뉴를 열어 주세요.");
+        }
+        @JavascriptInterface public void openTouchAppInfo(){
+            Intent intent=new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,Uri.fromParts("package",getPackageName(),null));
+            openSettings(intent,"휴대폰 설정의 애플리케이션 목록에서 포켓몬 작은 모험을 열어 주세요.");
+        }
+        private void openSettings(Intent intent,String fallback){
             runOnUiThread(()->{
-                try { startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)); }
+                try { startActivity(intent); }
                 catch (ActivityNotFoundException | SecurityException e) {
-                    android.widget.Toast.makeText(MainActivity.this,"휴대폰 설정에서 접근성 메뉴를 열어 주세요.",android.widget.Toast.LENGTH_SHORT).show();
+                    android.widget.Toast.makeText(MainActivity.this,fallback,android.widget.Toast.LENGTH_SHORT).show();
                 }
             });
         }

@@ -2,3 +2,28 @@
 .walk-counts{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:12px}.walk-counts p{margin:0;color:#b8c8ae;font-size:12px;line-height:1.6}.walk-counts b{color:#edf1e7;font-weight:600;margin-left:4px;font-variant-numeric:tabular-nums}
 
 .walk-usage{margin-top:16px;padding-top:12px;border-top:1px solid #40583f}.walk-usage .walk-counts{margin-top:6px}
+
+.touch-card-heading,.touch-guide-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.touch-card-heading button,.touch-guide-header button{width:auto;margin:0;padding:7px 12px;min-height:44px;font-size:12px;flex-shrink:0}
+.touch-guide-header h2{margin:0}
+#touch-guide{padding:18px;max-height:calc(100% - 24px)}
+#touch-guide-status{display:inline-block;margin:5px 0 0;padding:1px 9px;border:1px solid #5b7059;border-radius:99px;font-weight:700;color:#dae5ce}
+#touch-guide-status[data-enabled="true"]{color:#e7f2b0;background:#3a5233;border-color:#809d5d}
+.touch-guide-card{padding:12px;border:1px solid #4c654e;border-radius:11px;background:#1a2b21}
+.touch-guide-card h3{margin:0;color:#edf0e2}.touch-guide-card p{margin:7px 0 10px}
+.touch-guide-card strong{color:#f1f3df}
+.touch-diagram{margin:0;border:1px solid #526b53;border-radius:9px;overflow:hidden;background:#24372c}
+.touch-diagram-title,.touch-diagram-row{display:flex;align-items:center;gap:8px;padding:7px 10px;font-size:12px}
+.touch-diagram-title{color:#b9caaf;background:#151f19;min-height:28px}
+.touch-diagram-row{justify-content:space-between;padding-block:9px;color:#edf1e4;line-height:1.4}
+.touch-diagram-row strong{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;margin-left:auto;color:#f0f5d6}
+.touch-diagram-switch{display:inline-block;width:32px;height:18px;border-radius:20px;background:#bacf7d;border:1px solid #d4e39f;position:relative}
+.touch-diagram-switch::after{content:"";position:absolute;inset:2px 2px auto auto;width:12px;height:12px;border-radius:50%;background:#25351e}
+.touch-guide-primary{background:#d4df9d;color:#23331d;font-weight:750}
+.touch-guide-help{border-color:#766547;background:#302b21}
+.touch-guide-help summary{cursor:pointer;color:#f1d593;font-weight:700;line-height:1.4;min-height:30px;padding:5px 0}
+.touch-guide-help .touch-diagram{border-color:#83714c;background:#372f23}
+.touch-guide-help .touch-diagram-title{justify-content:space-between;background:#221e16}
+.touch-guide-help .touch-diagram-row strong{margin-left:0;color:#f2d695}
+.touch-diagram-menu{font-size:17px;line-height:1;color:#f6dca1;background:#5c4a31;padding:0 5px;border-radius:4px}
+.touch-guide-help button{margin-bottom:0}

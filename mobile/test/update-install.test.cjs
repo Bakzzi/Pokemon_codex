@@ -5,8 +5,8 @@ const {Game}=require('../../desktop/game.cjs');
 function fixture(){
   let now=Date.parse('2026-10-17T06:00:00Z'),stored={format:1,game:new Game({},Date.parse('2026-10-17T06:00:00Z')).data,mobile:{consumed:0}},saveOk=true;const calls=[],timers=[],intervals=[],elements=new Map();
   const status={touches:0,touchTracking:false,update:'',updateReady:false,installing:false,pendingInstall:false,canInstall:true};
-  const element=id=>{if(!elements.has(id))elements.set(id,{hidden:false,open:false,style:{},dataset:{},clientWidth:380,contentWindow:{postMessage(){}},setAttribute(name,value){this[name]=value;},getAttribute(name){return this[name]??null;},removeAttribute(name){delete this[name];},showModal(){this.open=true;},close(){this.open=false;}});return elements.get(id);};
-  const native={load:()=>JSON.stringify(stored||{}),save:text=>{calls.push('save');if(saveOk)stored=JSON.parse(text);return saveOk;},foreground:()=>true,status:()=>JSON.stringify(status),ready(){},reportError(){},openAccessibilitySettings(){calls.push('accessibility-settings');},installUpdate(){calls.push('install');status.updateReady=false;status.installing=true;}};
+  const element=id=>{if(!elements.has(id))elements.set(id,{hidden:false,open:false,style:{},dataset:{},clientWidth:380,contentWindow:{postMessage(){}},setAttribute(name,value){this[name]=value;},getAttribute(name){return this[name]??null;},removeAttribute(name){delete this[name];},showModal(){this.open=true;},close(){this.open=false;},scrollIntoView(){this.scrolled=true;}});return elements.get(id);};
+  const native={load:()=>JSON.stringify(stored||{}),save:text=>{calls.push('save');if(saveOk)stored=JSON.parse(text);return saveOk;},foreground:()=>true,status:()=>JSON.stringify(status),ready(){},reportError(){},openAccessibilitySettings(){calls.push('accessibility-settings');},openTouchAppInfo(){calls.push('touch-app-info');},installUpdate(){calls.push('install');status.updateReady=false;status.installing=true;}};
   const c=vm.createContext({console,TextEncoder,TextDecoder,structuredClone,Date:class extends Date{static now(){return now;}},Android:native,MobileConfig:{name:'fixture',stepsPerAction:10},document:{getElementById:element},location:{origin:'https://game.pokemon.local'},setInterval:fn=>intervals.push(fn),setTimeout:fn=>timers.push(fn),clearTimeout(){},clearInterval(){},addEventListener(){}});
   vm.runInContext('window=globalThis',c);
   for(const file of ['mobile/android/app/build/generated/gameAssets/web/game.bundle.js','mobile/web/progression.js','desktop/npc-portraits.js','desktop/story-presentation.js','mobile/web/story-ui.js','mobile/web/app.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),c);
@@ -18,10 +18,24 @@ test('touch card shows today, calendar month and lifetime',()=>{
  assert.equal(f.run("$('touch-today').textContent"),'71회');assert.equal(f.run("$('touch-month').textContent"),'9,000회');assert.equal(f.run("$('touch-total').textContent"),'103,444회');
  Object.assign(f.status,{todayTouches:0,monthlyTouches:0,monthlySince:''});f.tick();assert.equal(f.run("$('touch-month').textContent"),'0회');assert.equal(f.run("$('touch-total').textContent"),'103,444회');
 });
-test('the accessibility settings shortcut opens Android settings and displays the returned service state',()=>{
+test('the touch guide opens from the home card and confirms actual service state after returning',()=>{
  const f=fixture();f.start();assert.equal(f.run("$('touch-status').textContent"),'터치 기록 · 꺼짐');
+ f.run("$('touch-home-open').onclick()");assert.ok(f.run("$('touch-guide').open"));assert.equal(f.run("$('touch-blocked-help').open"),false);
  f.run("$('accessibility-settings').onclick()");assert.equal(f.calls.at(-1),'accessibility-settings');
  f.status.touchTracking=true;f.run('mobileLifecycle(true,true)');assert.equal(f.run("$('touch-status').textContent"),'터치 기록 · 켜짐');
+ assert.equal(f.run("$('touch-guide-status').textContent"),'켜짐');assert.ok(f.run("$('touch-home-open').hidden && $('touch-enable-steps').hidden && $('touch-blocked-help').hidden"));
+ assert.equal(f.run("$('touch-settings-open').textContent"),'터치 기록 설정');
+});
+test('returning without touch access opens the restriction guide, then app info returns to the accessibility shortcut',()=>{
+ const f=fixture();f.start();f.run("$('settings-open').onclick();$('touch-settings-open').onclick()");
+ assert.ok(f.run("$('settings').open && $('touch-guide').open"));
+ f.run("$('accessibility-settings').onclick();mobileLifecycle(false);mobileLifecycle(true,true)");
+ assert.ok(f.run("$('touch-blocked-help').open && $('touch-blocked-help').scrolled"));
+ f.run("$('touch-guide').scrollTop=150;$('touch-app-info').onclick()");assert.equal(f.calls.at(-1),'touch-app-info');
+ f.run('mobileLifecycle(false);mobileLifecycle(true,true)');
+ assert.equal(f.run("$('touch-guide').scrollTop"),0);assert.ok(f.run("$('touch-blocked-help').open"));
+ assert.equal(f.run("$('touch-guide-status').textContent"),'꺼짐');
+ f.run('mobileBack()');assert.ok(f.run("$('settings').open && !$('touch-guide').open"));
 });
 test('full game reset retains the native monthly, daily and lifetime touch records',()=>{
  const f=fixture();Object.assign(f.status,{todayTouches:71,monthlyTouches:9000,touches:103444});f.start();f.run("$('reset-accept').onclick()");
