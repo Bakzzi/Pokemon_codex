@@ -18,6 +18,14 @@ test('touch card shows today, calendar month and lifetime',()=>{
  assert.equal(f.run("$('touch-today').textContent"),'71회');assert.equal(f.run("$('touch-month').textContent"),'9,000회');assert.equal(f.run("$('touch-total').textContent"),'103,444회');
  Object.assign(f.status,{todayTouches:0,monthlyTouches:0,monthlySince:''});f.tick();assert.equal(f.run("$('touch-month').textContent"),'0회');assert.equal(f.run("$('touch-total').textContent"),'103,444회');
 });
+test('home exchanges one resource, saves the free actions and disables the button at zero balance',()=>{
+ const f=fixture();f.start();assert.equal(f.run("$('move-stock').textContent"),'1개');
+ assert.equal(f.run("$('exchange-actions').disabled"),false);
+ f.run("$('exchange-actions').onclick();$('exchange-actions').onclick()");
+ assert.equal(f.stored().game.mapTravel.bank,0);assert.equal(f.stored().game.mapTravel.bonusActions,20);
+ assert.equal(f.run("$('exchange-actions').disabled"),true);
+ f.run('mobileLifecycle(true,true)');assert.equal(f.run("$('bonus-actions').textContent"),'남은 무료 행동 20회');
+});
 test('the touch guide opens from the home card and confirms actual service state after returning',()=>{
  const f=fixture();f.start();assert.equal(f.run("$('touch-status').textContent"),'터치 기록 · 꺼짐');
  f.run("$('touch-home-open').onclick()");assert.ok(f.run("$('touch-guide').open"));assert.equal(f.run("$('touch-blocked-help').open"),false);

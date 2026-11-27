@@ -4,7 +4,7 @@ const root=path.resolve(__dirname,'../..');
 const context=vm.createContext({console,setTimeout,clearTimeout,structuredClone,TextEncoder,TextDecoder});
 vm.runInContext(fs.readFileSync(path.join(root,'mobile/android/app/build/generated/gameAssets/web/game.bundle.js'),'utf8'),context);
 vm.runInContext(fs.readFileSync(path.join(root,'mobile/web/progression.js'),'utf8'),context);
-const {Game}=context.MobileCore,Progression=context.MobileProgression;
+const {Game,Adventure}=context.MobileCore,Progression=context.MobileProgression;
 const now=new Date('2026-10-16T06:00:00Z').getTime();
 test('browser bundle runs the existing engine without Node globals',()=>{
   assert.equal(vm.runInContext('typeof require',context),'undefined');
@@ -63,5 +63,41 @@ test('offline processing never creates future events or advances the season earl
   const edge=new Date('2026-10-31T14:59:59Z').getTime(),g=new Game({},edge,{random:()=>.4}),p=new Progression(g);p.resume(edge);
   assert.equal(p.catchUp({steps:50000,usageActive:true,usageMillis:10000000},edge,500),500);
   assert.equal(g.data.season.key,'2026-10');assert.ok(g.data.journal.every(e=>e.at<=edge));
+});
+function mobileWallet(saved={},at=now){
+ const g=new Adventure(saved,at,{random:()=>.53});
+ g.data.mobileStory.onboarding='done';g.data.mobileStory.scene=null;g.data.kantoStory.mapAt ||= now;
+ g.requestAction('story-travel',false,at);
+ return g;
+}
+test('one unreserved movement resource converts atomically to 20 actions and preserves partial distance',()=>{
+ const g=mobileWallet();g.data.mapTravel={bank:4126,credit:200};
+ g.data.kantoWorld.journey={bankCells:1};
+ assert.equal(g.actionWallet().available,1);assert.ok(g.requestAction('travel-actions',null,now));
+ assert.equal(g.data.mapTravel.bank,2126);assert.equal(g.data.mapTravel.credit,200);assert.equal(g.actionWallet().remaining,20);
+ assert.equal(g.requestAction('travel-actions',null,now),false);assert.equal(g.data.mapTravel.bank,2126);
+ g.data.kantoWorld.journey=null;g.data.pendingActions=[{kind:'travel',useBank:true}];
+ assert.equal(g.requestAction('travel-actions',null,now),false);
+ g.data.pendingActions=[];assert.ok(g.requestAction('travel-actions',null,now));
+ assert.equal(g.data.mapTravel.bank,126);assert.equal(g.actionWallet().remaining,40);
+});
+test('free actions spend real turns while visible, survive a saved pause and leave usage time unspent',()=>{
+ let g=mobileWallet();g.data.mapTravel={bank:2000,credit:0};assert.ok(g.requestAction('travel-actions',null,now));
+ let p=new Progression(g);p.resume(now);let t=now;
+ for(let i=0;i<20&&g.actionWallet().remaining===20;i++){t+=4500;p.live(t);}
+ assert.equal(g.actionWallet().remaining,19);assert.ok(g.data.battle);
+ p.pause(t);const saved=g.data;assert.equal(p.catchUp({usageMillis:0,usageActive:true},t+2000),0);assert.equal(g.actionWallet().remaining,19);
+ t+=10000;g=mobileWallet(structuredClone(saved),t);p=new Progression(g,p.checkpoint());p.resume(t);
+ g.dialogue('test','NPC',null,['Choose'],'test',t);g.presentation().awaitChoice=true;
+ assert.equal(p.live(t+20000),false);assert.equal(g.actionWallet().remaining,19);
+ g.data.mobileStory.scene=null;
+ for(let i=0;i<150&&g.actionWallet().remaining>0;i++){t+=4500;p.live(t);}
+ assert.equal(g.actionWallet().remaining,0);assert.equal(p.usageConsumed,0);assert.equal(g.data.mapTravel.bank,0);
+});
+test('the last free turn can finish its battle result without buying another action',()=>{
+ const g=mobileWallet();g.newWild(now);g.data.battle.foe.hp=0;g.deferBattle('faint',now);
+ g.data.mapTravel={bank:0,credit:0,bonusActions:0,finishBonusTurn:true};g.nextTick=now;g.data.switchUntil=now;
+ const p=new Progression(g);p.resume(now);assert.ok(p.live(now));assert.equal(g.data.battle,null);
+ p.live(now+6000);assert.equal(g.data.mapTravel.finishBonusTurn,undefined);assert.equal(p.usageConsumed,0);assert.equal(g.data.battle,null);
 });
 // Mobile map-distance regressions run against this same bundle in map-travel.test.cjs.

@@ -93,7 +93,9 @@ class Adventure extends Engine{
   onWildEnd(b,now){if(world.active(this))world.encounterEnded(this,b);}
   recordTravelTouches(total){return require('./step-travel.cjs').observe(this,total);}
   recordTravelTime(now){return require('./step-travel.cjs').accrueTime(this,now);}
+  actionWallet(){return require('./step-travel.cjs').actionWallet(this);}
   requestAction(kind,value,now=Date.now()){
+    if(kind==='travel-actions')return require('./step-travel.cjs').exchangeForActions(this,now);
     if(kind==='travel-bank'){
       const steps=require('./step-travel.cjs');
       if(value!==undefined&&value!==null){

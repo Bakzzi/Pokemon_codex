@@ -26,12 +26,19 @@
       if(d.johtoWorld?.walk)d.johtoWorld.walk.at+=delta;
       for(const e of [d.animation,d.captureAnimation])if(e){e.at+=delta;if(e.leadIn)e.leadIn.at+=delta;}
     }
-    step(now){
+    step(now,bonus=false){
       const g=this.game;if(g.presentation?.())return g.sceneTick(now);
-      g.data.workTokens=250;
-      const changed=g.tick(now);g.data.workTokens=0;
-      if(changed)root.MobileCore.nursery.advance(g,250,now);
+      const data=g.data;g.data.workTokens=250;
+      const changed=g.tick(now),paid=g.data===data&&g.data.workTokens<250;
+      g.data.workTokens=0;
+      if(changed&&(!bonus||paid))root.MobileCore.nursery.advance(g,250,now);
+      if(changed&&bonus&&paid)this.spendBonusAction();
       return changed;
+    }
+    spendBonusAction(){
+      const d=this.game.data,account=d.mapTravel;
+      if(--account.bonusActions===0&&d.pendingBattle)account.finishBonusTurn=true;
+      this.dirty=true;
     }
     observe(totals,now){
       if(Number.isSafeInteger(now)&&Number.isSafeInteger(totals.usageMillis)&&totals.usageMillis>=0){
@@ -98,6 +105,15 @@
       if(this.movementTick(now))return true;
       if(!b?.activityTrainer&&(b?.kind==='trainer'||b?.storyId))return this.step(now)||this.dirty;
       if(g.controlTick(now))return true;
+      const account=g.data.mapTravel;
+      if(account?.finishBonusTurn){
+        if(g.data.pendingBattle)return g.tick(now)||this.dirty;
+        delete account.finishBonusTurn;this.dirty=true;
+      }
+      if(Number.isSafeInteger(account?.bonusActions)&&account.bonusActions>0){
+        if(g.activityStep?.(now)){this.spendBonusAction();return true;}
+        return this.step(now,true)||this.dirty;
+      }
       if(Number.isSafeInteger(totals.usageMillis)&&totals.usageMillis-this.usageConsumed>=20000){
         if(g.activityStep?.(now)||this.step(now)){this.usageConsumed+=20000;this.dirty=true;return true;}
       }

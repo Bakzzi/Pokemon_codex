@@ -6,7 +6,7 @@ try{saved=JSON.parse(native.load());game=new MobileCore.Adventure(saved.game||{}
 function save(){if(fatal)return false;const ok=native.save(JSON.stringify({format:1,game:game.data,mobile:progression.checkpoint(),savedAt:Date.now()}));if(!ok){fatal=true;active=false;notice='진행을 저장하지 못해 모험을 멈췄어요. 저장 공간을 확인해 주세요.';}if(ok)progression.dirty=false;lastSave=Date.now();return ok;}
 function snapshot(){return {...game.panelState(),scene:game.automaticStoryScene(),phase:'working',source:{connected:true},compact:false,pinned:false,demo:false,notice,remote:{connections:[]}};}
 function formatUsage(millis){const minutes=Math.floor((Number.isFinite(millis)&&millis>0?millis:0)/60000);return Math.floor(minutes/60).toLocaleString('ko-KR')+'시간 '+minutes%60+'분';}
-function publish(){if(fatal){$('app-notice').textContent=notice;return;}const s=snapshot();for(const id of ['battle','panel'])$(id).contentWindow.postMessage({type:'state',state:s},location.origin);renderScene(s);$('app-notice').textContent=notice;}
+function publish(){if(fatal){$('app-notice').textContent=notice;return;}const s=snapshot();for(const id of ['battle','panel'])$(id).contentWindow.postMessage({type:'state',state:s},location.origin);renderScene(s);renderActionWallet();$('app-notice').textContent=notice;}
 function openPanel(tab){panelTab=tab;panelDetail=false;$('back').textContent='‹ 모험으로';$('adventure').hidden=true;$('panel-wrap').hidden=false;$('panel').contentWindow.postMessage({type:'tab',tab},location.origin);publish();}
 function back(){if($('reset-confirm').open){$('reset-confirm').close();return true;}if($('touch-guide').open){$('touch-guide').close();return true;}if($('settings').open){$('settings').close();return true;}if(!$('panel-wrap').hidden){if(panelDetail){panelDetail=false;$('back').textContent='‹ 모험으로';$('panel').contentWindow.postMessage({type:'dex-back'},location.origin);return true;}$('adventure').hidden=false;$('panel-wrap').hidden=true;return true;}return false;}
 window.mobileBack=back;
@@ -16,8 +16,8 @@ function action(action,value){
   if(action==='story-open'){$('adventure').hidden=false;$('panel-wrap').hidden=true;return;}
   let ok=true;
   try{
-    if(['travel','world-pass','travel-bank','fossil-choice'].includes(action))refreshNative();
-    if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass','travel-bank','fossil-choice','npc-review','story-travel'].includes(action))ok=game.requestAction(action,value);
+    if(['travel','world-pass','travel-bank','travel-actions','fossil-choice'].includes(action))refreshNative();
+    if(['select','slot','evolve','daycare-start','daycare-withdraw','abandon','johto-stay','johto-unlock','device-claim','device-learner','travel','world-pass','travel-bank','travel-actions','fossil-choice','npc-review','story-travel'].includes(action))ok=game.requestAction(action,value);
     else if(action==='action-cancel')ok=game.cancelAction(value);
     else if(action==='capture-reserve')ok=game.reserveCapture(value,1);
     else if(action==='capture-cancel')ok=game.reserveCapture(value,0);
@@ -27,11 +27,20 @@ function action(action,value){
     else if(action==='safari-return')ok=game.returnSafari();
     else if(action==='daycare-preview')game.daycareSelection=Array.isArray(value)?value.slice(0,2).map(Number):[];
     else return;
-    notice=ok===false?'지금은 예약할 수 없어요. 동료와 도전 조건을 확인해 주세요.':'';
+    notice=ok===false?(action==='travel-actions'?'지금 쓸 수 있는 이동 자원이 없어요.':'지금은 예약할 수 없어요. 동료와 도전 조건을 확인해 주세요.'):'';
     save();publish();
   }catch(e){native.reportError(String(e));notice='이 행동을 처리하지 못했어요. 다시 선택해 주세요.';publish();}
 }
 window.addEventListener('message',e=>{if(e.origin!==location.origin||!['battle','panel'].some(id=>$(id).contentWindow===e.source))return;if(e.data.type==='ready'){publish();if(e.source===$('panel').contentWindow)e.source.postMessage({type:'tab',tab:panelTab},location.origin);}else if(e.data.type==='dex-view'&&e.source===$('panel').contentWindow){panelDetail=!!e.data.detail;$('back').textContent=panelDetail?'‹ 도감 목록':'‹ 모험으로';}else if(e.data.type==='action')action(e.data.action,e.data.value);});
+function renderActionWallet(){
+  if(!game)return;
+  const {stock,available,remaining}=game.actionWallet();
+  $('move-stock').textContent=stock.toLocaleString('ko-KR')+'개';
+  $('exchange-actions').disabled=available===0;
+  $('exchange-cost').textContent=stock>0&&available===0?'이동에 사용 중':'이동 자원 1개 사용';
+  $('bonus-actions').hidden=remaining===0;
+  $('bonus-actions').textContent=remaining===0?'':'남은 무료 행동 '+remaining.toLocaleString('ko-KR')+'회';
+}
 function refreshNative(){
   nativeState=JSON.parse(native.status());
   progression?.observe(nativeState,Date.now());
@@ -46,6 +55,7 @@ function refreshNative(){
   $('touch-month').textContent=(nativeState.monthlyTouches||0).toLocaleString('ko-KR')+'회';
   $('touch-total').textContent=(nativeState.touches||0).toLocaleString('ko-KR')+'회';
   $('usage-today').textContent=formatUsage(nativeState.usageTodayMillis);$('usage-month').textContent=formatUsage(nativeState.usageMonthlyMillis);$('usage-total').textContent=formatUsage(nativeState.usageMillis);
+  renderActionWallet();
   $('update-status').textContent=nativeState.update;$('update-confirm').hidden=!nativeState.pendingInstall;$('install-permission').hidden=nativeState.canInstall;
   $('update-check').disabled=!!nativeState.updateChecking||!!nativeState.installing;$('version').textContent='Android v'+(nativeState.versionName||MobileConfig.name);
 }
@@ -91,6 +101,7 @@ setInterval(()=>{
   try{refreshNative();if(applyReadyUpdate())return;if(updatePaused){updatePaused=false;window.mobileLifecycle(true);return;}if(!active||catchingUp)return;const changed=progression.live(Date.now(),nativeState);if(changed){save();publish();}else if(Date.now()-lastSave>15000)save();}catch(e){active=false;native.reportError(String(e));notice='모험을 잠시 멈췄어요. 앱을 다시 열어 주세요.';publish();}
 },250);
 $('back').onclick=back;$('settings-open').onclick=()=>{refreshNative();$('settings').showModal();};$('settings-close').onclick=()=>$('settings').close();
+$('exchange-actions').onclick=()=>action('travel-actions');
 $('touch-home-open').onclick=$('touch-settings-open').onclick=openTouchGuide;
 $('touch-guide-close').onclick=()=>$('touch-guide').close();
 $('accessibility-settings').onclick=()=>{touchSettingsPage='accessibility';native.openAccessibilitySettings();};
