@@ -1,0 +1,54 @@
+{
+    "version":  "0.1.105",
+    "versionCode":  107,
+    "platform":  "android",
+    "channel":  "android-preview",
+    "sourceCommit":  "392aeaf52ad6abb68674135d9035534f3e8bab31",
+    "sourceTag":  "android-v0.1.105",
+    "release":  "https://github.com/Bakzzi/Pokemon_codex/releases/tag/android-v0.1.105",
+    "package":  "io.github.bakzzi.pokemonidle",
+    "minSdk":  31,
+    "targetSdk":  36,
+    "artifact":  "Pokemon-Idle-0.1.105.apk",
+    "bytes":  11877818,
+    "sha256":  "7fb70c2b1f0992e965894dd712bfd634eae6abeffb27badf884f8bbea146bf5c",
+    "signingCertificateSha256":  "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+    "build":  {
+                  "commands":  [
+                                   "npm.cmd run mobile:bundle",
+                                   "gradle --offline --no-daemon assembleRelease lintRelease assembleReleaseAndroidTest -x bundleGame"
+                               ],
+                  "buildTools":  "36.1.0",
+                  "node":  "22.11.0",
+                  "gradle":  "8.13",
+                  "agp":  "8.13.0"
+              },
+    "validation":  {
+                       "embeddedFilesMatched":  479,
+                       "lintRelease":  "passed",
+                       "nodeTestsPassed":  1016,
+                       "javaTestsPassed":  [
+                                               "UsageLedgerTest",
+                                               "UsagePeriodTest"
+                                           ],
+                       "instrumentationApk":  "compiled",
+                       "githubDownloadSha256Matched":  true,
+                       "apkSignatureVerified":  true,
+                       "packagedChromiumUiWithAndroidBridgeFixture":  {
+                                                                          "apkSha256":  "7fb70c2b1f0992e965894dd712bfd634eae6abeffb27badf884f8bbea146bf5c",
+                                                                          "labels":  [
+                                                                                         0,
+                                                                                         180,
+                                                                                         200,
+                                                                                         201
+                                                                                     ],
+                                                                          "afterReload":  201,
+                                                                          "passed":  true
+                                                                      }
+                   },
+    "retention":  {
+                      "previousLocalTest":  "0.1.100",
+                      "publicLatest":  "0.1.105",
+                      "previousPublic":  "0.1.104"
+                  }
+}
