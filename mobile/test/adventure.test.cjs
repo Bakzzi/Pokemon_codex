@@ -8,11 +8,14 @@ const tap=(g,t=now)=>{const s=g.presentation();assert.ok(s);assert.ok(g.advanceS
 function finishDialogue(g,t=now){const id=g.presentation()?.id;for(let i=0;i<10&&g.presentation()?.mode==='dialogue'&&g.presentation().id===id;i++)tap(g,t);}
 function playable(){return new Story(new Game({},now).data,now,{random:()=>.5});}
 function rivalBattle(){const g=new Adventure({},now);finishDialogue(g);assert.equal(g.data.battle.storyId,'tutorial-green');finishDialogue(g);assert.equal(g.presentation().mode,'sendout');assert.ok(g.sceneTick(now+3000));return g;}
-test('fresh game waits for taps; walking, clocks and duplicate taps cannot skip Oak',()=>{
-  const g=new Adventure({},now),p=new Progression(g),before=JSON.stringify({...g.data,mapTravel:null});p.resume(now);
-  assert.equal(p.live(now+86400000),true);assert.equal(p.catchUp(2000,now+86400000),0);assert.equal(p.consumed,0);assert.equal(JSON.stringify({...g.data,mapTravel:null}),before);assert.equal(g.data.mapTravel.bank,4000);
-  const s=g.presentation(),key=s.id+':'+s.index;assert.ok(g.advanceScene(key,now));assert.equal(g.advanceScene(key,now),false);assert.equal(g.presentation().index,1);
-  tap(g);assert.equal(g.data.mobileStory.giftReceived,true);assert.equal(Object.values(g.data.owned).length,1);assert.equal(g.data.slots.filter(Boolean).length,1);
+test('active phone time plays the tutorial one page at a time and receives the first partner once',()=>{
+  const g=new Adventure({},now),p=new Progression(g);p.resume(now);
+  const key=g.presentation().id+':0';p.live(now+100);assert.equal(g.presentation().index,0);
+  assert.equal(p.live(now+4000),true);assert.equal(g.presentation().index,1);assert.equal(g.advanceScene(key,now+4000),false);
+  p.live(now+4100);assert.equal(g.presentation().index,1);
+  for(let n=2;n<=4;n++)assert.equal(p.live(now+n*4000),true);
+  assert.equal(g.data.mobileStory.giftReceived,true);assert.equal(Object.values(g.data.owned).length,1);
+  assert.equal(g.data.battle.storyId,'tutorial-green');assert.equal(p.usageConsumed,0);
 });
 test('save/reload preserves each dialogue page and the first partner is not duplicated',()=>{
   let g=new Adventure({},now);tap(g);tap(g);

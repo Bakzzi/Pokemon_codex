@@ -93,6 +93,7 @@
       this.observe(totals,now);
       this.accrueTravel(now);
       const g=this.game,b=g.data.battle;
+      if(g.automaticStoryTick?.(now)){this.dirty=true;return true;}
       if(g.presentation?.())return g.sceneTick(now)||this.dirty;
       if(this.movementTick(now))return true;
       if(!b?.activityTrainer&&(b?.kind==='trainer'||b?.storyId))return this.step(now)||this.dirty;
@@ -109,6 +110,7 @@
       const available=(n,cost,cursor)=>Number.isSafeInteger(n)&&n>=cursor?Math.floor((n-cursor)/cost):0;
       const g=this.game;let used=0,moves=0,travelTurns=0;this.moreMovement=false;
       for(;used<maxActions;used++){
+        if(active&&g.automaticStoryTick?.(now)){this.dirty=true;break;}
         if(!active&&g.data.trainerSequence)break;
         if(active&&(g.data.trainerSequence||!g.data.battle?.activityTrainer&&(g.data.battle?.kind==='trainer'||g.data.battle?.storyId))){
           if(this.challengeTick(now))this.dirty=true;
@@ -122,7 +124,7 @@
         }
         if(moves<512&&this.mapTick(now,active)){moves++;used--;continue;}
         if(!active||!available(usage,20000,this.usageConsumed))break;
-        // Manual dialogue must preserve every unspent lock-time action.
+        // Presentation and choices never spend phone-use actions.
         if(g.presentation?.()||!g.data.battle?.activityTrainer&&(g.data.battle?.kind==='trainer'||g.data.battle?.storyId))break;
         if(g.activityStep?.(now)){this.usageConsumed+=20000;continue;}
         // Consume recorded activity immediately, never simulate a future calendar.
@@ -145,7 +147,7 @@
       return used;
     }
     challengeTick(now){const g=this.game;if(g.presentation?.())return g.sceneTick(now);return this.step(now)||g.controlTick(now);}
-    checkpoint(){return {consumed:this.consumed,lockConsumed:this.lockConsumed,usageConsumed:this.usageConsumed,usageAt:this.usageAt,usageMillis:this.usageMillis,pausedAt:this.pausedAt,nextTick:this.game.nextTick,movementFixRewardClaimed:this.movementFixRewardClaimed};}
+    checkpoint(){return {consumed:this.consumed,lockConsumed:this.lockConsumed,usageConsumed:this.usageConsumed,usageAt:this.usageAt,usageMillis:this.usageMillis,pausedAt:this.pausedAt,nextTick:this.game.nextTick,movementFixRewardClaimed:this.movementFixRewardClaimed,storyPending:!!this.game.storyWorkPending?.()};}
   }
   root.MobileProgression=Progression;if(typeof module==='object')module.exports=Progression;
 })(globalThis);

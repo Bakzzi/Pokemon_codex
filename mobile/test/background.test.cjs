@@ -50,11 +50,15 @@ test('headless company queue triggers its hidden rival after the grunt, without 
   const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika','koga'];const g=new c.MobileCore.Adventure(old.data,now);g.data.mobileStory.silph.wins[0]=now;g.data.kantoWorld.location='saffron';g.data.kantoStory.drinkAt=now;g.data.kantoStory.cleared['k-card-key']=now;g.data.pendingChallenge={index:'silph-duo',queuedAt:now};
   const r=run({format:1,game:g.data,mobile:{consumed:0}},1000);assert.equal(r.used,1);assert.equal(r.save.game.battle.storyId,'rival-silph');assert.equal(r.save.game.mobileStory.silph.wins[1],0);assert.equal(run(r.save,1000,now+3600000).used,0);
 });
-test('headless eligibility leaves the aide invitation untouched until an explicit local action',()=>{
+test('headless automatic gifts finish once with no paid action and a locked phone pauses the invitation',()=>{
   const old=new c.MobileCore.Game({},now);old.data.badges=['brock','misty','surge','erika'];const g=new c.MobileCore.Adventure(old.data,now);g.data.kantoWorld.location='route-15';for(const n of require('../../shared/kanto-journey.cjs').nodes.values())if(n.location==='route-15')g.data.kantoStory.cleared[n.id]=now;for(let id=1;id<=50;id++)g.data.caught[id]=now;
-  const r=run({format:1,game:g.data,mobile:{consumed:0}},1000);assert.ok(r.used>1);assert.ok(!r.save.game.mobileStory.scene);assert.equal(r.save.game.trainingDevice.obtainedAt,null);
-  const next=run(r.save,1000,now+3600000);assert.ok(!next.save.game.mobileStory.scene);assert.equal(next.save.game.trainingDevice.obtainedAt,null);
-  const opened=new c.MobileCore.Adventure(next.save.game,now+3600000);opened.data.battle=null;opened.data.pendingBattle=null;opened.data.switchUntil=0;opened.nextTick=0;
-  assert.ok(opened.challenge('k-device-visit',now+3600000));assert.equal(opened.presentation().next,'device-reward');
-  const waiting=run({format:1,game:opened.data,mobile:next.save.mobile},1000,now+3601000);assert.equal(waiting.used,0);assert.equal(waiting.save,undefined);assert.equal(opened.data.trainingDevice.obtainedAt,null);
+  let r=run({format:1,game:g.data,mobile:{consumed:0}},{touches:0,usageActive:true,usageMillis:0});
+  assert.equal(r.used,0);assert.equal(r.save.game.mobileStory.scene.next,'device-reward');assert.equal(r.save.game.trainingDevice.obtainedAt,null);assert.equal(r.save.mobile.storyPending,true);
+  const locked=run(r.save,{touches:0,usageActive:false,usageMillis:0},now+10000);assert.equal(locked.save,undefined);
+  for(let n=1;r.save.game.mobileStory.scene&&n<=6;n++){
+   r=run(r.save,{touches:0,usageActive:true,usageMillis:n*4000},now+10000+n*4000);
+   assert.equal(r.used,0);assert.equal(r.save.mobile.usageConsumed,0);
+  }
+  assert.ok(r.save.game.trainingDevice.obtainedAt);assert.equal(r.save.game.mobileStory.scene,null);
+  const next=run(r.save,{touches:0,usageActive:true,usageMillis:0},now+39000);assert.ok(!next.save||next.save.game.trainingDevice.obtainedAt===r.save.game.trainingDevice.obtainedAt);
 });

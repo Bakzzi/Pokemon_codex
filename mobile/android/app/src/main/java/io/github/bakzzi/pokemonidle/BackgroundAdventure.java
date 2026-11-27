@@ -36,9 +36,10 @@ final class BackgroundAdventure {
         boolean active=StepService.usingPhone(context);
         if(active&&usage()-(mobile==null?0:mobile.optLong("usageConsumed",0))>=20000)return true;
         if(game==null)return false;
-        JSONObject map=game.optJSONObject(game.optBoolean("johtoUnlocked")?"johtoWorld":"kantoWorld"),distance=game.optJSONObject("mapTravel");
+        JSONObject map=game.optJSONObject(game.optLong("johtoUnlocked",0)>0?"johtoWorld":"kantoWorld"),distance=game.optJSONObject("mapTravel");
         JSONObject trip=map==null?null:map.optJSONObject("journey"),battle=game.optJSONObject("battle");
         if(active&&(game.optJSONObject("trainerSequence")!=null||battle!=null&&!battle.optBoolean("activityTrainer")&&(battle.optString("kind").equals("trainer")||!battle.isNull("storyId"))))return true;
+        if(active&&mobile!=null&&mobile.optBoolean("storyPending"))return true;
         boolean moving=trip!=null,bankRequested=false;
         JSONArray pending=game.optJSONArray("pendingActions");
         if(pending!=null)for(int i=0;i<pending.length();i++){JSONObject a=pending.optJSONObject(i);if(a!=null&&(a.optString("kind").equals("travel")||a.optString("kind").equals("world-pass"))){moving=true;bankRequested|=a.optBoolean("useBank");}}

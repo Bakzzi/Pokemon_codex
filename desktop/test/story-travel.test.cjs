@@ -103,3 +103,57 @@ for(const [name,Type]of [['PC',PC],['Android',Android]])test(name+' main Kanto j
  assert.equal(g.data.champion,true);assert.equal(auto.goal(g),null);assert.equal(g.data.kantoWorld.location,'indigo');assert.equal(g.data.kantoStory.fossil,138);
  assert.ok(visits.includes('sea-cottage'));assert.ok(visits.includes('route-2'));assert.ok(visits.includes('saffron'));assert.ok(visits.includes('safari'));
 });
+
+function simulateStory(g,finished){
+ let at=now,choices=0;const places=new Set();
+ for(let turn=0;turn<6000&&!finished();turn++){
+  at=Math.max(at+4000,clock(g));
+  const d=g.data,w=d.johtoUnlocked?d.johtoWorld:d.kantoWorld;
+  places.add(w.location);
+  const s=g.presentation();
+  if(s?.awaitChoice){
+   const save=structuredClone(d);
+   for(let wait=0;wait<3;wait++)assert.equal(g.automaticStoryTick(at+wait*4000),false);
+   assert.deepEqual(d,save);assert.ok(g.requestAction('fossil-choice',138,at));choices++;continue;
+  }
+  if(g.automaticStoryTick(at)||g.sceneTick(at))continue;
+  if(s)throw Error('Unexpected dialogue '+JSON.stringify(s));
+  if(d.battle){d.battle.foe.hp=0;g.defeatOpponent(at);continue;}
+  if(d.mobileStory.safari.trip){g.walkingStep(1500,at);continue;}
+  if(g.platform==='mobile'){
+   if(d.mapTravel?.touchesObserved===undefined)g.recordTravelTouches(0);
+   if(w.journey)g.recordTravelTouches(d.mapTravel.touchesObserved+1000);
+  }else if(w.journey){for(let n=0;n<20;n++)g.onWildEnd({kind:'wild',location:w.location},at);}
+  if(g.controlTick(at))continue;
+  const trainer=g.movementTrainerNode?.();if(trainer){d.workTokens=250;if(g.startAutomaticTrainer(trainer,at))continue;}
+  if(w.location==='mansion'&&d.mobileStory.mansion.startedAt&&!d.mobileStory.mansion.completedAt){g.newWild(at);continue;}
+  throw Error(JSON.stringify({location:w.location,goal:auto.goal(g),blocked:w.blocked,battle:d.battle?.storyId,pending:d.pendingActions,trips:w.journey?.segments?.length,last:d.journal?.slice(0,4)}));
+ }
+ assert.ok(finished(),JSON.stringify({location:g.data.johtoWorld?.location||g.data.kantoWorld.location,goal:auto.goal(g),scene:g.presentation(),battle:g.data.battle?.storyId}));return {choices,places};
+}
+for(const [name,Type]of [['PC',PC],['Android',Android]]){
+ test(name+' goes from the first Kanto gym to the League without taps except the fossil decision',()=>{
+  const g=fixture(Type);for(let id=1;id<=10;id++)g.addPokemon(id,20,'fixture',now);
+  const {choices,places}=simulateStory(g,()=>g.data.champion&&!g.presentation());
+  assert.equal(choices,1);assert.equal(g.data.kantoStory.fossil,138);assert.ok(g.data.kantoWorld.leaguePass);
+  assert.ok(K.done(g,'k-bill')&&g.data.kantoStory.drinkAt&&g.data.mobileStory.laprasResolved);
+  assert.ok(places.has('mansion')&&places.has('safari'));assert.equal(g.automaticStoryTick(clock(g)+4000),false);
+ });
+ test(name+' automatically clears the Johto league and later mountain without selecting a starter',()=>{
+  const g=fixture(Type);g.data.johtoUnlocked=now;g.prepareJohtoJourney(now);JW.init(g);
+  const {choices}=simulateStory(g,()=>J.done(g,'j-red')&&!g.presentation());
+  assert.equal(choices,0);assert.ok(g.data.johto.champion);assert.ok(!g.data.johto.starterChoice);
+ });
+ test(name+' saves automatic dialogue timing and waits to retry until the deployed party changes',()=>{
+  let g=fixture(Type);place(g,'pewter');for(const id of K.cases.filter(c=>['forest-path','trainers-gym-0'].includes(c.id)).flatMap(c=>c.entries))g.data.kantoStory.cleared[id]=now;
+  assert.ok(g.automaticStoryTick(now));let s=g.presentation();assert.equal(g.automaticStoryTick(now+100),false);
+  assert.ok(g.automaticStoryTick(now+4000));s=g.presentation();assert.equal(g.automaticStoryTick(now+4050),false);
+  winIntro(g,now+8000);g.endChallenge(false,now+20000);winIntro(g,now+24000);
+  g=new Type(structuredClone(g.data),now+50000);assert.equal(g.automaticStoryTick(now+51000),false);
+  g.data.owned[g.data.activeId].level++;assert.ok(g.automaticStoryTick(now+52000));assert.equal(g.data.battle.bossIndex,0);
+ });
+}
+function winIntro(g,at){
+ for(let i=0;i<12&&g.presentation();i++,at+=4000)assert.ok(g.automaticStoryTick(at)||g.sceneTick(at));
+ assert.equal(g.presentation(),null);
+}

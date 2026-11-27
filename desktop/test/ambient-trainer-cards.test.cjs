@@ -15,12 +15,12 @@ for(const Type of [PC,Android]){
   g.data.kantoWorld.location='ss-anne';g.data.kantoStory.cleared['k-bill']=now;assert.ok(K.snapshot(g).cases.find(c=>c.id==='anne-visit').entries.some(e=>e.team.length));
   g.data.kantoWorld.location='route-5';assert.ok(g.panelState(now).daycare.access.atLocation);assert.ok(K.nodes.get('k-route3-1').automatic);assert.ok(K.done(g,'k-route3-1'));
  });
- test(Type.name+' bridge arrival waits for manual dialogue across idle time, reload and headless movement credit',()=>{
+ test(Type.name+' bridge rival appears on arrival and each saved dialogue page has a timed pause',()=>{
   let g=fixture(Type);g.data.badges=['brock','misty'];g.data.kantoWorld.location='route-24';g.data.kantoWorld.walk={at:now,duration:2000};assert.equal(g.routeRivalTick(now),false);assert.ok(g.routeRivalTick(now+2000));
   const scene=structuredClone(g.presentation());assert.equal(g.data.battle.storyId,'rival-cerulean');assert.ok(!scene.automatic);
   for(let i=1;i<=5;i++){g.data.workTokens=1000;g.controlTick(now+i*10000);g.tick(now+i*10000);}assert.deepEqual(g.presentation(),scene);assert.equal(g.data.battle.turn,0);
   g=new Type(structuredClone(g.data),now+60000);assert.deepEqual(g.presentation(),scene);
-  if(Type===Android){const p=new P(g);p.pause(now+60000);assert.equal(p.catchUp({steps:12000,usageActive:true,usageMillis:86400000},now+70000),0);assert.deepEqual(g.presentation(),scene);assert.equal(p.usageConsumed,0);}
+  if(Type===Android){const p=new P(g);assert.equal(p.catchUp({touches:0,usageActive:false,usageMillis:0},now+60000),0);assert.deepEqual(g.presentation(),scene);assert.equal(p.catchUp({touches:0,usageActive:true,usageMillis:10000},now+70000),0);assert.equal(g.presentation().index,scene.index+1);assert.equal(p.usageConsumed,0);}
   assert.ok(!K.snapshot(g).cases.flatMap(c=>c.entries).some(e=>K.nodes.get(e.id).automatic));
  });
 }

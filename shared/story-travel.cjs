@@ -1,8 +1,9 @@
 'use strict';
-// Select destinations only. Existing travel pays distance, meets ordinary
-// trainers and enforces gates; story actions and rewards remain manual.
+// Select destinations from confirmed progress. Story actions use the same
+// local challenge and passage rules as player requests.
 const K=require('./kanto-journey.cjs'),J=require('./johto.cjs');
 const KW=require('./kanto-world.cjs'),JW=require('./johto-world.cjs');
+const actions=require('./story-actions.cjs');
 function kantoGoal(g){
  const d=g.data,s=d.kantoStory,m=d.mobileStory,w=d.kantoWorld;
  if(!s?.mapAt||m.onboarding!=='done')return null;
@@ -48,7 +49,25 @@ function withStoryTravel(Base){return class StoryTravel extends Base{
   // Let an existing trip finish before choosing the following story destination.
   this.data.storyTravel ||= {enabled:options.storyAuto!==false};
  }
- resetSeason(now){super.resetSeason(now);this.data.storyTravel={enabled:true};this.autoTravelAttempt=null;}
+ resetSeason(now){super.resetSeason(now);this.data.storyTravel={enabled:true};delete this.data.storyLosses;this.autoTravelAttempt=null;}
+ automaticStoryTick(now=Date.now()){return actions.tick(this,now);}
+ storyWorkPending(){return actions.workPending(this);}
+ automaticStoryScene(){const s=this.presentation();return actions.autoPage(s)?{...s,autoAdvance:true}:s;}
+ advanceScene(key,now=Date.now()){
+  const scene=this.presentation(),prefix='story-pass:';
+  if(scene?.next?.startsWith(prefix)&&key===scene.id+':'+scene.index&&scene.index===scene.pages.length-1){
+   this.data.mobileStory.scene=null;
+   require('./adventure-records.cjs').remember(this,scene,now);
+   return this.requestAction('world-pass',scene.next.slice(prefix.length),now);
+  }
+  return super.advanceScene(key,now);
+ }
+ endChallenge(won,now){if(!won)actions.rememberLoss(this,this.data.battle);return super.endChallenge(won,now);}
+ abandon(now=Date.now()){
+  const battle=this.data.battle,ok=super.abandon(now);
+  if(ok)actions.rememberLoss(this,battle);
+  return ok;
+ }
  unlockJohto(now=Date.now(),ids){const ok=super.unlockJohto(now,ids);if(ok){this.data.storyTravel={enabled:true};this.autoTravelAttempt=null;}return ok;}
  storyTravelTick(now){
   const d=this.data,w=state(this);

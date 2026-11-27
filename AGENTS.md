@@ -1,5 +1,7 @@
 # Verified releases and automatic completion
 
+- User instruction: PC and Android advance deterministic story conversations, one-time rewards, challenges and checks automatically at the actual location. Show each dialogue page and battle result, and wait for the player on real choices such as fossils and regional transfer. Keep direct travel, movement-bank spending and party training controls explicit. Retry a lost story battle after the deployed party changes or gains a level. On Android keep the existing phone-use and movement rules. This supersedes earlier instructions requiring taps for story actions.
+
 - User instruction: Android uses observed phone-use time for growth and detected accessibility clicks, scrolls and input-field changes for movement. Count 1,000 touches per map cell, provide an explicit shortcut to Android accessibility settings, and keep the separate 12-hour movement resource. Display phone-use and touch totals on the home screen. This replaces step-based earning. Save only local counters; preserve earned movement resources, partial routes, PC behavior, and manual story gates.
 
 - User instruction (2026-11-18): NPC cards and dialogue use full-body pixel portraits, including former overworld-only characters. A matching trainer-class/occupation sprite is acceptable when the exact character has no dedicated full-body sprite. Keep source images and artist credits, and share frame rendering across PC and Android. Do not restore the old 16px Elm or checkpoint crops.

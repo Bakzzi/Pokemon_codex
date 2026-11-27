@@ -6,7 +6,7 @@ const A=c.MobileCore.Adventure,P=c.MobileProgression,day=43200000,now=Date.parse
 const make=()=>{const g=new A({},now),p=new P(g);p.resume(now);p.dirty=false;return {g,p};};
 const run=(game,at)=>JSON.parse(c.MobileBackground.run(JSON.stringify({format:1,game,mobile:{}}),{touches:0,usageActive:true,usageMillis:0},at,0));
 test('daily movement uses elapsed 12 hours, adds touch resources and preserves sub-day remainder',()=>{
- const {g,p}=make();p.observe({touches:0});p.observe({touches:1500});assert.equal(g.data.mapTravel.bank,3000);p.dirty=false;
+ const {g,p}=make();g.data.mobileStory.scene=null;p.observe({touches:0});p.observe({touches:1500});assert.equal(g.data.mapTravel.bank,3000);p.dirty=false;
  p.live(now+day-1);assert.equal(g.data.mapTravel.bank,3000);assert.equal(p.dirty,false);
  p.live(now+day);assert.equal(g.data.mapTravel.bank,5000);assert.equal(g.data.mapTravel.dailyAt,now+day);assert.ok(p.dirty);
  p.dirty=false;p.catchUp({touches:1500,usageActive:true,usageMillis:0},now+3*day+1000,0);assert.equal(g.data.mapTravel.bank,9000);assert.equal(g.data.mapTravel.dailyAt,now+3*day);

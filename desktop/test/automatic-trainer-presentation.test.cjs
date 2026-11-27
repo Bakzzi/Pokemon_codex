@@ -17,5 +17,5 @@ test('foreground automatic trainer visuals finish without lock-time, steps or di
 });
 test('headless catch-up finishes saved automatic visuals without another paid action or future events',()=>{
  const g=fixture(Android,'k-forest-1'),p=new P(g,{usageConsumed:20000});p.observe({touches:0});p.pause(now);assert.equal(p.catchUp({touches:0,usageActive:true,usageMillis:20000},now+100,0),0);assert.equal(g.presentation(),null);assert.equal(g.data.battle.turn,0);assert.equal(p.usageConsumed,20000);assert.ok(p.dirty);assert.ok(g.data.journal.every(e=>e.at<=now+100));
- g.dialogue('trainer','그린','green',['직접 넘길 대사'],'sendout',now);const before=structuredClone(g.presentation());p.catchUp({touches:0,usageActive:true,usageMillis:1000000},now+10000);assert.deepEqual(g.presentation(),before);assert.equal(p.usageConsumed,20000);
+ g.dialogue('trainer','그린','green',['이전 대사'],'close-recollection',now);const before=structuredClone(g.presentation());p.catchUp({touches:0,usageActive:true,usageMillis:1000000},now+10000);assert.deepEqual(g.presentation(),before);assert.equal(p.usageConsumed,20000);
 });

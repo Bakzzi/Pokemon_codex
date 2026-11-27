@@ -31,7 +31,7 @@ function secure(window){
 function snapshot(){
   const source=agents.combine(reader?.status,claudeReader?.status,remotes?.snapshot().connections||[]);
   const update=updater?.snapshot();
-  const state=game.snapshot();if(!source.limitsProvider&&source.agents.claude.connected)state.limits=state.limits.map(limit=>({...limit,left:null,resetsAt:null}));
+  const state=game.snapshot();if(!smoke)state.scene=game.automaticStoryScene();if(!source.limitsProvider&&source.agents.claude.connected)state.limits=state.limits.map(limit=>({...limit,left:null,resetsAt:null}));
   return {...state,source,compact:!!settings.compact,pinned:settings.pinned!==false,demo:demo||smoke,update,notice:notice||update?.notice||''};
 }
 function publish(force=false){
@@ -142,7 +142,7 @@ async function start(){
     if(busy||updating||resetting)return;busy=true;
     try{
       if(reader&&Date.now()-lastRead>=1500){await Promise.all([reader.poll(),claudeReader.poll()]);lastRead=Date.now();}
-      remotes?.poll();game.tick();save();publish();
+      remotes?.poll();if(!game.automaticStoryTick())game.tick();save();publish();
       if(++healthyTicks===3){const token=process.argv.find(a=>a.startsWith('--update-transaction='))?.split('=')[1];if(token)try{markHealthy(path.dirname(process.execPath),app.getVersion(),token);}catch(error){console.error('Update startup confirmation failed:',error.message);}}
     }catch(error){console.error(error);notice='진행 저장 오류 · 저장 폴더를 확인해 주세요.';clearInterval(timer);publish(true);}
     finally{busy=false;}
