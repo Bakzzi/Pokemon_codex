@@ -43,7 +43,7 @@
         this.usageAt=now;this.usageMillis=totals.usageMillis;
         if(this.game.data.battle)delete this.game.data.battle.resumeAfterLock;
       }
-      if(this.game.recordTravelSteps?.(totals.steps))this.dirty=true;
+      if(this.game.recordTravelTouches?.(totals.touches))this.dirty=true;
     }
     accrueTravel(now){if(this.game.recordTravelTime?.(now))this.dirty=true;}
     claimMovementFixReward(now){
@@ -102,10 +102,9 @@
       }
       return this.dirty;
     }
-    catchUp(total,now,maxActions=100){
-      const steps=typeof total==='object'?total.steps:total,usage=typeof total==='object'?total.usageMillis:0;
-      const active=total?.usageActive===true;
-      this.observe(typeof total==='object'?total:{steps},now);
+    catchUp(totals,now,maxActions=100){
+      const usage=totals?.usageMillis,active=totals?.usageActive===true;
+      this.observe(totals??{},now);
       this.accrueTravel(now);
       const available=(n,cost,cursor)=>Number.isSafeInteger(n)&&n>=cursor?Math.floor((n-cursor)/cost):0;
       const g=this.game;let used=0,moves=0,travelTurns=0;this.moreMovement=false;

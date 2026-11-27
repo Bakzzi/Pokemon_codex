@@ -61,7 +61,7 @@ test('Android locked catch-up cannot advance an explicit run, including the gap 
   if(['between','queued'].includes(phase))at=win(g,at);
   if(phase==='queued'){g.data.pendingChallenge={index:g.data.trainerSequence.current,queuedAt:at};delete g.data.trainerSequence.waiting;}
   g=new Android(structuredClone(g.data),at,{random:()=>.6});const before=JSON.stringify(g.data),p=new Progression(g);
-  assert.equal(p.catchUp({steps:0,usageActive:false,usageMillis:86400000},at+60000),0,phase);
+  assert.equal(p.catchUp({touches:0,usageActive:false,usageMillis:86400000},at+60000),0,phase);
   assert.equal(p.usageConsumed,0);assert.equal(JSON.stringify(g.data.battle),JSON.stringify(JSON.parse(before).battle));assert.deepEqual(g.data.kantoStory.cleared,JSON.parse(before).kantoStory.cleared);
  }
 });
@@ -69,7 +69,7 @@ test('Android other-app phone use continues all ordinary ship trainers and stops
  const g=fixture(Android),p=new Progression(g);let at=now;assert.ok(g.challenge('k-anne-1',at));p.observe({usageMillis:0},at);
  for(let i=0;g.data.trainerSequence&&i<2500;i++){
   at=Math.max(at+500,g.nextTick,g.data.switchUntil||0);
-  p.catchUp({steps:0,usageActive:true,usageMillis:at-now},at);
+  p.catchUp({touches:0,usageActive:true,usageMillis:at-now},at);
  }
  assert.equal(g.data.trainerSequence,undefined);assert.equal(g.data.battle,null);assert.ok(!K.done(g,'k-captain'));
  assert.equal(p.usageConsumed,0);assert.equal(g.data.workTokens,0);

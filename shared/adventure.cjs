@@ -17,7 +17,7 @@ const wildExclusions=[131,...safari.pool.map(([id])=>id)];
 const oakIntro=[
   '반갑다! 나는 포켓몬을 연구하는 오박사란다. 작은 모험에 온 걸 환영한다!',
   '이 피카츄가 네 첫 동료란다. 함께 포켓몬을 만나고, 잡고, 키워 보렴.',
-  '폰을 사용하는 동안 20초마다 동료와 모험한단다. 걸음은 타운맵에서 이동할 때 사용하지. 도전 배틀은 직접 지켜볼 수 있어.',
+  '폰을 사용하는 동안 20초마다 동료와 모험한단다. 터치 기록을 켜면 터치 1,000회마다 타운맵에서 한 칸 이동할 수 있지.',
   '도감에서 동료를 살펴보고, 타운맵에서 다음 모험을 찾아보렴. 물건은 가방에 있단다.'
 ];
 const oakClose=['첫 배틀은 어땠니? 이기든 지든 동료와 함께 배우면 된단다. 피카츄는 회복해 두었단다.','이제 너희의 모험이 시작이다! 새로 만난 동료와 모험 기록도 가끔 살펴보렴.'];
@@ -50,7 +50,7 @@ class Adventure extends Engine{
     if((rivals.has(pending?.index)||storyEncounter(pending?.index)||['safari-start','mansion-investigate'].includes(pending?.index)||pending?.index===6)&&this.canChallenge(pending.index))this.data.pendingChallenge={...pending};
     const scene=story.scene,b=this.data.battle;
     world.init(this,now);
-    if(this.platform==='mobile'&&scene?.kind==='oak'&&scene.pages)scene.pages=scene.pages.map(text=>['폰을 잠그면 20초마다 동료와 모험한단다. 걸음은 타운맵에서 이동할 때 사용하지. 도전 배틀은 직접 지켜볼 수 있어.','앱을 켜 두면 자동으로 모험한단다. 꺼 둔 동안에는 10걸음마다 모험이 이어지지.','폰을 잠그면 10초마다 모험한단다. 잠근 동안 10걸음을 걸으면 한 번 더 모험하지. 도전 배틀은 직접 지켜볼 수 있어.','10걸음마다 동료와 모험한단다. 폰을 잠그면 10초마다 한 번 더 모험하지. 앱을 켜고 걸어도 모험을 지켜볼 수 있어.','10걸음마다 동료와 모험한단다. 폰을 잠그면 20초마다 한 번 더 모험하지. 앱을 켜고 걸어도 모험을 지켜볼 수 있어.'].includes(text)?oakIntro[2]:text);
+    if(this.platform==='mobile'&&scene?.kind==='oak'&&scene.pages)scene.pages=scene.pages.map(text=>['폰을 사용하는 동안 20초마다 동료와 모험한단다. 걸음은 타운맵에서 이동할 때 사용하지. 도전 배틀은 직접 지켜볼 수 있어.','폰을 잠그면 20초마다 동료와 모험한단다. 걸음은 타운맵에서 이동할 때 사용하지. 도전 배틀은 직접 지켜볼 수 있어.','앱을 켜 두면 자동으로 모험한단다. 꺼 둔 동안에는 10걸음마다 모험이 이어지지.','폰을 잠그면 10초마다 모험한단다. 잠근 동안 10걸음을 걸으면 한 번 더 모험하지. 도전 배틀은 직접 지켜볼 수 있어.','10걸음마다 동료와 모험한단다. 폰을 잠그면 10초마다 한 번 더 모험하지. 앱을 켜고 걸어도 모험을 지켜볼 수 있어.','10걸음마다 동료와 모험한단다. 폰을 잠그면 20초마다 한 번 더 모험하지. 앱을 켜고 걸어도 모험을 지켜볼 수 있어.'].includes(text)?oakIntro[2]:text);
     if(this.platform==='mobile'&&scene?.kind==='safari'&&scene.pages)scene.pages=scene.pages.map(text=>['걸어서 탐험하고 돌아오면 어떤 동료를 만났는지 살펴보렴. 몬스터볼 30개로 1,500걸음 동안 다녀올 수 있어.','폰을 잠근 동안 탐험하고 돌아오면 어떤 동료를 만났는지 살펴보렴. 몬스터볼 30개로 다녀올 수 있어.'].includes(text)?'폰을 사용하는 동안 탐험하고 돌아오면 어떤 동료를 만났는지 살펴보렴. 몬스터볼 30개로 다녀올 수 있어.':text);
     if(b?.kind==='trainer'&&scene?.mode==='dialogue'){
       const boss=this.battleBoss(b);
@@ -91,7 +91,7 @@ class Adventure extends Engine{
   passCheckpoint(id,now){return world.pass(this,id,now);}
   advanceTravel(now){return world.active(this)&&world.advance(this,now);}
   onWildEnd(b,now){if(world.active(this))world.encounterEnded(this,b);}
-  recordTravelSteps(total){return require('./step-travel.cjs').observe(this,total);}
+  recordTravelTouches(total){return require('./step-travel.cjs').observe(this,total);}
   recordTravelTime(now){return require('./step-travel.cjs').accrueTime(this,now);}
   requestAction(kind,value,now=Date.now()){
     if(kind==='travel-bank'){

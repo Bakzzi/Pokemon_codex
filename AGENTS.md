@@ -1,5 +1,7 @@
 # Verified releases and automatic completion
 
+- User instruction: Android uses observed phone-use time for growth and detected accessibility clicks, scrolls and input-field changes for movement. Count 1,000 touches per map cell, provide an explicit shortcut to Android accessibility settings, and keep the separate 12-hour movement resource. Display phone-use and touch totals on the home screen. This replaces step-based earning. Save only local counters; preserve earned movement resources, partial routes, PC behavior, and manual story gates.
+
 - User instruction (2026-11-18): NPC cards and dialogue use full-body pixel portraits, including former overworld-only characters. A matching trainer-class/occupation sprite is acceptable when the exact character has no dedicated full-body sprite. Keep source images and artist credits, and share frame rendering across PC and Android. Do not restore the old 16px Elm or checkpoint crops.
 - User instruction (2026-11-18): clicking a map place or visited facility only inspects it. Change the route only through the explicit travel or movement-bank button. Preserve inspection across live state refreshes. Show persistent markers for actually visited Day Care/Safari locations, without revealing unvisited events. Explicit bank travel promptly leaves an undecided ordinary wild encounter with the escape message; preserve committed capture/knockout results and all trainer/manual-story boundaries.
 

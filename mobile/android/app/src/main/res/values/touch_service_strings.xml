@@ -1,0 +1,4 @@
+<resources>
+    <string name="touch_service_label">포켓몬 작은 모험 · 터치 기록</string>
+    <string name="touch_service_description">클릭, 스크롤, 입력란 변경을 터치로 세어 타운맵에서 이동해요. 누적 횟수만 이 기기에 저장해요.</string>
+</resources>

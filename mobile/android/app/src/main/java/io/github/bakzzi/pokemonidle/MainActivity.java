@@ -1,9 +1,7 @@
 package io.github.bakzzi.pokemonidle;
 
-import android.Manifest;
 import android.app.*;
 import android.content.*;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.*;
 import android.provider.Settings;
@@ -77,7 +75,6 @@ public final class MainActivity extends Activity {
     private void handleBack(){if(web!=null)web.evaluateJavascript("window.mobileBack&&window.mobileBack()",value->{if(!"true".equals(value))moveTaskToBack(true);});}
     // API 31-32 use this fallback. API 33+ registers the platform predictive-back API above.
     @android.annotation.SuppressLint("GestureBackNavigation") @SuppressWarnings("deprecation") @Override public void onBackPressed(){handleBack();}
-    @Override public void onRequestPermissionsResult(int request,String[] permissions,int[] results){super.onRequestPermissionsResult(request,permissions,results);if(request==42&&checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION)==PackageManager.PERMISSION_GRANTED){getSharedPreferences("steps",0).edit().putBoolean("enabled",true).putLong("count",-1).putLong("walkingCount",-1).commit();StepService.start(this);}}
     private synchronized String readSave(){
         String raw=adventure.read();uiLoaded=true;return raw;
     }
@@ -89,9 +86,31 @@ public final class MainActivity extends Activity {
         @JavascriptInterface public boolean save(String text){return writeSave(text);}
         @JavascriptInterface public boolean foreground(){return visible;}
         @JavascriptInterface public void ready(){runOnUiThread(()->{if(web!=null){jsReady=true;web.evaluateJavascript("window.mobileLifecycle("+visible+",true)",null);}});}
-        @JavascriptInterface public String status(){try{StepService.sampleUsage();android.content.SharedPreferences p=getSharedPreferences("steps",0);boolean enabled=p.getBoolean("enabled",false);boolean supported=StepService.supported(MainActivity.this);return new JSONObject().put("steps",p.getLong("total",0)).put("lockMillis",p.getLong("lockMillis",0)).put("lockEpoch",p.getLong("lockEpoch",0)).put("usageMillis",p.getLong("usageMillis",0)).put("usageActive",StepService.usingPhone(MainActivity.this)).put("usageTodayMillis",StepService.usageToday(MainActivity.this)).put("usageMonthlyMillis",StepService.usageMonthly(MainActivity.this)).put("usageSince",StepService.usageSince(MainActivity.this)).put("monitorError",p.getString("monitorError","")).put("backgroundError",p.getString("backgroundError","")) .put("todaySteps",StepService.today(MainActivity.this)).put("monthlySteps",StepService.monthly(MainActivity.this)).put("monthlySince",StepService.monthlySince(MainActivity.this)).put("lifetimeSteps",StepService.lifetime(MainActivity.this)).put("stepsEnabled",enabled).put("sensorSupported",supported).put("tracking",enabled&&StepService.instance!=null).put("sensor",!supported?"걸음 센서가 없는 기기예요. 폰을 사용하는 동안 모험할 수 있어요.":p.getString("error",enabled?"걸음 기록이 켜져 있어요. 강제 종료·절전 설정에 따라 기록이 멈출 수 있어요.":"권한을 허용하면 걸음 기록 알림이 표시돼요.")).put("versionName",updater.installedName).put("versionCode",updater.installedCode).put("updateChecking",updater.busy).put("update",updater.status).put("updateReady",updater.ready).put("installing",updater.installing).put("pendingInstall",updater.pending!=null).put("canInstall",getPackageManager().canRequestPackageInstalls()).toString();}catch(JSONException e){throw new IllegalStateException(e);}}
-        @JavascriptInterface public void enableSteps(){runOnUiThread(()->{if(!StepService.supported(MainActivity.this))return;requestPermissions(Build.VERSION.SDK_INT>=33?new String[]{Manifest.permission.ACTIVITY_RECOGNITION,Manifest.permission.POST_NOTIFICATIONS}:new String[]{Manifest.permission.ACTIVITY_RECOGNITION},42);});}
-        @JavascriptInterface public void disableSteps(){runOnUiThread(()->{getSharedPreferences("steps",0).edit().putBoolean("enabled",false).putLong("count",-1).putLong("walkingCount",-1).commit();StepService.start(MainActivity.this);});}
+        @JavascriptInterface public String status(){
+            StepService.sampleUsage();
+            SharedPreferences p=getSharedPreferences("steps",MODE_PRIVATE);
+            try {
+                return new JSONObject()
+                    .put("touches",TouchService.total(MainActivity.this)).put("todayTouches",TouchService.today(MainActivity.this))
+                    .put("monthlyTouches",TouchService.monthly(MainActivity.this)).put("touchTracking",TouchService.enabled(MainActivity.this))
+                    .put("lockMillis",p.getLong("lockMillis",0)).put("lockEpoch",p.getLong("lockEpoch",0))
+                    .put("usageMillis",p.getLong("usageMillis",0)).put("usageActive",StepService.usingPhone(MainActivity.this))
+                    .put("usageTodayMillis",StepService.usageToday(MainActivity.this)).put("usageMonthlyMillis",StepService.usageMonthly(MainActivity.this))
+                    .put("monitorError",p.getString("monitorError","")).put("backgroundError",p.getString("backgroundError",""))
+                    .put("versionName",updater.installedName).put("versionCode",updater.installedCode)
+                    .put("updateChecking",updater.busy).put("update",updater.status).put("updateReady",updater.ready)
+                    .put("installing",updater.installing).put("pendingInstall",updater.pending!=null)
+                    .put("canInstall",getPackageManager().canRequestPackageInstalls()).toString();
+            } catch(JSONException e){throw new IllegalStateException(e);}
+        }
+        @JavascriptInterface public void openAccessibilitySettings(){
+            runOnUiThread(()->{
+                try { startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)); }
+                catch (ActivityNotFoundException | SecurityException e) {
+                    android.widget.Toast.makeText(MainActivity.this,"휴대폰 설정에서 접근성 메뉴를 열어 주세요.",android.widget.Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
         @JavascriptInterface public void allowUpdates(){runOnUiThread(()->startActivity(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,Uri.parse("package:"+getPackageName()))));}
         @JavascriptInterface public void checkUpdate(){updater.check(true);}
         @JavascriptInterface public void installUpdate(){updater.install();}

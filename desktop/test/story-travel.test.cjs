@@ -17,7 +17,7 @@ function drive(g,limit=500){
   if(g.presentation()&&!g.presentation().automatic)return 'dialogue';
   if(g.data.battle?.activityTrainer){win(g);continue;}
   if(g.presentation()?.automatic){const s=g.presentation();g.sceneTick(Math.max(clock(g),s.at+s.duration+1));continue;}
-  if(g.platform==='mobile'){if(g.data.mapTravel?.observed===undefined)g.recordTravelSteps(0);if(w.journey)g.recordTravelSteps(g.data.mapTravel.observed+2000);}
+  if(g.platform==='mobile'){if(g.data.mapTravel?.touchesObserved===undefined)g.recordTravelTouches(0);if(w.journey)g.recordTravelTouches(g.data.mapTravel.touchesObserved+1000);}
   else if(w.journey)for(let n=0;n<20;n++)g.onWildEnd({kind:'wild',location:w.location},clock(g));
   if(g.controlTick(clock(g)))continue;
   const trainer=g.movementTrainerNode?.();if(trainer){g.data.workTokens=250;if(g.startAutomaticTrainer(trainer,clock(g)))continue;}
@@ -51,11 +51,11 @@ for(const [name,Type]of [['PC',PC],['Android',Android]]){
   place(g,'sea-cottage');g.dialogue('kanto-event','NPC','bill',['test'],'kanto-complete:k-bill',clock(g));assert.equal(g.storyTravelTick(clock(g)),false);assert.ok(!K.done(g,'k-bill'));assert.equal(auto.goal(g),'sea-cottage');
  });
 }
-test('Android automatic itineraries retain 2000-step distance, do not spend the saved bank, and bank surplus when stopped',()=>{
- const g=fixture(Android);g.recordTravelSteps(0);g.data.mapTravel.bank=10000;assert.ok(g.storyTravelTick(clock(g)));const before={...g.data.kantoWorld.position};
+test('Android automatic itineraries retain 1,000-touch distance, do not spend the saved bank, and bank surplus when stopped',()=>{
+ const g=fixture(Android);g.recordTravelTouches(0);g.data.mapTravel.bank=10000;assert.ok(g.storyTravelTick(clock(g)));const before={...g.data.kantoWorld.position};
  for(let i=0;i<10;i++)g.controlTick(clock(g)+i*20000);assert.deepEqual(g.data.kantoWorld.position,before);assert.equal(g.data.mapTravel.bank,10000);
- g.recordTravelSteps(1999);g.controlTick(clock(g));assert.deepEqual(g.data.kantoWorld.position,before);g.recordTravelSteps(2000);g.controlTick(clock(g));assert.notDeepEqual(g.data.kantoWorld.position,before);assert.equal(g.data.mapTravel.bank,10000);
- g.recordTravelSteps(2500);g.requestAction('story-travel',false,clock(g));assert.equal(g.data.mapTravel.bank,10500);
+ g.recordTravelTouches(999);g.controlTick(clock(g));assert.deepEqual(g.data.kantoWorld.position,before);g.recordTravelTouches(1000);g.controlTick(clock(g));assert.notDeepEqual(g.data.kantoWorld.position,before);assert.equal(g.data.mapTravel.bank,10000);
+ g.recordTravelTouches(1250);g.requestAction('story-travel',false,clock(g));assert.equal(g.data.mapTravel.bank,10500);
 });
 test('Johto destinations cover the existing main story through the return region and final mountain without completing any event',()=>{
  const g=fixture(Android);g.data.johtoUnlocked=now;g.prepareJohtoJourney(now);JW.init(g);let previous='';
@@ -75,8 +75,8 @@ for(const [name,Type]of [['PC',PC],['Android',Android]])test(name+' Johto main i
  assert.ok(J.done(g,'j-red'));assert.equal(auto.goal(g),null);
 });
 test('Android background itinerary selection consumes neither lock-time actions nor saved movement',()=>{
- const g=fixture(Android),Progression=require('../../mobile/web/progression.js'),p=new Progression(g);g.recordTravelSteps(0);g.data.mapTravel.bank=8000;
- assert.equal(p.catchUp({steps:0,usageActive:true,usageMillis:0},now),0);assert.ok(g.data.kantoWorld.journey);assert.equal(p.usageConsumed,0);assert.equal(g.data.mapTravel.bank,8000);
+ const g=fixture(Android),Progression=require('../../mobile/web/progression.js'),p=new Progression(g);g.recordTravelTouches(0);g.data.mapTravel.bank=8000;
+ assert.equal(p.catchUp({touches:0,usageActive:true,usageMillis:0},now),0);assert.ok(g.data.kantoWorld.journey);assert.equal(p.usageConsumed,0);assert.equal(g.data.mapTravel.bank,8000);
 });
 test('already-reached unchecked entrances recover their manual checkpoint instead of hiding the required action',()=>{
  for(const Type of [PC,Android])for(const target of ['saffron','route-23']){

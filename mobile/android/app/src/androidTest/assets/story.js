@@ -48,8 +48,8 @@
   $('reset-cancel').click();check(game.data.caught[150]&&!$('reset-confirm').open,'cancel preserves the adventure');
   $('reset-open').click();$('reset-accept').click();active=false;
   check(Object.keys(game.data.caught).join(',')==='25'&&Object.keys(game.data.owned).length===1&&game.data.badges.length===0&&Object.keys(game.data.inventory).length===0,'confirmed reset removes game progress and collection');
-  check(game.presentation()?.name==='오박사'&&progression.consumed===counts.steps,'reset restarts Oak without replaying old walking actions');
-  const after=JSON.parse(Android.status());check(after.todaySteps===counts.todaySteps&&after.lifetimeSteps===counts.lifetimeSteps&&after.stepsEnabled===counts.stepsEnabled,'pedometer and settings survive game reset');
+  check(game.presentation()?.name==='오박사'&&game.data.mapTravel.touchesObserved===counts.touches,'reset restarts Oak without replaying old touch credit');
+  const after=JSON.parse(Android.status());check(after.todayTouches===counts.todayTouches&&after.touches===counts.touches&&after.touchTracking===counts.touchTracking,'touch counts and settings survive game reset');
   save();mobileLifecycle(true,true);active=false;check(game.presentation()?.name==='오박사','reset is persisted through native storage');
   // A migrated game gets regular trainer presentation without onboarding.
   game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);if(game.rivalProgress('rival-brock'))game.rivalProgress('rival-brock').state='won';progression=new MobileProgression(game);game.nextTick=0;game.data.switchUntil=0;publish();action('challenge',0);active=false;

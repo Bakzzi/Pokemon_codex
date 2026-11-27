@@ -1,6 +1,8 @@
 'use strict';
 // Mobile map distance is independent of battle activity and lock-time credits.
 const walking=require('../desktop/map-walk.js'),cost=2000,dailyInterval=12*60*60*1000;
+// Keep the saved distance scale so earned resources and partial routes survive upgrades.
+const touchesPerCell=1000,unitsPerTouch=cost/touchesPerCell;
 const friendship=require('./friendship.cjs');
 const valid=n=>Number.isSafeInteger(n)&&n>=0;
 function world(game){return game.data.johtoUnlocked?game.data.johtoWorld:game.data.kantoWorld;}
@@ -21,13 +23,13 @@ function beginIntent(game,previous){if(game.platform==='mobile'&&!previous&&hasI
 function observe(game,total){
  if(game.platform!=='mobile'||!valid(total))return false;
  const saved=game.data.mapTravel;
- if(valid(saved?.observed)&&total<saved.observed)return false;
- game.mapSteps=total;
- const delta=valid(saved?.observed)&&total>=saved.observed?total-saved.observed:0;
+ const previous=count(saved?.touchesObserved);
+ if(total<previous)return false;
+ const delta=(total-previous)*unitsPerTouch;
  const moving=hasIntent(game),credit=moving?Math.min(Number.MAX_SAFE_INTEGER,count(saved?.credit)+delta):0;
  const bank=Math.min(Number.MAX_SAFE_INTEGER,count(saved?.bank)+(moving?0:count(saved?.credit)+delta));
- if(saved?.observed===total&&saved.credit===credit&&saved.bank===bank)return false;
- game.data.mapTravel={...saved,observed:total,credit,bank};return true;
+ if(saved?.touchesObserved===total&&saved.credit===credit&&saved.bank===bank)return false;
+ game.data.mapTravel={...saved,touchesObserved:total,credit,bank};return true;
 }
 function useBank(game,executing=false){
  if(game.platform!=='mobile'||count(game.data.mapTravel?.bank)<cost)return false;
@@ -116,6 +118,6 @@ function snapshot(game,state){
  const trip=state.journey,bank=count(game.data.mapTravel?.bank),queued=game.data.pendingActions?.some(a=>['travel','world-pass'].includes(a.kind)&&a.useBank)||false;
  const usingBank=queued||!!(trip?.bankLeg||trip?.bankCells>0),remaining=trip?.mode==='steps'?trip.segments.slice(trip.index).filter(s=>!s.arrival).length:null;
  const phase=queued?'queued':game.data.battle?.movementTrainer?'trainer':usingBank&&trainerPending(game)?'trainer-wait':usingBank?'moving':null;
- return {travelMode:'steps',roadProgress:null,movement:{count:Math.floor(bank/cost),remainder:bank%cost,usingBank,phase},stepProgress:trip&&remaining!==0&&!usingBank?{completed:Math.min(cost,count(game.data.mapTravel?.credit)),required:cost,remainingCells:remaining}:null};
+ return {travelMode:'touches',roadProgress:null,movement:{count:Math.floor(bank/cost),remainder:Math.floor(bank%cost/unitsPerTouch),required:touchesPerCell,usingBank,phase},touchProgress:trip&&remaining!==0&&!usingBank?{completed:Math.floor(Math.min(cost,count(game.data.mapTravel?.credit))/unitsPerTouch),required:touchesPerCell,remainingCells:remaining}:null};
 }
-module.exports={cost,dailyInterval,accrueTime,observe,hasIntent,beginIntent,bankRemainder,useBank,requestBank,bankActive,bankRequest,departing,trainerPending,handoff,start,migrate,advance,snapshot};
+module.exports={cost,touchesPerCell,dailyInterval,accrueTime,observe,hasIntent,beginIntent,bankRemainder,useBank,requestBank,bankActive,bankRequest,departing,trainerPending,handoff,start,migrate,advance,snapshot};

@@ -46,7 +46,7 @@
  function draw(){
   raf=0;if(!world||!actor)return;const ownZone=!world.maps||zone===world.zone,walk=ownZone?world.walk:null,frame=walk?MapWalk.frame(walk,Date.now()):{...world.position,walking:false,direction:world.facing,sprite:{up:1,left:2,right:2}[world.facing]||0};
   actor.hidden=!ownZone;actor.classList.toggle('walking',frame.walking);actor.style.left=frame.x/currentMap().width*100+'%';actor.style.top=frame.y/currentMap().height*100+'%';actor.dataset.x=frame.x;actor.dataset.y=frame.y;map.dataset.moving=String(frame.walking);
-  caption.textContent=world.name+' · '+(!world.active?'지나온 길':frame.walking?'이동 중':world.movement?.phase?.startsWith('trainer')?'트레이너와 승부 중':world.movement?.phase==='queued'?'이동 준비 중':world.stepProgress?'다음 칸까지 '+world.stepProgress.completed.toLocaleString('ko-KR')+' / 2,000걸음':world.roadProgress?'야생 만남 '+world.roadProgress.completed+' / '+world.roadProgress.required:'현재 위치');if(frame.walking)raf=requestAnimationFrame(draw);
+  caption.textContent=world.name+' · '+(!world.active?'지나온 길':frame.walking?'이동 중':world.movement?.phase?.startsWith('trainer')?'트레이너와 승부 중':world.movement?.phase==='queued'?'이동 준비 중':world.touchProgress?'다음 칸까지 '+world.touchProgress.completed.toLocaleString('ko-KR')+' / '+world.touchProgress.required.toLocaleString('ko-KR')+'회':world.roadProgress?'야생 만남 '+world.roadProgress.completed+' / '+world.roadProgress.required:'현재 위치');if(frame.walking)raf=requestAnimationFrame(draw);
  }
  function pick(id,position){
   const p=world?.places.find(p=>p.id===id);if(!p)return;choice=id;choicePoint=position?{...position}:null;inspecting=true;showPane('map');renderChoice();
@@ -68,13 +68,13 @@
   if(!world)return;const p=world.places.find(p=>p.id===choice)||world.places.find(p=>p.id===world.location);choice=p.id;selected.textContent=p.name;range.textContent=p.current?'현재 머무는 곳':p.visited?'다녀온 곳':'';
   const to=choicePoint||currentMap().points[p.id],here=world.position,atChoice=p.current&&to.x===here.x&&to.y===here.y;
   travelButton.hidden=!world.active||world.manualTravel===false||atChoice;
-  travelButton.textContent=world.travelMode==='steps'?'걸어서 이동':'이곳으로 이동';
-  note.textContent=state.challengeReadOnly?'이전 모험은 모험 기록에서 볼 수 있어요.':world.pending?'진행 중인 배틀이 끝나면 이동해요.':world.journey?world.journey.name+'로 모험 중 · '+(world.travelMode==='steps'?'한 칸마다 2,000걸음씩 이동해요.':'지나치는 도로의 풀숲에서 야생 포켓몬을 만날 수 있어요!'):world.walk?'레드가 길을 따라 이동하고 있어요.':'지나치는 도로의 풀숲에서 야생 포켓몬을 만날 수 있어요!';
+  travelButton.textContent='이곳으로 이동';
+  note.textContent=state.challengeReadOnly?'이전 모험은 모험 기록에서 볼 수 있어요.':world.pending?'진행 중인 배틀이 끝나면 이동해요.':world.journey?world.journey.name+'로 모험 중 · '+(world.travelMode==='touches'?'터치 1,000회마다 한 칸 이동해요.':'지나치는 도로의 풀숲에서 야생 포켓몬을 만날 수 있어요!'):world.walk?'레드가 길을 따라 이동하고 있어요.':'지나치는 도로의 풀숲에서 야생 포켓몬을 만날 수 있어요!';
   if(p.current&&!state.johto?.active&&!state.challengeReadOnly&&!world.pending&&!world.journey&&!world.walk&&state.kantoStory?.placeSummary)note.textContent=state.kantoStory.placeSummary;
   movement.hidden=!world.movement||!world.active;
   const automatic=world.storyTravel;autoTravel.hidden=!world.active||!automatic?.available;
   if(automatic){autoLabel.textContent=automatic.enabled?(automatic.complete?'이야기를 마쳤어요. 자유롭게 둘러보세요.':'이야기를 따라 자동으로 이동해요. 대화와 도전은 직접 진행해 주세요.'):'자동 이동을 쉬고 있어요. 가고 싶은 곳을 골라 이동하세요.';autoToggle.textContent=automatic.enabled?'자동 이동 멈추기':'자동 이동 이어가기';autoToggle.setAttribute('aria-pressed',String(automatic.enabled));}
-  if(world.movement){const m=world.movement;movementCount.textContent='이동 '+m.count.toLocaleString('ko-KR')+'개 · '+m.remainder.toLocaleString('ko-KR')+' / 2,000걸음';movementUse.disabled=m.count<1||((!inspecting||atChoice)&&!world.journey&&!world.pending)||m.usingBank;movementUse.textContent=m.phase==='queued'?'이동 준비 중':m.phase?.startsWith('trainer')?'트레이너와 승부 중':m.usingBank?'이동 중':'이동 자원 사용';if(m.usingBank)note.textContent=m.phase==='queued'?'진행 중인 동작을 마치고 이동해요.':m.phase?.startsWith('trainer')?'길에서 만난 트레이너와 승부하고 있어요.':'이동 자원으로 길을 지나가요.';}
+  if(world.movement){const m=world.movement;movementCount.textContent='이동 '+m.count.toLocaleString('ko-KR')+'개 · '+m.remainder.toLocaleString('ko-KR')+' / '+m.required.toLocaleString('ko-KR')+'회';movementUse.disabled=m.count<1||((!inspecting||atChoice)&&!world.journey&&!world.pending)||m.usingBank;movementUse.textContent=m.phase==='queued'?'이동 준비 중':m.phase?.startsWith('trainer')?'트레이너와 승부 중':m.usingBank?'이동 중':'이동 자원 사용';if(m.usingBank)note.textContent=m.phase==='queued'?'진행 중인 동작을 마치고 이동해요.':m.phase?.startsWith('trainer')?'길에서 만난 트레이너와 승부하고 있어요.':'이동 자원으로 길을 지나가요.';}
   restoreInline();local.replaceChildren();const gym=localGym(p);note.hidden=!!gym&&!world.pending&&!world.journey;
   const entries=world.active&&p.current&&!world.walk?activities(p.id).filter(a=>a.gym===undefined&&!['johto-gym-details','johto-kanto-gyms'].includes(a.key)):[];
   const trainers=gym?.card&&entries.find(entry=>entry.key===gym.trainersKey);

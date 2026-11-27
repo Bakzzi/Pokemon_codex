@@ -14,14 +14,14 @@ for(const Type of [PC,Android])test(Type.name+' remembers visited facilities acr
  assert.deepEqual(g.panelState(now+1).johtoWorld.facilities.map(r=>r.location),['j-route34','j-k-route-5']);
 });
 test('one explicit bank click can select a route and promptly leave an undecided wild battle; duplicates cannot retarget it',()=>{
- const g=game(Android);g.data.kantoWorld.location='pallet';g.data.kantoWorld.position={...g.panelState(now).kantoWorld.map.points.pallet};g.recordTravelSteps(0);g.data.mapTravel.bank=10000;g.newWild(now);g.animate('attack',{text:'fixture'},now);
+ const g=game(Android);g.data.kantoWorld.location='pallet';g.data.kantoWorld.position={...g.panelState(now).kantoWorld.map.points.pallet};g.recordTravelTouches(0);g.data.mapTravel.bank=10000;g.newWild(now);g.animate('attack',{text:'fixture'},now);
  const xp=g.data.owned[g.data.activeId].xp,request={location:'route-1',position:{x:44,y:92}};
  assert.ok(g.requestAction('travel-bank',request,now));assert.equal(g.data.battle,null);assert.equal(g.data.animation.text,'성공적으로 도망쳤다!');assert.equal(g.nextTick,now+350);assert.equal(g.data.mapTravel.bank,10000);
  const pending=structuredClone(g.data.pendingActions),trip=structuredClone(g.data.kantoWorld.journey);
  assert.equal(g.requestAction('travel-bank','pewter',now),false);assert.deepEqual(g.data.pendingActions,pending);assert.deepEqual(g.data.kantoWorld.journey,trip);assert.equal(g.data.owned[g.data.activeId].xp,xp);
 });
 test('bank requests with an invalid destination or insufficient resources preserve the current route and automatic travel choice',()=>{
- const g=game(Android);g.recordTravelSteps(0);g.data.mapTravel.bank=2000;
+ const g=game(Android);g.recordTravelTouches(0);g.data.mapTravel.bank=2000;
  const before=structuredClone({world:g.data.kantoWorld,auto:g.data.storyTravel,actions:g.data.pendingActions});
  assert.equal(g.requestAction('travel-bank','missing-place',now),false);assert.deepEqual({world:g.data.kantoWorld,auto:g.data.storyTravel,actions:g.data.pendingActions},before);
  g.data.mapTravel.bank=1999;assert.equal(g.requestAction('travel-bank','pewter',now),false);assert.deepEqual(g.data.pendingActions,before.actions);

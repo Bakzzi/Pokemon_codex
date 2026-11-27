@@ -10,7 +10,7 @@ function finishJourney(game,now){
   if(game.presentation()&&!game.presentation().automatic)return clock;
   if(!state.journey&&!game.data.pendingActions.some(a=>['travel','world-pass'].includes(a.kind)))return clock;
   clock=Math.max(clock,game.nextTick,game.data.switchUntil||0);
-  if(game.platform==='mobile'){if(!Number.isSafeInteger(game.data.mapTravel?.observed))game.recordTravelSteps(0);game.recordTravelSteps(game.data.mapTravel.observed+2000);}
+  if(game.platform==='mobile'){if(!Number.isSafeInteger(game.data.mapTravel?.touchesObserved))game.recordTravelTouches(0);game.recordTravelTouches(game.data.mapTravel.touchesObserved+1000);}
   else for(let n=0;n<20;n++)game.onWildEnd({kind:'wild',location:state.location},clock);
   if(!game.controlTick(clock)){
    const id=game.movementTrainerNode?.();if(!id)throw new Error('Fixture journey failed to advance at '+state.location);

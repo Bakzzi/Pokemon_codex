@@ -14,7 +14,7 @@ function pages(g){for(let i=0;i<20&&g.presentation();i++){const s=g.presentation
 function finishOpponent(g){pages(g);for(let i=0;i<10&&g.data.battle;i++){g.data.battle.foe.hp=0;g.defeatOpponent(settle(g));if(g.presentation()?.next==='win')return;pages(g);}throw Error('Victory dialogue missing');}
 function ambient(g){for(let i=0;i<20&&g.movementTrainerNode();i++){g.data.workTokens=250;assert.ok(g.startAutomaticTrainer(g.movementTrainerNode(),settle(g)));for(let j=0;j<10&&g.data.battle;j++){pages(g);g.data.battle.foe.hp=0;g.defeatOpponent(settle(g));}assert.equal(g.data.battle,null);}}
 function travel(g,id){assert.ok(g.requestAction('travel',id,settle(g)));finishJourney(g,settle(g));}
-function bankTravel(g,id){g.recordTravelSteps(0);g.data.mapTravel.bank=40000;assert.ok(g.requestAction('travel',id,settle(g)));assert.ok(g.requestAction('travel-bank',null,settle(g)));finishJourney(g,settle(g));}
+function bankTravel(g,id){g.recordTravelTouches(0);g.data.mapTravel.bank=40000;assert.ok(g.requestAction('travel',id,settle(g)));assert.ok(g.requestAction('travel-bank',null,settle(g)));finishJourney(g,settle(g));}
 for(const Type of [PC,Android]){
  const label=Type===PC?'PC':'Android';
  test(label+' a real trip to Bill stops for the bridge incident, including loss and unconfirmed victory',()=>{

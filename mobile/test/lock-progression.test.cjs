@@ -5,7 +5,7 @@ globalThis.MobileCore={nursery:require('../../desktop/daycare.cjs')};
 const now=Date.parse('2026-10-18T06:00:00Z');
 const gameplay=g=>JSON.stringify({...g.data,mapTravel:undefined});
 function fixture(){const g=new Adventure(new Game({},now).data,now,{random:()=>.7}),p=new Progression(g);p.resume(now);p.dirty=false;return {g,p};}
-const usage=n=>({steps:0,usageActive:true,usageMillis:n});
+const usage=n=>({touches:0,usageActive:true,usageMillis:n});
 test('saved tutorials explain phone use without skipping the current page',()=>{
  const old=new Adventure({},now);old.presentation().pages[2]='폰을 잠그면 20초마다 동료와 모험한단다. 걸음은 타운맵에서 이동할 때 사용하지. 도전 배틀은 직접 지켜볼 수 있어.';old.presentation().index=2;
  const next=new Adventure(structuredClone(old.data),now+1000);assert.equal(next.presentation().index,2);assert.match(next.presentation().pages[2],/폰을 사용하는 동안 20초마다/);
@@ -14,8 +14,8 @@ test('a saved Safari introduction updates its old lock-only guidance without con
  const {g}=fixture();g.dialogue('safari','안내원','scientist',['폰을 잠근 동안 탐험하고 돌아오면 어떤 동료를 만났는지 살펴보렴. 몬스터볼 30개로 다녀올 수 있어.'],'safari-depart',now);
  const h=new Adventure(structuredClone(g.data),now+1000);assert.equal(h.presentation().index,0);assert.match(h.presentation().pages[0],/폰을 사용하는 동안/);assert.equal(h.data.mobileStory.safari.trip,null);
 });
-test('foreground ordinary adventure uses recorded phone time, not steps or wall time',()=>{
- const {g,p}=fixture();assert.equal(p.live(now,{...usage(0),steps:10000}),true);p.dirty=false;const before=gameplay(g);
+test('foreground ordinary adventure uses recorded phone time independently of touches',()=>{
+ const {g,p}=fixture();assert.equal(p.live(now,{...usage(0),touches:10000}),true);p.dirty=false;const before=gameplay(g);
  assert.equal(p.live(now+60000,usage(19999)),false);assert.equal(gameplay(g),before);
  assert.equal(p.live(now+60001,usage(20000)),true);assert.ok(g.data.battle);assert.equal(p.usageConsumed,20000);
 });
@@ -26,10 +26,10 @@ test('other apps earn the same twenty-second actions and partial time survives r
 });
 test('a locked phone never spends previously banked usage or legacy lock balances',()=>{
  const {g,p}=fixture();p.pause(now);const before=gameplay(g);
- for(const total of [{steps:0,lockMillis:99999999},{...usage(100000),usageActive:false}])assert.equal(p.catchUp(total,now+100000),0);
+ for(const total of [{touches:0,lockMillis:99999999},{...usage(100000),usageActive:false}])assert.equal(p.catchUp(total,now+100000),0);
  assert.equal(gameplay(g),before);assert.equal(p.usageConsumed,0);
  const old=new Progression(g,{lockConsumed:10000,consumed:1000});
- assert.equal(old.catchUp({steps:100000,lockMillis:99999999},now),0);assert.equal(old.usageConsumed,0);assert.equal(old.lockConsumed,10000);
+ assert.equal(old.catchUp({touches:100000,lockMillis:99999999},now),0);assert.equal(old.usageConsumed,0);assert.equal(old.lockConsumed,10000);
 });
 test('invalid usage counters and unobserved time cannot create actions',()=>{
  const {g,p}=fixture(),before=gameplay(g);for(const n of [undefined,-1,NaN,Infinity,19999,20000.1])assert.equal(p.catchUp(usage(n),now+100000),0);
@@ -54,5 +54,5 @@ test('locked time freezes a challenge timer through background save and reopen',
 test('Safari uses phone time and never walking or locked time',()=>{
  const {g,p}=fixture();p.pause(now);let walked=0;g.activityStep=()=>{walked++;return true;};
  assert.equal(p.catchUp(usage(20000),now),1);assert.equal(walked,1);
- assert.equal(p.catchUp({...usage(40000),usageActive:false,steps:10000},now),0);assert.equal(walked,1);
+ assert.equal(p.catchUp({...usage(40000),usageActive:false,touches:10000},now),0);assert.equal(walked,1);
 });

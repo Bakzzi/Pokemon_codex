@@ -11,10 +11,10 @@ test('movement compensation adds one banked cell while preserving an active trip
  assert.equal(p.claimMovementFixReward(now+1000),false);assert.equal(g.data.mapTravel.bank,6567);assert.equal(p.checkpoint().movementFixRewardClaimed,true);
 });
 test('background round trips and monthly reset preserve the one-time receipt independently of the daily grant',()=>{
- const g=new A({},now),p=new P(g);p.resume(now);p.observe({steps:10});p.claimMovementFixReward(now);
- const r=JSON.parse(c.MobileBackground.run(JSON.stringify({format:1,game:g.data,mobile:p.checkpoint()}),{steps:11,usageActive:true,usageMillis:0},now+1000,0));assert.ok(r.changed);assert.equal(r.save.mobile.movementFixRewardClaimed,true);assert.equal(r.save.game.mapTravel.bank,2001);
- const h=new A(r.save.game,now+1000),q=new P(h,r.save.mobile);assert.equal(q.claimMovementFixReward(now+1000),false);h.resetSeason(now+2000);assert.equal(q.claimMovementFixReward(now+2000),false);assert.equal(h.data.mapTravel.bank,2001);
- h.recordTravelTime(now+43200000);assert.equal(h.data.mapTravel.bank,4001);const loaded=new P(new A(plain(h.data),now+43200000),plain(q.checkpoint()));assert.equal(loaded.claimMovementFixReward(now+43200000),false);
+ const g=new A({},now),p=new P(g);p.resume(now);p.observe({touches:0});p.claimMovementFixReward(now);
+ const r=JSON.parse(c.MobileBackground.run(JSON.stringify({format:1,game:g.data,mobile:p.checkpoint()}),{touches:1,usageActive:true,usageMillis:0},now+1000,0));assert.ok(r.changed);assert.equal(r.save.mobile.movementFixRewardClaimed,true);assert.equal(r.save.game.mapTravel.bank,2002);
+ const h=new A(r.save.game,now+1000),q=new P(h,r.save.mobile);assert.equal(q.claimMovementFixReward(now+1000),false);h.resetSeason(now+2000);assert.equal(q.claimMovementFixReward(now+2000),false);assert.equal(h.data.mapTravel.bank,2002);
+ h.recordTravelTime(now+43200000);assert.equal(h.data.mapTravel.bank,4002);const loaded=new P(new A(plain(h.data),now+43200000),plain(q.checkpoint()));assert.equal(loaded.claimMovementFixReward(now+43200000),false);
 });
 test('compensation rejects invalid clocks and never grants PC a mobile resource',()=>{
  const g=new A({},now),p=new P(g);for(const t of [-1,1.5,NaN,Infinity])assert.equal(p.claimMovementFixReward(t),false);assert.equal(g.data.mapTravel,undefined);

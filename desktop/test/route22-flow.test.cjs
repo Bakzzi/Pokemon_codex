@@ -17,7 +17,7 @@ for(const [name,Type]of [['PC',PC],['Android',Android]]){
   g.data.battle=null;assert.ok(g.controlTick(clock(g)));assert.ok(g.data.kantoWorld.journey);assert.equal(g.rivalProgress('rival-brock').state,'unseen');assert.equal(g.data.mapTravel.bank,3333);
  });
  for(const late of [false,true])test(name+' '+(late?'late':'early')+' Route 22 encounter occurs after arrival, pauses for manual dialogue and never consumes another movement cell',()=>{
-  let g=fixture(Type);if(late)g.data.badges=[...K.badges];const id=late?'rival-league':'rival-brock';g.recordTravelSteps(0);g.recordTravelSteps(7000);
+  let g=fixture(Type);if(late)g.data.badges=[...K.badges];const id=late?'rival-league':'rival-brock';g.recordTravelTouches(0);g.recordTravelTouches(3500);
   assert.ok(g.requestAction('travel','route-22',now));if(Type===Android)assert.ok(g.requestAction('travel-bank',null,now));
   let t=now;for(let i=0;i<100&&!g.presentation();i++){t=clock(g);if(Type===PC)for(let j=0;j<20;j++)g.onWildEnd({kind:'wild',location:g.data.kantoWorld.location},t);g.controlTick(t);}
   assert.equal(g.data.kantoWorld.location,'route-22');assert.equal(g.data.battle.storyId,id);assert.equal(g.presentation().name,'그린');const scene=structuredClone(g.presentation()),account=structuredClone(g.data.mapTravel),trip=structuredClone(g.data.kantoWorld.journey);

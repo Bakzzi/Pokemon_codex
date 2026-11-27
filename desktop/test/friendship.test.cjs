@@ -39,7 +39,7 @@ for(const Type of [PC,Android])test(Type.name+' credits completed map cells once
 for(const Type of [PC,Android])test(Type.name+' actual map journey earns friendship without converting raw steps, encounters or idle time',()=>{
  const g=ready(Type),world=require('../../shared/kanto-world.cjs'),{finishJourney}=require('./helpers/travel-fixture.cjs');
  g.data.owned[25].happiness=70;
- if(g.platform==='mobile'){g.recordTravelSteps(0);g.recordTravelSteps(10000);assert.equal(g.data.owned[25].happiness,70);}
+ if(g.platform==='mobile'){g.recordTravelTouches(0);g.recordTravelTouches(5000);assert.equal(g.data.owned[25].happiness,70);}
  assert.ok(g.requestAction('travel','viridian',now));finishJourney(g,now);
  assert.ok(g.data.owned[25].happiness>70);const bond=g.data.owned[25].happiness;
  world.advance(g,now+86400000);assert.equal(g.data.owned[25].happiness,bond);

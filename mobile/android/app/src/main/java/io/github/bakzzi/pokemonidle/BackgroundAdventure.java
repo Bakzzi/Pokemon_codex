@@ -10,7 +10,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.json.*;
 
-/** Runs recorded phone-use and walking credits without an Activity or WebView. */
+/** Runs recorded phone use and touch movement without an Activity or WebView. */
 final class BackgroundAdventure {
     private static BackgroundAdventure instance;
     static synchronized BackgroundAdventure get(Context c){if(instance==null)instance=new BackgroundAdventure(c.getApplicationContext());return instance;}
@@ -25,7 +25,6 @@ final class BackgroundAdventure {
     volatile boolean busy;
     private BackgroundAdventure(Context c){context=c;store=AdventureStore.get(c);}
     void request(){requested.set(true);if(!queued.compareAndSet(false,true))return;worker.execute(this::drain);}
-    private long total(){return context.getSharedPreferences("steps",0).getLong("total",0);}
     private long usage(){return context.getSharedPreferences("steps",0).getLong("usageMillis",0);}
     static boolean dailyMovementDue(JSONObject distance,long now){
         if(distance==null||distance.isNull("dailyAt"))return true;
@@ -43,7 +42,7 @@ final class BackgroundAdventure {
         boolean moving=trip!=null,bankRequested=false;
         JSONArray pending=game.optJSONArray("pendingActions");
         if(pending!=null)for(int i=0;i<pending.length();i++){JSONObject a=pending.optJSONObject(i);if(a!=null&&(a.optString("kind").equals("travel")||a.optString("kind").equals("world-pass"))){moving=true;bankRequested|=a.optBoolean("useBank");}}
-        return dailyMovementDue(distance,System.currentTimeMillis())||distance.isNull("observed")||total()>distance.optLong("observed",total())
+        return dailyMovementDue(distance,System.currentTimeMillis())||TouchService.total(context)>distance.optLong("touchesObserved",0)
             ||battle!=null&&battle.optBoolean("movementTrainer")
             ||trip!=null&&(trip.optBoolean("bankLeg")||trip.optInt("bankCells")>0)
             ||bankRequested
@@ -57,13 +56,13 @@ final class BackgroundAdventure {
             JSONObject save=new JSONObject(before.raw);
             if(!available(save))return;
             if(idle!=null)idle.cancel(false);
-            wake=context.getSystemService(PowerManager.class).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"PokemonIdle:walking");wake.acquire(45000);
+            wake=context.getSystemService(PowerManager.class).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"PokemonIdle:adventure");wake.acquire(45000);
             ensureEngine();
             int completed=0;
             for(int batch=0;batch<32;batch++){
                 before=store.backgroundSnapshot();if(before==null)break;
-                long count=total(),now=System.currentTimeMillis();
-                String code="MobileBackground.run("+JSONObject.quote(before.raw)+",{steps:"+count+",usageMillis:"+usage()+",usageActive:"+StepService.usingPhone(context)+"},"+now+")";
+                long count=TouchService.total(context),now=System.currentTimeMillis();
+                String code="MobileBackground.run("+JSONObject.quote(before.raw)+",{touches:"+count+",usageMillis:"+usage()+",usageActive:"+StepService.usingPhone(context)+"},"+now+")";
                 JSONObject result=new JSONObject(isolate.evaluateJavaScriptAsync(code).get(30,TimeUnit.SECONDS));
                 if(result.getInt("used")==0&&!result.optBoolean("changed"))break;
                 if(!store.commitBackground(before,result.getJSONObject("save").toString()))break;

@@ -17,9 +17,22 @@ public final class MobileTest extends Instrumentation {
     private volatile MainActivity resumedActivity;
     @Override public void onCreate(Bundle args){arguments=args;super.onCreate(args);start();}
     private void require(boolean condition,String message){if(!condition)throw new AssertionError(message);}
-    private void walkingNotification(NotificationManager manager,String expected)throws Exception{
+    private static String shell(UiAutomation automation,String command)throws IOException{
+        try(InputStream in=new ParcelFileDescriptor.AutoCloseInputStream(automation.executeShellCommand(command))){
+            return new String(in.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8).trim();
+        }
+    }
+    private void awaitCondition(java.util.concurrent.Callable<Boolean> check,String message)throws Exception{
+        long deadline=SystemClock.elapsedRealtime()+10000;
+        do {
+            if(check.call())return;
+            Thread.sleep(100);
+        } while(SystemClock.elapsedRealtime()<deadline);
+        throw new AssertionError(message);
+    }
+    private void touchNotification(NotificationManager manager,String expected)throws Exception{
         for(int i=0;i<50;i++){if(java.util.Arrays.stream(manager.getActiveNotifications()).anyMatch(n->n.getId()==7&&expected.contentEquals(n.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT,""))))return;Thread.sleep(100);}
-        throw new AssertionError("Walking notification did not become: "+expected);
+        throw new AssertionError("Touch notification did not become: "+expected);
     }
     private String js(String code)throws Exception{
         CountDownLatch done=new CountDownLatch(1);String[] value={null};
@@ -88,6 +101,53 @@ public final class MobileTest extends Instrumentation {
             Field field=MainActivity.class.getDeclaredField("web");field.setAccessible(true);web=(WebView)field.get(activity);
             if("inspect".equals(arguments.getString("mode"))){Thread.sleep(5000);result.putString("diagnostic",js("(()=>{try{return JSON.stringify({document:document.readyState,ready:typeof ready,game:typeof game,active:typeof active,phase:typeof active!=='undefined'?active:null,party:document.getElementById('battle')?.contentDocument.querySelectorAll('#party button').length,call:(()=>{try{window.mobileLifecycle(true);return 'ok'}catch(e){return e.stack}})()})}catch(e){return e.stack}})()"));finish(Activity.RESULT_OK,result);return;}
             waitReady();Thread.sleep(1500);
+            if("touch-system".equals(arguments.getString("mode"))){
+                require(Build.HARDWARE.equals("ranchu"),"Use only an isolated Android emulator");
+                Context target=getTargetContext();
+                UiAutomation automation=getUiAutomation(UiAutomation.FLAG_DONT_SUPPRESS_ACCESSIBILITY_SERVICES);
+                String oldServices=shell(automation,"settings get secure enabled_accessibility_services");
+                String oldEnabled=shell(automation,"settings get secure accessibility_enabled");
+                require(oldServices.equals("null")||oldServices.isEmpty(),"Expected an isolated fixture without existing services");
+                require(!TouchService.enabled(target),"Touch service should initially be disabled");
+                js("document.getElementById('settings-open').click();document.getElementById('accessibility-settings').click()");
+                awaitCondition(()->!MainActivity.visible&&shell(automation,"dumpsys activity activities").contains("AccessibilitySettingsActivity"),"Game shortcut did not open Android accessibility settings");
+                try {
+                    String component=new ComponentName(target,TouchService.class).flattenToShortString();
+                    shell(automation,"settings put secure enabled_accessibility_services "+component);
+                    shell(automation,"settings put secure accessibility_enabled 1");
+                    awaitCondition(()->TouchService.enabled(target),"Android did not enable the touch service");
+                    shell(automation,"am start -W -a android.settings.DISPLAY_SETTINGS -f 0x10008000");
+                    awaitCondition(()->{
+                        var root=automation.getRootInActiveWindow();
+                        return root!=null&&"com.android.settings".contentEquals(root.getPackageName())
+                            && !root.findAccessibilityNodeInfosByText("Dark theme").isEmpty();
+                    },"The external Settings fixture did not open");
+                    var bounds=new android.graphics.Rect();
+                    var node=automation.getRootInActiveWindow().findAccessibilityNodeInfosByText("Dark theme").get(0);
+                    node.getBoundsInScreen(bounds);
+                    long before=TouchService.total(target);
+                    shell(automation,"input tap "+bounds.centerX()+" "+bounds.centerY());
+                    awaitCondition(()->TouchService.total(target)>before,"Interaction in another app was not counted");
+                    String explanation="Dark theme uses a black background";
+                    awaitCondition(()->{
+                        var root=automation.getRootInActiveWindow();
+                        return root!=null&&!root.findAccessibilityNodeInfosByText(explanation).isEmpty();
+                    },"The non-interactive Settings text did not appear");
+                    automation.getRootInActiveWindow().findAccessibilityNodeInfosByText(explanation).get(0).getBoundsInScreen(bounds);
+                    long blank=TouchService.total(target);
+                    shell(automation,"input tap "+bounds.centerX()+" "+bounds.centerY());
+                    Thread.sleep(300);
+                    require(TouchService.total(target)==blank,"Touching the non-interactive Settings text was counted");
+                    shell(automation,"am start -W -n "+target.getPackageName()+"/.MainActivity");
+                    awaitCondition(()->MainActivity.visible&&"true".equals(js("refreshNative();document.getElementById('touch-status').textContent.includes('켜짐')")),"The game did not display enabled after returning from Settings");
+                } finally {
+                    shell(automation,"settings delete secure enabled_accessibility_services");
+                    if(oldEnabled.equals("null"))shell(automation,"settings delete secure accessibility_enabled");
+                    else shell(automation,"settings put secure accessibility_enabled "+oldEnabled);
+                }
+                awaitCondition(()->"true".equals(js("refreshNative();document.getElementById('touch-status').textContent.includes('꺼짐')")),"The game did not display disabled");
+                result.putInt("touchSystemChecks",6);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+            }
             if("automatic-trainers".equals(arguments.getString("mode"))){
                 int checks=0;
                 for(String id:new String[]{"k-forest-1","k-route3-1","k-route11-1"}){
@@ -107,30 +167,22 @@ public final class MobileTest extends Instrumentation {
                 }
                 result.putInt("automaticTrainerChecks",checks);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
-            if("walking-live".equals(arguments.getString("mode"))){
-                StepService service=StepService.instance;require(service!=null,"Step service missing");
-                js("game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);game.data.mobileStory.onboarding='done';game.data.mobileStory.scene=null;game.nextTick=0;game.data.switchUntil=0;refreshNative();progression=new MobileProgression(game,{consumed:nativeState.steps,usageConsumed:nativeState.usageMillis});progression.observe(nativeState);progression.resume(Date.now());active=true;catchingUp=false;save();publish()");
-                long base=SystemClock.elapsedRealtimeNanos(),time=System.currentTimeMillis();
-                String before=js("JSON.stringify({...game.data,mapTravel:null})");
-                runOnMainSync(()->{service.recordSample(100,base,time,time);service.recordSample(110,base+1,time,time);});Thread.sleep(750);
-                require(before.equals(js("JSON.stringify({...game.data,mapTravel:null})")),"Ten steps awarded a game action");
-                require("true".equals(js("game.data.battle===null&&progression.usageConsumed===0")),"Walking started a battle or used lock time");
+            if("touch-live".equals(arguments.getString("mode"))){
+                SharedPreferences touches=TouchService.preferences(getTargetContext());
+                require(!TouchService.enabled(getTargetContext()),"This fixture needs touch collection disabled");
+                touches.edit().putLong("total",0).commit();
+                js("game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);game.data.mobileStory.onboarding='done';game.data.mobileStory.scene=null;game.nextTick=0;game.data.switchUntil=0;refreshNative();globalThis.usageBefore=nativeState.usageMillis+3600000;progression=new MobileProgression(game,{usageConsumed:usageBefore});progression.resume(Date.now());active=true;catchingUp=false;save();publish()");
                 require("true".equals(js("globalThis.mapBefore=JSON.stringify(game.panelState().kantoWorld.position);game.requestAction('travel',{location:'route-1',position:{x:44,y:92}},Date.now())")),"Map journey was not accepted");
-                runOnMainSync(()->service.recordSample(2109,base+2,time,time));Thread.sleep(750);
-                require("true".equals(js("JSON.stringify(game.panelState().kantoWorld.position)===mapBefore&&game.data.mapTravel.credit===1999")),"Map moved before 2000 new steps");
-                runOnMainSync(()->service.recordSample(2110,base+3,time,time));
+                touches.edit().putLong("total",999).commit();Thread.sleep(750);
+                require("true".equals(js("JSON.stringify(game.panelState().kantoWorld.position)===mapBefore&&game.panelState().kantoWorld.touchProgress.completed===999")),"Map moved before 1000 touches");
+                touches.edit().putLong("total",1000).commit();
                 long end=SystemClock.elapsedRealtime()+10000;
                 while(!"true".equals(js("JSON.stringify(game.panelState().kantoWorld.position)!==mapBefore"))&&SystemClock.elapsedRealtime()<end)Thread.sleep(100);
-                require("true".equals(js("game.panelState().kantoWorld.position.x===44&&game.panelState().kantoWorld.position.y===92&&game.data.mapTravel.credit===0")),"2000 steps did not move exactly one map cell");
-                require("true".equals(js("game.data.battle===null&&progression.usageConsumed===0&&Object.values(game.data.owned).every(p=>p.level===5)")),"Map walking granted a battle or levels");
-                Thread.sleep(750);runOnMainSync(()->service.recordSample(2110,base+3,time,time));Thread.sleep(500);
-                require("true".equals(js("game.data.mapTravel.credit===0&&game.data.battle===null")),"Walking sample replayed");
-                require(MainActivity.visible&&!StepService.locked(getTargetContext()),"Fixture was not unlocked and foreground");
-                runOnMainSync(()->service.recordSample(7110,base+4,time,time));Thread.sleep(1000);
-                require("true".equals(js("game.data.mapTravel.bank===5010&&game.data.battle===null&&progression.usageConsumed===0")),"Surplus walking did not bank without battle actions");
-                require("true".equals(js("game.requestAction('travel',{location:'viridian',position:{x:44,y:84}},Date.now())&&game.requestAction('travel-bank',null,Date.now())")),"Stored movement could not be selected");
-                Thread.sleep(1500);require("true".equals(js("game.panelState().kantoWorld.position.y===84&&game.data.mapTravel.bank===3010&&game.data.mapTravel.credit===0")),"Bank travel did not spend exactly one move without new steps");
-                screenshot("walking-map-only.png");result.putInt("foregroundMovementOnlyChecks",10);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+                require("true".equals(js("game.panelState().kantoWorld.position.x===44&&game.panelState().kantoWorld.position.y===92&&game.data.mapTravel.credit===0")),"1000 touches did not move exactly one map cell");
+                require("true".equals(js("game.data.battle===null&&progression.usageConsumed===usageBefore")),"Touch distance changed battle progress");
+                Thread.sleep(850);
+                require("true".equals(js("game.data.mapTravel.touchesObserved===1000&&game.data.mapTravel.bank===0")),"Same native count was paid again");
+                result.putInt("foregroundMovementChecks",5);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
             if("lock-adventure".equals(arguments.getString("mode"))){
                 Application.ActivityLifecycleCallbacks lockLifecycle=new Application.ActivityLifecycleCallbacks(){
@@ -142,7 +194,7 @@ public final class MobileTest extends Instrumentation {
                 activity.getApplication().registerActivityLifecycleCallbacks(lockLifecycle);
                 require(StepService.instance!=null,"Lock monitor did not start without step permission");
                 require(!getTargetContext().getSharedPreferences("steps",0).getBoolean("enabled",false),"Expected sensor-free fixture");
-                js("game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);refreshNative();progression=new MobileProgression(game,{consumed:nativeState.steps,usageConsumed:nativeState.usageMillis});progression.resume(Date.now());active=true;save();publish()");
+                js("game=new MobileCore.Adventure(new MobileCore.Game({},Date.now()).data);refreshNative();progression=new MobileProgression(game,{usageConsumed:nativeState.usageMillis});progression.resume(Date.now());active=true;save();publish()");
                 String unchanged=js("JSON.stringify(game.data)");Thread.sleep(11000);require(unchanged.equals(js("JSON.stringify(game.data)")),"Unlocked foreground generated adventure actions");
                 runOnMainSync(()->activity.startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));
                 for(int i=0;i<100&&AdventureStore.get(getTargetContext()).backgroundSnapshot()==null;i++)Thread.sleep(50);
@@ -165,7 +217,6 @@ public final class MobileTest extends Instrumentation {
                 String afterUnlock=js("JSON.stringify(game.data)");Thread.sleep(11000);require(afterUnlock.equals(js("JSON.stringify(game.data)")),"Wild battle continued while unlocked");
                 require("true".equals(js("game.data.mobileStory.rivals['rival-brock'].state='won';game.data.pendingBattle=null;game.data.battle=null;game.newWild(Date.now()-10000);game.nextTick=Date.now();game.data.switchUntil=Date.now();globalThis.pausedFoe=JSON.stringify(game.data.battle.foe);action('challenge',0);true")),"Challenge request failed");
                 Thread.sleep(1500);require("true".equals(js("game.data.battle.kind==='trainer'&&JSON.stringify(game.data.suspendedWild.foe)===pausedFoe&&!!game.presentation()")),"Foreground challenge did not suspend wild encounter");
-                runOnMainSync(()->activity.new Bridge().disableSteps());Thread.sleep(500);require(StepService.instance!=null,"Disabling steps stopped lock monitoring");
                 String beforeRenderer=js("save();JSON.stringify(game.data)");MainActivity oldActivity=activity;resumedActivity=null;
                 activity.getApplication().registerActivityLifecycleCallbacks(lockLifecycle);
                 runOnMainSync(()->require(web.getWebViewRenderProcess()!=null&&web.getWebViewRenderProcess().terminate(),"Renderer termination fixture failed"));
@@ -300,24 +351,20 @@ public final class MobileTest extends Instrumentation {
             }
             if("pending-ui".equals(arguments.getString("mode"))){
                 js("active=false;progression.pause(Date.now());save();back()");
-                android.content.SharedPreferences p=getTargetContext().getSharedPreferences("steps",0);
-                p.edit().putLong("total",730).putLong("walkingTotal",12345).putLong("walkingToday",234).putString("walkingDay",WalkingCounter.dayKey(System.currentTimeMillis(),java.time.ZoneId.systemDefault())).commit();
-                require("true".equals(js("refreshNative();document.getElementById('walk-status').textContent==='모험의 발걸음'&&document.getElementById('walk-today').textContent==='234걸음'&&document.getElementById('walk-total').textContent==='12,345걸음'")),"Walking card is incorrect");
+                SharedPreferences touches=TouchService.preferences(getTargetContext());
+                touches.edit().putLong("total",12345).putLong("today",234).putString("day",WalkingCounter.dayKey(System.currentTimeMillis(),java.time.ZoneId.systemDefault())).commit();
+                require("true".equals(js("refreshNative();document.getElementById('touch-today').textContent==='234회'&&document.getElementById('touch-total').textContent==='12,345회'")),"Touch card is incorrect");
                 require("true".equals(js("['battle','panel'].every(id=>!document.getElementById(id).contentDocument.body.textContent.includes('momozzing'))")),"Credits still appear outside Settings");
-                require("true".equals(js("document.documentElement.scrollWidth<=innerWidth&&document.querySelector('.walk-card').getBoundingClientRect().right<=innerWidth")),"Walking card overflows");screenshot("walking-card.png");
+                require("true".equals(js("document.documentElement.scrollWidth<=innerWidth&&document.querySelector('.walk-card').getBoundingClientRect().right<=innerWidth")),"Touch card overflows");
                 js("document.getElementById('settings-open').click()");require("true".equals(js("document.getElementById('settings').querySelector('.credit').checkVisibility()&&document.getElementById('settings').textContent.includes('모모찡 · momozzing')")),"Settings credit missing");js("document.getElementById('settings-close').click()");
-                require("true".equals(js("(()=>{const n=Date.now(),old=n-3600000,g=new MobileCore.Game({},old),reopened=new MobileCore.Game(JSON.parse(JSON.stringify(g.data)),n),p=new MobileProgression(reopened,{consumed:0,pausedAt:old});p.resume(n);return reopened.nextTick<=n&&p.catchUp({steps:0,usageMillis:20000},n+10000)===1&&!!reopened.data.battle})()")),"Reopened game waits through offline time again");
-                NotificationManager nm=getTargetContext().getSystemService(NotificationManager.class);nm.createNotificationChannel(new NotificationChannel("walking","걸음 모험",NotificationManager.IMPORTANCE_LOW));
-                nm.notify(7,StepService.notification(getTargetContext(),StepService.today(getTargetContext())));Thread.sleep(200);
-                walkingNotification(nm,"오늘 234걸음");
-                StepService service=new StepService();java.lang.reflect.Method attach=ContextWrapper.class.getDeclaredMethod("attachBaseContext",Context.class);attach.setAccessible(true);attach.invoke(service,getTargetContext());
-                WalkingCounter counter=new WalkingCounter();counter.total=12345;counter.today=234;counter.day="2000-01-01";StepLedger rewards=new StepLedger();rewards.total=730;
-                for(String name:new String[]{"walking","ledger","prefs"}){Field f=StepService.class.getDeclaredField(name);f.setAccessible(true);f.set(service,name.equals("walking")?counter:name.equals("ledger")?rewards:p);}
-                java.lang.reflect.Method rollover=StepService.class.getDeclaredMethod("refreshClock");rollover.setAccessible(true);rollover.invoke(service);Field clock=StepService.class.getDeclaredField("clock");clock.setAccessible(true);((Handler)clock.get(service)).removeCallbacksAndMessages(null);Thread.sleep(200);
-                require(p.getLong("walkingToday",-1)==0&&p.getLong("walkingTotal",0)==12345&&p.getLong("total",0)==730,"Daily rollover changed lifetime or offline rewards");
-                walkingNotification(nm,"오늘 0걸음");
-                require("true".equals(js("refreshNative();document.getElementById('walk-today').textContent==='0걸음'&&document.getElementById('walk-total').textContent==='12,345걸음'")),"Daily rollover is not reflected in the app");
-                nm.cancel(7);result.putInt("pendingChecks",9);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+                NotificationManager nm=getTargetContext().getSystemService(NotificationManager.class);
+                nm.notify(7,StepService.notification(getTargetContext(),TouchService.today(getTargetContext())));
+                touchNotification(nm,"오늘 터치 234회");
+                touches.edit().putString("day","2000-01-01").commit();
+                nm.notify(7,StepService.notification(getTargetContext(),TouchService.today(getTargetContext())));
+                touchNotification(nm,"오늘 터치 0회");
+                require("true".equals(js("refreshNative();document.getElementById('touch-today').textContent==='0회'&&document.getElementById('touch-total').textContent==='12,345회'")),"Daily rollover is not reflected in the app");
+                nm.cancel(7);result.putInt("pendingChecks",7);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
             if("journal".equals(arguments.getString("mode"))){
                 js("active=false;game=new MobileCore.Game({},Date.now());game.log('꼬렛 포획!','catch',19);game.data.adventure.totals.wins=12;game.data.adventure.totals.xp=620;game.data.adventure.checkpoint={at:Date.now()+1,totals:{...game.data.adventure.totals}};progression=new MobileProgression(game);save();openPanel('journal')");
@@ -335,13 +382,9 @@ public final class MobileTest extends Instrumentation {
                 js("document.getElementById('panel').contentDocument.querySelector('.dex-card[data-id=\"19\"]').click()");Thread.sleep(200);screenshot("dex-detail.png");
                 js("openPanel('challenge')");Thread.sleep(200);screenshot("challenge-collapsed.png");
                 js("back();document.getElementById('settings-open').click()");
-                require("true".equals(js("document.querySelectorAll('[role=switch]').length===1&&!document.getElementById('steps-enable')&&!document.getElementById('steps-disable')")),"Walking controls are not one switch");
-                getTargetContext().getSharedPreferences("steps",0).edit().putBoolean("enabled",true).commit();
-                require("true".equals(js("refreshNative();document.getElementById('steps-toggle').getAttribute('aria-checked')==='true'")),"Enabled walking state missing");
-                js("document.getElementById('steps-toggle').click()");Thread.sleep(400);
-                require(!getTargetContext().getSharedPreferences("steps",0).getBoolean("enabled",true),"Walking switch did not disable native setting");
-                require("true".equals(js("refreshNative();document.getElementById('steps-toggle').getAttribute('aria-checked')==='false'")),"Disabled walking state missing");screenshot("settings-toggle.png");
-                result.putInt("walkingSwitchChecks",4);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
+                require("true".equals(js("document.getElementById('accessibility-settings').checkVisibility()&&document.getElementById('touch-status').textContent.includes('꺼짐')")),"Accessibility settings button or state missing");
+                screenshot("touch-settings.png");
+                result.putInt("touchSettingsChecks",1);result.putString("result","passed");finish(Activity.RESULT_OK,result);return;
             }
             if("update-live".equals(arguments.getString("mode"))){
                 js("active=false;progression.pause(Date.now());save();document.getElementById('settings-open').click();document.getElementById('update-check').click()");Updater u=Updater.current;UpdateChecks.await(u);Thread.sleep(400);

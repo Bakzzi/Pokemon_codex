@@ -9,7 +9,7 @@ function win(g){for(let i=0;i<12&&g.data.battle?.kind==='trainer';i++){pages(g);
 function finishJourney(g){
  for(let i=0;i<200&&g.data.kantoWorld.journey;i++){
   const w=g.data.kantoWorld;
-  if(g.platform==='mobile'){if(!Number.isSafeInteger(g.data.mapTravel?.observed))g.recordTravelSteps(0);g.recordTravelSteps(g.data.mapTravel.observed+2000);}
+  if(g.platform==='mobile'){if(!Number.isSafeInteger(g.data.mapTravel?.touchesObserved))g.recordTravelTouches(0);g.recordTravelTouches(g.data.mapTravel.touchesObserved+1000);}
   else for(let j=0;j<20;j++)g.onWildEnd({kind:'wild',location:w.location},clock(g));
   if(!g.controlTick(clock(g))){const id=g.movementTrainerNode();assert.ok(id,'travel must advance or meet a trainer');g.data.workTokens=250;assert.ok(g.startAutomaticTrainer(id,clock(g)));win(g);}
  }
@@ -59,7 +59,7 @@ for(const Type of [PC,Android]){
  test(Type.name+' distance and wild quotas cannot skip uncleared automatic trainers',()=>{
   const g=new Type(oldSave(),now+1);g.data.battle=null;g.data.switchUntil=0;g.nextTick=now;
   const w=g.data.kantoWorld;w.location='route-3';w.position={...W.snapshot(g).map.points['route-3']};
-  const next={location:'route-4',path:[w.position,{x:76,y:44}]};w.journey={mode:g.platform==='mobile'?'steps':undefined,index:0,destination:'mt-moon',position:{x:84,y:44},segments:g.platform==='mobile'?[next]:[{location:'route-3',path:[w.position]},next]};w.roadProgress={location:'route-3',required:10,completed:10};g.recordTravelSteps(0);g.recordTravelSteps(10000);
+  const next={location:'route-4',path:[w.position,{x:76,y:44}]};w.journey={mode:g.platform==='mobile'?'steps':undefined,index:0,destination:'mt-moon',position:{x:84,y:44},segments:g.platform==='mobile'?[next]:[{location:'route-3',path:[w.position]},next]};w.roadProgress={location:'route-3',required:10,completed:10};g.recordTravelTouches(0);g.recordTravelTouches(5000);
   assert.equal(g.advanceTravel(now+1000),false);assert.equal(w.location,'route-3');assert.ok(g.movementTrainerNode());
   g.data.workTokens=250;assert.ok(g.tick(now+1000));assert.ok(g.data.battle.activityTrainer);assert.equal(g.data.battle.kantoNode,route3.entries[0]);
  });
