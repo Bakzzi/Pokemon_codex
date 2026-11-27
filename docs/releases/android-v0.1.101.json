@@ -2,8 +2,10 @@
   "version": "0.1.101",
   "versionCode": 103,
   "platform": "android",
-  "channel": "local-validation",
+  "channel": "android-preview",
   "sourceCommit": "a9ad5f94e4430ff1de56f7a64772629a7ded239b",
+  "sourceTag": "android-v0.1.101",
+  "release": "https://github.com/Bakzzi/Pokemon_codex/releases/tag/android-v0.1.101",
   "package": "io.github.bakzzi.pokemonidle",
   "minSdk": 31,
   "targetSdk": 36,
@@ -18,11 +20,13 @@
     "headlessStoryTimingLockAndRewards": "passed",
     "lintRelease": "passed",
     "apkSignatureVerified": true,
+    "signingCertificateMatchesVersion": "0.1.99",
+    "githubDownloadSha256Matched": true,
     "embeddedFilesMatched": 479,
     "bundleSha256": "4c53df36c99e7ceec3a6770e1506492cefce1540ae671057d9100265b572ee05",
     "emulatorApi": 34,
     "emulatorAutoplayThroughFirstSendout": "passed",
     "physicalDeviceVerified": false
   },
-  "retention": {"localTest": "0.1.101", "previousLocalTest": "0.1.100", "publicLatest": "0.1.99", "previousPublic": "0.1.98"}
+  "retention": {"publicLatest": "0.1.101", "previousPublic": "0.1.99", "previousLocalTest": "0.1.100"}
 }
