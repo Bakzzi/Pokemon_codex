@@ -1,12 +1,11 @@
 package io.github.bakzzi.pokemonidle;
 
 import android.accessibilityservice.AccessibilityService;
-import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.Settings;
 import android.view.accessibility.AccessibilityEvent;
-import android.view.accessibility.AccessibilityManager;
 import java.time.ZoneId;
 
 public final class TouchService extends AccessibilityService {
@@ -31,11 +30,12 @@ public final class TouchService extends AccessibilityService {
     }
 
     static boolean enabled(Context context) {
+        // Show the user's setting even while Android is connecting the service.
+        String enabled = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+        if (enabled == null) return false;
         ComponentName ours = new ComponentName(context, TouchService.class);
-        AccessibilityManager manager = context.getSystemService(AccessibilityManager.class);
-        for (AccessibilityServiceInfo info : manager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)) {
-            ComponentName component = ComponentName.unflattenFromString(info.getId());
-            if (ours.equals(component)) return true;
+        for (String component : enabled.split(":")) {
+            if (ours.equals(ComponentName.unflattenFromString(component))) return true;
         }
         return false;
     }
