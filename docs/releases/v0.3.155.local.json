@@ -1,0 +1,19 @@
+{
+  "version": "0.3.155",
+  "platform": "windows-x64-portable",
+  "channel": "local-validation",
+  "sourceCommit": "a9ad5f94e4430ff1de56f7a64772629a7ded239b",
+  "build": {"command": "npm.cmd run package", "node": "22.11.0", "electron": "44.7.0"},
+  "validation": {
+    "nodeTestsPassed": 1013,
+    "simulatedKantoAndJohtoRoutes": "passed",
+    "packagedRendererAutoplayThroughFirstSendout": "passed",
+    "archiveFilesVerified": 1391
+  },
+  "artifact": {
+    "name": "Pokemon-Codex-0.3.155-portable.zip",
+    "bytes": 164637880,
+    "sha256": "58c6a3445c21431680ba3f68d57d63264dd466ba71bd56a848c14a4100dce137"
+  },
+  "retention": {"localTest": "0.3.155", "publicLatest": "0.3.154", "previousPublic": "0.3.153"}
+}
