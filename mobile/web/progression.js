@@ -1,12 +1,13 @@
 'use strict';
 (function(root){
+  const usageMillisPerAction=20000;
   // Persist this cursor in the SAME atomic file as game progress.
   class Progression{
     constructor(core,saved={}){
       this.game=core;this.consumed=Number.isSafeInteger(saved.consumed)?saved.consumed:0;
       this.dirty=false;
       this.lockConsumed=Number.isSafeInteger(saved.lockConsumed)?saved.lockConsumed:0;
-      this.usageConsumed=Number.isSafeInteger(saved.usageConsumed)?saved.usageConsumed:0;
+      this.usageConsumed=Number.isSafeInteger(saved.usageConsumed)&&saved.usageConsumed>=0?saved.usageConsumed:0;
       this.usageAt=saved.usageAt;this.usageMillis=saved.usageMillis;
       this.movementFixRewardClaimed=saved.movementFixRewardClaimed===true;
       // Preserve the legacy step cursor for save compatibility; steps never buy actions.
@@ -39,6 +40,9 @@
       const d=this.game.data,account=d.mapTravel;
       if(--account.bonusActions===0&&d.pendingBattle)account.finishBonusTurn=true;
       this.dirty=true;
+    }
+    usageActions(total){
+      return Number.isSafeInteger(total)&&total>=this.usageConsumed?Math.floor((total-this.usageConsumed)/usageMillisPerAction):0;
     }
     observe(totals,now){
       if(Number.isSafeInteger(now)&&Number.isSafeInteger(totals.usageMillis)&&totals.usageMillis>=0){
@@ -114,8 +118,8 @@
         if(g.activityStep?.(now)){this.spendBonusAction();return true;}
         return this.step(now,true)||this.dirty;
       }
-      if(Number.isSafeInteger(totals.usageMillis)&&totals.usageMillis-this.usageConsumed>=20000){
-        if(g.activityStep?.(now)||this.step(now)){this.usageConsumed+=20000;this.dirty=true;return true;}
+      if(this.usageActions(totals.usageMillis)>0){
+        if(g.activityStep?.(now)||this.step(now)){this.usageConsumed+=usageMillisPerAction;this.dirty=true;return true;}
       }
       return this.dirty;
     }
@@ -123,7 +127,6 @@
       const usage=totals?.usageMillis,active=totals?.usageActive===true;
       this.observe(totals??{},now);
       this.accrueTravel(now);
-      const available=(n,cost,cursor)=>Number.isSafeInteger(n)&&n>=cursor?Math.floor((n-cursor)/cost):0;
       const g=this.game;let used=0,moves=0,travelTurns=0;this.moreMovement=false;
       for(;used<maxActions;used++){
         if(active&&g.automaticStoryTick?.(now)){this.dirty=true;break;}
@@ -139,17 +142,17 @@
           if(this.movementTick(now,active)){travelTurns++;used--;continue;}
         }
         if(moves<512&&this.mapTick(now,active)){moves++;used--;continue;}
-        if(!active||!available(usage,20000,this.usageConsumed))break;
+        if(!active||!this.usageActions(usage))break;
         // Presentation and choices never spend phone-use actions.
         if(g.presentation?.()||!g.data.battle?.activityTrainer&&(g.data.battle?.kind==='trainer'||g.data.battle?.storyId))break;
-        if(g.activityStep?.(now)){this.usageConsumed+=20000;continue;}
+        if(g.activityStep?.(now)){this.usageConsumed+=usageMillisPerAction;continue;}
         // Consume recorded activity immediately, never simulate a future calendar.
         // Only presentation waits are skipped; every game transition still uses tick().
         this.skipWaits(now);
         const world=g.data.johtoUnlocked?g.data.johtoWorld:g.data.kantoWorld;
         if(!g.data.battle&&(g.data.pendingActions.some(a=>['travel','world-pass'].includes(a.kind))||world?.journey&&!g.data.pendingChallenge)&&g.controlTick(now)){used--;continue;}
         if(!this.step(now))break;
-        this.usageConsumed+=20000;
+        this.usageConsumed+=usageMillisPerAction;
       }
       while(moves<512){
         if(g.data.trainerSequence)break;

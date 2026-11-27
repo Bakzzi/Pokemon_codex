@@ -33,13 +33,13 @@ function action(action,value){
 }
 window.addEventListener('message',e=>{if(e.origin!==location.origin||!['battle','panel'].some(id=>$(id).contentWindow===e.source))return;if(e.data.type==='ready'){publish();if(e.source===$('panel').contentWindow)e.source.postMessage({type:'tab',tab:panelTab},location.origin);}else if(e.data.type==='dex-view'&&e.source===$('panel').contentWindow){panelDetail=!!e.data.detail;$('back').textContent=panelDetail?'‹ 도감 목록':'‹ 모험으로';}else if(e.data.type==='action')action(e.data.action,e.data.value);});
 function renderActionWallet(){
-  if(!game)return;
+  if(!game||!progression)return;
   const {stock,available,remaining}=game.actionWallet();
   $('move-stock').textContent=stock.toLocaleString('ko-KR')+'개';
   $('exchange-actions').disabled=available===0;
   $('exchange-cost').textContent=stock>0&&available===0?'이동에 사용 중':'이동 자원 1개 사용';
-  $('bonus-actions').hidden=remaining===0;
-  $('bonus-actions').textContent=remaining===0?'':'남은 무료 행동 '+remaining.toLocaleString('ko-KR')+'회';
+  const actions=remaining+progression.usageActions(nativeState.usageMillis);
+  $('remaining-actions').textContent='남은 행동 '+actions.toLocaleString('ko-KR')+'회';
 }
 function refreshNative(){
   nativeState=JSON.parse(native.status());

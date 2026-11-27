@@ -20,11 +20,21 @@ test('touch card shows today, calendar month and lifetime',()=>{
 });
 test('home exchanges one resource, saves the free actions and disables the button at zero balance',()=>{
  const f=fixture();f.start();assert.equal(f.run("$('move-stock').textContent"),'1개');
+ assert.equal(f.run("$('remaining-actions').textContent"),'남은 행동 0회');
  assert.equal(f.run("$('exchange-actions').disabled"),false);
  f.run("$('exchange-actions').onclick();$('exchange-actions').onclick()");
  assert.equal(f.stored().game.mapTravel.bank,0);assert.equal(f.stored().game.mapTravel.bonusActions,20);
  assert.equal(f.run("$('exchange-actions').disabled"),true);
- f.run('mobileLifecycle(true,true)');assert.equal(f.run("$('bonus-actions').textContent"),'남은 무료 행동 20회');
+ f.run('mobileLifecycle(true,true)');assert.equal(f.run("$('remaining-actions').textContent"),'남은 행동 20회');
+});
+test('time earned during a story challenge and movement exchange share one live and restored balance',()=>{
+ const f=fixture();f.start();
+ assert.ok(f.run("game.data.kantoWorld.location='route-22';game.challenge('rival-brock',Date.now())"));
+ f.status.usageMillis=120000;f.tick();
+ assert.equal(f.snapshot().mobile.usageConsumed,0);assert.equal(f.run("$('remaining-actions').textContent"),'남은 행동 6회');
+ f.run("$('exchange-actions').onclick()");assert.equal(f.run("$('remaining-actions').textContent"),'남은 행동 26회');
+ f.run('mobileLifecycle(true,true)');assert.equal(f.run("$('remaining-actions').textContent"),'남은 행동 26회');
+ f.status.usageMillis=140000;f.tick();assert.equal(f.run("$('remaining-actions').textContent"),'남은 행동 27회');
 });
 test('the touch guide opens from the home card and confirms actual service state after returning',()=>{
  const f=fixture();f.start();assert.equal(f.run("$('touch-status').textContent"),'터치 기록 · 꺼짐');

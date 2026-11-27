@@ -35,6 +35,13 @@ test('twenty-second lock actions retain the raw time remainder and do not replay
   const resumed=new Progression(new Game(JSON.parse(JSON.stringify(g.data)),now),p.checkpoint());
   assert.equal(resumed.catchUp({steps:50000,usageActive:true,usageMillis:49999},now),0);assert.equal(resumed.catchUp({steps:50000,usageActive:true,usageMillis:50000},now),1);
 });
+test('observed use can earn another action while an earned turn is playing',()=>{
+  const g=new Game({},now,{random:()=>.53}),p=new Progression(g);p.resume(now);
+  assert.ok(p.live(now,{usageMillis:120000}));assert.equal(p.usageActions(120000),5);
+  p.live(now+1,{usageMillis:140000});assert.equal(p.usageActions(140000),6);
+  const ready=Math.max(g.nextTick,g.data.switchUntil);assert.ok(p.live(ready,{usageMillis:140000}));
+  assert.equal(p.usageActions(140000),5);
+});
 test('pause preserves battle pacing without adding hours after offline catchup',()=>{
   const g=new Game({},now,{random:()=>.4}),p=new Progression(g);p.resume(now);p.live(now);p.pause(now+1000);
   const next=now+3600000;p.resume(next);p.catchUp({steps:100,usageActive:true,usageMillis:200000},next);

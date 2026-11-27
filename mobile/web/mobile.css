@@ -8,7 +8,7 @@
 #move-stock{display:block;margin-top:4px;font-size:15px;font-variant-numeric:tabular-nums}
 #exchange-actions{text-align:center;font-weight:650}
 #exchange-cost{margin-top:2px;font-size:10px;font-weight:500}
-.bonus-actions{color:var(--accent);font-size:12px;margin:8px 0 0}
+#remaining-actions{color:var(--accent);font-size:12px;margin:8px 0 0;font-variant-numeric:tabular-nums}
 .touch-guide-header h2{margin:0}
 #touch-guide{padding:18px;max-height:calc(100% - 24px)}
 #touch-guide-status{display:inline-block;margin:5px 0 0;padding:1px 9px;border:1px solid #5b7059;border-radius:99px;font-weight:700;color:#dae5ce}
