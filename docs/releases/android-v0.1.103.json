@@ -1,0 +1,40 @@
+{
+    "version":  "0.1.103",
+    "versionCode":  105,
+    "platform":  "android",
+    "channel":  "android-preview",
+    "sourceCommit":  "ec4195791fe2fd3a5eeba159266b7bab0fad2a60",
+    "sourceTag":  "android-v0.1.103",
+    "release":  "https://github.com/Bakzzi/Pokemon_codex/releases/tag/android-v0.1.103",
+    "package":  "io.github.bakzzi.pokemonidle",
+    "minSdk":  31,
+    "targetSdk":  36,
+    "artifact":  "Pokemon-Idle-0.1.103.apk",
+    "bytes":  11877578,
+    "sha256":  "9be9219d087130d5484795aa403c7f7b55e260d4cde6dcff77b04af1926a42c9",
+    "signingCertificateSha256":  "5604ed4e294970f902dbb88ded471d487fd99cce1f907b9963c43a7f7b2a0a44",
+    "build":  {
+                  "commands":  [
+                                   "npm.cmd run mobile:bundle",
+                                   "gradle --offline --no-daemon assembleRelease lintRelease -x bundleGame"
+                               ],
+                  "buildTools":  "36.1.0",
+                  "node":  "22.11.0",
+                  "gradle":  "8.13",
+                  "agp":  "8.13.0"
+              },
+    "validation":  {
+                       "nodeTestsPassed":  1018,
+                       "lintRelease":  "passed",
+                       "embeddedFilesMatched":  479,
+                       "apkSignatureVerified":  true,
+                       "exchangeAndReloadRegressions":  "passed",
+                       "githubDownloadSha256Matched":  true,
+                       "physicalDeviceVerified":  false
+                   },
+    "retention":  {
+                      "previousLocalTest":  "0.1.100",
+                      "publicLatest":  "0.1.103",
+                      "previousPublic":  "0.1.102"
+                  }
+}
